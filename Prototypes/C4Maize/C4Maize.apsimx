@@ -550,7 +550,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
+                      "FixedValue": 50.0,
                       "Units": null,
                       "Name": "Target",
                       "Children": [],
@@ -2970,42 +2970,80 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "$type": "Models.Functions.PhaseLookup, Models",
                   "Name": "DMDemandFunction",
                   "Children": [
                     {
-                      "$type": "Models.Functions.OnEventFunction, Models",
-                      "SetEvent": "StartGrainFill",
-                      "ReSetEvent": "Sowing",
-                      "Name": "pKGR",
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "Sowing",
+                      "End": "Maturity",
+                      "Name": "SowingToMat",
                       "Children": [
                         {
-                          "$type": "Models.Memo, Models",
-                          "Text": "Potential kernel growth rate in mg/grain/oC",
-                          "Name": "Memo",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": null,
-                          "Name": "PreEventValue",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.DivideFunction, Models",
-                          "Name": "PostEventValue",
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "DMDemandFunction",
                           "Children": [
                             {
+                              "$type": "Models.Functions.OnEventFunction, Models",
+                              "SetEvent": "StartGrainFill",
+                              "ReSetEvent": "Sowing",
+                              "Name": "pKGR",
+                              "Children": [
+                                {
+                                  "$type": "Models.Memo, Models",
+                                  "Text": "Potential kernel growth rate in mg/grain/oC",
+                                  "Name": "Memo",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 0.0,
+                                  "Units": null,
+                                  "Name": "PreEventValue",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.DivideFunction, Models",
+                                  "Name": "PostEventValue",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Grain].PotKernelWt",
+                                      "Name": "PotKernelWt",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Phenology].GrainFilling.Target",
+                                      "Name": "GrainFillingTTTarget",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Grain].PotKernelWt",
-                              "Name": "PotKernelWt",
+                              "VariableName": "[Phenology].ThermalTime",
+                              "Name": "ThermalTime",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -3013,8 +3051,18 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].GrainFilling.Target",
-                              "Name": "GrainFillingTTTarget",
+                              "VariableName": "[Grain].NumberFunction",
+                              "Name": "GrainNumber",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.001,
+                              "Units": null,
+                              "Name": "Constant",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -3026,34 +3074,6 @@
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime",
-                      "Name": "ThermalTime",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Grain].NumberFunction",
-                      "Name": "GrainNumber",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.001,
-                      "Units": null,
-                      "Name": "Constant",
-                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -3069,9 +3089,9 @@
                   "Children": [
                     {
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.5,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.1,
+                      "FractionLiveToRemove": 1.0,
+                      "FractionDeadToRemove": 1.0,
+                      "FractionLiveToResidue": 0.0,
                       "FractionDeadToResidue": 0.0,
                       "Name": "Harvest",
                       "Children": [],
@@ -4590,10 +4610,10 @@
                   "Children": [
                     {
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.5,
+                      "FractionLiveToRemove": 0.0,
                       "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.1,
-                      "FractionDeadToResidue": 0.0,
+                      "FractionLiveToResidue": 1.0,
+                      "FractionDeadToResidue": 1.0,
                       "Name": "Harvest",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -6482,10 +6502,10 @@
                   "Children": [
                     {
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.5,
+                      "FractionLiveToRemove": 0.0,
                       "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.1,
-                      "FractionDeadToResidue": 0.0,
+                      "FractionLiveToResidue": 1.0,
+                      "FractionDeadToResidue": 1.0,
                       "Name": "Harvest",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -8868,10 +8888,10 @@
                   "Children": [
                     {
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.5,
+                      "FractionLiveToRemove": 0.0,
                       "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.1,
-                      "FractionDeadToResidue": 0.0,
+                      "FractionLiveToResidue": 1.0,
+                      "FractionDeadToResidue": 1.0,
                       "Name": "Harvest",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -10126,10 +10146,10 @@
                   "Children": [
                     {
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.5,
+                      "FractionLiveToRemove": 0.0,
                       "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.1,
-                      "FractionDeadToResidue": 0.0,
+                      "FractionLiveToResidue": 1.0,
+                      "FractionDeadToResidue": 1.0,
                       "Name": "Harvest",
                       "Children": [],
                       "IncludeInDocumentation": true,
