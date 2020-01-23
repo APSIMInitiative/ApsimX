@@ -211,9 +211,9 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Gets the tree leaf areas shown in the temporal data grid.
+        /// Gets the shade modifiers shown in the temporal data grid.
         /// </summary>
-        public double[] TreeLeafAreas
+        public double[] ShadeModifiers
         {
             get
             {
@@ -237,10 +237,10 @@ namespace UserInterface.Views
         /// <param name="heights">Heights to be displayed in the heights column.</param>
         /// <param name="nDemands">N Demands to be displayed in the N Demands column.</param>
         /// <param name="canopyWidths">Canopy widths to be displayed in the canopy widths column.</param>
-        /// <param name="treeLeafAreas">Tree leaf areas to be displayed in the leaf areas column.</param>
-        public void SetupHeights(DateTime[] dates, double[] heights, double[] nDemands, double[] canopyWidths, double[] treeLeafAreas)
+        /// <param name="shadeModifiers">Shade Modifiers to be displayed in the shade modifiers column.</param>
+        public void SetupHeights(DateTime[] dates, double[] heights, double[] nDemands, double[] canopyWidths, double[] shadeModifiers)
         {
-            string[] colLabels = new string[] { "Date", "Height (m)", "N Demands (g/m2)", "Canopy Width (m)", "Tree Leaf Area (m2)" };
+            string[] colLabels = new string[] { "Date", "Height (m)", "N Demands (g/m2)", "Canopy Width (m)", "Shade Modifier (0-1)" };
             DataTable table = new DataTable("Height Data");
 
             // Use the string column type for everything.
@@ -253,8 +253,8 @@ namespace UserInterface.Views
                 string height = heights?.Length > i ? (heights[i] / 1000).ToString() : null;
                 string nDemand = nDemands?.Length > i ? nDemands[i].ToString() : null;
                 string canopyWidth = canopyWidths?.Length > i ? canopyWidths[i].ToString() : null;
-                string treeLeafArea = treeLeafAreas?.Length > i ? treeLeafAreas[i].ToString() : null;
-                table.Rows.Add(date, height, nDemand, canopyWidth, treeLeafArea);
+                string shadeModifier = shadeModifiers?.Length > i ? shadeModifiers[i].ToString() : null;
+                table.Rows.Add(date, height, nDemand, canopyWidth, shadeModifier);
             }
 
             TemporalDataGrid.DataSource = table;

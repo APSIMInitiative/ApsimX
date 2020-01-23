@@ -102,7 +102,7 @@ namespace UserInterface.Presenters
                 return;
 
             // Setup tree heights.
-            forestryViewer.SetupHeights(forestryModel.Dates, forestryModel.Heights, forestryModel.NDemands, forestryModel.CanopyWidths, forestryModel.TreeLeafAreas);
+            forestryViewer.SetupHeights(forestryModel.Dates, forestryModel.Heights, forestryModel.NDemands, forestryModel.CanopyWidths, forestryModel.ShadeModifiers);
 
             // Get the first soil. For now we're assuming all soils have the same structure.
             soil = Apsim.Find(zones[0], typeof(Soil)) as Soil;
@@ -201,7 +201,7 @@ namespace UserInterface.Presenters
                 new ChangeProperty.Property(forestryModel, "Heights", forestryViewer.Heights.ToArray()),
                 new ChangeProperty.Property(forestryModel, "NDemands", forestryViewer.NDemands.ToArray()),
                 new ChangeProperty.Property(forestryModel, "CanopyWidths", forestryViewer.CanopyWidths.ToArray()),
-                new ChangeProperty.Property(forestryModel, "TreeLeafAreas", forestryViewer.TreeLeafAreas.ToArray())
+                new ChangeProperty.Property(forestryModel, "TreeLeafAreas", forestryViewer.ShadeModifiers.ToArray())
             });
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
             presenter.CommandHistory.Add(changeTemporalData);
@@ -216,7 +216,7 @@ namespace UserInterface.Presenters
         {
             propertyPresenter.UpdateModel(forestryModel);
             forestryViewer.SpatialData = forestryModel.Table;
-            forestryViewer.SetupHeights(forestryModel.Dates, forestryModel.Heights, forestryModel.NDemands, forestryModel.CanopyWidths, forestryModel.TreeLeafAreas);
+            forestryViewer.SetupHeights(forestryModel.Dates, forestryModel.Heights, forestryModel.NDemands, forestryModel.CanopyWidths, forestryModel.ShadeModifiers);
         }
 
         /// <summary>

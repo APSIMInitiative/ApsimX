@@ -22,7 +22,7 @@ namespace Models.Agroforestry
     /// 
     /// * Tree height (m)
     /// * Tree canopy width (m)
-    /// * Tree leaf area (m<sup>2</sup>/tree)
+    /// * Shade modifier with age (0-1)
     /// * Tree root radius (cm)
     /// * Shade at a range of distances from the trees (%)
     /// * Tree root length density at various depths and distances from the trees (cm/cm<sup>3</sup>)
@@ -87,7 +87,7 @@ namespace Models.Agroforestry
         /// </summary>
         [XmlIgnore]
         [Units("m2")]
-        public double LeafAreaToday { get { return GetTreeLeafAreaToday();} }
+        public double LeafAreaToday { get { return GetShadeModifierToday();} }
 
         /// <summary>
         /// The trees water uptake per layer in a single zone
@@ -198,10 +198,10 @@ namespace Models.Agroforestry
         public double[] CanopyWidths { get; set; } = new double[0];
 
         /// <summary>
-        /// Tree leaf areas
+        /// Shade Modifiers
         /// </summary>
         [Summary]
-        public double[] TreeLeafAreas { get; set; }
+        public double[] ShadeModifiers { get; set; }
 
         private Dictionary<double, double> shade = new Dictionary<double, double>();
         private Dictionary<double, double[]> rld = new Dictionary<double, double[]>();
@@ -276,7 +276,7 @@ namespace Models.Agroforestry
         {
             double distInTH = ZoneDistanceInTreeHeights(z);
             bool didInterp = false;
-            return MathUtilities.LinearInterpReal(distInTH, shade.Keys.ToArray(), shade.Values.ToArray(), out didInterp);
+            return MathUtilities.LinearInterpReal(distInTH, shade.Keys.ToArray(), shade.Values.ToArray(), out didInterp) * GetShadeModifierToday();
         }
 
         /// <summary>
@@ -348,14 +348,14 @@ namespace Models.Agroforestry
             return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, CanopyWidths, out didInterp);
         }
 
-        private double GetTreeLeafAreaToday()
+        private double GetShadeModifierToday()
         {
             double[] OADates = new double[Dates.Count()];
             bool didInterp;
 
             for (int i = 0; i < Dates.Count(); i++)
                 OADates[i] = Dates[i].ToOADate();
-            return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, TreeLeafAreas, out didInterp);
+            return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, ShadeModifiers, out didInterp);
         }
 
         /// <summary>
