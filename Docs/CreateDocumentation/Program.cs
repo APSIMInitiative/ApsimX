@@ -44,7 +44,7 @@
                 // Was a title for the generated html file given as argument 1?
                 var version = GetVersion();
                 var serverFtpFolder = "ftp://apsimdev.apsim.info/ApsimX/Releases/" + version;
-                var serverHttpFolder = "http://apsimdev.apsim.info/ApsimX/Releases/" + version;
+                var serverHttpFolder = "https://apsimdev.apsim.info/ApsimX/Releases/" + version;
 
                 htmlBuilder.AppendLine("<h1>Documentation for version " + version + "</h1>");
 
@@ -174,7 +174,10 @@
             string href;
             string hrefName = documentObject["Name"].ToString();
             if (documentObject["URL"] != null)
+            {
                 href = documentObject["URL"].ToString();
+                return string.Format("<p><a href=\"{0}\">{1}</a></p>", href, hrefName);
+            }
             else
             {
                 var fileName = Path.Combine(apsimDirectory, documentObject["FileName"].ToString());
@@ -215,11 +218,12 @@
                         createDoc.Do(null);
                         href = Path.GetFileName(createDoc.FileNameWritten);
                     }
+
+                    return string.Format("<p><a href=\"{0}/{1}\">{2}</a></p>", destinationUrl, href, hrefName);
                 }
                 else
                     return null;
             }
-            return string.Format("<p><a href=\"{0}/{1}\">{2}</a></p>", destinationUrl, href, hrefName);
         }
 
         /// <summary>
