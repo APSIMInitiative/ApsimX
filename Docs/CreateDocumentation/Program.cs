@@ -44,7 +44,7 @@
                 // Was a title for the generated html file given as argument 1?
                 var version = GetVersion();
                 var serverFtpFolder = "ftp://apsimdev.apsim.info/ApsimX/Releases/" + version;
-                var serverHttpFolder = "http://apsimdev.apsim.info/ApsimX/Releases/" + version;
+                var serverHttpFolder = "https://apsimdev.apsim.info/ApsimX/Releases/" + version;
 
                 htmlBuilder.AppendLine("<h1>Documentation for version " + version + "</h1>");
 
