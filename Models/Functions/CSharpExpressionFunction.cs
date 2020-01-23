@@ -43,12 +43,11 @@ namespace Models.Functions
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
-                string st = Expression.Replace(".Value()", "");
+                string st = Expression?.Replace(".Value()", "");
                 tags.Add(new AutoDocumentation.Paragraph(Name + " = " + st, indent));
 
                 foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
-
             }
         }
 
