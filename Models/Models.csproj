@@ -258,6 +258,7 @@
     <Compile Include="Factorial\Permutation.cs" />
     <Compile Include="Functions\DecumulateFunction.cs" />
     <Compile Include="Functions\EndOfDayFunction.cs" />
+    <Compile Include="Functions\CSharpExpressionFunction.cs" />
     <Compile Include="Functions\LiveOnEventFunction.cs" />
     <Compile Include="Functions\ProtectedDivideFunction.cs" />
     <Compile Include="Graph\DefaultPainter.cs" />
@@ -279,6 +280,7 @@
     <Compile Include="Plant\Phenology\Phases\DAWSPhase.cs" />
     <Compile Include="Plant\Phenology\Scales\Age.cs" />
     <EmbeddedResource Include="Resources\Scripts\GraphPanelScriptTemplate.cs" />
+    <EmbeddedResource Include="Resources\Scripts\CSharpExpressionTemplate.cs" />
     <Compile Include="Soils\Nutrients\INutrientPool.cs" />
     <Compile Include="Soils\SoilTemp\SoilTemperature.cs" />
     <Compile Include="Soils\Standardiser\Layers.cs" />
