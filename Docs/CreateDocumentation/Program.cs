@@ -176,7 +176,7 @@
             if (documentObject["URL"] != null)
             {
                 href = documentObject["URL"].ToString();
-                return string.Format("<p><a href=\"{0}\">{1}</a></p>", href, hrefName);
+                return string.Format("<p><a href=\"{0}\" target=\"_blank\">{1}</a></p>", href, hrefName);
             }
             else
             {
@@ -219,7 +219,7 @@
                         href = Path.GetFileName(createDoc.FileNameWritten);
                     }
 
-                    return string.Format("<p><a href=\"{0}/{1}\">{2}</a></p>", destinationUrl, href, hrefName);
+                    return string.Format("<p><a href=\"{0}/{1}\" target=\"_blank\">{2}</a></p>", destinationUrl, href, hrefName);
                 }
                 else
                     return null;
