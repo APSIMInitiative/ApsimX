@@ -1454,23 +1454,15 @@
         }
 
         /// <summary>
-        /// Change TreeLeafAreas to ShadeModiers in Tree Proxy
+        /// Changes the Surface Organic Matter property FractionFaecesAdded to 1.0
         /// </summary>
         /// <param name="root">The root JSON token.</param>
         /// <param name="fileName">The name of the apsimx file.</param>
         private static void UpgradeToVersion74(JObject root, string fileName)
         {
-            foreach (JObject TreeProxy in JsonUtilities.ChildrenRecursively(root, "TreeProxy"))
-            {
-                TreeProxy["ShadeModifiers"] = TreeProxy["TreeLeafAreas"];
-                var SM = TreeProxy["ShadeModifiers"].Values<double>().ToArray();
-                for (int i = 0; i < SM.Count(); i++)
-                    SM[i] = 1.0;
-                TreeProxy["ShadeModifiers"] = new JArray(SM);
-            }
+            foreach (JObject som in JsonUtilities.ChildrenRecursively(root, "SurfaceOrganicMatter"))
+                som["FractionFaecesAdded"] = "1.0";
         }
-
-
 
         /// <summary>
         /// Changes initial Root Wt to an array.
