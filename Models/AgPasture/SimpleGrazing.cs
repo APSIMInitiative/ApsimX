@@ -113,7 +113,7 @@
         /// <summary></summary>
         [Separator("Settings for flexible grazing")]
       
-        [Description("Expression for timing of grazing (e.g..")]
+        [Description("Expression for timing of grazing (e.g. AGPRyegrass.CoverTotal > 0.95)")]
         public string FlexibleExpressionForTimingOfGrazing { get; set; }
 
         /// <summary></summary>
@@ -462,9 +462,9 @@
                             forage.RemoveBiomass(organ.Name, "Graze",
                                                  new OrganBiomassRemovalType()
                                                  {
-                                                     FractionLiveToRemove = fractionLiveToRemove / 10,  // g/m2
-                                                 FractionDeadToRemove = fractionDeadToRemove / 10   // g/m2
-                                             });
+                                                     FractionLiveToRemove = fractionLiveToRemove,  
+                                                     FractionDeadToRemove = fractionDeadToRemove   
+                                                 });
 
                             PostGrazeDM += (organ.Live.Wt + organ.Dead.Wt) * 10;
 
