@@ -76,7 +76,7 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            // work our pregnancy status of initial herd
+            // work out pregnancy status of initial herd
             if (InferStartupPregnancy)
             {
                 // set up pre start conception status of breeders
@@ -190,11 +190,6 @@ namespace Models.CLEM.Activities
             // grouped by location
             var breeders = from ind in herd
                             where ind.IsBreeder
-                            //(ind.Gender == Sex.Male && ind.Age >= ind.BreedParams.MinimumAge1stMating) ||
-                            //(ind.Gender == Sex.Female &&
-                            //ind.Age >= ind.BreedParams.MinimumAge1stMating &&
-                            //ind.HighWeight >= (ind.BreedParams.MinimumSize1stMating * ind.StandardReferenceWeight)
-                            //)
                             group ind by ind.Location into grp
                             select grp;
 
@@ -314,7 +309,6 @@ namespace Models.CLEM.Activities
                     }
                 }
 
-                // restructure of conception between controlled and uncontrolled mating to combine neatly and remove duplicated code 11/11/2019
                 numberPossible = -1;
                 if (!UseAI)
                 {

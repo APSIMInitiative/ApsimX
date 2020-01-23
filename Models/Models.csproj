@@ -149,11 +149,13 @@
     <Compile Include="Aqua\WaterPropertiesData.cs" />
     <Compile Include="CLEM\Activities\FinanceActivityIncome.cs" />
     <Compile Include="CLEM\Activities\LabourActivityFeedTarget.cs" />
+    <Compile Include="CLEM\Activities\LabourActivityFeedTargetPurchase.cs" />
     <Compile Include="CLEM\Activities\LabourActivityFeedToTargets.cs" />
     <Compile Include="CLEM\Activities\LabourActivityFeedToTargetsV1.cs" />
     <Compile Include="CLEM\Activities\LabourActivityPayHired.cs" />
     <Compile Include="CLEM\Activities\LabourActivityFeed.cs" />
     <Compile Include="CLEM\Activities\LabourAERelationship.cs" />
+    <Compile Include="CLEM\Market.cs" />
     <Compile Include="CLEM\Reporting\ConceptionStatus.cs" />
     <Compile Include="CLEM\Reporting\ConceptionStatusChangedEventArgs.cs" />
     <Compile Include="CLEM\Resources\LabourDietComponent.cs" />

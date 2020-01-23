@@ -116,7 +116,8 @@
                 this.parentForGraph = this.model.Parent as IModel;
                 if (this.parentForGraph != null)
                 {
-                    this.parentForGraph.Children.Add(this.graph);
+                    // Don't add the graph as a child of the soil. This causes problems
+                    // (see bug #4622), and adding the soil as a parent is sufficient.
                     this.graph.Parent = this.parentForGraph;
                     this.view.ShowGraph(true);
                     int padding = (this.view as ProfileView).MainWidget.Allocation.Width / 2 / 2;
@@ -180,9 +181,6 @@
             profileGrid.Detach();
             if (this.graphPresenter != null)
                 this.graphPresenter.Detach();
-
-            if (this.parentForGraph != null && this.graph != null)
-                this.parentForGraph.Children.Remove(this.graph);
         }
 
         /// <summary>

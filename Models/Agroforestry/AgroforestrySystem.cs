@@ -145,7 +145,7 @@ namespace Models.Agroforestry
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {

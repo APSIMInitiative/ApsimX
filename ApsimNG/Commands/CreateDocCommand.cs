@@ -33,12 +33,12 @@
         /// Initializes a new instance of the <see cref="CreateDocCommand"/> class.
         /// </summary>
         /// <param name="explorerPresenter">The explorer presenter.</param>
-        public CreateDocCommand(ExplorerPresenter explorerPresenter)
+        public CreateDocCommand(ExplorerPresenter explorerPresenter, string destinationFolder)
         {
             this.explorerPresenter = explorerPresenter;
             modelNameToDocument = Path.GetFileNameWithoutExtension(explorerPresenter.ApsimXFile.FileName.Replace("Validation", string.Empty));
             modelNameToDocument = modelNameToDocument.Replace("validation", string.Empty);
-            FileNameWritten = Path.Combine(Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName), modelNameToDocument + ".pdf");
+            FileNameWritten = Path.Combine(destinationFolder, modelNameToDocument + ".pdf");
         }
 
         /// <summary>
@@ -64,28 +64,27 @@
         /// <summary>
         /// Export to PDF
         /// </summary>
-        public void CreatePDF(string modelNameToExport)
+        private void CreatePDF(string modelNameToExport)
         {
             var pdfWriter = new PDFWriter(explorerPresenter, portraitOrientation: true);
 
             // write image files
             Image banner;
             banner = new Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.AIBanner.png"));
-            
+
             // Convert all models in file to tags.
             var tags = new List<AutoDocumentation.ITag>();
 
             // Add banner and version.
             tags.Add(new AutoDocumentation.Image() { image = banner, name = "AIBanner" });
             tags.Add(new AutoDocumentation.Paragraph(explorerPresenter.ApsimXFile.ApsimVersion, 0));
-            
+
             foreach (IModel child in explorerPresenter.ApsimXFile.Children)
             {
-                AutoDocumentation.DocumentModel(child, tags, headingLevel:1, indent:0);
+                DocumentModel(tags, child);
                 if (child.Name == "TitlePage")
                 {
                     AddBackground(tags);
-                    AddUserDocumentation(tags, modelNameToExport);
 
                     // Document model description.
                     int modelDescriptionIndex = tags.Count;
@@ -109,6 +108,31 @@
             pdfWriter.CreatePDF(tags, FileNameWritten);
         }
 
+        /// <summary>
+        /// Document the specified model.
+        /// </summary>
+        /// <param name="tags">Document tags to add to.</param>
+        /// <param name="modelToDocument">The model to document.</param>
+        private void DocumentModel(List<AutoDocumentation.ITag> tags, IModel modelToDocument)
+        {
+            var childParent = Apsim.Parent(modelToDocument, typeof(Simulation));
+            if (childParent == null || childParent is Simulations)
+                AutoDocumentation.DocumentModel(modelToDocument, tags, headingLevel: 1, indent: 0);
+            else
+            {
+                var clonedModel = Apsim.Clone(modelToDocument);
+                try
+                {
+                    explorerPresenter.ApsimXFile.Links.Resolve(clonedModel, true);
+                    AutoDocumentation.DocumentModel(clonedModel, tags, headingLevel: 1, indent: 0);
+                }
+                finally
+                {
+                    explorerPresenter.ApsimXFile.Links.Unresolve(clonedModel, true);
+                }
+            }
+        }
+
         /// <summary>Add statistics</summary>
         /// <param name="tags">Document tags to add to.</param>
         private void AddStatistics(List<AutoDocumentation.ITag> tags)
@@ -123,56 +147,6 @@
 
                 foreach (Tests test in tests)
                     test.Document(tags, 3, 0);
-            }
-        }
-
-        /// <summary>Add user documentation, based on the example.</summary>
-        /// <param name="tags">The tags to add to.</param>
-        /// <param name="modelName">Name of model to document.</param>
-        private void AddUserDocumentation(List<AutoDocumentation.ITag> tags, string modelName)
-        {
-            // Look for some instructions on which models in the example file we should write.
-            // Instructions will be in a memo in the validation .apsimx file 
-
-            IModel userDocumentation = Apsim.Get(explorerPresenter.ApsimXFile, ".Simulations.UserDocumentation") as IModel;
-            string exampleFileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "..", "Examples", modelName + ".apsimx");
-
-            if (userDocumentation != null && userDocumentation.Children.Count > 0 && File.Exists(exampleFileName))
-            {
-                // Write heading.
-                tags.Add(new AutoDocumentation.Heading("User documentation", 1));
-
-                // Open the related example .apsimx file and get its presenter.
-                ExplorerPresenter examplePresenter = explorerPresenter.MainPresenter.OpenApsimXFileInTab(exampleFileName, onLeftTabControl: true);
-
-                Memo instructionsMemo = userDocumentation.Children[0] as Memo;
-                string[] instructions = instructionsMemo.Text.Split("\r\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                foreach (string instruction in instructions)
-                {
-                    IModel model = Apsim.Find(examplePresenter.ApsimXFile, instruction);
-                    if (model != null)
-                    {
-                        examplePresenter.SelectNode(Apsim.FullPath(model));
-                        while (Gtk.Application.EventsPending())
-                            Gtk.Application.RunIteration();
-                        if (model is Memo)
-                            AutoDocumentation.DocumentModel(model, tags, 1, 0);
-                        else
-                        {
-                            Image image = examplePresenter.GetScreenhotOfRightHandPanel();
-                            if (image != null)
-                            {
-                                string name = "Example" + instruction;
-                                tags.Add(new AutoDocumentation.Image() { name = name, image = image });
-                            }
-                        }
-                    }
-                }
-
-                // Close the tab
-                examplePresenter.MainPresenter.CloseTabContaining(examplePresenter.GetView().MainWidget);
-                while (Gtk.Application.EventsPending())
-                    Gtk.Application.RunIteration();
             }
         }
 

@@ -13,7 +13,7 @@
     {
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
         [Description("Depth")]
-        [Units("mm")]
+        [Units("cm")]
         public string[] Depth
         {
             get

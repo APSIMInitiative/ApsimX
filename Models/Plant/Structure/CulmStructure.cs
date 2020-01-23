@@ -378,8 +378,16 @@ namespace Models.PMF.Struct
         /// <summary>Clears this instance.</summary>
         public void Clear()
         {
-            CurrentLeafNo = 0.0;
-
+            CurrentLeafNo = 0;
+            leavesInitialised = false;
+            tillersAdded = 0;
+            dayofEmergence = false;
+            dltTTDayBefore = 0;
+            TTTargetFI = 0;
+            FertileTillerNumber = 0;
+            CurrentLeafNo = 0;
+            LeafNoApp = 0;
+            NLeaves = 0;
             //TotalStemPopn = 0;
             //PotLeafTipsAppeared = 0;
             //PlantTotalNodeNo = 0;

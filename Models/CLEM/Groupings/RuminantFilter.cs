@@ -164,15 +164,15 @@ namespace Models.CLEM.Groupings
             string html = "";
             if(!this.ValidParent())
             {
-                html = "<div class=\"errorlink\">Invalid Parent. Type of Ruminant Group required.</div>";
+                html = "<div class=\"errorlink\">Invalid Parent. Ruminant Group type required.</div>";
             }
             if (this.Value == null)
             {
-                html += "<div class=\"errorlink\">[FILTER NOT DEFINED]</div>";
+                html += "<div class=\"errorlink\" style=\"opacity: " + ((this.Enabled) ? "1" : "0.4") + "\">[FILTER NOT DEFINED]</div>";
             }
             else
             {
-                html += "<div class=\"filter\">" + this.ToString() + "</div>";
+                html += "<div class=\"filter\" style=\"opacity: " + ((this.Enabled) ? "1" : "0.4") + "\">" + this.ToString() + "</div>";
             }
             return html;
         }
