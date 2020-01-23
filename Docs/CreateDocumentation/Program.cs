@@ -68,7 +68,7 @@
                     else
                     {
                         // Write table to html.
-                        htmlBuilder.AppendLine(DataTableUtilities.ToHTML(documentationTable, writeHeaders: false));
+                        htmlBuilder.AppendLine(DataTableUtilities.ToHTML(documentationTable, writeHeaders: true));
                     }
                 }
 
@@ -128,7 +128,10 @@
         {
             // Create a data table that will later be turned into a table on a html page.
             var documentationTable = new DataTable();
-            documentationTable.Columns.Add();
+            documentationTable.Columns.Add("Name");
+            documentationTable.Columns.Add("Auto-generated");
+            documentationTable.Columns.Add("Params/Inputs/Outputs");
+            documentationTable.Columns.Add("Detailed");
 
             // Loop through all models and document.
             bool errorsFound = false;
@@ -141,8 +144,6 @@
                     int columnIndex = 1;
                     foreach (var documentDescription in model["Documents"] as JArray)
                     {
-                        if (columnIndex >= documentationTable.Columns.Count)
-                            documentationTable.Columns.Add();
                         documentationRow[columnIndex] = CreateModelDocumentation(documentDescription as JObject, apsimDirectory, destinationFolder, destinationUrl);
                         columnIndex++;
                     }
