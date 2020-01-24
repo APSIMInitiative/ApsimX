@@ -192,7 +192,7 @@
                 new ChangeProperty.Property(forestryModel, "Dates", forestryViewer.Dates.ToArray()),
                 new ChangeProperty.Property(forestryModel, "Heights", forestryViewer.Heights.ToArray()),
                 new ChangeProperty.Property(forestryModel, "NDemands", forestryViewer.NDemands.ToArray()),
-                new ChangeProperty.Property(forestryModel, "TreeLeafAreas", forestryViewer.ShadeModifiers.ToArray())
+                new ChangeProperty.Property(forestryModel, "ShadeModifiers", forestryViewer.ShadeModifiers.ToArray())
             });
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
             presenter.CommandHistory.Add(changeTemporalData);
