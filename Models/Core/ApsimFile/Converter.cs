@@ -1474,7 +1474,8 @@
             foreach (JObject TreeProxy in JsonUtilities.ChildrenRecursively(root, "TreeProxy"))
             {
                 TreeProxy["ShadeModifiers"] = TreeProxy["TreeLeafAreas"];
-                var SM = TreeProxy["ShadeModifiers"].Values<double>().ToArray();
+                // ShadeModifiers is sometimes null (not sure why) so fill it with 1s using Heights to get array length
+                var SM = TreeProxy["Heights"].Values<double>().ToArray();  
                 for (int i = 0; i < SM.Count(); i++)
                     SM[i] = 1.0;
                 TreeProxy["ShadeModifiers"] = new JArray(SM);
