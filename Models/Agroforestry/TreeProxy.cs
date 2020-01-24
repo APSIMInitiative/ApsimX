@@ -21,7 +21,6 @@ namespace Models.Agroforestry
     /// Several parameters are required of the user to specify the state of trees within the simulation.  These include:
     /// 
     /// * Tree height (m)
-    /// * Tree canopy width (m)
     /// * Shade modifier with age (0-1)
     /// * Tree root radius (cm)
     /// * Shade at a range of distances from the trees (%)
@@ -73,21 +72,11 @@ namespace Models.Agroforestry
         public double heightToday { get { return GetHeightToday();}}
 
         /// <summary>
-        /// CanopyWidth
-        /// </summary>
-        [XmlIgnore]
-        [Units("m")]
-        public double CanopyWidthToday { 
-            get
-            { return GetCanopyWidthToday();}
-            }
-
-        /// <summary>
         /// Leaf Area
         /// </summary>
         [XmlIgnore]
         [Units("m2")]
-        public double LeafAreaToday { get { return GetShadeModifierToday();} }
+        public double ShadeModiferToday { get { return GetShadeModifierToday();} }
 
         /// <summary>
         /// The trees water uptake per layer in a single zone
@@ -190,12 +179,6 @@ namespace Models.Agroforestry
         [Summary]
         [Units("g/m2")]
         public double[] NDemands { get; set; }
-
-        /// <summary>
-        /// Tree canopy widths
-        /// </summary>
-        [Summary]
-        public double[] CanopyWidths { get; set; } = new double[0];
 
         /// <summary>
         /// Shade Modifiers
@@ -336,16 +319,6 @@ namespace Models.Agroforestry
             for (int i = 0; i < Dates.Count(); i++)
                 OADates[i] = Dates[i].ToOADate();
             return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, NDemands, out didInterp);
-        }
-
-        private double GetCanopyWidthToday()
-        {
-            double[] OADates = new double[Dates.Count()];
-            bool didInterp;
-
-            for (int i = 0; i < Dates.Count(); i++)
-                OADates[i] = Dates[i].ToOADate();
-            return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, CanopyWidths, out didInterp);
         }
 
         private double GetShadeModifierToday()
