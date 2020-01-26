@@ -17,7 +17,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 74; } }
+        public static int LatestVersion { get { return 75; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1462,6 +1462,24 @@
         {
             foreach (JObject som in JsonUtilities.ChildrenRecursively(root, "SurfaceOrganicMatter"))
                 som["FractionFaecesAdded"] = "1.0";
+        }
+
+        /// <summary>
+        /// Change TreeLeafAreas to ShadeModiers in Tree Proxy
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion75(JObject root, string fileName)
+        {
+            foreach (JObject TreeProxy in JsonUtilities.ChildrenRecursively(root, "TreeProxy"))
+            {
+                TreeProxy["ShadeModifiers"] = TreeProxy["TreeLeafAreas"];
+                // ShadeModifiers is sometimes null (not sure why) so fill it with 1s using Heights to get array length
+                var SM = TreeProxy["Heights"].Values<double>().ToArray();  
+                for (int i = 0; i < SM.Count(); i++)
+                    SM[i] = 1.0;
+                TreeProxy["ShadeModifiers"] = new JArray(SM);
+            }
         }
 
         /// <summary>
