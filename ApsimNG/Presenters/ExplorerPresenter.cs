@@ -623,26 +623,27 @@
                     Action = FileDialog.FileActionType.SelectFolder
                 };
                 path = fileChooser.GetFile();
-                if (!string.IsNullOrEmpty(path))
+            }
+
+            if (!string.IsNullOrEmpty(path))
+            {
+                MainPresenter.ShowMessage("Generating simulation files: ", Simulation.MessageType.Information);
+
+                var runner = new Runner(model);
+                var errors = Models.Core.Run.GenerateApsimXFiles.Generate(runner, path, (int percent) =>
                 {
-                    MainPresenter.ShowMessage("Generating simulation files: ", Simulation.MessageType.Information);
+                    MainPresenter.ShowProgress(percent, false);
+                });
 
-                    var runner = new Runner(model);
-                    var errors = Models.Core.Run.GenerateApsimXFiles.Generate(runner, path, (int percent) => 
-                    {
-                        MainPresenter.ShowProgress(percent, false);
-                    });
-
-                    if (errors == null || errors.Count == 0)
-                    {
-                        MainPresenter.ShowMessage("Successfully generated .apsimx files under " + path + ".", Simulation.MessageType.Information);
-                        return true;
-                    }
-                    else
-                    {
-                        MainPresenter.ShowError(errors);
-                        return false;
-                    }
+                if (errors == null || errors.Count == 0)
+                {
+                    MainPresenter.ShowMessage("Successfully generated .apsimx files under " + path + ".", Simulation.MessageType.Information);
+                    return true;
+                }
+                else
+                {
+                    MainPresenter.ShowError(errors);
+                    return false;
                 }
             }
             return true;
@@ -1063,7 +1064,7 @@
                 string modelNamespace = modelType.FullName.Split('.')[1] + ".";
                 resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelNamespace + modelType.Name + ".png";
 
-                if (!MainView.MasterView.HasResource(resourceNameForImage))
+                if (MainView.MasterView != null && !MainView.MasterView.HasResource(resourceNameForImage))
                 {
                     resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelType.Name + ".png";
                 }

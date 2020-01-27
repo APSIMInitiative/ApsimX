@@ -72,7 +72,7 @@ namespace Models.PostSimulationTools
                     throw new ApsimXException(this, "Could not find observed data table: " + ObservedTableName);
 
                 // get the common columns between these lists of columns
-                IEnumerable<string> commonCols = predictedDataNames.Intersect(observedDataNames);
+                List<string> commonCols = predictedDataNames.Intersect(observedDataNames).ToList();
 
                 IStorageReader reader = dataStore.Reader;
                 string match1ObsShort = reader.BriefColumnName(ObservedTableName, FieldNameUsedForMatch);
@@ -84,26 +84,34 @@ namespace Models.PostSimulationTools
                 string match3PredShort = reader.BriefColumnName(PredictedTableName, FieldName3UsedForMatch);
 
                 StringBuilder query = new StringBuilder("SELECT ");
-                foreach (string s in commonCols)
+                for (int i = 0; i < commonCols.Count; i++)
                 {
+                    string s = commonCols[i];
                     string obsColShort = reader.BriefColumnName(ObservedTableName, s);
                     string predColShort = reader.BriefColumnName(PredictedTableName, s);
+                    if (i != 0)
+                        query.Append(", ");
+
                     if (s == FieldNameUsedForMatch || s == FieldName2UsedForMatch || s == FieldName3UsedForMatch)
-                        query.Append("O.[" + obsColShort + "], ");
+                        query.Append($"O.[{obsColShort}]");
                     else
-                        query.Append("O.[" + obsColShort + "] AS [Observed." + obsColShort + "], P.[" + predColShort + "] AS [Predicted." + predColShort +"], ");
+                        query.Append($"O.[{obsColShort}] AS [Observed.{obsColShort}], P.[{predColShort}] AS [Predicted.{predColShort}]");
                 }
 
-                query.Append("FROM [" + ObservedTableName + "] O INNER JOIN [" + PredictedTableName + "] P USING ([SimulationID]) WHERE O.[" + match1ObsShort + "] = P.[" + match1PredShort + "]");
-                if (FieldName2UsedForMatch != null && FieldName2UsedForMatch != string.Empty)
-                    query.Append(" AND O.[" + match2ObsShort + "] = P.[" + match2PredShort + "]");
-                if (FieldName3UsedForMatch != null && FieldName3UsedForMatch != string.Empty)
-                    query.Append(" AND O.[" + match3ObsShort + "] = P.[" + match3PredShort + "]");
+                query.AppendLine();
+                query.AppendLine("FROM [" + ObservedTableName + "] O");
+                query.AppendLine($"INNER JOIN [{PredictedTableName}] P");
+                query.Append($"USING ([SimulationID], [CheckpointID], [{FieldNameUsedForMatch}]");
+                if (!string.IsNullOrEmpty(FieldName2UsedForMatch))
+                    query.Append($", [{FieldName2UsedForMatch}]");
+                if (!string.IsNullOrEmpty(FieldName3UsedForMatch))
+                    query.Append($", [{FieldName3UsedForMatch}]");
+                query.AppendLine(")");
 
                 int checkpointID = dataStore.Writer.GetCheckpointID("Current");
-                query.Append(" AND P.[CheckpointID] = " + checkpointID);
-                query.Replace(", FROM", " FROM"); // get rid of the last comma
+                query.AppendLine("WHERE [CheckpointID] = " + checkpointID);
                 query.Replace("O.[SimulationID] AS [Observed.SimulationID], P.[SimulationID] AS [Predicted.SimulationID]", "O.[SimulationID] AS [SimulationID]");
+                query.Replace("O.[CheckpointID] AS [Observed.CheckpointID], P.[CheckpointID] AS [Predicted.CheckpointID]", "O.[CheckpointID] AS [CheckpointID]");
 
                 if (Parent is Folder)
                 {

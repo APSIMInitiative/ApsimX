@@ -70,7 +70,7 @@ namespace Models.CLEM
             }
             else
             {
-                html += "Invalid transmutation provided. No amout to purchase set";
+                html += "<span class=\"errorlink\">Invalid transmutation provided. No amout to purchase set</span>";
             }
             html += "</div>";
 

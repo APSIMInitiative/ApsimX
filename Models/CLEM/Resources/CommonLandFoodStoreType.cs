@@ -377,8 +377,8 @@ namespace Models.CLEM.Resources
         protected virtual void OnEcologicalIndicatorsCalculated(EventArgs e)
         {
             EcologicalIndicatorsCalculated?.Invoke(this, e);
+            CurrentEcologicalIndicators.Reset();
         }
-
 
         /// <summary>
         /// Ecological indicators of this pasture

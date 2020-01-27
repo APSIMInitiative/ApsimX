@@ -266,8 +266,11 @@ namespace Models.Core
                                         case TypeCode.String:
                                             argumentsList.Add(cleanArg);
                                             break;
-                                        default:
+                                        case TypeCode.Boolean:
+                                            argumentsList.Add(Convert.ToBoolean(cleanArg, CultureInfo.InvariantCulture));
                                             break;
+                                        default:
+                                            throw new ApsimXException(relativeToModel, "The type of argument (" + Type.GetTypeCode(pars[argid].ParameterType) + ") is not currently supported in Report methods");
                                     }
                                 }
                             }

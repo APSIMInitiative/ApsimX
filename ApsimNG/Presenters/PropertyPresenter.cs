@@ -432,14 +432,15 @@ namespace UserInterface.Presenters
         /// <param name="property"></param>
         protected virtual void AddPropertyToTable(DataTable table, IVariable property)
         {
+            int row = properties.IndexOf(property);
             if (property is VariableObject)
                 table.Rows.Add(new object[] { property.Value, null, null });
             else if (property.Value is IModel)
                 table.Rows.Add(new object[] { property.Description, Apsim.FullPath(property.Value as IModel), property.Name });
             else if (property is VariableProperty p)
-                table.Rows.Add(new object[] { property.Description, property.ValueWithArrayHandling, p.Tooltip });
+                table.Rows.Add(new object[] { property.Description, GetCellValue(property, row, 1), p.Tooltip });
             else
-                table.Rows.Add(new object[] { property.Description, property.ValueWithArrayHandling, property.Description });
+                table.Rows.Add(new object[] { property.Description, GetCellValue(property, row, 1), property.Description });
         }
 
         /// <summary>
@@ -840,7 +841,10 @@ namespace UserInterface.Presenters
         /// <param name="column">Column index of the cell.</param>
         protected virtual object GetCellValue(IVariable property, int row, int column)
         {
-            return property.ValueWithArrayHandling;
+            object result = property.ValueWithArrayHandling;
+            if (property.DataType == typeof(double) && double.IsNaN((double)result))
+                result = "";
+            return result;
         }
 
         /// <summary>

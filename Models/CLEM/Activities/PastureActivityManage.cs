@@ -22,6 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages a pasture by allocating land, tracking pasture state and ecological indicators and communicating with the GRASP data file.")]
+    [Version(1, 0, 2, "Added ecological indicator calculations")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Pasture/ManagePasture.htm")]
     public class PastureActivityManage: CLEMActivityBase, IValidatableObject, IPastureManager
@@ -88,17 +89,17 @@ namespace Models.CLEM.Activities
         [XmlIgnore]
         public Relationship GrassBasalArea { get; set; }
 
-        /// <summary>
-        /// Perennials
-        /// </summary>
-        [XmlIgnore]
-        public double Perennials { get; set; }
+        ///// <summary>
+        ///// Perennials
+        ///// </summary>
+        //[XmlIgnore]
+        //public double Perennials { get; set; }
 
-        /// <summary>
-        /// Perennials
-        /// </summary>
-        [XmlIgnore]
-        public double Cover { get; set; }
+        ///// <summary>
+        ///// Perennials
+        ///// </summary>
+        //[XmlIgnore]
+        //public double Cover { get; set; }
 
         /// <summary>
         /// Area requested
@@ -276,7 +277,11 @@ namespace Models.CLEM.Activities
                 // convert from kg/ha to kg/area unit
                 growth *= unitsOfArea2Ha;
 
-                Cover = pasturedata.Cover;
+                LinkedNativeFoodType.CurrentEcologicalIndicators.Rainfall += pasturedata.Rainfall;
+                LinkedNativeFoodType.CurrentEcologicalIndicators.Erosion += pasturedata.SoilLoss;
+                LinkedNativeFoodType.CurrentEcologicalIndicators.Runoff += pasturedata.Runoff;
+                LinkedNativeFoodType.CurrentEcologicalIndicators.Cover += pasturedata.Cover;
+                LinkedNativeFoodType.CurrentEcologicalIndicators.TreeBasalArea += pasturedata.TreeBA;
 
                 if (growth > 0)
                 {
@@ -330,65 +335,6 @@ namespace Models.CLEM.Activities
 
             CalculateEcologicalIndicators();
         }
-
-        ///// <summary>An event handler to allow us to clear pools.</summary>
-        ///// <param name="sender">The sender.</param>
-        ///// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        //[EventSubscribe("CLEMStartOfTimeStep")]
-        //private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
-        //{
-        //    // reset pool counters
-        //    foreach (var pool in LinkedNativeFoodType.Pools)
-        //    {
-        //        pool.Reset();
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Function to detach pasture before reporting
-        ///// </summary>
-        ///// <param name="sender">The sender.</param>
-        ///// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        //[EventSubscribe("CLEMDetachPasture")]
-        //private void OnCLEMDetachPasture(object sender, EventArgs e)
-        //{
-        //    foreach (var pool in LinkedNativeFoodType.Pools)
-        //    {
-        //        double detach = LinkedNativeFoodType.CarryoverDetachRate;
-        //        if (pool.Age < 12)
-        //        {
-        //            detach = LinkedNativeFoodType.DetachRate;
-        //        }
-        //        double detachedAmount = pool.Amount * (1 - detach);
-        //        pool.Detached = pool.Amount * detach;
-        //        pool.Set(detachedAmount);
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Function to age resource pools
-        ///// </summary>
-        ///// <param name="sender">The sender.</param>
-        ///// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        //[EventSubscribe("CLEMAgeResources")]
-        //private void OnCLEMAgeResources(object sender, EventArgs e)
-        //{
-        //    // decay N and DMD of pools and age by 1 month
-        //    foreach (var pool in LinkedNativeFoodType.Pools)
-        //    {
-        //        // N is a loss of N% (x = x -loss)
-        //        pool.Nitrogen = Math.Max(pool.Nitrogen - LinkedNativeFoodType.DecayNitrogen, LinkedNativeFoodType.MinimumNitrogen);
-        //        // DMD is a proportional loss (x = x*(1-proploss))
-        //        pool.DMD = Math.Max(pool.DMD * (1 - LinkedNativeFoodType.DecayDMD), LinkedNativeFoodType.MinimumDMD);
-
-        //        if (pool.Age < 12)
-        //        {
-        //            pool.Age++;
-        //        }
-        //    }
-        //    // remove all pools with less than 10g of food
-        //    LinkedNativeFoodType.Pools.RemoveAll(a => a.Amount < 0.01);
-        //}
 
         private void SetupStartingPasturePools(double startingGrowth)
         {
@@ -525,22 +471,28 @@ namespace Models.CLEM.Activities
                 }
                 LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate = StockingRateSummed / monthdiff;
 
-                //erosion
-                //tree basal area
                 //perennials
-                Perennials = 92.2 * (1 - Math.Pow(LandConditionIndex.Value, 3.35) / Math.Pow(LandConditionIndex.Value, 3.35 + 137.7)) - 2.2;
-                //%runoff
-                //methane
-                //soilC
-                //TreeC
-                //Burnkg
-                //methaneFire
-                //N2OFire
+                LinkedNativeFoodType.CurrentEcologicalIndicators.Perennials = 92.2 * (1 - Math.Pow(LandConditionIndex.Value, 3.35) / Math.Pow(LandConditionIndex.Value, 3.35 + 137.7)) - 2.2;
+
                 //%utilisation
                 LinkedNativeFoodType.CurrentEcologicalIndicators.Utilisation = utilisation;
 
                 // Reset running total for stocking rate
                 StockingRateSummed = 0;
+
+                // calculate averages
+                LinkedNativeFoodType.CurrentEcologicalIndicators.Cover /= monthdiff;
+                LinkedNativeFoodType.CurrentEcologicalIndicators.TreeBasalArea /= monthdiff;
+
+                //TreeC
+                // I didn't include the / area as tba is already per ha. I think NABSA has this wrong
+                LinkedNativeFoodType.CurrentEcologicalIndicators.TreeCarbon = LinkedNativeFoodType.CurrentEcologicalIndicators.TreeBasalArea * 6286 * 0.46;
+
+                //methane
+                //soilC
+                //Burnkg
+                //methaneFire
+                //N2OFire
 
                 //Get the new Pasture Data using the new Ecological Indicators (ie. GrassBA, LandCon, StRate)
                 GetPastureDataList_TodayToNextEcolCalculation();
@@ -553,9 +505,9 @@ namespace Models.CLEM.Activities
         /// </summary>
         private void GetPastureDataList_TodayToNextEcolCalculation()
         {
-            //In IAT it only updates the GrassBA, LandCon and StockingRate (Ecological Indicators) 
+            // In IAT it only updates the GrassBA, LandCon and StockingRate (Ecological Indicators) 
             // every so many months (specified by  not every month.
-            //And the month they are updated on each year is whatever the starting month was for the run.
+            // And the month they are updated on each year is whatever the starting month was for the run.
 
             //round the doubles to nearest integers so can be used as primary key
             double landConditionIndex = LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex;

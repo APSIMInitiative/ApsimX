@@ -267,7 +267,11 @@ namespace UserInterface.Presenters
         private object GetCellValue(int row, int column)
         {
             VariableProperty property = properties[column];
-            object value = (property.Value as Array)?.GetValue(row);
+            Array arr = property.Value as Array;
+            if (arr == null || arr.Length <= row)
+                return null;
+
+            object value = arr.GetValue(row);
             if (value == null)
                 return null;
 
