@@ -155,13 +155,13 @@
         private void FindChildren()
         {
             waterNode = Apsim.Child(this, typeof(Physical)) as Physical;
-            if (waterNode == null)
-                throw new Exception($"{Name}: Unable to find Physical child model");
 
             Weirdo = Apsim.Child(this, typeof(WEIRDO)) as WEIRDO;
             SoilWater = Apsim.Child(this, typeof(ISoilWater)) as ISoilWater;
             if (Weirdo == null && SoilWater == null)
                 throw new Exception($"{Name}: Unable to find SoilWater or WEIRDO child model");
+            if (Weirdo == null && waterNode == null)
+                throw new Exception($"{Name}: Unable to find Physical or WEIRDO child model");
 
             SoilOrganicMatter = Apsim.Child(this, typeof(Organic)) as Organic;
             if (SoilOrganicMatter == null)
