@@ -111,6 +111,12 @@
         public double[] RotationLengthArray { get; set; }
 
         /// <summary></summary>
+        [Description("Monthly minimum rotation length")]
+        [Units("days")]
+        [Display(EnabledCallback = "IsTargetMassAndLengthTurnedOn")]
+        public double[] MinimumRotationLengthArray { get; set; }
+
+        /// <summary></summary>
         [Separator("Settings for flexible grazing")]
       
         [Description("Expression for timing of grazing (e.g. AGPRyegrass.CoverTotal > 0.95)")]
@@ -419,7 +425,7 @@
         {
             residualBiomass = PostGrazeDMArray[clock.Today.Month - 1];
             return ((PreGrazeDM > PreGrazeDMArray[clock.Today.Month - 1] || DaysSinceGraze > RotationLengthArray[clock.Today.Month - 1])
-                    && PreGrazeDM > PostGrazeDMArray[clock.Today.Month - 1] && DaysSinceGraze > 14);  // does have to be grazable!
+                    && PreGrazeDM > PostGrazeDMArray[clock.Today.Month - 1] && DaysSinceGraze > MinimumRotationLengthArray[clock.Today.Month - 1]);  // does have to be grazable!
         }
 
         /// <summary>Calculate whether a target mass and length rotation can graze today.</summary>
