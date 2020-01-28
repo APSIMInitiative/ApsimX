@@ -824,7 +824,8 @@ namespace Models.GrazPlan
 
             double totalDMD = 0;
             double totalN = 0;
-            double meanDMD = 0;
+            double nConc;
+            double meanDMD;
             double dmd;
 
             // calculate the green available based on the total green in this paddock
@@ -846,10 +847,11 @@ namespace Models.GrazPlan
                         result.TotalGreen += (greenPropn * biomass.Live.Wt);   // g/m^2
                         result.TotalDead += biomass.Dead.Wt;
 
+                        // we can find the dmd of structural, assume storage and metabolic are 100% digestible
                         dmd = (biomass.Live.DMDOfStructural * greenPropn * biomass.Live.StructuralWt) + (1 * greenPropn * biomass.Live.StorageWt) + (1 * greenPropn * biomass.Live.MetabolicWt);    // storage and metab are 100% dmd
                         dmd += ((biomass.Dead.DMDOfStructural * biomass.Dead.StructuralWt) + (1 * biomass.Dead.StorageWt) + (1 * biomass.Dead.MetabolicWt));
                         totalDMD += dmd;
-                        totalN += (greenPropn * biomass.Live.N) + biomass.Dead.N;
+                        totalN += (greenPropn * biomass.Live.N) + biomass.Dead.N;   // g/m^2
                     }
                 }
             }
@@ -858,10 +860,10 @@ namespace Models.GrazPlan
             double availDM = result.TotalGreen + result.TotalDead;
             if (availDM > 0)
             {
-                meanDMD = totalDMD / (result.TotalGreen + result.TotalDead); // calc the average dmd for the plant
-
+                meanDMD = totalDMD / availDM; // calc the average dmd for the plant
+                nConc = totalN / availDM;     // N conc 
                 // get the dmd distribution
-                double[] dmdPropns = new double[GrazType.DigClassNo + 1];
+                double[] dmdPropns; // = new double[GrazType.DigClassNo + 1];
 
                 // green 0.85-0.45, dead 0.70-0.30
                 dmdPropns = ForageInfo.CalcDMDDistribution(meanDMD, 0.85, 0.45);    // FIX ME: the DMD ranges should be organ- and development-specific values
@@ -869,7 +871,7 @@ namespace Models.GrazPlan
                 for (int idx = 1; idx <= GrazType.DigClassNo; idx++)
                 {
                     result.Herbage[idx].Biomass = dmdPropns[idx] * availDM;
-                    result.Herbage[idx].CrudeProtein = dmdPropns[idx] * totalN * GrazType.N2Protein;
+                    result.Herbage[idx].CrudeProtein = nConc * GrazType.N2Protein;
                     result.Herbage[idx].Digestibility = GrazType.ClassDig[idx];
                     result.Herbage[idx].Degradability = Math.Min(0.90, result.Herbage[idx].Digestibility + 0.10);
                     result.Herbage[idx].HeightRatio = 1;

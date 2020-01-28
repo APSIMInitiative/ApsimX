@@ -2,6 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core.Interfaces;
+    using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
@@ -48,6 +49,40 @@
                     DoSerialiseChildren = false;
                 }
             }
+        }
+
+        /// <summary>
+        /// Get a list of parameter names for this model.
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetModelParameterNames()
+        {
+            if (ResourceName != null && ResourceName != "")
+            {
+                string contents = ReflectionUtilities.GetResourceAsString("Models.Resources." + ResourceName + ".json");
+                if (contents != null)
+                {
+                    var parameterNames = new List<string>();
+
+                    var json = JObject.Parse(contents);
+                    var children = json["Children"] as JArray;
+                    var simulations = children[0];
+                    foreach (var parameter in simulations.Children())
+                    {
+                        if (parameter is JProperty)
+                        {
+                            var property = parameter as JProperty;
+                            if (property.Name != "$type")
+                            {
+                                parameterNames.Add(property.Name);
+                            }
+                        }
+                    }
+                    return parameterNames;
+                }
+            }
+
+            return null;
         }
 
         /// <summary>

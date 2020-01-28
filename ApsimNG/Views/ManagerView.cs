@@ -39,7 +39,7 @@ namespace UserInterface.Views
             mainWidget = notebook;
             grid = new GridView(this);
             scriptEditor = new EditorView(this);
-            notebook.AppendPage(grid.MainWidget, new Label("Properties"));
+            notebook.AppendPage(grid.MainWidget, new Label("Parameters"));
             notebook.AppendPage(scriptEditor.MainWidget, new Label("Script"));
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }

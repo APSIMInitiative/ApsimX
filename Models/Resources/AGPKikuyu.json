@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 73,
+  "Version": 75,
   "Name": "Simulations",
   "Children": [
     {
@@ -11,7 +11,7 @@
       "Gsmax": 0.011,
       "R50": 200.0,
       "SpeciesFamily": 0,
-      "PhotosyntheticPathway": 0,
+      "PhotosyntheticPathway": 1,
       "ReferencePhotosyntheticRate": 1.2,
       "LightExtinctionCoefficient": 0.5,
       "GrowthTminimum": 10.0,
@@ -95,8 +95,8 @@
       "NDillutionCoefficient": 0.5,
       "GlfGeneric": 1.0,
       "GlfSoilFertility": 1.0,
-      "PlantHeightMinimum": 25.0,
-      "PlantHeightMaximum": 750.0,
+      "PlantHeightMinimum": 300.0,
+      "PlantHeightMaximum": 300.0,
       "PlantHeightMassForMax": 10000.0,
       "PlantHeightExponent": 2.6,
       "RootDepthMinimum": 50.0,
@@ -104,7 +104,12 @@
       "RootElongationRate": 30.0,
       "RootDistributionDepthParam": 250.0,
       "RootDistributionExponent": 3.2,
-      "DigestibilitiesCellWall": [0.6, 0.6, 0.6, 0.2],
+      "DigestibilitiesCellWall": [
+        0.6,
+        0.6,
+        0.6,
+        0.2
+      ],
       "MinimumGreenWt": 50.0,
       "FractionStolonStanding": 0.0,
       "PreferenceForGreenOverDead": 1.0,

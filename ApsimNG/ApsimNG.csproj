@@ -482,7 +482,6 @@
     <EmbeddedResource Include="Resources\TreeViewImages\ProtectedDivideFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\StorageNDemandFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\ShadedBarsOnGraph.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\SimpleGrazing.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourAdultEquivalentRelationship.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\GraphPanel.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\AGPWhiteClover.png" />
@@ -782,6 +781,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\AGPTallFescue.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\AGPLucerne.png" />
     <EmbeddedResource Include="Resources\Sounds\Fail.wav" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SimpleGrazing.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />

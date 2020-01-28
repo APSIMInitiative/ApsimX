@@ -1064,7 +1064,7 @@
                 string modelNamespace = modelType.FullName.Split('.')[1] + ".";
                 resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelNamespace + modelType.Name + ".png";
 
-                if (!MainView.MasterView.HasResource(resourceNameForImage))
+                if (MainView.MasterView != null && !MainView.MasterView.HasResource(resourceNameForImage))
                 {
                     resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelType.Name + ".png";
                 }
