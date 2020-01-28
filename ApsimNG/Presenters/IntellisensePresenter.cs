@@ -227,6 +227,9 @@
                     objectName = objectName.Substring(modelNameIndex);
             }
 
+            if (double.TryParse(objectName, out _))
+                return false;
+
             List<NeedContextItemsArgs.ContextItem> results = NeedContextItemsArgs.ExamineModelForContextItemsV2(model as Model, objectName, properties, methods, events);
 
             view.Populate(results);

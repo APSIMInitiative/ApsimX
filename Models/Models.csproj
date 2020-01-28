@@ -149,10 +149,13 @@
     <Compile Include="Aqua\WaterPropertiesData.cs" />
     <Compile Include="CLEM\Activities\FinanceActivityIncome.cs" />
     <Compile Include="CLEM\Activities\LabourActivityFeedTarget.cs" />
+    <Compile Include="CLEM\Activities\LabourActivityFeedTargetPurchase.cs" />
     <Compile Include="CLEM\Activities\LabourActivityFeedToTargets.cs" />
+    <Compile Include="CLEM\Activities\LabourActivityFeedToTargetsV1.cs" />
     <Compile Include="CLEM\Activities\LabourActivityPayHired.cs" />
     <Compile Include="CLEM\Activities\LabourActivityFeed.cs" />
     <Compile Include="CLEM\Activities\LabourAERelationship.cs" />
+    <Compile Include="CLEM\Market.cs" />
     <Compile Include="CLEM\Reporting\ConceptionStatus.cs" />
     <Compile Include="CLEM\Reporting\ConceptionStatusChangedEventArgs.cs" />
     <Compile Include="CLEM\Resources\LabourDietComponent.cs" />
@@ -204,6 +207,7 @@
     <Compile Include="CLEM\Resources\LabourSpecifications.cs" />
     <Compile Include="CLEM\Resources\ResourcePricing.cs" />
     <Compile Include="Core\Attributes\CategoryAttribute.cs" />
+    <Compile Include="Core\Attributes\TooltipAttribute.cs" />
     <Compile Include="Core\Attributes\VersionAttribute.cs" />
     <Compile Include="Core\Checkpoints.cs" />
     <Compile Include="CLEM\Activities\BlankActivity.cs" />
@@ -254,8 +258,11 @@
     <Compile Include="Factorial\Permutation.cs" />
     <Compile Include="Functions\DecumulateFunction.cs" />
     <Compile Include="Functions\EndOfDayFunction.cs" />
+    <Compile Include="Functions\CSharpExpressionFunction.cs" />
     <Compile Include="Functions\LiveOnEventFunction.cs" />
+    <Compile Include="Functions\ProtectedDivideFunction.cs" />
     <Compile Include="Graph\DefaultPainter.cs" />
+    <Compile Include="Graph\ShadedBarsOnGraph.cs" />
     <Compile Include="Graph\GraphPanel.cs" />
     <Compile Include="Graph\IGraphPanelScript.cs" />
     <Compile Include="Graph\ISeriesDefinitionPainter.cs" />
@@ -273,6 +280,7 @@
     <Compile Include="Plant\Phenology\Phases\DAWSPhase.cs" />
     <Compile Include="Plant\Phenology\Scales\Age.cs" />
     <EmbeddedResource Include="Resources\Scripts\GraphPanelScriptTemplate.cs" />
+    <EmbeddedResource Include="Resources\Scripts\CSharpExpressionTemplate.cs" />
     <Compile Include="Soils\Nutrients\INutrientPool.cs" />
     <Compile Include="Soils\SoilTemp\SoilTemperature.cs" />
     <Compile Include="Soils\Standardiser\Layers.cs" />
@@ -750,6 +758,15 @@
     <EmbeddedResource Include="Resources\Potato.json" />
     <EmbeddedResource Include="Resources\RedClover.json" />
     <EmbeddedResource Include="Resources\WhiteClover.json" />
+    <EmbeddedResource Include="Resources\AGPBrownTop.json" />
+    <EmbeddedResource Include="Resources\AGPCocksfoot.json" />
+    <EmbeddedResource Include="Resources\AGPKikuyu.json" />
+    <EmbeddedResource Include="Resources\AGPPaspalum.json" />
+    <EmbeddedResource Include="Resources\AGPPhalaris.json" />
+    <EmbeddedResource Include="Resources\AGPRedClover.json" />
+    <EmbeddedResource Include="Resources\AGPRhodes.json" />
+    <EmbeddedResource Include="Resources\AGPTallFescue.json" />
+    <EmbeddedResource Include="Resources\AGPLucerne.json" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">

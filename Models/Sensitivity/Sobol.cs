@@ -36,6 +36,8 @@
         /// <summary>A list of factors that we are to run</summary>
         private List<List<CompositeFactor>> allCombinations = new List<List<CompositeFactor>>();
 
+        private int _numPaths = 1000;
+
         /// <summary>Parameter values coming back from R</summary>
         public DataTable ParameterValues { get; set; }
 
@@ -47,7 +49,11 @@
 
         /// <summary>The number of paths to run</summary>
         [Description("Number of paths:")]
-        public int NumPaths { get; set; } = 1000;
+        public int NumPaths
+        {
+            get { return _numPaths; }
+            set { _numPaths = value; ParametersHaveChanged = true; }
+        }
 
         /// <summary>
         /// List of parameters
@@ -117,6 +123,7 @@
             }
             set
             {
+                ParametersHaveChanged = true;
                 Parameters.Clear();
                 foreach (DataRow row in value[0].Rows)
                 {
@@ -134,6 +141,9 @@
                 }
             }
         }
+
+        /// <summary>Have the values of the parameters changed?</summary>
+        public bool ParametersHaveChanged { get; set; } = false;
 
         /// <summary>Gets a list of simulation descriptions.</summary>
         public List<SimulationDescription> GenerateSimulationDescriptions()
@@ -177,6 +187,11 @@
             R r = new R();
             r.InstallPackage("boot");
             r.InstallPackage("sensitivity");
+            if (ParametersHaveChanged)
+            {
+                allCombinations.Clear();
+                ParameterValues.Clear();
+            }
         }
 
         /// <summary>
@@ -184,7 +199,6 @@
         /// </summary>
         private void CalculateFactors()
         {
-            allCombinations.Clear();
             if (allCombinations.Count == 0)
             {
                 if (ParameterValues.Rows.Count == 0)

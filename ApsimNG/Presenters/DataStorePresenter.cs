@@ -58,13 +58,13 @@ namespace UserInterface.Presenters
             this.view.Grid.NumericFormat = "N3";
             if (dataStore != null)
             {
-                this.view.TableList.Values = dataStore.Reader.TableNames.ToArray();
+                this.view.TableList.Values = dataStore.Reader.TableAndViewNames.ToArray();
                 if (Utility.Configuration.Settings.MaximumRowsOnReportGrid > 0)
                 {
                     this.view.MaximumNumberRecords.Value = Utility.Configuration.Settings.MaximumRowsOnReportGrid.ToString();
                 }
+                this.view.FileName.Value = dataStore.FileName;
             }
-            this.view.FileName.Value = dataStore.FileName;
 
             this.view.TableList.Changed += this.OnTableSelected;
             this.view.ColumnFilter.Leave += OnColumnFilterChanged;

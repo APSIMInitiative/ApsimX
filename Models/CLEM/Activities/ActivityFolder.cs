@@ -128,15 +128,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
-            double opacity = 1;
-            if (!this.Enabled)
-            {
-                if (this.Parent.Enabled)
-                {
-                    opacity = 0.4;
-                }
-            }
-            return "\n<div class=\"activityborder\" style=\"opacity: " + opacity.ToString() + ";\">";
+            return "\n<div class=\"activityborder\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + ";\">";
         }
 
     }

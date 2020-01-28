@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using APSIM.Shared.Utilities;
 using Models.Core;
+using Models.Core.Run;
 using Models.Soils;
 using UserInterface.Commands;
 using UserInterface.EventArguments;
@@ -115,10 +116,25 @@ namespace UserInterface.Presenters
 
             // When user clicks on a SoilCrop, there is no thickness column. In this
             // situation get thickness column from parent model.
-            if (this.model is SoilCrop && model.Parent is Physical water)
+            if (this.model is SoilCrop)
             {
-                PropertyInfo depth = water.GetType().GetProperty("Depth");
-                properties.Add(new VariableProperty(water, depth));
+                Physical water = model.Parent as Physical;
+                if (water == null)
+                {
+                    // Parent model is not a Physical model. This can happen if the soil
+                    // crop is a factor or under replacements. If under replacements, all
+                    // bets are off. Otherwise, we find an ancestor which is a simulation
+                    // generator (experiment, simulation, morris, etc.) and search for
+                    // a physical node somewhere under the simulation generator.
+                    IModel parent = Apsim.Parent(model, typeof(ISimulationDescriptionGenerator));
+                    if (parent != null)
+                        water = Apsim.ChildrenRecursively(parent, typeof(Physical)).FirstOrDefault() as Physical;
+                }
+                if (water != null)
+                {
+                    PropertyInfo depth = water.GetType().GetProperty("Depth");
+                    properties.Add(new VariableProperty(water, depth));
+                }
             }
 
             // Get all properties of the model which have a description attribute.
@@ -251,7 +267,11 @@ namespace UserInterface.Presenters
         private object GetCellValue(int row, int column)
         {
             VariableProperty property = properties[column];
-            object value = (property.Value as Array)?.GetValue(row);
+            Array arr = property.Value as Array;
+            if (arr == null || arr.Length <= row)
+                return null;
+
+            object value = arr.GetValue(row);
             if (value == null)
                 return null;
 

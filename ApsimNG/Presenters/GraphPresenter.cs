@@ -104,7 +104,7 @@ namespace UserInterface.Presenters
             // Get a list of series definitions.
             try
             {
-                SeriesDefinitions = graph.GetDefinitionsToGraph(storage.Reader, SimulationFilter);
+                SeriesDefinitions = graph.GetDefinitionsToGraph(storage?.Reader, SimulationFilter);
             }
             catch (SQLiteException e)
             {
@@ -374,7 +374,9 @@ namespace UserInterface.Presenters
                                         lineAnnotation.y2,
                                         lineAnnotation.type, 
                                         lineAnnotation.thickness,
-                                        Utility.Configuration.Settings.DarkTheme ? Color.White : lineAnnotation.colour);
+                                        Utility.Configuration.Settings.DarkTheme ? Color.White : lineAnnotation.colour,
+                                        lineAnnotation.InFrontOfSeries,
+                                        lineAnnotation.ToolTip);
                 }
             }
         }

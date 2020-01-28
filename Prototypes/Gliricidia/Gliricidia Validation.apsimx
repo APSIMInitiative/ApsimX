@@ -1138,6 +1138,7 @@
               "potentialDMAllocation": null,
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
+              "RootLengthDensityModifierDueToDamage": 1.0,
               "RootAngle": 45.0,
               "SWAvailabilityRatio": 0.0,
               "Name": "Root",
@@ -8351,10 +8352,10 @@
                             {
                               "$type": "Models.Soils.SoilCrop, Models",
                               "LL": [
-                                0.05,
-                                0.05,
-                                0.05,
-                                0.05,
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08,
                                 0.1,
                                 0.1,
                                 0.1,
@@ -8404,18 +8405,18 @@
                             {
                               "$type": "Models.Soils.SoilCrop, Models",
                               "LL": [
-                                0.02,
-                                0.02,
-                                0.02,
-                                0.02,
-                                0.02,
-                                0.02,
-                                0.02,
-                                0.02,
-                                0.02,
-                                0.02,
-                                0.02,
-                                0.02
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08
                               ],
                               "KL": [
                                 0.1,

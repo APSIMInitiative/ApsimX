@@ -1580,7 +1580,7 @@ namespace Models.GrazPlan
         /// <param name="ageDays"></param>
         /// <param name="parameters"></param>
         /// <returns>Maximum normal weight</returns>
-        protected double MaxNormWtFunc(double SRW, double BW,
+        public static double MaxNormWtFunc(double SRW, double BW,
                                 int ageDays,
                                 AnimalParamSet parameters)
         {
@@ -2208,7 +2208,7 @@ namespace Models.GrazPlan
         /// <param name="reprdType"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        protected double GrowthCurve(int ageDays, GrazType.ReproType reprdType, AnimalParamSet parameters)
+        public static double GrowthCurve(int ageDays, GrazType.ReproType reprdType, AnimalParamSet parameters)
         {
             double SRW;
 
@@ -2376,7 +2376,7 @@ namespace Models.GrazPlan
             double[] urineRefLength = { 0.20, 0.60 };          // m
             double[] urineWidthToLength = { 1.00, 1.00 };
             double[] urineRefVolume = { 0.00015, 0.00200 };    // m^3
-            double[] dailyUrineRefVol = { 0.0003, 0.0250 };    // m^3/head/d
+            double[] dailyUrineRefVol = { 0.0030, 0.0250 };    // m^3/head/d
 
             double faecalLongAxis;         // metres
             double faecalHeight;           // metres
@@ -5271,7 +5271,7 @@ namespace Models.GrazPlan
             maxPrevW = Math.Max(this.BaseWeight, this.MaxPrevWt);
             bodyCond[0] = this.BaseWeight / this.NormalWeightFunc(this.MeanAge, maxPrevW, this.AParams.GrowthC[3]);   // Today's value of body condition          
             bodyCond[1] = bodyCond[0] + deltaBC;                                                            // Desired body condition tomorrow          
-            maxN1 = this.MaxNormWtFunc(this.StdRefWt, this.BirthWt, this.MeanAge + 1, this.AParams);        // Maximum normal weight tomorrow           
+            maxN1 = MaxNormWtFunc(this.StdRefWt, this.BirthWt, this.MeanAge + 1, this.AParams);        // Maximum normal weight tomorrow           
 
             fA = bodyCond[1] * this.AParams.GrowthC[3] * maxN1;
             fB = bodyCond[1] * (1.0 - this.AParams.GrowthC[3]);
@@ -5690,7 +5690,7 @@ namespace Models.GrazPlan
         {
             double maxNormWt;
 
-            maxNormWt = this.GrowthCurve(ageDays, reprod, paramSet);
+            maxNormWt = GrowthCurve(ageDays, reprod, paramSet);
             highBaseWt = bodyCond * maxNormWt;
             if (bodyCond >= 1.0)
                 lowBaseWt = highBaseWt;

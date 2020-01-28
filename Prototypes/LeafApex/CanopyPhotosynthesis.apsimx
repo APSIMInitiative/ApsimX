@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 69,
+  "Version": 70,
   "Name": "Simulations",
   "Children": [
     {
@@ -2304,6 +2304,7 @@
               "potentialDMAllocation": null,
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
+              "RootLengthDensityModifierDueToDamage": 1.0,
               "RootAngle": 45.0,
               "SWAvailabilityRatio": 0.0,
               "Name": "Root",
@@ -4475,6 +4476,7 @@
               "DMDemand": null,
               "NDemand": null,
               "potentialDMAllocation": null,
+              "IsAboveGround": true,
               "Name": "Spike",
               "Children": [
                 {
@@ -5077,6 +5079,7 @@
               "DMDemand": null,
               "NDemand": null,
               "potentialDMAllocation": null,
+              "IsAboveGround": true,
               "Name": "Stem",
               "Children": [
                 {
@@ -9925,8 +9928,8 @@
                               ],
                               "AirDry": [
                                 0.07,
-                                0.13,
-                                0.15,
+                                0.11,
+                                0.1,
                                 0.09,
                                 0.1,
                                 0.12,

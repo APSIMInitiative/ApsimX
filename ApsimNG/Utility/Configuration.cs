@@ -31,6 +31,10 @@ namespace Utility
         /// <summary>The maximum number of files allowed in the mru list</summary>
         public int FilesInHistory { get; set; }
 
+        /// <summary>Position of split screen divider.</summary>
+        /// <remarks>Not sure what units this uses...might be pixels.</remarks>
+        public int SplitScreenPosition { get; set; }
+
         /// <summary>The previous folder where a file was opened or saved</summary>
         public string PreviousFolder { get; set; }
 
@@ -97,6 +101,16 @@ namespace Utility
         /// Store the user's preferred font size
         /// </summary>
         public double BaseFontSize { get; set; } = 12.5;
+
+        /// <summary>
+        /// Simulation complete wav file.
+        /// </summary>
+        public string SimulationCompleteWavFileName { get; set; }
+
+        /// <summary>
+        /// Simulation complete with error wav file.
+        /// </summary>
+        public string SimulationCompleteWithErrorWavFileName { get; set; }
 
         /// <summary>
         /// Stores the user's preferred font.

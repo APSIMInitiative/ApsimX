@@ -2,6 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core.Interfaces;
+    using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
@@ -51,11 +52,46 @@
         }
 
         /// <summary>
+        /// Get a list of parameter names for this model.
+        /// </summary>
+        /// <returns></returns>
+        public List<string> GetModelParameterNames()
+        {
+            if (ResourceName != null && ResourceName != "")
+            {
+                string contents = ReflectionUtilities.GetResourceAsString("Models.Resources." + ResourceName + ".json");
+                if (contents != null)
+                {
+                    var parameterNames = new List<string>();
+
+                    var json = JObject.Parse(contents);
+                    var children = json["Children"] as JArray;
+                    var simulations = children[0];
+                    foreach (var parameter in simulations.Children())
+                    {
+                        if (parameter is JProperty)
+                        {
+                            var property = parameter as JProperty;
+                            if (property.Name != "$type")
+                            {
+                                parameterNames.Add(property.Name);
+                            }
+                        }
+                    }
+                    return parameterNames;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Copy all properties from the specified resource.
         /// </summary>
         /// <param name="from">Model to copy from</param>
         private void CopyPropertiesFrom(Model from)
         {
+
             foreach (PropertyInfo property in from.GetType().GetProperties())
             {
                 if (property.CanWrite &&
@@ -65,15 +101,19 @@
                     property.Name != "IncludeInDocumentation" &&
                     property.Name != "ResourceName")
                 {
-                    object fromValue = property.GetValue(from);
-                    bool doSetPropertyValue;
-                    if (fromValue is double)
-                        doSetPropertyValue = Convert.ToDouble(fromValue, CultureInfo.InvariantCulture) != 0;
-                    else
-                        doSetPropertyValue = fromValue != null;
+                    var description = property.GetCustomAttribute(typeof(DescriptionAttribute));
+                    if (description == null)
+                    {
+                        object fromValue = property.GetValue(from);
+                        bool doSetPropertyValue;
+                        if (fromValue is double)
+                            doSetPropertyValue = Convert.ToDouble(fromValue, CultureInfo.InvariantCulture) != 0;
+                        else
+                            doSetPropertyValue = fromValue != null;
 
-                    if (doSetPropertyValue)
-                        property.SetValue(this, fromValue);
+                        if (doSetPropertyValue)
+                            property.SetValue(this, fromValue);
+                    }
                 }
             }
         }

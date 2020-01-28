@@ -1,12 +1,5 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="TreeProxyPresenter.cs" company="CSIRO">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
-    using System;
     using System.Collections.Generic;
     using System.Data;
     using System.Linq;
@@ -16,7 +9,6 @@ namespace UserInterface.Presenters
     using Views;
     using Commands;
     using EventArguments;
-    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// The tree proxy presenter
@@ -102,7 +94,7 @@ namespace UserInterface.Presenters
                 return;
 
             // Setup tree heights.
-            forestryViewer.SetupHeights(forestryModel.Dates, forestryModel.Heights, forestryModel.NDemands, forestryModel.CanopyWidths, forestryModel.TreeLeafAreas);
+            forestryViewer.SetupHeights(forestryModel.Dates, forestryModel.Heights, forestryModel.NDemands, forestryModel.ShadeModifiers);
 
             // Get the first soil. For now we're assuming all soils have the same structure.
             soil = Apsim.Find(zones[0], typeof(Soil)) as Soil;
@@ -200,8 +192,7 @@ namespace UserInterface.Presenters
                 new ChangeProperty.Property(forestryModel, "Dates", forestryViewer.Dates.ToArray()),
                 new ChangeProperty.Property(forestryModel, "Heights", forestryViewer.Heights.ToArray()),
                 new ChangeProperty.Property(forestryModel, "NDemands", forestryViewer.NDemands.ToArray()),
-                new ChangeProperty.Property(forestryModel, "CanopyWidths", forestryViewer.CanopyWidths.ToArray()),
-                new ChangeProperty.Property(forestryModel, "TreeLeafAreas", forestryViewer.TreeLeafAreas.ToArray())
+                new ChangeProperty.Property(forestryModel, "ShadeModifiers", forestryViewer.ShadeModifiers.ToArray())
             });
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
             presenter.CommandHistory.Add(changeTemporalData);
@@ -216,7 +207,7 @@ namespace UserInterface.Presenters
         {
             propertyPresenter.UpdateModel(forestryModel);
             forestryViewer.SpatialData = forestryModel.Table;
-            forestryViewer.SetupHeights(forestryModel.Dates, forestryModel.Heights, forestryModel.NDemands, forestryModel.CanopyWidths, forestryModel.TreeLeafAreas);
+            forestryViewer.SetupHeights(forestryModel.Dates, forestryModel.Heights, forestryModel.NDemands, forestryModel.ShadeModifiers);
         }
 
         /// <summary>

@@ -215,7 +215,14 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnDoCompile(object sender, EventArgs e)
         {
-            BuildScript();
+            try
+            {
+                BuildScript();
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>
@@ -225,10 +232,17 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnDoReformat(object sender, EventArgs e)
         {
-            CSharpFormatter formatter = new CSharpFormatter(FormattingOptionsFactory.CreateAllman());
-            string newText = formatter.Format(managerView.Editor.Text);
-            managerView.Editor.Text = newText;
-            explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(manager, "Code", newText));
+            try
+            {
+                CSharpFormatter formatter = new CSharpFormatter(FormattingOptionsFactory.CreateAllman());
+                string newText = formatter.Format(managerView.Editor.Text);
+                managerView.Editor.Text = newText;
+                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(manager, "Code", newText));
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>

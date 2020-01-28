@@ -6,6 +6,8 @@
 
 namespace Models.GrazPlan
 {
+    using Models.Core;
+
     /// <summary>
     /// Common interface for data passed to stock management events.
     /// </summary>
@@ -14,7 +16,7 @@ namespace Models.GrazPlan
     }
 
     /// <summary>
-    /// The AddStock event
+    /// Used by the Add() method 
     /// </summary>
     public class StockAdd : IStockEvent
     {
@@ -33,11 +35,12 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the sex of the animals. Feasible values are as for sheep:sex or cattle:sex, as appropriate.
         /// </summary>
-        public string Sex { get; set; }
+        public ReproductiveType Sex { get; set; }
 
         /// <summary>
         /// Gets or sets the day of year (1-365) on which all animals are assumed to have been born.
         /// </summary>
+        [Units("d")]
         public int BirthDay { get; set; }
 
         /// <summary>
@@ -56,6 +59,7 @@ namespace Models.GrazPlan
         /// This parameter may also be set to zero, in which case a default set of live weights will be computed, taking cond_score into account if it is nonzero.
         /// kg
         /// </summary>
+        [Units("kg")]
         public double MeanWeight { get; set; }
 
         /// <summary>
@@ -71,6 +75,7 @@ namespace Models.GrazPlan
         /// Only meaningful in sheep.
         /// kg
         /// </summary>
+        [Units("kg")]
         public double MeanFleeceWt { get; set; }
 
         /// <summary>
@@ -88,8 +93,8 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the pregnancy status. Zero denotes no animals are pregnant; 1 or more denotes the time since conception of those animals that are pregnant. 
         /// Only meaningful for females.
-        /// d
         /// </summary>
+        [Units("d")]
         public int Pregnant { get; set; }
 
         /// <summary>
@@ -104,6 +109,7 @@ namespace Models.GrazPlan
         /// Only meaningful for females.
         /// d
         /// </summary>
+        [Units("d")]
         public int Lactating { get; set; }
 
         /// <summary>
@@ -115,20 +121,20 @@ namespace Models.GrazPlan
 
         /// <summary>
         /// Gets or sets the average unfasted live weight of any suckling lambs or calves.
-        /// kg
         /// </summary>
+        [Units("kg")]
         public double YoungWt { get; set; }
 
         /// <summary>
         /// Gets or sets the average body condition score of any suckling lambs or calves.
-        /// kg
         /// </summary>
+        [Units("kg")]
         public double YoungCondScore { get; set; }
 
         /// <summary>
         /// Gets or sets the average greasy fleece weight of any suckling lambs.
-        /// kg
         /// </summary>
+        [Units("kg")]
         public double YoungFleeceWt { get; set; }
 
         /// <summary>
@@ -138,7 +144,7 @@ namespace Models.GrazPlan
     }
 
     /// <summary>
-    /// Buy stock
+    /// Used by the Buy() method
     /// </summary>
     public class StockBuy : IStockEvent
     {
@@ -165,26 +171,26 @@ namespace Models.GrazPlan
         /// Gets or sets the sex of the animals. 
         /// Feasible values are as for sheep:sex or cattle:sex, as appropriate,
         /// </summary>
-        public string Sex { get; set; }
+        public ReproductiveType Sex { get; set; }
 
         /// <summary>
         /// Gets or sets the average age of the animals.
-        /// Months
         /// </summary>
+        [Units("Months")]
         public double Age { get; set; }
 
         /// <summary>
         /// Gets or sets the average unfasted live weight of the animals. 
         /// If a value of zero is given, a default value will be calculated, making use of the cond_score parameter if it is non-zero.
-        /// kg
         /// </summary>
+        [Units("kg")]
         public double Weight { get; set; }
 
         /// <summary>
         /// Gets or sets the average greasy fleece weight of the animals. 
         /// Only meaningful in sheep.
-        /// kg
         /// </summary>
+        [Units("kg")]
         public double FleeceWt { get; set; }
 
         /// <summary>
@@ -203,15 +209,15 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the pregnancy status. Zero denotes not pregnant; 1 or more denotes the time since conception. 
         /// Only meaningful for females.
-        /// d
         /// </summary>
+        [Units("d")]
         public int Pregnant { get; set; }
 
         /// <summary>
         /// Gets or sets the latation status. Zero denotes not lactating; 1 or more denotes the time since parturition in lactating animals. 
         /// Only meaningful for females.
-        /// d
         /// </summary>
+        [Units("d")]
         public int Lactating { get; set; }
 
         /// <summary>
@@ -221,14 +227,14 @@ namespace Models.GrazPlan
 
         /// <summary>
         /// Gets or sets the average unfasted live weight of any suckling lambs or calves.
-        /// kg
         /// </summary>
+        [Units("kg")]
         public double YoungWt { get; set; }
 
         /// <summary>
         /// Gets or sets the average greasy fleece weight of any suckling lambs.
-        /// kg
         /// </summary>
+        [Units("kg")]
         public double YoungFleeceWt { get; set; }
 
         /// <summary>
@@ -358,8 +364,8 @@ namespace Models.GrazPlan
 
         /// <summary>
         /// Gets or sets the length of the mating period.
-        /// d
         /// </summary>
+        [Units("d")]
         public int MateDays { get; set; }
     }
 

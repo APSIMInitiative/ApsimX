@@ -2421,7 +2421,7 @@ namespace Models.Soils
         /// </remarks>
         /// <param name="callingModelType">Type of calling model</param>
         /// <param name="value">New values</param>
-        public void Seturea(SoluteSetterType callingModelType, double[] value)
+        public void SetUrea(SoluteSetterType callingModelType, double[] value)
         {
             // get the delta N
             var currentUrea = CalculateUrea();
@@ -2429,7 +2429,7 @@ namespace Models.Soils
             for (int layer = 0; layer < Math.Min(nLayers, value.Length); layer++)
                 deltaN[layer] = value[layer] - currentUrea[layer];
 
-            SetureaDelta(callingModelType, deltaN);
+            SetUreaDelta(callingModelType, deltaN);
         }
 
         /// <summary>Setter for urea delta</summary>
@@ -2439,7 +2439,7 @@ namespace Models.Soils
         /// </remarks>
         /// <param name="callingModelType">Type of calling model</param>
         /// <param name="deltaN">New values</param>
-        public void SetureaDelta(SoluteSetterType callingModelType, double[] deltaN)
+        public void SetUreaDelta(SoluteSetterType callingModelType, double[] deltaN)
         {
             // get the sender module (this is for report/testing only)
             if (callingModelType == SoluteSetterType.Soil)
@@ -6775,21 +6775,21 @@ namespace Models.Soils
     /// </remarks>
     public class AddUrineType
     {
-        /// <summary>The urinations</summary>
+        /// <summary>The number of urinations in the time step</summary>
         public double Urinations;
-        /// <summary>The volume per urination</summary>
+        /// <summary>The volume per urination in m^3</summary>
         public double VolumePerUrination;
-        /// <summary>The area per urination</summary>
+        /// <summary>The area per urination in m^2</summary>
         public double AreaPerUrination;
         /// <summary>The eccentricity</summary>
         public double Eccentricity;
-        /// <summary>The urea</summary>
+        /// <summary>The urea in kg N/ha</summary>
         public double Urea;
-        /// <summary>The pox</summary>
+        /// <summary>The pox in kg P/ha</summary>
         public double POX;
-        /// <summary>The s o4</summary>
+        /// <summary>The s o4 in kg S/ha</summary>
         public double SO4;
-        /// <summary>The ash alk</summary>
+        /// <summary>The ash alkin mol/ha</summary>
         public double AshAlk;
     }
 

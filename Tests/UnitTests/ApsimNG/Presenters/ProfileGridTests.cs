@@ -18,7 +18,7 @@ namespace UnitTests.ApsimNG.Presenters
         /// <summary>
         /// This test ensures that the user can change the value of
         /// property (NO3N) which is set to null. This test reproduces
-        /// but #4364:
+        /// bug #4364:
         /// 
         /// https://github.com/APSIMInitiative/ApsimX/issues/4364
         /// 

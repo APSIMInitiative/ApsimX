@@ -28,7 +28,7 @@ namespace Models.CLEM.Resources
         private Dictionary<string, double> otherMetricAmounts = new Dictionary<string, double>();
 
         /// <summary>
-        /// A method to add addition metric amoutn at the start of the month to represent value non food store consumption
+        /// A method to add addition metric amount at the start of the month to represent value non food store consumption
         /// </summary>
         /// <param name="metric">Name of the metric</param>
         /// <param name="amount">Amount for time step for AE</param>
@@ -37,12 +37,10 @@ namespace Models.CLEM.Resources
             double val;
             if (otherMetricAmounts.TryGetValue(metric, out val))
             {
-                // yay, value exists!
                 otherMetricAmounts[metric] = val + amount;
             }
             else
             {
-                // darn, lets add the value
                 otherMetricAmounts.Add(metric, amount);
             }
         }
@@ -66,7 +64,7 @@ namespace Models.CLEM.Resources
                 var amount = FoodStore.ConvertTo(metric, AmountConsumed);
                 if (amount != null)
                 {
-                    Double.TryParse(result.ToString(), out result);
+                    Double.TryParse(amount.ToString(), out result);
                 }
             }
             return result;

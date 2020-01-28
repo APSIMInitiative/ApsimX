@@ -358,11 +358,12 @@
             // Get a complete list of all models in this file.
             List<IModel> allModels = Apsim.ChildrenRecursivelyVisible(this.ApsimXFile);
             allModels.Insert(0, ApsimXFile);
+
             /* If the current node path is '.Simulations' (the root node) then
                select the first item in the 'allModels' list. */
-            if (this.view.Tree.SelectedNode == string.Empty)
+            if (string.IsNullOrEmpty(view.Tree.SelectedNode))
             {
-                this.view.Tree.SelectedNode = Apsim.FullPath(allModels[0]);
+                view.Tree.SelectedNode = Apsim.FullPath(allModels[0]);
                 return true;
             }
 
@@ -622,26 +623,27 @@
                     Action = FileDialog.FileActionType.SelectFolder
                 };
                 path = fileChooser.GetFile();
-                if (!string.IsNullOrEmpty(path))
+            }
+
+            if (!string.IsNullOrEmpty(path))
+            {
+                MainPresenter.ShowMessage("Generating simulation files: ", Simulation.MessageType.Information);
+
+                var runner = new Runner(model);
+                var errors = Models.Core.Run.GenerateApsimXFiles.Generate(runner, path, (int percent) =>
                 {
-                    MainPresenter.ShowMessage("Generating simulation files: ", Simulation.MessageType.Information);
+                    MainPresenter.ShowProgress(percent, false);
+                });
 
-                    var runner = new Runner(model);
-                    var errors = Models.Core.Run.GenerateApsimXFiles.Generate(runner, path, (int percent) => 
-                    {
-                        MainPresenter.ShowProgress(percent, false);
-                    });
-
-                    if (errors == null || errors.Count == 0)
-                    {
-                        MainPresenter.ShowMessage("Successfully generated .apsimx files under " + path + ".", Simulation.MessageType.Information);
-                        return true;
-                    }
-                    else
-                    {
-                        MainPresenter.ShowError(errors);
-                        return false;
-                    }
+                if (errors == null || errors.Count == 0)
+                {
+                    MainPresenter.ShowMessage("Successfully generated .apsimx files under " + path + ".", Simulation.MessageType.Information);
+                    return true;
+                }
+                else
+                {
+                    MainPresenter.ShowError(errors);
+                    return false;
                 }
             }
             return true;
@@ -669,40 +671,37 @@
         /// <summary>Display a view on the right hand panel in view.</summary>
         public void ShowRightHandPanel()
         {
-            try
+            if (this.view.Tree.SelectedNode != string.Empty)
             {
-                if (this.view.Tree.SelectedNode != string.Empty)
+                object model = Apsim.Get(this.ApsimXFile, this.view.Tree.SelectedNode);
+
+                if (model != null)
                 {
-                    object model = Apsim.Get(this.ApsimXFile, this.view.Tree.SelectedNode);
+                    ViewNameAttribute viewName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
+                    PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
+                    DescriptionAttribute descriptionName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
 
-                    if (model != null)
+                    if (descriptionName != null && model.GetType().Namespace.Contains("CLEM"))
                     {
-                        ViewNameAttribute viewName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
-                        PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
-                        DescriptionAttribute descriptionName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
-
-                        if (descriptionName != null && model.GetType().Namespace.Contains("CLEM"))
-                        {
-                            viewName = new ViewNameAttribute("UserInterface.Views.ModelDetailsWrapperView");
-                            presenterName = new PresenterNameAttribute("UserInterface.Presenters.ModelDetailsWrapperPresenter");
-                        }
-
-                        if (viewName == null && presenterName == null)
-                        {
-                            viewName = new ViewNameAttribute("UserInterface.Views.HTMLView");
-                            presenterName = new PresenterNameAttribute("UserInterface.Presenters.GenericPresenter");
-                        }
-
-                        ShowDescriptionInRightHandPanel(descriptionName?.ToString());
-
-                        if (viewName != null && presenterName != null)
-                            ShowInRightHandPanel(model, viewName.ToString(), presenterName.ToString());
+                        viewName = new ViewNameAttribute("UserInterface.Views.ModelDetailsWrapperView");
+                        presenterName = new PresenterNameAttribute("UserInterface.Presenters.ModelDetailsWrapperPresenter");
                     }
+
+                    if (viewName == null && presenterName == null)
+                    {
+                        viewName = new ViewNameAttribute("UserInterface.Views.HTMLView");
+                        presenterName = new PresenterNameAttribute("UserInterface.Presenters.GenericPresenter");
+                    }
+
+                    // if a clem model ignore the newly added description box that is handled by CLEM wrapper
+                    if (!model.GetType().Namespace.Contains("CLEM"))
+                    {
+                        ShowDescriptionInRightHandPanel(descriptionName?.ToString());
+                    }
+
+                    if (viewName != null && presenterName != null)
+                        ShowInRightHandPanel(model, viewName.ToString(), presenterName.ToString());
                 }
-            }
-            catch (Exception err)
-            {
-                MainPresenter.ShowError(err);
             }
         }
 
@@ -743,28 +742,14 @@
         /// <param name="presenter">The presenter.</param>
         public void ShowInRightHandPanel(object model, ViewBase newView, IPresenter presenter)
         {
-            try
+            currentRightHandPresenter = presenter;
+            if (newView != null && currentRightHandPresenter != null)
             {
-                this.currentRightHandPresenter = presenter;
-                if (newView != null && this.currentRightHandPresenter != null)
-                {
-                    // Resolve links in presenter.
-                    ApsimXFile.Links.Resolve(currentRightHandPresenter);
-                    this.view.AddRightHandView(newView);
-                    this.currentRightHandPresenter.Attach(model, newView, this);
-                    this.CurrentRightHandView = newView as ViewBase;
-                }
-            }
-            catch (Exception err)
-            {
-                if (err is TargetInvocationException)
-                {
-                    err = (err as TargetInvocationException).InnerException;
-                }
-
-                string message = err.Message;
-                message += "\r\n" + err.StackTrace;
-                MainPresenter.ShowError(err);
+                // Resolve links in presenter.
+                ApsimXFile.Links.Resolve(currentRightHandPresenter);
+                view.AddRightHandView(newView);
+                currentRightHandPresenter.Attach(model, newView, this);
+                CurrentRightHandView = newView as ViewBase;
             }
         }
 
@@ -1079,7 +1064,7 @@
                 string modelNamespace = modelType.FullName.Split('.')[1] + ".";
                 resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelNamespace + modelType.Name + ".png";
 
-                if (!MainView.MasterView.HasResource(resourceNameForImage))
+                if (MainView.MasterView != null && !MainView.MasterView.HasResource(resourceNameForImage))
                 {
                     resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelType.Name + ".png";
                 }

@@ -82,6 +82,16 @@ namespace Models.CLEM.Resources
         public double AgeEnteredSimulation { get; private set; }
 
         /// <summary>
+        /// A method to set the age (months) this individual entered the simulation.
+        /// This should be used with caution as this is usually a automatic calculation
+        /// </summary>
+        /// <units>Months</units>
+        public void SetAgeEnteredSimulation(double age)
+        {
+            AgeEnteredSimulation = age;
+        }
+
+        /// <summary>
         /// Purchase age (Months)
         /// </summary>
         /// <units>Months</units>
@@ -118,13 +128,13 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Previous weight (kg)
+        /// Previous weight
         /// </summary>
         /// <units>kg</units>
         public double PreviousWeight { get; set; }
 
         /// <summary>
-        /// Previous weight (kg)
+        /// Weight gain
         /// </summary>
         /// <units>kg</units>
         public double WeightGain { get { return Weight - PreviousWeight; } }
@@ -163,6 +173,20 @@ namespace Models.CLEM.Resources
             }
         }
 
+        /// <summary>
+        /// Is this individual a valid breeder
+        /// </summary>
+        public bool IsBreeder 
+        { 
+            get
+            {
+                return (Gender == Sex.Male && Age >= BreedParams.MinimumAge1stMating) ||
+                    (Gender == Sex.Female &&
+                    Age >= BreedParams.MinimumAge1stMating &&
+                    HighWeight >= (BreedParams.MinimumSize1stMating * StandardReferenceWeight)
+                    );
+            }
+        }
 
         /// <summary>
         /// Determine if weaned and less that 12 months old. Weaner
@@ -309,6 +333,26 @@ namespace Models.CLEM.Resources
         /// Energy balance store
         /// </summary>
         public double EnergyBalance { get; set; }
+
+        /// <summary>
+        /// Energy used for milk production
+        /// </summary>
+        public double EnergyMilk { get; set; }
+
+        /// <summary>
+        /// Energy used for foetal development
+        /// </summary>
+        public double EnergyFoetus { get; set; }
+
+        /// <summary>
+        /// Energy used for maintenance
+        /// </summary>
+        public double EnergyMaintenance { get; set; }
+
+        /// <summary>
+        /// Energy from intake
+        /// </summary>
+        public double EnergyIntake { get; set; }
 
         /// <summary>
         /// Indicates if this individual has died

@@ -32,9 +32,17 @@ namespace UserInterface.Views
         int Offset { get; }
 
         /// <summary>
-        /// Inserts the selected text at the cursor.
+        /// Inserts the selected text at the cursor, replacing all text
+        /// before the cursor and after the most recent character which
+        /// is not an opening square bracket.
         /// </summary>
-        /// <param name="text"></param>
+        /// <param name="text">The text to be inserted.</param>
+        void InsertAtCursorInSquareBrackets(string text);
+
+        /// <summary>
+        /// Insert text at the cursor.
+        /// </summary>
+        /// <param name="text">The text to be inserted.</param>
         void InsertAtCursor(string text);
 
         /// <summary>
@@ -101,12 +109,19 @@ namespace UserInterface.Views
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            textentry1.FocusOutEvent -= OnLeave;
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            textentry1.Changed -= OnChanged;
-            textentry1.FocusOutEvent -= OnLeave;
-            textentry1.KeyPressEvent -= OnKeyPress;
-            owner = null;
+            try
+            {
+                textentry1.FocusOutEvent -= OnLeave;
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                textentry1.Changed -= OnChanged;
+                textentry1.FocusOutEvent -= OnLeave;
+                textentry1.KeyPressEvent -= OnKeyPress;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         private string lastText = String.Empty;
@@ -141,10 +156,17 @@ namespace UserInterface.Views
         [GLib.ConnectBefore]
         private void OnLeave(object sender, EventArgs e)
         {
-            if (Leave != null && textentry1.Text != lastText)
+            try
             {
-                lastText = textentry1.Text;
-                Leave.Invoke(this, e);
+                if (Leave != null && textentry1.Text != lastText)
+                {
+                    lastText = textentry1.Text;
+                    Leave.Invoke(this, e);
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -158,32 +180,39 @@ namespace UserInterface.Views
         [GLib.ConnectBefore]
         private void OnKeyPress(object sender, KeyPressEventArgs args)
         {
-            bool controlSpace = (args.Event.State & Gdk.ModifierType.ControlMask) == Gdk.ModifierType.ControlMask && args.Event.Key == Gdk.Key.space;
-            bool controlShiftSpace = controlSpace && (args.Event.State & Gdk.ModifierType.ShiftMask) == Gdk.ModifierType.ShiftMask;
-            bool isPeriod = args.Event.Key == Gdk.Key.period;
-            if (isPeriod || controlSpace || controlShiftSpace)
+            try
             {
-                if (IntellisenseItemsNeeded != null)
+                bool controlSpace = (args.Event.State & Gdk.ModifierType.ControlMask) == Gdk.ModifierType.ControlMask && args.Event.Key == Gdk.Key.space;
+                bool controlShiftSpace = controlSpace && (args.Event.State & Gdk.ModifierType.ShiftMask) == Gdk.ModifierType.ShiftMask;
+                bool isPeriod = args.Event.Key == Gdk.Key.period;
+                if (isPeriod || controlSpace || controlShiftSpace)
                 {
-                    int x, y;
-                    textentry1.GdkWindow.GetOrigin(out x, out y);
-                    System.Drawing.Point coordinates = new System.Drawing.Point(x, y + textentry1.SizeRequest().Height);
-                    NeedContextItemsArgs e = new NeedContextItemsArgs()
+                    if (IntellisenseItemsNeeded != null)
                     {
-                        Coordinates = coordinates,
-                        Code = textentry1.Text,
-                        ControlSpace = controlSpace,
-                        ControlShiftSpace = controlShiftSpace,
-                        Offset = Offset,
-                        ColNo = this.textentry1.CursorPosition
-                    };
-                    lastText = textentry1.Text;
-                    IntellisenseItemsNeeded.Invoke(this, e);
+                        int x, y;
+                        textentry1.GdkWindow.GetOrigin(out x, out y);
+                        System.Drawing.Point coordinates = new System.Drawing.Point(x, y + textentry1.SizeRequest().Height);
+                        NeedContextItemsArgs e = new NeedContextItemsArgs()
+                        {
+                            Coordinates = coordinates,
+                            Code = textentry1.Text,
+                            ControlSpace = controlSpace,
+                            ControlShiftSpace = controlShiftSpace,
+                            Offset = Offset,
+                            ColNo = this.textentry1.CursorPosition
+                        };
+                        lastText = textentry1.Text;
+                        IntellisenseItemsNeeded.Invoke(this, e);
+                    }
+                }
+                else if ((args.Event.Key & Gdk.Key.Return) == Gdk.Key.Return)
+                {
+                    OnLeave(this, EventArgs.Empty);
                 }
             }
-            else if ((args.Event.Key & Gdk.Key.Return) == Gdk.Key.Return)
+            catch (Exception err)
             {
-                OnLeave(this, EventArgs.Empty);
+                ShowError(err);
             }
         }
 
@@ -194,12 +223,26 @@ namespace UserInterface.Views
         /// <param name="args"></param>
         private void OnLeave(object o, FocusOutEventArgs args)
         {
-            OnLeave(o, new EventArgs());
+            try
+            {
+                OnLeave(o, new EventArgs());
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         private void OnChanged(object sender, EventArgs e)
         {
-            Changed?.Invoke(this, e);
+            try
+            {
+                Changed?.Invoke(this, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -244,14 +287,25 @@ namespace UserInterface.Views
         /// before the cursor and after the most recent character which
         /// is not an opening square bracket.
         /// </summary>
-        /// <param name="text"></param>
-        public void InsertAtCursor(string text)
+        /// <param name="text">The text to be inserted.</param>
+        public void InsertAtCursorInSquareBrackets(string text)
         {
             int offset = IndexOfNot(textentry1.Text.Substring(0, Offset), '[');
             if (offset < 0)
                 offset = Offset;
             textentry1.Text = textentry1.Text.Substring(0, offset) + text + textentry1.Text.Substring(Offset);
             textentry1.Position = offset + text.Length;
+        }
+
+        /// <summary>
+        /// Insert text at the cursor.
+        /// </summary>
+        /// <param name="text">The text to be inserted.</param>
+        public void InsertAtCursor(string text)
+        {
+            int pos = Offset + text.Length;
+            textentry1.Text = textentry1.Text.Substring(0, Offset) + text + textentry1.Text.Substring(Offset);
+            textentry1.Position = pos;
         }
 
         /// <summary>

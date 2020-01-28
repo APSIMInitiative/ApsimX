@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 69,
+  "Version": 75,
   "Name": "Simulations",
   "Children": [
     {
@@ -12,9 +12,6 @@
       "R50": 200.0,
       "SpeciesFamily": 1,
       "PhotosyntheticPathway": 0,
-      "InitialShootDM": 500.0,
-      "InitialRootDM": 150.0,
-      "InitialRootDepth": 350.0,
       "ReferencePhotosyntheticRate": 1.0,
       "LightExtinctionCoefficient": 0.8,
       "GrowthTminimum": 2.0,

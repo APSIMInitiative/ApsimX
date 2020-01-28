@@ -21,6 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs the management of ruminant numbers based upon the current herd filtering. It requires a RuminantActivityBuySell to undertake the purchases and sales.")]
+    [Version(1, 0, 1, "Implements minimum breeders kept to define breeder purchase limits")]
     [Version(1, 0, 1, "First implementation of this activity using IAT/NABSA processes")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantManage.htm")]
     public class RuminantActivityManage : CLEMRuminantActivityBase, IValidatableObject
@@ -52,10 +53,10 @@ namespace Models.CLEM.Activities
         public double MaximumBreederAge { get; set; }
 
         /// <summary>
-        /// Proportion of max breeders in single purchase
+        /// Proportion of min breeders in single purchase
         /// </summary>
         [Category("General", "Breeders")]
-        [Description("Proportion of max female breeders in single purchase")]
+        [Description("Proportion of min female breeders in single purchase")]
         [System.ComponentModel.DefaultValueAttribute(1)]
         [Required, Proportion, GreaterThanEqualValue(0)]
         public double MaximumProportionBreedersPerPurchase { get; set; }
@@ -403,7 +404,7 @@ namespace Models.CLEM.Activities
                             double propOfBreeders = (double)numberFemaleBreedingInHerd / (double)MaximumBreedersKept;
                             propOfBreeders = 1;
 
-                            int sires = Convert.ToInt32(Math.Ceiling(Math.Ceiling(SiresKept * propOfBreeders)));
+                            int sires = Convert.ToInt32(Math.Ceiling(SiresKept * propOfBreeders), CultureInfo.InvariantCulture);
                             int numberToBuy = Math.Min(MaximumSiresPerPurchase, Math.Max(0, sires - numberMaleSiresInHerd));
 
                             for (int i = 0; i < numberToBuy; i++)
@@ -449,6 +450,12 @@ namespace Models.CLEM.Activities
                 // account for heifers already in the herd
                 // These are the next cohort that will become breeders in the next 12 months (before this method is called again)
                 excessBreeders += numberFemaleHeifersInHerd;
+
+                // if negative - i.e. purchases needed limit to min breeders kept not max breeders kept
+                if(excessBreeders < 0)
+                {
+                    excessBreeders = Math.Min(0, numberFemaleBreedingInHerd - MinimumBreedersKept - numberDyingInNextYear + numberFemaleHeifersInHerd);
+                }
 
                 if (excessBreeders > 0) // surplus heifers to sell
                 {
@@ -513,7 +520,7 @@ namespace Models.CLEM.Activities
                             // IAT-NABSA had buy mortality base% more to account for deaths before these individuals grow to breeding age
                             // These individuals are already of breeding age so we will ignore this in CLEM
                             // minimum of (max kept x prop in single purchase) and (the number needed + annual mortality)
-                            int numberToBuy = Math.Min(excessBreeders,Convert.ToInt32(Math.Ceiling(MaximumProportionBreedersPerPurchase*MaximumBreedersKept), CultureInfo.InvariantCulture));
+                            int numberToBuy = Math.Min(excessBreeders,Convert.ToInt32(Math.Ceiling(MaximumProportionBreedersPerPurchase*MinimumBreedersKept), CultureInfo.InvariantCulture));
                             int numberPerPurchaseCohort = Convert.ToInt32(Math.Ceiling(numberToBuy / Convert.ToDouble(NumberOfBreederPurchaseAgeClasses, CultureInfo.InvariantCulture)), CultureInfo.InvariantCulture);
 
                             int numberBought = 0;
@@ -544,7 +551,7 @@ namespace Models.CLEM.Activities
                         }
                     }
                 }
-                // Breeders themselves don't get sold. Trading is with Heifers
+                // Breeders themselves don't get sold. Sales is with Heifers
                 // Breeders can be sold in seasonal and ENSO destocking.
                 // sell breeders
                 // What rule? oldest first as they may be lost soonest

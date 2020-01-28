@@ -191,7 +191,19 @@ namespace UserInterface.Presenters
         {
             try
             {
-                seriesView.Filter.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
+                // The completion options in the series filter will typically contain the trigger word,
+                // e.g. "Maize.Total.Wt". We don't want to end up with "Maize.Maize.Total.Wt".
+                if (args.ItemSelected.StartsWith(args.TriggerWord))
+                {
+                    int index = args.ItemSelected.IndexOf(args.TriggerWord);
+                    if (index >= 0)
+                        args.ItemSelected = args.ItemSelected.Substring(args.TriggerWord.Length);
+                }
+                string textBeforeCursor = seriesView.Filter.Value.Substring(0, seriesView.Filter.Offset);
+                if (textBeforeCursor.EndsWith(".") && args.ItemSelected.StartsWith("."))
+                    args.ItemSelected = args.ItemSelected.TrimStart('.');
+
+                seriesView.Filter.InsertAtCursor(args.ItemSelected);
             }
             catch (Exception err)
             {
@@ -543,7 +555,7 @@ namespace UserInterface.Presenters
             this.seriesView.YCumulative.IsChecked = series.Cumulative;
 
             // Populate data source drop down.
-            List<string> dataSources = storage.Reader.TableNames.ToList();
+            List<string> dataSources = storage.Reader.TableAndViewNames.ToList();
             if (!dataSources.Contains(series.TableName) && !string.IsNullOrEmpty(series.TableName))
             {
                 dataSources.Add(series.TableName);
@@ -573,7 +585,6 @@ namespace UserInterface.Presenters
             // Box plots ignore x variable, markertype, marker size,
             // so don't make these controls editable if the series is a box plot.
             bool isBoxPlot = series.Type == SeriesType.Box;
-            this.seriesView.X.IsSensitive = !isBoxPlot;
             seriesView.MarkerSize.IsSensitive = !isBoxPlot;
             seriesView.MarkerType.IsSensitive = !isBoxPlot;
             seriesView.XCumulative.IsSensitive = !isBoxPlot;
@@ -587,8 +598,7 @@ namespace UserInterface.Presenters
 
             List<string> values = new List<string>(Enum.GetNames(typeof(LineType)));
 
-            var descriptors = series.GetDescriptorNames();
-            descriptors = descriptors.Concat(storage.Reader.StringColumnNames(series.TableName));
+            var descriptors = series.GetDescriptorNames(storage.Reader);
             if (descriptors != null)
                 values.AddRange(descriptors.Select(factorName => "Vary by " + factorName));
 
@@ -615,8 +625,7 @@ namespace UserInterface.Presenters
             List<string> warnings = new List<string>();
 
             List<string> values = new List<string>(Enum.GetNames(typeof(MarkerType)));
-            var descriptors = series.GetDescriptorNames();
-            descriptors = descriptors.Concat(storage.Reader.StringColumnNames(series.TableName));
+            var descriptors = series.GetDescriptorNames(storage.Reader);
             if (descriptors != null)
                 values.AddRange(descriptors.Select(factorName => "Vary by " + factorName));
 
@@ -647,8 +656,8 @@ namespace UserInterface.Presenters
                 colourOptions.Add(colour);
 
             // Send colour options to view.
-            var descriptors = series.GetDescriptorNames();
-            descriptors = descriptors.Concat(storage.Reader.StringColumnNames(series.TableName));
+            var descriptors = series.GetDescriptorNames(storage.Reader);
+
             if (descriptors != null)
                 colourOptions.AddRange(descriptors.Select(factorName => "Vary by " + factorName));
 
