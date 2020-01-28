@@ -78,6 +78,14 @@ namespace Models.CLEM
                 string[] memberNames = new string[] { "CLEM.Activities" };
                 results.Add(new ValidationResult("A market place must contain only one (1) Activities Holder to manage activities", memberNames));
             }
+            // only one market
+            holderCount = Apsim.Children(Apsim.Parent(this, typeof(Zone)), typeof(Market)).Count();
+            if (holderCount > 1)
+            {
+                string[] memberNames = new string[] { "CLEM.Markets" };
+                results.Add(new ValidationResult("Only one [m=Market] place is allowed in a CLEM simulation", memberNames));
+            }
+
             return results;
         }
 
@@ -92,11 +100,6 @@ namespace Models.CLEM
         {
             string html = "";
             html += "\n<div class=\"holdermain\" style=\"opacity: " + ((!this.Enabled) ? "0.4" : "1") + "\">";
-            //html += "\n<div class=\"clearfix defaultbanner\">";
-            //html += "<div class=\"typediv\">" + this.GetType().Name + "</div>";
-            //html += "</div>";
-            //html += "\n<div class=\"defaultcontent\">";
-            //html += "\n</div>";
 
             foreach (CLEMModel cm in Apsim.Children(this, typeof(CLEMModel)).Cast<CLEMModel>())
             {

@@ -48,5 +48,21 @@ namespace Models.CLEM.Resources
         {
             return this.Children.Where(a => a.Name == name).FirstOrDefault();
         }
+
+
+        /// <summary>
+        /// Add all events when a new child is added to this resource in run time
+        /// </summary>
+        /// <param name="child"></param>
+        public void AddChildEvents(IResourceWithTransactionType child)
+        {
+            child.TransactionOccurred += Resource_TransactionOccurred;
+        }
+
+        private void Resource_TransactionOccurred(object sender, EventArgs e)
+        {
+            LastTransaction = (e as TransactionEventArgs).Transaction;
+            OnTransactionOccurred(e);
+        }
     }
 }
