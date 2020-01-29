@@ -349,21 +349,21 @@ light_interception_2009 <- light_interception %>% select(year, variety, sowing, 
 
 
 
-colnames(s1_light_interception)[1] <- "date"
-colnames(s2_light_interception)[1] <- "date"
-colnames(s3_light_interception)[1] <- "date"
+colnames(s1_nodes_over_time)[1] <- "date"
+colnames(s2_nodes_over_time)[1] <- "date"
+colnames(s3_nodes_over_time)[1] <- "date"
 
-s1_light_interception <- s1_light_interception %>% mutate(sowing = "s1")
-s2_light_interception <- s2_light_interception %>% mutate(sowing = "s2")
-s3_light_interception <- s3_light_interception %>% mutate(sowing = "s3")
+s1_nodes_over_time <- s1_nodes_over_time %>% mutate(sowing = "s1")
+s2_nodes_over_time <- s2_nodes_over_time %>% mutate(sowing = "s2")
+s3_nodes_over_time <- s3_nodes_over_time %>% mutate(sowing = "s3")
 
-light_interception <- bind_rows(s1_light_interception, s2_light_interception, s3_light_interception)
+nodes_over_time <- bind_rows(s1_nodes_over_time, s2_nodes_over_time, s3_nodes_over_time)
 
-light_interception <- light_interception %>% gather("variety", "light_interception", colnames(light_interception)[3:6])
+nodes_over_time <- nodes_over_time %>% gather("variety", "nodes_over_time", colnames(nodes_over_time)[3:6])
 
-light_interception <- light_interception %>% mutate(year = "2009")
+nodes_over_time <- nodes_over_time %>% mutate(year = "2009")
 
-light_interception_2009 <- light_interception %>% select(year, variety, sowing, date, DAS, everything())
+nodes_over_time_2009 <- nodes_over_time %>% select(year, variety, sowing, date, DAS, everything())
 
 
 
