@@ -908,8 +908,10 @@
                         dul[i] = thetaWwp[i] + awc20[i];  // This could be made Moore complex
                     waterNode.DUL = ConvertLayers(dul, layerCount);
 
-                    var particleSizeSand = ConvertLayers(sand, layerCount);
+                    waterNode.ParticleSizeSand = ConvertLayers(sand, layerCount);
+                    waterNode.ParticleSizeSilt = ConvertLayers(silt, layerCount);
                     waterNode.ParticleSizeClay = ConvertLayers(clay, layerCount);
+                    // waterNode.Rocks = ConvertLayers(coarse, layerCount);
                     analysis.PH = ConvertLayers(phWater, layerCount);
                     // Obviously using the averaging in "ConvertLayers" for texture classes is not really correct, but should be OK as a first pass if we don't have sharply contrasting layers
                     double[] classes = ConvertLayers(texture, layerCount);
@@ -931,7 +933,7 @@
 
                     for (int i = 0; i < layerCount; i++)
                     {
-                        xf[i] = 1.0 - (waterNode.BD[i] - (p1 + p2 * 0.01 * particleSizeSand[i])) / p3;
+                        xf[i] = 1.0 - (waterNode.BD[i] - (p1 + p2 * 0.01 * waterNode.ParticleSizeSand[i])) / p3;
                         xf[i] = Math.Max(0.1, Math.Min(1.0, xf[i]));
                         double effectiveThickness = thickness[i] * xf[i];
                         double bottomEffDepth = topEffDepth + effectiveThickness;
