@@ -530,6 +530,12 @@
       <class>Input.GcmData</class>
     </MetaData>
   </Type>
+  <Type name="g_range">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+      <class>G_Range</class>
+    </MetaData>
+  </Type>
   <Type name="grasp">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>

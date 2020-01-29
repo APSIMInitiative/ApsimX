@@ -769,6 +769,7 @@
     <EmbeddedResource Include="Resources\AgPastureTissueDynamics.png" />
     <EmbeddedResource Include="Resources\MenuImages\Settings.png" />
     <EmbeddedResource Include="Resources\LargeImages\WhiteClover.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\G_Range.png" />
     <EmbeddedResource Include="Resources\RadInt.jpg" />
     <EmbeddedResource Include="Resources\SyntaxHighlighting\Report.xml" />
     <EmbeddedResource Include="Resources\TreeViewImages\AGPBrownTop.png" />

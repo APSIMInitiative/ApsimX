@@ -746,6 +746,11 @@
     <Compile Include="CLEM\ZoneCLEM.cs" />
     <Compile Include="Zones\CircularZone.cs" />
     <Compile Include="Zones\RectangularZone.cs" />
+    <Compile Include="G_Range\G_Range.cs" />
+    <Compile Include="G_Range\GRLosses.cs" />
+    <Compile Include="G_Range\GRParms.cs" />
+    <Compile Include="G_Range\GRPlant.cs" />
+    <Compile Include="G_Range\GRWeather.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -818,6 +823,9 @@
       <Project>{e243ae8d-35e3-4397-b180-ef1e8a91ae8c}</Project>
       <Name>APSIM.Shared</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\GRangeLandUnits.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
