@@ -98,6 +98,32 @@ namespace Models.Core
         }
 
         /// <summary>
+        /// Return the current APSIM version number.
+        /// </summary>
+        public string ApsimVersion
+        {
+            get
+            {
+                return GetApsimVersion();
+            }
+            set
+            {
+                // Setter is provided so that this property gets serialized.
+            }
+        }
+
+        /// <summary>
+        /// Return the current APSIM version number.
+        /// </summary>
+        public static string GetApsimVersion()
+        {
+            string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            FileInfo info = new FileInfo(Assembly.GetExecutingAssembly().Location);
+            string buildDate = info.LastWriteTime.ToString("yyyy-MM-dd");
+            return "Version " + version + ", built " + buildDate;
+        }
+
+        /// <summary>
         /// Checkpoint the simulation.
         /// </summary>
         /// <param name="checkpointName">Name of checkpoint</param>

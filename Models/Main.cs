@@ -153,8 +153,7 @@
         /// </summary>
         private static void WriteVersion()
         {
-            Model m = new Model();
-            Console.WriteLine(m.ApsimVersion);
+            Console.WriteLine(Simulations.GetApsimVersion());
         }
 
         /// <summary>
