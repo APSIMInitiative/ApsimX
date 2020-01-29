@@ -295,7 +295,10 @@ namespace UserInterface.Presenters
 
                 string text = string.IsNullOrEmpty(externalCBText) ? internalCBText : externalCBText;
 
-                this.explorerPresenter.Add(text, this.explorerPresenter.CurrentNodePath);
+                var command = new AddModelCommand(pathOfParent: explorerPresenter.CurrentNodePath,
+                                                  textToAdd: text, 
+                                                  explorerPresenter);
+                explorerPresenter.CommandHistory.Add(command, true);
             }
             catch (Exception err)
             {

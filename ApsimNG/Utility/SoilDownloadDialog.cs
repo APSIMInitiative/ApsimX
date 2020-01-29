@@ -2,7 +2,6 @@
 {
     using APSIM.Shared.Utilities;
     using Gtk;
-    using Importer;
     using Newtonsoft.Json;
     using Models;
     using Models.Core;
@@ -17,6 +16,7 @@
     using UserInterface.Presenters;
     using UserInterface.Views;
     using System.Globalization;
+    using Models.Core.Apsim710File;
 
     /// <summary>
     /// Class for displaying a dialog to select a soil description to be downloaded from ASRIS or ISRIC
@@ -270,7 +270,7 @@
                 }
                 else if (dest is Zone)
                 {
-                    AddModelCommand command = new AddModelCommand(replaceNode, newSoil, owningView, explorerPresenter);
+                    var command = new AddModelCommand(replaceNode, newSoil, explorerPresenter);
                     explorerPresenter.CommandHistory.Add(command, true);
                 }
                 MessageDialog md = new MessageDialog(owningView.MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok,
@@ -328,7 +328,7 @@
             {
                 XmlDocument soilDoc = new XmlDocument();
                 XmlNode rootNode = soilDoc.CreateNode("element", "root", "");
-                APSIMImporter importer = new APSIMImporter();
+                var importer = new Importer();
                 XmlNode newNode = null;
                 newNode = importer.ImportSoil(soil, rootNode, newNode);
 

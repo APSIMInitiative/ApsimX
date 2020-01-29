@@ -1,5 +1,6 @@
 ﻿namespace UserInterface.Presenters
 {
+    using global::UserInterface.Commands;
     using Interfaces;
     using Models.Core;
     using Models.Core.ApsimFile;
@@ -132,7 +133,11 @@
                     child.Name = modelName;
                     if (child is ModelCollectionFromResource)
                         (child as ModelCollectionFromResource).ResourceName = selectedModelType.ModelName;
-                    explorerPresenter.Add(child, Apsim.FullPath(this.model));
+
+                    var command = new AddModelCommand(pathOfParent: Apsim.FullPath(this.model),
+                                                      child,
+                                                      explorerPresenter);
+                    explorerPresenter.CommandHistory.Add(command, true);
                 }
                 finally
                 {

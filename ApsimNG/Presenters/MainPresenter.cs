@@ -6,7 +6,6 @@
     using System.Reflection;
     using System.Xml;
     using APSIM.Shared.Utilities;
-    using Importer;
     using Interfaces;
     using Models;
     using Models.Core;
@@ -18,6 +17,7 @@
     using EventArguments;
     using Utility;
     using Models.Core.ApsimFile;
+    using Models.Core.Apsim710File;
 
     /// <summary>
     /// This presenter class provides the functionality behind a TabbedExplorerView 
@@ -1024,7 +1024,7 @@
         {
             try
             {
-                APSIMImporter importer = new APSIMImporter();
+                var importer = new Importer();
                 importer.ProcessFile(fileName);
             }
             catch (Exception err)
