@@ -11,6 +11,7 @@
     using Models.Interfaces;
     using Models.Soils.Nutrients;
     using Models.Surface;
+    using Models.Functions;
 
     /// <summary>
     /// 
@@ -29,6 +30,7 @@
         private DateTime NoGrazingStart;
         private DateTime NoGrazingEnd;
         private double residualBiomass;
+        private CSharpExpressionFunction expressionFunction;
 
         /// <summary>Average potential ME concentration in herbage material (MJ/kg)</summary>
         private const double PotentialMEOfHerbage = 16.0;
@@ -46,7 +48,10 @@
             TargetMassAndLength,
 
             /// <summary>Timing of grazing is controlled elsewhere.</summary>
-            TimingControlledElsewhere
+            TimingControlledElsewhere,
+
+            /// <summary>Flexible grazing using an expression.</summary>
+            Flexible
         }
 
         /// <summary>Invoked when a grazing occurs.</summary>
@@ -105,6 +110,23 @@
         [Display(EnabledCallback = "IsTargetMassAndLengthTurnedOn")]
         public double[] RotationLengthArray { get; set; }
 
+        /// <summary></summary>
+        [Description("Monthly minimum rotation length")]
+        [Units("days")]
+        [Display(EnabledCallback = "IsTargetMassAndLengthTurnedOn")]
+        public double[] MinimumRotationLengthArray { get; set; }
+
+        /// <summary></summary>
+        [Separator("Settings for flexible grazing")]
+      
+        [Description("Expression for timing of grazing (e.g. AGPRyegrass.CoverTotal > 0.95)")]
+        public string FlexibleExpressionForTimingOfGrazing { get; set; }
+
+        /// <summary></summary>
+        [Description("Residual pasture mass after grazing")]
+        [Units("kgDM/ha")]
+        [Display(EnabledCallback = "IsFlexibleGrazingTurnedOn")]
+        public double FlexibleGrazePostDM { get; set; }
 
         /// <summary></summary>
         [Separator("Optional no-grazing window")]
@@ -175,6 +197,15 @@
                 return GrazingRotationType != GrazingRotationTypeEnum.TimingControlledElsewhere;
             }
         }
+        
+        /// <summary></summary>
+        public bool IsFlexibleGrazingTurnedOn
+        {
+            get
+            {
+                return GrazingRotationType == GrazingRotationTypeEnum.Flexible;
+            }
+        }
 
         ////////////// Outputs //////////////
 
@@ -239,6 +270,15 @@
                 if (RotationLengthArray == null || RotationLengthArray.Length != 12)
                     throw new Exception("There must be 12 values input for rotation length");
             }
+            else if (GrazingRotationType == GrazingRotationTypeEnum.Flexible)
+            {
+                if (string.IsNullOrEmpty(FlexibleExpressionForTimingOfGrazing))
+                    throw new Exception("You must specify an expression for timing of grazing.");
+                expressionFunction = new CSharpExpressionFunction();
+                expressionFunction.Parent = this;
+                expressionFunction.Expression = "Convert.ToDouble(" + FlexibleExpressionForTimingOfGrazing + ")";
+                expressionFunction.CompileExpression();
+            }
 
             if (FractionOfBiomassToDung.Length != 1 && FractionOfBiomassToDung.Length != 12)
                 throw new Exception("You must specify either a single value for 'proportion of biomass going to dung' or 12 monthly values.");
@@ -285,6 +325,8 @@
                 grazeNow = TargetMass();
             else if (GrazingRotationType == GrazingRotationTypeEnum.TargetMassAndLength)
                 grazeNow = TargetMassAndLength();
+            else if (GrazingRotationType == GrazingRotationTypeEnum.Flexible)
+                grazeNow = FlexibleTiming();
 
             if (NoGrazingStart != null && 
                 NoGrazingEnd != null &&
@@ -383,7 +425,15 @@
         {
             residualBiomass = PostGrazeDMArray[clock.Today.Month - 1];
             return ((PreGrazeDM > PreGrazeDMArray[clock.Today.Month - 1] || DaysSinceGraze > RotationLengthArray[clock.Today.Month - 1])
-                    && PreGrazeDM > PostGrazeDMArray[clock.Today.Month - 1] && DaysSinceGraze > 14);  // does have to be grazable!
+                    && PreGrazeDM > PostGrazeDMArray[clock.Today.Month - 1] && DaysSinceGraze > MinimumRotationLengthArray[clock.Today.Month - 1]);  // does have to be grazable!
+        }
+
+        /// <summary>Calculate whether a target mass and length rotation can graze today.</summary>
+        /// <returns>True if can graze.</returns>
+        private bool FlexibleTiming()
+        {
+            residualBiomass = FlexibleGrazePostDM;
+            return expressionFunction.Value() == 1;
         }
 
         /// <summary>Remove biomass from the specified forage.</summary>
@@ -418,9 +468,9 @@
                             forage.RemoveBiomass(organ.Name, "Graze",
                                                  new OrganBiomassRemovalType()
                                                  {
-                                                     FractionLiveToRemove = fractionLiveToRemove / 10,  // g/m2
-                                                 FractionDeadToRemove = fractionDeadToRemove / 10   // g/m2
-                                             });
+                                                     FractionLiveToRemove = fractionLiveToRemove,  
+                                                     FractionDeadToRemove = fractionDeadToRemove   
+                                                 });
 
                             PostGrazeDM += (organ.Live.Wt + organ.Dead.Wt) * 10;
 

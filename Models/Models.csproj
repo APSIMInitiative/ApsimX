@@ -149,11 +149,13 @@
     <Compile Include="Aqua\WaterPropertiesData.cs" />
     <Compile Include="CLEM\Activities\FinanceActivityIncome.cs" />
     <Compile Include="CLEM\Activities\LabourActivityFeedTarget.cs" />
+    <Compile Include="CLEM\Activities\LabourActivityFeedTargetPurchase.cs" />
     <Compile Include="CLEM\Activities\LabourActivityFeedToTargets.cs" />
     <Compile Include="CLEM\Activities\LabourActivityFeedToTargetsV1.cs" />
     <Compile Include="CLEM\Activities\LabourActivityPayHired.cs" />
     <Compile Include="CLEM\Activities\LabourActivityFeed.cs" />
     <Compile Include="CLEM\Activities\LabourAERelationship.cs" />
+    <Compile Include="CLEM\Market.cs" />
     <Compile Include="CLEM\Reporting\ConceptionStatus.cs" />
     <Compile Include="CLEM\Reporting\ConceptionStatusChangedEventArgs.cs" />
     <Compile Include="CLEM\Resources\LabourDietComponent.cs" />
@@ -235,7 +237,6 @@
     <Compile Include="Core\Attributes\SoluteAttribute.cs" />
     <Compile Include="Core\AutoDocumentation.cs" />
     <Compile Include="Core\Alias.cs" />
-    <Compile Include="Core\EventArgs\LoadedEventArgs.cs" />
     <Compile Include="Core\Events.cs" />
     <Compile Include="Core\ApsimFile\FileFormat.cs" />
     <Compile Include="Core\ICustomDocumentation.cs" />
@@ -256,6 +257,7 @@
     <Compile Include="Factorial\Permutation.cs" />
     <Compile Include="Functions\DecumulateFunction.cs" />
     <Compile Include="Functions\EndOfDayFunction.cs" />
+    <Compile Include="Functions\CSharpExpressionFunction.cs" />
     <Compile Include="Functions\LiveOnEventFunction.cs" />
     <Compile Include="Functions\ProtectedDivideFunction.cs" />
     <Compile Include="Graph\DefaultPainter.cs" />
@@ -277,6 +279,7 @@
     <Compile Include="Plant\Phenology\Phases\DAWSPhase.cs" />
     <Compile Include="Plant\Phenology\Scales\Age.cs" />
     <EmbeddedResource Include="Resources\Scripts\GraphPanelScriptTemplate.cs" />
+    <EmbeddedResource Include="Resources\Scripts\CSharpExpressionTemplate.cs" />
     <Compile Include="Soils\Nutrients\INutrientPool.cs" />
     <Compile Include="Soils\SoilTemp\SoilTemperature.cs" />
     <Compile Include="Soils\Standardiser\Layers.cs" />

@@ -75,8 +75,15 @@ namespace UserInterface.Views
             
             mainWidget = scroller;
             drawable.Realized += OnRealized;
-            DGObject.DefaultOutlineColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.Style.Foreground(StateType.Normal));
-            DGObject.DefaultBackgroundColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.Style.Background(StateType.Normal));
+            if (owner == null)
+            {
+                DGObject.DefaultOutlineColour = OxyPlot.OxyColors.Black;
+            }
+            else
+            {
+                DGObject.DefaultOutlineColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.Style.Foreground(StateType.Normal));
+                DGObject.DefaultBackgroundColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.Style.Background(StateType.Normal));
+            }
         }
 
         /// <summary>The description (nodes & arcs) of the directed graph.</summary>

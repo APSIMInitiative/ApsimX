@@ -98,6 +98,13 @@ namespace UserInterface.Presenters
                 // Run all child model post processors.
                 var runner = new Runner(explorerPresenter.ApsimXFile, runSimulations: false);
                 runner.Run();
+
+                if (runner.ExceptionsThrown != null && runner.ExceptionsThrown.Count > 0)
+                {
+                    explorerPresenter.MainPresenter.ShowError(runner.ExceptionsThrown);
+                    return;
+                }
+
                 (explorerPresenter.CurrentPresenter as DataStorePresenter).PopulateGrid();
                 this.explorerPresenter.MainPresenter.ShowMessage("Post processing models have successfully completed", Simulation.MessageType.Information);
             }
@@ -805,33 +812,30 @@ namespace UserInterface.Presenters
             {
                 if (this.explorerPresenter.Save())
                 {
-                    string destinationFolder = Path.Combine(Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), "Doc");
-                    if (destinationFolder != null)
+                    explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", Simulation.MessageType.Information);
+                    explorerPresenter.MainPresenter.ShowWaitCursor(true);
+
+                    ICommand command;
+                    string fileNameWritten;
+                    var modelToDocument = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+
+                    var destinationFolder = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
+                    if (modelToDocument is Simulations)
                     {
-                        explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", Simulation.MessageType.Information);
-                        explorerPresenter.MainPresenter.ShowWaitCursor(true);
-
-                        ICommand command;
-                        string fileNameWritten;
-                        var modelToDocument = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
-
-                        if (modelToDocument is Simulations)
-                        {
-                            command = new CreateDocCommand(explorerPresenter);
-                            fileNameWritten = (command as CreateDocCommand).FileNameWritten;
-                        }
-                        else
-                        {
-                            command = new CreateModelDescriptionDocCommand(explorerPresenter, modelToDocument);
-                            fileNameWritten = (command as CreateModelDescriptionDocCommand).FileNameWritten;
-                        }
-
-                        explorerPresenter.CommandHistory.Add(command, true);
-                        explorerPresenter.MainPresenter.ShowMessage("Written " + fileNameWritten, Simulation.MessageType.Information);
-
-                        // Open the document.
-                        Process.Start(fileNameWritten);
+                        command = new CreateDocCommand(explorerPresenter, destinationFolder);
+                        fileNameWritten = (command as CreateDocCommand).FileNameWritten;
                     }
+                    else
+                    {
+                        command = new CreateModelDescriptionDocCommand(explorerPresenter, modelToDocument, destinationFolder);
+                        fileNameWritten = (command as CreateModelDescriptionDocCommand).FileNameWritten;
+                    }
+
+                    explorerPresenter.CommandHistory.Add(command, true);
+                    explorerPresenter.MainPresenter.ShowMessage("Written " + fileNameWritten, Simulation.MessageType.Information);
+
+                    // Open the document.
+                    Process.Start(fileNameWritten);
                 }
             }
             catch (Exception err)
