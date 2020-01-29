@@ -211,7 +211,7 @@
             initConditions.Rows.Add(row);
 
             row = initConditions.NewRow();
-            row.ItemArray = new object[] { simulation.Name, simulationPath, "APSIM version", "APSIM version", "String", string.Empty, string.Empty, 0, simulation.ApsimVersion };
+            row.ItemArray = new object[] { simulation.Name, simulationPath, "APSIM version", "APSIM version", "String", string.Empty, string.Empty, 0, Simulations.GetApsimVersion() };
             initConditions.Rows.Add(row);
 
             row = initConditions.NewRow();
