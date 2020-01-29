@@ -17,6 +17,7 @@
     [ViewName("UserInterface.Views.TabbedMetDataView")]
     [PresenterName("UserInterface.Presenters.MetDataPresenter")]
     [ValidParent(ParentType=typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Zone))]
     public class Weather : Model, IWeather, IReferenceExternalFiles
     {
         /// <summary>
