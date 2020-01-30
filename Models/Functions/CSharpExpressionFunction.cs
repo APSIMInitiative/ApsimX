@@ -62,7 +62,10 @@ namespace Models.Functions
             // and namespace lines e.g.
             //    using Models.Clock;
             //    using Models;
-            var models = Apsim.FindAll(Parent).Where(model => !model.IsHidden);
+            var models = Apsim.FindAll(Parent).Where(model => !model.IsHidden && 
+                                                              model.GetType() != typeof(Graph.Graph) &&
+                                                              model.GetType() != typeof(Graph.Series) &&
+                                                              model.GetType().Name != "StorageViaSockets");
             var links = new StringBuilder();
             var namespaceList = new SortedSet<string>();
             foreach (var model in models)
@@ -93,10 +96,17 @@ namespace Models.Functions
             var manager = new Manager();
             manager.Code = template;
             manager.Parent = Parent;
-            manager.OnCreated();   // This will compile the expression.
-
-            if (manager.Children.Count == 0)
-                throw new Exception("Cannot compile expression: " + Expression);
+            try
+            {
+                manager.OnCreated();   // This will compile the expression.
+            }
+            catch (Exception err)
+            {
+                var st = "Cannot compile expression: " + Expression + Environment.NewLine;
+                st += err.ToString() + Environment.NewLine;
+                st += "Generated code: " + Environment.NewLine + template;
+                throw new Exception(st);
+            }
 
             expressionFunction = manager.Children[0] as IFunction;
 
