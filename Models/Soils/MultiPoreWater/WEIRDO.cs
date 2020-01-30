@@ -101,7 +101,7 @@ namespace Models.Soils
         public double[] FlowNO3 { get; set; }
         ///<summary> Who knows</summary>
         [XmlIgnore]
-        public double[] flow_urea { get; set; }
+        public double[] FlowUrea { get; set; }
         ///<summary> Who knows</summary>
         [XmlIgnore]
         public double[] Flux { get; set; }

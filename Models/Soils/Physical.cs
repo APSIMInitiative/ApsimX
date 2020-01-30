@@ -37,6 +37,24 @@
         [Units("%")]
         public double[] ParticleSizeClay { get; set; }
 
+        /// <summary>Particle size clay.</summary>
+        [Summary]
+        [Description("Sand")]
+        [Units("%")]
+        public double[] ParticleSizeSand { get; set; }
+
+        /// <summary>Particle size silt.</summary>
+        [Summary]
+        [Description("Silt")]
+        [Units("%")]
+        public double[] ParticleSizeSilt { get; set; }
+
+        // <summary>Particle size clay.</summary>
+        //[Summary]
+        //[Description("Rocks")]
+        //[Units("%")]
+        //public double[] Rocks { get; set; }
+
         /// <summary>Gets or sets the bd.</summary>
         [Summary]
         [Description("BD")]
