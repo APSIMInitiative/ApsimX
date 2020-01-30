@@ -1,7 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 281,
-  "Version": 74,
+  "Version": 76,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-01-30",
   "Name": "Simulations",
   "Children": [
     {
@@ -13696,6 +13697,8 @@
                                 300.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.32,
                                 1.3,
@@ -20892,6 +20895,8 @@
                                 300.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.32,
                                 1.3,
@@ -21672,6 +21677,8 @@
                                 300.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.32,
                                 1.3,
@@ -22421,6 +22428,8 @@
                                 300.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.2,
                                 1.2,
@@ -23291,6 +23300,8 @@
                                 300.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.2,
                                 1.2,
@@ -24326,6 +24337,8 @@
                                 300.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.56,
                                 1.52,
@@ -25334,6 +25347,8 @@
                                 300.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.56,
                                 1.52,
@@ -26162,6 +26177,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -26794,6 +26811,8 @@
                                     300.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -27438,6 +27457,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -28068,6 +28089,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -28688,6 +28711,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -29280,6 +29305,8 @@
                                     300.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -29872,6 +29899,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -30448,6 +30477,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -30976,6 +31007,8 @@
                                     300.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -31564,6 +31597,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -32090,6 +32125,8 @@
                                     300.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -32652,6 +32689,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -33180,6 +33219,8 @@
                                     300.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -33760,6 +33801,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -34340,6 +34383,8 @@
                                     300.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -34930,6 +34975,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -35496,6 +35543,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -36084,6 +36133,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -36606,6 +36657,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -37114,6 +37167,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -37612,6 +37667,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -38202,6 +38259,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -38802,6 +38861,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -39368,6 +39429,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -40085,6 +40148,8 @@
                                 200.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.35,
                                 1.35,
@@ -40741,6 +40806,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -41291,6 +41358,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -41821,6 +41890,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -42429,6 +42500,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -42959,6 +43032,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -43567,6 +43642,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -44177,6 +44254,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -44813,6 +44892,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -45385,6 +45466,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -46045,6 +46128,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -46653,6 +46738,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -47259,6 +47346,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -47843,6 +47932,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -48477,6 +48568,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -49081,6 +49174,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -49633,6 +49728,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -50228,6 +50325,8 @@
                                 200.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.35,
                                 1.35,
@@ -50918,6 +51017,8 @@
                                 400.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.35,
                                 1.35,
@@ -51668,6 +51769,8 @@
                                         200.0
                                       ],
                                       "ParticleSizeClay": null,
+                                      "ParticleSizeSand": null,
+                                      "ParticleSizeSilt": null,
                                       "BD": [
                                         1.35,
                                         1.35,
@@ -52238,6 +52341,8 @@
                                         200.0
                                       ],
                                       "ParticleSizeClay": null,
+                                      "ParticleSizeSand": null,
+                                      "ParticleSizeSilt": null,
                                       "BD": [
                                         1.35,
                                         1.35,
@@ -52868,6 +52973,8 @@
                                 200.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.35,
                                 1.35,
@@ -53633,6 +53740,8 @@
                             300.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.2,
                             1.2,
@@ -54571,6 +54680,8 @@
                             300.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.2,
                             1.2,
@@ -55545,6 +55656,8 @@
                             300.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.2,
                             1.2,
@@ -56549,6 +56662,8 @@
                             300.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.2,
                             1.2,
@@ -57635,6 +57750,8 @@
                                 300.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.2,
                                 1.2,
@@ -58430,6 +58547,8 @@
                                         300.0
                                       ],
                                       "ParticleSizeClay": null,
+                                      "ParticleSizeSand": null,
+                                      "ParticleSizeSilt": null,
                                       "BD": [
                                         1.2,
                                         1.2,
@@ -58969,6 +59088,8 @@
                                         300.0
                                       ],
                                       "ParticleSizeClay": null,
+                                      "ParticleSizeSand": null,
+                                      "ParticleSizeSilt": null,
                                       "BD": [
                                         1.35,
                                         1.54,
@@ -59510,6 +59631,8 @@
                                 300.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.2,
                                 1.2,
@@ -60475,6 +60598,8 @@
                                 300.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.2,
                                 1.2,
@@ -61275,6 +61400,8 @@
                             600.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.02,
                             1.03,
