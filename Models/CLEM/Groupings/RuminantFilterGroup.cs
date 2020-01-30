@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Models.Core.Attributes;
+using System.Xml.Serialization;
+using Models.CLEM.Resources;
 
 namespace Models.CLEM.Groupings
 {
@@ -24,8 +26,14 @@ namespace Models.CLEM.Groupings
     [Description("This ruminant filter group selects specific individuals from the ruminant herd using any number of Ruminant Filters.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/RuminantFilterGroup.htm")]
-    public class RuminantFilterGroup : CLEMModel
+    public class RuminantFilterGroup : CLEMModel, IFilterGroup
     {
+        /// <summary>
+        /// Combined ML ruleset for LINQ expression tree
+        /// </summary>
+        [XmlIgnore]
+        public object CombinedRules { get; set; } = null;
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>

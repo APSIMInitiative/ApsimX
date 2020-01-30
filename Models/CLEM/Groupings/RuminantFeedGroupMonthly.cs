@@ -7,6 +7,8 @@ using System.Text;
 using Models.Core.Attributes;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
+using System.Xml.Serialization;
+using Models.CLEM.Resources;
 
 namespace Models.CLEM.Groupings
 {
@@ -20,7 +22,7 @@ namespace Models.CLEM.Groupings
     [Description("This ruminant filter group selects specific individuals from the ruminant herd using any number of Ruminant Filters. This filter group includes feeding rules. No filters will apply rules to current herd. Multiple feeding groups will select groups of individuals required.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/RuminantFeedGroupMonthly.htm")]
-    public class RuminantFeedGroupMonthly: CLEMModel, IValidatableObject
+    public class RuminantFeedGroupMonthly: CLEMModel, IValidatableObject, IFilterGroup
     {
         /// <summary>
         /// Daily value to supply for each month
@@ -28,6 +30,12 @@ namespace Models.CLEM.Groupings
         [Description("Daily value to supply for each month")]
         [ArrayItemCount(12), GreaterThanValue(0)]
         public double[] MonthlyValues { get; set; }
+
+        /// <summary>
+        /// Combined ML ruleset for LINQ expression tree
+        /// </summary>
+        [XmlIgnore]
+        public object CombinedRules { get; set; } = null;
 
         /// <summary>
         /// Constructor

@@ -7,6 +7,7 @@ using System.Text;
 using Models.Core.Attributes;
 using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Resources;
+using System.Xml.Serialization;
 
 namespace Models.CLEM.Groupings
 {
@@ -20,7 +21,7 @@ namespace Models.CLEM.Groupings
     [Description("This labour filter group selects specific individuals from the labour pool using any number of Labour Filters. This filter group includes feeding rules. No filters will apply rules to all individuals. Multiple feeding groups will select groups of individuals required.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/LabourFeedGroup.htm")]
-    public class LabourFeedGroup: CLEMModel, IValidatableObject
+    public class LabourFeedGroup: CLEMModel, IValidatableObject, IFilterGroup
     {
         /// <summary>
         /// Value to supply for each month
@@ -28,6 +29,12 @@ namespace Models.CLEM.Groupings
         [Description("Value to supply")]
         [GreaterThanValue(0)]
         public double Value { get; set; }
+
+        /// <summary>
+        /// Combined ML ruleset for LINQ expression tree
+        /// </summary>
+        [XmlIgnore]
+        public object CombinedRules { get; set; } = null;
 
         /// <summary>
         /// Constructor
