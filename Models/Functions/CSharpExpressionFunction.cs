@@ -89,14 +89,23 @@ namespace Models.Functions
             // Replace the expression place holder in the template with the real expression.
             template = template.Replace("return 123456;", "return " + Expression + ";");
 
+            System.IO.File.WriteAllText(System.IO.Path.GetTempFileName(), template);
+
             // Create a new manager that will compile the expression.
             var manager = new Manager();
             manager.Code = template;
             manager.Parent = Parent;
-            manager.OnCreated();   // This will compile the expression.
-
-            if (manager.Children.Count == 0)
-                throw new Exception("Cannot compile expression: " + Expression);
+            try
+            {
+                manager.OnCreated();   // This will compile the expression.
+            }
+            catch (Exception err)
+            {
+                var st = "Cannot compile expression: " + Expression + Environment.NewLine;
+                st += err.ToString() + Environment.NewLine;
+                st += "Generated code: " + Environment.NewLine + template;
+                throw new Exception(st);
+            }
 
             expressionFunction = manager.Children[0] as IFunction;
 
