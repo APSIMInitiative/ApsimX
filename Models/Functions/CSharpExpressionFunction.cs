@@ -62,7 +62,10 @@ namespace Models.Functions
             // and namespace lines e.g.
             //    using Models.Clock;
             //    using Models;
-            var models = Apsim.FindAll(Parent).Where(model => !model.IsHidden && !(model.GetType() == typeof(Graph.Graph)));
+            var models = Apsim.FindAll(Parent).Where(model => !model.IsHidden && 
+                                                              model.GetType() != typeof(Graph.Graph) &&
+                                                              model.GetType() != typeof(Graph.Series) &&
+                                                              model.GetType().Name != "StorageViaSockets");
             var links = new StringBuilder();
             var namespaceList = new SortedSet<string>();
             foreach (var model in models)
@@ -88,8 +91,6 @@ namespace Models.Functions
 
             // Replace the expression place holder in the template with the real expression.
             template = template.Replace("return 123456;", "return " + Expression + ";");
-
-            System.IO.File.WriteAllText(System.IO.Path.GetTempFileName(), template);
 
             // Create a new manager that will compile the expression.
             var manager = new Manager();
