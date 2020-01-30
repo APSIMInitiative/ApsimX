@@ -112,7 +112,7 @@ namespace UnitTests.ApsimNG.Views
             Folder graphs = new Folder();
             graphs.Name = "Graphs";
 
-            var command = new AddModelCommand(pathOfParent: Apsim.FullPath(paddock),
+            var command = new AddModelCommand(Apsim.FullPath(paddock),
                                               graphs,
                                               explorer);
             explorer.CommandHistory.Add(command, true);
@@ -120,7 +120,7 @@ namespace UnitTests.ApsimNG.Views
             // Add an empty graph to the folder.
             Models.Graph.Graph graph = new Models.Graph.Graph();
             graph.Name = "Graph";
-            command = new AddModelCommand(pathOfParent: Apsim.FullPath(graphs),
+            command = new AddModelCommand(Apsim.FullPath(graphs),
                                           graph,
                                           explorer);
             explorer.CommandHistory.Add(command, true);
@@ -128,7 +128,7 @@ namespace UnitTests.ApsimNG.Views
             // Add an empty series to the graph.
             Models.Graph.Series series = new Models.Graph.Series();
             series.Name = "Series";
-            command = new AddModelCommand(pathOfParent: Apsim.FullPath(graph),
+            command = new AddModelCommand(Apsim.FullPath(graph),
                                           series,
                                           explorer);
             explorer.CommandHistory.Add(command, true);
