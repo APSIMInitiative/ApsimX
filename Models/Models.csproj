@@ -18,13 +18,24 @@
   </ItemGroup>
   
   <ItemGroup>
+    <Compile Remove="DataStore.cs" />
     <Compile Remove="Functions\BoundFunction.cs" />
+    <Compile Remove="GRange.cs" />
+    <Compile Remove="MySoluteManager.cs" />
+    <Compile Remove="Plant\BiomassSummariser.cs" />
     <Compile Remove="Plant\Phenology\PhotoperiodEffect.cs" />
     <Compile Remove="Plant\Phenology\VernalisationEffect.cs" />
+    <Compile Remove="Report\RowEnumerator.cs" />
+    <Compile Remove="Resources\Scripts\CSharpExpressionTemplate.cs" />
+    <Compile Remove="Resources\Scripts\GraphPanelScriptTemplate.cs" />
+    <Compile Remove="Storage\FBDataStore.cs" />
     <Compile Remove="Storage\MyDataStore.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="DataStore.cs.saved" />
+    <None Remove="Manager.cs.rej" />
+    <None Remove="Models.csproj.saved" />
     <None Remove="Resources\Barley.json" />
     <None Remove="Resources\Chicory.json" />
     <None Remove="Resources\Eucalyptus.json" />
@@ -43,6 +54,10 @@
     <None Remove="Resources\SurfaceOrganicMatter.json" />
     <None Remove="Resources\Wheat.json" />
     <None Remove="Resources\WhiteClover.json" />
+    <None Remove="Settings.StyleCop" />
+    <None Remove="sgen.exe" />
+    <None Remove="Storage\DataStoreWriter.cs.saved" />
+    <None Remove="Storage\DeleteRowsCommand.cs.saved" />
     <None Remove="StyleCop.Cache" />
   </ItemGroup>
 
@@ -59,6 +74,7 @@
     <EmbeddedResource Include="Resources\Plantain.json" />
     <EmbeddedResource Include="Resources\Potato.json" />
     <EmbeddedResource Include="Resources\ruminant.prm" />
+    <EmbeddedResource Include="Resources\Scripts\CSharpExpressionTemplate.cs" />
     <EmbeddedResource Include="Resources\SCRUM.json" />
     <EmbeddedResource Include="Resources\Slurp.json" />
     <EmbeddedResource Include="Resources\Supplement.txt" />
