@@ -280,6 +280,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMAnimalManage")]
         private void OnCLEMAnimalManage(object sender, EventArgs e)
         {
+            this.Status = ActivityStatus.NoTask;
             RuminantHerd ruminantHerd = Resources.RuminantHerd();
 
             // remove only the individuals that are affected by this activity.
@@ -296,6 +297,7 @@ namespace Models.CLEM.Activities
             // SellFemalesLikeMales will grow out excess heifers until age/weight rather than sell immediately.
             if (this.TimingOK || ContinuousMaleSales)
             {
+                this.Status = ActivityStatus.NotNeeded;
                 foreach (var ind in herd.Where(a => a.Weaned && (SellFemalesLikeMales ? true : (a.Gender == Sex.Male)) && (a.Age >= MaleSellingAge || a.Weight >= MaleSellingWeight)))
                 {
                     bool sell = true;
@@ -312,6 +314,7 @@ namespace Models.CLEM.Activities
 
                     if (sell)
                     {
+                        this.Status = ActivityStatus.Success;
                         ind.SaleFlag = HerdChangeReason.AgeWeightSale;
                     }
                 }
@@ -320,6 +323,7 @@ namespace Models.CLEM.Activities
             // if management month
             if (this.TimingOK)
             {
+                this.Status = ActivityStatus.NotNeeded;
                 // ensure pasture limits are ok before purchases
                 bool sufficientFood = true;
                 if (foodStore != null)
@@ -368,6 +372,7 @@ namespace Models.CLEM.Activities
                         foreach (var male in herd.Where(a => a.Gender == Sex.Male).Cast<RuminantMale>().Where(a => a.BreedingSire).OrderByDescending(a => a.Age).Take(numberToRemove))
                         {
                             male.SaleFlag = HerdChangeReason.ExcessBullSale;
+                            this.Status = ActivityStatus.Success;
                             numberToRemove--;
                             if (numberToRemove == 0)
                             {
@@ -411,6 +416,8 @@ namespace Models.CLEM.Activities
                             {
                                 if (i < MaximumSiresPerPurchase)
                                 {
+                                    this.Status = ActivityStatus.Success;
+
                                     RuminantMale newbull = new RuminantMale(BullAgeAtPurchase, Sex.Male, 0, breedParams)
                                     {
                                         Location = grazeStore,
@@ -459,6 +466,8 @@ namespace Models.CLEM.Activities
 
                 if (excessBreeders > 0) // surplus heifers to sell
                 {
+                    this.Status = ActivityStatus.Success;
+
                     foreach (var female in herd.Where(a => a.Gender == Sex.Female &&  (a as RuminantFemale).IsHeifer).Take(excessBreeders))
                     {
                         // if sell like males tag for grow out otherwise mark for sale
@@ -526,6 +535,8 @@ namespace Models.CLEM.Activities
                             int numberBought = 0;
                             while(numberBought < numberToBuy)
                             {
+                                this.Status = ActivityStatus.Success;
+
                                 int breederClass = Convert.ToInt32(numberBought / numberPerPurchaseCohort, CultureInfo.InvariantCulture);
                                 ageOfBreeder = Convert.ToInt32(minBreedAge + (breederClass * 12), CultureInfo.InvariantCulture);
 
