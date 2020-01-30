@@ -18,6 +18,9 @@
   </ItemGroup>
   
   <ItemGroup>
+    <Compile Remove="Functions\BoundFunction.cs" />
+    <Compile Remove="Plant\Phenology\PhotoperiodEffect.cs" />
+    <Compile Remove="Plant\Phenology\VernalisationEffect.cs" />
     <Compile Remove="Storage\MyDataStore.cs" />
   </ItemGroup>
 
