@@ -62,7 +62,7 @@ namespace Models.Functions
             // and namespace lines e.g.
             //    using Models.Clock;
             //    using Models;
-            var models = Apsim.FindAll(Parent).Where(model => !model.IsHidden);
+            var models = Apsim.FindAll(Parent).Where(model => !model.IsHidden && !(model.GetType() == typeof(Graph.Graph)));
             var links = new StringBuilder();
             var namespaceList = new SortedSet<string>();
             foreach (var model in models)
