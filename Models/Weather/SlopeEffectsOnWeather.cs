@@ -20,6 +20,7 @@
     /// </remarks>
     [Serializable]
     [ValidParent(ParentType = typeof(Zone))]
+    [ValidParent(ParentType = typeof(Simulation))]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SlopeEffectsOnWeather : Model
