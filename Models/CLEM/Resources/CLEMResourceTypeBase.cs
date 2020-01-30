@@ -113,7 +113,7 @@ namespace Models.CLEM.Resources
             }
             else
             {
-                ResourceUnitsConverter converter = Apsim.Children(this, typeof(ResourceUnitsConverter)).Where(a => a.Name.ToLower() == converterName.ToLower()).FirstOrDefault() as ResourceUnitsConverter;
+                ResourceUnitsConverter converter = Apsim.Children(this, typeof(ResourceUnitsConverter)).Where(a => string.Compare(a.Name, converterName, true) == 0).FirstOrDefault() as ResourceUnitsConverter;
                 if (converter != null)
                 {
                     double result = amount;
