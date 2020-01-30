@@ -303,7 +303,6 @@
     <Compile Include="Main.cs" />
     <Compile Include="Menus\ContextMenu.cs" />
     <Compile Include="Menus\MainMenu.cs" />
-    <Compile Include="Presenters\AddFunctionPresenter.cs" />
     <Compile Include="Presenters\CheckpointsPresenter.cs" />
     <Compile Include="Presenters\AddModelPresenter.cs" />
     <Compile Include="Presenters\AxisPresenter.cs" />
@@ -917,10 +916,6 @@
     <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj">
       <Project>{e243ae8d-35e3-4397-b180-ef1e8a91ae8c}</Project>
       <Name>APSIM.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Models\Importer\Importer.csproj">
-      <Project>{075f2644-f14e-4010-ba52-35e4b0011835}</Project>
-      <Name>Importer</Name>
     </ProjectReference>
     <ProjectReference Include="..\Models\Models.csproj">
       <Project>{a3e10705-f2bb-4182-a19c-7f63222584df}</Project>
