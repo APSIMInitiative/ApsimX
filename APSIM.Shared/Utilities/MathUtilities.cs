@@ -685,6 +685,9 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         static public double[] StringsToDoubles(IList Values)
         {
+            if (Values == null)
+                return new double[0];
+
             double[] ReturnValues = new double[Values.Count];
 
             for (int Index = 0; Index != Values.Count; Index++)

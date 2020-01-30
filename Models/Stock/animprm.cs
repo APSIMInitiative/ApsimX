@@ -1288,17 +1288,16 @@ namespace Models.GrazPlan
                     sTag = Defn.FullName;
                     if (this.IsDefined(sTag))
                     {
-                        switch (Defn.ParamType)
-                        {
-                            case TYPETEXT: result = (result && (this.ParamStr(sTag) == otherSet.ParamStr(sTag)));
-                                break;
-                            case TYPEREAL: result = (result && (this.ParamReal(sTag) == otherSet.ParamReal(sTag)));
-                                break;
-                            case TYPEINT: result = (result && (this.ParamInt(sTag) == otherSet.ParamInt(sTag)));
-                                break;
-                            case TYPEBOOL: result = (result && (this.ParamBool(sTag) == otherSet.ParamBool(sTag)));
-                                break;
-                        }
+                        if (Defn.ParamType == TYPETEXT)
+                            result = (result && (this.ParamStr(sTag) == otherSet.ParamStr(sTag)));
+                        else if (Defn.ParamType == TYPEREAL)
+                            result = (result && (this.ParamReal(sTag) == otherSet.ParamReal(sTag)));
+                        else if (Defn.ParamType == TYPEINT)
+                            result = (result && (this.ParamInt(sTag) == otherSet.ParamInt(sTag)));
+                        else if (Defn.ParamType == TYPEBOOL)
+                            result = (result && (this.ParamBool(sTag) == otherSet.ParamBool(sTag)));
+                        else
+                            result = false;
                     }
                     else
                         result = (result && !otherSet.IsDefined(Defn.FullName));
