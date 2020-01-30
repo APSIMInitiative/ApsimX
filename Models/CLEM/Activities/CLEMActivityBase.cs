@@ -79,7 +79,7 @@ namespace Models.CLEM.Activities
         /// Property to check if timing of this activity is ok based on child and parent ActivityTimers in UI tree
         /// </summary>
         /// <returns>T/F</returns>
-        public bool TimingOK
+        public virtual bool TimingOK
         {
             get
             {
@@ -260,7 +260,7 @@ namespace Models.CLEM.Activities
         {
             if (this.Enabled)
             {
-                if (this.TimingOK)
+                if (TimingOK)
                 {
                     ResourcesForAllActivities(model);
                 }

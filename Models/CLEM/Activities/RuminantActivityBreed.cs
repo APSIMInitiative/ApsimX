@@ -75,6 +75,13 @@ namespace Models.CLEM.Activities
                     Summary.WriteWarning(this, String.Format("Breeding with Artificial Insemination (AI) requires a Timer otherwise breeding will be undertaken every time step in activity [a={0}]", this.Name));
                 }
             }
+            else
+            {
+                if (this.TimingExists)
+                {
+                    Summary.WriteWarning(this, String.Format("Uncontrolled/natural breeding will occur every month and the timer associated with [a={0}] will be ignored.", this.Name));
+                }
+            }
 
             // work out pregnancy status of initial herd
             if (InferStartupPregnancy)
@@ -236,6 +243,7 @@ namespace Models.CLEM.Activities
             {
                 // report that this activity was performed as it does not use base GetResourcesRequired
                 this.TriggerOnActivityPerformed();
+                this.Status = ActivityStatus.NotNeeded;
             }
 
             // for each location where parts of this herd are located
@@ -306,6 +314,7 @@ namespace Models.CLEM.Activities
                         female.UpdateBirthDetails();
                         // report conception status changed when last multiple birth dies.
                         female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Birth, female, Clock.Today));
+                        this.Status = ActivityStatus.Success;
                     }
                 }
 
@@ -347,6 +356,7 @@ namespace Models.CLEM.Activities
                             }
                         }
                         numberServiced++;
+                        this.Status = ActivityStatus.Success;
                     }
 
                     // report change in breeding status
@@ -507,6 +517,18 @@ namespace Models.CLEM.Activities
                 }
             }
             return ResourceRequestList;
+        }
+
+        /// <summary>
+        /// Property to check if timing of this activity is ok based on child and parent ActivityTimers in UI tree
+        /// </summary>
+        /// <returns>T/F</returns>
+        public override bool TimingOK
+        {
+            get
+            {
+                return (!UseAI) ? true : base.TimingOK;
+            }
         }
 
         /// <summary>
