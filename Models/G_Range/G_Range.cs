@@ -125,11 +125,7 @@ namespace Models
         /// <summary>Gets the LAI</summary>
         [Description("Leaf Area Index (m^2/m^2)")]
         [Units("m^2/m^2")]
-<<<<<<< HEAD
-        public double LAI { get { return 1.7; } }
-=======
         public double LAI { get { return 1.7; } set { } }
->>>>>>> 37d4af9009f9e488e06a8eaaec7e0fba2216da9f
 
         /// <summary>Gets the LAI live + dead (m^2/m^2)</summary>
         public double LAITotal { get { return LAI; } }
@@ -1422,16 +1418,11 @@ namespace Models
         /// Gets or sets the file name. Should be relative filename where possible.
         /// </summary>
         [Summary]
-<<<<<<< HEAD
-=======
         [Display(Type = DisplayType.FileName)]
->>>>>>> 37d4af9009f9e488e06a8eaaec7e0fba2216da9f
         [Description("G_Range database file name")]
         public string DatabaseName { get; set; }
 
         /// <summary>
-<<<<<<< HEAD
-=======
         /// Gets or sets the file name. Should be relative filename where possible.
         /// </summary>
         [Summary]
@@ -1439,7 +1430,6 @@ namespace Models
         [Description("G_Range parameter file (blank for default values)")]
         public string ParameterFileName { get; set; } = String.Empty;
         /// <summary>
->>>>>>> 37d4af9009f9e488e06a8eaaec7e0fba2216da9f
         /// Gets or sets the number of years to spinup the model
         /// </summary>
         [Summary]

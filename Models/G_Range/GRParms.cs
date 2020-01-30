@@ -1,8 +1,5 @@
 ﻿using System;
-<<<<<<< HEAD
-=======
 using System.IO;
->>>>>>> 37d4af9009f9e488e06a8eaaec7e0fba2216da9f
 using System.Linq;
 
 namespace Models
@@ -1157,10 +1154,6 @@ namespace Models
         private void LoadParms()
         {
             parmArray = new Parms[15];
-<<<<<<< HEAD
-            // Read in the whole parameter file as one big string
-            string allParmData = ReflectionUtilities.GetResourceAsString("Models.Resources.GRangeLandUnits.txt"); 
-=======
 
             // Read in the whole parameter file as one big string
             string allParmData;
@@ -1170,7 +1163,6 @@ namespace Models
             }
             else
                 allParmData = File.ReadAllText(ParameterFileName);
->>>>>>> 37d4af9009f9e488e06a8eaaec7e0fba2216da9f
             // Split the string into lines
             string[] longParmStrings = allParmData.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
             // Extract only the first part of each line
