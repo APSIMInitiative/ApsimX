@@ -897,8 +897,8 @@
                     ICommand cmd = null;
                     if (e.Copied)
                     {
-                        var command = new AddModelCommand(pathOfParent: toParentPath,
-                                                          textToAdd: modelString,
+                        var command = new AddModelCommand(toParentPath,
+                                                          modelString,
                                                           this);
                         CommandHistory.Add(command, true);
                     }

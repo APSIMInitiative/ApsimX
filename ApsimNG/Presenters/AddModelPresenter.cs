@@ -134,7 +134,7 @@
                     if (child is ModelCollectionFromResource)
                         (child as ModelCollectionFromResource).ResourceName = selectedModelType.ModelName;
 
-                    var command = new AddModelCommand(pathOfParent: Apsim.FullPath(this.model),
+                    var command = new AddModelCommand(Apsim.FullPath(this.model),
                                                       child,
                                                       explorerPresenter);
                     explorerPresenter.CommandHistory.Add(command, true);
