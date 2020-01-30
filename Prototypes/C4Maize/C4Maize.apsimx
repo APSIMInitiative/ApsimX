@@ -23163,7 +23163,13 @@
             },
             {
               "$type": "Models.Factorial.Experiment, Models",
-              "DisabledSimNames": null,
+              "DisabledSimNames": [
+                "DRKSowDate1991-09-19Cultivarhycorn_50",
+                "DRKSowDate1991-10-10Cultivarhycorn_50",
+                "DRKSowDate1991-11-07Cultivarhycorn_50",
+                "DRKSowDate1991-12-11Cultivarhycorn_50",
+                "DRKSowDate1991-08-14Cultivarhycorn_50"
+              ],
               "Name": "DRK",
               "Children": [
                 {
