@@ -289,7 +289,7 @@ namespace Models.CLEM.Resources
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "\n<div class=\"activityentry\">";
-            if (Units.ToUpper() != "KG")
+            if ((Units??"").ToUpper() != "KG")
             {
                 html += "Each unit of this resource is equivalent to ";
                 if (ConvertToKg == 0)
@@ -332,8 +332,8 @@ namespace Models.CLEM.Resources
             }
             html += "\n</div>";
 
-            html += "\n<div class=\"activityentry\">";
-            html += ((EdibleProportion == 1)?"All":EdibleProportion.ToString("%"))+" of this raw food is edible";
+            html += "\n<div class=\"activityentry\"><span class=\"setvalue\">";
+            html += ((EdibleProportion == 1)?"All":EdibleProportion.ToString("#0%"))+"</span> of this raw food is edible";
             html += "\n</div>";
 
             return html;
