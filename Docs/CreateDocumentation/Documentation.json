@@ -1,10 +1,11 @@
 {
     "Tables": [
         {
-            "Title": "Model documentation",
+            "Title": "",
             "Columns": [
                 "Name",
-                "Inputs/Outputs",
+                "Documentation",
+                "Params/Inputs/Outputs",
                 "Detailed"
             ],
             "Rows": [
@@ -65,6 +66,15 @@
                             "Name": "PDF",
                             "FileName": "Tests\\Validation\\Chicory\\Chicory.apsimx",
                             "ModelNameToDocument": "Chicory"
+                        }
+                    ]
+                },
+                {
+                    "Name": "Clock",
+                    "Documents": [
+                        {
+                            "Name": "PDF",
+                            "FileName": "Tests\\Validation\\Clock\\Clock.apsimx"
                         }
                     ]
                 },

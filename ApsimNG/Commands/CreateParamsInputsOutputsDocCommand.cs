@@ -1,27 +1,19 @@
-﻿
-
-namespace UserInterface.Commands
+﻿namespace UserInterface.Commands
 {
-    using Models.Core;
-    using System.IO;
-    using System;
     using APSIM.Shared.Utilities;
-    using System.Reflection;
-    using System.Data;
-    using System.Xml;
-    using System.Collections.Generic;
-    using System.Xml.Serialization;
-    using System.Linq;
-    using Presenters;
-    using System.Xml.Xsl;
-    using System.Diagnostics;
-    using Models.Core.Run;
     using ApsimNG.Classes;
+    using Models.Core;
+    using Presenters;
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.IO;
+    using System.Reflection;
 
     /// <summary>
     /// This command exports the specified node and all child nodes as HTML.
     /// </summary>
-    public class CreateModelDescriptionDocCommand : ICommand
+    public class CreateParamsInputsOutputsDocCommand : ICommand
     {
         /// <summary>The maximum length of a description.</summary>
         private const int maxDescriptionLength = 50;
@@ -48,12 +40,12 @@ namespace UserInterface.Commands
         private enum PropertyType { Parameters, NonParameters };
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CreateDocCommand"/> class.
+        /// Initializes a new instance of the <see cref="CreateFileDocumentationCommand"/> class.
         /// </summary>
         /// <param name="explorerPresenter">The explorer presenter.</param>
         /// <param name="model">The model to document.</param>
         /// <param name="destinationFolder">Name of directory to put pdf file into.</param>
-        public CreateModelDescriptionDocCommand(ExplorerPresenter explorerPresenter, IModel model, string destinationFolder)
+        public CreateParamsInputsOutputsDocCommand(ExplorerPresenter explorerPresenter, IModel model, string destinationFolder)
         {
             this.explorerPresenter = explorerPresenter;
             this.modelToDocument = model;

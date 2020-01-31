@@ -558,6 +558,18 @@
                         }
                     }
 
+                    if (ok && contextMenuAttr.Excluding != null && selectedModel != null)
+                    {
+                        ok = true;
+                        foreach (Type t in contextMenuAttr.Excluding)
+                        {
+                            if (t.IsAssignableFrom(selectedModel.GetType()))
+                            {
+                                ok = false;
+                            }
+                        }
+                    }
+
                     if (ok)
                     {
                         MenuDescriptionArgs desc = new MenuDescriptionArgs();
@@ -681,12 +693,6 @@
                     {
                         viewName = new ViewNameAttribute("UserInterface.Views.ModelDetailsWrapperView");
                         presenterName = new PresenterNameAttribute("UserInterface.Presenters.ModelDetailsWrapperPresenter");
-                    }
-
-                    if (viewName == null && presenterName == null)
-                    {
-                        viewName = new ViewNameAttribute("UserInterface.Views.HTMLView");
-                        presenterName = new PresenterNameAttribute("UserInterface.Presenters.GenericPresenter");
                     }
 
                     // if a clem model ignore the newly added description box that is handled by CLEM wrapper
