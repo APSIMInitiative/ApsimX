@@ -938,7 +938,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("kg/ha")]
-        public double[] flow_urea
+        public double[] FlowUrea
         { get { return SoilObject != null ? SoilObject.GetFlowArrayForASolute("urea") : new double[0]; } }
 
         //MANAGER COMMANDS

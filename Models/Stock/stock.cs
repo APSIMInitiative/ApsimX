@@ -258,6 +258,25 @@ namespace Models.GrazPlan
         }
 
         #region Initialisation properties ====================================================
+
+        /// <summary>
+        /// Gets or sets the parameter filename for the stock model
+        /// </summary>
+        [Description("Name of an XML file containing genotypic parameters. If an empty string is specified, a default parameter set that is compiled into APSIM is used. " +
+                     "If a file name is used, the parameters in the file modify (rather than replacing) the default parameter set")]
+        [Units("")]
+        [Summary]
+        public string ParamFile
+        {
+            get { return stockModel.ParamFile; }
+            set 
+            {
+                if (value != string.Empty)
+                    this.outputSummary.WriteMessage(this, "Using animal parameters from " + value);
+                stockModel.ParamFile = value; 
+            }
+        }
+        
         /// <summary>
         /// Gets or sets the Seed for the random number generator. Used when computing numbers of animals dying and conceiving from the equations for mortality and conception rates
         /// </summary>

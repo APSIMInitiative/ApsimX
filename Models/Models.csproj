@@ -175,6 +175,7 @@
     <Compile Include="CLEM\Resources\RuminantConceptionCurve.cs" />
     <Compile Include="CLEM\Reporting\PivotTable.cs" />
     <Compile Include="CLEM\WarningLog.cs" />
+    <Compile Include="Core\Apsim710File\Importer.cs" />
     <Compile Include="Core\ApsimFile\ConverterReturnType.cs" />
     <Compile Include="Core\ApsimFile\JsonUtilities.cs" />
     <Compile Include="Core\ApsimFile\Structure.cs" />
@@ -238,7 +239,6 @@
     <Compile Include="Core\Attributes\SoluteAttribute.cs" />
     <Compile Include="Core\AutoDocumentation.cs" />
     <Compile Include="Core\Alias.cs" />
-    <Compile Include="Core\EventArgs\LoadedEventArgs.cs" />
     <Compile Include="Core\Events.cs" />
     <Compile Include="Core\ApsimFile\FileFormat.cs" />
     <Compile Include="Core\ICustomDocumentation.cs" />
@@ -499,7 +499,6 @@
     <Compile Include="Stock\grazparam.cs" />
     <Compile Include="Stock\grazprmread.cs" />
     <Compile Include="Stock\graztype.cs" />
-    <Compile Include="Stock\sdmlpsr.cs" />
     <Compile Include="Stock\stddate.cs" />
     <Compile Include="Stock\stdmath.cs" />
     <Compile Include="Stock\stdstrng.cs" />
@@ -509,7 +508,6 @@
     <Compile Include="Stock\stock_manage.cs" />
     <Compile Include="Stock\stock_padd.cs" />
     <Compile Include="Stock\stock_vars.cs" />
-    <Compile Include="Stock\typedval.cs" />
     <Compile Include="Stock\xmlpsr.cs" />
     <Compile Include="Storage\DataStoreWriter.cs" />
     <Compile Include="Storage\InsertQuery.cs" />
@@ -748,6 +746,11 @@
     <Compile Include="CLEM\ZoneCLEM.cs" />
     <Compile Include="Zones\CircularZone.cs" />
     <Compile Include="Zones\RectangularZone.cs" />
+    <Compile Include="G_Range\G_Range.cs" />
+    <Compile Include="G_Range\GRLosses.cs" />
+    <Compile Include="G_Range\GRParms.cs" />
+    <Compile Include="G_Range\GRPlant.cs" />
+    <Compile Include="G_Range\GRWeather.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -820,6 +823,9 @@
       <Project>{e243ae8d-35e3-4397-b180-ef1e8a91ae8c}</Project>
       <Name>APSIM.Shared</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\GRangeLandUnits.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

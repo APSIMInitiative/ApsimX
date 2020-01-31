@@ -190,9 +190,9 @@
     <Compile Include="Weather\MockWeather.cs" />
     <Compile Include="Core\ApsimFile\ConverterTests.cs" />
     <Compile Include="Core\ApsimTests.cs" />
-	<Compile Include="..\..\Models\Properties\AssemblyVersion.cs">
+    <Compile Include="..\..\Models\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
-    </Compile>	
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -273,10 +273,6 @@
     <ProjectReference Include="..\..\ApsimNG\ApsimNG.csproj">
       <Project>{83f4bd8a-a0d1-4aa7-9dc7-42af7d9bacba}</Project>
       <Name>ApsimNG</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Models\Importer\Importer.csproj">
-      <Project>{075F2644-F14E-4010-BA52-35E4B0011835}</Project>
-      <Name>Importer</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Models\Models.csproj">
       <Project>{A3E10705-F2BB-4182-A19C-7F63222584DF}</Project>

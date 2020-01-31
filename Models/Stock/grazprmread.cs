@@ -61,22 +61,22 @@ namespace Models.GrazPlan
         /// <summary>
         /// Type real-single
         /// </summary>
-        protected const TTypedValue.TBaseType TYPEREAL = TTypedValue.TBaseType.ITYPE_SINGLE;
+        protected static readonly Type TYPEREAL = typeof(float);
 
         /// <summary>
         /// Type integer
         /// </summary>
-        protected const TTypedValue.TBaseType TYPEINT = TTypedValue.TBaseType.ITYPE_INT4;
+        protected static readonly Type TYPEINT = typeof(int);
 
         /// <summary>
         /// Type Boolean
         /// </summary>
-        protected const TTypedValue.TBaseType TYPEBOOL = TTypedValue.TBaseType.ITYPE_BOOL;
+        protected static readonly Type TYPEBOOL = typeof(bool);
 
         /// <summary>
         /// Type string
         /// </summary>
-        protected const TTypedValue.TBaseType TYPETEXT = TTypedValue.TBaseType.ITYPE_STR;
+        protected static readonly Type TYPETEXT = typeof(string);
 
         /// <summary>
         /// Parses a &lt;parameters&gt; or &lt;set&gt; element in an XML parameter document          
@@ -270,19 +270,16 @@ namespace Models.GrazPlan
                 result = true;
             else
             {
-                switch (paramDefinition.ParamType)
-                {
-                    case TYPEREAL: result = subSet.ParamReal(paramDefinition.FullName) != subSet.Parent.ParamReal(paramDefinition.FullName);
-                        break;
-                    case TYPEINT: result = subSet.ParamInt(paramDefinition.FullName) != subSet.Parent.ParamInt(paramDefinition.FullName);
-                        break;
-                    case TYPEBOOL: result = subSet.ParamBool(paramDefinition.FullName) != subSet.Parent.ParamBool(paramDefinition.FullName);
-                        break;
-                    case TYPETEXT: result = subSet.ParamStr(paramDefinition.FullName) != subSet.Parent.ParamStr(paramDefinition.FullName);
-                        break;
-                    default: result = false;
-                        break;
-                }
+                if (paramDefinition.ParamType == TYPEREAL)
+                    result = subSet.ParamReal(paramDefinition.FullName) != subSet.Parent.ParamReal(paramDefinition.FullName);
+                else if (paramDefinition.ParamType == TYPEINT)
+                    result = subSet.ParamInt(paramDefinition.FullName) != subSet.Parent.ParamInt(paramDefinition.FullName);
+                else if (paramDefinition.ParamType == TYPEBOOL)
+                    result = subSet.ParamBool(paramDefinition.FullName) != subSet.Parent.ParamBool(paramDefinition.FullName);
+                else if (paramDefinition.ParamType == TYPETEXT)
+                    result = subSet.ParamStr(paramDefinition.FullName) != subSet.Parent.ParamStr(paramDefinition.FullName);
+                else
+                    result = false;
             }
             return result;
         }
@@ -384,7 +381,7 @@ namespace Models.GrazPlan
                 {
                     lineStr = new string(' ', indent + 2) + "<translate lang=\"" +
                              subSet.GetTranslation(idx).Lang + "\">" +
-                             TTypedValue.EscapeText(subSet.GetTranslation(idx).Text) + "</translate>";
+                             EscapeText(subSet.GetTranslation(idx).Text) + "</translate>";
                     strings.Add(lineStr);
                 }
 
@@ -399,6 +396,49 @@ namespace Models.GrazPlan
 
             strings.Add(lineStr);
         }
+
+        /// <summary>
+        /// Escapes the special characters for storing as xml.
+        /// </summary>
+        /// <param name="text">The character string to escape.</param>
+        /// <returns>The escaped string.</returns>
+        /// N.Herrmann Apr 2002
+        public static string EscapeText(string text)
+        {
+            int index;
+
+            System.Text.StringBuilder sbuf = new System.Text.StringBuilder(string.Empty);
+            for (index = 0; index < text.Length; index++)
+            {
+                switch (text[index])
+                {
+                    case '&':
+                        sbuf.Append("&#38;");
+                        break;
+                    case '<':
+                        sbuf.Append("&#60;");
+                        break;
+                    case '>':
+                        sbuf.Append("&#62;");
+                        break;
+                    case '"':
+                        sbuf.Append("&#34;");
+                        break;
+                    case '\'':
+                        sbuf.Append("&#39;");
+                        break;
+                    default:
+                        {
+                            // If it is none of the special characters, just copy it
+                            sbuf.Append(text[index]);
+                        }
+                        break;
+                }
+            }
+
+            return sbuf.ToString();
+        }
+
 
         /// <summary>
         /// The strategy for obtaining default parameters is:                            
