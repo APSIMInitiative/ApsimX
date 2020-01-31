@@ -3233,9 +3233,9 @@
                   "$type": "Models.Functions.DecumulateFunction, Models",
                   "InitialValue": 1.0,
                   "MinValue": 0.0,
-                  "StartStageName": "FlagLeaf",
+                  "StartStageName": "FloralInitiation",
                   "ResetStageName": "Emergence",
-                  "StopStageName": null,
+                  "StopStageName": "Flowering",
                   "Name": "TemperatureFactor",
                   "Children": [
                     {
