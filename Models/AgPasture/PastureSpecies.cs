@@ -1254,10 +1254,10 @@
         [Units("0-1")]
         public double MinimumGreenRootProp { get; set; } = 0.5;
 
-        /// <summary>Proportion of stolon DM standing, available for removal (0-1).</summary>
+        /// <summary>Proportion of stolons that is above grond and available for grazing (0-1).</summary>
         [Units("0-1")]
         [XmlIgnore]
-        public double FractionStolonStanding { get; set; } = 0.0;
+        public double FractionStolonsAboveGround { get; set; } = 0.0;
 
 
 
@@ -1876,7 +1876,7 @@
         [Units("kg/ha")]
         public double AboveGroundLiveWt
         {
-            get { return leaves.DMLive + stems.DMLive + stolons.DMLive; }
+            get { return leaves.DMLive + stems.DMLive + stolons.DMLive * stolons.Abovegroundedness; }
         }
 
         /// <summary>Gets the dry matter weight of dead tissues above ground (kgDM/ha).</summary>
@@ -1884,7 +1884,7 @@
         [Units("kg/ha")]
         public double AboveGroundDeadWt
         {
-            get { return leaves.DMDead + stems.DMDead + stolons.DMDead; }
+            get { return leaves.DMDead + stems.DMDead + stolons.DMDead * stolons.Abovegroundedness; }
         }
 
         /// <summary>Gets the dry matter weight of the plant below ground (kgDM/ha).</summary>
@@ -1894,7 +1894,7 @@
         {
             get
             {
-                double dmTotal = roots[0].DMTotal;
+                double dmTotal = roots[0].DMTotal + stolons.DMTotal * (1-stolons.Abovegroundedness);
                 //foreach (PastureBelowGroundOrgan root in roots)
                 //    dmTotal += root.DMTotal;
                 // TODO: currently only the roots at the main/home zone are considered, must add the other zones too
@@ -1909,7 +1909,7 @@
         {
             get
             {
-                double dmTotal = roots[0].DMLive;
+                double dmTotal = roots[0].DMLive + stolons.DMLive * (1 - stolons.Abovegroundedness);
                 //foreach (PastureBelowGroundOrgan root in roots)
                 //    dmTotal += root.DMLive;
                 // TODO: currently only the roots at the main/home zone are considered, must add the other zones too
@@ -1921,7 +1921,7 @@
         [Units("kg/ha")]
         public double StandingHerbageWt
         {
-            get { return leaves.DMTotal + stems.DMTotal + stolons.DMTotal * stolons.FractionStanding; }
+            get { return leaves.DMTotal + stems.DMTotal + stolons.DMTotal * stolons.Abovegroundedness; }
         }
 
         /// <summary>Gets the dry matter weight of live standing herbage (kgDM/ha).</summary>
@@ -1929,7 +1929,7 @@
         [Units("kg/ha")]
         public double StandingLiveHerbageWt
         {
-            get { return leaves.DMLive + stems.DMLive + stolons.DMLive * stolons.FractionStanding; }
+            get { return leaves.DMLive + stems.DMLive + stolons.DMLive * stolons.Abovegroundedness; }
         }
 
         /// <summary>Gets the dry matter weight of dead standing herbage (kgDM/ha).</summary>
@@ -1937,7 +1937,7 @@
         [Units("kg/ha")]
         public double StandingDeadHerbageWt
         {
-            get { return leaves.DMDead + stems.DMDead + stolons.DMDead * stolons.FractionStanding; }
+            get { return leaves.DMDead + stems.DMDead + stolons.DMDead * stolons.Abovegroundedness; }
         }
 
         /// <summary>Gets the dry matter weight of plant's leaves (kgDM/ha).</summary>
@@ -2052,7 +2052,7 @@
         [Units("kg/ha")]
         public double AboveGroundLiveN
         {
-            get { return leaves.NLive + stems.NLive + stolons.NLive; }
+            get { return leaves.NLive + stems.NLive + stolons.NLive * stolons.NLive * stolons.Abovegroundedness; }
         }
 
         /// <summary>Gets the amount of N in dead tissues above ground (kgN/ha).</summary>
@@ -2060,7 +2060,7 @@
         [Units("kg/ha")]
         public double AboveGroundDeadN
         {
-            get { return leaves.NDead + stems.NDead + stolons.NDead; }
+            get { return leaves.NDead + stems.NDead + stolons.NDead * stolons.Abovegroundedness; }
         }
 
         /// <summary>Gets the amount of N in the plant below ground (kgN/ha).</summary>
@@ -2070,7 +2070,7 @@
         {
             get
             {
-                double nTotal = roots[0].NTotal;
+                double nTotal = roots[0].NTotal * stolons.NTotal * (1 - stolons.Abovegroundedness);
                 //foreach (PastureBelowGroundOrgan root in roots)
                 //    nTotal += root.NTotal;
                 // TODO: currently only the roots at the main/home zone are considered, must add the other zones too
@@ -2084,7 +2084,7 @@
         {
             get
             {
-                double nTotal = roots[0].NLive;
+                double nTotal = roots[0].NLive * stolons.NLive * (1 - stolons.Abovegroundedness);
                 //foreach (PastureBelowGroundOrgan root in roots)
                 //    nTotal += root.NLive;
                 // TODO: currently only the roots at the main/home zone are considered, must add the other zones too
@@ -2097,7 +2097,7 @@
         [Units("kg/ha")]
         public double StandingHerbageN
         {
-            get { return leaves.NTotal + stems.NTotal + stolons.NTotal * stolons.FractionStanding; }
+            get { return leaves.NTotal + stems.NTotal + stolons.NTotal * stolons.Abovegroundedness; }
         }
 
         /// <summary>Gets the amount of N in live standing herbage (kgN/ha).</summary>
@@ -2105,7 +2105,7 @@
         [Units("kg/ha")]
         public double StandingLiveHerbageN
         {
-            get { return leaves.NLive + stems.NLive + stolons.NLive * stolons.FractionStanding; }
+            get { return leaves.NLive + stems.NLive + stolons.NLive * stolons.Abovegroundedness; }
         }
 
         /// <summary>Gets the N content  of standing dead plant material (kg/ha).</summary>
@@ -2113,7 +2113,7 @@
         [Units("kg/ha")]
         public double StandingDeadHerbageN
         {
-            get { return leaves.NDead + stems.NDead + stolons.NDead * stolons.FractionStanding; }
+            get { return leaves.NDead + stems.NDead + stolons.NDead * stolons.Abovegroundedness; }
         }
 
         /// <summary>Gets the amount of N in the plant's leaves (kgN/ha).</summary>
@@ -2896,7 +2896,7 @@
                 if (StandingHerbageWt > Epsilon)
                 {
                     result = (leaves.DigestibilityTotal * leaves.DMTotal) + (stems.DigestibilityTotal * stems.DMTotal)
-                           + (stolons.DigestibilityTotal * stolons.DMTotal * stolons.FractionStanding);
+                           + (stolons.DigestibilityTotal * stolons.DMTotal * stolons.Abovegroundedness);
                     result /= StandingHerbageWt;
                 }
                 return result;
@@ -3426,7 +3426,7 @@
             leaves.MinimumLiveDM = MinimumGreenWt * MinimumGreenLeafProp;
             stems.MinimumLiveDM = MinimumGreenWt * (1.0 - MinimumGreenLeafProp);
             stolons.MinimumLiveDM = 0.0;
-            stolons.FractionStanding = FractionStolonStanding;
+            stolons.Abovegroundedness = FractionStolonsAboveGround;
 
             // 5. Set remobilisation rate for luxury N in each tissue
             for (int tissue = 0; tissue < 3; tissue++)
@@ -4205,8 +4205,9 @@
             dGrowthNet = (dGrowthShootDM - detachedShootDM) + (dGrowthRootDM - detachedRootDM);
 
             // Save some variables for mass balance check
-            double preTotalWt = AboveGroundWt + BelowGroundWt;
-            double preTotalN = AboveGroundN + BelowGroundN;
+            double preTotalWt = leaves.DMTotal + stems.DMTotal + stolons.DMTotal + roots[0].DMTotal;
+
+            double preTotalN = leaves.NTotal + stems.NTotal + stolons.NTotal + roots[0].NTotal;
 
             // Update each organ, returns test for mass balance
             if (leaves.DoOrganUpdate() == false)
@@ -4222,8 +4223,8 @@
                 throw new ApsimXException(this, "Growth and tissue turnover resulted in loss of mass balance for roots");
             // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
 
-            double postTotalWt = AboveGroundWt + BelowGroundWt;
-            double postTotalN = AboveGroundN + BelowGroundN;
+            double postTotalWt = leaves.DMTotal + stems.DMTotal + stolons.DMTotal + roots[0].DMTotal;
+            double postTotalN = leaves.NTotal + stems.NTotal + stolons.NTotal + roots[0].NTotal;
 
             // Check for loss of mass balance in the whole plant
             if (Math.Abs(preTotalWt + dGrowthAfterNutrientLimitations - detachedShootDM - detachedRootDM - postTotalWt) > Epsilon)
@@ -5064,7 +5065,7 @@
             amountToRemove += leaves.DMDeadHarvestable * removalFractions[0][1];
             amountToRemove += (stems.DMLiveHarvestable - stems.MinimumLiveDM) * removalFractions[1][0];
             amountToRemove += stems.DMDeadHarvestable * removalFractions[1][1];
-            amountToRemove += (stolons.DMLiveHarvestable - stolons.MinimumLiveDM * stolons.FractionStanding) * removalFractions[2][0];
+            amountToRemove += (stolons.DMLiveHarvestable - stolons.MinimumLiveDM * stolons.Abovegroundedness) * removalFractions[2][0];
             amountToRemove += stolons.DMDeadHarvestable * removalFractions[2][1];
 
             // get digestibility of DM being harvested (do this before updating pools)

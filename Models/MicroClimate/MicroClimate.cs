@@ -205,7 +205,7 @@
         [Units("-")]
         public double CanopyCover
         {
-            get { return MathUtilities.Divide(RadiationInterception, weather.Radn, 0.0); }
+            get { return microClimatesZones[0].CanopyCover; }
         }
 
         /// <summary>Called when simulation starts.</summary>
@@ -216,18 +216,9 @@
         {
             microClimatesZones = new List<MicroClimateZone>();
             foreach (Zone newZone in Apsim.ChildrenRecursively(this.Parent, typeof(Zone)))
-                microClimatesZones.Add(new MicroClimateZone(clock, weather, newZone));
+                microClimatesZones.Add(new MicroClimateZone(clock, newZone));
             if (microClimatesZones.Count == 0)
-                microClimatesZones.Add(new MicroClimateZone(clock, weather, this.Parent as Zone));
-        }
-
-        /// <summary>Called start of each day.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The event data.</param>
-        [EventSubscribe("StartOfDay")]
-        private void OnStartOfDay(object sender, EventArgs e)
-        {
-            microClimatesZones.ForEach(zone => zone.OnStartOfDay());
+                microClimatesZones.Add(new MicroClimateZone(clock, this.Parent as Zone));
         }
 
         /// <summary>Called when the canopy energy balance needs to be calculated.</summary>
@@ -236,6 +227,8 @@
         [EventSubscribe("DoEnergyArbitration")]
         private void DoEnergyArbitration(object sender, EventArgs e)
         {
+            microClimatesZones.ForEach(zone => zone.DailyInitialise(weather));
+
             dayLengthLight = MathUtilities.DayLength(clock.Today.DayOfYear, sunSetAngle, weather.Latitude);
             dayLengthEvap = MathUtilities.DayLength(clock.Today.DayOfYear, sunAngleNetPositiveRadiation, weather.Latitude);
             // VOS - a temporary kludge to get this running for high latitudes. MicroMet is due for a clean up soon so reconsider then.
