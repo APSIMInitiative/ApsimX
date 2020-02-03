@@ -81,25 +81,12 @@ namespace Models.CLEM.Activities
         /// </summary>
         [XmlIgnore]
         public Relationship LandConditionIndex { get; set; }
-        private int pkLandCon = 0; //rounded integer value used as primary key in GRASP file.
 
         /// <summary>
         /// Grass basal area
         /// </summary>
         [XmlIgnore]
         public Relationship GrassBasalArea { get; set; }
-
-        ///// <summary>
-        ///// Perennials
-        ///// </summary>
-        //[XmlIgnore]
-        //public double Perennials { get; set; }
-
-        ///// <summary>
-        ///// Perennials
-        ///// </summary>
-        //[XmlIgnore]
-        //public double Cover { get; set; }
 
         /// <summary>
         /// Area requested
@@ -129,10 +116,11 @@ namespace Models.CLEM.Activities
         // private properties
         private double unitsOfArea2Ha;
         private IFileGRASP FileGRASP = null;
-        private int pkGrassBA = 0; //rounded integer value used as primary key in GRASP file.
+        private double pkGrassBA = 0; //rounded (1 decimal place) integer value used as primary key in GRASP file.
+        private double pkLandCon = 0; //rounded (1decimal place) double value used as primary key in GRASP file.
         private string soilIndex = "0"; // obtained from LandType used
         private double StockingRateSummed;  //summed since last Ecological Calculation.
-        private int pkStkRate = 0; //rounded integer value used as primary key in GRASP file.
+        private double pkStkRate = 0; //rounded integer value used as primary key in GRASP file.
         private double ha2sqkm = 0.01; //convert ha to square km
         private bool gotLandRequested = false; //was this pasture able to get the land it requested ?
         //EcologicalCalculationIntervals worth of data read from GRASP file 
@@ -523,13 +511,13 @@ namespace Models.CLEM.Activities
             //pkLandCon = (int)(Math.Round(landConditionIndex / 2, 0) * 2); //weird way but this is how NABSA does it.
             //pkGrassBA = (int)(Math.Round((grassBasalArea - 1.1) / 2, 0) * 2 + 1);
 
-            pkLandCon = (int)(Math.Round(landConditionIndex, 0));
-            pkLandCon = Math.Min(10, Math.Max(0, pkLandCon));
-            pkGrassBA = (int)(Math.Round(grassBasalArea, 0));
-            pkGrassBA = Math.Min(6, Math.Max(1, pkGrassBA));
+            pkLandCon = Math.Round(landConditionIndex, 1);
+            //pkLandCon = Math.Min(10, Math.Max(0, pkLandCon));
+            pkGrassBA = Math.Round(grassBasalArea, 1);
+            //pkGrassBA = Math.Min(6, Math.Max(0, pkGrassBA));
 
             double stockingRate = LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate;
-            pkStkRate = (int)Math.Round(stockingRate);
+            pkStkRate = Math.Round(stockingRate);
             pkStkRate = Math.Min(70, Math.Max(1, pkStkRate));
 
             PastureDataList = FileGRASP.GetIntervalsPastureData(ZoneCLEM.ClimateRegion, soilIndex,

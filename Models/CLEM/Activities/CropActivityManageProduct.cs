@@ -192,8 +192,9 @@ namespace Models.CLEM.Activities
             parentManagementActivity = Apsim.Parent(this, typeof(CropActivityManageCrop)) as CropActivityManageCrop;
 
             // Retrieve harvest data from the forage file for the entire run. 
+            // only get entries where a harvest happened (Amtkg > 0)
             HarvestData = fileCrop.GetCropDataForEntireRun(parentManagementActivity.LinkedLandItem.SoilType, CropName,
-                                                               Clock.StartDate, Clock.EndDate).OrderBy(a => a.Year * 100 + a.Month).ToList<CropDataType>();
+                                                               Clock.StartDate, Clock.EndDate).Where(a => a.AmtKg > 0).OrderBy(a => a.Year * 100 + a.Month).ToList<CropDataType>();
             if ((HarvestData == null) || (HarvestData.Count == 0))
             {
                 Summary.WriteWarning(this, String.Format("Unable to locate any harvest data in [x={0}] using [x={1}] for soil type [{2}] and crop name [{3}] between the dates [{4}] and [{5}]",
@@ -225,7 +226,6 @@ namespace Models.CLEM.Activities
                 HarvestData.RemoveAt(0);
             }
             NextHarvest = HarvestData.FirstOrDefault();
-
         }
 
         /// <summary>
@@ -239,7 +239,8 @@ namespace Models.CLEM.Activities
             // rotate harvest if needed
             if (HarvestData.Count() > 0 && Clock.Today.Year * 100 + Clock.Today.Month == HarvestData.First().Year * 100 + HarvestData.First().Month)
             {
-                if(this.ActivityEnabled)
+                // don't rotate activities that may have just had their enabled status changed in this timestep
+                if(this.ActivityEnabled & Status != ActivityStatus.Ignored)
                 {
                     parentManagementActivity.RotateCrop();
                 }
