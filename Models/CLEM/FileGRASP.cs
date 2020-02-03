@@ -29,10 +29,12 @@ namespace Models.CLEM
     [Serializable]
     [ViewName("UserInterface.Views.GridView")] //CLEMFileGRASPView
     [PresenterName("UserInterface.Presenters.PropertyPresenter")] //CLEMFileGRASPPresenter
-    [ValidParent(ParentType = typeof(ZoneCLEM))]
-    [ValidParent(ParentType = typeof(ActivityFolder))]
-    [ValidParent(ParentType = typeof(PastureActivityManage))]
+    // No longer supported. Ignore from tree or ability to add until deleted.
+    //[ValidParent(ParentType = typeof(ZoneCLEM))]
+    //[ValidParent(ParentType = typeof(ActivityFolder))]
+    //[ValidParent(ParentType = typeof(PastureActivityManage))]
     [Description("This model holds a GRASP data file for native pasture used in the CLEM simulation.")]
+    [Version(1, 0, 2, "This component is no longer supported.\nUse the FileSQLiteGRASP reader for best performance.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/DataReaders/GRASPDataReader.htm")]
     public class FileGRASP : CLEMModel, IFileGRASP
@@ -434,7 +436,7 @@ namespace Models.CLEM
         /// <param name="ecolCalculationDate"></param>
         /// <param name="ecolCalculationInterval"></param>
         /// <returns></returns>
-        public List<PastureDataType> GetIntervalsPastureData(int region, string soil, int grassBasalArea, int landCondition, int stockingRate,
+        public List<PastureDataType> GetIntervalsPastureData(int region, string soil, double grassBasalArea, double landCondition, double stockingRate,
                                          DateTime ecolCalculationDate, int ecolCalculationInterval)
         {
             int startYear = ecolCalculationDate.Year;
@@ -500,7 +502,7 @@ namespace Models.CLEM
         /// <param name="landCondition"></param>
         /// <param name="stockingRate"></param>
         private void CheckAllMonthsWereRetrieved(List<PastureDataType> filtered, DateTime startDate, DateTime endDate,
-            int region, string soil, int grassBasalArea, int landCondition, int stockingRate)
+            int region, string soil, double grassBasalArea, double landCondition, double stockingRate)
         {
             string errormessageStart = "Problem with GRASP input file." + System.Environment.NewLine
                         + "For Region: " + region + ", Soil: " + soil 
