@@ -2,10 +2,12 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core.Interfaces;
+    using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.Linq;
     using System.Reflection;
 
     /// <summary>This class loads a model from a resource</summary>
@@ -16,8 +18,39 @@
         public string ResourceName { get; set; }
 
         /// <summary>Allow children to be serialised?</summary>
-        [System.Xml.Serialization.XmlIgnore]
-        public bool DoSerialiseChildren { get; private set; } = true;
+        [JsonIgnore]
+        public bool DoSerialiseChildren
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(ResourceName))
+                    return true;
+
+                if (ChildrenToSerialize != null && ChildrenToSerialize.Count > 0)
+                    return true;
+
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets all child models which are not part of the 'official' model resource.
+        /// Generally speaking, this is all models which have been added by the user
+        /// (e.g. cultivars).
+        /// </summary>
+        /// <remarks>
+        /// This returns all child models which do not have a matching model in the
+        /// resource model's children. A match is defined as having the same name and
+        /// type.
+        /// </remarks>
+        public List<Model> ChildrenToSerialize
+        {
+            get
+            {
+                List<Model> officialChildren = GetResourceModel().Children;
+                return Children.Except(officialChildren, new ModelComparer()).ToList();
+            }
+        }
 
         /// <summary>
         /// We have just been deserialised. If from XML then load our model
@@ -31,22 +64,15 @@
                 string contents = ReflectionUtilities.GetResourceAsString("Models.Resources." + ResourceName + ".json");
                 if (contents != null)
                 {
-                    List<Exception> creationExceptions;
-                    Model modelFromResource = ApsimFile.FileFormat.ReadFromString<Model>(contents, out creationExceptions);
-                    if (this.GetType() != modelFromResource.GetType())
-                    {
-                        // Top-level model may be a simulations node. Search for a child of the correct type.
-                        Model child = Apsim.Child(modelFromResource, this.GetType()) as Model;
-                        if (child != null)
-                            modelFromResource = child;
-                    }
+                    Model modelFromResource = GetResourceModel();
                     modelFromResource.Enabled = Enabled;
-                    Children.Clear();
-                    Children.AddRange(modelFromResource.Children);
+                    
+                    Children.RemoveAll(c => modelFromResource.Children.Contains(c, new ModelComparer()));
+                    Children.InsertRange(0, modelFromResource.Children);
+
                     CopyPropertiesFrom(modelFromResource);
                     SetNotVisible(modelFromResource);
                     Apsim.ParentAllChildren(this);
-                    DoSerialiseChildren = false;
                 }
             }
         }
@@ -85,13 +111,30 @@
             return null;
         }
 
+        private Model GetResourceModel()
+        {
+            string contents = ReflectionUtilities.GetResourceAsString($"Models.Resources.{ResourceName}.json");
+            Model modelFromResource = ApsimFile.FileFormat.ReadFromString<Model>(contents, out List<Exception> errors);
+            if (errors != null && errors.Count > 0)
+                throw errors[0];
+
+            if (this.GetType() != modelFromResource.GetType())
+            {
+                // Top-level model may be a simulations node. Search for a child of the correct type.
+                Model child = Apsim.Child(modelFromResource, this.GetType()) as Model;
+                if (child != null)
+                    modelFromResource = child;
+            }
+
+            return modelFromResource;
+        }
+
         /// <summary>
         /// Copy all properties from the specified resource.
         /// </summary>
         /// <param name="from">Model to copy from</param>
         private void CopyPropertiesFrom(Model from)
         {
-
             foreach (PropertyInfo property in from.GetType().GetProperties())
             {
                 if (property.CanWrite &&
@@ -130,5 +173,21 @@
             }
         }
 
+        /// <summary>
+        /// Class used to compare models. The models are considered equal iff they have
+        /// the same name and type.
+        /// </summary>
+        private class ModelComparer : IEqualityComparer<Model>
+        {
+            public bool Equals(Model x, Model y)
+            {
+                return x.GetType() == y.GetType() && string.Equals(x.Name, y.Name, StringComparison.InvariantCultureIgnoreCase);
+            }
+
+            public int GetHashCode(Model obj)
+            {
+                return obj.GetHashCode();
+            }
+        }
     }
 }
