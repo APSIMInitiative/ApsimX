@@ -4870,8 +4870,8 @@
         public double RemoveDM(double amountToRemove)
         {
             // get existing DM and N amounts
-            double preRemovalDMShoot = AboveGroundWt;
-            double preRemovalNShoot = AboveGroundN;
+            double preRemovalDMShoot = TotalWt;
+            double preRemovalNShoot = TotalN;
 
             if (amountToRemove > Epsilon)
             {
@@ -4983,8 +4983,8 @@
             }
 
             // Set outputs and check balance
-            defoliatedDM = preRemovalDMShoot - AboveGroundWt;
-            defoliatedN = preRemovalNShoot - AboveGroundN;
+            defoliatedDM = preRemovalDMShoot - TotalWt;
+            defoliatedN = preRemovalNShoot - TotalN;
             if (Math.Abs(defoliatedDM - amountToRemove) > Epsilon)
                 throw new ApsimXException(this, "  AgPasture " + Name + " - removal of DM resulted in loss of mass balance");
             else
