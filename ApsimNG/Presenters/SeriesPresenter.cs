@@ -191,7 +191,19 @@ namespace UserInterface.Presenters
         {
             try
             {
-                seriesView.Filter.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
+                // The completion options in the series filter will typically contain the trigger word,
+                // e.g. "Maize.Total.Wt". We don't want to end up with "Maize.Maize.Total.Wt".
+                if (args.ItemSelected.StartsWith(args.TriggerWord))
+                {
+                    int index = args.ItemSelected.IndexOf(args.TriggerWord);
+                    if (index >= 0)
+                        args.ItemSelected = args.ItemSelected.Substring(args.TriggerWord.Length);
+                }
+                string textBeforeCursor = seriesView.Filter.Value.Substring(0, seriesView.Filter.Offset);
+                if (textBeforeCursor.EndsWith(".") && args.ItemSelected.StartsWith("."))
+                    args.ItemSelected = args.ItemSelected.TrimStart('.');
+
+                seriesView.Filter.InsertAtCursor(args.ItemSelected);
             }
             catch (Exception err)
             {

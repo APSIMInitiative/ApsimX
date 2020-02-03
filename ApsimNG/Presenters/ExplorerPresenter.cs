@@ -434,15 +434,12 @@
         /// <summary>
         /// Adds a model to a parent model.
         /// </summary>
-        /// <param name="st">The string representation (JSON or XML) of a model.</param>
-        /// <param name="parentPath">Path to the parent</param>
-        public void Add(string st, string parentPath)
+        /// <param name="parentPath">Path to the parent.</param>
+        /// <param name="modelToAdd">The model to add to the tree.</param>
+        public void AddChildToTree(string parentPath, IModel modelToAdd)
         {
-            IModel model = FileFormat.ReadFromString<IModel>(st, out List<Exception> errors);
-            if (errors != null && errors.Count > 0)
-                throw errors[0];
-            AddModelCommand command = new AddModelCommand(parentPath, model, view, this);
-            CommandHistory.Add(command, true);
+            var nodeDescription = GetNodeDescription(modelToAdd);
+            view.Tree.AddChild(parentPath, nodeDescription);
         }
 
         /// <summary>
@@ -450,10 +447,9 @@
         /// </summary>
         /// <param name="child">The string representation (JSON or XML) of a model.</param>
         /// <param name="parentPath">Path to the parent</param>
-        public void Add(IModel child, string parentPath)
+        public void DeleteFromTree(string pathToNodeToDelete)
         {
-            AddModelCommand command = new AddModelCommand(parentPath, child, view, this);
-            CommandHistory.Add(command, true);
+            view.Tree.Delete(pathToNodeToDelete);
         }
 
         /// <summary>Deletes the specified model.</summary>
@@ -558,6 +554,18 @@
                             if (t.IsAssignableFrom(selectedModel.GetType()))
                             {
                                 ok = true;
+                            }
+                        }
+                    }
+
+                    if (ok && contextMenuAttr.Excluding != null && selectedModel != null)
+                    {
+                        ok = true;
+                        foreach (Type t in contextMenuAttr.Excluding)
+                        {
+                            if (t.IsAssignableFrom(selectedModel.GetType()))
+                            {
+                                ok = false;
                             }
                         }
                     }
@@ -685,12 +693,6 @@
                     {
                         viewName = new ViewNameAttribute("UserInterface.Views.ModelDetailsWrapperView");
                         presenterName = new PresenterNameAttribute("UserInterface.Presenters.ModelDetailsWrapperPresenter");
-                    }
-
-                    if (viewName == null && presenterName == null)
-                    {
-                        viewName = new ViewNameAttribute("UserInterface.Views.HTMLView");
-                        presenterName = new PresenterNameAttribute("UserInterface.Presenters.GenericPresenter");
                     }
 
                     // if a clem model ignore the newly added description box that is handled by CLEM wrapper
@@ -901,7 +903,10 @@
                     ICommand cmd = null;
                     if (e.Copied)
                     {
-                        this.Add(modelString, toParentPath);
+                        var command = new AddModelCommand(toParentPath,
+                                                          modelString,
+                                                          this);
+                        CommandHistory.Add(command, true);
                     }
                     else if (e.Moved)
                     {
@@ -1064,7 +1069,7 @@
                 string modelNamespace = modelType.FullName.Split('.')[1] + ".";
                 resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelNamespace + modelType.Name + ".png";
 
-                if (!MainView.MasterView.HasResource(resourceNameForImage))
+                if (MainView.MasterView != null && !MainView.MasterView.HasResource(resourceNameForImage))
                 {
                     resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelType.Name + ".png";
                 }

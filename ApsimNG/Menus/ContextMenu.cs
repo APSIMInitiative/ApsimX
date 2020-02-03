@@ -98,6 +98,13 @@ namespace UserInterface.Presenters
                 // Run all child model post processors.
                 var runner = new Runner(explorerPresenter.ApsimXFile, runSimulations: false);
                 runner.Run();
+
+                if (runner.ExceptionsThrown != null && runner.ExceptionsThrown.Count > 0)
+                {
+                    explorerPresenter.MainPresenter.ShowError(runner.ExceptionsThrown);
+                    return;
+                }
+
                 (explorerPresenter.CurrentPresenter as DataStorePresenter).PopulateGrid();
                 this.explorerPresenter.MainPresenter.ShowMessage("Post processing models have successfully completed", Simulation.MessageType.Information);
             }
@@ -295,7 +302,10 @@ namespace UserInterface.Presenters
 
                 string text = string.IsNullOrEmpty(externalCBText) ? internalCBText : externalCBText;
 
-                this.explorerPresenter.Add(text, this.explorerPresenter.CurrentNodePath);
+                var command = new AddModelCommand(explorerPresenter.CurrentNodePath,
+                                                  text, 
+                                                  explorerPresenter);
+                explorerPresenter.CommandHistory.Add(command, true);
             }
             catch (Exception err)
             {
@@ -793,45 +803,35 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Event handler for a User interface "Create documentation" action
+        /// Event handler for a User interface "Create documentation from simulations" action
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
         [ContextMenu(MenuName = "Create documentation",
+                     AppliesTo = new Type[] { typeof(Simulations) },
                      FollowsSeparator = true)]
-        public void CreateDocumentation(object sender, EventArgs e)
+        public void CreateFileDocumentation(object sender, EventArgs e)
         {
             try
             {
                 if (this.explorerPresenter.Save())
                 {
-                    string destinationFolder = Path.Combine(Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), "Doc");
-                    if (destinationFolder != null)
-                    {
-                        explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", Simulation.MessageType.Information);
-                        explorerPresenter.MainPresenter.ShowWaitCursor(true);
+                    explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", Simulation.MessageType.Information);
+                    explorerPresenter.MainPresenter.ShowWaitCursor(true);
 
-                        ICommand command;
-                        string fileNameWritten;
-                        var modelToDocument = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+                    ICommand command;
+                    string fileNameWritten;
+                    var modelToDocument = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
 
-                        if (modelToDocument is Simulations)
-                        {
-                            command = new CreateDocCommand(explorerPresenter);
-                            fileNameWritten = (command as CreateDocCommand).FileNameWritten;
-                        }
-                        else
-                        {
-                            command = new CreateModelDescriptionDocCommand(explorerPresenter, modelToDocument);
-                            fileNameWritten = (command as CreateModelDescriptionDocCommand).FileNameWritten;
-                        }
+                    var destinationFolder = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
+                    command = new CreateFileDocumentationCommand(explorerPresenter, destinationFolder);
+                    fileNameWritten = (command as CreateFileDocumentationCommand).FileNameWritten;
 
-                        explorerPresenter.CommandHistory.Add(command, true);
-                        explorerPresenter.MainPresenter.ShowMessage("Written " + fileNameWritten, Simulation.MessageType.Information);
+                    explorerPresenter.CommandHistory.Add(command, true);
+                    explorerPresenter.MainPresenter.ShowMessage("Written " + fileNameWritten, Simulation.MessageType.Information);
 
-                        // Open the document.
-                        Process.Start(fileNameWritten);
-                    }
+                    // Open the document.
+                    Process.Start(fileNameWritten);
                 }
             }
             catch (Exception err)
@@ -849,7 +849,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Include in documentation", IsToggle = true)]
+        [ContextMenu(MenuName = "Include in documentation", IsToggle = true, FollowsSeparator = true)]
         public void IncludeInDocumentation(object sender, EventArgs e)
         {
             try
@@ -887,7 +887,8 @@ namespace UserInterface.Presenters
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
         [ContextMenu(MenuName = "Show page of graphs in documentation", IsToggle = true,
-                     AppliesTo = new Type[] { typeof(Folder) })]
+                     AppliesTo = new Type[] { typeof(Folder) },
+                     FollowsSeparator = true)]
         public void ShowPageOfGraphs(object sender, EventArgs e)
         {
             try

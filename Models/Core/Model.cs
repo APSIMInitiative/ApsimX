@@ -80,20 +80,6 @@ namespace Models.Core
         public bool Enabled { get; set; }
 
         /// <summary>
-        /// Return the current APSIM version number.
-        /// </summary>
-        public string ApsimVersion
-        {
-            get
-            {
-                string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-                FileInfo info = new FileInfo(Assembly.GetExecutingAssembly().Location);
-                string buildDate = info.LastWriteTime.ToString("yyyy-MM-dd");
-                return "Version " + version + ", built " + buildDate;
-            }
-        }
-
-        /// <summary>
         /// Controls whether the model can be modified.
         /// </summary>
         public bool ReadOnly { get; set; }

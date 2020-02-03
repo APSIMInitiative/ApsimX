@@ -1,7 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 296,
-  "Version": 70,
+  "Version": 76,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-01-31",
   "Name": "Simulations",
   "Children": [
     {
@@ -119,6 +120,8 @@
                     300.0
                   ],
                   "ParticleSizeClay": null,
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
                   "BD": [
                     1.01056473311131,
                     1.07145631083388,
@@ -605,7 +608,7 @@
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 100.0,
-              "FractionFaecesAdded": 0.5,
+              "FractionFaecesAdded": 1.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
               "IncludeInDocumentation": true,
@@ -728,6 +731,7 @@
         },
         {
           "$type": "Models.GrazPlan.Stock, Models",
+          "ParamFile": "",
           "RandSeed": 9999,
           "GenoTypes": [
             {
@@ -775,7 +779,7 @@
         },
         {
           "$type": "Models.Manager, Models",
-          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.Utilities;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Calendar;\r\n        [Link] Stock Animals;\r\n        [Link] Supplement Feed;\r\n\r\n        private double sale_age = 3.0;\r\n        private int no_to_buy;\r\n        private int group_count;\r\n        private int g;\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            // purchase animals annually\r\n            //if (DateUtilities.DatesEqual(\"1-jan\", Calendar.Today))\r\n            if (Calendar.Today == new DateTime(2004,6,25))\r\n            {\r\n                g = Animals.NoGroups + 1;\r\n                //no_to_buy = 500 - Animals.NumberAll;\r\n                \r\n                StockBuy purchase = new StockBuy();\r\n                purchase.Genotype = \"Friesian\";\r\n                purchase.Number = 10;\r\n                purchase.Sex =  ReproductiveType.Female;\r\n                purchase.Age = 36;\r\n                purchase.Weight = 450.0;\r\n                purchase.UseTag = g + 1;\r\n                \r\n                Animals.Buy(purchase);\r\n                Animals.Move(g, \"Feedlot\");\r\n            }\r\n\r\n\r\n            //if (Animals.NumberAll > 0)\r\n            //    Feed.Feed(\"wheat, crushed\", 0.5 * Animals.NumberAll, \"Feedlot\");\r\n        }\r\n    }\r\n}\r\n",
+          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.Utilities;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Calendar;\r\n        [Link] Stock Animals;\r\n        [Link] Supplement Feed;\r\n\r\n        private double sale_age = 3.0;\r\n        private int no_to_buy;\r\n        private int group_count;\r\n        private int g;\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            // purchase animals annually\r\n            //if (DateUtilities.DatesEqual(\"1-jan\", Calendar.Today))\r\n            if (Calendar.Today == new DateTime(2004,6,25))\r\n            {\r\n                g = Animals.NoGroups + 1;\r\n                //no_to_buy = 500 - Animals.NumberAll;\r\n                \r\n                StockBuy purchase = new StockBuy();\r\n                purchase.Genotype = \"Friesian\";\r\n                purchase.Number = 10;\r\n                purchase.Sex =  ReproductiveType.Female;\r\n                purchase.Age = 36;\r\n                purchase.Weight = 450.0;\r\n                purchase.UseTag = g + 1;\r\n                \r\n                Animals.Buy(purchase);\r\n                Animals.Move(\"Feedlot\", g);\r\n            }\r\n\r\n\r\n            //if (Animals.NumberAll > 0)\r\n            //    Feed.Feed(\"wheat, crushed\", 0.5 * Animals.NumberAll, \"Feedlot\");\r\n        }\r\n    }\r\n}\r\n",
           "Parameters": [],
           "Name": "ManageStock",
           "IncludeInDocumentation": true,
@@ -869,8 +873,8 @@
           "TableName": "Report",
           "XFieldName": "Clock.Today",
           "YFieldName": "Stock.NumberAll",
-          "X2FieldName": null,
-          "Y2FieldName": null,
+          "X2FieldName": "",
+          "Y2FieldName": "",
           "ShowInLegend": false,
           "IncludeSeriesNameInLegend": false,
           "Cumulative": false,
@@ -937,8 +941,8 @@
           "TableName": "Report",
           "XFieldName": "Clock.Today",
           "YFieldName": "Stock.WeightAll",
-          "X2FieldName": null,
-          "Y2FieldName": null,
+          "X2FieldName": "",
+          "Y2FieldName": "",
           "ShowInLegend": false,
           "IncludeSeriesNameInLegend": false,
           "Cumulative": false,
@@ -1005,8 +1009,8 @@
           "TableName": "Report",
           "XFieldName": "Clock.Today",
           "YFieldName": "Slurp.Leaf.Live.Wt",
-          "X2FieldName": null,
-          "Y2FieldName": null,
+          "X2FieldName": "",
+          "Y2FieldName": "",
           "ShowInLegend": true,
           "IncludeSeriesNameInLegend": false,
           "Cumulative": false,
@@ -1073,8 +1077,8 @@
           "TableName": "Report",
           "XFieldName": "Clock.Today",
           "YFieldName": "Stock.IntakeAll.Weight",
-          "X2FieldName": null,
-          "Y2FieldName": null,
+          "X2FieldName": "",
+          "Y2FieldName": "",
           "ShowInLegend": false,
           "IncludeSeriesNameInLegend": false,
           "Cumulative": false,
