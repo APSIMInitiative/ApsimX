@@ -39,12 +39,14 @@
         /// <param name="parentPresenter">The parent explorer presenter.</param>
         public void Attach(object model, object v, ExplorerPresenter parentPresenter)
         {
+            if (model is ITestable t)
+                t.Test(false, true);
             presenter = parentPresenter;
             view = v as IDualGridView;
             tableModel = model as IModelAsTable;
             tables = tableModel.Tables;
             view.Grid1.DataSource = tables[0];
-            view.Grid2.DataSource = tables[1];
+            view.Grid2.DataSource = tables.Count > 1 ? tables[1] : null;
             view.Grid1.CellsChanged += OnCellValueChanged1;
             view.Grid2.CellsChanged += OnCellValueChanged2;
             parentPresenter.CommandHistory.ModelChanged += OnModelChanged;
