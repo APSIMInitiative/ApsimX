@@ -1226,6 +1226,9 @@ namespace Models.PMF.Organs
             DMDemand.Clear();
             NSupply.Clear();
             NDemand.Clear();
+            PotentialEP = 0;
+            WaterDemand = 0;
+            LightProfile = null;
         }
         /// <summary>Initialises the cohorts.</summary>
         [EventSubscribe("InitialiseLeafCohorts")]
