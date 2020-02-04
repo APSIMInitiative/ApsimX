@@ -47,7 +47,13 @@
         {
             get
             {
-                List<Model> officialChildren = GetResourceModel().Children;
+                if (string.IsNullOrEmpty(ResourceName))
+                    return Children;
+
+                List<Model> officialChildren = GetResourceModel()?.Children;
+                if (officialChildren == null)
+                    return Children;
+
                 return Children.Except(officialChildren, new ModelComparer()).ToList();
             }
         }
@@ -59,7 +65,7 @@
         public override void OnCreated()
         {
             // lookup the resource get the xml and then deserialise to a model.
-            if (ResourceName != null && ResourceName != "")
+            if (!string.IsNullOrEmpty(ResourceName))
             {
                 string contents = ReflectionUtilities.GetResourceAsString("Models.Resources." + ResourceName + ".json");
                 if (contents != null)
@@ -113,7 +119,13 @@
 
         private Model GetResourceModel()
         {
+            if (string.IsNullOrEmpty(ResourceName))
+                return null;
+
             string contents = ReflectionUtilities.GetResourceAsString($"Models.Resources.{ResourceName}.json");
+            if (string.IsNullOrEmpty(contents))
+                return null;
+
             Model modelFromResource = ApsimFile.FileFormat.ReadFromString<Model>(contents, out List<Exception> errors);
             if (errors != null && errors.Count > 0)
                 throw errors[0];
