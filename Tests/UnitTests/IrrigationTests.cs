@@ -129,7 +129,8 @@
                                     new Solute() { Name = "NH4" },
                                     new Solute() { Name = "Urea"}
                                 }
-                            }
+                            },
+                            new MockSoilTemperature(),
                         }
                     },
                     new MockClock()
