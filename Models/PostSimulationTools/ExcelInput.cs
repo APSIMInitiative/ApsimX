@@ -51,10 +51,6 @@
             }
         }
 
-        /// <summary>Gets or sets the texture metadata.</summary>
-        /// <value>The texture metadata.</value>
-        public string[] FileNameMetadata { get; set; }
-
         /// <summary>
         /// List of Excel sheet names to read from.
         /// </summary>
@@ -167,7 +163,7 @@
         /// if we begin to make use of sub-day model steps.
         /// </summary>
         /// <param name="table">Table to be adjusted</param>
-        private void TruncateDates(DataTable table)
+        public static void TruncateDates(DataTable table)
         {
             for (int icol = 0; icol < table.Columns.Count; icol++)
                 if (table.Columns[icol].DataType == typeof(DateTime))
@@ -177,6 +173,5 @@
                             row[icol] = Convert.ToDateTime(row[icol], CultureInfo.InvariantCulture).Date;
                 }
         }
-
     }
 }
