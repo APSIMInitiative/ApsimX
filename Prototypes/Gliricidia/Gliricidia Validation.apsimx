@@ -2647,7 +2647,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 10000.0,
+                  "FixedValue": 0.6,
                   "Units": "g/m^2/d",
                   "Name": "FixationRate",
                   "Children": [],
