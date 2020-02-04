@@ -1,7 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 70,
+  "Version": 76,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-01-31",
   "Name": "Simulations",
   "Children": [
     {
@@ -122,6 +123,8 @@
                             300.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.01056473311131,
                             1.07145631083388,
@@ -608,7 +611,7 @@
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 100.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,
@@ -684,6 +687,7 @@
                 },
                 {
                   "$type": "Models.GrazPlan.Stock, Models",
+                  "ParamFile": "",
                   "RandSeed": 9999,
                   "GenoTypes": [],
                   "Animals": [],
@@ -728,7 +732,7 @@
                     },
                     {
                       "Key": "w",
-                      "Value": ".Simulations.Management Examples.Stocking Rates.Farm.Feedlot.Soil"
+                      "Value": "[Soil]"
                     }
                   ],
                   "Name": "BuySell",

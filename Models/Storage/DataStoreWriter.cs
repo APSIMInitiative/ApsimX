@@ -151,6 +151,15 @@
             }
         }
 
+        /// <summary>
+        /// Deletes a table from the database.
+        /// </summary>
+        /// <param name="tableName">Name of the table to be deleted.</param>
+        public void DeleteTable(string tableName)
+        {
+            Connection.ExecuteNonQuery($"DROP TABLE {tableName}");
+        }
+
         /// <summary>Wait for all records to be written.</summary>
         public void WaitForIdle()
         {
