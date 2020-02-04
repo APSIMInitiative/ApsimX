@@ -81,14 +81,46 @@ namespace Models.PostSimulationTools
                                 // Note that this is only possible if another excel file with the same
                                 // sheet name has recently been read in.
                                 if (storage.Reader.TableNames.Contains(table.TableName))
-                                    table.Merge(storage.Reader.GetData(table.TableName));
+                                    Merge(table, storage.Reader.GetData(table.TableName));
 
                                 storage.Writer.WriteTable(table);
+                                storage.Writer.WaitForIdle();
                             }
                         }
                     }
                 }
             }
+        }
+
+        private void Merge(DataTable table, DataTable existingTable)
+        {
+            for (int i = 0; i < table.Columns.Count; i++)
+            {
+                DataColumn newColumn = table.Columns[i];
+                DataColumn oldColumn = existingTable.Columns[newColumn.ColumnName];
+
+                if (oldColumn != null && oldColumn.DataType != newColumn.DataType)
+                    ChangeColumnType(table, newColumn.ColumnName, oldColumn.DataType);
+            }
+            table.Merge(existingTable);
+        }
+
+        private void ChangeColumnType(DataTable table, string columnName, Type dataType)
+        {
+            DataColumn newColumn = new DataColumn(columnName + "_new", dataType);
+
+            int ord = table.Columns[columnName].Ordinal;
+            table.Columns.Add(newColumn);
+            newColumn.SetOrdinal(ord);
+
+            foreach (DataRow row in table.Rows)
+            {
+                object value = row[columnName];
+                row[newColumn.ColumnName] = value == DBNull.Value ? DBNull.Value : Convert.ChangeType(value, dataType);
+            }
+
+            table.Columns.Remove(columnName);
+            newColumn.ColumnName = columnName;
         }
     }
 }
