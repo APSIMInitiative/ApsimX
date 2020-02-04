@@ -48,7 +48,7 @@ namespace Models
         /// <summary>
         /// Implementation of IModelAsTable - required for UI to work properly.
         /// </summary>
-        public List<DataTable> Tables { get { return new List<DataTable>() { Table }; } set { throw new NotImplementedException(); } }
+        public List<DataTable> Tables { get { return new List<DataTable>() { Table }; } }
 
         /// <summary>
         /// Run tests

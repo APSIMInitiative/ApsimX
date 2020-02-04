@@ -41,6 +41,7 @@
         {
             if (model is ITestable t)
                 t.Test(false, true);
+
             presenter = parentPresenter;
             view = v as IDualGridView;
             tableModel = model as IModelAsTable;
@@ -49,6 +50,11 @@
             view.Grid2.DataSource = tables.Count > 1 ? tables[1] : null;
             view.Grid1.CellsChanged += OnCellValueChanged1;
             view.Grid2.CellsChanged += OnCellValueChanged2;
+
+            bool readOnly = !tableModel.GetType().GetProperty("Tables").CanWrite;
+            view.Grid1.ReadOnly = readOnly;
+            view.Grid2.ReadOnly = readOnly;
+
             parentPresenter.CommandHistory.ModelChanged += OnModelChanged;
 
             gridPresenter1 = new GridPresenter();
