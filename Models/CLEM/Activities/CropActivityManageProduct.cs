@@ -459,27 +459,6 @@ namespace Models.CLEM.Activities
                                 }
                                 LinkedResourceItem.Add(packet, this, addReason);
                             }
-
-                            ////if Npct column was not in the file 
-                            //if (double.IsNaN(NextHarvest.Npct))
-                            //{
-                            //    //Add without adding any new nitrogen.
-                            //    //The nitrogen value for this feed item in the store remains the same.
-                            //    LinkedResourceItem.Add(AmountHarvested, this, addReason);
-                            //}
-                            //else
-                            //{
-                            //    FoodResourcePacket packet = new FoodResourcePacket()
-                            //    {
-                            //        Amount = AmountHarvested,
-                            //        PercentN = NextHarvest.Npct
-                            //    };
-                            //    if (LinkedResourceItem.GetType() == typeof(GrazeFoodStoreType))
-                            //    {
-                            //        packet.DMD = (LinkedResourceItem as GrazeFoodStoreType).EstimateDMD(packet.PercentN);
-                            //    }
-                            //    LinkedResourceItem.Add(packet, this, addReason);
-                            //}
                             SetStatusSuccess();
                         }
                         else
@@ -495,6 +474,10 @@ namespace Models.CLEM.Activities
                 {
                     this.Status = ActivityStatus.NotNeeded;
                 }
+            }
+            else
+            {
+                this.Status = ActivityStatus.NotNeeded;
             }
         }
 
