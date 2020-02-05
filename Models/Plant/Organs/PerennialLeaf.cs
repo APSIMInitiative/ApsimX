@@ -434,6 +434,9 @@ namespace Models.PMF.Organs
         protected void Clear()
         {
             Height = 0;
+            PotentialEP = 0;
+            WaterDemand = 0;
+            LightProfile = null;
             StartNRetranslocationSupply = 0;
             StartNReallocationSupply = 0;
             LiveFWt = 0;

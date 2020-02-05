@@ -20,6 +20,7 @@
     /// </remarks>
     [Serializable]
     [ValidParent(ParentType = typeof(Zone))]
+    [ValidParent(ParentType = typeof(Simulation))]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SlopeEffectsOnWeather : Model
@@ -102,11 +103,11 @@
         /// <summary>Parameter A for diffuse radiation fraction.</summary>
         [Separator("Parameters to adjust solar radiation")]
         [Description("Parameter A for diffuse radiation fraction")]
-        public double A_diffuseRadn { get; set; } = -5.0;
+        public double A_diffuseRadn { get; set; } = -3.664;
 
         /// <summary>Parameter B for diffuse radiation fraction.</summary>
         [Description("Parameter B for diffuse radiation fraction")]
-        public double B_diffuseRadn { get; set; } = 8.0;
+        public double B_diffuseRadn { get; set; } = 7.011;
 
         /// <summary>
         /// Mean air turbidity for direct radiation (0-1).
@@ -145,23 +146,23 @@
         /// <summary>Parameter aT0 of dltTemp × dltRadn function, max rate of change (oC per MJ/m2/day).</summary>
         [Separator("Parameters to adjust min and max temperatures")]
         [Description("Parameter aT0 of dltTemp × dltRadn function, max rate of change (oC per MJ/m2/day)")]
-        public double aT0 { get; set; } = 0.0;
+        public double aT0 { get; set; } = 1.61;
 
         /// <summary>Parameter bT of dltTemp × dltRadn function, non linear coefficient (exponent).</summary>
         [Description("Parameter bT of dltTemp × dltRadn function, non linear coefficient (exponent)")]
-        public double bT { get; set; } = 0.0;
+        public double bT { get; set; } = 0.88;
 
         /// <summary>Parameter cT of dltTemp × dltRadn function, accounts for wind effects (0-1).</summary>
         [Description("Parameter cT of dltTemp × dltRadn function, accounts for wind effects (0-1)")]
-        public double cT { get; set; } = 0.0;
+        public double cT { get; set; } = 0.12;
 
         /// <summary>Parameter FN of dltTemp × dltRadn function, used when dltRadn is negative (0-1).</summary>
         [Description("Parameter FN of dltTemp × dltRadn function, used when dltRadn is negative (0-1)")]
-        public double FN { get; set; } = 0.0;
+        public double FN { get; set; } = 0.81;
 
         /// <summary>Parameter FM of dltTemp × dltRadn function, adjust for Tmin (0-1).</summary>
         [Description("Parameter FM of dltTemp × dltRadn function, adjust for Tmin (0-1)")]
-        public double FM { get; set; } = 0.0;
+        public double FM { get; set; } = 0.5;
 
         /// <summary>Relative change in rainfall.</summary>
         [Separator("Parameters to adjust other variables (not function of slope)")]
@@ -298,8 +299,10 @@
                 throw new Exception("Turbidity coefficient value is out of bounds (0-1)");
 
             // Convert and fix some parameters
-            if (zone.AspectAngle > 180)
-                zone.AspectAngle -= 180;
+            // AspectAngle is degres from north. Should really check this against original 
+            // sources of the equations. Seems to make sense.
+            //if (zone.AspectAngle > 180)
+            //    zone.AspectAngle -= 180;
             zone.Slope = Math.PI * zone.Slope / 180;
             zone.AspectAngle = Math.PI * zone.AspectAngle / 180;
             latitudeAngle = Math.PI * weather.Latitude / 180;
