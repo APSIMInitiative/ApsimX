@@ -148,6 +148,7 @@ namespace Models.CLEM.Activities
             // purchase details only on timer
             if(TimingOK)
             {
+                this.Status = ActivityStatus.NotNeeded;
                 // remove any old potential sales from list as these will be updated here
                 Resources.RuminantHerd().PurchaseIndividuals.RemoveAll(a => a.Breed == this.PredictedHerdBreed && a.SaleFlag == HerdChangeReason.TradePurchase);
 
@@ -204,6 +205,7 @@ namespace Models.CLEM.Activities
                         }
 
                         Resources.RuminantHerd().PurchaseIndividuals.Add(ruminantBase as Ruminant);
+                        this.Status = ActivityStatus.Success;
                     }
                 }
             }
@@ -213,10 +215,12 @@ namespace Models.CLEM.Activities
                 if (ind.Age - ind.PurchaseAge >= MinMonthsKept)
                 {
                     ind.SaleFlag = HerdChangeReason.TradeSale;
+                    this.Status = ActivityStatus.Success;
                 }
                 if (TradeWeight > 0 && ind.Weight >= TradeWeight)
                 {
                     ind.SaleFlag = HerdChangeReason.TradeSale;
+                    this.Status = ActivityStatus.Success;
                 }
             }
         }
