@@ -26,9 +26,12 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// A link to the equivalent market store for trading.
         /// </summary>
-        private protected CLEMResourceTypeBase equivalentMarketStore { get; set; }
+        protected CLEMResourceTypeBase equivalentMarketStore { get; set; }
 
-        private protected bool equivalentMarketStoreDetermined { get; set; }
+        /// <summary>
+        /// Detemrines if an equivalent resource has been found in the market
+        /// </summary>
+        protected bool equivalentMarketStoreDetermined { get; set; }
 
         /// <summary>
         /// Determine whether transmutation has been defined for this foodtype
@@ -163,8 +166,10 @@ namespace Models.CLEM.Resources
             }
         }
 
-
-        private protected void FindEquivalentMarketStore()
+        /// <summary>
+        /// Locate the equivalent store in a market if available
+        /// </summary>
+        protected void FindEquivalentMarketStore()
         {
             // determine what resource types allow market transactions
             switch (this.GetType().Name)
