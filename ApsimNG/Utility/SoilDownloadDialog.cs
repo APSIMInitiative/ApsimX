@@ -2,7 +2,6 @@
 {
     using APSIM.Shared.Utilities;
     using Gtk;
-    using Importer;
     using Newtonsoft.Json;
     using Models;
     using Models.Core;
@@ -17,6 +16,7 @@
     using UserInterface.Presenters;
     using UserInterface.Views;
     using System.Globalization;
+    using Models.Core.Apsim710File;
 
     /// <summary>
     /// Class for displaying a dialog to select a soil description to be downloaded from ASRIS or ISRIC
@@ -270,7 +270,7 @@
                 }
                 else if (dest is Zone)
                 {
-                    AddModelCommand command = new AddModelCommand(replaceNode, newSoil, owningView, explorerPresenter);
+                    var command = new AddModelCommand(replaceNode, newSoil, explorerPresenter);
                     explorerPresenter.CommandHistory.Add(command, true);
                 }
                 MessageDialog md = new MessageDialog(owningView.MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok,
@@ -328,7 +328,7 @@
             {
                 XmlDocument soilDoc = new XmlDocument();
                 XmlNode rootNode = soilDoc.CreateNode("element", "root", "");
-                APSIMImporter importer = new APSIMImporter();
+                var importer = new Importer();
                 XmlNode newNode = null;
                 newNode = importer.ImportSoil(soil, rootNode, newNode);
 
@@ -908,8 +908,10 @@
                         dul[i] = thetaWwp[i] + awc20[i];  // This could be made Moore complex
                     waterNode.DUL = ConvertLayers(dul, layerCount);
 
-                    var particleSizeSand = ConvertLayers(sand, layerCount);
+                    waterNode.ParticleSizeSand = ConvertLayers(sand, layerCount);
+                    waterNode.ParticleSizeSilt = ConvertLayers(silt, layerCount);
                     waterNode.ParticleSizeClay = ConvertLayers(clay, layerCount);
+                    // waterNode.Rocks = ConvertLayers(coarse, layerCount);
                     analysis.PH = ConvertLayers(phWater, layerCount);
                     // Obviously using the averaging in "ConvertLayers" for texture classes is not really correct, but should be OK as a first pass if we don't have sharply contrasting layers
                     double[] classes = ConvertLayers(texture, layerCount);
@@ -931,7 +933,7 @@
 
                     for (int i = 0; i < layerCount; i++)
                     {
-                        xf[i] = 1.0 - (waterNode.BD[i] - (p1 + p2 * 0.01 * particleSizeSand[i])) / p3;
+                        xf[i] = 1.0 - (waterNode.BD[i] - (p1 + p2 * 0.01 * waterNode.ParticleSizeSand[i])) / p3;
                         xf[i] = Math.Max(0.1, Math.Min(1.0, xf[i]));
                         double effectiveThickness = thickness[i] * xf[i];
                         double bottomEffDepth = topEffDepth + effectiveThickness;

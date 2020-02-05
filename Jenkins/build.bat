@@ -44,10 +44,10 @@ set "flags=/v:m /m /nologo"
 if "%1"=="/r" (
 	rem We need to build in release mode.
 	set "flags=%flags% /p:Configuration=Release"
-	
-	rem Generate a version number.
-	call :getVersion
 )
+
+rem Generate a version number.
+call :getVersion
 
 echo Compiling...
 msbuild %solution_file% %flags%
@@ -56,6 +56,9 @@ exit /b %errorlevel%
 
 :getVersion
 rem We generate a version number by calling a webservice.
+if "%PULL_ID%"=="" (
+   set PULL_ID=%ghprbPullId%
+)
 echo PULL_ID=%PULL_ID%
 if "%PULL_ID%"=="" (
 	echo Error: PULL_ID is not set.
@@ -70,6 +73,7 @@ for /F "tokens=1-6 delims=-" %%I IN ("%FULLRESPONSE%") DO SET BUILD_TIMESTAMP=%%
 for /F "tokens=1-6 delims=," %%I IN ("%FULLRESPONSE%") DO SET DATETIMESTAMP=%%I
 for /F "tokens=1-6 delims=," %%I IN ("%FULLRESPONSE%") DO SET ISSUE_NUMBER=%%J
 set APSIM_VERSION=%BUILD_TIMESTAMP%.%ISSUE_NUMBER%
+set YEAR=%date:~10,4%
 
 echo APSIM_VERSION=%APSIM_VERSION% > %apsimx%\Bin\Build.properties
 echo ISSUE_NUMBER=%ISSUE_NUMBER% >> %apsimx%\Bin\Build.properties
@@ -86,3 +90,4 @@ echo using System.Reflection; > "%apsimx%\Models\Properties\AssemblyVersion.cs"
 echo [assembly: AssemblyTitle("APSIM %APSIM_VERSION%")] >> "%apsimx%\Models\Properties\AssemblyVersion.cs"
 echo [assembly: AssemblyVersion("%APSIM_VERSION%")] >> "%apsimx%\Models\Properties\AssemblyVersion.cs"
 echo [assembly: AssemblyFileVersion("%APSIM_VERSION%")] >> "%apsimx%\Models\Properties\AssemblyVersion.cs"
+echo [assembly: AssemblyCopyright("Copyright © APSIM Initiative %YEAR%")] >> "%apsimx%\Models\Properties\AssemblyVersion.cs"

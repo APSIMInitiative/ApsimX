@@ -98,6 +98,13 @@ namespace UserInterface.Presenters
                 // Run all child model post processors.
                 var runner = new Runner(explorerPresenter.ApsimXFile, runSimulations: false);
                 runner.Run();
+
+                if (runner.ExceptionsThrown != null && runner.ExceptionsThrown.Count > 0)
+                {
+                    explorerPresenter.MainPresenter.ShowError(runner.ExceptionsThrown);
+                    return;
+                }
+
                 (explorerPresenter.CurrentPresenter as DataStorePresenter).PopulateGrid();
                 this.explorerPresenter.MainPresenter.ShowMessage("Post processing models have successfully completed", Simulation.MessageType.Information);
             }
@@ -198,8 +205,8 @@ namespace UserInterface.Presenters
                     object model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath);
                     explorerPresenter.HideRightHandPanel();
                     explorerPresenter.ShowInRightHandPanel(model,
-                                                           "UserInterface.Views.NewAzureJobView",
-                                                           "UserInterface.Presenters.NewAzureJobPresenter");
+                                                           "UserInterface.Views.RunOnCloudView",
+                                                           "UserInterface.Presenters.RunOnCloudPresenter");
                 }
                 else
                 {
@@ -295,7 +302,10 @@ namespace UserInterface.Presenters
 
                 string text = string.IsNullOrEmpty(externalCBText) ? internalCBText : externalCBText;
 
-                this.explorerPresenter.Add(text, this.explorerPresenter.CurrentNodePath);
+                var command = new AddModelCommand(explorerPresenter.CurrentNodePath,
+                                                  text, 
+                                                  explorerPresenter);
+                explorerPresenter.CommandHistory.Add(command, true);
             }
             catch (Exception err)
             {
@@ -473,7 +483,7 @@ namespace UserInterface.Presenters
                 if (currentSoil != null)
                 {
 
-                    string errorMessages = SoilChecker.Check(currentSoil);
+                    string errorMessages = SoilChecker.CheckWithStandardisation(currentSoil);
                     if (!string.IsNullOrEmpty(errorMessages))
                         explorerPresenter.MainPresenter.ShowError(errorMessages);
                     else
@@ -793,67 +803,44 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Event handler for a User interface "Create documentation" action
+        /// Event handler for a User interface "Create documentation from simulations" action
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Create simulation documentation",
-                     FollowsSeparator = true,
-                     AppliesTo = new[] { typeof(Simulations) })]
-        public void CreateDocumentation(object sender, EventArgs e)
+        [ContextMenu(MenuName = "Create documentation",
+                     AppliesTo = new Type[] { typeof(Simulations) },
+                     FollowsSeparator = true)]
+        public void CreateFileDocumentation(object sender, EventArgs e)
         {
             try
             {
                 if (this.explorerPresenter.Save())
                 {
-                    string destinationFolder = Path.Combine(Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), "Doc");
-                    if (destinationFolder != null)
-                    {
-                        explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", Simulation.MessageType.Information);
-                        explorerPresenter.MainPresenter.ShowWaitCursor(true);
+                    explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", Simulation.MessageType.Information);
+                    explorerPresenter.MainPresenter.ShowWaitCursor(true);
 
-                        try
-                        {
-                            ExportNodeCommand command = new ExportNodeCommand(this.explorerPresenter, this.explorerPresenter.CurrentNodePath);
-                            this.explorerPresenter.CommandHistory.Add(command, true);
-                            explorerPresenter.MainPresenter.ShowMessage("Finished creating documentation", Simulation.MessageType.Information);
-                            Process.Start(command.FileNameWritten);
-                        }
-                        catch (Exception err)
-                        {
-                            explorerPresenter.MainPresenter.ShowError(err);
-                        }
-                        finally
-                        {
-                            explorerPresenter.MainPresenter.ShowWaitCursor(false);
-                        }
-                    }
+                    ICommand command;
+                    string fileNameWritten;
+                    var modelToDocument = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+
+                    var destinationFolder = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
+                    command = new CreateFileDocumentationCommand(explorerPresenter, destinationFolder);
+                    fileNameWritten = (command as CreateFileDocumentationCommand).FileNameWritten;
+
+                    explorerPresenter.CommandHistory.Add(command, true);
+                    explorerPresenter.MainPresenter.ShowMessage("Written " + fileNameWritten, Simulation.MessageType.Information);
+
+                    // Open the document.
+                    Process.Start(fileNameWritten);
                 }
             }
             catch (Exception err)
             {
                 explorerPresenter.MainPresenter.ShowError(err);
             }
-        }
-
-        /// <summary>
-        /// Event handler for a write debug document
-        /// </summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Write debug document",
-                     AppliesTo = new Type[] { typeof(Simulation) })]
-        public void WriteDebugDocument(object sender, EventArgs e)
-        {
-            try
+            finally 
             {
-                Simulation model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as Simulation;
-                WriteDebugDoc writeDocument = new WriteDebugDoc(explorerPresenter, model);
-                writeDocument.Do(null);
-            }
-            catch (Exception err)
-            {
-                explorerPresenter.MainPresenter.ShowError(err);
+                explorerPresenter.MainPresenter.ShowWaitCursor(false);
             }
         }
 
@@ -862,7 +849,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Include in documentation", IsToggle = true)]
+        [ContextMenu(MenuName = "Include in documentation", IsToggle = true, FollowsSeparator = true)]
         public void IncludeInDocumentation(object sender, EventArgs e)
         {
             try
@@ -900,7 +887,8 @@ namespace UserInterface.Presenters
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
         [ContextMenu(MenuName = "Show page of graphs in documentation", IsToggle = true,
-                     AppliesTo = new Type[] { typeof(Folder) })]
+                     AppliesTo = new Type[] { typeof(Folder) },
+                     FollowsSeparator = true)]
         public void ShowPageOfGraphs(object sender, EventArgs e)
         {
             try

@@ -156,7 +156,7 @@
         private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
         {
             if (string.IsNullOrEmpty(args.ItemSelected))
-                factorView.Specification.InsertAtCursor(args.ItemSelected);
+                factorView.Specification.InsertAtCursorInSquareBrackets(args.ItemSelected);
             else
                 factorView.Specification.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
         }

@@ -10,7 +10,6 @@
     using APSIM.Shared.Utilities;
     using Commands;
     using EventArguments;
-    using Importer;
     using Interfaces;
     using Models;
     using Models.CLEM;
@@ -72,6 +71,11 @@
                 {
                     this.view.ModelTypeTextColour = "008000";
                 }
+                else if (this.view.ModelTypeText.Contains(".Market"))
+                {
+                    this.view.ModelTypeTextColour = "1785FF";
+                }
+
 
                 HelpUriAttribute helpAtt = ReflectionUtilities.GetAttribute(model.GetType(), typeof(HelpUriAttribute), false) as HelpUriAttribute;
                 this.view.ModelHelpURL = "";
@@ -99,7 +103,7 @@
                 if (viewName != null && presenterName != null)
                 {
                     // if model CLEMModel
-                    if(model.GetType().IsSubclassOf(typeof(CLEMModel)) || model is ZoneCLEM)
+                    if(model.GetType().IsSubclassOf(typeof(CLEMModel)) | model is ZoneCLEM | model is Market)
                     {
                         ShowInLowerPanel(model, "UserInterface.Views.CLEMView", "UserInterface.Presenters.CLEMPresenter");
                     }

@@ -21,7 +21,6 @@ namespace Models.CLEM
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
-    [ValidParent(ParentType = typeof(Zone))]
     [Description("This represents a CLEM farm resources")]
     [HelpUri(@"Content/Features/CLEMComponent.htm")]
     [Version(1, 0, 2, "New ResourceUnitConverter functionality added that changes some reporting.\nThis change will cause errors for all previous custom resource ledger reports created using the APSIM Report component.\nTo fix errors add \".Name\" to all LastTransaction.ResourceType and LastTransaction.Activity entries in custom ledgers (i.e. LastTransaction.ResourceType.Name as Resource). The CLEM ReportResourceLedger component has been updated to automatically handle the changes.")]
@@ -110,7 +109,6 @@ namespace Models.CLEM
         /// <summary>Local altitude (meters above sea level).</summary>
         [XmlIgnore]
         public new double Altitude { get; set; } = 50;
-
 
         /// <summary>
         /// Validate object
@@ -313,7 +311,7 @@ namespace Models.CLEM
             return valid;
         }
 
-            /// <summary>
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="model"></param>
@@ -323,7 +321,7 @@ namespace Models.CLEM
         public string GetFullSummary(object model, bool useFullDescription, string htmlString)
         {
             string html = "";
-            html += "\n<div class=\"holdermain\">";
+            html += "\n<div class=\"holdermain\" style=\"opacity: " + ((!this.Enabled) ? "0.4" : "1") + "\">";
             html += "\n<div class=\"clearfix defaultbanner\">";
             html += "<div class=\"typediv\">" + this.GetType().Name + "</div>";
             html += "</div>";

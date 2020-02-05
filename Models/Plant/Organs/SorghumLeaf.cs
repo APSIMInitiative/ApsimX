@@ -565,6 +565,7 @@ namespace Models.PMF.Organs
 
             laiEquilibWaterQ = new Queue<double>(10);
             sdRatioQ = new Queue<double>(5);
+            totalLaiEquilibWater = 0;
             totalSDRatio = 0.0;
             avSDRatio = 0.0;
 
@@ -599,6 +600,22 @@ namespace Models.PMF.Organs
         }
 
         #region Top Level time step functions
+
+        [EventSubscribe("StartOfDay")]
+        private void ResetDailyVariables(object sender, EventArgs e)
+        {
+            BiomassRUE = 0;
+            BiomassTE = 0;
+            DltLAI = 0;
+            DltSenescedLai = 0;
+            DltSenescedLaiAge = 0;
+            DltSenescedLaiFrost = 0;
+            DltSenescedLaiLight = 0;
+            DltSenescedLaiN = 0;
+            DltSenescedLaiWater = 0;
+            DltSenescedN = 0;
+        }
+
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -700,8 +717,12 @@ namespace Models.PMF.Organs
 
             NitrogenPhotoStress = nPhotoStress.Value(); // Math.Max(photoStress, 0.0);
 
-            var phenoStress = (1.0 / 0.7) * SLN * 1.25 - (3.0 / 7.0);
-            NitrogenPhenoStress = MathUtilities.Bound(phenoStress, 0.0, 1.0);
+            NitrogenPhenoStress = 1.0;
+            if (phenology.Between("Emergence", "Flowering"))
+            {
+                var phenoStress = (1.0 / 0.7) * SLN * 1.25 - (3.0 / 7.0);
+                NitrogenPhenoStress = MathUtilities.Bound(phenoStress, 0.0, 1.0);
+            }
         }
 
         /// <summary>Radiation level for onset of light senescence.</summary>
@@ -853,9 +874,13 @@ namespace Models.PMF.Organs
             double effectiveRue = MathUtilities.Divide(Photosynthesis.Value(), RadIntTot, 0);
 
             double radnCanopy = MathUtilities.Divide(RadIntTot, CoverGreen, MetData.Radn);
+            if (MathUtilities.FloatsAreEqual(CoverGreen, 0))
+                radnCanopy = 0;
 
             double sen_radn_crit = MathUtilities.Divide(dlt_dm_transp, effectiveRue, radnCanopy);
             double intc_crit = MathUtilities.Divide(sen_radn_crit, radnCanopy, 1.0);
+            if (MathUtilities.FloatsAreEqual(sen_radn_crit, 0))
+                intc_crit = 0;
 
             //            ! needs rework for row spacing
             double laiEquilibWaterToday;
@@ -1276,20 +1301,24 @@ namespace Models.PMF.Organs
                 if (requiredN <= 0.0001)
                     return nProvided;
 
-                // take from decreasing dltLai 
-                if (!forLeaf && MathUtilities.IsPositive(DltLAI))
+                // decrease dltLai which will reduce the amount of new leaf that is produced
+                if (MathUtilities.IsPositive(DltLAI))
                 {
+                    // Only half of the requiredN can be accounted for by reducing DltLAI
+                    // If the RequiredN is large enough, it will result in 0 new growth
+                    // Stem and Rachis can technically get to this point, but it doesn't occur in all of the validation data sets
                     double n = DltLAI * NewLeafSLN.Value();
                     double laiN = Math.Min(n, requiredN / 2.0);
                     // dh - we don't make this check in old apsim
-                    //laiN = Math.Min(laiN, BAT.StructuralAllocation[leafIndex]);
                     if (MathUtilities.IsPositive(laiN))
                     {
                         DltLAI = (n - laiN) / NewLeafSLN.Value();
-                        // fixme
-                        BAT.StructuralDemand[leafIndex] = nDemands.Structural.Value();
-                        requiredN -= laiN;
-                        nProvided += laiN;
+                        if (forLeaf)
+                        {
+                            // should we update the StructuralDemand?
+                            //BAT.StructuralDemand[leafIndex] = nDemands.Structural.Value();
+                            requiredN -= laiN;
+                        }
                     }
                 }
 

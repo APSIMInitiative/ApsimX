@@ -53,7 +53,7 @@ namespace UserInterface.Presenters
                 "body {color: [FontColor]; max-width:1000px; font-size:10pt;}" + 
                 "table {border-collapse: collapse; font-size:0.8em; }" +
                 ".resource table,th,td {border: 1px solid #996633; }" +
-                "table th {padding:8px; }" +
+                "table th {padding:8px; color:[HeaderFontColor];}" +
                 "table td {padding:8px; }" +
                 " td:nth-child(n+2) {text-align:center;}" +
                 " th:nth-child(1) {text-align:left;}" +
@@ -126,6 +126,7 @@ namespace UserInterface.Presenters
             {
                 // light theme
                 htmlString = htmlString.Replace("[FontColor]", "black");
+                htmlString = htmlString.Replace("[HeaderFontColor]", "white");
 
                 // resources
                 htmlString = htmlString.Replace("[ResRowBack]", "floralwhite");
@@ -162,6 +163,7 @@ namespace UserInterface.Presenters
             {
                 // dark theme
                 htmlString = htmlString.Replace("[FontColor]", "#E5E5E5");
+                htmlString = htmlString.Replace("[HeaderFontColor]", "black");
 
                 // resources
                 htmlString = htmlString.Replace("[ResRowBack]", "#281A0E");
@@ -195,9 +197,13 @@ namespace UserInterface.Presenters
                 htmlString = htmlString.Replace("[ValueSetFont]", "#0e2023");
             }
 
-            if (model.GetType() == typeof(ZoneCLEM))
+            if (model is ZoneCLEM)
             {
                 htmlString += (model as ZoneCLEM).GetFullSummary(model, true, htmlString);
+            }
+            else if (model is Market)
+            {
+                htmlString += (model as Market).GetFullSummary(model, true, htmlString);
             }
             else
             {

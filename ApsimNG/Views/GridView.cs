@@ -422,115 +422,122 @@
         /// <param name="iter">The tree iterator.</param>
         public void OnSetCellData(TreeViewColumn col, CellRenderer cell, TreeModel model, TreeIter iter)
         {
-            TreePath path = model.GetPath(iter);
-            Gtk.TreeView view = col.TreeView as Gtk.TreeView;
-            int rowNo = path.Indices[0];
-            int colNo = -1;
-            string text = string.Empty;
-            CellRendererText textRenderer = cell as CellRendererText;
-            Grid.TooltipColumn = 0;
-            if (colLookup.TryGetValue(cell, out colNo) && rowNo < DataSource.Rows.Count && colNo < ColumnCount)
+            try
             {
-                StateType cellState = CellIsSelected(rowNo, colNo) ? StateType.Selected : StateType.Normal;
+                TreePath path = model.GetPath(iter);
+                Gtk.TreeView view = col.TreeView as Gtk.TreeView;
+                int rowNo = path.Indices[0];
+                int colNo = -1;
+                string text = string.Empty;
+                CellRendererText textRenderer = cell as CellRendererText;
+                Grid.TooltipColumn = 0;
+                if (colLookup.TryGetValue(cell, out colNo) && rowNo < DataSource.Rows.Count && colNo < ColumnCount)
+                {
+                    StateType cellState = CellIsSelected(rowNo, colNo) ? StateType.Selected : StateType.Normal;
 
-                textRenderer.Editable = true;
-                if (IsSeparator(rowNo))
-                {
-                    textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Normal);
-                    Color separatorColour = Utility.Configuration.Settings.DarkTheme ? Utility.Colour.FromGtk(MainWidget.Style.Background(StateType.Active)) : Color.LightSteelBlue;
-                    cell.CellBackgroundGdk = new Gdk.Color(separatorColour.R, separatorColour.G, separatorColour.B);
-                    textRenderer.Editable = false;
-                }
-                else if (colAttributes.TryGetValue(colNo, out ColRenderAttributes attributes) && cellState != StateType.Selected)
-                {
-                    cell.CellBackgroundGdk = attributes.BackgroundColor;
-                    textRenderer.ForegroundGdk = attributes.ForegroundColor;
-                }
-                else
-                {
-                    cell.CellBackgroundGdk = Grid.Style.Base(cellState);
-                    textRenderer.ForegroundGdk = Grid.Style.Foreground(cellState);
-                }
-
-                if (IsRowReadonly(rowNo))
-                {
-                    textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Insensitive);
-                    textRenderer.Editable = false;
-                }
-
-                if (view == Grid)
-                {
-                    col.CellRenderers[1].Visible = false;
-                    col.CellRenderers[2].Visible = false;
-                    col.CellRenderers[3].Visible = false;
-                }
-                object dataVal = DataSource.Rows[rowNo][colNo];
-                Type dataType = dataVal.GetType();
-                if (dataType == typeof(DBNull))
-                    text = string.Empty;
-                else if (NumericFormat != null && ((dataType == typeof(float) && !float.IsNaN((float)dataVal)) ||
-                    (dataType == typeof(double) && !double.IsNaN((double)dataVal))))
-                    text = string.Format("{0:" + NumericFormat + "}", dataVal);
-                else if (dataType == typeof(DateTime))
-                    text = string.Format("{0:d}", dataVal);
-                else if (view == Grid)
-                {
-                    // Currently not handling booleans and lists in the "fixed" column grid
-                    if (dataType == typeof(bool))
+                    textRenderer.Editable = true;
+                    if (IsSeparator(rowNo))
                     {
-                        CellRendererToggle toggleRend = col.CellRenderers[1] as CellRendererToggle;
-                        if (toggleRend != null)
-                        {
-                            toggleRend.CellBackgroundGdk = cell.CellBackgroundGdk; // cell.CellBackgroundGdk does not affect this
-                            toggleRend.Active = (bool)dataVal;
-                            toggleRend.Activatable = true;
-                            cell.Visible = false;
-                            col.CellRenderers[2].Visible = false;
-                            toggleRend.Visible = true;
-                            return;
-                        }
+                        textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Normal);
+                        Color separatorColour = Utility.Configuration.Settings.DarkTheme ? Utility.Colour.FromGtk(MainWidget.Style.Background(StateType.Active)) : Color.LightSteelBlue;
+                        cell.CellBackgroundGdk = new Gdk.Color(separatorColour.R, separatorColour.G, separatorColour.B);
+                        textRenderer.Editable = false;
+                    }
+                    else if (colAttributes.TryGetValue(colNo, out ColRenderAttributes attributes) && cellState != StateType.Selected)
+                    {
+                        cell.CellBackgroundGdk = attributes.BackgroundColor;
+                        textRenderer.ForegroundGdk = attributes.ForegroundColor;
                     }
                     else
-                    {   // This assumes that combobox grid cells are based on the "string" type
-                        Tuple<int, int> location = new Tuple<int, int>(rowNo, colNo);
-                        ListStore store;
-                        if (ComboLookup.TryGetValue(location, out store))
+                    {
+                        cell.CellBackgroundGdk = Grid.Style.Base(cellState);
+                        textRenderer.ForegroundGdk = Grid.Style.Foreground(cellState);
+                    }
+
+                    if (IsRowReadonly(rowNo))
+                    {
+                        textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Insensitive);
+                        textRenderer.Editable = false;
+                    }
+
+                    if (view == Grid)
+                    {
+                        col.CellRenderers[1].Visible = false;
+                        col.CellRenderers[2].Visible = false;
+                        col.CellRenderers[3].Visible = false;
+                    }
+                    object dataVal = DataSource.Rows[rowNo][colNo];
+                    Type dataType = dataVal.GetType();
+                    if (dataType == typeof(DBNull))
+                        text = string.Empty;
+                    else if (NumericFormat != null && ((dataType == typeof(float) && !float.IsNaN((float)dataVal)) ||
+                        (dataType == typeof(double) && !double.IsNaN((double)dataVal))))
+                        text = string.Format("{0:" + NumericFormat + "}", dataVal);
+                    else if (dataType == typeof(DateTime))
+                        text = string.Format("{0:d}", dataVal);
+                    else if (view == Grid)
+                    {
+                        // Currently not handling booleans and lists in the "fixed" column grid
+                        if (dataType == typeof(bool))
                         {
-                            CellRendererCombo comboRend = col.CellRenderers[2] as CellRendererCombo;
-                            if (comboRend != null)
+                            CellRendererToggle toggleRend = col.CellRenderers[1] as CellRendererToggle;
+                            if (toggleRend != null)
                             {
-                                comboRend.Model = store;
-                                comboRend.TextColumn = 0;
-                                comboRend.Editable = true;
-                                comboRend.HasEntry = false;
+                                toggleRend.CellBackgroundGdk = cell.CellBackgroundGdk; // cell.CellBackgroundGdk does not affect this
+                                toggleRend.Active = (bool)dataVal;
+                                toggleRend.Activatable = true;
                                 cell.Visible = false;
-                                col.CellRenderers[1].Visible = false;
-                                comboRend.Visible = true;
-                                comboRend.Text = AsString(dataVal);
-                                comboRend.CellBackgroundGdk = cell.CellBackgroundGdk; // cell.CellBackgroundGdk does not affect this
+                                col.CellRenderers[2].Visible = false;
+                                toggleRend.Visible = true;
                                 return;
                             }
                         }
-                        if (ButtonList.Contains(location))
-                        {
-                            CellRendererActiveButton buttonRend = col.CellRenderers[3] as CellRendererActiveButton;
-                            if (buttonRend != null)
+                        else
+                        {   // This assumes that combobox grid cells are based on the "string" type
+                            Tuple<int, int> location = new Tuple<int, int>(rowNo, colNo);
+                            ListStore store;
+                            if (ComboLookup.TryGetValue(location, out store))
                             {
-                                buttonRend.Visible = true;
+                                CellRendererCombo comboRend = col.CellRenderers[2] as CellRendererCombo;
+                                if (comboRend != null)
+                                {
+                                    comboRend.Model = store;
+                                    comboRend.TextColumn = 0;
+                                    comboRend.Editable = true;
+                                    comboRend.HasEntry = false;
+                                    cell.Visible = false;
+                                    col.CellRenderers[1].Visible = false;
+                                    comboRend.Visible = true;
+                                    comboRend.Text = AsString(dataVal);
+                                    comboRend.CellBackgroundGdk = cell.CellBackgroundGdk; // cell.CellBackgroundGdk does not affect this
+                                    return;
+                                }
                             }
+                            if (ButtonList.Contains(location))
+                            {
+                                CellRendererActiveButton buttonRend = col.CellRenderers[3] as CellRendererActiveButton;
+                                if (buttonRend != null)
+                                {
+                                    buttonRend.Visible = true;
+                                }
+                            }
+                            text = AsString(dataVal);
                         }
+                    }
+                    else
+                    {
                         text = AsString(dataVal);
                     }
                 }
-                else
-                {
-                    text = AsString(dataVal);
-                }
-            }
 
-            // We have a "text" cell. Set the text, and other properties for the cell
-            cell.Visible = true;
-            textRenderer.Text = text;
+                // We have a "text" cell. Set the text, and other properties for the cell
+                cell.Visible = true;
+                textRenderer.Text = text;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         private Gtk.TreeView GetTreeView(int columnIndex)
@@ -1087,7 +1094,14 @@
         /// <param name="e">The event arguments.</param>
         private void MainWidgetDestroyed(object sender, EventArgs e)
         {
-            Dispose();
+            try
+            {
+                Dispose();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -1238,7 +1252,7 @@
                     if (DeleteCells == null)
                         throw new Exception("Unable to perform the delete operation - this grid is not owned by a grid presenter! 😠");
                 }
-                else if (IsUserEditingCell && (keyName == "Return" || keyName == "Tab"))
+                else if (IsUserEditingCell && (keyName == "Return" || keyName == "Tab" || args.Event.Key == Gdk.Key.Up || args.Event.Key == Gdk.Key.Down))
                 {
                     args.RetVal = true;
                     EndEdit();
@@ -2014,7 +2028,7 @@
         {
             try
             {
-                    ((o as Widget).Toplevel as Window).RemoveAccelGroup(accel);
+                ((o as Widget).Toplevel as Window).RemoveAccelGroup(accel);
             }
             catch (Exception err)
             {
@@ -2143,12 +2157,19 @@
 
         private void OnSetComboData(CellLayout cell_layout, CellRenderer cell, TreeModel tree_model, TreeIter iter)
         {
-            (cell as CellRendererText).Text = (string)tree_model.GetValue(iter, 0);
-            if (tree_model.NColumns > 1 && !comboTooltipsSet && cell_layout is TreeViewColumn)
+            try
             {
-                ((cell_layout as TreeViewColumn).TreeView as Gtk.TreeView).TooltipColumn = 1;
-                (cell_layout as TreeViewColumn).TreeView.HasTooltip = true;
-                comboTooltipsSet = true;
+                (cell as CellRendererText).Text = (string)tree_model.GetValue(iter, 0);
+                if (tree_model.NColumns > 1 && !comboTooltipsSet && cell_layout is TreeViewColumn)
+                {
+                    ((cell_layout as TreeViewColumn).TreeView as Gtk.TreeView).TooltipColumn = 1;
+                    (cell_layout as TreeViewColumn).TreeView.HasTooltip = true;
+                    comboTooltipsSet = true;
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 

@@ -91,11 +91,18 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            combobox1.Changed -= OnSelectionChanged;
-            comboModel.Dispose();
-            comboRender.Destroy();
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            owner = null;
+            try
+            {
+                combobox1.Changed -= OnSelectionChanged;
+                comboModel.Dispose();
+                comboRender.Destroy();
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Gets or sets the list of valid values.</summary>

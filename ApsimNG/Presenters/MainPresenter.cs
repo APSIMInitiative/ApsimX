@@ -6,7 +6,6 @@
     using System.Reflection;
     using System.Xml;
     using APSIM.Shared.Utilities;
-    using Importer;
     using Interfaces;
     using Models;
     using Models.Core;
@@ -18,6 +17,7 @@
     using EventArguments;
     using Utility;
     using Models.Core.ApsimFile;
+    using Models.Core.Apsim710File;
 
     /// <summary>
     /// This presenter class provides the functionality behind a TabbedExplorerView 
@@ -256,8 +256,16 @@
         {
             if (error != null)
             {
-                LastError = new List<string> { error.ToString() };
-                view.ShowMessage(GetInnerException(error).Message, Simulation.ErrorLevel.Error);
+                if (view == null)
+                {
+                    // This can happen when CreateDocumentation.exe is the main program.
+                    Console.WriteLine(error.ToString());
+                }
+                else
+                {
+                    LastError = new List<string> { error.ToString() };
+                    view.ShowMessage(GetInnerException(error).Message, Simulation.ErrorLevel.Error);
+                }
             }
             else
             {
@@ -1016,7 +1024,7 @@
         {
             try
             {
-                APSIMImporter importer = new APSIMImporter();
+                var importer = new Importer();
                 importer.ProcessFile(fileName);
             }
             catch (Exception err)
@@ -1036,12 +1044,9 @@
             // Clear the message window
             view.ShowMessage(" ", Simulation.ErrorLevel.Information);
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-            {
-                CreateNewTab("View Cloud Jobs", null, onLeftTabControl, "UserInterface.Views.CloudJobDisplayView", "UserInterface.Presenters.AzureJobDisplayPresenter");
-            } else
-            {
+                CreateNewTab("View Cloud Jobs", null, onLeftTabControl, "UserInterface.Views.CloudJobView", "UserInterface.Presenters.CloudJobPresenter");
+            else
                 ShowError("Microsoft Azure functionality is currently only available under Windows.");
-            }
             
         }
 

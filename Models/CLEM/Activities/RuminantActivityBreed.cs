@@ -24,7 +24,8 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages the breeding of ruminants based upon the current herd filtering.")]
-    [Version(1, 0, 4, "Implemented conceptopn ststus reporting.")]
+    [Version(1, 0, 5, "Fixed issue defining breeders who's weight fell below critical limit.\nThis change requires all simulations to be performed again.")]
+    [Version(1, 0, 4, "Implemented conception status reporting.")]
     [Version(1, 0, 3, "Removed the inter-parturition calculation and influence on uncontrolled mating\nIt is assumed that the individual based model will track conception timing based on the individual's body condition.")]
     [Version(1, 0, 2, "Added calculation for proportion offspring male parameter")]
     [Version(1, 0, 1, "")]
@@ -75,7 +76,7 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            // work our pregnancy status of initial herd
+            // work out pregnancy status of initial herd
             if (InferStartupPregnancy)
             {
                 // set up pre start conception status of breeders
@@ -189,11 +190,6 @@ namespace Models.CLEM.Activities
             // grouped by location
             var breeders = from ind in herd
                             where ind.IsBreeder
-                            //(ind.Gender == Sex.Male && ind.Age >= ind.BreedParams.MinimumAge1stMating) ||
-                            //(ind.Gender == Sex.Female &&
-                            //ind.Age >= ind.BreedParams.MinimumAge1stMating &&
-                            //ind.HighWeight >= (ind.BreedParams.MinimumSize1stMating * ind.StandardReferenceWeight)
-                            //)
                             group ind by ind.Location into grp
                             select grp;
 
@@ -313,7 +309,6 @@ namespace Models.CLEM.Activities
                     }
                 }
 
-                // restructure of conception between controlled and uncontrolled mating to combine neatly and remove duplicated code 11/11/2019
                 numberPossible = -1;
                 if (!UseAI)
                 {
@@ -323,7 +318,7 @@ namespace Models.CLEM.Activities
                     {
                         int maleCount = location.Where(a => a.Gender == Sex.Male).Count();
                         int femaleCount = location.Where(a => a.Gender == Sex.Female).Count();
-                        numberPossible = Convert.ToInt32(Math.Ceiling(maleCount * location.FirstOrDefault().BreedParams.MaximumMaleMatingsPerDay * 30));
+                        numberPossible = Convert.ToInt32(Math.Ceiling(maleCount * location.FirstOrDefault().BreedParams.MaximumMaleMatingsPerDay * 30), CultureInfo.InvariantCulture);
                     }
                 }
                 else

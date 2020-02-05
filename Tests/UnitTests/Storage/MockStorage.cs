@@ -260,5 +260,15 @@ namespace UnitTests.Storage
         {
             throw new NotImplementedException();
         }
+
+        public List<Tuple<string, Type>> GetColumns(string tableName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteTable(string tableName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

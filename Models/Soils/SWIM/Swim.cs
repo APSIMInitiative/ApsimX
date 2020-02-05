@@ -5863,31 +5863,35 @@ namespace Models.Soils
 
         /// <summary>Amount of water moving laterally out of the profile (mm)</summary>
         [XmlIgnore]
-        public double[] LateralOutflow { get { throw new NotImplementedException("SWIM doesn't implement an LateralOutflow property"); } }
+        public double[] LateralOutflow { get { throw new NotImplementedException("SWIM doesn't implement a LateralOutflow property"); } }
 
         /// <summary>Amount of N leaching as NO3-N from the deepest soil layer (kg /ha)</summary>
         [XmlIgnore]
-        public double LeachNO3 { get { throw new NotImplementedException("SWIM doesn't implement an LeachNO3 property"); } }
+        public double LeachNO3 { get { throw new NotImplementedException("SWIM doesn't implement a LeachNO3 property"); } }
 
         /// <summary>Amount of N leaching as NH4-N from the deepest soil layer (kg /ha)</summary>
         [XmlIgnore]
-        public double LeachNH4 { get { throw new NotImplementedException("SWIM doesn't implement an LeachNH4 property"); } }
+        public double LeachNH4 { get { throw new NotImplementedException("SWIM doesn't implement a LeachNH4 property"); } }
 
         /// <summary>Amount of N leaching as urea-N  from the deepest soil layer (kg /ha)</summary>
         [XmlIgnore]
-        public double LeachUrea { get { throw new NotImplementedException("SWIM doesn't implement an LeachUrea property"); } }
+        public double LeachUrea { get { throw new NotImplementedException("SWIM doesn't implement a LeachUrea property"); } }
 
         /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>
         [XmlIgnore]
-        public double[] FlowNO3 { get { throw new NotImplementedException("SWIM doesn't implement an FlowNO3 property"); } }
+        public double[] FlowNO3 { get { throw new NotImplementedException("SWIM doesn't implement a FlowNO3 property"); } }
 
         /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>
         [XmlIgnore]
-        public double[] FlowNH4 { get { throw new NotImplementedException("SWIM doesn't implement an FlowNH4 property"); } }
+        public double[] FlowNH4 { get { throw new NotImplementedException("SWIM doesn't implement a FlowNH4 property"); } }
+
+        /// <summary>Amount of N leaching as urea from each soil layer (kg /ha)</summary>
+        [XmlIgnore]
+        public double[] FlowUrea { get { throw new NotImplementedException("SWIM doesn't implement a FlowUrea property"); } }
 
         /// <summary>Amount of water moving downward out of each soil layer due to gravity drainage (above DUL) (mm)</summary>
         [XmlIgnore]
-        public double[] Flux { get { throw new NotImplementedException("SWIM doesn't implement an Flux property"); } }
+        public double[] Flux { get { throw new NotImplementedException("SWIM doesn't implement a Flux property"); } }
 
         /// <summary>Loss of precipitation due in interception of surface residues (mm)</summary>
         [XmlIgnore]
