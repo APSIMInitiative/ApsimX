@@ -27,7 +27,7 @@
         virtual public double Slope { get; set; }
 
         /// <summary>Angle of the aspect, from south (degrees).</summary>
-        [Description("Aspect (degrees from south)")]
+        [Description("Aspect (degrees from north)")]
         public double AspectAngle { get; set; }
 
         /// <summary>Local altitude (meters above sea level).</summary>

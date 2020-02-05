@@ -299,8 +299,10 @@
                 throw new Exception("Turbidity coefficient value is out of bounds (0-1)");
 
             // Convert and fix some parameters
-            if (zone.AspectAngle > 180)
-                zone.AspectAngle -= 180;
+            // AspectAngle is degres from north. Should really check this against original 
+            // sources of the equations. Seems to make sense.
+            //if (zone.AspectAngle > 180)
+            //    zone.AspectAngle -= 180;
             zone.Slope = Math.PI * zone.Slope / 180;
             zone.AspectAngle = Math.PI * zone.AspectAngle / 180;
             latitudeAngle = Math.PI * weather.Latitude / 180;
