@@ -57,6 +57,8 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
+            this.AllocationStyle = ResourceAllocationStyle.Manual;
+
             // Assignment of mothers was moved to RuminantHerd resource to ensure this is done even if no breeding activity is included
             this.InitialiseHerd(false, true);
 
@@ -196,7 +198,7 @@ namespace Models.CLEM.Activities
             // get list of all individuals of breeding age and condition
             // grouped by location
             var breeders = from ind in herd
-                            where ind.IsBreeder
+                            where ind.IsBreedingCondition
                             group ind by ind.Location into grp
                             select grp;
 
@@ -434,7 +436,7 @@ namespace Models.CLEM.Activities
 
             // get only breeders for labour calculations
             List<Ruminant> herd = CurrentHerd(true).Where(a => a.Gender == Sex.Female &&
-                            a.IsBreeder).ToList();
+                            a.IsBreedingCondition).ToList();
             int head = herd.Count();
             double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
 

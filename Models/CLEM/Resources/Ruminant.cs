@@ -190,16 +190,17 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Is this individual a valid breeder
+        /// Is this individual a valid breeder and in condition
         /// </summary>
-        public bool IsBreeder 
+        public bool IsBreedingCondition 
         { 
             get
             {
-                return (Gender == Sex.Male && Age >= BreedParams.MinimumAge1stMating) ||
-                    (Gender == Sex.Female &&
-                    Age >= BreedParams.MinimumAge1stMating &&
-                    HighWeight >= (BreedParams.MinimumSize1stMating * StandardReferenceWeight)
+                return (Gender == Sex.Male & Age >= BreedParams.MinimumAge1stMating) |
+                    (Gender == Sex.Female &
+                    (Age >= BreedParams.MinimumAge1stMating &
+                    HighWeight >= BreedParams.MinimumSize1stMating * StandardReferenceWeight &
+                    Age <= BreedParams.MaximumAgeMating)
                     );
             }
         }

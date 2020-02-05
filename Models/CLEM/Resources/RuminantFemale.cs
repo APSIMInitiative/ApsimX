@@ -14,9 +14,39 @@ namespace Models.CLEM.Resources
         // Female Ruminant properties
 
         /// <summary>
+        /// Is female of breeing age
+        /// </summary>
+        public bool IsBreeder
+        {
+            get
+            {
+                return ((Age >= BreedParams.MinimumAge1stMating)&(Weight >= BreedParams.MinimumSize1stMating * StandardReferenceWeight) &(Age <= BreedParams.MaximumAgeMating) );
+            }
+        }
+
+        /// <summary>
         /// The age of female at last birth
         /// </summary>
         public double AgeAtLastBirth { get; set; }
+
+        /// <summary>
+        /// The time (months) passed since last birth
+        /// Returns 0 for pre-first birth females
+        /// </summary>
+        public double MonthsSinceLastBirth 
+        { 
+            get 
+            {
+                if (AgeAtLastBirth > 0)
+                {
+                    return Age - AgeAtLastBirth;
+                }
+                else
+                {
+                    return 0;
+                }
+            } 
+        }
 
         /// <summary>
         /// Number of births for the female (twins = 1 birth)
