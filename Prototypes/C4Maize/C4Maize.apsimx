@@ -11198,7 +11198,7 @@
                     "[Grain].PotKernelWt.FixedValue = 300",
                     "[Leaf].Photosynthesis.RUE.FixedValue = 1.60"
                   ],
-                  "Name": "dekalb_xl82",
+                  "Name": "Dekalb_XL82",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -11229,7 +11229,7 @@
                     "[Grain].GNMaxCoeff.FixedValue = 120",
                     "[Grain].PgrBase.FixedValue = 1.5"
                   ],
-                  "Name": "katumani",
+                  "Name": "Katumani",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -11632,7 +11632,7 @@
                     "[Leaf].LeafNoDeadIntercept.FixedValue = -0.025",
                     "[Leaf].LeafNoDeadSlope.FixedValue = 0.00042"
                   ],
-                  "Name": "hycorn_40",
+                  "Name": "Hycorn_40",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -11674,7 +11674,7 @@
                     "[Grain].PotKernelWt.FixedValue = 260",
                     "[Leaf].Photosynthesis.RUE.FixedValue = 1.60"
                   ],
-                  "Name": "gh_5009",
+                  "Name": "GH_5009",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -11695,7 +11695,7 @@
                     "[Grain].PotKernelWt.FixedValue = 260",
                     "[Leaf].Photosynthesis.RUE.FixedValue = 1.60"
                   ],
-                  "Name": "gh_5019wx",
+                  "Name": "GH_5019WX",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -12249,7 +12249,7 @@
                     "[Leaf].LeafNoDeadIntercept.FixedValue = -0.025",
                     "[Leaf].LeafNoDeadSlope.FixedValue = 0.00034"
                   ],
-                  "Name": "Hycorn53",
+                  "Name": "Hycorn_53",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -12326,7 +12326,7 @@
                     "[Leaf].HeightFunction.XYPairs.X = 0,80",
                     "[Leaf].HeightFunction.XYPairs.Y = 0,2000"
                   ],
-                  "Name": "makueni",
+                  "Name": "Makueni",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -14148,7 +14148,7 @@
                                 },
                                 {
                                   "Key": "Cultivar",
-                                  "Value": "Hycorn53"
+                                  "Value": "Hycorn_53"
                                 },
                                 {
                                   "Key": "RowSpacing",
@@ -21563,7 +21563,7 @@
                                 },
                                 {
                                   "Key": "Cultivar",
-                                  "Value": "Hycorn53"
+                                  "Value": "Hycorn_53"
                                 },
                                 {
                                   "Key": "RowSpacing",
@@ -22334,7 +22334,7 @@
                                 },
                                 {
                                   "Key": "Cultivar",
-                                  "Value": "Hycorn53"
+                                  "Value": "Hycorn_53"
                                 },
                                 {
                                   "Key": "RowSpacing",
@@ -22534,7 +22534,7 @@
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factor, Models",
-                      "Specification": "[SowingRule].Script.Cultivar = Pioneer_6875, Barker, katumani, Dekalb_XL82\r\n",
+                      "Specification": "[SowingRule].Script.Cultivar = Pioneer_6875, Barker, Katumani, Dekalb_XL82\r\n",
                       "Name": "Cv",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -23381,7 +23381,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "# Simulation Notes\n\n- Base sim is DRKA09\n- DRKAH40 previously used 200kg fertiliser instead of the 250kg in DRKA09\n- DRKA sims sow on 14 Aug 91 with 250kg fertiliser\n- DRKD sims sow on 11 Dec 91 with 300kg fertiliser\n- DRKF sims sow on 20 Feb 91 with 300kg fertiliser and different auto irrigation settings + initial water node\n- DRKJ sims sow on 31 Jan 91 with 300kg fertiliser\n- DRKM sims sow on 12 March with different sowing depth (70) and different auto irrigation settings (FASWDepth = 1800, FASWThreshold = 0.75) + initial water node\n- DRKM09 is different to the other DRKM sims in sowing depth and auto irrig settings\n- DRKN sims sow on 07 Nov with 300kg fertiliser\n- DRKO sims sow on 10 Oct with 300kg fertiliser\n- DRKS sims sow on 19 Sep with 300kg fertiliser\n\nThese discrepancies have all been removed from both old and new apsim. Need to check if this is correct via rems.\n\n# Summary\n\n| Simulation Name        \t|Sowing Date        | Cultivar\t\t|\n|---------------------------|-------------------|---------------|\n| Maize_DRK_DRKA09\t\t\t| 14 Aug 1991\t\t| gh_5009\t\t|\n| Maize_DRK_DRKAH40\t\t\t| 14 Aug 1991\t\t| hycorn_40\t\t|\n| Maize_DRK_DRKAWX\t\t\t| 14 Aug 1991\t\t| gh_5019wx\t\t|\n| Maize_DRK_DRKD09\t\t\t| 11 Dec 1991\t\t| gh_5009\t\t|\n| Maize_DRK_DRKDH40\t\t\t| 11 Dec 1991\t\t| hycorn_40\t\t|\n| Maize_DRK_DRKDWX\t\t\t| 11 Dec 1991\t\t| gh_5019wx\t\t|\n| Maize_DRK_DRKF09\t\t\t| 20 Feb 1991\t\t| gh_5009\t\t|\n| Maize_DRK_DRKFH40\t\t\t| 20 Feb 1991\t\t| hycorn_40\t\t|\n| Maize_DRK_DRKFH50\t\t\t| 20 Feb 1991\t\t| hycorn_50\t\t|\n| Maize_DRK_DRKFWX\t\t\t| 31 Jan 1991\t\t| gh_5019wx\t\t|\n| Maize_DRK_DRKJ09\t\t\t| 31 Jan 1991\t\t| gh_5009\t\t|\n| Maize_DRK_DRKJH40\t\t\t| 31 Jan 1991\t\t| hycorn_40\t\t|\n| Maize_DRK_DRKJH50\t\t\t| 31 Jan 1991\t\t| hycorn_50\t\t|\n| Maize_DRK_DRKJWX\t\t\t| 31 Jan 1991\t\t| gh_5019wx\t\t|\n| Maize_DRK_DRKM09\t\t\t| 12 Mar 1991\t\t| gh_5009\t\t|\n| Maize_DRK_DRKMH40\t\t\t| 12 Mar 1991\t\t| hycorn_40\t\t|\n| Maize_DRK_DRKMH50\t\t\t| 12 Mar 1991\t\t| hycorn_50\t\t|\n| Maize_DRK_DRKMWX\t\t\t| 12 Mar 1991\t\t| gh_5019wx\t\t|\n| Maize_DRK_DRKN09\t\t\t| 07 Nov 1991\t\t| gh_5009\t\t|\n| Maize_DRK_DRKNH40\t\t\t| 07 Nov 1991\t\t| hycorn_40\t\t|\n| Maize_DRK_DRKNWX\t\t\t| 07 Nov 1991\t\t| gh_5019wx\t\t|\n| Maize_DRK_DRKO09\t\t\t| 10 Oct 1991\t\t| gh_5009\t\t|\n| Maize_DRK_DRKOH40\t\t\t| 10 Oct 1991\t\t| hycorn_40\t\t|\n| Maize_DRK_DRKOWX\t\t\t| 10 Oct 1991\t\t| gh_5019wx\t\t|\n| Maize_DRK_DRKS09\t\t\t| 19 Sep 1991\t\t| gh_5009\t\t|\n| Maize_DRK_DRKSH40\t\t\t| 19 Sep 1991\t\t| hycorn_40\t\t|\n| Maize_DRK_DRKSWX\t\t\t| 19 Sep 1991\t\t| gh_5019wx\t\t|\n",
+                  "Text": "# Simulation Notes\n\n- Base sim is DRKA09\n- DRKAH40 previously used 200kg fertiliser instead of the 250kg in DRKA09\n- DRKA sims sow on 14 Aug 91 with 250kg fertiliser\n- DRKD sims sow on 11 Dec 91 with 300kg fertiliser\n- DRKF sims sow on 20 Feb 91 with 300kg fertiliser and different auto irrigation settings + initial water node\n- DRKJ sims sow on 31 Jan 91 with 300kg fertiliser\n- DRKM sims sow on 12 March with different sowing depth (70) and different auto irrigation settings (FASWDepth = 1800, FASWThreshold = 0.75) + initial water node\n- DRKM09 is different to the other DRKM sims in sowing depth and auto irrig settings\n- DRKN sims sow on 07 Nov with 300kg fertiliser\n- DRKO sims sow on 10 Oct with 300kg fertiliser\n- DRKS sims sow on 19 Sep with 300kg fertiliser\n\nThese discrepancies have all been removed from both old and new apsim. Need to check if this is correct via rems.\n\n# Summary\n\n| Simulation Name        \t|Sowing Date        | Cultivar\t\t|\n|---------------------------|-------------------|---------------|\n| Maize_DRK_DRKA09\t\t\t| 14 Aug 1991\t\t| GH_5009\t\t|\n| Maize_DRK_DRKAH40\t\t\t| 14 Aug 1991\t\t| Hycorn_40\t\t|\n| Maize_DRK_DRKAWX\t\t\t| 14 Aug 1991\t\t| GH_5019WX\t\t|\n| Maize_DRK_DRKD09\t\t\t| 11 Dec 1991\t\t| GH_5009\t\t|\n| Maize_DRK_DRKDH40\t\t\t| 11 Dec 1991\t\t| Hycorn_40\t\t|\n| Maize_DRK_DRKDWX\t\t\t| 11 Dec 1991\t\t| GH_5019WX\t\t|\n| Maize_DRK_DRKF09\t\t\t| 20 Feb 1991\t\t| GH_5009\t\t|\n| Maize_DRK_DRKFH40\t\t\t| 20 Feb 1991\t\t| Hycorn_40\t\t|\n| Maize_DRK_DRKFH50\t\t\t| 20 Feb 1991\t\t| hycorn_50\t\t|\n| Maize_DRK_DRKFWX\t\t\t| 31 Jan 1991\t\t| GH_5019WX\t\t|\n| Maize_DRK_DRKJ09\t\t\t| 31 Jan 1991\t\t| GH_5009\t\t|\n| Maize_DRK_DRKJH40\t\t\t| 31 Jan 1991\t\t| Hycorn_40\t\t|\n| Maize_DRK_DRKJH50\t\t\t| 31 Jan 1991\t\t| hycorn_50\t\t|\n| Maize_DRK_DRKJWX\t\t\t| 31 Jan 1991\t\t| GH_5019WX\t\t|\n| Maize_DRK_DRKM09\t\t\t| 12 Mar 1991\t\t| GH_5009\t\t|\n| Maize_DRK_DRKMH40\t\t\t| 12 Mar 1991\t\t| Hycorn_40\t\t|\n| Maize_DRK_DRKMH50\t\t\t| 12 Mar 1991\t\t| hycorn_50\t\t|\n| Maize_DRK_DRKMWX\t\t\t| 12 Mar 1991\t\t| GH_5019WX\t\t|\n| Maize_DRK_DRKN09\t\t\t| 07 Nov 1991\t\t| GH_5009\t\t|\n| Maize_DRK_DRKNH40\t\t\t| 07 Nov 1991\t\t| Hycorn_40\t\t|\n| Maize_DRK_DRKNWX\t\t\t| 07 Nov 1991\t\t| GH_5019WX\t\t|\n| Maize_DRK_DRKO09\t\t\t| 10 Oct 1991\t\t| GH_5009\t\t|\n| Maize_DRK_DRKOH40\t\t\t| 10 Oct 1991\t\t| Hycorn_40\t\t|\n| Maize_DRK_DRKOWX\t\t\t| 10 Oct 1991\t\t| GH_5019WX\t\t|\n| Maize_DRK_DRKS09\t\t\t| 19 Sep 1991\t\t| GH_5009\t\t|\n| Maize_DRK_DRKSH40\t\t\t| 19 Sep 1991\t\t| Hycorn_40\t\t|\n| Maize_DRK_DRKSWX\t\t\t| 19 Sep 1991\t\t| GH_5019WX\t\t|\n",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -23407,7 +23407,7 @@
                         },
                         {
                           "$type": "Models.Factorial.Factor, Models",
-                          "Specification": "[SowingRule].Script.Cultivar = gh_5009, hycorn_40, hycorn_50, gh_5019wx",
+                          "Specification": "[SowingRule].Script.Cultivar = GH_5009, Hycorn_40, hycorn_50, GH_5019WX",
                           "Name": "Cultivar",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -24064,7 +24064,7 @@
                                 },
                                 {
                                   "Key": "Cultivar",
-                                  "Value": "gh_5009"
+                                  "Value": "GH_5009"
                                 },
                                 {
                                   "Key": "RowSpacing",
@@ -24274,7 +24274,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "# Simulation Notes\n\n- Only the simulations present in old apsim validation set are enabled (some permutations seem to have been omitted)\n- Maize_K841_K841QK6D applies 40mm irrigation on 1983-11-26, whereas every other dry simulation applies 15mm on this date\n- Maize_K841_K841HY9W has auto irrigation enabled but no other wet simulation has this\n- K841 experiment in the released validation set sows dekalb_xl82 in every simulation...not really an immediate problem though",
+                  "Text": "# Simulation Notes\n\n- Only the simulations present in old apsim validation set are enabled (some permutations seem to have been omitted)\n- Maize_K841_K841QK6D applies 40mm irrigation on 1983-11-26, whereas every other dry simulation applies 15mm on this date\n- Maize_K841_K841HY9W has auto irrigation enabled but no other wet simulation has this\n- K841 experiment in the released validation set sows Dekalb_XL82 in every simulation...not really an immediate problem though",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -24444,7 +24444,7 @@
                         },
                         {
                           "$type": "Models.Factorial.Factor, Models",
-                          "Specification": "[SowingRule].Script.Cultivar = hycorn_9, dekalb_xl82, QK_694, sargeant",
+                          "Specification": "[SowingRule].Script.Cultivar = hycorn_9, Dekalb_XL82, QK_694, sargeant",
                           "Name": "Cultivar",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -25454,7 +25454,7 @@
                         },
                         {
                           "$type": "Models.Factorial.Factor, Models",
-                          "Specification": "[SowingRule].Script.Cultivar = hycorn_9, dekalb_xl82, QK_694, sargeant",
+                          "Specification": "[SowingRule].Script.Cultivar = hycorn_9, Dekalb_XL82, QK_694, sargeant",
                           "Name": "Cultivar",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -40255,7 +40255,7 @@
                     },
                     {
                       "$type": "Models.Weather, Models",
-                      "FileName": "met\\KATUMANI.MET",
+                      "FileName": "met\\katumani.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
                       "Children": [],
@@ -50482,7 +50482,7 @@
                     },
                     {
                       "$type": "Models.Weather, Models",
-                      "FileName": "met\\KATUMANI.MET",
+                      "FileName": "met\\katumani.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
                       "Children": [],
@@ -51168,7 +51168,7 @@
                     },
                     {
                       "$type": "Models.Weather, Models",
-                      "FileName": "met\\KATUMANI.MET",
+                      "FileName": "met\\katumani.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
                       "Children": [],
@@ -51740,7 +51740,7 @@
                                 },
                                 {
                                   "Key": "Cultivar",
-                                  "Value": "katumani"
+                                  "Value": "Katumani"
                                 },
                                 {
                                   "Key": "RowSpacing",
@@ -53696,7 +53696,7 @@
                                 },
                                 {
                                   "Key": "Cultivar",
-                                  "Value": "katumani"
+                                  "Value": "Katumani"
                                 },
                                 {
                                   "Key": "RowSpacing",
@@ -54504,7 +54504,7 @@
                             },
                             {
                               "Key": "Cultivar",
-                              "Value": "dekalb_xl82"
+                              "Value": "Dekalb_XL82"
                             },
                             {
                               "Key": "RowSpacing",
@@ -55444,7 +55444,7 @@
                             },
                             {
                               "Key": "Cultivar",
-                              "Value": "dekalb_xl82"
+                              "Value": "Dekalb_XL82"
                             },
                             {
                               "Key": "RowSpacing",
@@ -56420,7 +56420,7 @@
                             },
                             {
                               "Key": "Cultivar",
-                              "Value": "dekalb_xl82"
+                              "Value": "Dekalb_XL82"
                             },
                             {
                               "Key": "RowSpacing",
@@ -57426,7 +57426,7 @@
                             },
                             {
                               "Key": "Cultivar",
-                              "Value": "dekalb_xl82"
+                              "Value": "Dekalb_XL82"
                             },
                             {
                               "Key": "RowSpacing",
