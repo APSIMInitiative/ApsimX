@@ -33,6 +33,8 @@ if "%1"=="%uisyntax%" (
 
 if "%1"=="%prototypesyntax%" (
 	set testdir=%apsimx%\Prototypes
+	set soybean=%apsimx%\Prototypes\Soybean
+	echo %SOYBEAN_PASSWORD%| 7z x !soybean!\ObservedFACTS.7z -o!soybean!
 	goto :tests
 )
 

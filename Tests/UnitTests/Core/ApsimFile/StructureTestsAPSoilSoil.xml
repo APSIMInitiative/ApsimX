@@ -515,4 +515,5 @@
     <PHUnits>CaCl2</PHUnits>
     <BoronUnits>HotWater</BoronUnits>
   </Analysis>
+  <CERESSoilTemperature />
 </Soil>

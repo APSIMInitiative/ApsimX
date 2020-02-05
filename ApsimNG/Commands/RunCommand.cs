@@ -80,24 +80,27 @@
             else
                 explorerPresenter.MainPresenter.ShowError(errors);
 
-            // Play a completion sound.
-            SoundPlayer player = new SoundPlayer();
-            if (errors.Count > 0)
+            if (!Configuration.Settings.Muted)
             {
-                if (File.Exists(Configuration.Settings.SimulationCompleteWithErrorWavFileName))
-                    player.SoundLocation = Configuration.Settings.SimulationCompleteWithErrorWavFileName;
+                // Play a completion sound.
+                SoundPlayer player = new SoundPlayer();
+                if (errors.Count > 0)
+                {
+                    if (File.Exists(Configuration.Settings.SimulationCompleteWithErrorWavFileName))
+                        player.SoundLocation = Configuration.Settings.SimulationCompleteWithErrorWavFileName;
+                    else
+                        player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.Sounds.Fail.wav");
+                }
                 else
-                    player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.Sounds.Fail.wav");
+                {
+                    if (File.Exists(Configuration.Settings.SimulationCompleteWavFileName))
+                        player.SoundLocation = Configuration.Settings.SimulationCompleteWithErrorWavFileName;
+                    else
+                        player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.Sounds.Success.wav");
+                }
+
+                player.Play();
             }
-            else
-            {
-                if (File.Exists(Configuration.Settings.SimulationCompleteWavFileName))
-                    player.SoundLocation = Configuration.Settings.SimulationCompleteWithErrorWavFileName;
-                else
-                    player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.Sounds.Success.wav");
-            }
-            
-            player.Play();
         }
 
         /// <summary>

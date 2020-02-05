@@ -1126,7 +1126,7 @@
 
                 chemical["$type"] = "Models.Soils.Chemical, Models";
                 JsonUtilities.RenameModel(chemical, "Chemical");
-                if (physical != null)
+                if (physical != null && physical["Thickness"] != null)
                 {
                     // Move particle size numbers from chemical to physical and make sure layers are mapped.
                     var physicalThickness = physical["Thickness"].Values<double>().ToArray();

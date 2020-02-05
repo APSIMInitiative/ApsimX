@@ -174,6 +174,7 @@
     <Compile Include="CLEM\Resources\RuminantConceptionCurve.cs" />
     <Compile Include="CLEM\Reporting\PivotTable.cs" />
     <Compile Include="CLEM\WarningLog.cs" />
+    <Compile Include="Core\Apsim710File\Importer.cs" />
     <Compile Include="Core\ApsimFile\ConverterReturnType.cs" />
     <Compile Include="Core\ApsimFile\JsonUtilities.cs" />
     <Compile Include="Core\ApsimFile\Structure.cs" />
@@ -280,6 +281,7 @@
     <Compile Include="Plant\Phenology\Scales\Age.cs" />
     <EmbeddedResource Include="Resources\Scripts\GraphPanelScriptTemplate.cs" />
     <EmbeddedResource Include="Resources\Scripts\CSharpExpressionTemplate.cs" />
+    <Compile Include="PostSimulationTools\ExcelMultiInput.cs" />
     <Compile Include="Soils\Nutrients\INutrientPool.cs" />
     <Compile Include="Soils\SoilTemp\SoilTemperature.cs" />
     <Compile Include="Soils\Standardiser\Layers.cs" />
@@ -497,7 +499,6 @@
     <Compile Include="Stock\grazparam.cs" />
     <Compile Include="Stock\grazprmread.cs" />
     <Compile Include="Stock\graztype.cs" />
-    <Compile Include="Stock\sdmlpsr.cs" />
     <Compile Include="Stock\stddate.cs" />
     <Compile Include="Stock\stdmath.cs" />
     <Compile Include="Stock\stdstrng.cs" />
@@ -507,7 +508,6 @@
     <Compile Include="Stock\stock_manage.cs" />
     <Compile Include="Stock\stock_padd.cs" />
     <Compile Include="Stock\stock_vars.cs" />
-    <Compile Include="Stock\typedval.cs" />
     <Compile Include="Stock\xmlpsr.cs" />
     <Compile Include="Storage\DataStoreWriter.cs" />
     <Compile Include="Storage\InsertQuery.cs" />

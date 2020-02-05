@@ -9,6 +9,6 @@
         /// <summary>
         /// Gets or sets the tables of values.
         /// </summary>
-        List<DataTable> Tables { get; set; }
+        List<DataTable> Tables { get; }
     }
 }
