@@ -310,8 +310,7 @@ namespace Models.CLEM
                 }
                 catch(Exception ex)
                 {
-                    string[] memberNames = new string[] { "SQLite database error" };
-                    results.Add(new ValidationResult("There was a problem opening the SQLite database [x=" + FullFileName + "] for [" + this.Name + "]\n" + ex.Message, memberNames));
+                    throw new ApsimXException(this, "There was a problem opening the SQLite database [x=" + FullFileName + "] for [" + this.Name + "]\n" + ((ex.Message == "file is not a database")?"The file is not a supported SQLite database":ex.Message));
                 }
 
                 // check all columns present
@@ -349,21 +348,27 @@ namespace Models.CLEM
                     expectedColumns.Add(TBAColumnName);
                 }
 
-                DataTable res = SQLiteReader.ExecuteQuery("PRAGMA table_info("+ TableName + ")");
-
-                List<string> dBcolumns = new List<string>();
-                foreach (DataRow row in res.Rows)
+                try
                 {
-                    dBcolumns.Add(row[1].ToString());
-                }
-
-                foreach (string col in expectedColumns)
-                {
-                    if (!dBcolumns.Contains(col))
+                    DataTable res = SQLiteReader.ExecuteQuery("PRAGMA table_info(" + TableName + ")");
+                    List<string> dBcolumns = new List<string>();
+                    foreach (DataRow row in res.Rows)
                     {
-                        string[] memberNames = new string[] { "Missing SQLite database column" };
-                        results.Add(new ValidationResult("Unable to find column [o=" + col + "] in GRASP database [x=" + FullFileName + "] for [" + this.Name + "]", memberNames));
+                        dBcolumns.Add(row[1].ToString());
                     }
+
+                    foreach (string col in expectedColumns)
+                    {
+                        if (!dBcolumns.Contains(col))
+                        {
+                            string[] memberNames = new string[] { "Missing SQLite database column" };
+                            results.Add(new ValidationResult("Unable to find column [o=" + col + "] in GRASP database [x=" + FullFileName + "] for [" + this.Name + "]", memberNames));
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new ApsimXException(this, "There was a problem opening the SQLite database [x=" + FullFileName + "] for [" + this.Name + "]\n" + ((ex.Message == "file is not a database") ? "The file is not a supported SQLite database" : ex.Message));
                 }
             }
             return results;
