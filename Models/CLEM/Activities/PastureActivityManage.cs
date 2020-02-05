@@ -171,29 +171,23 @@ namespace Models.CLEM.Activities
             {
                 LinkedLandItem.TransactionOccurred += LinkedLandItem_TransactionOccurred;
             }
-            if (Area == 0 && AreaRequested > 0)
-            {
-                ResourceRequestList = new List<ResourceRequest>
-                {
-                    new ResourceRequest()
-                    {
-                        AllowTransmutation = false,
-                        Required = UseAreaAvailable ? LinkedLandItem.AreaAvailable : AreaRequested,
-                        ResourceType = typeof(Land),
-                        ResourceTypeName = LandTypeNameToUse.Split('.').Last(),
-                        ActivityModel = this,
-                        Reason = "Assign",
-                        FilterDetails = null
-                    }
-                };
-            }
 
-            // if we get here we assume some land has been supplied
-            if (ResourceRequestList != null && ResourceRequestList.Count() > 0)
-            {
-                CheckResources(ResourceRequestList, Guid.NewGuid());
-                gotLandRequested = TakeResources(ResourceRequestList, false);
-            }
+            ResourceRequestList = new List<ResourceRequest>
+                {
+                new ResourceRequest()
+                {
+                    AllowTransmutation = false,
+                    Required = UseAreaAvailable ? LinkedLandItem.AreaAvailable : AreaRequested,
+                    ResourceType = typeof(Land),
+                    ResourceTypeName = LandTypeNameToUse.Split('.').Last(),
+                    ActivityModel = this,
+                    Reason = UseAreaAvailable ?"Assign unallocated":"Assign",
+                    FilterDetails = null
+                }
+                };
+
+            CheckResources(ResourceRequestList, Guid.NewGuid());
+            gotLandRequested = TakeResources(ResourceRequestList, false);
 
             //Now the Land has been allocated we have an Area 
             if (gotLandRequested)
