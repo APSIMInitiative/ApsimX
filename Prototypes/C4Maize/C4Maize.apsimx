@@ -51897,7 +51897,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "# Simulation notes\n\nI changed the planting density in the high N sowing rules in old apsim to make the densities identical to those in the equivalent low N treatments.\n\n- j2ki06: no change\n- j2ki07: 2.17 -> 2.18\n- j2ki08: 4.39 -> 4.23\n- j2ki09: 6.54 -> 6.22\n- j2ki10: 7.63 -> 7.91\n\nNote: the initial N in the soils is different in the high N treatments. I'm assuming this is deliberate for now.\n\nNote: the outputs from this experiment don't line up with old apsim for some reason, but neither do the individual j2ki* simulations. Something to look into.",
+                  "Text": "# Simulation notes\n\nI changed the planting density in the high N sowing rules in old apsim to make the densities identical to those in the equivalent low N treatments.\n\n- j2ki06: no change\n- j2ki07: 2.17 -> 2.18\n- j2ki08: 4.39 -> 4.23\n- j2ki09: 6.54 -> 6.22\n- j2ki10: 7.63 -> 7.91\n\nNote: the initial N in the soils is different in the high N treatments. I'm assuming this is deliberate for now.\n\nNote: the outputs from this experiment don't line up with old apsim for some reason, but neither do the individual j2ki* simulations. Something to look into.\n\nNote: j2ki05 originally had curve runoff number set to 80. Every other j2k* sim has this number set to 65. Is this an oversight? For now I have changed it to 80 in both old and new for consistency's sake.",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -52108,7 +52108,7 @@
                                       "DiffusConst": 88.0,
                                       "DiffusSlope": 35.4,
                                       "Salb": 0.13,
-                                      "CN2Bare": 80.0,
+                                      "CN2Bare": 65.0,
                                       "CNRed": 20.0,
                                       "CNCov": 0.8,
                                       "slope": "NaN",
