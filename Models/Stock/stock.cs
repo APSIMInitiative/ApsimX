@@ -293,7 +293,7 @@ namespace Models.GrazPlan
         /// </summary>
         [Description("Information about each animal genotype")]
         [Units("")]
-        public SingleGenotypeInits[] GenoTypes
+        public SingleGenotypeInits[] Genotypes
         {
             get
             {
@@ -4772,7 +4772,7 @@ namespace Models.GrazPlan
         {
             AnimalParamSet paramSet = stockModel.BaseParams;   
             string[] genoParams = GenotypeNames(animal);
-            foreach (SingleGenotypeInits geno in GenoTypes)
+            foreach (SingleGenotypeInits geno in Genotypes)
             {
                 if (!genoParams.Contains(geno.GenotypeName))
                 {
@@ -4805,7 +4805,7 @@ namespace Models.GrazPlan
                 genoParams.CopyTo(allGenoNames, allGenoNames.Length - genoParams.Length);
             }
 
-            foreach (SingleGenotypeInits geno in GenoTypes)
+            foreach (SingleGenotypeInits geno in Genotypes)
             {
                 if (!allGenoNames.Contains(geno.GenotypeName))
                 {
