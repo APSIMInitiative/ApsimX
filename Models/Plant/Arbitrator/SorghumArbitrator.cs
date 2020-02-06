@@ -102,6 +102,7 @@ namespace Models.PMF
         private bool doIncrement;
         private double stage;
         private IPhase previousPhase;
+        private double accumTT;
 
         /// <summary>
         /// (Fractional) number of days from floral init to start grain fill.
@@ -160,6 +161,7 @@ namespace Models.PMF
         private void OnEndOfDay(object sender, EventArgs e)
         {
             DltTT = (double)Apsim.Get(this, "[Phenology].DltTT.Value()");
+            accumTT += DltTT;
         }
 
         [EventSubscribe("PhaseChanged")]
@@ -175,7 +177,7 @@ namespace Models.PMF
 
             if (DMPlantMax > 9990)
             {
-                double ttNow = phenology.AccumulatedTT;
+                double ttNow = accumTT;
                 double ttToFlowering = (double)Apsim.Get(this, "[Phenology].TTToFlowering.Value()");
                 double dmPlantMaxTT = (double)Apsim.Get(this, "[Grain].PgrT1.Value()");
                 if (ttNow > dmPlantMaxTT + ttToFlowering)
