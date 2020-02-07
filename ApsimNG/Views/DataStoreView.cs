@@ -116,20 +116,27 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void _mainWidget_Destroyed(object sender, System.EventArgs e)
         {
-            fileName.Leave -= OnFileNameChanged;
-            gridView.Dispose();
-            gridView = null;
-            dropDownView1.MainWidget.Destroy();
-            dropDownView1 = null;
-            editView1.MainWidget.Destroy();
-            editView1 = null;
-            editView2.MainWidget.Destroy();
-            editView2 = null;
-            rowFilter.MainWidget.Destroy();
-            rowFilter = null;
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            chooseFile.Clicked -= OnChooseFile;
-            owner = null;
+            try
+            {
+                fileName.Leave -= OnFileNameChanged;
+                gridView.Dispose();
+                gridView = null;
+                dropDownView1.MainWidget.Destroy();
+                dropDownView1 = null;
+                editView1.MainWidget.Destroy();
+                editView1 = null;
+                editView2.MainWidget.Destroy();
+                editView2 = null;
+                rowFilter.MainWidget.Destroy();
+                rowFilter = null;
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                chooseFile.Clicked -= OnChooseFile;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -142,11 +149,18 @@ namespace UserInterface.Views
         [GLib.ConnectBefore]
         private void OnChooseFile(object sender, EventArgs e)
         {
-            string newFileName = AskUserForFileName("Choose a file name", Utility.FileDialog.FileActionType.Save, "SQLite Database (*.db)|*.db|All Files (*.*)|*.*");
-            if (!string.IsNullOrEmpty(newFileName))
+            try
             {
-                FileName.Value = newFileName;
-                FileNameChanged?.Invoke(FileName, EventArgs.Empty);
+                string newFileName = AskUserForFileName("Choose a file name", Utility.FileDialog.FileActionType.Save, "SQLite Database (*.db)|*.db|All Files (*.*)|*.*");
+                if (!string.IsNullOrEmpty(newFileName))
+                {
+                    FileName.Value = newFileName;
+                    FileNameChanged?.Invoke(FileName, EventArgs.Empty);
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 

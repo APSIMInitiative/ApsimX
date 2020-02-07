@@ -438,6 +438,10 @@ namespace Models.CLEM.Activities
 
                 energyMaintenance = (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / kml) * Math.Exp(-ind.BreedParams.EMaintExponent * ind.AgeZeroCorrected);
                 ind.EnergyBalance = energyMilkConsumed - energyMaintenance + energyMetablicFromIntake;
+                ind.EnergyIntake = energyMilkConsumed + energyMetablicFromIntake;
+                ind.EnergyFoetus = 0;
+                ind.EnergyMaintenance = energyMaintenance;
+                ind.EnergyMilk = 0;
 
                 double feedingValue;
                 if (ind.EnergyBalance > 0)
@@ -479,7 +483,7 @@ namespace Models.CLEM.Activities
                         // Reference: Freer
                         double potentialBirthWeight = ind.BreedParams.SRWBirth * standardReferenceWeight * (1 - 0.33 * (1 - ind.Weight / standardReferenceWeight));
                         double foetusAge = (femaleind.Age - femaleind.AgeAtLastConception) * 30.4;
-                        //TODO: Check foetus gage correct
+                        //TODO: Check foetus age correct
                         energyFoetus = potentialBirthWeight * 349.16 * 0.000058 * Math.Exp(345.67 - 0.000058 * foetusAge - 349.16 * Math.Exp(-0.000058 * foetusAge)) / 0.13;
                     }
                 }
@@ -495,6 +499,10 @@ namespace Models.CLEM.Activities
                 energyMaintenance = ind.BreedParams.Kme * sme * (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / km) * Math.Exp(-ind.BreedParams.EMaintExponent * maintenanceAge) + (ind.BreedParams.EMaintIntercept * energyMetablicFromIntake);
                 ind.EnergyBalance = energyMetablicFromIntake - energyMaintenance - energyMilk - energyFoetus; // milk will be zero for non lactating individuals.
                 double feedingValue;
+                ind.EnergyIntake = energyMetablicFromIntake;
+                ind.EnergyFoetus = energyFoetus;
+                ind.EnergyMaintenance = energyMaintenance;
+                ind.EnergyMilk = energyMilk;
 
                 // Reference: Feeding_value = Ajustment for rate of loss or gain (SCA p.43, ? different from Hirata model)
                 if (ind.EnergyBalance > 0)

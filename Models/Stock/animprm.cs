@@ -20,7 +20,7 @@ namespace Models.GrazPlan
             if (_GAnimalParams == null)
             {
                 _GAnimalParams = new AnimalParamSet();
-                GlobalParameterFactory.ParamXMLFactory().readDefaults("Models.Resources.ruminant.prm", ref _GAnimalParams);
+                GlobalParameterFactory.ParamXMLFactory().ReadDefaults("Models.Resources.ruminant.prm", ref _GAnimalParams);
             }
             return (AnimalParamSet)_GAnimalParams;
         }
@@ -288,11 +288,11 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="srcSet"></param>
         /// <param name="bCopyData"></param>
-        override protected void copyParams(ParameterSet srcSet, bool bCopyData)
+        override protected void CopyParams(ParameterSet srcSet, bool bCopyData)
         {
             int Idx;
 
-            base.copyParams(srcSet, false);
+            base.CopyParams(srcSet, false);
 
             AnimalParamSet prmSet = (AnimalParamSet)srcSet;
 
@@ -354,14 +354,14 @@ namespace Models.GrazPlan
                 SelfWeanPropn = prmSet.SelfWeanPropn;
 
                 for (Idx = 0; Idx <= DefinitionCount() - 1; Idx++)
-                    GetDefinition(Idx).setDefined(prmSet.GetDefinition(Idx));
+                    GetDefinition(Idx).SetDefined(prmSet.GetDefinition(Idx));
             }
         }
         /// <summary>
         /// Make a new animal parameter set that is a child of this one
         /// </summary>
         /// <returns></returns>
-        override protected ParameterSet makeChild()
+        override protected ParameterSet MakeChild()
         {
             return new AnimalParamSet(this);
         }
@@ -369,52 +369,52 @@ namespace Models.GrazPlan
         /// <summary>
         /// 
         /// </summary>
-        override protected void defineEntries()
+        override protected void DefineEntries()
         {
-            defineParameters("editor", ptyText);
-            defineParameters("edited", ptyText);
+            DefineParameters("editor", TYPETEXT);
+            DefineParameters("edited", TYPETEXT);
 
-            defineParameters("animal", ptyText);
-            defineParameters("srw", ptyReal);
-            defineParameters("dairy", ptyBool);
-            defineParameters("c-pfw", ptyReal);
-            defineParameters("c-mu", ptyReal);
-            defineParameters("c-srs-castr;male", ptyReal);
-            defineParameters("c-n-1:4", ptyReal);
-            defineParameters("c-i-1:20", ptyReal);
-            defineParameters("c-idy-1:3", ptyReal);
-            defineParameters("c-imx-1:3", ptyReal);
-            defineParameters("c-r-1:20", ptyReal);
-            defineParameters("c-k-1:16", ptyReal);
-            defineParameters("c-m-1:17", ptyReal);
-            defineParameters("c-rd-1:8", ptyReal);
-            defineParameters("c-a-1:9", ptyReal);
-            defineParameters("c-p-1:13", ptyReal);
-            defineParameters("c-p14-1:3", ptyReal);
-            defineParameters("c-p15-1:3", ptyReal);
-            defineParameters("c-l0-1:3", ptyReal);
-            defineParameters("c-l-1:25", ptyReal);
-            defineParameters("c-w-1:14", ptyReal);
-            defineParameters("c-c-1:16", ptyReal);
-            defineParameters("c-g-1:18", ptyReal);
-            defineParameters("c-ph-1:15", ptyReal);
-            defineParameters("c-su-1:4", ptyReal);
-            defineParameters("c-h-1:7", ptyReal);
-            defineParameters("c-aa-1:3", ptyReal);
-            defineParameters("c-f1-1:3", ptyReal);
-            defineParameters("c-f2-1:3", ptyReal);
-            defineParameters("c-f3-1:3", ptyReal);
-            defineParameters("c-f4", ptyInt);
-            defineParameters("c-pbt-female;male", ptyInt);
-            defineParameters("c-d-1:15", ptyReal);
-            defineParameters("c-swn", ptyReal);
+            DefineParameters("animal", TYPETEXT);
+            DefineParameters("srw", TYPEREAL);
+            DefineParameters("dairy", TYPEBOOL);
+            DefineParameters("c-pfw", TYPEREAL);
+            DefineParameters("c-mu", TYPEREAL);
+            DefineParameters("c-srs-castr;male", TYPEREAL);
+            DefineParameters("c-n-1:4", TYPEREAL);
+            DefineParameters("c-i-1:20", TYPEREAL);
+            DefineParameters("c-idy-1:3", TYPEREAL);
+            DefineParameters("c-imx-1:3", TYPEREAL);
+            DefineParameters("c-r-1:20", TYPEREAL);
+            DefineParameters("c-k-1:16", TYPEREAL);
+            DefineParameters("c-m-1:17", TYPEREAL);
+            DefineParameters("c-rd-1:8", TYPEREAL);
+            DefineParameters("c-a-1:9", TYPEREAL);
+            DefineParameters("c-p-1:13", TYPEREAL);
+            DefineParameters("c-p14-1:3", TYPEREAL);
+            DefineParameters("c-p15-1:3", TYPEREAL);
+            DefineParameters("c-l0-1:3", TYPEREAL);
+            DefineParameters("c-l-1:25", TYPEREAL);
+            DefineParameters("c-w-1:14", TYPEREAL);
+            DefineParameters("c-c-1:16", TYPEREAL);
+            DefineParameters("c-g-1:18", TYPEREAL);
+            DefineParameters("c-ph-1:15", TYPEREAL);
+            DefineParameters("c-su-1:4", TYPEREAL);
+            DefineParameters("c-h-1:7", TYPEREAL);
+            DefineParameters("c-aa-1:3", TYPEREAL);
+            DefineParameters("c-f1-1:3", TYPEREAL);
+            DefineParameters("c-f2-1:3", TYPEREAL);
+            DefineParameters("c-f3-1:3", TYPEREAL);
+            DefineParameters("c-f4", TYPEINT);
+            DefineParameters("c-pbt-female;male", TYPEINT);
+            DefineParameters("c-d-1:15", TYPEREAL);
+            DefineParameters("c-swn", TYPEREAL);
         }
         /// <summary>
         /// Get the floating point value
         /// </summary>
         /// <param name="sTagList"></param>
         /// <returns></returns>
-        override protected double getRealParam(string[] sTagList)
+        override protected double GetRealParam(string[] sTagList)
         {
             int Idx;
 
@@ -540,7 +540,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="sTagList"></param>
         /// <returns></returns>
-        override protected int getIntParam(string[] sTagList)
+        override protected int GetIntParam(string[] sTagList)
         {
             int result = 0;
 
@@ -564,7 +564,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="sTagList"></param>
         /// <returns></returns>
-        override protected string getTextParam(string[] sTagList)
+        override protected string GetTextParam(string[] sTagList)
         {
             string result = "";
             if (sTagList[0] == "editor")
@@ -582,7 +582,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="sTagList"></param>
         /// <returns></returns>
-        override protected bool getBoolParam(string[] sTagList)
+        override protected bool GetBoolParam(string[] sTagList)
         {
             bool result = false;
             if (sTagList[0] == "dairy")
@@ -595,7 +595,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="sTagList"></param>
         /// <param name="fValue"></param>
-        protected override void setRealParam(string[] sTagList, double fValue)
+        protected override void SetRealParam(string[] sTagList, double fValue)
         {
             int Idx;
 
@@ -718,7 +718,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="sTagList"></param>
         /// <param name="iValue"></param>
-        override protected void setIntParam(string[] sTagList, int iValue)
+        override protected void SetIntParam(string[] sTagList, int iValue)
         {
             if (sTagList[0] == "c")
             {
@@ -739,7 +739,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="sTagList"></param>
         /// <param name="sValue"></param>
-        override protected void setTextParam(string[] sTagList, string sValue)
+        override protected void SetTextParam(string[] sTagList, string sValue)
         {
             if (sTagList[0] == "editor")
                 sEditor = sValue;
@@ -759,7 +759,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="sTagList"></param>
         /// <param name="bValue"></param>
-        override protected void setBoolParam(string[] sTagList, bool bValue)
+        override protected void SetBoolParam(string[] sTagList, bool bValue)
         {
             if (sTagList[0] == "dairy")
                 bDairyBreed = bValue;
@@ -992,7 +992,7 @@ namespace Models.GrazPlan
                 if (srcSet.FParentage.Length == 0)
                 {
                     Array.Resize(ref FParentage, 1);
-                    FParentage[0].sBaseBreed = srcSet.sName;
+                    FParentage[0].sBaseBreed = srcSet.Name;
                     FParentage[0].fPropn = 1.0;
                 }
                 else
@@ -1142,7 +1142,7 @@ namespace Models.GrazPlan
                         ConceiveSigs[Idx][Jdx] = fPropn0 * Breed0.ConceiveSigs[Idx][Jdx] + fPropn1 * Breed1.ConceiveSigs[Idx][Jdx];
 
                 for (Idx = 0; Idx <= DefinitionCount() - 1; Idx++)
-                    GetDefinition(Idx).setDefined(Blend[0].Breed.GetDefinition(Idx));
+                    GetDefinition(Idx).SetDefined(Blend[0].Breed.GetDefinition(Idx));
             }
             else                                                                         // Mixture of breeds provided            
             {
@@ -1150,21 +1150,21 @@ namespace Models.GrazPlan
                 {
                     for (Idx = 0; Idx <= ParamCount() - 1; Idx++)
                     {
-                        prmDefn = getParam(Idx);
-                        if (prmDefn.paramType == ptyReal)
+                        prmDefn = GetParam(Idx);
+                        if (prmDefn.ParamType == TYPEREAL)
                         {
                             fParamSum = 0.0;
                             fPropnSum = 0.0;
                             for (Jdx = 0; Jdx <= Blend.Length - 1; Jdx++)
                             {
-                                if (Blend[Jdx].Breed.IsDefined(prmDefn.sFullName))
+                                if (Blend[Jdx].Breed.IsDefined(prmDefn.FullName))
                                 {
-                                    fParamSum = fParamSum + Blend[Jdx].fPropn * Blend[Jdx].Breed.fParam(prmDefn.sFullName);
+                                    fParamSum = fParamSum + Blend[Jdx].fPropn * Blend[Jdx].Breed.ParamReal(prmDefn.FullName);
                                     fPropnSum = fPropnSum + Blend[Jdx].fPropn;
                                 }
                             }
                             if (fPropnSum > 0.0)
-                                SetParam(prmDefn.sFullName, fParamSum / fPropnSum);
+                                SetParam(prmDefn.FullName, fParamSum / fPropnSum);
                         }
                     }
                 }
@@ -1201,9 +1201,9 @@ namespace Models.GrazPlan
             }
 
             if (sBreedName != "")                                                    // Construct a name for the new genotype 
-                sName = sBreedName;
+                Name = sBreedName;
             else if (FParentage.Length == 1)
-                sName = FParentage[0].sBaseBreed;
+                Name = FParentage[0].sBaseBreed;
             else if (FParentage.Length > 1)
             {
                 iDecPlaces = 0;
@@ -1213,14 +1213,14 @@ namespace Models.GrazPlan
                         iDecPlaces = 1;
                 }
 
-                sName = "";
+                Name = "";
                 for (Idx = 0; Idx <= FParentage.Length - 1; Idx++)
                 {
                     if (FParentage[Idx].fPropn > 0.0005)
                     {
-                        if (sName != "")
-                            sName = sName + ", ";
-                        sName = sName + FParentage[Idx].sBaseBreed + " "
+                        if (Name != "")
+                            Name = Name + ", ";
+                        Name = Name + FParentage[Idx].sBaseBreed + " "
                                          + String.Format("{0:0." + new String('0', iDecPlaces) + "}", 100.0 * FParentage[Idx].fPropn) + "%";
                     }
                 }
@@ -1249,7 +1249,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// 
         /// </summary>
-        override public void deriveParams()
+        override public void DeriveParams()
         {
             MaxYoung = 1;
             while ((MaxYoung < 3) && (BirthWtScale[MaxYoung + 1] > 0.0))
@@ -1282,26 +1282,25 @@ namespace Models.GrazPlan
             iPrm = 0;
             while ((iPrm < iCount) && result)
             {
-                Defn = this.getParam(iPrm);
+                Defn = this.GetParam(iPrm);
                 if (Defn != null)
                 {
-                    sTag = Defn.sFullName;
+                    sTag = Defn.FullName;
                     if (this.IsDefined(sTag))
                     {
-                        switch (Defn.paramType)
-                        {
-                            case ptyText: result = (result && (this.sParam(sTag) == otherSet.sParam(sTag)));
-                                break;
-                            case ptyReal: result = (result && (this.fParam(sTag) == otherSet.fParam(sTag)));
-                                break;
-                            case ptyInt: result = (result && (this.iParam(sTag) == otherSet.iParam(sTag)));
-                                break;
-                            case ptyBool: result = (result && (this.bParam(sTag) == otherSet.bParam(sTag)));
-                                break;
-                        }
+                        if (Defn.ParamType == TYPETEXT)
+                            result = (result && (this.ParamStr(sTag) == otherSet.ParamStr(sTag)));
+                        else if (Defn.ParamType == TYPEREAL)
+                            result = (result && (this.ParamReal(sTag) == otherSet.ParamReal(sTag)));
+                        else if (Defn.ParamType == TYPEINT)
+                            result = (result && (this.ParamInt(sTag) == otherSet.ParamInt(sTag)));
+                        else if (Defn.ParamType == TYPEBOOL)
+                            result = (result && (this.ParamBool(sTag) == otherSet.ParamBool(sTag)));
+                        else
+                            result = false;
                     }
                     else
-                        result = (result && !otherSet.IsDefined(Defn.sFullName));
+                        result = (result && !otherSet.IsDefined(Defn.FullName));
                 }
                 else
                     result = false;
@@ -1317,31 +1316,30 @@ namespace Models.GrazPlan
         ///   separated list of functionally identical breeds. In this case the       
         ///   parameter set for the first member of the group is returned.            
         /// </summary>
-        /// <param name="sBreedName"></param>
+        /// <param name="breedName">The breed name</param>
         /// <returns></returns>
-        public AnimalParamSet Match(string sBreedName)
+        public AnimalParamSet Match(string breedName)
         {
-            if (sBreedName.IndexOf(',') >= 0)
-                sBreedName = sBreedName.Remove(sBreedName.IndexOf(','), sBreedName.Length - sBreedName.IndexOf(','));
+            if (breedName.IndexOf(',') >= 0)
+                breedName = breedName.Remove(breedName.IndexOf(','), breedName.Length - breedName.IndexOf(','));
 
-            return (AnimalParamSet)GetNode(sBreedName);
+            return (AnimalParamSet)GetNode(breedName);
         }
 
         /// <summary>
         /// Returns the number of breeds of a given animal type
         /// </summary>
-        /// <param name="aAnimal"></param>
+        /// <param name="animalType">The animal type</param>
         /// <returns></returns>
-        public int iBreedCount(GrazType.AnimalType aAnimal)
+        public int BreedCount(GrazType.AnimalType animalType)
         {
             AnimalParamSet breedSet;
-            int Idx;
-
+            
             int result = 0;
-            for (Idx = 0; Idx <= LeafCount(true) - 1; Idx++)                                     // Current locale only                      
+            for (int idx = 0; idx <= LeafCount(true) - 1; idx++)                                     // Current locale only                      
             {
-                breedSet = (AnimalParamSet)GetLeaf(Idx, true);
-                if (breedSet.Animal == aAnimal)
+                breedSet = (AnimalParamSet)GetLeaf(idx, true);
+                if (breedSet.Animal == animalType)
                     result++;
             }
 
@@ -1351,30 +1349,30 @@ namespace Models.GrazPlan
         /// <summary>
         /// Iterates through breeds of a given animal type and returns the breed name
         /// </summary>
-        /// <param name="aAnimal"></param>
-        /// <param name="iBreed"></param>
+        /// <param name="animalType">The animal type</param>
+        /// <param name="breedIdx">The breed index 0-n</param>
         /// <returns></returns>
-        public string sBreedName(GrazType.AnimalType aAnimal, int iBreed)
+        public string BreedName(GrazType.AnimalType animalType, int breedIdx)
         {
             AnimalParamSet breedSet;
-            int iCount;
-            int iFound;
-            int Idx;
+            int count;
+            int found;
+            int idx;
 
-            iCount = LeafCount(true);                                             // Current locale only                      
-            iFound = -1;
-            Idx = 0;
+            count = LeafCount(true);                                             // Current locale only                      
+            found = -1;
+            idx = 0;
             breedSet = null;
-            while ((Idx < iCount) && (iFound < iBreed))
+            while ((idx < count) && (found < breedIdx))
             {
-                breedSet = (AnimalParamSet)GetLeaf(Idx, true);
-                if (breedSet.Animal == aAnimal)
-                    iFound++;
-                Idx++;
+                breedSet = (AnimalParamSet)GetLeaf(idx, true);
+                if (breedSet.Animal == animalType)
+                    found++;
+                idx++;
             }
 
-            if (iFound == iBreed)
-                return breedSet.sName;
+            if (found == breedIdx)
+                return breedSet.Name;
             else
                 return "";
         }
@@ -1383,38 +1381,38 @@ namespace Models.GrazPlan
         /// Populates a string list with the names of "breed groups", i.e. sets of    
         /// parameter sets that are identical in all respects save their names.       
         /// </summary>
-        /// <param name="aAnimal"></param>
-        /// <param name="aList"></param>
-        public void getBreedGroups(GrazType.AnimalType aAnimal, List<string> aList)
+        /// <param name="animalType">The animal type</param>
+        /// <param name="breedList">The list of breeds found that are the same</param>
+        public void GetBreedGroups(GrazType.AnimalType animalType, List<string> breedList)
         {
-            bool bSameFound;
-            int Idx, Jdx;
+            bool sameFound;
+            int idx, jdx;
 
-            aList.Clear();                                                              // Start by forming a list of all breeds.   
-            for (Idx = 0; Idx <= iBreedCount(aAnimal) - 1; Idx++)
-                aList.Add(sBreedName(aAnimal, Idx));
+            breedList.Clear();                                                              // Start by forming a list of all breeds.   
+            for (idx = 0; idx <= BreedCount(animalType) - 1; idx++)
+                breedList.Add(BreedName(animalType, idx));
 
-            for (Idx = aList.Count - 1; Idx >= 1; Idx--)
+            for (idx = breedList.Count - 1; idx >= 1; idx--)
             {
-                bSameFound = false;
-                for (Jdx = Idx - 1; Jdx >= 0; Jdx--)
-                    if (!bSameFound)
+                sameFound = false;
+                for (jdx = idx - 1; jdx >= 0; jdx--)
+                    if (!sameFound)
                     {
-                        bSameFound = Match(aList[Idx]).bFunctionallySame(Match(aList[Jdx]));
-                        if (bSameFound)
+                        sameFound = Match(breedList[idx]).bFunctionallySame(Match(breedList[jdx]));
+                        if (sameFound)
                         {
-                            aList[Jdx] = aList[Jdx] + ", " + aList[Idx];
-                            aList.RemoveAt(Idx);
+                            breedList[jdx] = breedList[jdx] + ", " + breedList[idx];
+                            breedList.RemoveAt(idx);
                         }
                     }
             }
         }
 
         /// <summary>
-        /// 
+        /// Count of parents
         /// </summary>
-        /// <returns></returns>
-        public int iParentageCount()
+        /// <returns>The count of parents</returns>
+        public int ParentageCount()
         {
             int result;
 
@@ -1429,29 +1427,29 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        /// Parent breed at the index
         /// </summary>
-        /// <param name="Idx"></param>
-        /// <returns></returns>
-        public string sParentageBreed(int Idx)
+        /// <param name="parentIdx">The index of the parent</param>
+        /// <returns>The parent breed</returns>
+        public string ParentageBreed(int parentIdx)
         {
-            if ((FParentage.Length == 0) && (Idx == 0))
-                return sName;
+            if ((FParentage.Length == 0) && (parentIdx == 0))
+                return Name;
             else
-                return FParentage[Idx].sBaseBreed;
+                return FParentage[parentIdx].sBaseBreed;
         }
 
         /// <summary>
-        /// 
+        /// The proportion of the parent
         /// </summary>
-        /// <param name="Idx"></param>
-        /// <returns></returns>
-        public double fParentagePropn(int Idx)
+        /// <param name="parentIdx">The index of the parent</param>
+        /// <returns>The proportion</returns>
+        public double ParentagePropn(int parentIdx)
         {
-            if ((FParentage.Length == 0) && (Idx == 0))
+            if ((FParentage.Length == 0) && (parentIdx == 0))
                 return 1.0;
             else
-                return FParentage[Idx].fPropn;
+                return FParentage[parentIdx].fPropn;
         }
         /// <summary>
         /// Breed standard reference weight

@@ -15,7 +15,7 @@ namespace Models.Functions
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [Description("A value is returned via linear interpolation of a given set of XY pairs")]
+    [Description("A Y value is returned for the current vaule of the XValue child via linear interpolation of the XY pairs specified")]
     public class LinearInterpolationFunction : Model, IFunction, ICustomDocumentation
     {
         /// <summary>The ys are all the same</summary>
@@ -25,14 +25,11 @@ namespace Models.Functions
         [Link(Type = LinkType.Child, ByName = true)]
         private XYPairs XYPairs = null;
 
-        [Link]
-        private ILocator locator = null;
-
         private Dictionary<double, double> cache = new Dictionary<double, double>();
 
-        /// <summary>The x property</summary>
-        [Description("XProperty")]
-        public string XProperty { get; set; }
+        /// <summary>The x value to use for interpolation</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        IFunction XValue = null;
 
         /// <summary>Constructor</summary>
         public LinearInterpolationFunction() { }
@@ -44,12 +41,13 @@ namespace Models.Functions
         }
 
         /// <summary>Constructor</summary>
-        /// <param name="xproperty">x property</param>
+        /// <param name="xProperty">name of the x property</param>
         /// <param name="x">x values.</param>
         /// <param name="y">y values.</param>
-        public LinearInterpolationFunction(string xproperty, double[] x, double[] y)
+        public LinearInterpolationFunction(string xProperty, double[] x, double[] y)
         {
-            XProperty = xproperty;
+            VariableReference XValue = new VariableReference();
+            XValue.VariableName = xProperty;
             XYPairs = new XYPairs();
             XYPairs.X = x;
             XYPairs.Y = y;
@@ -80,20 +78,8 @@ namespace Models.Functions
             // Shortcut exit when the Y values are all the same. Runs quicker.
             if (YsAreAllTheSame)
                 return XYPairs.Y[0];
-
-            
-            string PropertyName = XProperty;
-            object v = locator.Get(PropertyName);
-            if (v == null)
-                throw new Exception("Cannot find value for " + Name + " XProperty: " + XProperty);
-            double XValue;
-            if (v is Array)
-                XValue = (double)(v as Array).GetValue(arrayIndex);
-            else if (v is IFunction)
-                XValue = (v as IFunction).Value(arrayIndex);
             else
-                XValue = Convert.ToDouble(v, System.Globalization.CultureInfo.InvariantCulture);
-            return XYPairs.ValueIndexed(XValue);
+                return XYPairs.ValueIndexed(XValue.Value(arrayIndex));
         }
 
         /// <summary>Values for x.</summary>
@@ -122,12 +108,10 @@ namespace Models.Functions
                 // add graph and table.
                 if (XYPairs != null)
                 {
-                    IVariable xProperty = Apsim.GetVariableObject(this, XProperty);
-                    string xName = XProperty;
-                    if (xProperty != null && xProperty.UnitsLabel != string.Empty)
-                        xName += " " + xProperty.UnitsLabel;
-
-                    tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + "</i> is calculated as a function of <i>" + StringUtilities.RemoveTrailingString(XProperty, ".Value()") + "</i>", indent));
+                    IModel xValue = (IModel)Apsim.Get(this, "XValue");
+                    string xName = xValue.Name;
+                    
+                    tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + "</i> is calculated as a function of <i>" + xName + "</i>", indent));
 
                     tags.Add(new AutoDocumentation.GraphAndTable(XYPairs, string.Empty, xName, LookForYAxisTitle(this), indent));
                 }

@@ -178,7 +178,7 @@ namespace Models.CLEM.Activities
             fileCrop = Apsim.ChildrenRecursively(Simulation).Where(a => a.Name == ModelNameFileCrop).FirstOrDefault() as IFileCrop;
             if (fileCrop == null)
             {
-                throw new ApsimXException(this, String.Format("Unable to locate model for crop input file [x={0}] referred to in [a={1}]", this.ModelNameFileCrop, this.Name));
+                throw new ApsimXException(this, String.Format("Unable to locate model for crop input file [x={0}] referred to in [a={1}]", this.ModelNameFileCrop??"Unknown", this.Name));
             }
 
             LinkedResourceItem = Resources.GetResourceItem(this, StoreItemName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
@@ -424,8 +424,22 @@ namespace Models.CLEM.Activities
 
                         if (AmountHarvested > 0)
                         {
-                            //if Npct column was not in the file 
+                            double percentN = 0;
+                            // if no nitrogen provided form file
                             if (double.IsNaN(NextHarvest.Npct))
+                            {
+                                if (LinkedResourceItem.GetType() == typeof(GrazeFoodStoreType))
+                                {
+                                    // grazed pasture with no N read assumes the green biomass N content
+                                    percentN = (LinkedResourceItem as GrazeFoodStoreType).GreenNitrogen;
+                                }
+                            }
+                            else
+                            {
+                                percentN =  NextHarvest.Npct;
+                            }
+
+                            if (percentN == 0)
                             {
                                 //Add without adding any new nitrogen.
                                 //The nitrogen value for this feed item in the store remains the same.
@@ -436,7 +450,7 @@ namespace Models.CLEM.Activities
                                 FoodResourcePacket packet = new FoodResourcePacket()
                                 {
                                     Amount = AmountHarvested,
-                                    PercentN = NextHarvest.Npct
+                                    PercentN = percentN
                                 };
                                 if (LinkedResourceItem.GetType() == typeof(GrazeFoodStoreType))
                                 {
@@ -444,6 +458,27 @@ namespace Models.CLEM.Activities
                                 }
                                 LinkedResourceItem.Add(packet, this, addReason);
                             }
+
+                            ////if Npct column was not in the file 
+                            //if (double.IsNaN(NextHarvest.Npct))
+                            //{
+                            //    //Add without adding any new nitrogen.
+                            //    //The nitrogen value for this feed item in the store remains the same.
+                            //    LinkedResourceItem.Add(AmountHarvested, this, addReason);
+                            //}
+                            //else
+                            //{
+                            //    FoodResourcePacket packet = new FoodResourcePacket()
+                            //    {
+                            //        Amount = AmountHarvested,
+                            //        PercentN = NextHarvest.Npct
+                            //    };
+                            //    if (LinkedResourceItem.GetType() == typeof(GrazeFoodStoreType))
+                            //    {
+                            //        packet.DMD = (LinkedResourceItem as GrazeFoodStoreType).EstimateDMD(packet.PercentN);
+                            //    }
+                            //    LinkedResourceItem.Add(packet, this, addReason);
+                            //}
                             SetStatusSuccess();
                         }
                         else

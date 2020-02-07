@@ -413,6 +413,8 @@ namespace Models.PMF.Phen
                         propOfDayToUse = 1 - portionInOld;
                     }
                     incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
+                    if (SorghumFlag != null && CurrentStageName == "Emergence")
+                        AccumulatedEmergedTT -= (1 - propOfDayToUse) * thermalTime.Value();
                 }
 
                 AccumulatedTT += thermalTime.Value();

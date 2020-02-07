@@ -124,6 +124,14 @@
                 return result;
             }
 
+            protected override IValueProvider CreateMemberValueProvider(MemberInfo member)
+            {
+                if (member.Name == "Children")
+                    return new ChildrenProvider(member);
+
+                return base.CreateMemberValueProvider(member);
+            }
+
             protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
             {
                 JsonProperty property = base.CreateProperty(member, memberSerialization);
@@ -139,6 +147,28 @@
                 return property;
             }
 
+            private class ChildrenProvider : IValueProvider
+            {
+                private MemberInfo memberInfo;
+
+                public ChildrenProvider(MemberInfo memberInfo)
+                {
+                    this.memberInfo = memberInfo;
+                }
+
+                public object GetValue(object target)
+                {
+                    if (target is ModelCollectionFromResource m)
+                        return m.ChildrenToSerialize;
+
+                    return new DynamicValueProvider(memberInfo).GetValue(target);
+                }
+
+                public void SetValue(object target, object value)
+                {
+                    new DynamicValueProvider(memberInfo).SetValue(target, value);
+                }
+            }
         }
     }
 }

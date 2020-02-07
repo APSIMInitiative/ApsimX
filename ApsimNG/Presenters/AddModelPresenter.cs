@@ -1,5 +1,6 @@
 ﻿namespace UserInterface.Presenters
 {
+    using global::UserInterface.Commands;
     using Interfaces;
     using Models.Core;
     using Models.Core.ApsimFile;
@@ -119,16 +120,24 @@
         /// <param name="e">Event arguments</param>
         private void OnAddButtonClicked(object sender, EventArgs e)
         {
-            Type modelType = typeof(IModel).Assembly.GetType(tree.SelectedNode);
+            var namespaceWords = tree.SelectedNode.Split(".".ToCharArray()).ToList();
+            var modelName = namespaceWords.Last();
 
-            if (modelType != null)
+            var selectedModelType = this.allowableChildModels.FirstOrDefault(m => m.ModelName == modelName);
+            if (selectedModelType != null)
             {
                 this.explorerPresenter.MainPresenter.ShowWaitCursor(true);
                 try
                 {
-                    IModel child = (IModel)Activator.CreateInstance(modelType, true);
-                    child.Name = modelType.Name;
-                    explorerPresenter.Add(child, Apsim.FullPath(this.model));
+                    IModel child = (IModel)Activator.CreateInstance(selectedModelType.ModelType, true);
+                    child.Name = modelName;
+                    if (child is ModelCollectionFromResource)
+                        (child as ModelCollectionFromResource).ResourceName = selectedModelType.ModelName;
+
+                    var command = new AddModelCommand(Apsim.FullPath(this.model),
+                                                      child,
+                                                      explorerPresenter);
+                    explorerPresenter.CommandHistory.Add(command, true);
                 }
                 finally
                 {

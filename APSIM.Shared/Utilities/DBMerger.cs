@@ -15,16 +15,14 @@
         /// Merge multiple .db files into a single .db file.
         /// </summary>
         /// <param name="fileSpec">The file specification for the .db files to merge.</param>
+        /// <param name="recurse">Recursively search for matching .db files in child directories?</param>
         /// <param name="outFileName">The name of the new output file.</param>
-        public static void MergeFiles(string fileSpec, string outFileName)
+        public static void MergeFiles(string fileSpec, bool recurse, string outFileName)
         {
             File.Delete(outFileName);
 
-            string path = Path.GetDirectoryName(fileSpec);
-            if (path == "")
-                path = Directory.GetCurrentDirectory();
-            var filesToMerge = Directory.GetFiles(path, Path.GetFileName(fileSpec)).ToList();
-            if (filesToMerge.Count > 1)
+            string[] filesToMerge = DirectoryUtilities.FindFiles(fileSpec, recurse);
+            if (filesToMerge.Length > 1)
             {
                 File.Copy(filesToMerge[0], outFileName, overwrite:true);
 

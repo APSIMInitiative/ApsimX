@@ -17,6 +17,7 @@
     [ViewName("UserInterface.Views.TabbedMetDataView")]
     [PresenterName("UserInterface.Presenters.MetDataPresenter")]
     [ValidParent(ParentType=typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Zone))]
     public class Weather : Model, IWeather, IReferenceExternalFiles
     {
         /// <summary>
@@ -407,8 +408,10 @@
             this.windIndex = 0;
             this.DiffuseFractionIndex = 0;
             this.dayLengthIndex = 0;
-            this.CO2 = 350;
-            this.AirPressure = 1010;
+            if (CO2 == 0)
+                this.CO2 = 350;
+            if (AirPressure == 0)
+                this.AirPressure = 1010;
             if (reader != null)
             {
                 reader.Close();

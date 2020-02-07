@@ -28,6 +28,14 @@
         /// <summary>
         /// Not mated
         /// </summary>
-        NotMated
+        NotMated,
+        /// <summary>
+        /// Not ready
+        /// </summary>
+        NotReady,
+        /// <summary>
+        /// Not available
+        /// </summary>
+        NotAvailable
     }
 }

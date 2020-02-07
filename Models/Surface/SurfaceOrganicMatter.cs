@@ -19,7 +19,7 @@
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType=typeof(Zone))]
-    public class SurfaceOrganicMatter : ModelCollectionFromResource, ISurfaceOrganicMatter, IHaveCanopy, IRemovableBiomass
+    public class SurfaceOrganicMatter : ModelCollectionFromResource, ISurfaceOrganicMatter, IHaveCanopy, IOrganDamage
     {
         /// <summary>Link to the soil component</summary>
         [Link]
@@ -122,7 +122,7 @@
         //private double lyingExtinctionCoeff = 1.0;
 
         /// <summary>fraction of incoming faeces to add</summary>
-        private double fractionFaecesAdded = 0.5;
+        private double fractionFaecesAdded = 1.0;
 
         /// <summary>Actual surface organic matter decomposition. Calculated by SoilNitrogen.</summary>
         private SurfaceOrganicMatterDecompType actualSOMDecomp;

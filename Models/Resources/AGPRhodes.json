@@ -1,0 +1,287 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 0,
+  "Version": 77,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.AgPasture.PastureSpecies, Models",
+      "MaximumNUptake": 10.0,
+      "Albedo": 0.26,
+      "Gsmax": 0.011,
+      "R50": 200.0,
+      "SpeciesFamily": 0,
+      "PhotosyntheticPathway": 1,
+      "ReferencePhotosyntheticRate": 1.2,
+      "LightExtinctionCoefficient": 0.5,
+      "GrowthTminimum": 10.0,
+      "GrowthToptimum": 32.0,
+      "GrowthTEffectExponent": 1.25,
+      "UseHeatStressFactor": "yes",
+      "HeatOnsetTemperature": 35.0,
+      "HeatFullTemperature": 42.0,
+      "HeatRecoverySumDD": 30.0,
+      "HeatRecoveryTReference": 35.0,
+      "UseColdStressFactor": "yes",
+      "ColdOnsetTemperature": 8.0,
+      "ColdFullTemperature": 0.0,
+      "ColdRecoverySumDD": 50.0,
+      "ColdRecoveryTReference": 5.0,
+      "MaintenanceRespirationCoefficient": 0.03,
+      "GrowthRespirationCoefficient": 0.25,
+      "RespirationTReference": 20.0,
+      "RespirationExponent": 1.5,
+      "NThresholdsForLeaves": [
+        0.04,
+        0.012,
+        0.05
+      ],
+      "NThresholdsForStems": [
+        0.02,
+        0.006,
+        0.025
+      ],
+      "NThresholdsForStolons": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "NThresholdsForRoots": [
+        0.02,
+        0.006,
+        0.025
+      ],
+      "DegreesDayForGermination": 150.0,
+      "TargetShootRootRatio": 4.0,
+      "MaxRootAllocation": 0.25,
+      "ShootRootGlfFactor": 0.6,
+      "UseReproSeasonFactor": "yes",
+      "ReproSeasonReferenceLatitude": 41.0,
+      "ReproSeasonTimingCoeff": 0.14,
+      "ReproSeasonMaxAllocationIncrease": 0.5,
+      "ReproSeasonAllocationCoeff": 0.1,
+      "FractionLeafMaximum": 0.6,
+      "FractionLeafMinimum": 0.6,
+      "FractionLeafDMThreshold": 500.0,
+      "FractionLeafDMFactor": 2000.0,
+      "FractionLeafExponent": 3.0,
+      "FractionToStolon": 0.0,
+      "SpecificLeafArea": 20.0,
+      "SpecificRootLength": 75.0,
+      "StolonEffectOnLAI": 0.0,
+      "ShootMaxEffectOnLAI": 1000.0,
+      "MaxStemEffectOnLAI": 0.75,
+      "LiveLeavesPerTiller": 3.5,
+      "TissueTurnoverRateShoot": 0.05,
+      "TissueTurnoverRateRoot": 0.02,
+      "DetachmentRateShoot": 0.05,
+      "TurnoverTemperatureMin": 5.0,
+      "TurnoverTemperatureRef": 20.0,
+      "TurnoverTemperatureExponent": 1.0,
+      "TurnoverDroughtEffectMax": 2.0,
+      "TurnoverDroughtThreshold": 0.5,
+      "TurnoverDefoliationCoefficient": 0.5,
+      "TurnoverDefoliationRootEffect": 0.1,
+      "FractionNLuxuryRemobilisable": [
+        0.1,
+        0.1,
+        0.1
+      ],
+      "MinimumNFixation": 0.0,
+      "MaximumNFixation": 0.0,
+      "SoilSaturationEffectMax": 0.1,
+      "MinimumWaterFreePorosity": -1.0,
+      "SoilSaturationRecoveryFactor": 0.25,
+      "NDillutionCoefficient": 0.5,
+      "GlfGeneric": 1.0,
+      "GlfSoilFertility": 1.0,
+      "PlantHeightMinimum": 300.0,
+      "PlantHeightMaximum": 300.0,
+      "PlantHeightMassForMax": 12000.0,
+      "PlantHeightExponent": 2.7,
+      "RootDepthMinimum": 50.0,
+      "RootDepthMaximum": 1000.0,
+      "RootElongationRate": 30.0,
+      "RootDistributionDepthParam": 250.0,
+      "RootDistributionExponent": 3.2,
+      "DigestibilitiesCellWall": [
+        0.6,
+        0.6,
+        0.6,
+        0.2
+      ],
+      "MinimumGreenWt": 50.0,
+      "FractionStolonStanding": 0.0,
+      "PreferenceForGreenOverDead": 1.0,
+      "PreferenceForLeafOverStems": 1.0,
+      "WaterAvailableMethod": 0,
+      "NitrogenAvailableMethod": 0,
+      "Name": "Rhodes",
+      "Children": [
+        {
+          "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
+          "Name": "Leaves",
+          "Children": [
+            {
+              "$type": "Models.AgPasture.GenericTissue, Models",
+              "Name": "LeafCohort1",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.GenericTissue, Models",
+              "Name": "LeafCohort2",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.GenericTissue, Models",
+              "Name": "LeafCohort3",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.GenericTissue, Models",
+              "Name": "Dead",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
+          "Name": "Stems",
+          "Children": [
+            {
+              "$type": "Models.AgPasture.GenericTissue, Models",
+              "Name": "LeafCohort1",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.GenericTissue, Models",
+              "Name": "LeafCohort2",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.GenericTissue, Models",
+              "Name": "LeafCohort3",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.GenericTissue, Models",
+              "Name": "Dead",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
+          "Name": "Stolons",
+          "Children": [
+            {
+              "$type": "Models.AgPasture.GenericTissue, Models",
+              "Name": "LeafCohort1",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.GenericTissue, Models",
+              "Name": "LeafCohort2",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.GenericTissue, Models",
+              "Name": "LeafCohort3",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.GenericTissue, Models",
+              "Name": "Dead",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false,
+      "PhotosynthesisPathwayType": 4.0,
+      "PhotosyntheticEfficiency": 0.01,
+      "PhotosynthesisCurveFactor": 0.8,
+      "FractionPAR": 0.5,
+      "LightExtinctionCoefficients": 0.7,
+      "ReferenceCO2": 380.0,
+      "CO2EffectScaleFactor": 150.0,
+      "CO2EffectOffsetFactor": 600.0,
+      "CO2EffectMinimum": 0.6,
+      "CO2EffectExponent": 2.0,
+      "RelativeNconcForStems": 0.5,
+      "RelativeNconcForStolons": 0.0,
+      "RelativeNconcForRoots": 0.5,
+      "ReproSeasonDurationCoeff": 2.0,
+      "ReproSeasonShouldersLengthFactor": 1.0,
+      "ReproSeasonOnsetDurationFactor": 0.6,
+      "RelativeTurnoverEmerging": 2.0,
+      "DetachmentDroughtCoefficient": 3.0,
+      "DetachmentDroughtEffectMin": 0.1,
+      "TurnoverStockFactor": 0.01,
+      "TurnoverDefoliationEffectMin": 0.025,
+      "FractionNLuxuryRemobStage1": 0.1,
+      "FractionNLuxuryRemobStage2": 0.1,
+      "FractionNLuxuryRemobStage3": 0.1,
+      "SymbiontCostFactor": 0.0,
+      "NFixingCostFactor": 0.0,
+      "GenericGLF": 1.0,
+      "SoilFertilityGLF": 1.0,
+      "rootDistributionDepthParam": 80.0,
+      "rootDistributionExponent": 3.5,
+      "SugarFractionNewGrowth": 0.5,
+      "FractionStolonsStanding": 0.0,
+      "referenceRLD": 5.0,
+      "ReferenceKSuptake": 15.0,
+      "NuptakeSWFactor": 0.25,
+      "MaximumUptakeRateNH4": 0.5,
+      "MaximumUptakeRateNO3": 0.5
+    }
+  ]
+}

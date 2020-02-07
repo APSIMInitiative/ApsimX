@@ -284,6 +284,7 @@
         public static ReportColumn Create(string descriptor, IClock clock, IStorageWriter storage, ILocator locator, IEvent events)
         {
             string columnName = StringUtilities.RemoveWordAfter(ref descriptor, "as");
+            string originalDescriptor = descriptor;
             object to = StringUtilities.RemoveWordAfter(ref descriptor, "to");
             object from = StringUtilities.RemoveWordAfter(ref descriptor, "from");
             if (clock is IModel)
@@ -301,6 +302,10 @@
                         to = toValue;
                 }
             }
+
+            if (to == null || from == null)
+                descriptor = originalDescriptor;
+
             string aggregationFunction = StringUtilities.RemoveWordBefore(ref descriptor, "of");
 
             string variableName = descriptor;  // variable name is what is left over.
@@ -348,8 +353,17 @@
         /// </summary>
         private object GetVariableValue()
         {
-            object value = locator.Get(variableName);
-
+            object value = null;
+            try
+            {
+                value = locator.Get(variableName);
+            }
+            catch (Exception)
+            {
+                // Swallow exception because reporting sum(Wheat.Root.PlantZone.WaterUptake) will
+                // throw an exception before the crop is sown. We don't want this to stop the
+                // simulation. Instead, simply report null.
+            }
             if (value is IFunction function)
                 value = function.Value();
             else if (value != null && (value.GetType().IsArray || value.GetType().IsClass))

@@ -92,7 +92,7 @@ namespace Models.CLEM.Activities
                 // sum all where true=0 and false=1 so that all must be zero to get a sum total of zero or there are no timers
                 int result = 0;
                 IModel current = this as IModel;
-                while (current.GetType() != typeof(ZoneCLEM))
+                while (current.GetType() != typeof(ZoneCLEM) & current.GetType() != typeof(Market))
                 {
                     result += current.Children.Where(a => a is IActivityTimer).Where(a => a.Enabled).Cast<IActivityTimer>().Sum(a => a.ActivityDue ? 0 : 1);
                     current = current.Parent as IModel;
@@ -374,7 +374,6 @@ namespace Models.CLEM.Activities
 
                 // if no resources required perform Activity if code is present.
                 // if resources are returned (all available or UseResourcesAvailable action) perform Activity
-                // if reportErrorAndStop or SkipActivity do not perform Activity
                 if (tookRequestedResources || (ResourceRequestList.Count == 0))
                 {
                     DoActivity();
@@ -695,6 +694,7 @@ namespace Models.CLEM.Activities
                 this.Status = ActivityStatus.Success;
                 return;
             }
+
             foreach (ResourceRequest request in resourceRequestList)
             {
                 request.ActivityID = uniqueActivityID;
@@ -738,6 +738,7 @@ namespace Models.CLEM.Activities
             if (((countShortfallRequests > 0) && (countShortfallRequests == countTransmutationsSuccessful)) || (countTransmutationsSuccessful > 0 && OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable))
             {
                 // do transmutations.
+                // this uses the current zone resources, but will find markets if needed in the process
                 Resources.TransmutateShortfall(shortfallRequests, false);
 
                 // recheck resource amounts now that resources have been topped up
@@ -766,7 +767,6 @@ namespace Models.CLEM.Activities
             {
                 this.Status = ActivityStatus.Success;
             }
-
         }
 
         /// <summary>

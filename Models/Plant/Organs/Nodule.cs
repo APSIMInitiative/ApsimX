@@ -18,7 +18,7 @@ namespace Models.PMF.Organs
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class Nodule : Model, IOrgan, IArbitration, ICustomDocumentation, IRemovableBiomass
+    public class Nodule : Model, IOrgan, IArbitration, ICustomDocumentation, IOrganDamage
     {
         #region Paramater Input Classes
 

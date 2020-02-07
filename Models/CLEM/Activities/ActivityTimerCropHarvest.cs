@@ -63,7 +63,7 @@ namespace Models.CLEM.Activities
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            // check that this activity has a parent of type CropActivityCollectProduct
+            // check that this activity has a parent of type CropActivityManageProduct
 
             Model current = this;
             while (current.GetType() != typeof(ZoneCLEM))
@@ -77,8 +77,8 @@ namespace Models.CLEM.Activities
 
             if (ManageProductActivity == null)
             {
-                string[] memberNames = new string[] { "CropActivityCollectProduct parent" };
-                results.Add(new ValidationResult("This crop timer be below a parent of the type Crop Activity Collect Product", memberNames));
+                string[] memberNames = new string[] { "CropActivityManageProduct parent" };
+                results.Add(new ValidationResult("This crop timer be below a parent of the type Crop Activity Manage Product", memberNames));
             }
 
             return results;
@@ -203,7 +203,6 @@ namespace Models.CLEM.Activities
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"filterborder clearfix\" style=\"opacity: " + ((this.Enabled) ? "1" : "0.4") + "\">";
             if (OffsetMonthHarvestStart + OffsetMonthHarvestStop == 0)
             {
                 html += "\n<div class=\"filter\">At harvest";
@@ -245,7 +244,6 @@ namespace Models.CLEM.Activities
             {
                 html += " - DISABLED!";
             }
-            html += "\n</div>";
             return html;
         }
 
@@ -255,7 +253,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
-            return "";
+            return "</div>";
         }
 
         /// <summary>
@@ -264,7 +262,9 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
-            return "";
+            string html = "";
+            html += "\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
+            return html;
         }
     }
 }

@@ -16,18 +16,18 @@
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Agroforestry.AgroforestrySystem))]
     [ScopedModel]
-    public class Zone : Model
+    public class Zone : Model, ICustomDocumentation
     {
         /// <summary>Area of the zone.</summary>
         [Description("Area of zone (ha)")]
         virtual public double Area { get; set; }
 
         /// <summary>Gets or sets the slope.</summary>
-        [Description("Slope angle(deg)")]
+        [Description("Slope angle (degrees)")]
         virtual public double Slope { get; set; }
 
-        /// <summary>Angle of the aspect, from north (degrees).</summary>
-        [Description("Angle of the aspect, from north (degrees)")]
+        /// <summary>Angle of the aspect, from south (degrees).</summary>
+        [Description("Aspect (degrees from north)")]
         public double AspectAngle { get; set; }
 
         /// <summary>Local altitude (meters above sea level).</summary>
@@ -92,5 +92,18 @@
             }
         }
 
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public virtual void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            if (IncludeInDocumentation)
+            {
+                // document children
+                foreach (IModel child in Children)
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
+            }
+        }
     }
 }

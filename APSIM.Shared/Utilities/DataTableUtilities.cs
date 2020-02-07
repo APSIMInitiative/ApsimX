@@ -773,6 +773,58 @@ namespace APSIM.Shared.Utilities
                 to.Rows.InsertAt(newRow, index + i);
             }
         }
-            
+
+        /// <summary>
+        /// Return true if the specified data column has a DbNull in every row.
+        /// </summary>
+        /// <param name="dataColumn">The column to check.</param>
+        public static bool ColumnIsNull(DataColumn dataColumn)
+        {
+            foreach (DataRow row in dataColumn.Table.Rows)
+                if (!Convert.IsDBNull(row[dataColumn]))
+                    return false;
+            return true;
+        }
+
+        /// <summary>
+        /// Convert a data table to html snippet.
+        /// </summary>
+        /// <param name="table">The data table to convert to string.</param>
+        /// <param name="writeHeaders">Write the table headers to html?</param>
+        /// <returns>HTML snippet. Never returns null.</returns>
+        public static string ToHTML(DataTable table, bool writeHeaders)
+        {
+            var builder = new StringBuilder();
+            if (table.Rows.Count > 0)
+            {
+                builder.Append("<table border='1px' cellpadding='5' cellspacing='0' ");
+                builder.AppendLine("style='border: solid 1px Silver;'>");
+                if (writeHeaders)
+                {
+                    builder.AppendLine("<tr align='left' valign='top'>");
+                    foreach (DataColumn c in table.Columns)
+                    {
+                        builder.Append("<td align='left' valign='top'><b>");
+                        builder.Append(c.ColumnName);
+                        builder.AppendLine("</b></td>");
+                    }
+                    builder.AppendLine("</tr>");
+                }
+                foreach (DataRow r in table.Rows)
+                {
+                    builder.AppendLine("<tr align='left' valign='top'>");
+                    foreach (DataColumn c in table.Columns)
+                    {
+                        builder.AppendLine("<td align='left' valign='top'>");
+                        builder.AppendLine(r[c.ColumnName].ToString());
+                        builder.AppendLine("</td>");
+                    }
+                    builder.AppendLine("</tr>");
+                }
+                builder.AppendLine("</table>");
+
+            }
+            return builder.ToString();
+        }
     }
 }

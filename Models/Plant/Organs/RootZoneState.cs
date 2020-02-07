@@ -165,13 +165,11 @@ namespace Models.PMF.Organs
                 LayerLive[layer].StructuralWt = toMass[layer] * population;
                 LayerLive[layer].StructuralN = LayerLive[layer].StructuralWt * maxNConc;
             }
-            double mtomm = 1000.0;
             if(plant.SowingData != null)
             {
-                LeftDist = plant.SowingData.RowSpacing * mtomm * (plant.SowingData.SkipRow - 0.5);
-                RightDist = plant.SowingData.RowSpacing * mtomm * 0.5;
+                LeftDist = plant.SowingData.RowSpacing * (plant.SowingData.SkipRow - 0.5);
+                RightDist = plant.SowingData.RowSpacing * 0.5;
             }
-
         }
 
 
@@ -215,17 +213,7 @@ namespace Models.PMF.Organs
             //sorghum calc
             var rootDepthWaterStress = 1.0;
             if (root.RootDepthStressFactor != null)
-            {
-                //calc StressFactorLookup   
-                var extractable = soil.SoilWater.ESW[RootLayer];
-                var llDep = soil.LL15[RootLayer] * soil.Thickness[RootLayer];
-                var capacity = soil.DULmm[RootLayer] - llDep;
-
-                root.SWAvailabilityRatio = MathUtilities.Divide(extractable, capacity, 10);
-                if (MathUtilities.FloatsAreEqual(extractable, 0))
-                    root.SWAvailabilityRatio = 0; // :(
-                rootDepthWaterStress = root.RootDepthStressFactor.Value();
-            }
+                rootDepthWaterStress = root.RootDepthStressFactor.Value(RootLayer);
 
             double MaxDepth;
             double[] xf = null;

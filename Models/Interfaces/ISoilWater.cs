@@ -59,6 +59,9 @@
         /// <summary>Amount of N leaching as NH4 from each soil layer (kg /ha)</summary>
         double[] FlowNH4 { get; }
 
+        /// <summary>Amount of N leaching as urea from each soil layer (kg /ha)</summary>
+        double[] FlowUrea { get; }
+
         /// <summary>Amount of water moving upward from each soil layer during unsaturated flow (negative value means downward movement) (mm)</summary>
         double[] Flow { get; }
 

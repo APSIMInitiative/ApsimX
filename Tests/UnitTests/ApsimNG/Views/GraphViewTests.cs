@@ -17,6 +17,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnitTests.ApsimNG.Utilities;
+using UserInterface.Commands;
 using UserInterface.Presenters;
 using UserInterface.Views;
 using Utility;
@@ -110,17 +111,27 @@ namespace UnitTests.ApsimNG.Views
             IModel paddock = Apsim.Find(sims, typeof(Zone));
             Folder graphs = new Folder();
             graphs.Name = "Graphs";
-            explorer.Add(graphs, Apsim.FullPath(paddock));
+
+            var command = new AddModelCommand(Apsim.FullPath(paddock),
+                                              graphs,
+                                              explorer);
+            explorer.CommandHistory.Add(command, true);
 
             // Add an empty graph to the folder.
             Models.Graph.Graph graph = new Models.Graph.Graph();
             graph.Name = "Graph";
-            explorer.Add(graph, Apsim.FullPath(graphs));
+            command = new AddModelCommand(Apsim.FullPath(graphs),
+                                          graph,
+                                          explorer);
+            explorer.CommandHistory.Add(command, true);
 
             // Add an empty series to the graph.
             Models.Graph.Series series = new Models.Graph.Series();
             series.Name = "Series";
-            explorer.Add(series, Apsim.FullPath(graph));
+            command = new AddModelCommand(Apsim.FullPath(graph),
+                                          series,
+                                          explorer);
+            explorer.CommandHistory.Add(command, true);
 
             // click on the series node.
             explorer.SelectNode(Apsim.FullPath(series));
@@ -237,7 +248,6 @@ namespace UnitTests.ApsimNG.Views
             Assert.AreNotEqual(white, boxPlot.Stroke);
 
             // The controls should no longer be sensitive.
-            Assert.IsFalse(seriesView.X.IsSensitive);
             Assert.IsFalse(seriesView.XCumulative.IsSensitive);
             Assert.IsFalse(seriesView.XOnTop.IsSensitive);
             Assert.IsFalse(seriesView.MarkerSize.IsSensitive);

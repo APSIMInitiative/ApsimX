@@ -1,4 +1,5 @@
 ﻿using Gtk;
+using System;
 using UserInterface.Interfaces;
 
 namespace UserInterface.Views
@@ -38,19 +39,26 @@ namespace UserInterface.Views
             mainWidget = notebook;
             grid = new GridView(this);
             scriptEditor = new EditorView(this);
-            notebook.AppendPage(grid.MainWidget, new Label("Properties"));
+            notebook.AppendPage(grid.MainWidget, new Label("Parameters"));
             notebook.AppendPage(scriptEditor.MainWidget, new Label("Script"));
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, System.EventArgs e)
         {
-            grid.MainWidget.Destroy();
-            grid = null;
-            scriptEditor.MainWidget.Destroy();
-            scriptEditor = null;
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            owner = null;
+            try
+            {
+                grid.MainWidget.Destroy();
+                grid = null;
+                scriptEditor.MainWidget.Destroy();
+                scriptEditor = null;
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>

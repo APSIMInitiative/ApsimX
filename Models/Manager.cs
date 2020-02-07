@@ -154,7 +154,7 @@
                 catch (Exception err)
                 {
                     CompiledCode = null;
-                    throw new Exception("Unable to compile \"" + Name + "\"", err);
+                    throw new Exception("Unable to compile \"" + Name + "\"" + ". Full path: " + Apsim.FullPath(this), err);
                 }
             }
         }

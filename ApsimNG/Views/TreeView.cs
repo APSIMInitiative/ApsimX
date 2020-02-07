@@ -181,7 +181,7 @@ namespace UserInterface.Views
             if (path.Prev() && treemodel.GetIter(out prevnode, path))
                 treemodel.MoveBefore(node, prevnode);
 
-            treeview1.ScrollToCell(path, treeview1.Columns[0], false, 0, 0);
+            treeview1.ScrollToCell(path, null, false, 0, 0);
         }
 
         /// <summary>Moves the specified node down 1 position.</summary>
@@ -195,7 +195,7 @@ namespace UserInterface.Views
             if (treemodel.GetIter(out nextnode, path))
                 treemodel.MoveAfter(node, nextnode);
 
-            treeview1.ScrollToCell(path, treeview1.Columns[0], false, 0, 0);
+            treeview1.ScrollToCell(path, null, false, 0, 0);
         }
 
         /// <summary>Renames the specified node path.</summary>
@@ -362,7 +362,7 @@ namespace UserInterface.Views
         private void RefreshNode(TreeIter node, TreeViewNode description)
         {
             Gdk.Pixbuf pixbuf = null;
-            if (MasterView.HasResource(description.ResourceNameForImage))
+            if (MasterView != null && MasterView.HasResource(description.ResourceNameForImage))
                 pixbuf = new Gdk.Pixbuf(null, description.ResourceNameForImage);
             string tick = description.Checked ? "✔" : "";
             treemodel.SetValues(node, description.Name, pixbuf, description.ToolTip, tick, description.Colour, description.Strikethrough);
@@ -495,12 +495,24 @@ namespace UserInterface.Views
                     if (selectionChangedData.NewNodePath != selectionChangedData.OldNodePath)
                         SelectedNodeChanged.Invoke(this, selectionChangedData);
                     previouslySelectedNodePath = selectionChangedData.NewNodePath;
-                    treeview1.CursorChanged += OnAfterSelect;
+                }
+                else
+                {
+                    // Presenter is ignoring the SelectedNodeChanged event.
+                    // We should scroll to the newly selected node so the user
+                    // can actually see what they've selected.
+                    treeview1.GetCursor(out TreePath path, out _);
+                    treeview1.ScrollToCell(path, null, false, 0, 1);
                 }
             }
             catch (Exception err)
             {
                 ShowError(err);
+            }
+            finally
+            {
+                if (SelectedNodeChanged != null && treeview1 != null)
+                    treeview1.CursorChanged += OnAfterSelect;
             }
         }
 

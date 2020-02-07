@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace Models.Storage
@@ -49,15 +50,21 @@ namespace Models.Storage
         /// <summary>Returns a list of table names</summary>
         List<string> TableNames { get; }
 
+        /// <summary>Returns a list of view names</summary>
+        List<string> ViewNames { get; }
+
+        /// <summary>Returns a list of table and view names</summary>
+        List<string> TableAndViewNames { get; }
+
         /// <summary>Return a list of column names for a table. Never returns null.</summary>
         /// <param name="tableName">The table name to return column names for.</param>
         /// <returns>Can return an empty list but never null.</returns>
         List<string> ColumnNames(string tableName);
 
-        /// <summary>Return a list of full column names of type string for a table. Never returns null.</summary>
+        /// <summary>Return a list of column names/column type tuples for a table. Never returns null.</summary>
         /// <param name="tableName">The table name to return column names for.</param>
         /// <returns>Can return an empty list but never null.</returns>
-        List<string> StringColumnNames(string tableName);
+        List<Tuple<string, Type>> GetColumns(string tableName);
 
         /// <summary>
         /// Gets a "brief" column name for a column

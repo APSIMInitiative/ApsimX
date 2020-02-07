@@ -31,6 +31,12 @@
         [Link]
         private IDataStore dataStore = null;
 
+        private int _numPaths = 200;
+        private int _numIntervals = 20;
+        private int _jump = 10;
+        private string _tableName = "Report";
+        private string _aggregationVariableName = "Clock.Today.Year";
+
         /// <summary>A list of factors that we are to run</summary>
         private List<List<CompositeFactor>> allCombinations = new List<List<CompositeFactor>>();
 
@@ -39,15 +45,50 @@
 
         /// <summary>The number of paths to run</summary>
         [Description("Number of paths:")]
-        public int NumPaths { get; set; } = 200;
+        public int NumPaths
+        {
+            get { return _numPaths; }
+            set { _numPaths = value; ParametersHaveChanged = true; }
+        }
 
         /// <summary>The number of intervals</summary>
         [Description("Number of intervals:")]
-        public int NumIntervals { get; set; } = 20;
+        public int NumIntervals
+        {
+            get { return _numIntervals; }
+            set { _numIntervals = value; ParametersHaveChanged = true; }
+        }
 
         /// <summary>The jump parameter</summary>
         [Description("Jump:")]
-        public int Jump { get; set; } = 10;
+        public int Jump
+        {
+            get { return _jump; }
+            set { _jump = value; ParametersHaveChanged = true; }
+        }
+
+        /// <summary>Name of table in DataStore to read from.</summary>
+        /// <remarks>
+        /// Needs to be public so that it gets written to .apsimx file
+        /// </remarks>
+        [Description("Name of table to read from:")]
+        [Display(Type = DisplayType.TableName)]
+        public string TableName
+        {
+            get { return _tableName; }
+            set { _tableName = value; ParametersHaveChanged = true; }
+        }
+        /// <summary>The name of the variable to use to aggregiate each Morris analysis.</summary>
+        /// <remarks>
+        /// Needs to be public so that it gets written to .apsimx file
+        /// </remarks>
+        [Description("Name of variable in table for aggregation:")]
+        [Display(Type = DisplayType.FieldName)]
+        public string AggregationVariableName
+        {
+            get { return _aggregationVariableName; }
+            set { _aggregationVariableName = value; ParametersHaveChanged = true; }
+        }
 
         /// <summary>
         /// List of parameters
@@ -56,22 +97,6 @@
         /// Needs to be public so that it gets written to .apsimx file
         /// </remarks>
         public List<Parameter> Parameters { get; set; }
-
-        /// <summary>Name of table in DataStore to read from.</summary>
-        /// <remarks>
-        /// Needs to be public so that it gets written to .apsimx file
-        /// </remarks>
-        [Description("Name of table to read from:")]
-        [Display(Type=DisplayType.TableName)]
-        public string TableName { get; set; } = "Report";
-
-        /// <summary>The name of the variable to use to aggregiate each Morris analysis.</summary>
-        /// <remarks>
-        /// Needs to be public so that it gets written to .apsimx file
-        /// </remarks>
-        [Description("Name of variable in table for aggregation:")]
-        [Display(Type = DisplayType.FieldName)]
-        public string AggregationVariableName { get; set; } = "Clock.Today.Year";
 
         /// <summary>
         /// List of aggregation values
@@ -130,6 +155,7 @@
             }
             set
             {
+                ParametersHaveChanged = true;
                 Parameters.Clear();
                 foreach (DataRow row in value[0].Rows)
                 {
@@ -147,6 +173,9 @@
                 }
             }
         }
+
+        /// <summary>Have the values of the parameters changed?</summary>
+        public bool ParametersHaveChanged { get; set; }  = false;
 
         /// <summary>Gets a list of simulation descriptions.</summary>
         public List<SimulationDescription> GenerateSimulationDescriptions()
@@ -193,6 +222,11 @@
         {
             R r = new R();
             r.InstallPackage("sensitivity");
+            if (ParametersHaveChanged)
+            {
+                allCombinations.Clear();
+                ParameterValues.Clear();
+            }
         }
 
         /// <summary>
@@ -202,7 +236,7 @@
         {
             if (allCombinations.Count == 0)
             {
-                if (ParameterValues == null)
+                if (ParameterValues == null || ParameterValues.Rows.Count == 0)
                     ParameterValues = RunRToGetParameterValues();
                 if (ParameterValues == null || ParameterValues.Rows.Count == 0)
                     throw new Exception("The morris function in R returned null");

@@ -58,6 +58,12 @@ namespace Models.CLEM.Activities
         public double CurrentAchieved { get; set; }
 
         /// <summary>
+        /// Has target been achieved
+        /// </summary>
+        [XmlIgnore]
+        public bool TargetMet { get { return CurrentAchieved >= Target; } }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public LabourActivityFeedTarget()

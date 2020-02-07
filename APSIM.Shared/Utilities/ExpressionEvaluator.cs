@@ -763,7 +763,7 @@ namespace APSIM.Shared.Utilities
                     if (args.Length == 1)
                     {
                         result.m_name = name + "(" + ((Symbol)args[0]).m_value.ToString() + ")";
-                        result.m_value = System.Math.Log(((Symbol)args[0]).m_value, 2);
+                        result.m_value = System.Math.Log(((Symbol)args[0]).m_value);
                     }
                     else
                     {
@@ -939,6 +939,8 @@ namespace APSIM.Shared.Utilities
                         {
                             if (i == 0)
                                 result.m_value = Values[i];
+                            else if (MathUtilities.FloatsAreEqual(Values[i], 0, 1e-8))
+                                result.m_value = 0;
                             else
                                 result.m_value /= Values[i];
                         }
@@ -981,6 +983,18 @@ namespace APSIM.Shared.Utilities
                         result.m_type = ExpressionType.Error;
                     }
                     break;
+                case "floor":
+                    if (args.Length == 1)
+                    {
+                        result.m_name = name + "(" + ((Symbol)args[0]).m_value.ToString() + ")";
+                        result.m_value = Math.Floor(((Symbol)args[0]).m_value);
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;				
                 case "stddev":
                     if (args.Length == 1)
                     {

@@ -102,6 +102,7 @@ namespace Models.PMF
         private bool doIncrement;
         private double stage;
         private IPhase previousPhase;
+        private double accumTT;
 
         /// <summary>
         /// (Fractional) number of days from floral init to start grain fill.
@@ -129,6 +130,12 @@ namespace Models.PMF
         [JsonIgnore]
         public double TTFMFromFlowering { get; private set; }
 
+        /// <summary>
+        /// Used in stem DM demand function. Need to reconsider how this works.
+        /// </summary>
+        [JsonIgnore]
+        public double DMPlantMax { get; set; }
+
         /// <summary>Called at the start of the simulation.</summary>
         /// <param name="sender">The sender of the event</param>
         /// <param name="e">Dummy event data.</param>
@@ -140,18 +147,21 @@ namespace Models.PMF
             zones = Apsim.ChildrenRecursively(this.Parent, typeof(Zone));
             DaysTotal = new List<double>();
             previousPhase = phenology.CurrentPhase;
+            DMPlantMax = 9999;
         }
 
         [EventSubscribe("StartOfDay")]
         private void OnStartOfDay(object sender, EventArgs e)
         {
             doIncrement = true;
+            WAllocated = 0;
         }
 
         [EventSubscribe("DoPhenology")]
         private void OnEndOfDay(object sender, EventArgs e)
         {
             DltTT = (double)Apsim.Get(this, "[Phenology].DltTT.Value()");
+            accumTT += DltTT;
         }
 
         [EventSubscribe("PhaseChanged")]
@@ -164,6 +174,15 @@ namespace Models.PMF
         private void PostPhenology(object sender, EventArgs e)
         {
             IncrementDaysTotal(false);
+
+            if (DMPlantMax > 9990)
+            {
+                double ttNow = accumTT;
+                double ttToFlowering = (double)Apsim.Get(this, "[Phenology].TTToFlowering.Value()");
+                double dmPlantMaxTT = (double)Apsim.Get(this, "[Grain].PgrT1.Value()");
+                if (ttNow > dmPlantMaxTT + ttToFlowering)
+                    DMPlantMax = (double)Apsim.Get(this, "[Stem].Live.Wt");
+            }
         }
 
         [EventSubscribe("DoPotentialPlantGrowth")]
@@ -173,6 +192,25 @@ namespace Models.PMF
                 N.UptakeSupply[i] = 0;
             UpdateTTElapsed();
         }
+
+        /// <summary>Clears this instance.</summary>
+        protected override void Clear()
+        {
+            base.Clear();
+            DltTT = 0.0;
+            WatSupply = 0.0;
+            NMassFlowSupply = 0.0;
+            NDiffusionSupply = 0.0;
+            TTFMFromFlowering = 0.0;
+            DaysTotal = new List<double>();
+
+            SWAvailRatio = 0.0;
+            SDRatio = 0.0;
+            PhotoStress = 0.0;
+            TotalAvail  = 0.0;
+            TotalPotAvail  = 0.0;
+        }
+
 
         /// <summary>
         /// This is basically one giant hack to calculate the equivalent
@@ -204,7 +242,7 @@ namespace Models.PMF
                     // If after flowering, use dltTTFM instead. If on day of flowering, we want
                     // to mimic a bug in old apsim where the proportion is still based on dltTT.
                     if (phenology.Between("Flowering", "Maturity") && phaseIndex != 7)
-                        potDltTT = (double)Apsim.Get(this, "[Phenology].DltTTFM.Value()");
+                        potDltTT = (double?)Apsim.Get(this, "[Phenology].DltTTFM.Value()") ?? (double)Apsim.Get(this, "[Phenology].ThermalTime.Value()");
 
                     // Amount of TT which goes to next phase = total TT - amount allocated to previous phase.
                     double portionInNew = Math.Max(0, potDltTT - dltTT);
@@ -306,8 +344,10 @@ namespace Models.PMF
                 var soilCrop = Soil.Crop(Plant.Name);
                 double[] kl = soilCrop.KL;
 
+                double[] llDep = MathUtilities.Multiply(soilCrop.LL, myZone.soil.Thickness);
+
                 if (root.Depth != myZone.Depth)
-                    myZone.Depth += 0;
+                    myZone.Depth += 0; // wtf??
 
                 var currentLayer = myZone.soil.LayerIndexOfDepth(myZone.Depth);
                 var currentLayerProportion = myZone.soil.ProportionThroughLayer(currentLayer, myZone.Depth);
@@ -315,8 +355,8 @@ namespace Models.PMF
                 {
                     myZone.StartWater[layer] = myZone.soil.Water[layer];
 
-                    myZone.AvailableSW[layer] = Math.Max(myZone.soil.Water[layer] - myZone.soil.LL15mm[layer], 0);
-                    myZone.PotentialAvailableSW[layer] = myZone.soil.DULmm[layer] - myZone.soil.LL15mm[layer];
+                    myZone.AvailableSW[layer] = Math.Max(myZone.soil.Water[layer] - llDep[layer], 0);
+                    myZone.PotentialAvailableSW[layer] = myZone.soil.DULmm[layer] - llDep[layer];
 
                     if (layer == currentLayer)
                     {
@@ -466,6 +506,9 @@ namespace Models.PMF
                             actualDiffusion = Math.Min(actualDiffusion, maxUptake);
                         }
 
+                        NDiffusionSupply = actualDiffusion;
+                        NMassFlowSupply = actualMassFlow;
+
                         //adjust diffusion values proportionally
                         //make sure organNO3Supply is in kg/ha
                         for (int layer = 0; layer < organNO3Supply.Length; layer++)
@@ -585,7 +628,7 @@ namespace Models.PMF
                 if (phenology.CurrentPhase.Start == "Flowering" && phenology.CurrentPhase is GenericPhase)
                     dltTT = (phenology.CurrentPhase as GenericPhase).ProgressionForTimeStep;
                 else
-                    dltTT = (double)Apsim.Get(this, "[Phenology].DltTTFM.Value()");
+                    dltTT = ((double?)Apsim.Get(this, "[Phenology].DltTTFM.Value()") ?? (double)Apsim.Get(this, "[Phenology].ThermalTime.Value()"));
                 TTFMFromFlowering += dltTT;
             }
         }

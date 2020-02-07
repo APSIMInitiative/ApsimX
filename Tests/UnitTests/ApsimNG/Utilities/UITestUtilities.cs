@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Models.Core;
+using Models.Soils;
+using UnitTests.ApsimNG.Utilities;
 using UserInterface.Presenters;
 using UserInterface.Views;
 
