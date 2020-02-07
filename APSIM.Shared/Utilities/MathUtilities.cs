@@ -729,7 +729,7 @@ namespace APSIM.Shared.Utilities
 
             n = sequence.Length;    //count the number of useful values
 
-            if ((n == 0) || (pctile < 0.0) || (pctile > 1.0))
+            if ((n <= 1) || (pctile < 0.0) || (pctile > 1.0))
                 return double.NaN;
             else if (pctile == 1.0)
             {
@@ -737,9 +737,11 @@ namespace APSIM.Shared.Utilities
             }
             else
             {
+                double[] sortedSequence = (double[]) sequence.Clone();
+                Array.Sort(sortedSequence);
                 int i = Convert.ToInt32(Math.Truncate(pctile * (n - 1)), CultureInfo.InvariantCulture);       //Otherwise interpolate between the
                 double z = pctile * (n - 1) - i;                                //appropriate array elements
-                return sequence[i] * (1.0 - z) + sequence[i + 1] * z;
+                return sortedSequence[i] * (1.0 - z) + sortedSequence[i + 1] * z;
             }
         }
 
