@@ -10,6 +10,7 @@ namespace Models.LifeCycle
     using System.Collections.Generic;
     using Models.Core;
     using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// # [Name]
@@ -55,8 +56,11 @@ namespace Models.LifeCycle
         /// </summary>
         public LifeCycle OwningCycle;
 
-        [NonSerialized]
-        private List<Cohort> CohortList;
+        /// <summary>
+        /// The list of cohorts in this stage.
+        /// </summary>
+        [JsonIgnore]
+        public List<Cohort> Cohorts { get; set; }
 
         [NonSerialized]
         private double stepMortality;
@@ -82,9 +86,9 @@ namespace Models.LifeCycle
         {
             get
             {
-                if (CohortList != null)
+                if (Cohorts != null)
                 {
-                    return CohortList.Count;
+                    return Cohorts.Count;
                 }
                 else
                 {
@@ -101,9 +105,9 @@ namespace Models.LifeCycle
             get
             {
                 double sum = 0;
-                if (CohortList != null)
+                if (Cohorts != null)
                 {
-                    foreach (Cohort aCohort in CohortList)
+                    foreach (Cohort aCohort in Cohorts)
                     {
                         sum += aCohort.Count;
                     }
@@ -119,10 +123,10 @@ namespace Models.LifeCycle
         {
             get
             {
-                double[] populations = new double[CohortList.Count];
-                for (int i = 0; i < CohortList.Count; i++)
+                double[] populations = new double[Cohorts.Count];
+                for (int i = 0; i < Cohorts.Count; i++)
                 {
-                    populations[i] = CohortList[i].Count;
+                    populations[i] = Cohorts[i].Count;
                 }
 
                 return populations;
@@ -158,13 +162,13 @@ namespace Models.LifeCycle
             Cohort immigrants = NewCohort();
             immigrants.Count = number;
             //get the state for a new cohort based on any pre-existing ones in this LifeStage
-            if (CohortList != null)
+            if (Cohorts != null)
             {
                 if (CohortCount > 1)
                 {
-                    immigrants.ChronoAge = CohortList[0].ChronoAge;
-                    immigrants.PhysiologicalAge = CohortList[0].PhysiologicalAge;
-                    immigrants.PhenoAge = CohortList[0].PhenoAge;
+                    immigrants.ChronoAge = Cohorts[0].ChronoAge;
+                    immigrants.PhysiologicalAge = Cohorts[0].PhysiologicalAge;
+                    immigrants.PhenoAge = Cohorts[0].PhenoAge;
                 }
             }
         }
@@ -180,17 +184,17 @@ namespace Models.LifeCycle
                 proc.Process(this);     // any pre processing/immigration
             }
 
-            if (CohortList != null)
+            if (Cohorts != null)
             {
                 Cohort aCohort;
-                int count = CohortList.Count;
+                int count = Cohorts.Count;
 
                 stepMigrants = 0;
                 stepMortality = 0;
                 // for each cohort in the lifestage
                 for (int i = 0; i < count; i++)
                 {
-                    aCohort = CohortList[i];
+                    aCohort = Cohorts[i];
                     aCohort.Mortality = 0;              // can have multiple mortality processes in this stage
                     //apply functions to cohort
                     CurrentCohort = aCohort;
@@ -243,12 +247,12 @@ namespace Models.LifeCycle
                 Cohort newCohort = null;
                 // find a cohort in the destStage that has PhenoAge = 0
                 int i = 0;
-                while (i < destStage.CohortList.Count)
+                while (i < destStage.Cohorts.Count)
                 {
-                    if (destStage.CohortList[i].PhenoAge <= 0)
+                    if (destStage.Cohorts[i].PhenoAge <= 0)
                     {
-                        newCohort = destStage.CohortList[i];
-                        i = destStage.CohortList.Count; // terminate loop
+                        newCohort = destStage.Cohorts[i];
+                        i = destStage.Cohorts.Count; // terminate loop
                     }
                     i++;
                 }
@@ -271,14 +275,14 @@ namespace Models.LifeCycle
         /// <returns>A new initialised cohort object</returns>
         public Cohort NewCohort()
         {
-            if (CohortList == null)
-                CohortList = new List<Cohort>();
+            if (Cohorts == null)
+                Cohorts = new List<Cohort>();
 
             Cohort a = new Cohort(this);
             a.Count = 0;
             a.ChronoAge = 0;
             a.PhysiologicalAge = 0;
-            CohortList.Add(a);
+            Cohorts.Add(a);
             return a;
         }
 
@@ -287,7 +291,7 @@ namespace Models.LifeCycle
         /// </summary>
         public void RemoveLastCohort()
         {
-            CohortList.RemoveAt(CohortList.Count - 1);
+            Cohorts.RemoveAt(Cohorts.Count - 1);
         }
 
         /// <summary>
@@ -295,11 +299,11 @@ namespace Models.LifeCycle
         /// </summary>
         public void RemoveEmptyCohorts()
         {
-            int i = CohortList.Count - 1;
+            int i = Cohorts.Count - 1;
             while (i >= 0)
             {
-                if (CohortList[i].Count < 0.001)
-                    CohortList.RemoveAt(i);
+                if (Cohorts[i].Count < 0.001)
+                    Cohorts.RemoveAt(i);
                 i--;
             }
         }
@@ -310,7 +314,7 @@ namespace Models.LifeCycle
         /// <param name="aCohort">The cohort object to be removed</param>
         public void Remove(Cohort aCohort)
         {
-            CohortList.Remove(aCohort);
+            Cohorts.Remove(aCohort);
         }
 
         /// <summary>
@@ -318,7 +322,7 @@ namespace Models.LifeCycle
         /// </summary>
         public void Clear()
         {
-            CohortList.Clear();
+            Cohorts.Clear();
         }
 
         /// <summary>

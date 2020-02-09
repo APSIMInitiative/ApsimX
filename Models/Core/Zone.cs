@@ -23,11 +23,11 @@
         virtual public double Area { get; set; }
 
         /// <summary>Gets or sets the slope.</summary>
-        [Description("Slope angle(deg)")]
+        [Description("Slope angle (degrees)")]
         virtual public double Slope { get; set; }
 
-        /// <summary>Angle of the aspect, from north (degrees).</summary>
-        [Description("Angle of the aspect, from north (degrees)")]
+        /// <summary>Angle of the aspect, from south (degrees).</summary>
+        [Description("Aspect (degrees from north)")]
         public double AspectAngle { get; set; }
 
         /// <summary>Local altitude (meters above sea level).</summary>
