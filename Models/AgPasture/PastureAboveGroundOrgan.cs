@@ -115,17 +115,23 @@
             get { return Tissue[Tissue.Length - 1].DM; }
         }
 
-        /// <summary>The dry matter in the live (green) tissues available to harvest (kg/ha).</summary>
-        internal double DMLiveHarvestable
-        {
-            get { return Math.Max(0.0, Math.Min(DMLive - MinimumLiveDM, DMLive * FractionHarvestable)); }
-        }
+        /// <summary>The total harvestable dry matter (kg/ha).</summary>
+        internal double DMTotalHarvestable { get { return DMLiveHarvestable + DMDeadHarvestable; } }
 
-        /// <summary>The dry matter in the dead tissues available to harvest (kg/ha).</summary>
-        internal virtual double DMDeadHarvestable
-        {
-            get { return DMDead * FractionHarvestable; }
-        }
+        /// <summary>The harvestable dry matter in the live (green) tissues (kg/ha).</summary>
+        internal double DMLiveHarvestable { get { return Math.Max(0.0, Math.Min(DMLive - MinimumLiveDM, DMLive * FractionHarvestable)); } }
+
+        /// <summary>The harvestable dry matter in the dead tissues (kg/ha).</summary>
+        internal virtual double DMDeadHarvestable { get { return DMDead * FractionHarvestable; } }
+
+        /// <summary>The amount of N in the total harvestable dry matter (kg/ha).</summary>
+        internal double NTotalHarvestable { get { return NLiveHarvestable + NDeadHarvestable; } }
+
+        /// <summary>The amount of N in the harvestable dry matter in the live (green) tissues (kg/ha).</summary>
+        internal double NLiveHarvestable { get { return DMLiveHarvestable / DMLive * NLive; } }
+
+        /// <summary>The amount of N in the harvestable dry matter in the dead tissues (kg/ha).</summary>
+        internal virtual double NDeadHarvestable { get { return DMDeadHarvestable / DMDead * NDead; } }
 
         /// <summary>The total N amount in this tissue (kg/ha).</summary>
         internal double NTotal
