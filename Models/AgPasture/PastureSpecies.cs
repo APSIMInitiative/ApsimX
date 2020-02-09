@@ -1254,26 +1254,15 @@
         [Units("0-1")]
         public double MinimumGreenRootProp { get; set; } = 0.5;
 
-        /// <summary>Proportion of stolon DM standing, available for removal (0-1).</summary>
-        [Units("0-1")]
-        [XmlIgnore]
-        public double FractionStolonStanding { get; set; } = 0.0;
-
-
-
         /// <summary>Relative preference for live over dead material during graze (>0.0).</summary>
         [Units("-")]
         [XmlIgnore]
         public double PreferenceForGreenOverDead { get; set; } = 1.0;
 
-
-
         /// <summary>Relative preference for leaf over stem-stolon material during graze (>0.0).</summary>
         [Units("-")]
         [XmlIgnore]
         public double PreferenceForLeafOverStems { get; set; } = 1.0;
-
-        
 
         ////- Soil related (water and N uptake) >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -1921,7 +1910,7 @@
         [Units("kg/ha")]
         public double StandingHerbageWt
         {
-            get { return leaves.DMTotal + stems.DMTotal + stolons.DMTotal * stolons.FractionStanding; }
+            get { return leaves.DMTotal + stems.DMTotal + stolons.DMTotal * stolons.FractionHarvestable; }
         }
 
         /// <summary>Gets the dry matter weight of live standing herbage (kgDM/ha).</summary>
@@ -1929,7 +1918,7 @@
         [Units("kg/ha")]
         public double StandingLiveHerbageWt
         {
-            get { return leaves.DMLive + stems.DMLive + stolons.DMLive * stolons.FractionStanding; }
+            get { return leaves.DMLive + stems.DMLive + stolons.DMLive * stolons.FractionHarvestable; }
         }
 
         /// <summary>Gets the dry matter weight of dead standing herbage (kgDM/ha).</summary>
@@ -1937,7 +1926,7 @@
         [Units("kg/ha")]
         public double StandingDeadHerbageWt
         {
-            get { return leaves.DMDead + stems.DMDead + stolons.DMDead * stolons.FractionStanding; }
+            get { return leaves.DMDead + stems.DMDead + stolons.DMDead * stolons.FractionHarvestable; }
         }
 
         /// <summary>Gets the dry matter weight of plant's leaves (kgDM/ha).</summary>
@@ -2097,7 +2086,7 @@
         [Units("kg/ha")]
         public double StandingHerbageN
         {
-            get { return leaves.NTotal + stems.NTotal + stolons.NTotal * stolons.FractionStanding; }
+            get { return leaves.NTotal + stems.NTotal + stolons.NTotal * stolons.FractionHarvestable; }
         }
 
         /// <summary>Gets the amount of N in live standing herbage (kgN/ha).</summary>
@@ -2105,7 +2094,7 @@
         [Units("kg/ha")]
         public double StandingLiveHerbageN
         {
-            get { return leaves.NLive + stems.NLive + stolons.NLive * stolons.FractionStanding; }
+            get { return leaves.NLive + stems.NLive + stolons.NLive * stolons.FractionHarvestable; }
         }
 
         /// <summary>Gets the N content  of standing dead plant material (kg/ha).</summary>
@@ -2113,7 +2102,7 @@
         [Units("kg/ha")]
         public double StandingDeadHerbageN
         {
-            get { return leaves.NDead + stems.NDead + stolons.NDead * stolons.FractionStanding; }
+            get { return leaves.NDead + stems.NDead + stolons.NDead * stolons.FractionHarvestable; }
         }
 
         /// <summary>Gets the amount of N in the plant's leaves (kgN/ha).</summary>
@@ -2896,7 +2885,7 @@
                 if (StandingHerbageWt > Epsilon)
                 {
                     result = (leaves.DigestibilityTotal * leaves.DMTotal) + (stems.DigestibilityTotal * stems.DMTotal)
-                           + (stolons.DigestibilityTotal * stolons.DMTotal * stolons.FractionStanding);
+                           + (stolons.DigestibilityTotal * stolons.DMTotal * stolons.FractionHarvestable);
                     result /= StandingHerbageWt;
                 }
                 return result;
@@ -3422,11 +3411,10 @@
                 InitialState.PhenoStage = -1;
             }
 
-            // 4. Set the minimum green DM, and stolon standing
+            // 4. Set the minimum green DM
             leaves.MinimumLiveDM = MinimumGreenWt * MinimumGreenLeafProp;
             stems.MinimumLiveDM = MinimumGreenWt * (1.0 - MinimumGreenLeafProp);
             stolons.MinimumLiveDM = 0.0;
-            stolons.FractionStanding = FractionStolonStanding;
 
             // 5. Set remobilisation rate for luxury N in each tissue
             for (int tissue = 0; tissue < 3; tissue++)
@@ -5064,7 +5052,7 @@
             amountToRemove += leaves.DMDeadHarvestable * removalFractions[0][1];
             amountToRemove += (stems.DMLiveHarvestable - stems.MinimumLiveDM) * removalFractions[1][0];
             amountToRemove += stems.DMDeadHarvestable * removalFractions[1][1];
-            amountToRemove += (stolons.DMLiveHarvestable - stolons.MinimumLiveDM * stolons.FractionStanding) * removalFractions[2][0];
+            amountToRemove += (stolons.DMLiveHarvestable - stolons.MinimumLiveDM * stolons.FractionHarvestable) * removalFractions[2][0];
             amountToRemove += stolons.DMDeadHarvestable * removalFractions[2][1];
 
             // get digestibility of DM being harvested (do this before updating pools)

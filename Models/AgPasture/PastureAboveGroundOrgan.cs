@@ -44,7 +44,7 @@
         internal double MinimumLiveDM = 0.0;
 
         /// <summary>Proportion of organ DM that is standing, available to harvest (0-1).</summary>
-        internal double FractionStanding = 1.0;
+        public double FractionHarvestable { get; set; } = 1.0;
 
         /// <summary>List of BiomassRemovalTypes with default biomass removal fractions for given removal types.</summary>
         private Dictionary<string, OrganBiomassRemovalType> defaultRemovalFractions = new Dictionary<string, OrganBiomassRemovalType>();
@@ -62,8 +62,8 @@
             get
             {
                 Biomass live = new Biomass();
-                live.StructuralWt = DMLive * 0.10 * FractionStanding;
-                live.StructuralN = NLive * 0.10 * FractionStanding;
+                live.StructuralWt = DMLive * 0.10 * FractionHarvestable;
+                live.StructuralN = NLive * 0.10 * FractionHarvestable;
                 live.DMDOfStructural = DigestibilityLive;
                 return live;
             }
@@ -75,8 +75,8 @@
             get
             {
                 Biomass dead = new Biomass();
-                dead.StructuralWt = DMDead * 0.10 * FractionStanding;
-                dead.StructuralN = NDead * 0.10 * FractionStanding;
+                dead.StructuralWt = DMDead * 0.10 * FractionHarvestable;
+                dead.StructuralN = NDead * 0.10 * FractionHarvestable;
                 dead.DMDOfStructural = DigestibilityDead;
                 return dead;
             }
@@ -118,13 +118,13 @@
         /// <summary>The dry matter in the live (green) tissues available to harvest (kg/ha).</summary>
         internal double DMLiveHarvestable
         {
-            get { return Math.Max(0.0, Math.Min(DMLive - MinimumLiveDM, DMLive * FractionStanding)); }
+            get { return Math.Max(0.0, Math.Min(DMLive - MinimumLiveDM, DMLive * FractionHarvestable)); }
         }
 
         /// <summary>The dry matter in the dead tissues available to harvest (kg/ha).</summary>
         internal virtual double DMDeadHarvestable
         {
-            get { return DMDead * FractionStanding; }
+            get { return DMDead * FractionHarvestable; }
         }
 
         /// <summary>The total N amount in this tissue (kg/ha).</summary>

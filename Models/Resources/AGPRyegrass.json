@@ -111,7 +111,6 @@
         0.2
       ],
       "MinimumGreenWt": 100.0,
-      "FractionStolonStanding": 0.0,
       "PreferenceForGreenOverDead": 1.0,
       "PreferenceForLeafOverStems": 1.0,
       "WaterAvailableMethod": 0,
@@ -202,6 +201,7 @@
         },
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
+          "FractionHarvestable": 0.0,
           "Name": "Stolons",
           "Children": [
             {
