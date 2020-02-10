@@ -9,6 +9,7 @@ using Models.PostSimulationTools;
 using APSIM.Shared.Utilities;
 using System.ComponentModel;
 using Models.Storage;
+using Models.Interfaces;
 
 namespace Models
 {
@@ -16,10 +17,10 @@ namespace Models
     /// Test interface.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ViewName("UserInterface.Views.DualGridView")]
+    [PresenterName("UserInterface.Presenters.TablePresenter")]
     [ValidParent(ParentType = typeof(PostSimulationTools.PredictedObserved))]
-    public class Tests : Model, ITestable, ICustomDocumentation
+    public class Tests : Model, ITestable, IModelAsTable, ICustomDocumentation
     {
         /// <summary>
         /// data table
@@ -43,6 +44,11 @@ namespace Models
         /// The name of the associated Predicted Observed node.
         /// </summary>
         public string POName { get; set; }
+
+        /// <summary>
+        /// Implementation of IModelAsTable - required for UI to work properly.
+        /// </summary>
+        public List<DataTable> Tables { get { return new List<DataTable>() { Table }; } }
 
         /// <summary>
         /// Run tests

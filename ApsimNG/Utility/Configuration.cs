@@ -44,6 +44,9 @@ namespace Utility
         /// <summary>Keeps track of whether the dark theme is enabled.</summary>
         public bool DarkTheme { get; set; }
 
+        /// <summary>Iff true, the GUI will not play a sound when simulations finish running.</summary>
+        public bool Muted { get; set; }
+
         /// <summary>Return the name of the summary file JPG.</summary>
         public string SummaryPngFileName
         {

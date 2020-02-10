@@ -27,6 +27,8 @@
         private readonly ExplorerPresenter explorerPresenter;
         private readonly bool portrait;
         private MarkdownDeep.Markdown markDown = new MarkdownDeep.Markdown();
+        private BibTeX bibTeX;
+        private List<BibTeX.Citation> citations;
 
         /// <summary>Constructor.</summary>
         /// <param name="explorerPresenter">The explorer presenter.</param>
@@ -62,6 +64,17 @@
         /// <param name="fileName">The name of the file to write.</param>
         public void CreatePDF(List<AutoDocumentation.ITag> tags, string fileName)
         {
+            string bibFile = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "..", "APSIM.bib");
+            bibTeX = new BibTeX(bibFile);
+            citations = new List<BibTeX.Citation>();
+            citations.Clear();
+
+            // Scan for citations.
+            ScanForCitations(tags);
+
+            // Create a bibliography.
+            CreateBibliography(tags);
+
             // Strip all blank sections i.e. two headings with nothing between them.
             StripEmptySections(tags);
 
@@ -114,6 +127,96 @@
 
             Style tableStyle = document.Styles.AddStyle("Table", "Normal");
             //tableStyle.Font.Size = 8;
+        }
+
+        /// <summary>Scans for citations.</summary>
+        /// <param name="t">The tags to go through looking for citations.</param>
+        private void ScanForCitations(List<AutoDocumentation.ITag> tags)
+        {
+            foreach (AutoDocumentation.ITag tag in tags)
+            {
+                if (tag is AutoDocumentation.Paragraph)
+                {
+                    AutoDocumentation.Paragraph paragraph = tag as AutoDocumentation.Paragraph;
+                    string text = paragraph.text;
+
+                    // citations are of the form [Brown et al. 2014][brown_plant_2014]
+                    // where the second bracketed value is the bibliography reference name. i.e.
+                    // the bit we're interested in.
+                    int posBracket = text.IndexOf('[');
+                    while (posBracket != -1)
+                    {
+                        int posEndBracket = text.IndexOf(']', posBracket);
+                        if (posEndBracket != -1)
+                        {
+                            // found a possible citation.
+                            string citationName = text.Substring(posBracket + 1, posEndBracket - posBracket - 1);
+                            string[] inTextCitations = citationName.Split("; ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                            string replacementText = string.Empty;
+
+                            foreach (string inTextCitation in inTextCitations)
+                            {
+                                // see if we have already encountered the citation.
+                                BibTeX.Citation citation = citations.Find(c => c.Name == inTextCitation);
+
+                                // If we haven't encountered it, look it up in the .bib file.
+                                if (citation == null)
+                                {
+                                    citation = bibTeX.Lookup(inTextCitation);
+                                    if (citation != null)
+                                        citations.Add(citation);
+                                }
+
+                                if (citation != null)
+                                {
+                                    // Replace the in-text citation with (author et al., year)
+                                    if (replacementText != string.Empty)
+                                        replacementText += "; ";
+                                    replacementText += string.Format("<a href=\"#{0}\">{1}</a>", citation.Name, citation.InTextCite);
+                                }
+                            }
+
+                            if (replacementText != string.Empty)
+                            {
+                                text = text.Remove(posBracket, posEndBracket - posBracket + 1);
+                                text = text.Insert(posBracket, replacementText);
+                            }
+                        }
+
+                        // Find the next bracketed potential citation.
+                        posBracket = text.IndexOf('[', posEndBracket + 1);
+                    }
+
+                    paragraph.text = text;
+                }
+            }
+        }
+
+        /// <summary>Creates the bibliography.</summary>
+        /// <param name="tags">The tags to add to.</param>
+        private void CreateBibliography(List<AutoDocumentation.ITag> tags)
+        {
+            if (citations.Count > 0)
+            {
+                // Create the heading.
+                tags.Add(new AutoDocumentation.Heading("References", 1));
+
+                citations.Sort(new BibTeX.CitationComparer());
+                foreach (BibTeX.Citation citation in citations)
+                {
+                    string url = citation.URL;
+                    string text;
+                    if (url != string.Empty)
+                        text = string.Format("<a href=\"{0}\">{1}</a>", url, citation.BibliographyText);
+                    else
+                        text = citation.BibliographyText;
+
+                    AutoDocumentation.Paragraph paragraph = new AutoDocumentation.Paragraph(text, 0);
+                    paragraph.bookmarkName = citation.Name;
+                    paragraph.handingIndent = true;
+                    tags.Add(paragraph);
+                }
+            }
         }
 
         /// <summary>Strip all blank sections i.e. two headings with nothing between them.</summary>

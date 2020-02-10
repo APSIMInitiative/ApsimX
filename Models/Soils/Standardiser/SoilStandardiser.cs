@@ -66,7 +66,7 @@
             var initial = soil.Children.Find(child => child is Sample) as Sample;
             if (initial == null)
             {
-                initial = new Sample() { Thickness = soil.Thickness };
+                initial = new Sample() { Thickness = soil.Thickness, Parent = soil };
                 soil.Children.Add(initial);
             }
             initial.Name = "Initial";
@@ -127,6 +127,7 @@
                 {
                     sample = new Sample();
                     sample.Thickness = soil.Thickness;
+                    sample.Parent = soil;
                     soil.Children.Add(sample);
                 }
 

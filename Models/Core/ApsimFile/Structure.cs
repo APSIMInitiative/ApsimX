@@ -2,9 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
+    using Models.Core.Apsim710File;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using System.Xml;
 
     /// <summary>
     /// A collection of methods for manipulating the structure of an .apsimx file.
@@ -16,7 +18,7 @@
         /// </summary>
         /// <param name="modelToAdd">The model to add.</param>
         /// <param name="parent">The parent model to add it to.</param>
-        public static void Add(IModel modelToAdd, IModel parent)
+        public static IModel Add(IModel modelToAdd, IModel parent)
         {
             if (parent.ReadOnly)
                 throw new Exception(string.Format("Unable to modify {0} - it is read-only.", parent.Name));
@@ -33,6 +35,7 @@
             Apsim.ChildrenRecursively(modelToAdd).ForEach(m => m.OnCreated());
 
             Apsim.ClearCaches(modelToAdd);
+            return modelToAdd;
         }
 
         /// <summary>Adds a new model (as specified by the string argument) to the specified parent.</summary>
@@ -41,8 +44,36 @@
         /// <returns>The newly created model.</returns>
         public static IModel Add(string st, IModel parent)
         {
+            // The strategy here is to try and add the string as if it was a APSIM Next Gen.
+            // string (json or xml). If that throws an exception then try adding it as if
+            // it was an APSIM 7.10 string (xml). If that doesn't work throw 'invalid format' exception.
             List<Exception> creationExceptions;
-            IModel modelToAdd = FileFormat.ReadFromString<IModel>(st, out creationExceptions);
+            IModel modelToAdd = null;
+            try
+            {
+                modelToAdd = FileFormat.ReadFromString<IModel>(st, out creationExceptions);
+            }
+            catch (Exception err)
+            {
+                if (err.Message.StartsWith("Unknown string encountered"))
+                    throw;
+            }
+
+            if (modelToAdd == null)
+            {
+                // Try the string as if it was an APSIM 7.10 xml string.
+                var xmlDocument = new XmlDocument();
+                xmlDocument.LoadXml("<Simulation>" + st + "</Simulation>");
+                var importer = new Importer();
+                var rootNode = xmlDocument.DocumentElement as XmlNode;
+                var convertedNode = importer.AddComponent(rootNode.ChildNodes[0], ref rootNode);
+                rootNode.RemoveAll();
+                rootNode.AppendChild(convertedNode);
+                var newSimulationModel = FileFormat.ReadFromString<IModel>(rootNode.OuterXml, out creationExceptions);
+                if (newSimulationModel == null || newSimulationModel.Children.Count == 0)
+                    throw new Exception("Cannot add model. Invalid model being added.");
+                modelToAdd = newSimulationModel.Children[0];
+            }
 
             // Correctly parent all models.
             Add(modelToAdd, parent);

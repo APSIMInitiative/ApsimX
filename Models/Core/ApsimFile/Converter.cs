@@ -17,7 +17,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 76; } }
+        public static int LatestVersion { get { return 77; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1126,11 +1126,29 @@
 
                 chemical["$type"] = "Models.Soils.Chemical, Models";
                 JsonUtilities.RenameModel(chemical, "Chemical");
-                if (physical != null)
+                if (physical != null && physical["Thickness"] != null)
                 {
                     // Move particle size numbers from chemical to physical and make sure layers are mapped.
                     var physicalThickness = physical["Thickness"].Values<double>().ToArray();
                     var chemicalThickness = chemical["Thickness"].Values<double>().ToArray();
+
+                    if (chemical["ParticleSizeSand"] != null && chemical["ParticleSizeSand"].HasValues)
+                    {
+                        var values = chemical["ParticleSizeSand"].Values<double>().ToArray();
+                        if (values.Length < physicalThickness.Length)
+                            Array.Resize(ref values, chemicalThickness.Length);
+                        var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, chemicalThickness, physicalThickness, values.Last());
+                        physical["ParticleSizeSand"] = new JArray(mappedValues);
+                    }
+
+                    if (chemical["ParticleSizeSilt"] != null && chemical["ParticleSizeSilt"].HasValues)
+                    {
+                        var values = chemical["ParticleSizeSilt"].Values<double>().ToArray();
+                        if (values.Length < physicalThickness.Length)
+                            Array.Resize(ref values, chemicalThickness.Length);
+                        var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, chemicalThickness, physicalThickness, values.Last());
+                        physical["ParticleSizeSilt"] = new JArray(mappedValues);
+                    }
 
                     if (chemical["ParticleSizeClay"] != null && chemical["ParticleSizeClay"].HasValues)
                     {
@@ -1497,6 +1515,24 @@
             foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
             {
                 JsonUtilities.SearchReplaceReportVariableNames(report, ".flow_urea", ".FlowUrea");
+            }
+        }
+
+        /// <summary>
+        /// Change the property in Stock to Genotypes
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion77(JObject root, string fileName)
+        {
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                if (manager.Replace(".GenoTypes", ".Genotypes"))
+                    manager.Save();
+            }
+            foreach (var stock in JsonUtilities.ChildrenOfType(root, "Stock"))
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(stock, ".GenoTypes", ".Genotypes");
             }
         }
 

@@ -55,7 +55,7 @@ namespace UserInterface.Presenters
             DisconnectViewEvents();
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
 
-            stock.GenoTypes = stockView.Genotypes;  // copies back to the model
+            stock.Genotypes = stockView.Genotypes;  // copies back to the model
 
         }
 
@@ -101,7 +101,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void PopulateGenotypes()
         {
-            stockView.Genotypes = stock.GenoTypes;  // copies the init value array into the View
+            stockView.Genotypes = stock.Genotypes;  // copies the init value array into the View
         }
 
         private void OnGetGenoParams(object sender, GenotypeInitArgs e)

@@ -13,21 +13,21 @@
     public class StructureTests
     {
         [Test]
-        public void StructureTests_EnsureAddOldXMLWorks()
+        public void EnsureAddXMLFromOldAPSIMWorks()
         {
             Simulation simulation = new Simulation();
 
-            string xml = 
-            "<Memo>" +
-            "  <Name>TitlePage</Name>" +
-            "  <IncludeInDocumentation>true</IncludeInDocumentation>" +
-            "  <Text>Some text</Text>" +
-            "</Memo>";
+            var xml = "<clock>" +
+                      "  <start_date type=\"date\">01/01/1990</start_date>" +
+                      "  <end_date type=\"date\">31/12/2000</end_date>" +
+                      "</clock>";
 
             Structure.Add(xml, simulation);
             Assert.AreEqual(simulation.Children.Count, 1);
-            Memo memo = simulation.Children[0] as Memo;
-            Assert.AreEqual(memo.Text, "Some text");
+            var clock = simulation.Children[0] as Clock;
+            Assert.IsNotNull(clock);
+            Assert.AreEqual(clock.StartDate, new DateTime(1990, 1, 1));
+            Assert.AreEqual(clock.EndDate, new DateTime(2000, 12, 31));
         }
 
         [Test]
@@ -84,9 +84,9 @@
             Structure.Add(soilXml, simulation);
             Assert.AreEqual(simulation.Children.Count, 1);
             Soil soil = simulation.Children[0] as Soil;
-            Assert.AreEqual(soil.Children.Count, 6);
-            Assert.IsTrue(soil.Children[4] is InitialWater);
-            Assert.IsTrue(soil.Children[5] is Sample);
+            Assert.AreEqual(7, soil.Children.Count);
+            Assert.IsTrue(soil.Children[5] is InitialWater);
+            Assert.IsTrue(soil.Children[6] is Sample);
         }
 
         [Test]
@@ -123,4 +123,3 @@
         }
     }
 }
-

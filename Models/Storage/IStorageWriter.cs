@@ -20,6 +20,12 @@
         /// <param name="data">The data to write.</param>
         void WriteTable(DataTable data);
 
+        /// <summary>
+        /// Deletes a table from the database.
+        /// </summary>
+        /// <param name="tableName">Name of the table to be deleted.</param>
+        void DeleteTable(string tableName);
+
         /// <summary>Delete all data in datastore, except for checkpointed data.</summary>
         void Empty();
 
