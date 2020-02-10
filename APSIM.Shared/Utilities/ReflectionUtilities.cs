@@ -518,23 +518,27 @@ namespace APSIM.Shared.Utilities
 
 
         /// <summary>
-        /// Get a string from a resource file.
+        /// Get a string from a resource file stored in the current assembly.
         /// </summary>
-        /// <param name="resourceName"></param>
-        /// <returns></returns>
+        /// <param name="resourceName">Name of the resource.</param>
         public static string GetResourceAsString(string resourceName)
         {
-            string result = null;
-            var assembly = Assembly.GetCallingAssembly();
-            assembly.GetManifestResourceStream(resourceName);
+            return GetResourceAsString(Assembly.GetCallingAssembly(), resourceName);
+        }
+
+        /// <summary>
+        /// Get a string from a resource file stored in a specific assembly.
+        /// </summary>
+        /// <param name="assembly">Assembly which houses the resource file.</param>
+        /// <param name="resourceName">Name of the resource.</param>
+        public static string GetResourceAsString(Assembly assembly, string resourceName)
+        {
             using (Stream stream = assembly.GetManifestResourceStream(resourceName))
                 if (stream != null)
                     using (StreamReader reader = new StreamReader(stream))
-                    {
-                        result = reader.ReadToEnd();
-                    }
+                        return reader.ReadToEnd();
 
-            return result;
+            return null;
         }
     }
 }
