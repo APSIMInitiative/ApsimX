@@ -269,6 +269,8 @@ namespace Models.PMF.Struct
                     if ((AllCohortsInitialised) && (LastLeafAppearing))
                     {
                         NextLeafProportion = 1 - (leaf.InitialisedCohortNo - finalLeafNumber.Value());
+                        if (NextLeafProportion <= 0)
+                            NextLeafProportion = 0.000001; //Get problems with leaf appearance if this is zero
                     }
                     else
                     {
@@ -287,7 +289,7 @@ namespace Models.PMF.Struct
                     }
 
                     PotLeafTipsAppeared += DeltaTipNumber;
-                    LeafTipsAppeared = Math.Min(PotLeafTipsAppeared, finalLeafNumber.Value());
+                    LeafTipsAppeared = Math.Min(PotLeafTipsAppeared, Math.Max(finalLeafNumber.Value(),leaf.InitialisedCohortNo));
 
                     TimeForAnotherLeaf = PotLeafTipsAppeared >= (leaf.AppearedCohortNo + 1);
                     int LeavesToAppear = (int)(LeafTipsAppeared - (leaf.AppearedCohortNo - (1 - NextLeafProportion)));
