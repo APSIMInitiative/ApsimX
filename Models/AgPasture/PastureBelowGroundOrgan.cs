@@ -8,6 +8,7 @@
     using Models.Soils.Arbitrator;
     using System;
     using System.Linq;
+    using System.Xml.Serialization;
 
     /// <summary>Describes a generic below ground organ of a pasture species.</summary>
     [Serializable]
@@ -129,13 +130,16 @@
         internal string myZoneName { get; private set; }
 
         /// <summary>Gets or sets the N concentration for optimum growth (kg/kg).</summary>
-        internal double NConcOptimum = 2.0;
-
-        /// <summary>Gets or sets the maximum N concentration, for luxury uptake (kg/kg).</summary>
-        internal double NConcMaximum = 2.5;
+        [XmlIgnore]
+        public double NConcOptimum { get; set; } = 2.0;
 
         /// <summary>Gets or sets the minimum N concentration, structural N (kg/kg).</summary>
-        internal double NConcMinimum = 0.6;
+        [XmlIgnore]
+        public double NConcMinimum { get; set; } = 0.6;
+
+        /// <summary>Gets or sets the maximum N concentration, for luxury uptake (kg/kg).</summary>
+        [XmlIgnore]
+        public double NConcMaximum { get; set; } = 2.5;
 
         /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
         internal double MinimumLiveDM = 0.0;

@@ -6,6 +6,7 @@
     using Models.PMF.Interfaces;
     using System;
     using System.Collections.Generic;
+    using System.Xml.Serialization;
 
     /// <summary>Describes a generic above ground organ of a pasture species.</summary>
     [Serializable]
@@ -32,13 +33,16 @@
         #region Organ specific characteristics  ----------------------------------------------------------------------------
 
         /// <summary>Gets or sets the N concentration for optimum growth (kg/kg).</summary>
-        internal double NConcOptimum = 0.04;
-
-        /// <summary>Gets or sets the maximum N concentration, for luxury uptake (kg/kg).</summary>
-        internal double NConcMaximum = 0.05;
+        [XmlIgnore]
+        public double NConcOptimum { get; set; } = 0.04;
 
         /// <summary>Gets or sets the minimum N concentration, structural N (kg/kg).</summary>
-        internal double NConcMinimum = 0.012;
+        [XmlIgnore]
+        public double NConcMinimum { get; set; } = 0.012;
+
+        /// <summary>Gets or sets the maximum N concentration, for luxury uptake (kg/kg).</summary>
+        [XmlIgnore]
+        public double NConcMaximum { get; set; } = 0.05;
 
         /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
         internal double MinimumLiveDM = 0.0;

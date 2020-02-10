@@ -31,21 +31,6 @@
       "GrowthRespirationCoefficient": 0.25,
       "RespirationTReference": 20.0,
       "RespirationExponent": 1.5,
-      "NThresholdsForLeaves": [
-        0.04,
-        0.012,
-        0.05
-      ],
-      "NThresholdsForStems": [
-        0.02,
-        0.006,
-        0.025
-      ],
-      "NThresholdsForStolons": [
-        0.0,
-        0.0,
-        0.0
-      ],
       "NThresholdsForRoots": [
         0.02,
         0.006,
@@ -154,11 +139,14 @@
       "Children": [
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
+		  "NConcOptimum": 0.04,
+		  "NConcMinimum": 0.012,
+   		  "NConcMaximum": 0.05,
           "Name": "Leaves",
           "Children": [
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
-              "Name": "LeafCohort1",
+              "Name": "Emerging",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -166,7 +154,7 @@
             },
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
-              "Name": "LeafCohort2",
+              "Name": "Developing",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -174,7 +162,7 @@
             },
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
-              "Name": "LeafCohort3",
+              "Name": "Mature",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -195,11 +183,14 @@
         },
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
+		  "NConcOptimum": 0.02,
+		  "NConcMinimum": 0.006,
+   		  "NConcMaximum": 0.025,
           "Name": "Stems",
           "Children": [
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
-              "Name": "LeafCohort1",
+              "Name": "Emerging",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -207,7 +198,7 @@
             },
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
-              "Name": "LeafCohort2",
+              "Name": "Developing",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -215,7 +206,7 @@
             },
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
-              "Name": "LeafCohort3",
+              "Name": "Mature",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -237,11 +228,14 @@
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
           "FractionHarvestable": 0.1,
+		  "NConcOptimum": 0.0,
+		  "NConcMinimum": 0.0,
+   		  "NConcMaximum": 0.0,
           "Name": "Stolons",
           "Children": [
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
-              "Name": "LeafCohort1",
+              "Name": "Emerging",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -249,7 +243,7 @@
             },
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
-              "Name": "LeafCohort2",
+              "Name": "Developing",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -257,7 +251,7 @@
             },
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
-              "Name": "LeafCohort3",
+              "Name": "Mature",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,

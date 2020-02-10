@@ -747,33 +747,6 @@
         private double myRespirationExponent = 1.5;
 
 
-
-        ////- N concentrations thresholds >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-        /// <summary>N concentration thresholds for leaves (kgN/kgDM).</summary>
-        //[Description("optimum, minimum and maximum")]
-        [Units("kg/kg")]
-        [XmlIgnore]
-        public double[] NThresholdsForLeaves { get; set; } = { 0.04, 0.012, 0.05 };
-
-
-
-        /// <summary>N concentration thresholds for stems (kgN/kgDM).</summary>
-        //[Description("optimum, minimum and maximum")]
-        [Units("kg/kg")]
-        [XmlIgnore]
-        public double[] NThresholdsForStems { get; set; } = { 0.02, 0.006, 0.025 };
-
-
-
-        /// <summary>N concentration thresholds for stolons (kgN/kgDM).</summary>
-        //[Description("optimum, minimum and maximum")]
-        [Units("kg/kg")]
-        [XmlIgnore]
-        public double[] NThresholdsForStolons { get; set; } = { 0.0, 0.0, 0.0 };
-
-
-
         /// <summary>N concentration thresholds for roots, optimum, minimum and maximum (kgN/kgDM).</summary>
         //[Description("optimum, minimum and maximum")]
         [Units("kg/kg")]
@@ -3359,19 +3332,6 @@
                 initialDMFractions = initialDMFractionsLegumes;
             else
                 initialDMFractions = initialDMFractionsForbs;
-
-            // 2. Initialise N concentration thresholds (optimum, minimum, and maximum)
-            leaves.NConcOptimum = NThresholdsForLeaves[0];
-            leaves.NConcMinimum = NThresholdsForLeaves[1];
-            leaves.NConcMaximum = NThresholdsForLeaves[2];
-
-            stems.NConcOptimum = NThresholdsForStems[0];
-            stems.NConcMinimum = NThresholdsForStems[1];
-            stems.NConcMaximum = NThresholdsForStems[2];
-
-            stolons.NConcOptimum = NThresholdsForStolons[0];
-            stolons.NConcMinimum = NThresholdsForStolons[1];
-            stolons.NConcMaximum = NThresholdsForStolons[2];
 
             // 3. Save initial state (may be used later for reset)
             InitialState = new SpeciesBasicStateSettings();
