@@ -1883,7 +1883,7 @@
         [Units("kg/ha")]
         public double StandingHerbageWt
         {
-            get { return leaves.DMTotal + stems.DMTotal + stolons.DMTotal * stolons.FractionHarvestable; }
+            get { return leaves.StandingHerbageWt + stems.StandingHerbageWt + stolons.StandingHerbageWt; }
         }
 
         /// <summary>Gets the dry matter weight of live standing herbage (kgDM/ha).</summary>
@@ -1891,7 +1891,7 @@
         [Units("kg/ha")]
         public double StandingLiveHerbageWt
         {
-            get { return leaves.DMLive + stems.DMLive + stolons.DMLive * stolons.FractionHarvestable; }
+            get { return leaves.StandingLiveHerbageWt + stems.StandingLiveHerbageWt + stolons.StandingLiveHerbageWt; }
         }
 
         /// <summary>Gets the dry matter weight of dead standing herbage (kgDM/ha).</summary>
@@ -1899,7 +1899,7 @@
         [Units("kg/ha")]
         public double StandingDeadHerbageWt
         {
-            get { return leaves.DMDead + stems.DMDead + stolons.DMDead * stolons.FractionHarvestable; }
+            get { return leaves.StandingDeadHerbageWt + stems.StandingDeadHerbageWt + stolons.StandingDeadHerbageWt; }
         }
 
         /// <summary>Gets the dry matter weight of plant's leaves (kgDM/ha).</summary>
@@ -2059,7 +2059,7 @@
         [Units("kg/ha")]
         public double StandingHerbageN
         {
-            get { return leaves.NTotal + stems.NTotal + stolons.NTotal * stolons.FractionHarvestable; }
+            get { return leaves.StandingHerbageN + stems.StandingHerbageN + stolons.StandingHerbageN; }
         }
 
         /// <summary>Gets the amount of N in live standing herbage (kgN/ha).</summary>
@@ -2067,7 +2067,7 @@
         [Units("kg/ha")]
         public double StandingLiveHerbageN
         {
-            get { return leaves.NLive + stems.NLive + stolons.NLive * stolons.FractionHarvestable; }
+            get { return leaves.StandingLiveHerbageN + stems.StandingLiveHerbageN + stolons.StandingLiveHerbageN; }
         }
 
         /// <summary>Gets the N content  of standing dead plant material (kg/ha).</summary>
@@ -2075,7 +2075,7 @@
         [Units("kg/ha")]
         public double StandingDeadHerbageN
         {
-            get { return leaves.NDead + stems.NDead + stolons.NDead * stolons.FractionHarvestable; }
+            get { return leaves.StandingDeadHerbageN + stems.StandingDeadHerbageN + stolons.StandingDeadHerbageN; }
         }
 
         /// <summary>Gets the amount of N in the plant's leaves (kgN/ha).</summary>
@@ -2854,14 +2854,12 @@
         {
             get
             {
-                double result = 0.0;
-                if (StandingHerbageWt > Epsilon)
-                {
-                    result = (leaves.DigestibilityTotal * leaves.DMTotal) + (stems.DigestibilityTotal * stems.DMTotal)
-                           + (stolons.DigestibilityTotal * stolons.DMTotal * stolons.FractionHarvestable);
-                    result /= StandingHerbageWt;
-                }
-                return result;
+                if (MathUtilities.IsGreaterThan(StandingHerbageWt, 0.0))
+                    return  (leaves.StandingDigestibility * leaves.DMTotal + 
+                             stems.StandingDigestibility * stems.DMTotal + 
+                             stolons.StandingDigestibility * stolons.DMTotal) / StandingHerbageWt;
+                else
+                    return 0.0;
             }
         }
 

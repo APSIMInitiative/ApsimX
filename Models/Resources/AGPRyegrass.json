@@ -192,7 +192,7 @@
         },
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
-          "FractionHarvestable": 0.0,
+          "FractionStanding": 0.0,
 		  "NConcOptimum": 0.0,
 		  "NConcMinimum": 0.0,
    		  "NConcMaximum": 0.0,
