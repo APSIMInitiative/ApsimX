@@ -23,6 +23,9 @@
             if (parent.ReadOnly)
                 throw new Exception(string.Format("Unable to modify {0} - it is read-only.", parent.Name));
 
+            if (modelToAdd is Simulations s && s.Children.Count == 1)
+                modelToAdd = s.Children[0];
+
             modelToAdd.Parent = parent;
             Apsim.ParentAllChildren(modelToAdd);
             parent.Children.Add(modelToAdd as Model);
@@ -76,7 +79,7 @@
             }
 
             // Correctly parent all models.
-            Add(modelToAdd, parent);
+            modelToAdd = Add(modelToAdd, parent);
 
             // Ensure the model name is valid.
             EnsureNameIsUnique(modelToAdd);
