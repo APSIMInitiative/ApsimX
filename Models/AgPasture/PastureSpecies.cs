@@ -4806,14 +4806,14 @@
                 root.DoResetOrgan();
             SetInitialState();
         }
-
+        /*
         /// <summary>Harvests the crop.</summary>
         /// <param name="removalData">The type and fractions to remove</param>
         public void Harvest(RemovalFractions removalData)
         {
             RemoveBiomass("Harvest", removalData);
         }
-
+        */
         /// <summary>Removes plant material simulating a graze event.</summary>
         /// <param name="type">The type of amount being defined (SetResidueAmount or SetRemoveAmount)</param>
         /// <param name="amount">The DM amount (kg/ha)</param>
@@ -4980,72 +4980,46 @@
             return defoliatedDM;
         }
 
-        /// <summary>Removes part of the crop biomass.</summary>
-        public void RemoveBiomass(string removalType, RemovalFractions removalData = null)
+/*        /// <summary>Removes part of the crop biomass.</summary>
+        public void RemoveBiomass(string removalType, RemovalFractions removalData)
         {
             // Get the fractions to remove from leaves
             double[][] removalFractions = new double[4][];
             removalFractions[0] = new double[2];
-            OrganBiomassRemovalType defaultFractions = leaves.GetRemovalFractions(removalType);
             OrganBiomassRemovalType userFractions = removalData.GetFractionsForOrgan("Leaves");
             if (userFractions == null)
-            {
-                if (defaultFractions == null)
-                    throw new ApsimXException(this, "Could not find biomass removal defaults for " + removalType
-                                                    + " and no removal fractions were supplied for leaves");
-                else
-                {
-                    removalFractions[0][0] = defaultFractions.FractionLiveToRemove + defaultFractions.FractionLiveToResidue;
-                    removalFractions[0][1] = defaultFractions.FractionDeadToRemove + defaultFractions.FractionDeadToResidue;
-                }
-            }
-            else
-            {
-                removalFractions[0][0] = MathUtilities.Bound(userFractions.FractionLiveToRemove + userFractions.FractionLiveToResidue, 0.0, 1.0);
-                removalFractions[0][1] = MathUtilities.Bound(userFractions.FractionDeadToRemove + userFractions.FractionDeadToResidue, 0.0, 1.0);
-            }
+                userFractions = leaves.GetRemovalFractions(removalType);
+
+            if (userFractions == null)
+                throw new Exception("Could not find biomass removal defaults for " + removalType
+                                  + " and no removal fractions were supplied for leaves");
+            removalFractions[0][0] = MathUtilities.Bound(userFractions.FractionLiveToRemove + userFractions.FractionLiveToResidue, 0.0, 1.0);
+            removalFractions[0][1] = MathUtilities.Bound(userFractions.FractionDeadToRemove + userFractions.FractionDeadToResidue, 0.0, 1.0);
 
             // Get the fractions to remove from stems
             removalFractions[1] = new double[2];
-            defaultFractions = stems.GetRemovalFractions(removalType);
             userFractions = removalData.GetFractionsForOrgan("Stems");
             if (userFractions == null)
-            {
-                if (defaultFractions == null)
-                    throw new ApsimXException(this, "Could not find biomass removal defaults for " + removalType
-                                                    + " and no removal fractions were supplied for stems");
-                else
-                {
-                    removalFractions[1][0] = defaultFractions.FractionLiveToRemove + defaultFractions.FractionLiveToResidue;
-                    removalFractions[1][1] = defaultFractions.FractionDeadToRemove + defaultFractions.FractionDeadToResidue;
-                }
-            }
-            else
-            {
-                removalFractions[1][0] = MathUtilities.Bound(userFractions.FractionLiveToRemove + userFractions.FractionLiveToResidue, 0.0, 1.0);
-                removalFractions[1][1] = MathUtilities.Bound(userFractions.FractionDeadToRemove + userFractions.FractionDeadToResidue, 0.0, 1.0);
-            }
+                userFractions = stems.GetRemovalFractions(removalType);
+
+            if (userFractions == null)
+                throw new Exception("Could not find biomass removal defaults for " + removalType
+                                  + " and no removal fractions were supplied for stems");
+            removalFractions[1][0] = MathUtilities.Bound(userFractions.FractionLiveToRemove + userFractions.FractionLiveToResidue, 0.0, 1.0);
+            removalFractions[1][1] = MathUtilities.Bound(userFractions.FractionDeadToRemove + userFractions.FractionDeadToResidue, 0.0, 1.0);
 
             // Get the fractions to remove from stolons
             removalFractions[2] = new double[2];
-            defaultFractions = stolons.GetRemovalFractions(removalType);
             userFractions = removalData.GetFractionsForOrgan("Stolons");
             if (userFractions == null)
-            {
-                if (defaultFractions == null)
-                    throw new ApsimXException(this, "Could not find biomass removal defaults for " + removalType
-                                                    + " and no removal fractions were supplied for stolons");
-                else
-                {
-                    removalFractions[2][0] = defaultFractions.FractionLiveToRemove + defaultFractions.FractionLiveToResidue;
-                    removalFractions[2][1] = defaultFractions.FractionDeadToRemove + defaultFractions.FractionDeadToResidue;
-                }
-            }
-            else
-            {
-                removalFractions[2][0] = MathUtilities.Bound(userFractions.FractionLiveToRemove + userFractions.FractionLiveToResidue, 0.0, 1.0);
-                removalFractions[2][1] = MathUtilities.Bound(userFractions.FractionDeadToRemove + userFractions.FractionDeadToResidue, 0.0, 1.0);
-            }
+                userFractions = stolons.GetRemovalFractions(removalType);
+
+            if (userFractions == null)
+                throw new Exception("Could not find biomass removal defaults for " + removalType
+                                  + " and no removal fractions were supplied for stolons");
+
+            removalFractions[2][0] = MathUtilities.Bound(userFractions.FractionLiveToRemove + userFractions.FractionLiveToResidue, 0.0, 1.0);
+            removalFractions[2][1] = MathUtilities.Bound(userFractions.FractionDeadToRemove + userFractions.FractionDeadToResidue, 0.0, 1.0);
 
             // Get the total amount required to remove
             double amountToRemove = (leaves.DMLiveHarvestable - leaves.MinimumLiveDM) * removalFractions[0][0];
@@ -5064,7 +5038,26 @@
             // Remove the biomass
             double preRemovalDM = AboveGroundWt;
             double preRemovalN = AboveGroundN;
-            DoRemoveBiomass(removalFractions);
+
+            leaves.RemoveBiomass(new OrganBiomassRemovalType()
+            {
+                FractionLiveToRemove = removalFractions[0][0],
+                FractionDeadToRemove = removalFractions[0][1]
+            });
+
+            stems.RemoveBiomass(new OrganBiomassRemovalType()
+            {
+                FractionLiveToRemove = removalFractions[1][0],
+                FractionDeadToRemove = removalFractions[1][1]
+            });
+
+            stolons.RemoveBiomass(new OrganBiomassRemovalType()
+            {
+                FractionLiveToRemove = removalFractions[2][0],
+                FractionDeadToRemove = removalFractions[2][1]
+            });
+
+//            DoRemoveBiomass(removalFractions);
 
             // Check balance and set outputs
             defoliatedDM = preRemovalDM - AboveGroundWt;
@@ -5078,46 +5071,22 @@
             EvaluateLAI();
             EvaluateDigestibility();
         }
-
-        /// <summary>Removes given fractions of biomass from each organ.</summary>
-        /// <param name="fractionToRemove">The fractions to remove (0-1)</param>
-        private void DoRemoveBiomass(double[][] fractionToRemove)
+*/
+        /// <summary>
+        /// Remove biomass from an organ.
+        /// </summary>
+        /// <param name="organName">Name of organ.</param>
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
+        /// <param name="biomassToRemove">Biomass to remove.</param>
+        public void RemoveBiomass(string organName, string biomassRemoveType, OrganBiomassRemovalType biomassToRemove)
         {
-            // Leaves, live and dead
-            double fracRemaining = Math.Max(0.0, 1.0 - fractionToRemove[0][0]);
-            int t;
-            for (t = 0; t < 3; t++)
-            {
-                leaves.Tissue[t].DM *= fracRemaining;
-                leaves.Tissue[t].Namount *= fracRemaining;
-                //                leaves.Tissue[t].NRemobilisable *= fracRemaining;
-            }
-            fracRemaining = Math.Max(0.0, 1.0 - fractionToRemove[0][1]);
-            leaves.Tissue[t].DM *= fracRemaining;
-            leaves.Tissue[t].Namount *= fracRemaining;
-            //            leaves.Tissue[t].NRemobilisable *= fracRemaining;
-
-            // Stems, live and dead
-            fracRemaining = Math.Max(0.0, 1.0 - fractionToRemove[1][0]);
-            for (t = 0; t < 3; t++)
-            {
-                stems.Tissue[t].DM *= fracRemaining;
-                stems.Tissue[t].Namount *= fracRemaining;
-                //                stems.Tissue[t].NRemobilisable *= fracRemaining;
-            }
-            fracRemaining = Math.Max(0.0, 1.0 - fractionToRemove[1][1]);
-            stems.Tissue[t].DM *= fracRemaining;
-            stems.Tissue[t].Namount *= fracRemaining;
-            //            stems.Tissue[t].NRemobilisable *= fracRemaining;
-
-            // Stolons, live only
-            fracRemaining = Math.Max(0.0, 1.0 - fractionToRemove[1][0]);
-            for (t = 0; t < 3; t++)
-            {
-                stolons.Tissue[t].DM *= fracRemaining;
-                stolons.Tissue[t].Namount *= fracRemaining;
-                //                stolons.Tissue[t].NRemobilisable *= fracRemaining;
-            }
+            var organ = Organs.Find(o => o.Name == organName);
+            if (organ == null)
+                throw new Exception("Cannot find organ to remove biomass from. Organ: " + organName);
+            if (organ is PastureAboveGroundOrgan)
+                (organ as PastureAboveGroundOrgan).RemoveBiomass(biomassToRemove);
+            else if (organ is PastureBelowGroundOrgan)
+                (organ as PastureBelowGroundOrgan).RemoveBiomass(biomassRemoveType, biomassToRemove);
         }
 
         /// <summary>Biomass has been removed from the plant by animals.</summary>
@@ -5639,23 +5608,6 @@
             }
 
             return result;
-        }
-
-        /// <summary>
-        /// Remove biomass from an organ.
-        /// </summary>
-        /// <param name="organName">Name of organ.</param>
-        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
-        /// <param name="biomassToRemove">Biomass to remove.</param>
-        public void RemoveBiomass(string organName, string biomassRemoveType, OrganBiomassRemovalType biomassToRemove)
-        {
-            var organ = Organs.Find(o => o.Name == organName);
-            if (organ == null)
-                throw new Exception("Cannot find organ to remove biomass from. Organ: " + organName);
-            if (organ is PastureAboveGroundOrgan)
-                (organ as PastureAboveGroundOrgan).RemoveBiomass(biomassToRemove);
-            else if (organ is PastureBelowGroundOrgan)
-                (organ as PastureBelowGroundOrgan).RemoveBiomass(biomassRemoveType, biomassToRemove);
         }
 
         /// <summary>
