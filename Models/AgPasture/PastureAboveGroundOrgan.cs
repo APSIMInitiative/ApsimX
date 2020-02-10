@@ -61,11 +61,12 @@
         {
             get
             {
-                Biomass live = new Biomass();
-                live.StructuralWt = DMLive * 0.10 * FractionHarvestable;
-                live.StructuralN = NLive * 0.10 * FractionHarvestable;
-                live.DMDOfStructural = DigestibilityLive;
-                return live;
+                return new Biomass()
+                {
+                    StructuralWt = DMLiveHarvestable / 10,  // to g/m2
+                    StructuralN = NLiveHarvestable / 10,    // to g/m2
+                    DMDOfStructural = DigestibilityLive
+                };
             }
         }
 
@@ -74,11 +75,12 @@
         {
             get
             {
-                Biomass dead = new Biomass();
-                dead.StructuralWt = DMDead * 0.10 * FractionHarvestable;
-                dead.StructuralN = NDead * 0.10 * FractionHarvestable;
-                dead.DMDOfStructural = DigestibilityDead;
-                return dead;
+                return new Biomass()
+                {
+                    StructuralWt = DMDeadHarvestable / 10,  // to g/m2
+                    StructuralN = NDeadHarvestable / 10,    // to g/m2
+                    DMDOfStructural = DigestibilityDead
+                };
             }
         }
 
