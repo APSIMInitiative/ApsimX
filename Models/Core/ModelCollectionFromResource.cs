@@ -54,7 +54,11 @@
                 if (officialChildren == null)
                     return Children;
 
-                return Children.Except(officialChildren, new ModelComparer()).ToList();
+                List<Model> toReturn = new List<Model>();
+                foreach (Model child in Children)
+                    if (!officialChildren.Any(m => m.GetType() == child.GetType() && string.Equals(m.Name, child.Name, StringComparison.InvariantCultureIgnoreCase)))
+                        toReturn.Add(child);
+                return toReturn;
             }
         }
 

@@ -1,0 +1,42 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 300,
+  "Version": 76,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-02-10",
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Core.Replacements, Models",
+      "Name": "Replacements",
+      "Children": [
+        {
+          "$type": "Models.PMF.Plant, Models",
+          "CropType": "Wheat",
+          "IsEnding": false,
+          "DaysAfterEnding": 0,
+          "ResourceName": "Wheat",
+          "Name": "Wheat",
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+}
