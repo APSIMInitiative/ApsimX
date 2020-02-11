@@ -102,7 +102,12 @@ namespace Models.PostSimulationTools
                 if (oldColumn != null && oldColumn.DataType != newColumn.DataType)
                     ChangeColumnType(table, newColumn.ColumnName, oldColumn.DataType);
             }
+
             table.Merge(existingTable);
+
+            table.Columns.Remove("SimulationID");
+            table.Columns.Remove("CheckpointID");
+            table.Columns.Remove("CheckpointName");
         }
 
         private void ChangeColumnType(DataTable table, string columnName, Type dataType)
