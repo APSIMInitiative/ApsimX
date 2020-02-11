@@ -784,6 +784,7 @@
                     <property name="height_request">300</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="border_width">1</property>
                     <property name="model">liststore2</property>
                   </object>
                   <packing>
@@ -1326,78 +1327,6 @@
                           <placeholder/>
                         </child>
                         <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
                           <object class="GtkComboBox" id="cbxGroupGenotype">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
@@ -1444,7 +1373,7 @@
                           <object class="GtkLabel" id="label2">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="xalign">0</property>
+                            <property name="xalign">1</property>
                             <property name="label" translatable="yes">Live weight</property>
                           </object>
                           <packing>
@@ -1483,7 +1412,7 @@
                           <object class="GtkLabel" id="lblFleece">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="xalign">0</property>
+                            <property name="xalign">1</property>
                             <property name="label" translatable="yes">Fleece weight</property>
                           </object>
                           <packing>
@@ -1495,7 +1424,7 @@
                           <object class="GtkLabel" id="label8">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="xalign">0</property>
+                            <property name="xalign">1</property>
                             <property name="label" translatable="yes">Paddock</property>
                           </object>
                           <packing>
@@ -1507,7 +1436,7 @@
                           <object class="GtkLabel" id="label9">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="xalign">0</property>
+                            <property name="xalign">1</property>
                             <property name="label" translatable="yes">Tag number</property>
                           </object>
                           <packing>
@@ -1600,7 +1529,7 @@
                           <object class="GtkLabel" id="label19">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="xalign">0</property>
+                            <property name="xalign">1</property>
                             <property name="label" translatable="yes">Age</property>
                           </object>
                           <packing>
@@ -1646,7 +1575,7 @@
                           <object class="GtkLabel" id="lblPrevWt">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="xalign">0</property>
+                            <property name="xalign">1</property>
                             <property name="label" translatable="yes">Highest prev. wt</property>
                           </object>
                           <packing>
@@ -1692,7 +1621,7 @@
                           <object class="GtkLabel" id="lblFibreDiam">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="xalign">0</property>
+                            <property name="xalign">1</property>
                             <property name="label" translatable="yes">Fibre diameter</property>
                           </object>
                           <packing>
@@ -1750,10 +1679,13 @@
                           <placeholder/>
                         </child>
                         <child>
+                          <placeholder/>
+                        </child>
+                        <child>
                           <object class="GtkLabel" id="label29">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="xalign">0</property>
+                            <property name="xalign">1</property>
                             <property name="label" translatable="yes">Priority</property>
                           </object>
                           <packing>
@@ -1799,7 +1731,9 @@
                           <object class="GtkLabel" id="lblError">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="label" translatable="yes">label</property>
+                            <attributes>
+                              <attribute name="weight" value="bold"/>
+                            </attributes>
                           </object>
                           <packing>
                             <property name="right_attach">5</property>
@@ -1831,12 +1765,65 @@
                           <object class="GtkTable" id="table3">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="n_rows">5</property>
+                            <property name="n_rows">6</property>
                             <property name="n_columns">8</property>
+                            <property name="row_spacing">5</property>
                             <child>
-                              <object class="GtkLabel" id="lblPreg">
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="lblPregnant">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="xalign">1</property>
                                 <property name="label" translatable="yes">Time pregnant</property>
                               </object>
                               <packing>
@@ -1845,7 +1832,8 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="entry1">
+                              <object class="GtkEntry" id="edtPregnant">
+                                <property name="width_request">40</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="invisible_char">●</property>
@@ -1857,12 +1845,14 @@
                               <packing>
                                 <property name="left_attach">6</property>
                                 <property name="right_attach">7</property>
+                                <property name="x_options">GTK_EXPAND</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="days1">
+                              <object class="GtkLabel" id="untPregnant">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="xalign">0</property>
                                 <property name="label" translatable="yes">days</property>
                               </object>
                               <packing>
@@ -1871,9 +1861,10 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="lblPregnant">
+                              <object class="GtkLabel" id="lblLactating">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="xalign">1</property>
                                 <property name="label" translatable="yes">Time since birth</property>
                               </object>
                               <packing>
@@ -1884,7 +1875,8 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="entry2">
+                              <object class="GtkEntry" id="edtLactating">
+                                <property name="width_request">40</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="invisible_char">●</property>
@@ -1898,12 +1890,14 @@
                                 <property name="right_attach">7</property>
                                 <property name="top_attach">1</property>
                                 <property name="bottom_attach">2</property>
+                                <property name="x_options">GTK_EXPAND</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="days2">
+                              <object class="GtkLabel" id="untLactating">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="xalign">0</property>
                                 <property name="label" translatable="yes">days</property>
                               </object>
                               <packing>
@@ -1914,9 +1908,10 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="label23">
+                              <object class="GtkLabel" id="lblBirthCS">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="xalign">1</property>
                                 <property name="label" translatable="yes">C.S. at birth</property>
                               </object>
                               <packing>
@@ -1927,7 +1922,8 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="entry3">
+                              <object class="GtkEntry" id="edtBirthCS">
+                                <property name="width_request">40</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="invisible_char">●</property>
@@ -1941,12 +1937,14 @@
                                 <property name="right_attach">7</property>
                                 <property name="top_attach">2</property>
                                 <property name="bottom_attach">3</property>
+                                <property name="x_options">GTK_EXPAND</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="label24">
+                              <object class="GtkLabel" id="lblYoungWt">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="xalign">1</property>
                                 <property name="label" translatable="yes">Lamb weight</property>
                               </object>
                               <packing>
@@ -1957,7 +1955,8 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="entry4">
+                              <object class="GtkEntry" id="edtYoungWt">
+                                <property name="width_request">40</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="invisible_char">●</property>
@@ -1971,12 +1970,14 @@
                                 <property name="right_attach">7</property>
                                 <property name="top_attach">3</property>
                                 <property name="bottom_attach">4</property>
+                                <property name="x_options">GTK_EXPAND</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="kg1">
+                              <object class="GtkLabel" id="untYoungWt">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="xalign">0</property>
                                 <property name="label" translatable="yes">kg</property>
                               </object>
                               <packing>
@@ -1987,9 +1988,10 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="label26">
+                              <object class="GtkLabel" id="lblLambGFW">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="xalign">1</property>
                                 <property name="label" translatable="yes">Lamb fleece weight</property>
                               </object>
                               <packing>
@@ -2000,7 +2002,8 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="entry5">
+                              <object class="GtkEntry" id="edtLambGFW">
+                                <property name="width_request">40</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="invisible_char">●</property>
@@ -2014,12 +2017,14 @@
                                 <property name="right_attach">7</property>
                                 <property name="top_attach">4</property>
                                 <property name="bottom_attach">5</property>
+                                <property name="x_options">GTK_EXPAND</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="kg2">
+                              <object class="GtkLabel" id="untLambGFW">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="xalign">0</property>
                                 <property name="label" translatable="yes">kg</property>
                               </object>
                               <packing>
@@ -2041,7 +2046,7 @@
                                     <property name="tooltip_text" translatable="yes">Number of lambs</property>
                                     <property name="border_width">2</property>
                                     <child>
-                                      <object class="GtkRadioButton" id="radiobutton1">
+                                      <object class="GtkRadioButton" id="rbOneLamb">
                                         <property name="label" translatable="yes">1</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
@@ -2056,14 +2061,14 @@
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkRadioButton" id="radiobutton2">
+                                      <object class="GtkRadioButton" id="rbTwoLambs">
                                         <property name="label" translatable="yes">2</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
                                         <property name="active">True</property>
                                         <property name="draw_indicator">True</property>
-                                        <property name="group">radiobutton1</property>
+                                        <property name="group">rbOneLamb</property>
                                       </object>
                                       <packing>
                                         <property name="expand">True</property>
@@ -2072,14 +2077,14 @@
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkRadioButton" id="radiobutton3">
+                                      <object class="GtkRadioButton" id="rbThreeLambs">
                                         <property name="label" translatable="yes">3</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">False</property>
                                         <property name="active">True</property>
                                         <property name="draw_indicator">True</property>
-                                        <property name="group">radiobutton1</property>
+                                        <property name="group">rbOneLamb</property>
                                       </object>
                                       <packing>
                                         <property name="expand">True</property>
@@ -2103,27 +2108,6 @@
                                 <property name="right_attach">5</property>
                                 <property name="bottom_attach">2</property>
                               </packing>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
                             </child>
                             <child>
                               <object class="GtkFrame" id="rgrpCLact">
@@ -2193,23 +2177,11 @@
                                 </child>
                               </object>
                               <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
+                                <property name="left_attach">2</property>
+                                <property name="right_attach">3</property>
                                 <property name="bottom_attach">2</property>
                                 <property name="x_padding">3</property>
                               </packing>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
                             </child>
                             <child>
                               <object class="GtkFrame" id="rgrpCPreg">
@@ -2265,24 +2237,6 @@
                               <packing>
                                 <property name="x_padding">3</property>
                               </packing>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
                             </child>
                             <child>
                               <object class="GtkFrame" id="rgrpSRepro">
@@ -2352,11 +2306,38 @@
                                 </child>
                               </object>
                               <packing>
-                                <property name="left_attach">2</property>
-                                <property name="right_attach">3</property>
+                                <property name="left_attach">3</property>
+                                <property name="right_attach">4</property>
                                 <property name="bottom_attach">2</property>
                                 <property name="x_padding">3</property>
                               </packing>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
                             </child>
                             <child>
                               <placeholder/>
@@ -2378,7 +2359,7 @@
                     </child>
                   </object>
                   <packing>
-                    <property name="expand">True</property>
+                    <property name="expand">False</property>
                     <property name="fill">True</property>
                     <property name="position">1</property>
                   </packing>

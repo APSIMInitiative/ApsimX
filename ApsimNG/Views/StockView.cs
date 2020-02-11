@@ -17,7 +17,7 @@ namespace UserInterface.Views
         // death rate item in the SingleGenoTypeInits.DeathRate array
         private const int ADULT = 0;
         private const int WNR = 1;
-        
+
         private const int MAXGENOTYPES = 20;
         private const int MAXANIMALGROUPS = 100;
         private const double DAY2MONTH = 12.0 / 365.25;
@@ -31,14 +31,10 @@ namespace UserInterface.Views
         private readonly SexRecord[,] SEXMAP = { { new SexRecord() {Text = "wethers", Repro = GrazType.ReproType.Castrated }, new SexRecord() {Text="ewes", Repro = GrazType.ReproType.Empty }, new SexRecord() {Text ="rams", Repro=GrazType.ReproType.Male} },
                                                  { new SexRecord() {Text = "steers",  Repro = GrazType.ReproType.Castrated }, new SexRecord() {Text="cows", Repro = GrazType.ReproType.Empty }, new SexRecord() {Text = "bulls", Repro = GrazType.ReproType.Male} } };
 
-        private int currentGenotype;    // selected genotype
-        private int currentGroup = -1;       // selected animal group
+        private int currentGenotype;            // selected genotype
+        private int currentGroup = -1;          // selected animal group
+        private uint currentTab = 0;
         private GrazType.AnimalType[] genotypeAnimals = new GrazType.AnimalType[20];    // animal types for each genotype in the list
-
-        /// <summary>
-        /// The array of initial animal groups that get assigned to paddocks 
-        /// </summary>
-        private AnimalInits[] animalInits = new AnimalInits[0];
 
         private AnimalParamSet paramSet;
         private AnimalParamSet genotypeSet;
@@ -54,6 +50,10 @@ namespace UserInterface.Views
         /// </summary>
         private SingleGenotypeInits[] genotypeInits;
 
+        /// <summary>
+        /// The array of initial animal groups that get assigned to paddocks 
+        /// </summary>
+        private AnimalInits[] animalInits = new AnimalInits[0];
 
         private Notebook notebook1 = null;
         // genotypes tab
@@ -126,6 +126,23 @@ namespace UserInterface.Views
         private RadioButton rbLac = null;
         private RadioButton rbLactCalf = null;
         private Frame rgrpNoLambs = null;
+        private RadioButton rbOneLamb = null;
+        private RadioButton rbTwoLambs = null;
+        private RadioButton rbThreeLambs = null;
+        private Label lblPregnant = null;
+        private DoubleEditView dePregnant = null;
+        private Label untPregnant = null;
+        private Label lblLactating = null;
+        private DoubleEditView deLactating = null;
+        private Label untLactating = null;
+        private DoubleEditView deBirthCS = null;
+        private DoubleEditView deYoungWt = null;
+        private DoubleEditView deLambGFW = null;
+        private Label lblBirthCS = null;
+        private Label lblYoungWt = null;
+        private Label untYoungWt = null;
+        private Label lblLambGFW = null;
+        private Label untLambGFW = null;
 
         /// <summary>
         /// The list of genotypes in the treeview
@@ -143,25 +160,25 @@ namespace UserInterface.Views
         public StockView(ViewBase owner) : base(owner)
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.StockView.glade");
-            notebook1 = (Notebook)builder.GetObject("notebook1");
-            notebook1.SwitchPage += TabControl1_SelectedIndexChanged;
+            this.notebook1 = (Notebook)builder.GetObject("notebook1");
+            this.notebook1.SwitchPage += TabControl1_SelectedIndexChanged;
 
-            gbxGenotype = (Frame)builder.GetObject("gbxGenotype");
-            edtGenotypeName = (Entry)builder.GetObject("edtGenotypeName");
-            btnNewGeno = (Button)builder.GetObject("btnNewGeno");
-            btnDelGeno = (Button)builder.GetObject("btnDelGeno");
-            rbtnSheep = (Gtk.RadioButton)builder.GetObject("rbtnSheep");
-            rbtnCattle = (Gtk.RadioButton)builder.GetObject("rbtnCattle");
-            lblConception3 = (Label)builder.GetObject("lblConception3");
-            unitConception = (Label)builder.GetObject("unitConception");
-            lblBreedPFWPeakMilk = (Label)builder.GetObject("lblBreedPFW_PeakMilk");
-            unitBreedPFWPeakMilk = (Label)builder.GetObject("unitBreedPFW_PeakMilk");
-            untWoolYield = (Label)builder.GetObject("untWoolYield");
-            lblWoolYield = (Label)builder.GetObject("lblWoolYield");
-            lblDamBreed = (Label)builder.GetObject("lblDamBreed");
-            lblSireBreed = (Label)builder.GetObject("lblSireBreed");
-            lblBreedMaxMu = (Label)builder.GetObject("lblBreedMaxMu");
-            unitBreedMaxMu = (Label)builder.GetObject("unitBreedMaxMu");
+            this.gbxGenotype = (Frame)builder.GetObject("gbxGenotype");
+            this.edtGenotypeName = (Entry)builder.GetObject("edtGenotypeName");
+            this.btnNewGeno = (Button)builder.GetObject("btnNewGeno");
+            this.btnDelGeno = (Button)builder.GetObject("btnDelGeno");
+            this.rbtnSheep = (Gtk.RadioButton)builder.GetObject("rbtnSheep");
+            this.rbtnCattle = (Gtk.RadioButton)builder.GetObject("rbtnCattle");
+            this.lblConception3 = (Label)builder.GetObject("lblConception3");
+            this.unitConception = (Label)builder.GetObject("unitConception");
+            this.lblBreedPFWPeakMilk = (Label)builder.GetObject("lblBreedPFW_PeakMilk");
+            this.unitBreedPFWPeakMilk = (Label)builder.GetObject("unitBreedPFW_PeakMilk");
+            this.untWoolYield = (Label)builder.GetObject("untWoolYield");
+            this.lblWoolYield = (Label)builder.GetObject("lblWoolYield");
+            this.lblDamBreed = (Label)builder.GetObject("lblDamBreed");
+            this.lblSireBreed = (Label)builder.GetObject("lblSireBreed");
+            this.lblBreedMaxMu = (Label)builder.GetObject("lblBreedMaxMu");
+            this.unitBreedMaxMu = (Label)builder.GetObject("unitBreedMaxMu");
 
             cbxDamBreed = new Views.DropDownView(this, (ComboBox)builder.GetObject("cbxDamBreed"));
             cbxSireBreed = new Views.DropDownView(this, (ComboBox)builder.GetObject("cbxSireBreed"));
@@ -215,41 +232,68 @@ namespace UserInterface.Views
             rbLac = (Gtk.RadioButton)builder.GetObject("rbLac");
             rbLactCalf = (Gtk.RadioButton)builder.GetObject("rbLactCalf");
             rgrpNoLambs = (Frame)builder.GetObject("rgrpNoLambs");
+            rbOneLamb = (Gtk.RadioButton)builder.GetObject("rbOneLamb");
+            rbTwoLambs = (Gtk.RadioButton)builder.GetObject("rbTwoLambs");
+            rbThreeLambs = (Gtk.RadioButton)builder.GetObject("rbThreeLambs");
+            lblPregnant = (Label)builder.GetObject("lblPregnant");
+            dePregnant = new DoubleEditView(this, (Entry)builder.GetObject("edtPregnant"), 300, 0, 0);
+            untPregnant = (Label)builder.GetObject("untPregnant");
+            lblLactating = (Label)builder.GetObject("lblLactating");
+            deLactating = new DoubleEditView(this, (Entry)builder.GetObject("edtLactating"), 365, 0, 0);
+            untLactating = (Label)builder.GetObject("untLactating");
+            deBirthCS = new DoubleEditView(this, (Entry)builder.GetObject("edtBirthCS"), 5, 1, 1);
+            deYoungWt = new DoubleEditView(this, (Entry)builder.GetObject("edtYoungWt"), 1000, 0, 1);
+            deLambGFW = new DoubleEditView(this, (Entry)builder.GetObject("edtLambGFW"), 100, 0, 2);
+            lblBirthCS = (Label)builder.GetObject("lblBirthCS");
+            lblYoungWt = (Label)builder.GetObject("lblYoungWt");
+            untYoungWt = (Label)builder.GetObject("untYoungWt");
+            lblLambGFW = (Label)builder.GetObject("lblLambGFW");
+            untLambGFW = (Label)builder.GetObject("untLambGFW");
 
             // configure the treeview of animal groups
-            lbxAnimalList = (Gtk.TreeView)builder.GetObject("tvAnimals");
-            lbxAnimalList.Model = groupsList;
+            this.lbxAnimalList = (Gtk.TreeView)builder.GetObject("tvAnimals");
+            this.lbxAnimalList.Model = groupsList;
             CellRendererText textRenderA = new Gtk.CellRendererText();
             TreeViewColumn columnA = new TreeViewColumn("Animal Groups", textRenderA, "text", 0);
-            lbxAnimalList.AppendColumn(columnA);
-            lbxAnimalList.HeadersVisible = false;
-            lbxAnimalList.CursorChanged += LbxAnimalList_SelectedIndexChanged;
+            this.lbxAnimalList.AppendColumn(columnA);
+            this.lbxAnimalList.HeadersVisible = false;
+            this.lbxAnimalList.CursorChanged += LbxAnimalList_SelectedIndexChanged;
 
-            btnNewAnimals.Clicked += BtnNewAnimals_Clicked;
-            btnDeleteAnimals.Clicked += BtnDeleteAnimals_Clicked;
+            this.btnNewAnimals.Clicked += BtnNewAnimals_Clicked;
+            this.btnDeleteAnimals.Clicked += BtnDeleteAnimals_Clicked;
 
             // configure the treeview of genotype names
-            lbxGenotypeList = (Gtk.TreeView)builder.GetObject("tvGenotypes");
-            lbxGenotypeList.Model = genoList;
+            this.lbxGenotypeList = (Gtk.TreeView)builder.GetObject("tvGenotypes");
+            this.lbxGenotypeList.Model = genoList;
             CellRendererText textRender = new Gtk.CellRendererText();
             TreeViewColumn column = new TreeViewColumn("Genotype Names", textRender, "text", 0);
-            lbxGenotypeList.AppendColumn(column);
-            lbxGenotypeList.HeadersVisible = false;
-            lbxGenotypeList.CursorChanged += LbxGenotypeList_SelectedIndexChanged;
+            this.lbxGenotypeList.AppendColumn(column);
+            this.lbxGenotypeList.HeadersVisible = false;
+            this.lbxGenotypeList.CursorChanged += LbxGenotypeList_SelectedIndexChanged;
 
-            btnNewGeno.Clicked += BtnNewGeno_Clicked;
-            btnDelGeno.Clicked += BtnDelGeno_Clicked;
-            edtGenotypeName.Changed += ChangeGenotypeName;
-            rbtnSheep.Clicked += ClickAnimal;
-            rbtnCattle.Clicked += ClickAnimal;
-            cbxDamBreed.Changed += ChangeBreed;
-            cbxGeneration.Changed += ChangeGeneration;
+            // Genotypes tab events
+            this.btnNewGeno.Clicked += BtnNewGeno_Clicked;
+            this.btnDelGeno.Clicked += BtnDelGeno_Clicked;
+            this.edtGenotypeName.Changed += ChangeGenotypeName;
+            this.rbtnSheep.Clicked += ClickAnimal;
+            this.rbtnCattle.Clicked += ClickAnimal;
+            this.cbxDamBreed.Changed += ChangeBreed;
+            this.cbxGeneration.Changed += ChangeGeneration;
+            // Animals tab events
             deNumber.OnChange += ChangeNumber;
             this.cbxSex.Changed += this.ChangeSex;
-            cbxGroupGenotype.Changed += ChangeGroupGenotype;
-            deWeight.OnChange += this.ChangeEditCtrl;
-            dePrevWt.OnChange += this.ChangeEditCtrl;
-            deAge.OnChange += this.ChangeEditCtrl;
+            this.cbxGroupGenotype.Changed += ChangeGroupGenotype;
+            this.deWeight.OnChange += this.ChangeEditCtrl;
+            this.dePrevWt.OnChange += this.ChangeEditCtrl;
+            this.deAge.OnChange += this.ChangeEditCtrl;
+            this.rbDryEmpty.Clicked += ClickSheepRepro;
+            this.rbPregS.Clicked += ClickSheepRepro;
+            this.rbLact.Clicked += ClickSheepRepro;
+            this.rbEmpty.Clicked += ClickCattlePreg;
+            this.rbPreg.Clicked += ClickCattlePreg;
+            this.rbNoLact.Clicked += ClickCattleLact;
+            this.rbLac.Clicked += ClickCattleLact;
+            this.rbLactCalf.Clicked += ClickCattleLact;
 
             mainWidget = notebook1;
             mainWidget.Destroyed += _mainWidget_Destroyed;
@@ -260,43 +304,82 @@ namespace UserInterface.Views
             try
             {
                 // detach events
-                btnNewGeno.Clicked -= BtnNewGeno_Clicked;
-                btnDelGeno.Clicked -= BtnDelGeno_Clicked;
-                edtGenotypeName.Changed -= ChangeGenotypeName;
-                rbtnSheep.Clicked -= ClickAnimal;
-                rbtnCattle.Clicked -= ClickAnimal;
-                cbxDamBreed.Changed -= ChangeBreed;
-                cbxGeneration.Changed -= ChangeGeneration;
-                notebook1.SwitchPage -= TabControl1_SelectedIndexChanged;
+                this.btnNewGeno.Clicked -= BtnNewGeno_Clicked;
+                this.btnDelGeno.Clicked -= BtnDelGeno_Clicked;
+                this.edtGenotypeName.Changed -= ChangeGenotypeName;
+                this.rbtnSheep.Clicked -= ClickAnimal;
+                this.rbtnCattle.Clicked -= ClickAnimal;
+                this.cbxDamBreed.Changed -= ChangeBreed;
+                this.cbxGeneration.Changed -= ChangeGeneration;
+                this.notebook1.SwitchPage -= TabControl1_SelectedIndexChanged;
 
-                btnNewAnimals.Clicked -= BtnNewAnimals_Clicked;
-                cbxGroupGenotype.Changed -= ChangeGroupGenotype;
-                deNumber.OnChange -= ChangeNumber;
-                deWeight.OnChange -= this.ChangeEditCtrl;
-                dePrevWt.OnChange -= this.ChangeEditCtrl;
-                deAge.OnChange -= this.ChangeEditCtrl;
+                this.btnNewAnimals.Clicked -= BtnNewAnimals_Clicked;
+                this.cbxGroupGenotype.Changed -= ChangeGroupGenotype;
+                this.deNumber.OnChange -= ChangeNumber;
+                this.deWeight.OnChange -= this.ChangeEditCtrl;
+                this.dePrevWt.OnChange -= this.ChangeEditCtrl;
+                this.deAge.OnChange -= this.ChangeEditCtrl;
             }
             catch (Exception err)
             {
-                ShowError(err);
+                this.ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Changing tab pages
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TabControl1_SelectedIndexChanged(object sender, SwitchPageArgs e)
+        {
+            try
+            {
+                switch (e.PageNum)
+                {
+                    case 0:
+                        if (this.currentTab == 1)
+                            this.ParseCurrGroup();
+                        break;
+                    case 1:
+                        if (animalInits.Length < 1)
+                            this.gbxAnimals.Child.HideAll();     // hide data entry on the animals tab
+                        else
+                        {
+                            this.currentGroup = Math.Min(0, animalInits.Length - 1);    // could be -1
+                            if (currentGroup >= 0)
+                            {
+                                this.filling = true;
+                                this.SelectedGroupIndex = currentGroup;
+                                //this.ClickAnimalList(null);
+                                this.filling = false;
+                            }
+                        }
+                        break;
+                }
+                this.currentTab = e.PageNum;
+            }
+            catch (Exception err)
+            {
+                this.ShowError(err);
             }
         }
 
         /// <summary>
         /// The list of animal groups
         /// </summary>
-        public AnimalInits[] AnimalGroups
+        public AnimalInits[] Animals
         {
             get
             {
-                if (currentGroup >= 0)
-                    ParseCurrGroup();
-                return animalInits;
+                if (this.currentGroup >= 0)
+                    this.ParseCurrGroup();
+                return this.animalInits;
             }
             set
             {
-                animalInits = new AnimalInits[value.Length];
-                value.CopyTo(animalInits, 0);
+                this.animalInits = new AnimalInits[value.Length];
+                value.CopyTo(this.animalInits, 0);
             }
         }
 
@@ -307,14 +390,14 @@ namespace UserInterface.Views
         {
             get
             {
-                if (currentGenotype >= 0)
-                    ParseCurrGenotype();
-                return genotypeInits;
+                if (this.currentGenotype >= 0)
+                    this.ParseCurrGenotype();
+                return this.genotypeInits;
             }
             set
             {
-                genotypeInits = new SingleGenotypeInits[value.Length];
-                value.CopyTo(genotypeInits, 0);
+                this.genotypeInits = new SingleGenotypeInits[value.Length];
+                value.CopyTo(this.genotypeInits, 0);
             }
         }
 
@@ -334,40 +417,52 @@ namespace UserInterface.Views
         {
             this.paramSet = StockList.MakeParamSet("");   // can use the param filename from component inits
 
-            genoList.Clear();
-            string[] genoNames = new string[genotypeInits.Length];
-            for (int i = 0; i < genotypeInits.Length; i++)
+            this.genoList.Clear();
+            string[] genoNames = new string[this.genotypeInits.Length];
+            for (int i = 0; i < this.genotypeInits.Length; i++)
             {
-                genoNames[i] = genotypeInits[i].GenotypeName;
-                genoList.AppendValues(genotypeInits[i].GenotypeName);
+                genoNames[i] = this.genotypeInits[i].GenotypeName;
+                this.genoList.AppendValues(this.genotypeInits[i].GenotypeName);
             }
-            cbxGroupGenotype.Values = genoNames;        // animals tab
+            this.cbxGroupGenotype.Values = genoNames;        // animals tab
 
             GenotypeInitArgs args = new GenotypeInitArgs();
-            args.Genotypes = genotypeInits;
+            args.Genotypes = this.genotypeInits;
             args.ParamSet = this.paramSet;
-            for (int idx = 0; idx < genotypeInits.Length; idx++)
+            for (int idx = 0; idx < this.genotypeInits.Length; idx++)
             {
                 args.Index = idx;
-                GetGenoParams.Invoke(null, args);   // gets params from the stock model
+                this.GetGenoParams.Invoke(null, args);   // gets params from the stock model
 
                 if (this.genotypeSet != null)
                 {
-                    genotypeAnimals[idx] = this.genotypeSet.Animal;
+                    this.genotypeAnimals[idx] = this.genotypeSet.Animal;
                 }
                 else
-                    genotypeAnimals[idx] = GrazType.AnimalType.Sheep;
+                    this.genotypeAnimals[idx] = GrazType.AnimalType.Sheep;
             }
-            currentGenotype = Math.Min(0, genotypeInits.Length - 1);
-            FillCurrGenotype();
+            this.currentGenotype = Math.Min(0, this.genotypeInits.Length - 1);
+            this.FillCurrGenotype();
 
-            filling = true;
-            if (currentGenotype >= 0)
-                SelectedGenoIndex = currentGenotype;
-            filling = false;
+            this.filling = true;
+            if (this.currentGenotype >= 0)
+                this.SelectedGenoIndex = this.currentGenotype;
 
-            EnableButtons();
+            // populate the animal groups list
+            for (int i = 0; i < animalInits.Length; i++)
+            {
+                string groupText = GroupText(i);
+                this.groupsList.AppendValues(groupText);
+            }
+            this.currentGroup = Math.Min(0, animalInits.Length - 1);    // could be -1
+            //this.ClickAnimalList(null);     // display initial animal group
+
+            this.filling = false;
+
+            this.EnableButtons();
         }
+
+        #region Genotypes tab =================================================
 
         /// <summary>
         /// Fill the controls on the form
@@ -377,77 +472,77 @@ namespace UserInterface.Views
             GrazType.AnimalType theAnimal;
             SingleGenotypeInits theGenoType;
 
-            if (currentGenotype < 0)
-                gbxGenotype.Hide();
+            if (this.currentGenotype < 0)
+                this.gbxGenotype.Hide();
             else
-                gbxGenotype.Show();
+                this.gbxGenotype.Show();
 
 
-            filling = true;
+            this.filling = true;
 
-            if (currentGenotype >= 0)
+            if (this.currentGenotype >= 0)
             {
-                theGenoType = this.genotypeInits[currentGenotype];
-                theAnimal = genotypeAnimals[currentGenotype];
+                theGenoType = this.genotypeInits[this.currentGenotype];
+                theAnimal = this.genotypeAnimals[this.currentGenotype];
 
                 if (theAnimal == GrazType.AnimalType.Sheep)
                 {
-                    deBreedSRW.MaxValue = MAXSHEEPSRW;
-                    deBreedSRW.MinValue = MINSHEEPSRW;
+                    this.deBreedSRW.MaxValue = MAXSHEEPSRW;
+                    this.deBreedSRW.MinValue = MINSHEEPSRW;
                 }
                 else if (theAnimal == GrazType.AnimalType.Cattle)
                 {
-                    deBreedSRW.MaxValue = MAXCATTLESRW;
-                    deBreedSRW.MinValue = MINCATTLESRW;
+                    this.deBreedSRW.MaxValue = MAXCATTLESRW;
+                    this.deBreedSRW.MinValue = MINCATTLESRW;
                 }
 
                 // Enable controls for Peak milk or fleece details
-                EnablePeakMilkOrFleece(theAnimal);
+                this.EnablePeakMilkOrFleece(theAnimal);
 
-                edtGenotypeName.Text = theGenoType.GenotypeName;
+                this.edtGenotypeName.Text = theGenoType.GenotypeName;
 
-                rbtnSheep.Active = (theAnimal == GrazType.AnimalType.Sheep);
-                rbtnCattle.Active = (theAnimal == GrazType.AnimalType.Cattle);
-                if (rbtnSheep.Active)
-                    rbtnSheep.Click();
+                this.rbtnSheep.Active = (theAnimal == GrazType.AnimalType.Sheep);
+                this.rbtnCattle.Active = (theAnimal == GrazType.AnimalType.Cattle);
+                if (this.rbtnSheep.Active)
+                    this.rbtnSheep.Click();
                 else
-                    rbtnCattle.Click();
+                    this.rbtnCattle.Click();
 
-                cbxGeneration.SelectedIndex = Math.Max(0, Math.Min(theGenoType.Generation, cbxGeneration.Values.Length - 1));
-                ChangeGeneration(null, null);
+                this.cbxGeneration.SelectedIndex = Math.Max(0, Math.Min(theGenoType.Generation, this.cbxGeneration.Values.Length - 1));
+                this.ChangeGeneration(null, null);
 
                 if ((theGenoType.Generation == 0) && (theGenoType.DamBreed == ""))                    //sDamBreed
-                    cbxDamBreed.SelectedIndex = cbxDamBreed.IndexOf(theGenoType.GenotypeName);
+                    this.cbxDamBreed.SelectedIndex = this.cbxDamBreed.IndexOf(theGenoType.GenotypeName);
                 else
-                    cbxDamBreed.SelectedIndex = cbxDamBreed.IndexOf(theGenoType.DamBreed);
+                    this.cbxDamBreed.SelectedIndex = this.cbxDamBreed.IndexOf(theGenoType.DamBreed);
 
-                cbxSireBreed.SelectedIndex = cbxSireBreed.IndexOf(theGenoType.SireBreed);
-                if (cbxSireBreed.SelectedIndex < 0)
-                    cbxSireBreed.SelectedIndex = cbxDamBreed.SelectedIndex;
+                this.cbxSireBreed.SelectedIndex = this.cbxSireBreed.IndexOf(theGenoType.SireBreed);
+                if (this.cbxSireBreed.SelectedIndex < 0)
+                    this.cbxSireBreed.SelectedIndex = this.cbxDamBreed.SelectedIndex;
 
-                deBreedSRW.Value = theGenoType.SRW;
-                deDeath.Value = 100.0 * theGenoType.DeathRate[ADULT];
-                deWnrDeath.Value = 100 * theGenoType.DeathRate[WNR];
-                deConception1.Value = 100 * theGenoType.Conceptions[1];
-                deConception2.Value = 100 * theGenoType.Conceptions[2];
+                this.deBreedSRW.Value = theGenoType.SRW;
+                this.deDeath.Value = 100.0 * theGenoType.DeathRate[ADULT];
+                this.deWnrDeath.Value = 100 * theGenoType.DeathRate[WNR];
+                this.deConception1.Value = 100 * theGenoType.Conceptions[1];
+                this.deConception2.Value = 100 * theGenoType.Conceptions[2];
 
                 if (theAnimal == GrazType.AnimalType.Sheep)
                 {
-                    deConception3.Value = 100 * theGenoType.Conceptions[3];
-                    dePFWMilk.DecPlaces = 2;
-                    dePFWMilk.MinValue = 0.0;
-                    dePFWMilk.Value = theGenoType.PotFleeceWt;  // dual purpose control
-                    deBreedMaxMu.Value = theGenoType.MaxFibreDiam;
-                    deWoolYield.Value = 100 * theGenoType.FleeceYield;
+                    this.deConception3.Value = 100 * theGenoType.Conceptions[3];
+                    this.dePFWMilk.DecPlaces = 2;
+                    this.dePFWMilk.MinValue = 0.0;
+                    this.dePFWMilk.Value = theGenoType.PotFleeceWt;  // dual purpose control
+                    this.deBreedMaxMu.Value = theGenoType.MaxFibreDiam;
+                    this.deWoolYield.Value = 100 * theGenoType.FleeceYield;
                 }
                 else if (theAnimal == GrazType.AnimalType.Cattle)
                 {
-                    dePFWMilk.DecPlaces = 1;
-                    dePFWMilk.MinValue = Math.Min(10.0, deBreedSRW.Value * 0.01);
-                    dePFWMilk.Value = theGenoType.PeakMilk;
+                    this.dePFWMilk.DecPlaces = 1;
+                    this.dePFWMilk.MinValue = Math.Min(10.0, this.deBreedSRW.Value * 0.01);
+                    this.dePFWMilk.Value = theGenoType.PeakMilk;
                 }
             }
-            filling = false;
+            this.filling = false;
         }
 
         /// <summary>
@@ -459,22 +554,22 @@ namespace UserInterface.Views
         {
             try
             {
-                if (cbxGeneration.SelectedIndex <= 0)
+                if (this.cbxGeneration.SelectedIndex <= 0)
                 {
-                    lblDamBreed.Text = "Breed";
-                    lblSireBreed.Hide();
-                    cbxSireBreed.IsVisible = false;
+                    this.lblDamBreed.Text = "Breed";
+                    this.lblSireBreed.Hide();
+                    this.cbxSireBreed.IsVisible = false;
                 }
                 else
                 {
-                    lblDamBreed.Text = "Dam breed";
-                    lblSireBreed.Show();
-                    cbxSireBreed.IsVisible = true;
+                    this.lblDamBreed.Text = "Dam breed";
+                    this.lblSireBreed.Show();
+                    this.cbxSireBreed.IsVisible = true;
                 }
             }
             catch (Exception err)
             {
-                ShowError(err);
+                this.ShowError(err);
             }
         }
 
@@ -485,25 +580,25 @@ namespace UserInterface.Views
         private void EnablePeakMilkOrFleece(GrazType.AnimalType theAnimal)
         {
             // Visibility of animal - specific parameters 
-            lblConception3.Visible = (theAnimal == GrazType.AnimalType.Sheep);
-            deConception3.Visible = (theAnimal == GrazType.AnimalType.Sheep);
+            this.lblConception3.Visible = (theAnimal == GrazType.AnimalType.Sheep);
+            this.deConception3.Visible = (theAnimal == GrazType.AnimalType.Sheep);
             //unitConception.Visible = (theAnimal == GrazType.AnimalType.Sheep);
-            deWoolYield.Visible = (theAnimal == GrazType.AnimalType.Sheep);
-            untWoolYield.Visible = (theAnimal == GrazType.AnimalType.Sheep);
-            lblWoolYield.Visible = (theAnimal == GrazType.AnimalType.Sheep);
-            deBreedMaxMu.Visible = (theAnimal == GrazType.AnimalType.Sheep);
-            unitBreedMaxMu.Visible = (theAnimal == GrazType.AnimalType.Sheep);
-            lblBreedMaxMu.Visible = (theAnimal == GrazType.AnimalType.Sheep);
+            this.deWoolYield.Visible = (theAnimal == GrazType.AnimalType.Sheep);
+            this.untWoolYield.Visible = (theAnimal == GrazType.AnimalType.Sheep);
+            this.lblWoolYield.Visible = (theAnimal == GrazType.AnimalType.Sheep);
+            this.deBreedMaxMu.Visible = (theAnimal == GrazType.AnimalType.Sheep);
+            this.unitBreedMaxMu.Visible = (theAnimal == GrazType.AnimalType.Sheep);
+            this.lblBreedMaxMu.Visible = (theAnimal == GrazType.AnimalType.Sheep);
             if (theAnimal == GrazType.AnimalType.Sheep)
             {
-                lblBreedPFWPeakMilk.Text = "Breed potential fleece weight";
-                unitBreedPFWPeakMilk.Text = "kg";
+                this.lblBreedPFWPeakMilk.Text = "Breed potential fleece weight";
+                this.unitBreedPFWPeakMilk.Text = "kg";
             }
             else
             {
                 //cattle
-                lblBreedPFWPeakMilk.Text = "Peak milk production";
-                unitBreedPFWPeakMilk.Text = "kg FCM";
+                this.lblBreedPFWPeakMilk.Text = "Peak milk production";
+                this.unitBreedPFWPeakMilk.Text = "kg FCM";
             }
         }
 
@@ -515,44 +610,44 @@ namespace UserInterface.Views
         {
             SingleGenotypeInits theGenoType;
 
-            if (currentGenotype >= 0 && !filling)
+            if (this.currentGenotype >= 0 && !this.filling)
             {
                 theGenoType = new SingleGenotypeInits();
                 theGenoType.Conceptions = new double[4];
-                theGenoType.GenotypeName = edtGenotypeName.Text;
+                theGenoType.GenotypeName = this.edtGenotypeName.Text;
 
-                theGenoType.Generation = cbxGeneration.SelectedIndex;
+                theGenoType.Generation = this.cbxGeneration.SelectedIndex;
                 if (theGenoType.Generation > 0)
                 {
-                    theGenoType.DamBreed = cbxDamBreed.SelectedValue;
-                    theGenoType.SireBreed = cbxSireBreed.SelectedValue;
+                    theGenoType.DamBreed = this.cbxDamBreed.SelectedValue;
+                    theGenoType.SireBreed = this.cbxSireBreed.SelectedValue;
                 }
-                else if (cbxDamBreed.SelectedValue != null && (cbxDamBreed.SelectedValue.ToLower() == theGenoType.GenotypeName.ToLower()))
+                else if (this.cbxDamBreed.SelectedValue != null && (this.cbxDamBreed.SelectedValue.ToLower() == theGenoType.GenotypeName.ToLower()))
                 {
                     theGenoType.DamBreed = string.Empty;
                     theGenoType.SireBreed = string.Empty;
                 }
                 else
                 {
-                    theGenoType.DamBreed = cbxDamBreed.SelectedValue;
+                    theGenoType.DamBreed = this.cbxDamBreed.SelectedValue;
                     theGenoType.SireBreed = string.Empty;
                 }
 
-                theGenoType.SRW = deBreedSRW.Value;
-                theGenoType.DeathRate[ADULT] = deDeath.Value * 0.01;
-                theGenoType.DeathRate[WNR] = deWnrDeath.Value * 0.01;
-                theGenoType.Conceptions[1] = deConception1.Value * 0.01;
-                theGenoType.Conceptions[2] = deConception2.Value * 0.01;
+                theGenoType.SRW = this.deBreedSRW.Value;
+                theGenoType.DeathRate[ADULT] = this.deDeath.Value * 0.01;
+                theGenoType.DeathRate[WNR] = this.deWnrDeath.Value * 0.01;
+                theGenoType.Conceptions[1] = this.deConception1.Value * 0.01;
+                theGenoType.Conceptions[2] = this.deConception2.Value * 0.01;
 
-                if (genotypeAnimals[currentGenotype] == GrazType.AnimalType.Sheep)
+                if (this.genotypeAnimals[this.currentGenotype] == GrazType.AnimalType.Sheep)
                 {
-                    theGenoType.Conceptions[3] = deConception3.Value * 0.01;
-                    theGenoType.PotFleeceWt = dePFWMilk.Value;
-                    theGenoType.MaxFibreDiam = deBreedMaxMu.Value;
-                    theGenoType.FleeceYield = deWoolYield.Value * 0.01;
+                    theGenoType.Conceptions[3] = this.deConception3.Value * 0.01;
+                    theGenoType.PotFleeceWt = this.dePFWMilk.Value;
+                    theGenoType.MaxFibreDiam = this.deBreedMaxMu.Value;
+                    theGenoType.FleeceYield = this.deWoolYield.Value * 0.01;
                     theGenoType.PeakMilk = 0.0;
                 }
-                else if (genotypeAnimals[currentGenotype] == GrazType.AnimalType.Cattle)
+                else if (this.genotypeAnimals[this.currentGenotype] == GrazType.AnimalType.Cattle)
                 {
                     theGenoType.PeakMilk = dePFWMilk.Value;
                     theGenoType.Conceptions[3] = 0.0;
@@ -560,7 +655,7 @@ namespace UserInterface.Views
                     theGenoType.MaxFibreDiam = 0.0;
                     theGenoType.FleeceYield = 0.0;
                 }
-                this.genotypeInits[currentGenotype] = theGenoType;
+                this.genotypeInits[this.currentGenotype] = theGenoType;
             }
         }
 
@@ -579,13 +674,13 @@ namespace UserInterface.Views
                 bool found;
                 int index;
 
-                if (genotypeInits.Length < MAXGENOTYPES)
+                if (this.genotypeInits.Length < MAXGENOTYPES)
                 {
-                    ParseCurrGenotype();
+                    this.ParseCurrGenotype();
 
                     // Find the first genotype that is not in the inits yet
-                    if (currentGenotype >= 0)
-                        newAnimal = genotypeAnimals[currentGenotype];
+                    if (this.currentGenotype >= 0)
+                        newAnimal = this.genotypeAnimals[currentGenotype];
                     else
                         newAnimal = GrazType.AnimalType.Sheep;
                     newBreedIndex = 0;
@@ -595,9 +690,9 @@ namespace UserInterface.Views
                         newBreed = paramSet.BreedName(newAnimal, newBreedIndex);
 
                         found = true;
-                        for (index = 0; index < genotypeInits.Length; index++)
+                        for (index = 0; index < this.genotypeInits.Length; index++)
                         {
-                            found = (found && (newBreed.ToLower() != genotypeInits[index].GenotypeName.ToLower()));
+                            found = (found && (newBreed.ToLower() != this.genotypeInits[index].GenotypeName.ToLower()));
                         }
                         if (!found && (newBreedIndex == paramSet.BreedCount(newAnimal) - 1))
                         {
@@ -620,30 +715,30 @@ namespace UserInterface.Views
                     }
                     else
                     {
-                        Array.Resize(ref genotypeInits, genotypeInits.Length + 1);
-                        genotypeInits[genotypeInits.Length - 1] = new SingleGenotypeInits();
-                        genotypeInits[genotypeInits.Length - 1].Conceptions = new double[4];
+                        Array.Resize(ref this.genotypeInits, this.genotypeInits.Length + 1);
+                        this.genotypeInits[this.genotypeInits.Length - 1] = new SingleGenotypeInits();
+                        this.genotypeInits[this.genotypeInits.Length - 1].Conceptions = new double[4];
 
-                        SetGenotypeDefaults(genotypeInits.Length - 1, newBreed);
-                        genoList.AppendValues(newBreed);
-                        SelectedGenoIndex = genotypeInits.Length - 1;
+                        SetGenotypeDefaults(this.genotypeInits.Length - 1, newBreed);
+                        this.genoList.AppendValues(newBreed);
+                        this.SelectedGenoIndex = this.genotypeInits.Length - 1;
                         ClickGenotypeList(null, null);
 
                         // add to the animals genotypes combo list on the animals tab
-                        string[] genoNames = new string[genotypeInits.Length];
-                        for (int i = 0; i < genotypeInits.Length; i++)
+                        string[] genoNames = new string[this.genotypeInits.Length];
+                        for (int i = 0; i < this.genotypeInits.Length; i++)
                         {
-                            genoNames[i] = genotypeInits[i].GenotypeName;
+                            genoNames[i] = this.genotypeInits[i].GenotypeName;
                         }
-                        cbxGroupGenotype.Values = genoNames;
+                        this.cbxGroupGenotype.Values = genoNames;
 
-                        EnableButtons();
+                        this.EnableButtons();
                     }
                 }
             }
             catch (Exception err)
             {
-                ShowError(err);
+                this.ShowError(err);
             }
         }
 
@@ -656,14 +751,14 @@ namespace UserInterface.Views
         {
             try
             {
-                if (currentGenotype >= 0 && !filling)
-                    ParseCurrGenotype();
-                currentGenotype = SelectedGenoIndex;
-                FillCurrGenotype();
+                if (this.currentGenotype >= 0 && !this.filling)
+                    this.ParseCurrGenotype();
+                this.currentGenotype = this.SelectedGenoIndex;
+                this.FillCurrGenotype();
             }
             catch (Exception err)
             {
-                ShowError(err);
+                this.ShowError(err);
             }
         }
 
@@ -672,10 +767,10 @@ namespace UserInterface.Views
         /// </summary>
         private void EnableButtons()
         {
-            btnNewGeno.Sensitive = (genotypeInits.Length < MAXGENOTYPES);
-            btnDelGeno.Sensitive = (genotypeInits.Length > 0);
-            btnNewAnimals.Sensitive = (animalInits.Length < MAXANIMALGROUPS) &&(genotypeInits.Length > 0);
-            btnDeleteAnimals.Sensitive = (animalInits.Length > 0);
+            this.btnNewGeno.Sensitive = (this.genotypeInits.Length < MAXGENOTYPES);
+            this.btnDelGeno.Sensitive = (this.genotypeInits.Length > 0);
+            this.btnNewAnimals.Sensitive = (this.animalInits.Length < MAXANIMALGROUPS) && (this.genotypeInits.Length > 0);
+            this.btnDeleteAnimals.Sensitive = (this.animalInits.Length > 0);
         }
 
         /// <summary>
@@ -689,14 +784,14 @@ namespace UserInterface.Views
             {
                 if (!filling)
                 {
-                    string newGenoName = MakeUniqueGenoName(cbxDamBreed.SelectedValue);
-                    SetGenotypeDefaults(currentGenotype, cbxDamBreed.SelectedValue);
-                    FillCurrGenotype();
-                    edtGenotypeName.Text = newGenoName;
+                    string newGenoName = this.MakeUniqueGenoName(this.cbxDamBreed.SelectedValue);
+                    this.SetGenotypeDefaults(this.currentGenotype, this.cbxDamBreed.SelectedValue);
+                    this.FillCurrGenotype();
+                    this.edtGenotypeName.Text = newGenoName;
                     //ChangeGenotypeName(sender, e);          // ensure trigger updates on the Animals tab also
-                    filling = true;
-                    SetItem(genoList, currentGenotype, newGenoName);
-                    filling = false;
+                    this.filling = true;
+                    this.SetItem(this.genoList, this.currentGenotype, newGenoName);
+                    this.filling = false;
                 }
             }
             catch (Exception err)
@@ -714,8 +809,8 @@ namespace UserInterface.Views
         {
             try
             {
-                if (!filling)
-                    SetItem(genoList, currentGenotype, edtGenotypeName.Text);
+                if (!this.filling)
+                    SetItem(this.genoList, this.currentGenotype, this.edtGenotypeName.Text);
             }
             catch (Exception err)
             {
@@ -749,7 +844,7 @@ namespace UserInterface.Views
         private int IndexOf(ListStore store, string search)
         {
             int result = -1;
-            int nNames = store.IterNChildren();
+            //int nNames = store.IterNChildren();
             TreeIter iter;
             int i = 0;
             if (store.GetIterFirst(out iter))
@@ -840,9 +935,9 @@ namespace UserInterface.Views
             breedParams = paramSet.Match(breedName);
             if (breedParams != null)
             {
-                theGenoType = genotypeInits[index];
+                theGenoType = this.genotypeInits[index];
 
-                genotypeAnimals[index] = breedParams.Animal;
+                this.genotypeAnimals[index] = breedParams.Animal;
 
                 theGenoType.GenotypeName = breedParams.Name;
                 theGenoType.DamBreed = string.Empty;
@@ -882,7 +977,7 @@ namespace UserInterface.Views
             {
                 TreePath selPath;
                 TreeViewColumn selCol;
-                lbxGenotypeList.GetCursor(out selPath, out selCol);
+                this.lbxGenotypeList.GetCursor(out selPath, out selCol);
                 return selPath != null ? selPath.Indices[0] : 0;
             }
 
@@ -892,31 +987,7 @@ namespace UserInterface.Views
                 {
                     int[] indices = new int[1] { value };
                     TreePath selPath = new TreePath(indices);
-                    lbxGenotypeList.SetCursor(selPath, null, false);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the selected index for the animal group treeview
-        /// </summary>
-        private int SelectedGroupIndex
-        {
-            get
-            {
-                TreePath selPath;
-                TreeViewColumn selCol;
-                lbxAnimalList.GetCursor(out selPath, out selCol);
-                return selPath != null ? selPath.Indices[0] : 0;
-            }
-
-            set
-            {
-                if (value >= 0)
-                {
-                    int[] indices = new int[1] { value };
-                    TreePath selPath = new TreePath(indices);
-                    lbxAnimalList.SetCursor(selPath, null, false);
+                    this.lbxGenotypeList.SetCursor(selPath, null, false);
                 }
             }
         }
@@ -937,12 +1008,12 @@ namespace UserInterface.Views
                 {
                     GrazType.AnimalType currAnimal;
 
-                    if (rbtnSheep.Active)
+                    if (this.rbtnSheep.Active)
                         currAnimal = GrazType.AnimalType.Sheep;
                     else
                         currAnimal = GrazType.AnimalType.Cattle;
 
-                    genotypeAnimals[currentGenotype] = currAnimal;
+                    this.genotypeAnimals[this.currentGenotype] = currAnimal;
 
                     List<string> names = new List<string>();
 
@@ -953,21 +1024,21 @@ namespace UserInterface.Views
                         namesArray[i] = paramSet.BreedName(currAnimal, i);
                     }
 
-                    cbxDamBreed.Changed -= ChangeBreed;
+                    this.cbxDamBreed.Changed -= ChangeBreed;
 
-                    cbxDamBreed.Values = namesArray;
-                    cbxDamBreed.SelectedIndex = 0;
-                    cbxSireBreed.Values = namesArray;
-                    cbxSireBreed.SelectedIndex = 0;
+                    this.cbxDamBreed.Values = namesArray;
+                    this.cbxDamBreed.SelectedIndex = 0;
+                    this.cbxSireBreed.Values = namesArray;
+                    this.cbxSireBreed.SelectedIndex = 0;
 
-                    cbxDamBreed.Changed += ChangeBreed;
+                    this.cbxDamBreed.Changed += ChangeBreed;
 
-                    ChangeBreed(null, null);            //Force default SRW values etc
+                    this.ChangeBreed(null, null);            //Force default SRW values etc
                 }
             }
             catch (Exception err)
             {
-                ShowError(err);
+                this.ShowError(err);
             }
         }
 
@@ -980,45 +1051,24 @@ namespace UserInterface.Views
         {
             try
             {
-                if (currentGenotype >= 0)
+                if (this.currentGenotype >= 0)
                 {
                     //TODO when animals tab is working: deleteGroupsWithGenotype(FCurrGenotype);
 
-                    for (int idx = currentGenotype + 1; idx <= genotypeInits.Length - 1; idx++)
-                        genotypeInits[idx - 1] = genotypeInits[idx];
-                    Array.Resize(ref genotypeInits, genotypeInits.Length - 1);
+                    for (int idx = this.currentGenotype + 1; idx <= this.genotypeInits.Length - 1; idx++)
+                        this.genotypeInits[idx - 1] = this.genotypeInits[idx];
+                    Array.Resize(ref this.genotypeInits, this.genotypeInits.Length - 1);
 
-                    int current = SelectedGenoIndex;
+                    int current = this.SelectedGenoIndex;
                     // repopulate the view
-                    SetValues();
-                    SelectedGenoIndex = Math.Min(current, genotypeInits.Length - 1);
-                    EnableButtons();
+                    this.SetValues();
+                    this.SelectedGenoIndex = Math.Min(current, this.genotypeInits.Length - 1);
+                    this.EnableButtons();
                 }
             }
             catch (Exception err)
             {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void TabControl1_SelectedIndexChanged(object sender, SwitchPageArgs e)
-        {
-            try
-            {
-                switch (e.PageNum)
-                {
-                    case 0:
-                        break;
-                }
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
+                this.ShowError(err);
             }
         }
 
@@ -1031,11 +1081,39 @@ namespace UserInterface.Views
         {
             try
             {
-                ClickGenotypeList(sender, e);
+                this.ClickGenotypeList(sender, e);
             }
             catch (Exception err)
             {
-                ShowError(err);
+                this.ShowError(err);
+            }
+        }
+
+        #endregion========
+
+        #region Animals tab ===================================================
+
+        /// <summary>
+        /// Gets or sets the selected index for the animal group treeview
+        /// </summary>
+        private int SelectedGroupIndex
+        {
+            get
+            {
+                TreePath selPath;
+                TreeViewColumn selCol;
+                this.lbxAnimalList.GetCursor(out selPath, out selCol);
+                return selPath != null ? selPath.Indices[0] : -1;
+            }
+
+            set
+            {
+                if (value >= 0)
+                {
+                    int[] indices = new int[1] { value };
+                    TreePath selPath = new TreePath(indices);
+                    this.lbxAnimalList.SetCursor(selPath, null, false);
+                }
             }
         }
 
@@ -1048,11 +1126,12 @@ namespace UserInterface.Views
         {
             try
             {
-                ClickAnimalList(sender);
+                if (this.SelectedGroupIndex >= 0)
+                    this.ClickAnimalList(sender);
             }
             catch (Exception err)
             {
-                ShowError(err);
+                this.ShowError(err);
             }
         }
 
@@ -1065,16 +1144,23 @@ namespace UserInterface.Views
 
             // This procedure is called in several places: ClickAnimalList(nil).
             // We only want to check the weights, if user clicked AnimalList, so we have to check the Sender:
-            valuesOK = ((sender != lbxAnimalList) || CheckCurrGroup(lbxAnimalList, true));
-            if (!valuesOK)
-                SelectedGroupIndex = currentGroup;
-            else
+            if (this.currentGroup >= 0)
             {
-                if (lbxAnimalList.Data.Count > 0)
-                    ParseCurrGroup();
-                currentGroup = SelectedGroupIndex;
+                valuesOK = ((sender != this.lbxAnimalList) || CheckCurrGroup(this.lbxAnimalList, true));
+                if (!valuesOK)
+                {
+                    if (this.SelectedGroupIndex != this.currentGroup)
+                        this.SelectedGroupIndex = this.currentGroup;
+                }
+                else
+                {
+                    if (this.lbxAnimalList.Data.Count > 0)
+                        if (!this.filling)
+                            this.ParseCurrGroup();
+                    this.currentGroup = this.SelectedGroupIndex;
 
-                FillCurrentGroup();
+                    this.FillCurrentGroup();
+                }
             }
         }
 
@@ -1087,136 +1173,144 @@ namespace UserInterface.Views
         /// </summary>
         private void FillCurrentGroup()
         {
-            bool bIsMature;
-            bool bIsPregnant;
-            bool bIsLactating;
-            bool bHasYoung;
-            int iGenotype;
+            bool isMature;
+            bool isPregnant;
+            bool isLactating;
+            bool hasYoung;
+            int genotypeIdx;
             AnimalInits animalGroup;
             GrazType.AnimalType animalType;
 
-            if (currentGroup < 0)
-                gbxAnimals.Hide();
+            if (this.currentGroup < 0)
+                this.gbxAnimals.Child.HideAll();
             else
-                gbxAnimals.Show();
+                this.gbxAnimals.Child.ShowAll();
 
-            if (currentGroup >= 0)
+            if (this.currentGroup >= 0)
             {
                 this.filling = true;    // disable event handlers
                 animalGroup = this.animalInits[currentGroup];
                 // get the animaltype for this group
                 string geno = animalGroup.Genotype;
-                iGenotype = cbxGroupGenotype.IndexOf(geno);
-                if (iGenotype >= 0)
-                    animalType = genotypeAnimals[iGenotype];
+                genotypeIdx = cbxGroupGenotype.IndexOf(geno);
+                if (genotypeIdx >= 0)
+                    animalType = genotypeAnimals[genotypeIdx];
                 else
                     animalType = GrazType.AnimalType.Sheep;
 
-                cbxGroupGenotype.SelectedIndex = iGenotype;
+                this.cbxGroupGenotype.SelectedIndex = genotypeIdx;
 
                 string[] sexNames = new string[3];
                 for (int i = 0; i < 3; i++)
                 {
                     sexNames[i] = SEXMAP[(int)animalType, i].Text;
                 }
-                cbxSex.Values = sexNames;
-                cbxSex.SelectedIndex = REPRO2MAP[(int)animalGroup.Sex];
-                deNumber.Value = animalGroup.Number;
-                deAge.Value = animalGroup.AgeDays * DAY2MONTH;
-                deWeight.Value = animalGroup.Weight;
-                edtPaddock.Text = animalGroup.Paddock;
-                deTag.Value = animalGroup.Tag;
-                dePriority.Value = animalGroup.Priority;
+                this.cbxSex.Values = sexNames;
+                this.cbxSex.SelectedIndex = REPRO2MAP[(int)animalGroup.Sex];
+                this.deNumber.Value = animalGroup.Number;
+                this.deAge.Value = animalGroup.AgeDays * DAY2MONTH;
+                this.deWeight.Value = animalGroup.Weight;
+                this.edtPaddock.Text = animalGroup.Paddock;
+                this.deTag.Value = animalGroup.Tag;
+                this.dePriority.Value = animalGroup.Priority;
 
                 // Highest previous weight is only required for immature animals
-                bIsMature = ((animalType == GrazType.AnimalType.Sheep) && (animalGroup.AgeDays >= 24.0 / DAY2MONTH)) || ((animalType == GrazType.AnimalType.Cattle) && (animalGroup.AgeDays >= 36.0 / DAY2MONTH));
-                lblPrevWt.Visible = !bIsMature;
-                dePrevWt.Visible = !bIsMature;
-                untPrevWt.Visible = !bIsMature;
-                dePrevWt.Value = Math.Max(animalGroup.MaxPrevWt, animalGroup.Weight);
+                isMature = ((animalType == GrazType.AnimalType.Sheep) && (animalGroup.AgeDays >= 24.0 / DAY2MONTH)) || ((animalType == GrazType.AnimalType.Cattle) && (animalGroup.AgeDays >= 36.0 / DAY2MONTH));
+                this.lblPrevWt.Visible = !isMature;
+                this.dePrevWt.Visible = !isMature;
+                this.untPrevWt.Visible = !isMature;
+                this.dePrevWt.Value = Math.Max(animalGroup.MaxPrevWt, animalGroup.Weight);
 
                 // Fleece weight and diameter are only required for sheep        
-                lblFleece.Visible = (animalType == GrazType.AnimalType.Sheep);
-                deFleece.Visible = (animalType == GrazType.AnimalType.Sheep);
-                untFleece.Visible = (animalType == GrazType.AnimalType.Sheep);
-                deFleece.Value = animalGroup.FleeceWt;
+                this.lblFleece.Visible = (animalType == GrazType.AnimalType.Sheep);
+                this.deFleece.Visible = (animalType == GrazType.AnimalType.Sheep);
+                this.untFleece.Visible = (animalType == GrazType.AnimalType.Sheep);
+                this.deFleece.Value = animalGroup.FleeceWt;
 
-                lblFibreDiam.Visible = (animalType == GrazType.AnimalType.Sheep);
-                deFibreDiam.Visible = (animalType == GrazType.AnimalType.Sheep);
-                untFibreDiam.Visible = (animalType == GrazType.AnimalType.Sheep);
-                deFibreDiam.Value = animalGroup.FibreDiam;
+                this.lblFibreDiam.Visible = (animalType == GrazType.AnimalType.Sheep);
+                this.deFibreDiam.Visible = (animalType == GrazType.AnimalType.Sheep);
+                this.untFibreDiam.Visible = (animalType == GrazType.AnimalType.Sheep);
+                this.deFibreDiam.Value = animalGroup.FibreDiam;
 
 
-                pnlRepro.Visible = (animalGroup.Sex == GrazType.ReproType.Empty); // Reproduction-related controls are on a frame
+                this.pnlRepro.Visible = (animalGroup.Sex == GrazType.ReproType.Empty); // Reproduction-related controls are on a frame
 
-                if (pnlRepro.Visible)
+                if (this.pnlRepro.Visible)
                 {
-                    bIsPregnant = (animalGroup.Pregnant > 0);
-                    bIsLactating = (animalGroup.Lactating > 0);
-                    bHasYoung = (animalGroup.NumSuckling > 0);
+                    isPregnant = (animalGroup.Pregnant > 0);
+                    isLactating = (animalGroup.Lactating > 0);
+                    hasYoung = (animalGroup.NumSuckling > 0);
 
-                    rgrpSRepro.Visible = (animalType == GrazType.AnimalType.Sheep);                          // Reproduction options for sheep           
+                    this.rgrpSRepro.Visible = (animalType == GrazType.AnimalType.Sheep);                          // Reproduction options for sheep           
                     if (animalType == GrazType.AnimalType.Sheep)
                     {
-                        if (!(bIsPregnant || bIsLactating))
-                            rbDryEmpty.Active = true;
-                        else if (bIsPregnant)
-                            rbPregS.Active = true;
-                        else if (bIsLactating)
-                            rbLact.Active = true;
+                        if (!(isPregnant || isLactating))
+                            this.rbDryEmpty.Active = true;
+                        else if (isPregnant)
+                            this.rbPregS.Active = true;
+                        else if (isLactating)
+                            this.rbLact.Active = true;
                     }
 
-                    rgrpCPreg.Visible = (animalType == GrazType.AnimalType.Cattle);                          // Pregnancy options for cattle             
+                    this.rgrpCPreg.Visible = (animalType == GrazType.AnimalType.Cattle);                          // Pregnancy options for cattle             
                     if (animalType == GrazType.AnimalType.Cattle)
                     {
-                        if (!bIsPregnant)
-                            rbEmpty.Active = true;
+                        if (!isPregnant)
+                            this.rbEmpty.Active = true;
                         else
-                            rbPreg.Active = true;
+                            this.rbPreg.Active = true;
                     }
 
-                    rgrpCLact.Visible = (animalType == GrazType.AnimalType.Cattle);                          // Lactation options for cattle            
+                    this.rgrpCLact.Visible = (animalType == GrazType.AnimalType.Cattle);                          // Lactation options for cattle            
                     if (animalType == GrazType.AnimalType.Cattle)
-                        if (!bIsLactating)
-                            rbNoLact.Active = true;
-                        else if (bIsLactating && bHasYoung)
-                            rbLac.Active = true;
-                        else if (bIsLactating && !bHasYoung)
-                            rbLactCalf.Active = true;
-                    
-                    rgrpNoLambs.Visible  = (animalType == GrazType.AnimalType.Sheep) && (bIsPregnant || bIsLactating);
-                    /*if bIsPregnant then
-                      rgrpNoLambs.ItemIndex := No_Foetuses - 1
-                    else if bisLactating then
-                      rgrpNoLambs.ItemIndex := No_Suckling - 1;
+                        if (!isLactating)
+                            this.rbNoLact.Active = true;
+                        else if (isLactating && hasYoung)
+                            this.rbLac.Active = true;
+                        else if (isLactating && !hasYoung)
+                            this.rbLactCalf.Active = true;
 
-                    lblPregnant.Visible  := bIsPregnant;
-                    edtPregnant.Visible  := bIsPregnant;
-                    untPregnant.Visible  := bIsPregnant;
-                    edtPregnant.Value    := Pregnant;
+                    this.rgrpNoLambs.Visible = (animalType == GrazType.AnimalType.Sheep) && (isPregnant || isLactating);
+                    if (isPregnant)
+                    {
+                        this.rbOneLamb.Active = animalGroup.NumFoetuses == 1;
+                        this.rbTwoLambs.Active = animalGroup.NumFoetuses == 2;
+                        this.rbThreeLambs.Active = animalGroup.NumFoetuses == 3;
+                    }
+                    else if (isLactating)
+                    {
+                        this.rbOneLamb.Active = animalGroup.NumSuckling == 1;
+                        this.rbTwoLambs.Active = animalGroup.NumSuckling == 2;
+                        this.rbThreeLambs.Active = animalGroup.NumSuckling == 3;
+                    }
 
-                    lblLactating.Visible := bIsLactating;
-                    edtLactating.Visible := bIsLactating;
-                    untLactating.Visible := bIsLactating;
-                    edtLactating.Value   := Lactating;
+                    this.lblPregnant.Visible = isPregnant;
+                    this.dePregnant.Visible = isPregnant;
+                    this.untPregnant.Visible = isPregnant;
+                    this.dePregnant.Value = animalGroup.Pregnant;
 
-                    lblBirthCS.Visible   := bIsLactating;
-                    edtBirthCS.Visible   := bIsLactating;
-                    edtBirthCS.Value     := Birth_CS;
+                    this.lblLactating.Visible = isLactating;
+                    this.deLactating.Visible = isLactating;
+                    this.untLactating.Visible = isLactating;
+                    this.deLactating.Value = animalGroup.Lactating;
 
-                    if (theAnimal = Sheep) then
-                    lblYoungWt.Caption       := '&Lamb weight'
-                    else if (theAnimal = Cattle) then
-                    lblYoungWt.Caption       := 'Cal&f weight';
-                    lblYoungWt.Visible   := bIsLactating and bHasYoung;
-                    edtYoungWt.Visible   := bIsLactating and bHasYoung;
-                    untYoungWt.Visible   := bIsLactating and bHasYoung;
-                    edtYoungWt.Value     := Young_Wt;
+                    this.lblBirthCS.Visible = isLactating;
+                    this.deBirthCS.Visible = isLactating;
+                    this.deBirthCS.Value = animalGroup.BirthCS;
 
-                    lblLambGFW.Visible   := (TheAnimal = Sheep) and bIsLactating;
-                    edtLambGFW.Visible   := (TheAnimal = Sheep) and bIsLactating;
-                    untLambGFW.Visible   := (TheAnimal = Sheep) and bIsLactating;
-                    edtLambGFW.Value     := Young_GFW; */
+                    if (animalType == GrazType.AnimalType.Sheep)
+                        this.lblYoungWt.Text = "Lamb weight";
+                    else if (animalType == GrazType.AnimalType.Cattle)
+                        this.lblYoungWt.Text = "Calf weight";
+                    this.lblYoungWt.Visible = isLactating && hasYoung;
+                    this.deYoungWt.Visible = isLactating && hasYoung;
+                    this.untYoungWt.Visible = isLactating && hasYoung;
+                    this.deYoungWt.Value = animalGroup.YoungWt;
+
+                    this.lblLambGFW.Visible = (animalType == GrazType.AnimalType.Sheep) && isLactating;
+                    this.deLambGFW.Visible = (animalType == GrazType.AnimalType.Sheep) && isLactating;
+                    this.untLambGFW.Visible = (animalType == GrazType.AnimalType.Sheep) && isLactating;
+                    this.deLambGFW.Value = animalGroup.YoungGFW;
                 }
 
 
@@ -1224,8 +1318,8 @@ namespace UserInterface.Views
                 // Update the descriptive string in the animal groups list box
                 string groupText = GroupText(currentGroup);
                 TreeIter iter;
-                groupsList.IterNthChild(out iter, currentGroup);
-                groupsList.SetValue(iter, 0, groupText);
+                this.groupsList.IterNthChild(out iter, currentGroup);
+                this.groupsList.SetValue(iter, 0, groupText);
 
                 this.filling = false;
             }
@@ -1268,46 +1362,69 @@ namespace UserInterface.Views
                     }
 
                     // Default values for reproductive inputs
-                    animalGroup.BirthCS = 0;
-                    animalGroup.Lactating = 0;
-                    animalGroup.MatedTo = "";
                     animalGroup.Pregnant = 0;
+                    animalGroup.Lactating = 0;
+                    animalGroup.NumFoetuses = 0;
+                    animalGroup.NumSuckling = 0;
+                    animalGroup.BirthCS = 0;
+                    animalGroup.YoungWt = 0.0;
+                    animalGroup.YoungGFW = 0.0;
+                    animalGroup.MatedTo = "";
 
-                    
+                    bool isPregnant = false;
+                    bool isLactating = false;
+                    bool hasYoung = false;
+
                     if (animalGroup.Sex == GrazType.ReproType.Empty)
-                    { /*
-                    if (animalType == GrazType.AnimalType.Sheep)
                     {
-                        bIsPregnant = (rgrpSRepro.ItemIndex = 1);
-                        bIsLactating = (rgrpSRepro.ItemIndex = 2);
-                        bHasYoung = bIsLactating;
-                        if (bIsPregnant)
-                            animalGroup.No_Foetuses = 1 + rgrpNoLambs.ItemIndex;
-                        if (bHasYoung)
-                            animalGroup.No_Suckling = 1 + rgrpNoLambs.ItemIndex;
-                    }
-                    else if (animalType == GrazType.AnimalType.Cattle)
-                    {
-                        bIsPregnant = (rgrpCPreg.ItemIndex = 1);
-                        bIsLactating = (rgrpCLact.ItemIndex in [1,2]);
-                        bHasYoung = (rgrpCLact.ItemIndex in [0,1]);
-                        if (bisPregnant)
-                            animalGroup.No_Foetuses = 1;
-                        if (bHasYoung)
-                            animalGroup.No_Suckling = 1;
-                    }
+                        if (animalType == GrazType.AnimalType.Sheep)
+                        {
+                            isPregnant = rbPregS.Active == true;
+                            isLactating = rbLact.Active == true;
+                            hasYoung = isLactating;
+                            if (isPregnant)
+                            {
+                                if (rbOneLamb.Active == true)
+                                    animalGroup.NumFoetuses = 1;
+                                if (rbTwoLambs.Active == true)
+                                    animalGroup.NumFoetuses = 2;
+                                if (rbThreeLambs.Active == true)
+                                    animalGroup.NumFoetuses = 3;
+                            }
+                            if (hasYoung)
+                            {
+                                if (rbOneLamb.Active == true)
+                                    animalGroup.NumSuckling = 1;
+                                if (rbTwoLambs.Active == true)
+                                    animalGroup.NumSuckling = 2;
+                                if (rbThreeLambs.Active == true)
+                                    animalGroup.NumSuckling = 3;
+                            }
+                        }
+                        else if (animalType == GrazType.AnimalType.Cattle)
+                        {
+                            isPregnant = rbPreg.Active;
+                            isLactating = rbLact.Active || rbLactCalf.Active;
+                            hasYoung = rbLactCalf.Active;
+                            if (isPregnant)
+                                animalGroup.NumFoetuses = 1;    // do we allow for twin calves?
+                            if (hasYoung)
+                                animalGroup.NumSuckling = 1;
+                            else
+                                animalGroup.NumSuckling = 0;
+                        }
 
-                    if (bIsPregnant)
-                        animalGroup.Pregnant = Round(edtPregnant.Value);
-                    if (bIsLactating) 
-                    {
-                        animalGroup.Lactating = Round(edtLactating.Value );
-                        animalGroup.BirthCS  = edtBirthCS.Value;
-                    }
-                    if (bIsLactating and bHasYoung)
-                        animalGroup.Young_Wt = edtYoungWt.Value;
-                    if (bIsLactating and bHasYoung && (animalType == GrazType.AnimalType.Sheep))
-                        animalGroup.Young_GFW = edtLambGFW.Value; */
+                        if (isPregnant)
+                            animalGroup.Pregnant = Convert.ToInt32(dePregnant.Value);
+                        if (isLactating)
+                        {
+                            animalGroup.Lactating = Convert.ToInt32(deLactating.Value);
+                            animalGroup.BirthCS = deBirthCS.Value;
+                        }
+                        if (isLactating && hasYoung)
+                            animalGroup.YoungWt = deYoungWt.Value;
+                        if (isLactating && hasYoung && (animalType == GrazType.AnimalType.Sheep))
+                            animalGroup.YoungGFW = deLambGFW.Value;
                     } // reproduction values 
 
                     this.animalInits[currentGroup] = animalGroup;
@@ -1327,34 +1444,75 @@ namespace UserInterface.Views
                 if (CheckCurrGroup(null, true) && this.animalInits.Length < MAXANIMALGROUPS)
                 {
                     Array.Resize(ref this.animalInits, this.animalInits.Length + 1);
-                    this.animalInits[this.animalInits.Length - 1] = new AnimalInits();
 
-                    this.animalInits[this.animalInits.Length - 1].Genotype = this.genotypeInits[0].GenotypeName;
-                    this.animalInits[this.animalInits.Length - 1].FibreDiam = 20;
+                    int newIdx = this.animalInits.Length - 1;
+                    if (newIdx > 0)
+                    {
+                        this.animalInits[newIdx] = this.animalInits[newIdx - 1];
+                    }
+                    else
+                    {
+                        this.animalInits[newIdx] = new AnimalInits();
 
-                    string groupText = GroupText(animalInits.Length - 1);
-                    groupsList.AppendValues(groupText);
-                    SelectedGroupIndex = animalInits.Length - 1;
-                    ClickAnimalList(null);
+                        this.animalInits[newIdx].Genotype = this.genotypeInits[0].GenotypeName;
+                        this.animalInits[newIdx].FibreDiam = 20;
+                    }
 
-                    EnableButtons();
+                    string groupText = GroupText(newIdx);
+                    this.groupsList.AppendValues(groupText);
+                    this.currentGroup = newIdx;
+                    this.SelectedGroupIndex = currentGroup;
+                    //this.ClickAnimalList(null);
+
+                    this.EnableButtons();
                 }
             }
             catch (Exception err)
             {
-                ShowError(err);
+                this.ShowError(err);
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnDeleteAnimals_Clicked(object sender, EventArgs e)
         {
             try
             {
-                EnableButtons();
+                if (SelectedGroupIndex >= 0 && (animalInits.Length > 0))
+                {
+                    int current = SelectedGroupIndex;
+                    // delete the currentGroup
+                    for (int i = currentGroup + 1; i <= animalInits.Length - 1; i++)
+                    {
+                        animalInits[i - 1] = animalInits[i];
+                    }
+                    Array.Resize(ref animalInits, animalInits.Length - 1);
+
+                    // remove from the tree
+                    TreeIter iter;
+                    groupsList.IterNthChild(out iter, currentGroup);
+                    groupsList.Remove(ref iter);
+
+                    currentGroup = -1;              // prevent checking and parsing 
+                    int newIdx = Math.Min(current, animalInits.Length - 1);
+                    if (newIdx >= 0)
+                    {
+                        SelectedGroupIndex = newIdx;
+                    }
+                    this.ClickAnimalList(null);          // will also set currentGroup
+                    if (animalInits.Length < 1)
+                        gbxAnimals.Child.HideAll();
+                }
+
+                this.EnableButtons();
             }
             catch (Exception err)
             {
-                ShowError(err);
+                this.ShowError(err);
             }
         }
 
@@ -1385,7 +1543,7 @@ namespace UserInterface.Views
             return result;
         }
 
-        
+
         /// <summary>
         /// Change the genotype of the selected animal group
         /// </summary>
@@ -1393,15 +1551,17 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void ChangeGroupGenotype(object sender, EventArgs e)
         {
-            try
+            if (!this.filling)
             {
-                if (!this.filling)
+                try
+                {
                     animalInits[currentGroup].Genotype = cbxGroupGenotype.SelectedValue;
-                FillCurrentGroup();
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
+                    this.FillCurrentGroup();
+                }
+                catch (Exception err)
+                {
+                    this.ShowError(err);
+                }
             }
         }
 
@@ -1412,15 +1572,17 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void ChangeNumber(object sender, EventArgs e)
         {
-            try
+            if (!this.filling)
             {
-                if (!this.filling)
+                try
+                {
                     animalInits[currentGroup].Number = Convert.ToInt32(deNumber.Value);
-                FillCurrentGroup();
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
+                    this.FillCurrentGroup();
+                }
+                catch (Exception err)
+                {
+                    this.ShowError(err);
+                }
             }
         }
 
@@ -1431,33 +1593,35 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void ChangeSex(object sender, EventArgs e)
         {
-            try
+            if (!this.filling)
             {
-                if (!filling)
+                try
                 {
                     GrazType.AnimalType animalType = GetAnimalTypeForGroup(currentGroup);
                     animalInits[currentGroup].Sex = SEXMAP[(int)animalType, cbxSex.SelectedIndex].Repro;
                     this.FillCurrentGroup();
                     this.CheckCurrGroup(cbxSex, false);
                 }
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
+                catch (Exception err)
+                {
+                    this.ShowError(err);
+                }
             }
         }
 
         private void ChangeEditCtrl(object sender, EventArgs e)
         {
-            try
+            if (!filling)
             {
-                if (!filling)
-                    CheckCurrGroup(sender, false);
-                FillCurrentGroup();
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
+                try
+                {
+                    this.CheckCurrGroup(sender, false);
+                    this.FillCurrentGroup();
+                }
+                catch (Exception err)
+                {
+                    this.ShowError(err);
+                }
             }
         }
 
@@ -1487,157 +1651,283 @@ namespace UserInterface.Views
         /// <returns></returns>
         private bool CheckCurrGroup(object sender, bool showErrorMsg)
         {
-            int[] WtDecPlaces = { 2, 1 };
+            int[] weightDecPlaces = { 2, 1 };
             GrazType.AnimalType theAnimal = GrazType.AnimalType.Sheep;
-            double dLowFFLW = 0,
-            dHighFFLW = 2000,
-            dHighGFW;
-            string sMessage;
-            int iError = 0;
-            GrazType.ReproType Repro;
+            double lowFFLW = 0,
+            highFFLW = 2000,
+            highGFW;
+            string errorMessage = string.Empty;
+            int errorNum = 0;
+            GrazType.ReproType reproStatus;
 
             if (currentGroup >= 0)
             {
-                ParseCurrGenotype();
-                ParseCurrGroup();
+                this.ParseCurrGenotype();
+                this.ParseCurrGroup();
 
                 int genotypeIdx = IndexOf(genoList, animalInits[currentGroup].Genotype);
                 if (genotypeIdx < 0) //no genotype specified
-                    iError = 7;
+                    errorNum = 7;
                 else
                     theAnimal = genotypeAnimals[genotypeIdx];
 
                 AnimalInits theAnimalGroup = animalInits[currentGroup];
                 SingleGenotypeInits theGenoType = genotypeInits[genotypeIdx];
 
-                if (iError == 0)
+                if (errorNum == 0)
                 {
                     if (theAnimalGroup.Pregnant > 0)
-                        Repro = GrazType.ReproType.EarlyPreg;
+                        reproStatus = GrazType.ReproType.EarlyPreg;
                     else
-                        Repro = theAnimalGroup.Sex;
+                        reproStatus = theAnimalGroup.Sex;
 
                     // calc the normal weight range 
                     if (OnCalcNormalWeight != null)
-                        OnCalcNormalWeight.Invoke(this.paramSet, genotypeInits, genotypeIdx, Repro, Convert.ToInt32(theAnimalGroup.AgeDays), 0.70, 1.30, out dLowFFLW, out dHighFFLW);
+                        OnCalcNormalWeight.Invoke(this.paramSet, genotypeInits, genotypeIdx, reproStatus, Convert.ToInt32(theAnimalGroup.AgeDays), 0.70, 1.30, out lowFFLW, out highFFLW);
 
-                    if ((theAnimalGroup.Weight - theAnimalGroup.FleeceWt < dLowFFLW) || (theAnimalGroup.Weight - theAnimalGroup.FleeceWt > dHighFFLW))
-                        iError = 1;
+                    if ((theAnimalGroup.Weight - theAnimalGroup.FleeceWt < lowFFLW) || (theAnimalGroup.Weight - theAnimalGroup.FleeceWt > highFFLW))
+                        errorNum = 1;
                 }
-                if ((iError == 0) && dePrevWt.Visible)
+                if ((errorNum == 0) && dePrevWt.Visible)
                 {
-                    if ((theAnimalGroup.MaxPrevWt < theAnimalGroup.Weight) || (theAnimalGroup.MaxPrevWt - theAnimalGroup.FleeceWt > dHighFFLW))
-                        iError = 2;
+                    if ((theAnimalGroup.MaxPrevWt < theAnimalGroup.Weight) || (theAnimalGroup.MaxPrevWt - theAnimalGroup.FleeceWt > highFFLW))
+                        errorNum = 2;
                 }
-                if ((iError == 0) && (theAnimalGroup.Lactating > 0) /*&& (theAnimalGroup.NoSuckling > 0)*/)
+                if ((errorNum == 0) && (theAnimalGroup.Lactating > 0) && (theAnimalGroup.NumSuckling > 0))
                 {
                     // Lactating holds the age of the suckling young
                     if (OnCalcNormalWeight != null)
-                        OnCalcNormalWeight.Invoke(this.paramSet, genotypeInits, genotypeIdx, GrazType.ReproType.Castrated, theAnimalGroup.Lactating, 0.70, 1.30, out dLowFFLW, out dHighFFLW);
+                        OnCalcNormalWeight.Invoke(this.paramSet, genotypeInits, genotypeIdx, GrazType.ReproType.Castrated, theAnimalGroup.Lactating, 0.70, 1.30, out lowFFLW, out highFFLW);
 
-                    if ((theAnimalGroup.YoungWt - theAnimalGroup.YoungGFW < dLowFFLW) || (theAnimalGroup.YoungWt - theAnimalGroup.YoungGFW > dHighFFLW))
-                        iError = 3;
+                    if ((theAnimalGroup.YoungWt - theAnimalGroup.YoungGFW < lowFFLW) || (theAnimalGroup.YoungWt - theAnimalGroup.YoungGFW > highFFLW))
+                        errorNum = 3;
                 }
-                if ((iError == 0) && (theAnimal == GrazType.AnimalType.Sheep))
+                if ((errorNum == 0) && (theAnimal == GrazType.AnimalType.Sheep))
                 {
                     switch (theAnimalGroup.Sex)
                     {
                         case GrazType.ReproType.Male:
-                            dHighGFW = 1.5 * 1.4 * theGenoType.PotFleeceWt;
+                            highGFW = 1.5 * 1.4 * theGenoType.PotFleeceWt;
                             break;
                         case GrazType.ReproType.Castrated:
-                            dHighGFW = 1.5 * 1.2 * theGenoType.PotFleeceWt;
+                            highGFW = 1.5 * 1.2 * theGenoType.PotFleeceWt;
                             break;
                         default:
-                            dHighGFW = 1.5 * 1.0 * theGenoType.PotFleeceWt;
+                            highGFW = 1.5 * 1.0 * theGenoType.PotFleeceWt;
                             break;
                     }
-                    if ((theAnimalGroup.FleeceWt < 0.0) || (theAnimalGroup.FleeceWt > dHighGFW))
-                        iError = 4;
+                    if ((theAnimalGroup.FleeceWt < 0.0) || (theAnimalGroup.FleeceWt > highGFW))
+                        errorNum = 4;
                     else if ((theAnimalGroup.FibreDiam < 0.5 * theGenoType.MaxFibreDiam) || (theAnimalGroup.FibreDiam > 1.5 * theGenoType.MaxFibreDiam))
-                        iError = 5;
-                    else if ((theAnimalGroup.Lactating > 0) && (theAnimalGroup.YoungGFW < 0.0) || (theAnimalGroup.YoungGFW > dHighGFW))
-                        iError = 6;
+                        errorNum = 5;
+                    else if ((theAnimalGroup.Lactating > 0) && (theAnimalGroup.YoungGFW < 0.0) || (theAnimalGroup.YoungGFW > highGFW))
+                        errorNum = 6;
                 }
                 else
-                    dHighGFW = 0.0;
+                    highGFW = 0.0;
 
 
                 string errorMsg = string.Empty;
                 lblError.Text = string.Empty;
-                string decplaces = WtDecPlaces[(int)theAnimal].ToString();
-                if (iError > 0)
+                string decplaces = weightDecPlaces[(int)theAnimal].ToString();
+                if (errorNum > 0)
                 {
-                    switch (iError)
+                    switch (errorNum)
                     {
                         case 1:
                             {
-                                sMessage = string.Format("{0,0:f" + decplaces + "} to {1,0:f" + decplaces + "}", dLowFFLW + theAnimalGroup.FleeceWt, dHighFFLW + theAnimalGroup.FleeceWt);
+                                errorMessage = string.Format("{0,0:f" + decplaces + "} to {1,0:f" + decplaces + "}", lowFFLW + theAnimalGroup.FleeceWt, highFFLW + theAnimalGroup.FleeceWt);
                                 if (showErrorMsg)
-                                    sMessage = "Live weight should be in the range " + sMessage;
+                                    errorMessage = "Live weight should be in the range " + errorMessage;
                             }
                             break;
                         case 2:
                             {
-                                sMessage = string.Format("{0,0:f" + decplaces + "} to {1,0:f" + decplaces + "}", theAnimalGroup.Weight, dHighFFLW + theAnimalGroup.FleeceWt);
+                                errorMessage = string.Format("{0,0:f" + decplaces + "} to {1,0:f" + decplaces + "}", theAnimalGroup.Weight, highFFLW + theAnimalGroup.FleeceWt);
                                 if (showErrorMsg)
-                                    sMessage = "Highest previous weight should be in the range " + sMessage;
+                                    errorMessage = "Highest previous weight should be in the range " + errorMessage;
                             }
                             break;
                         case 3:
                             {
-                                sMessage = string.Format("{0,0:f" + decplaces + "} to {1,0:f" + decplaces + "}", dLowFFLW + theAnimalGroup.YoungGFW, dHighFFLW + theAnimalGroup.YoungGFW);
+                                errorMessage = string.Format("{0,0:f" + decplaces + "} to {1,0:f" + decplaces + "}", lowFFLW + theAnimalGroup.YoungGFW, highFFLW + theAnimalGroup.YoungGFW);
                                 if (showErrorMsg)
                                     if (theAnimal == GrazType.AnimalType.Sheep)
-                                        sMessage = "Lamb weight should be in the range " + sMessage;
+                                        errorMessage = "Lamb weight should be in the range " + errorMessage;
                                     else
-                                        sMessage = "Calf weight should be in the range " + sMessage;
+                                        errorMessage = "Calf weight should be in the range " + errorMessage;
                             }
                             break;
                         case 4:
                             {
-                                sMessage = string.Format("0.00 to {0,2:f1", dHighGFW);
+                                errorMessage = string.Format("0.00 to {0,2:f1}", highGFW);
                                 if (showErrorMsg)
-                                    sMessage = "Fleece weight should be in the range " + sMessage;
+                                    errorMessage = "Fleece weight should be in the range " + errorMessage;
                             }
                             break;
-                        case 5:/*
-             ErrorCtrl := edtFibreDiam;
-             sMessage  := Format('%1.f to %.1f', [ 0.5*FValues.Genotypes[iGenotype].MaxFibreDiam,
-                                                   1.5*FValues.Genotypes[iGenotype].MaxFibreDiam ] );
-             if bShowErrorMsg then
-               sMessage := 'Wool fibre diameter should be in the range'#13#10 + sMessage;
-                    */
-                            errorMsg = "Error in weights";
+                        case 5:
+                            {
+                                errorMessage = string.Format("{0,2:f1} to {1,2:f1}", 0.5 * this.genotypeInits[genotypeIdx].MaxFibreDiam, 1.5 * this.genotypeInits[genotypeIdx].MaxFibreDiam);
+                                if (showErrorMsg)
+                                    errorMessage = "Wool fibre diameter should be in the range " + errorMessage;
+                            }
                             break;
                         case 6:
-                        /*
-                         
-                 ErrorCtrl := edtLambGFW;
-                 sMessage  := Format('0.00 to %.2f', [ dHighGFW ] );
-                 if bShowErrorMsg then
-                   sMessage := 'Fleece weight should be in the range'#13#10 + sMessage;
-               
-                     */
+                            {
+                                errorMessage = string.Format("0.00 to {0,2:f1", highGFW);
+                                if (showErrorMsg)
+                                    errorMessage = "Fleece weight should be in the range " + errorMessage;
+                            }
+                            break;
                         case 7:
                             {
                                 if (showErrorMsg)
-                                    sMessage = "One of the animal groups (" + (currentGroup + 1).ToString() + ") does not have a genotype!";
+                                    errorMessage = "One of the animal groups (" + (currentGroup + 1).ToString() + ") does not have a genotype!";
                             }
                             break;
                     }
 
                     if (showErrorMsg)
                     {
-                        lblError.Text = errorMsg;
+                        lblError.Text = errorMessage;
                     }
                 }
             }
 
-            return (iError == 0);
+            return (errorNum == 0);
         }
 
-      
+        /// <summary>
+        /// Sets default values for time pregnant etc and then calls FillGroup() to re-display the controls
+        /// </summary>    
+        private void ClickSheepRepro(object sender, EventArgs e)
+        {
+            if (!this.filling)
+            {
+                if (this.currentGroup >= 0)
+                {
+                    AnimalInits animals = animalInits[currentGroup];
+                    if (this.rbDryEmpty.Active)
+                    {
+                        // dry, empty
+                        animals.Pregnant = 0;
+                        animals.Lactating = 0;
+                        animals.NumFoetuses = 0;
+                        animals.NumSuckling = 0;
+                        animals.YoungWt = 0.0;
+                        animals.YoungGFW = 0.0;
+                        animals.BirthCS = 0.0;
+                    }
+                    else if (this.rbPregS.Active)
+                    {
+                        // pregnant, not lactating
+                        if (animals.Pregnant == 0)
+                            animals.Pregnant = 60;
+                        animals.NumFoetuses = Math.Max(1, Math.Max(animals.NumFoetuses, animals.NumSuckling));
+                        animals.Lactating = 0;
+                        animals.NumSuckling = 0;
+                        animals.YoungWt = 0.0;
+                        animals.YoungGFW = 0.0;
+                        animals.BirthCS = 0.0;
+                    }
+                    else if (this.rbLact.Active)
+                    {
+                        // lactating, not pregnant
+                        animals.NumSuckling = Math.Max(1, Math.Max(animals.NumFoetuses, animals.NumSuckling));
+                        if (animals.Lactating == 0)
+                        {
+                            animals.Lactating = 30;
+                            animals.YoungWt = 10.0;
+                            animals.YoungGFW = 0.4;
+                            animals.BirthCS = 3.0;
+                        }
+                        animals.Pregnant = 0;
+                        animals.NumFoetuses = 0;
+                    }
+                    animalInits[currentGroup] = animals;
+                    this.FillCurrentGroup();
+                    this.CheckCurrGroup(null, false);
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// OnClick handler for rgrpCRepro and rgrpCLact
+        /// Set default values for time pregnant, etc and then calls FillGroup() to re-display the controls
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ClickCattlePreg(object sender, EventArgs e)
+        {
+            if (!this.filling)
+            {
+                AnimalInits animals = this.animalInits[this.currentGroup];
+                if (this.rbEmpty.Active)
+                {
+                    animals.Pregnant = 0;
+                }
+                else if (this.rbPreg.Active)
+                {
+                    if (animals.Pregnant == 0)
+                    {
+                        animals.Pregnant = 120;
+                    }
+                }
+
+                this.animalInits[this.currentGroup] = animals;
+                this.FillCurrentGroup();
+                this.CheckCurrGroup(null, false);
+            }
+        }
+
+        /// <summary>
+        /// Handler for changing the cattle lactation
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ClickCattleLact(object sender, EventArgs e)
+        {
+            if (!this.filling)
+            {
+                AnimalInits animals = this.animalInits[this.currentGroup];
+                if (this.rbNoLact.Active)
+                {
+                    // Not lactating                         
+                    animals.Lactating = 0;
+                    animals.NumSuckling = 0;
+                    animals.YoungWt = 0;
+                    animals.BirthCS = 0;
+                }
+                else if (this.rbLac.Active)
+                {
+                    // Lactating, calves suckling            
+                    if (animals.NumSuckling == 0)
+                    {
+                        animals.Lactating = 30;
+                        animals.YoungWt = 100;
+                        animals.BirthCS = 3.0;
+                    }
+                    animals.NumSuckling = 1;
+                }
+                else if (this.rbLactCalf.Active)
+                {
+                    // Lactating, no calves suckling         
+                    if ((animals.Lactating == 0) || (animals.NumSuckling > 0))
+                    {
+                        animals.Lactating = 150;
+                        animals.BirthCS = 3.0;
+                    }
+                    animals.NumSuckling = 0;
+                    animals.YoungWt = 0;
+                }
+
+                this.animalInits[this.currentGroup] = animals;
+                this.FillCurrentGroup();
+                this.CheckCurrGroup(null, false);
+            }
+        }
+        #endregion Animals tab ==================
     }
 }
 
