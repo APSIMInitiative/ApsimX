@@ -158,6 +158,7 @@
     <Compile Include="Soils\MockNutrientPool.cs" />
     <Compile Include="MockPostSimulationTool.cs" />
     <Compile Include="MockModelThatThrows.cs" />
+    <Compile Include="Soils\MockSoilTemperature.cs" />
     <Compile Include="Soils\SoilStandardiserTests.cs" />
     <Compile Include="Storage\DataStoreReaderTests.cs" />
     <Compile Include="Report\ReportDataTests.cs" />
@@ -264,6 +265,7 @@
     <EmbeddedResource Include="Core\ApsimFile\ManagerConverterTestsReplaceManagerTextRegex.json" />
     <EmbeddedResource Include="Sensitivity\MorrisTestsBroken.apsimx" />
     <EmbeddedResource Include="Report\ReportOnEvents.apsimx" />
+    <EmbeddedResource Include="Resources\WheatModel.apsimx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\APSIM.Shared\APSIM.Shared.csproj">

@@ -803,13 +803,14 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Event handler for a User interface "Create documentation" action
+        /// Event handler for a User interface "Create documentation from simulations" action
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
         [ContextMenu(MenuName = "Create documentation",
+                     AppliesTo = new Type[] { typeof(Simulations) },
                      FollowsSeparator = true)]
-        public void CreateDocumentation(object sender, EventArgs e)
+        public void CreateFileDocumentation(object sender, EventArgs e)
         {
             try
             {
@@ -823,16 +824,8 @@ namespace UserInterface.Presenters
                     var modelToDocument = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
 
                     var destinationFolder = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
-                    if (modelToDocument is Simulations)
-                    {
-                        command = new CreateDocCommand(explorerPresenter, destinationFolder);
-                        fileNameWritten = (command as CreateDocCommand).FileNameWritten;
-                    }
-                    else
-                    {
-                        command = new CreateModelDescriptionDocCommand(explorerPresenter, modelToDocument, destinationFolder);
-                        fileNameWritten = (command as CreateModelDescriptionDocCommand).FileNameWritten;
-                    }
+                    command = new CreateFileDocumentationCommand(explorerPresenter, destinationFolder);
+                    fileNameWritten = (command as CreateFileDocumentationCommand).FileNameWritten;
 
                     explorerPresenter.CommandHistory.Add(command, true);
                     explorerPresenter.MainPresenter.ShowMessage("Written " + fileNameWritten, Simulation.MessageType.Information);
@@ -856,7 +849,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Include in documentation", IsToggle = true)]
+        [ContextMenu(MenuName = "Include in documentation", IsToggle = true, FollowsSeparator = true)]
         public void IncludeInDocumentation(object sender, EventArgs e)
         {
             try
@@ -894,7 +887,8 @@ namespace UserInterface.Presenters
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
         [ContextMenu(MenuName = "Show page of graphs in documentation", IsToggle = true,
-                     AppliesTo = new Type[] { typeof(Folder) })]
+                     AppliesTo = new Type[] { typeof(Folder) },
+                     FollowsSeparator = true)]
         public void ShowPageOfGraphs(object sender, EventArgs e)
         {
             try

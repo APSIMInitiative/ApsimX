@@ -70,10 +70,11 @@ namespace Models.LifeCycle
             get
             {
                 double sum = 0;
-                foreach (LifeStage stage in ChildStages)
-                {
-                    sum += stage.TotalPopulation;
-                }
+                if (ChildStages != null)
+                    foreach (LifeStage stage in ChildStages)
+                    {
+                        sum += stage.TotalPopulation;
+                    }
                 return sum;
             }
         }

@@ -11,17 +11,11 @@
     using System.Reflection;
 
     /// <summary>
-    /// This command creates documentation for a model a.k.a. auto-doc
+    /// This command creates documentation for a file. e.g. wheat validation or tutorial
     /// </summary>
-    public class CreateDocCommand : ICommand
+    public class CreateFileDocumentationCommand : ICommand
     {
         private ExplorerPresenter explorerPresenter;
-
-        /// <summary>A .bib file instance.</summary>
-        private BibTeX bibTeX;
-
-        /// <summary>A list of all citations found.</summary>
-        private List<BibTeX.Citation> citations;
 
         /// <summary>The name of the model to document.</summary>
         private string modelNameToDocument;
@@ -30,10 +24,10 @@
         public string FileNameWritten { get; private set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CreateDocCommand"/> class.
+        /// Initializes a new instance of the <see cref="CreateFileDocumentationCommand"/> class.
         /// </summary>
         /// <param name="explorerPresenter">The explorer presenter.</param>
-        public CreateDocCommand(ExplorerPresenter explorerPresenter, string destinationFolder)
+        public CreateFileDocumentationCommand(ExplorerPresenter explorerPresenter, string destinationFolder)
         {
             this.explorerPresenter = explorerPresenter;
             modelNameToDocument = Path.GetFileNameWithoutExtension(explorerPresenter.ApsimXFile.FileName.Replace("Validation", string.Empty));
@@ -46,12 +40,7 @@
         /// </summary>
         public void Do(CommandHistory commandHistory)
         {
-            string bibFile = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "..", "APSIM.bib");
-            bibTeX = new BibTeX(bibFile);
-            citations = new List<BibTeX.Citation>();
-
             CreatePDF(modelNameToDocument);
-            citations.Clear();
         }
 
         /// <summary>
@@ -98,11 +87,6 @@
                 else if (child.Name == "Validation")
                     AddStatistics(tags);
             }
-            // Scan for citations.
-            ScanForCitations(tags);
-
-            // Create a bibliography.
-            CreateBibliography(tags);
 
             // Write the PDF.
             pdfWriter.CreatePDF(tags, FileNameWritten);
@@ -189,96 +173,5 @@
             tags.Add(new AutoDocumentation.Heading("APSIM Description", 1));
             tags.Add(new AutoDocumentation.Paragraph(text, 0));
         }
-
-        /// <summary>Scans for citations.</summary>
-        /// <param name="t">The tags to go through looking for citations.</param>
-        private void ScanForCitations(List<AutoDocumentation.ITag> tags)
-        {
-            foreach (AutoDocumentation.ITag tag in tags)
-            {
-                if (tag is AutoDocumentation.Paragraph)
-                {
-                    AutoDocumentation.Paragraph paragraph = tag as AutoDocumentation.Paragraph;
-                    string text = paragraph.text;
-
-                    // citations are of the form [Brown et al. 2014][brown_plant_2014]
-                    // where the second bracketed value is the bibliography reference name. i.e.
-                    // the bit we're interested in.
-                    int posBracket = text.IndexOf('[');
-                    while (posBracket != -1)
-                    {
-                        int posEndBracket = text.IndexOf(']', posBracket);
-                        if (posEndBracket != -1)
-                        {
-                            // found a possible citation.
-                            string citationName = text.Substring(posBracket + 1, posEndBracket - posBracket - 1);
-                            string[] inTextCitations = citationName.Split("; ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                            string replacementText = string.Empty;
-
-                            foreach (string inTextCitation in inTextCitations)
-                            {
-                                // see if we have already encountered the citation.
-                                BibTeX.Citation citation = citations.Find(c => c.Name == inTextCitation);
-
-                                // If we haven't encountered it, look it up in the .bib file.
-                                if (citation == null)
-                                {
-                                    citation = bibTeX.Lookup(inTextCitation);
-                                    if (citation != null)
-                                        citations.Add(citation);
-                                }
-
-                                if (citation != null)
-                                {
-                                    // Replace the in-text citation with (author et al., year)
-                                    if (replacementText != string.Empty)
-                                        replacementText += "; ";
-                                    replacementText += string.Format("<a href=\"#{0}\">{1}</a>", citation.Name, citation.InTextCite);
-                                }
-                            }
-
-                            if (replacementText != string.Empty)
-                            {
-                                text = text.Remove(posBracket, posEndBracket - posBracket + 1);
-                                text = text.Insert(posBracket, replacementText);
-                            }
-                        }
-
-                        // Find the next bracketed potential citation.
-                        posBracket = text.IndexOf('[', posEndBracket + 1);
-                    }
-
-                    paragraph.text = text;
-                }
-            }
-        }
-
-        /// <summary>Creates the bibliography.</summary>
-        /// <param name="tags">The tags to add to.</param>
-        private void CreateBibliography(List<AutoDocumentation.ITag> tags)
-        {
-            if (citations.Count > 0)
-            {
-                // Create the heading.
-                tags.Add(new AutoDocumentation.Heading("References", 1));
-
-                citations.Sort(new BibTeX.CitationComparer());
-                foreach (BibTeX.Citation citation in citations)
-                {
-                    string url = citation.URL;
-                    string text;
-                    if (url != string.Empty)
-                        text = string.Format("<a href=\"{0}\">{1}</a>", url, citation.BibliographyText);
-                    else
-                        text = citation.BibliographyText;
-
-                    AutoDocumentation.Paragraph paragraph = new AutoDocumentation.Paragraph(text, 0);
-                    paragraph.bookmarkName = citation.Name;
-                    paragraph.handingIndent = true;
-                    tags.Add(paragraph);
-                }
-            }
-        }
-
     }
 }

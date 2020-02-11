@@ -25,6 +25,8 @@ namespace Models.Core
     /// </summary>
     [Serializable]
     [ScopedModel]
+    [ViewName("UserInterface.Views.HTMLView")]
+    [PresenterName("UserInterface.Presenters.GenericPresenter")]
     public class Simulations : Model, ISimulationEngine
     {
         [NonSerialized]

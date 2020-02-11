@@ -1,10 +1,11 @@
 {
     "Tables": [
         {
-            "Title": "Model documentation",
+            "Title": "",
             "Columns": [
                 "Name",
-                "Inputs/Outputs",
+                "Documentation",
+                "Params/Inputs/Outputs",
                 "Detailed"
             ],
             "Rows": [
@@ -65,6 +66,15 @@
                             "Name": "PDF",
                             "FileName": "Tests\\Validation\\Chicory\\Chicory.apsimx",
                             "ModelNameToDocument": "Chicory"
+                        }
+                    ]
+                },
+                {
+                    "Name": "Clock",
+                    "Documents": [
+                        {
+                            "Name": "PDF",
+                            "FileName": "Tests\\Validation\\Clock\\Clock.apsimx"
                         }
                     ]
                 },
@@ -209,15 +219,6 @@
                     ]
                 },
                 {
-                    "Name": "Report",
-                    "Documents": [
-                        {
-                            "Name": "PDF",
-                            "FileName": "Examples\\Report.apsimx"
-                        }
-                    ]
-                },
-                {
                     "Name": "SCRUM",
                     "Documents": [
                         {
@@ -343,7 +344,7 @@
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Examples\\ManagerExamples\\ClimateController.apsimx"
+                            "FileName": "Examples\\Tutorials\\ClimateController.apsimx"
                         }
                     ]
                 },
@@ -353,6 +354,15 @@
                         {
                             "Name": "PDF",
                             "FileName": "Examples\\Tutorials\\Lifecycle.apsimx"
+                        }
+                    ]
+                },
+                {
+                    "Name": "Manager",
+                    "Documents": [
+                        {
+                            "Name": "PDF",
+                            "FileName": "Examples\\Tutorials\\Manager.apsimx"
                         }
                     ]
                 },
@@ -382,8 +392,16 @@
                             "FileName": "Examples\\Tutorials\\Sensitivity_FactorialANOVA.apsimx"
                         }
                     ]
+                },
+                {
+                    "Name": "Report",
+                    "Documents": [
+                        {
+                            "Name": "PDF",
+                            "FileName": "Examples\\Tutorials\\Report.apsimx"
+                        }
+                    ]
                 }
-
             ]
         },
         {

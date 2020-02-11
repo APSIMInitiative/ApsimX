@@ -69,9 +69,6 @@
                 else
                     modelToAdd = Structure.Add(child, parent);
 
-                if (modelToAdd is Simulations && modelToAdd.Children.Count == 1)
-                    modelToAdd = modelToAdd.Children[0];
-
                 presenter.AddChildToTree(parentPath, modelToAdd);
                 modelAdded = true;
             }
