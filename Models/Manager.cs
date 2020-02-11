@@ -348,7 +348,13 @@
                     var emitResult = compilation.Emit(ms, pdbStream);
                     if (!emitResult.Success)
                     {
-                        throw new Exception("Cannot compile manager script to an assembly");
+                        string Errors = "Cannot compile manager script to an assembly";
+                        foreach (Diagnostic diag in emitResult.Diagnostics)
+                        {
+                            if (diag.Severity == DiagnosticSeverity.Error)
+                                Errors += "\r\n" + diag.ToString();
+                        }
+                        throw new Exception(Errors);
                     }
                     ms.Seek(0, SeekOrigin.Begin);
                     return System.Runtime.Loader.AssemblyLoadContext.Default.LoadFromStream(ms);
