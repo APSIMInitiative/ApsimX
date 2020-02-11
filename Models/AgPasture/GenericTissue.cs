@@ -5,6 +5,7 @@
     using Models.PMF;
     using Models.Surface;
     using System;
+    using System.Xml.Serialization;
 
     /// <summary>Describes a generic tissue of a pasture species.</summary>
     [Serializable]
@@ -23,16 +24,20 @@
         ////- Characteristics (parameters) >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Gets or sets the fraction of luxury N remobilisable per day (0-1).</summary>
-        internal double FractionNLuxuryRemobilisable = 0.0;
+        [XmlIgnore]
+        public double FractionNLuxuryRemobilisable { get; set; } = 0.1;
 
         /// <summary>Gets or sets the sugar fraction on new growth, i.e. soluble carbohydrate (0-1).</summary>
-        internal double FractionSugarNewGrowth = 0.0;
+        [XmlIgnore]
+        public double FractionSugarNewGrowth { get; set; } = 0.0;
 
         /// <summary>Gets or sets the digestibility of cell walls (0-1).</summary>
-        internal double DigestibilityCellWall = 0.5;
+        [XmlIgnore]
+        public double DigestibilityCellWall { get; set; } = 0.5;
 
         /// <summary>Gets or sets the digestibility of proteins (0-1).</summary>
-        internal double DigestibilityProtein = 1.0;
+        [XmlIgnore]
+        public double DigestibilityProtein { get; set; } = 1.0;
 
         ////- State properties >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

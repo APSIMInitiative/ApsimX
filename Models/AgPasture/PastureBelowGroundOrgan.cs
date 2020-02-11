@@ -38,7 +38,6 @@
         /// <param name="minNconc">The minimum N concentration</param>
         /// <param name="maxNconc">The maximum N concentration</param>
         /// <param name="minLiveDM">The minimum biomass for this organ</param>
-        /// <param name="fractionLuxNremobilisable">Fraction of luxury N that can be remobilise in one day</param>
         /// <param name="specificRootLength">The specific root length (m/g)</param>
         /// <param name="rootDepthMaximum">The maximum root depth</param>
         /// <param name="rootDistributionDepthParam">Parameter to compute root distribution, depth with constant root</param>
@@ -58,7 +57,7 @@
         public PastureBelowGroundOrgan(string nameOfSpecies, int numTissues,
                                        double initialDM, double initialDepth,
                                        double optNconc, double minNconc, double maxNconc,
-                                       double minLiveDM, double fractionLuxNremobilisable,
+                                       double minLiveDM,
                                        double specificRootLength, double rootDepthMaximum,
                                        double rootDistributionDepthParam, double rootDistributionExponent,
                                        double rootBottomDistributionFactor,
@@ -86,7 +85,6 @@
             NConcMinimum = minNconc;
             NConcMaximum = maxNconc;
             MinimumLiveDM = minLiveDM;
-            Tissue[0].FractionNLuxuryRemobilisable = fractionLuxNremobilisable;
             mySpecificRootLength = specificRootLength;
             myRootDepthMaximum = rootDepthMaximum;
             myRootDistributionDepthParam = rootDistributionDepthParam;

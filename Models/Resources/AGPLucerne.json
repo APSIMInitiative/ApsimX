@@ -67,11 +67,6 @@
       "TurnoverDroughtThreshold": 0.5,
       "TurnoverDefoliationCoefficient": 0.5,
       "TurnoverDefoliationRootEffect": 0.2,
-      "FractionNLuxuryRemobilisable": [
-        0.1,
-        0.1,
-        0.1
-      ],
       "MinimumNFixation": 0.4,
       "MaximumNFixation": 0.6,
       "SoilSaturationEffectMax": 0.1,
@@ -89,12 +84,6 @@
       "RootElongationRate": 25.0,
       "RootDistributionDepthParam": 250.0,
       "RootDistributionExponent": 3.2,
-      "DigestibilitiesCellWall": [
-        0.7,
-        0.7,
-        0.7,
-        0.2
-      ],
       "MinimumGreenWt": 50.0,
       "PreferenceForGreenOverDead": 1.0,
       "PreferenceForLeafOverStems": 1.0,
@@ -129,7 +118,6 @@
       "SoilFertilityGLF": 1.0,
       "rootDistributionDepthParam": 100.0,
       "rootDistributionExponent": 3.7,
-      "SugarFractionNewGrowth": 0.5,
       "referenceRLD": 5.0,
       "ReferenceKSuptake": 15.0,
       "NuptakeSWFactor": 0.25,
@@ -142,11 +130,13 @@
 		  "NConcOptimum": 0.04,
 		  "NConcMinimum": 0.012,
    		  "NConcMaximum": 0.05,
-          "Name": "Leaves",
+          "Name": "Leaf",
           "Children": [
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
-              "Name": "Emerging",
+              "FractionSugarNewGrowth": 0.5,
+              "DigestibilityCellWall": 0.7,
+              "Name": "EmergingTissue",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -154,7 +144,8 @@
             },
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
-              "Name": "Developing",
+              "DigestibilityCellWall": 0.7,
+              "Name": "DevelopingTissue",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -162,7 +153,8 @@
             },
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
-              "Name": "Mature",
+              "DigestibilityCellWall": 0.7,
+              "Name": "MatureTissue",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -170,7 +162,9 @@
             },
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
-              "Name": "Dead",
+			  "FractionNLuxuryRemobilisable": 0,
+              "DigestibilityCellWall": 0.2,
+              "Name": "DeadTissue",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -186,11 +180,13 @@
 		  "NConcOptimum": 0.02,
 		  "NConcMinimum": 0.006,
    		  "NConcMaximum": 0.025,
-          "Name": "Stems",
+          "Name": "Stem",
           "Children": [
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
-              "Name": "Emerging",
+              "FractionSugarNewGrowth": 0.5,
+              "DigestibilityCellWall": 0.7,
+              "Name": "EmergingTissue",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -198,7 +194,8 @@
             },
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
-              "Name": "Developing",
+              "DigestibilityCellWall": 0.7,
+              "Name": "DevelopingTissue",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -206,7 +203,8 @@
             },
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
-              "Name": "Mature",
+              "DigestibilityCellWall": 0.7,
+              "Name": "MatureTissue",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -214,7 +212,9 @@
             },
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
-              "Name": "Dead",
+			  "FractionNLuxuryRemobilisable": 0,
+              "DigestibilityCellWall": 0.2,
+              "Name": "DeadTissue",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -231,11 +231,13 @@
 		  "NConcOptimum": 0.0,
 		  "NConcMinimum": 0.0,
    		  "NConcMaximum": 0.0,
-          "Name": "Stolons",
+          "Name": "Stolon",
           "Children": [
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
-              "Name": "Emerging",
+              "FractionSugarNewGrowth": 0.5,
+              "DigestibilityCellWall": 0.7,
+              "Name": "EmergingTissue",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -243,7 +245,8 @@
             },
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
-              "Name": "Developing",
+              "DigestibilityCellWall": 0.7,
+              "Name": "DevelopingTissue",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -251,7 +254,8 @@
             },
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
-              "Name": "Mature",
+              "DigestibilityCellWall": 0.7,
+              "Name": "MatureTissue",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -259,7 +263,9 @@
             },
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
-              "Name": "Dead",
+			  "FractionNLuxuryRemobilisable": 0,
+              "DigestibilityCellWall": 0.2,
+              "Name": "DeadTissue",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,

@@ -16,6 +16,22 @@
         [Link(Type = LinkType.Child)]
         public GenericTissue[] Tissue;
 
+        /// <summary>The emerging tissue.</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        public GenericTissue EmergingTissue { get; private set; }
+
+        /// <summary>The developing tissue.</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        public GenericTissue DevelopingTissue { get; private set; }
+
+        /// <summary>The mature tissue.</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        public GenericTissue MatureTissue { get; private set; }
+
+        /// <summary>The mature tissue.</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        public GenericTissue DeadTissue { get; private set; }
+
         /// <summary>List of BiomassRemovalTypes with default biomass removal fractions for given removal types.</summary>
         private Dictionary<string, OrganBiomassRemovalType> defaultRemovalFractions = new Dictionary<string, OrganBiomassRemovalType>();
 
