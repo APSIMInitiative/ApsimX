@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
-  "Version": 77,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-02-12",
+  "ExplorerWidth": 282,
+  "Version": 78,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-02-13",
   "Name": "Simulations",
   "Children": [
     {
@@ -76,12 +76,12 @@
           "Name": "Field",
           "Children": [
             {
-              "$type": "Models.SimpleGrazing, Models",
+              "$type": "Models.AgPasture.SimpleGrazing, Models",
               "Verbose": true,
               "GrazingRotationType": 0,
               "SimpleGrazingFrequency": 21,
-              "SimpleGrazingResidual": 2000.0,
               "SimpleMinGrazable": 3500.0,
+              "SimpleGrazingResidual": 2000.0,
               "PreGrazeDMArray": [
                 1000.0,
                 1000.0,
@@ -1513,12 +1513,12 @@
           "Name": "Field",
           "Children": [
             {
-              "$type": "Models.SimpleGrazing, Models",
+              "$type": "Models.AgPasture.SimpleGrazing, Models",
               "Verbose": true,
               "GrazingRotationType": 1,
               "SimpleGrazingFrequency": 21,
-              "SimpleGrazingResidual": 2000.0,
               "SimpleMinGrazable": 3500.0,
+              "SimpleGrazingResidual": 2000.0,
               "PreGrazeDMArray": [
                 3500.0,
                 3500.0,
@@ -2983,12 +2983,12 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.SimpleGrazing, Models",
+              "$type": "Models.AgPasture.SimpleGrazing, Models",
               "Verbose": true,
               "GrazingRotationType": 2,
               "SimpleGrazingFrequency": 21,
-              "SimpleGrazingResidual": 2000.0,
               "SimpleMinGrazable": 3500.0,
+              "SimpleGrazingResidual": 2000.0,
               "PreGrazeDMArray": [
                 3500.0,
                 3500.0,
@@ -4432,12 +4432,12 @@
           "Name": "Field",
           "Children": [
             {
-              "$type": "Models.SimpleGrazing, Models",
+              "$type": "Models.AgPasture.SimpleGrazing, Models",
               "Verbose": true,
               "GrazingRotationType": 3,
               "SimpleGrazingFrequency": 21,
-              "SimpleGrazingResidual": 2000.0,
               "SimpleMinGrazable": 3500.0,
+              "SimpleGrazingResidual": 2000.0,
               "PreGrazeDMArray": [
                 3500.0,
                 3500.0,
@@ -5868,12 +5868,12 @@
           "Name": "Field",
           "Children": [
             {
-              "$type": "Models.SimpleGrazing, Models",
+              "$type": "Models.AgPasture.SimpleGrazing, Models",
               "Verbose": true,
               "GrazingRotationType": 3,
               "SimpleGrazingFrequency": 21,
-              "SimpleGrazingResidual": 2000.0,
               "SimpleMinGrazable": 1000.0,
+              "SimpleGrazingResidual": 2000.0,
               "PreGrazeDMArray": [
                 3200.0,
                 3200.0,
