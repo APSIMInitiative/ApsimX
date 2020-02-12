@@ -17,7 +17,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 77; } }
+        public static int LatestVersion { get { return 78; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1533,6 +1533,19 @@
             foreach (var stock in JsonUtilities.ChildrenOfType(root, "Stock"))
             {
                 JsonUtilities.SearchReplaceReportVariableNames(stock, ".GenoTypes", ".Genotypes");
+            }
+        }
+
+        /// <summary>
+        /// Change the namespace for SimpleGrazing
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion78(JObject root, string fileName)
+        {
+            foreach (var simpleGrazing in JsonUtilities.ChildrenOfType(root, "SimpleGrazing"))
+            {
+                simpleGrazing["$type"] = "Models.AgPasture.SimpleGrazing, Models";
             }
         }
 
