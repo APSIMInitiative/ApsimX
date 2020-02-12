@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 78,
+  "Version": 79,
   "Name": "Simulations",
   "Children": [
     {
@@ -93,9 +93,9 @@
       "Children": [
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
-		  "NConcOptimum": 0.045,
-		  "NConcMinimum": 0.02,
-   		  "NConcMaximum": 0.055,
+          "NConcOptimum": 0.045,
+          "NConcMinimum": 0.02,
+          "NConcMaximum": 0.055,
           "Name": "Leaf",
           "Children": [
             {
@@ -128,7 +128,7 @@
             },
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
-			  "FractionNLuxuryRemobilisable": 0,
+              "FractionNLuxuryRemobilisable": 0,
               "DigestibilityCellWall": 0.2,
               "Name": "DeadTissue",
               "Children": [],
@@ -143,9 +143,9 @@
         },
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
-		  "NConcOptimum": 0.0225,
-		  "NConcMinimum": 0.01,
-   		  "NConcMaximum": 0.0275,
+          "NConcOptimum": 0.0225,
+          "NConcMinimum": 0.01,
+          "NConcMaximum": 0.0275,
           "Name": "Stem",
           "Children": [
             {
@@ -178,7 +178,7 @@
             },
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
-			  "FractionNLuxuryRemobilisable": 0,
+              "FractionNLuxuryRemobilisable": 0,
               "DigestibilityCellWall": 0.2,
               "Name": "DeadTissue",
               "Children": [],
@@ -194,9 +194,9 @@
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
           "FractionStanding": 0.3,
-		  "NConcOptimum": 0.0225,
-		  "NConcMinimum": 0.01,
-   		  "NConcMaximum": 0.0275,
+          "NConcOptimum": 0.0225,
+          "NConcMinimum": 0.01,
+          "NConcMaximum": 0.0275,
           "Name": "Stolon",
           "Children": [
             {
@@ -229,7 +229,7 @@
             },
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
-			  "FractionNLuxuryRemobilisable": 0,
+              "FractionNLuxuryRemobilisable": 0,
               "DigestibilityCellWall": 0.2,
               "Name": "DeadTissue",
               "Children": [],
