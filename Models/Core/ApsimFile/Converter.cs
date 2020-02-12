@@ -1519,6 +1519,24 @@
         }
 
         /// <summary>
+        /// Change the property in Stock to Genotypes
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion77(JObject root, string fileName)
+        {
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                if (manager.Replace(".GenoTypes", ".Genotypes"))
+                    manager.Save();
+            }
+            foreach (var stock in JsonUtilities.ChildrenOfType(root, "Stock"))
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(stock, ".GenoTypes", ".Genotypes");
+            }
+        }
+
+        /// <summary>
         /// Change the namespace for SimpleGrazing
         /// </summary>
         /// <param name="root"></param>
