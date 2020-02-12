@@ -1537,41 +1537,15 @@
         }
 
         /// <summary>
-        /// Change manager method and AgPasture variable names.
+        /// Change the namespace for SimpleGrazing
         /// </summary>
         /// <param name="root"></param>
         /// <param name="fileName"></param>
         private static void UpgradeToVersion78(JObject root, string fileName)
         {
-            Tuple<string, string>[] changes = 
-            { 
-                new Tuple<string, string>(".Graze(", ".RemoveBiomass("),
-                new Tuple<string, string>(".EmergingTissuesWt",   ".EmergingTissue.Wt"),
-                new Tuple<string, string>(".EmergingTissuesN",    ".EmergingTissue.N"),
-                new Tuple<string, string>(".DevelopingTissuesWt", ".DevelopingTissue.Wt"),
-                new Tuple<string, string>(".DevelopingTissuesN",  ".DevelopingTissue.N"),
-                new Tuple<string, string>(".MatureTissuesWt", ".MatureTissue.Wt"),
-                new Tuple<string, string>(".MatureTissuesN",  ".MatureTissue.N"),
-                new Tuple<string, string>(".DeadTissuesWt", ".DeadTissue.Wt"),
-                new Tuple<string, string>(".DeadTissuesN",  ".DeadTissue.N")
-            };
-
-            foreach (var manager in JsonUtilities.ChildManagers(root))
+            foreach (var simpleGrazing in JsonUtilities.ChildrenOfType(root, "SimpleGrazing"))
             {
-                bool managerChanged = false;
-
-                foreach (var replacement in changes)
-                {
-                    if (manager.Replace(replacement.Item1, replacement.Item2))
-                        managerChanged = true;
-                }
-                if (managerChanged)
-                    manager.Save();
-            }
-            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
-            {
-                foreach (var replacement in changes)
-                    JsonUtilities.SearchReplaceReportVariableNames(report, replacement.Item1, replacement.Item2);
+                simpleGrazing["$type"] = "Models.AgPasture.SimpleGrazing, Models";
             }
         }
 
@@ -1581,7 +1555,7 @@
         /// <param name="root">The root JSON token.</param>
         /// <param name="fileName">The name of the apsimx file.</param>
         private static void UpgradeToVersion99(JObject root, string fileName)
-    {
+        {
             // Delete all alias children.
             foreach (var soilNitrogen in JsonUtilities.ChildrenOfType(root, "SoilNitrogen"))
             {
