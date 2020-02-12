@@ -312,10 +312,10 @@ namespace Models.CLEM.Activities
                             female.SucklingOffspringList.Add(newCalfRuminant);
                             // remove calf weight from female
                             female.WeightLossDueToCalf += newCalfRuminant.Weight;
+                            // this now reports for each individual born not a birth event as individual wean events are reported
+                            female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Birth, female, Clock.Today));
                         }
                         female.UpdateBirthDetails();
-                        // report conception status changed when last multiple birth dies.
-                        female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Birth, female, Clock.Today));
                         this.Status = ActivityStatus.Success;
                     }
                 }
