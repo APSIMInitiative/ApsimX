@@ -116,11 +116,11 @@ namespace Models.CLEM.Activities
         // private properties
         private double unitsOfArea2Ha;
         private IFileGRASP FileGRASP = null;
-        private double pkGrassBA = 0; //rounded (1 decimal place) integer value used as primary key in GRASP file.
-        private double pkLandCon = 0; //rounded (1decimal place) double value used as primary key in GRASP file.
+        //private double pkGrassBA = 0; //rounded (1 decimal place) integer value used as primary key in GRASP file.
+        //private double pkLandCon = 0; //rounded (1decimal place) double value used as primary key in GRASP file.
         private string soilIndex = "0"; // obtained from LandType used
         private double StockingRateSummed;  //summed since last Ecological Calculation.
-        private double pkStkRate = 0; //rounded integer value used as primary key in GRASP file.
+        //private double pkStkRate = 0; //rounded integer value used as primary key in GRASP file.
         private double ha2sqkm = 0.01; //convert ha to square km
         private bool gotLandRequested = false; //was this pasture able to get the land it requested ?
         //EcologicalCalculationIntervals worth of data read from GRASP file 
@@ -273,10 +273,10 @@ namespace Models.CLEM.Activities
                         Age = 0
                     };
                     newPasture.Set(growth * Area);
-                    newPasture.Growth = growth * Area;
                     newPasture.Nitrogen = this.LinkedNativeFoodType.GreenNitrogen; 
                     newPasture.DMD = newPasture.Nitrogen * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
                     newPasture.DMD = Math.Min(100,Math.Max(LinkedNativeFoodType.MinimumDMD, newPasture.DMD));
+                    newPasture.Growth = newPasture.Amount;
                     this.LinkedNativeFoodType.Add(newPasture,this,"Growth");
                 }
             }
@@ -376,7 +376,6 @@ namespace Models.CLEM.Activities
             foreach (var pool in newPools)
             {
                 pool.Set(amountToAdd * (pool.StartingAmount / total));
-                pool.Growth = amountToAdd * (pool.StartingAmount / total);
             }
 
             // Previously: remove this months growth from pool age 0 to keep biomass at approximately setup.
@@ -491,10 +490,6 @@ namespace Models.CLEM.Activities
             // every so many months (specified by  not every month.
             // And the month they are updated on each year is whatever the starting month was for the run.
 
-            //round the doubles to nearest integers so can be used as primary key
-            double landConditionIndex = LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex;
-            double grassBasalArea = LinkedNativeFoodType.CurrentEcologicalIndicators.GrassBasalArea;
-
             // Shaun's code. back to front from NABSA
             //pkGrassBA = (int)(Math.Round(grassBasalArea / 2, 0) * 2); //weird way but this is how NABSA does it.
             //pkLandCon = (int)(Math.Round((landConditionIndex - 1.1) / 2, 0) * 2 + 1);
@@ -505,17 +500,8 @@ namespace Models.CLEM.Activities
             //pkLandCon = (int)(Math.Round(landConditionIndex / 2, 0) * 2); //weird way but this is how NABSA does it.
             //pkGrassBA = (int)(Math.Round((grassBasalArea - 1.1) / 2, 0) * 2 + 1);
 
-            pkLandCon = Math.Round(landConditionIndex, 1);
-            //pkLandCon = Math.Min(10, Math.Max(0, pkLandCon));
-            pkGrassBA = Math.Round(grassBasalArea, 1);
-            //pkGrassBA = Math.Min(6, Math.Max(0, pkGrassBA));
-
-            double stockingRate = LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate;
-            pkStkRate = Math.Round(stockingRate);
-            pkStkRate = Math.Min(70, Math.Max(1, pkStkRate));
-
             PastureDataList = FileGRASP.GetIntervalsPastureData(ZoneCLEM.ClimateRegion, soilIndex,
-               pkGrassBA, pkLandCon, pkStkRate, Clock.Today.AddDays(1), ZoneCLEM.EcologicalIndicatorsCalculationInterval);
+               LinkedNativeFoodType.CurrentEcologicalIndicators.GrassBasalArea, LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex, LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate, Clock.Today.AddDays(1), ZoneCLEM.EcologicalIndicatorsCalculationInterval);
         }
 
         // Method to listen for land use transactions 
