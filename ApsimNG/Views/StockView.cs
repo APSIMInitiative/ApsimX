@@ -123,8 +123,8 @@ namespace UserInterface.Views
         private RadioButton rbPreg = null;
         private Frame rgrpCLact = null;
         private RadioButton rbNoLact = null;
-        private RadioButton rbLac = null;
         private RadioButton rbLactCalf = null;
+        private RadioButton rbLactNoCalf = null;
         private Frame rgrpNoLambs = null;
         private RadioButton rbOneLamb = null;
         private RadioButton rbTwoLambs = null;
@@ -229,8 +229,8 @@ namespace UserInterface.Views
             rbPreg = (Gtk.RadioButton)builder.GetObject("rbPreg");
             rgrpCLact = (Frame)builder.GetObject("rgrpCLact");
             rbNoLact = (Gtk.RadioButton)builder.GetObject("rbNoLact");
-            rbLac = (Gtk.RadioButton)builder.GetObject("rbLac");
             rbLactCalf = (Gtk.RadioButton)builder.GetObject("rbLactCalf");
+            rbLactNoCalf = (Gtk.RadioButton)builder.GetObject("rbLactNoCalf");
             rgrpNoLambs = (Frame)builder.GetObject("rgrpNoLambs");
             rbOneLamb = (Gtk.RadioButton)builder.GetObject("rbOneLamb");
             rbTwoLambs = (Gtk.RadioButton)builder.GetObject("rbTwoLambs");
@@ -292,8 +292,8 @@ namespace UserInterface.Views
             this.rbEmpty.Clicked += ClickCattlePreg;
             this.rbPreg.Clicked += ClickCattlePreg;
             this.rbNoLact.Clicked += ClickCattleLact;
-            this.rbLac.Clicked += ClickCattleLact;
             this.rbLactCalf.Clicked += ClickCattleLact;
+            this.rbLactNoCalf.Clicked += ClickCattleLact;
 
             mainWidget = notebook1;
             mainWidget.Destroyed += _mainWidget_Destroyed;
@@ -1266,9 +1266,9 @@ namespace UserInterface.Views
                         if (!isLactating)
                             this.rbNoLact.Active = true;
                         else if (isLactating && hasYoung)
-                            this.rbLac.Active = true;
-                        else if (isLactating && !hasYoung)
                             this.rbLactCalf.Active = true;
+                        else if (isLactating && !hasYoung)
+                            this.rbLactNoCalf.Active = true;
 
                     this.rgrpNoLambs.Visible = (animalType == GrazType.AnimalType.Sheep) && (isPregnant || isLactating);
                     if (isPregnant)
@@ -1404,7 +1404,7 @@ namespace UserInterface.Views
                         else if (animalType == GrazType.AnimalType.Cattle)
                         {
                             isPregnant = rbPreg.Active;
-                            isLactating = rbLact.Active || rbLactCalf.Active;
+                            isLactating = rbLact.Active || rbLactNoCalf.Active;
                             hasYoung = rbLactCalf.Active;
                             if (isPregnant)
                                 animalGroup.NumFoetuses = 1;    // do we allow for twin calves?
@@ -1899,7 +1899,7 @@ namespace UserInterface.Views
                     animals.YoungWt = 0;
                     animals.BirthCS = 0;
                 }
-                else if (this.rbLac.Active)
+                else if (this.rbLactCalf.Active)
                 {
                     // Lactating, calves suckling            
                     if (animals.NumSuckling == 0)
@@ -1910,7 +1910,7 @@ namespace UserInterface.Views
                     }
                     animals.NumSuckling = 1;
                 }
-                else if (this.rbLactCalf.Active)
+                else if (this.rbLactNoCalf.Active)
                 {
                     // Lactating, no calves suckling         
                     if ((animals.Lactating == 0) || (animals.NumSuckling > 0))

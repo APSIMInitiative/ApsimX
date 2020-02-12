@@ -1255,78 +1255,6 @@
                           <placeholder/>
                         </child>
                         <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
                           <object class="GtkComboBox" id="cbxGroupGenotype">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
@@ -1682,6 +1610,9 @@
                           <placeholder/>
                         </child>
                         <child>
+                          <placeholder/>
+                        </child>
+                        <child>
                           <object class="GtkLabel" id="label29">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
@@ -1768,6 +1699,36 @@
                             <property name="n_rows">6</property>
                             <property name="n_columns">8</property>
                             <property name="row_spacing">5</property>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
+                            <child>
+                              <placeholder/>
+                            </child>
                             <child>
                               <placeholder/>
                             </child>
@@ -2134,7 +2095,7 @@
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkRadioButton" id="rbLac">
+                                      <object class="GtkRadioButton" id="rbLactCalf">
                                         <property name="label" translatable="yes">Lactating, with calf</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
@@ -2150,7 +2111,7 @@
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkRadioButton" id="rbLactCalf">
+                                      <object class="GtkRadioButton" id="rbLactNoCalf">
                                         <property name="label" translatable="yes">Lactating, no calf</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
@@ -2311,39 +2272,6 @@
                                 <property name="bottom_attach">2</property>
                                 <property name="x_padding">3</property>
                               </packing>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
                             </child>
                           </object>
                         </child>
