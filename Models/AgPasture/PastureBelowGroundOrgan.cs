@@ -518,6 +518,21 @@
 
         #region Organ methods  ---------------------------------------------------------------------------------------------
 
+
+        /// <summary>
+        /// Reset this root organ's state.
+        /// </summary>
+        /// <param name="rootWt">The amount of root biomass (kg/ha).</param>
+        /// <param name="rootDepth">The depth of roots (mm).</param>
+        public void Reset(double rootWt, double rootDepth)
+        {
+            Depth = rootDepth;
+
+            var rootFractions = CurrentRootDistributionTarget();
+            for (int i = 0; i < nLayers; i++)
+                Tissue[0].DMLayer[i] = rootWt * rootFractions[i];
+        }
+
         /// <summary>Reset all amounts to zero in all tissues of this organ.</summary>
         internal void DoResetOrgan()
         {

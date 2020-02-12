@@ -341,6 +341,46 @@
         public double StandingDigestibility { get { return DigestibilityTotal * FractionStanding; } }
 
         /// <summary>
+        /// Reset this organ's state.
+        /// </summary>
+        /// <param name="emergingWt">The amount of emerging biomass (kg/ha).</param>
+        /// <param name="developingWt">The amount of developing biomass (kg/ha).</param>
+        /// <param name="matureWt">The amount of developing biomass (kg/ha).</param>
+        /// <param name="deadWt">The amount of developing biomass (kg/ha).</param>
+        public void Reset(double emergingWt, double developingWt, double matureWt, double deadWt)
+        {
+            EmergingTissue.DM = emergingWt;
+            DevelopingTissue.DM = developingWt;
+            MatureTissue.DM = matureWt;
+            DeadTissue.DM = deadWt;
+
+            EmergingTissue.Namount = emergingWt * NConcOptimum;
+            DevelopingTissue.Namount = developingWt * NConcOptimum;
+            MatureTissue.Namount = matureWt * NConcOptimum;
+            DeadTissue.Namount = deadWt * NConcMinimum;
+        }
+
+        /// <summary>
+        /// Reset this organ's state at emergence.
+        /// </summary>
+        /// <param name="emergingWt">The amount of emerging biomass (kg/ha).</param>
+        /// <param name="developingWt">The amount of developing biomass (kg/ha).</param>
+        /// <param name="matureWt">The amount of developing biomass (kg/ha).</param>
+        /// <param name="deadWt">The amount of developing biomass (kg/ha).</param>
+        public void ResetEmergence(double emergingWt, double developingWt, double matureWt, double deadWt)
+        {
+            EmergingTissue.DM = emergingWt;
+            DevelopingTissue.DM = developingWt;
+            MatureTissue.DM = matureWt;
+            DeadTissue.DM = deadWt;
+
+            EmergingTissue.Namount = emergingWt * NConcOptimum;
+            DevelopingTissue.Namount = developingWt * NConcOptimum;
+            MatureTissue.Namount = matureWt * NConcOptimum;
+            DeadTissue.Namount = deadWt * NConcOptimum;
+        }
+
+        /// <summary>
         /// Biomass removal logic for this organ.
         /// </summary>
         /// <param name="biomassToRemove">Biomass to remove</param>

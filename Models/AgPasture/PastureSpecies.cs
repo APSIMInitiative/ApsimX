@@ -1354,9 +1354,6 @@
         [Link(Type = LinkType.Child)]
         public List<PastureAboveGroundOrgan> AboveGroundOrgans { get; private set; }
 
-        /// <summary>Holds the basic state variables for this plant (to be used for reset).</summary>
-        private SpeciesBasicStateSettings InitialState;
-
         /// <summary>Flag whether this species is alive (actively growing).</summary>
         private bool isAlive = false;
 
@@ -2958,8 +2955,10 @@
             // initialise soil water and N variables
             InitiliaseSoilArrays();
 
-            // Check and save initial state
-            CheckInitialState();
+            // Set the minimum green DM
+            leaf.MinimumLiveDM = MinimumGreenWt * MinimumGreenLeafProp;
+            stem.MinimumLiveDM = MinimumGreenWt * (1.0 - MinimumGreenLeafProp);
+            stolon.MinimumLiveDM = 0.0;
 
             // set initial plant state
             SetInitialState();
@@ -2987,8 +2986,10 @@
             mySoilNO3Uptake = new double[nLayers];
         }
 
-        /// <summary>Initialises, checks, and saves the variables representing the initial plant state.</summary>
-        private void CheckInitialState()
+        /// <summary>
+        /// Sets the initial parameters for this plant, including DM and N content of various pools plus plant height and root depth.
+        /// </summary>
+        private void SetInitialState()
         {
             // 1. Choose the appropriate DM partition, based on species family
             double[] initialDMFractions;
@@ -2999,133 +3000,62 @@
             else
                 initialDMFractions = initialDMFractionsForbs;
 
-            // 3. Save initial state (may be used later for reset)
-            InitialState = new SpeciesBasicStateSettings();
-            if (InitialShootDM > Epsilon)
-            {
-                // DM is positive, plant is on the ground and able to grow straight away
-                InitialState.PhenoStage = 1;
-                for (int pool = 0; pool < 11; pool++)
-                    InitialState.DMWeight[pool] = initialDMFractions[pool] * InitialShootDM;
-                InitialState.DMWeight[11] = InitialRootDM;
-                InitialState.RootDepth = InitialRootDepth;
-                if (InitialRootDepth > RootDepthMaximum)
-                    throw new ApsimXException(this, "The value for the initial root depth is greater than the value set for maximum depth");
+            // Determine what biomass to reset the organs to. If a negative InitialShootDM
+            // was specified by user then that means the plant isn't sown yet so reset
+            // the organs to zero biomass. This is the reason Max is used below.
+            var shootDM = Math.Max(0.0, InitialShootDM);
+            var rootDM = Math.Max(0.0, InitialRootDM);
 
-                // assume N concentration is at optimum for green pools and minimum for dead pools
-                InitialState.NAmount[0] = InitialState.DMWeight[0] * leaf.NConcOptimum;
-                InitialState.NAmount[1] = InitialState.DMWeight[1] * leaf.NConcOptimum;
-                InitialState.NAmount[2] = InitialState.DMWeight[2] * leaf.NConcOptimum;
-                InitialState.NAmount[3] = InitialState.DMWeight[3] * leaf.NConcMinimum;
-                InitialState.NAmount[4] = InitialState.DMWeight[4] * stem.NConcOptimum;
-                InitialState.NAmount[5] = InitialState.DMWeight[5] * stem.NConcOptimum;
-                InitialState.NAmount[6] = InitialState.DMWeight[6] * stem.NConcOptimum;
-                InitialState.NAmount[7] = InitialState.DMWeight[7] * stem.NConcMinimum;
-                InitialState.NAmount[8] = InitialState.DMWeight[8] * stolon.NConcOptimum;
-                InitialState.NAmount[9] = InitialState.DMWeight[9] * stolon.NConcOptimum;
-                InitialState.NAmount[10] = InitialState.DMWeight[10] * stolon.NConcOptimum;
-                InitialState.NAmount[11] = InitialState.DMWeight[11] * root[0].NConcOptimum;
-            }
-            else if (InitialShootDM > -Epsilon)
-            {
-                // DM is zero, plant has just sown and is able to germinate
-                InitialState.PhenoStage = 0;
-            }
+            // Perform the organ resets.
+            leaf.Reset(emergingWt: initialDMFractions[0] * shootDM,
+                       developingWt: initialDMFractions[1] * shootDM,
+                       matureWt: initialDMFractions[2] * shootDM,
+                       deadWt: initialDMFractions[3] * shootDM);
+
+            stem.Reset(emergingWt: initialDMFractions[4] * shootDM,
+                       developingWt: initialDMFractions[5] * shootDM,
+                       matureWt: initialDMFractions[6] * shootDM,
+                       deadWt: initialDMFractions[7] * shootDM);
+
+            stolon.Reset(emergingWt: initialDMFractions[8] * shootDM,
+                         developingWt: initialDMFractions[9] * shootDM,
+                         matureWt: initialDMFractions[10] * shootDM,
+                         deadWt: 0.0);
+
+            root[0].Reset(rootDM, InitialRootDepth);
+    
+            // Set initial phenological stage
+            if (MathUtilities.IsGreaterThan(InitialShootDM, 0))
+                phenologicStage = 1;
+            else if (MathUtilities.FloatsAreEqual(InitialShootDM, 0))
+                phenologicStage = 0;
             else
-            {
-                //DM is negative, plant is not yet in the ground 
-                InitialState.PhenoStage = -1;
-            }
+                phenologicStage = -1;
 
-            // 4. Set the minimum green DM
-            leaf.MinimumLiveDM = MinimumGreenWt * MinimumGreenLeafProp;
-            stem.MinimumLiveDM = MinimumGreenWt * (1.0 - MinimumGreenLeafProp);
-            stolon.MinimumLiveDM = 0.0;
-        }
-
-        /// <summary>
-        /// Sets the initial parameters for this plant, including DM and N content of various pools plus plant height and root depth.
-        /// </summary>
-        private void SetInitialState()
-        {
-            // 1. Initialise DM of each tissue pool above-ground (initial values supplied by user)
-            leaf.Tissue[0].DM = InitialState.DMWeight[0];
-            leaf.Tissue[1].DM = InitialState.DMWeight[1];
-            leaf.Tissue[2].DM = InitialState.DMWeight[2];
-            leaf.Tissue[3].DM = InitialState.DMWeight[3];
-            stem.Tissue[0].DM = InitialState.DMWeight[4];
-            stem.Tissue[1].DM = InitialState.DMWeight[5];
-            stem.Tissue[2].DM = InitialState.DMWeight[6];
-            stem.Tissue[3].DM = InitialState.DMWeight[7];
-            stolon.Tissue[0].DM = InitialState.DMWeight[8];
-            stolon.Tissue[1].DM = InitialState.DMWeight[9];
-            stolon.Tissue[2].DM = InitialState.DMWeight[10];
-            root[0].Tissue[0].DM = InitialState.DMWeight[11];
-
-            // 2. Set root depth and DM
-            root[0].Depth = InitialState.RootDepth;
-            double[] rootFractions = root[0].CurrentRootDistributionTarget();
-            for (int layer = 0; layer < nLayers; layer++)
-                root[0].Tissue[0].DMLayer[layer] = InitialState.DMWeight[11] * rootFractions[layer];
-
-            // 3. Initialise the N amounts in each pool above-ground (assume to be at optimum concentration)
-            leaf.Tissue[0].Namount = InitialState.NAmount[0];
-            leaf.Tissue[1].Namount = InitialState.NAmount[1];
-            leaf.Tissue[2].Namount = InitialState.NAmount[2];
-            leaf.Tissue[3].Namount = InitialState.NAmount[3];
-            stem.Tissue[0].Namount = InitialState.NAmount[4];
-            stem.Tissue[1].Namount = InitialState.NAmount[5];
-            stem.Tissue[2].Namount = InitialState.NAmount[6];
-            stem.Tissue[3].Namount = InitialState.NAmount[7];
-            stolon.Tissue[0].Namount = InitialState.NAmount[8];
-            stolon.Tissue[1].Namount = InitialState.NAmount[9];
-            stolon.Tissue[2].Namount = InitialState.NAmount[10];
-            root[0].Tissue[0].Namount = InitialState.NAmount[11];
-
-            // 5. Set initial phenological stage
-            phenologicStage = InitialState.PhenoStage;
             if (phenologicStage >= 0)
                 isAlive = true;
 
-            // 6. Calculate the values for LAI
+            // Calculate the values for LAI
             EvaluateLAI();
         }
 
         /// <summary>Set the plant state at germination.</summary>
         internal void SetEmergenceState()
         {
-            // 1. Set the above ground DM, equals MinimumGreenWt
-            leaf.Tissue[0].DM = MinimumGreenWt * emergenceDMFractions[0];
-            leaf.Tissue[1].DM = MinimumGreenWt * emergenceDMFractions[1];
-            leaf.Tissue[2].DM = MinimumGreenWt * emergenceDMFractions[2];
-            leaf.Tissue[3].DM = MinimumGreenWt * emergenceDMFractions[3];
-            stem.Tissue[0].DM = MinimumGreenWt * emergenceDMFractions[4];
-            stem.Tissue[1].DM = MinimumGreenWt * emergenceDMFractions[5];
-            stem.Tissue[2].DM = MinimumGreenWt * emergenceDMFractions[6];
-            stem.Tissue[3].DM = MinimumGreenWt * emergenceDMFractions[7];
-            stolon.Tissue[0].DM = MinimumGreenWt * emergenceDMFractions[8];
-            stolon.Tissue[1].DM = MinimumGreenWt * emergenceDMFractions[9];
-            stolon.Tissue[2].DM = MinimumGreenWt * emergenceDMFractions[10];
+            leaf.ResetEmergence(emergingWt: MinimumGreenWt * emergenceDMFractions[0],
+                                developingWt: MinimumGreenWt * emergenceDMFractions[1],
+                                matureWt: MinimumGreenWt * emergenceDMFractions[1],
+                                deadWt: MinimumGreenWt * emergenceDMFractions[3]);
+            stem.ResetEmergence(emergingWt: MinimumGreenWt * emergenceDMFractions[4],
+                                developingWt: MinimumGreenWt * emergenceDMFractions[5],
+                                matureWt: MinimumGreenWt * emergenceDMFractions[6],
+                                deadWt: MinimumGreenWt * emergenceDMFractions[7]);
+            stolon.ResetEmergence(emergingWt: MinimumGreenWt * emergenceDMFractions[8],
+                                  developingWt: MinimumGreenWt * emergenceDMFractions[9],
+                                  matureWt: MinimumGreenWt * emergenceDMFractions[10],
+                                  deadWt: 0.0);
 
-            // 2. Set root depth and DM (root DM equals shoot)
-            root[0].Depth = RootDepthMinimum;
-            double[] rootFractions = root[0].CurrentRootDistributionTarget();
-            for (int layer = 0; layer < nLayers; layer++)
-                root[0].Tissue[0].DMLayer[layer] = root[0].MinimumLiveDM * rootFractions[layer];
-
-            // 3. Set the N amounts in each plant part (assume to be at optimum)
-            leaf.Tissue[0].Nconc = leaf.NConcOptimum;
-            leaf.Tissue[1].Nconc = leaf.NConcOptimum;
-            leaf.Tissue[2].Nconc = leaf.NConcOptimum;
-            leaf.Tissue[3].Nconc = leaf.NConcOptimum;
-            stem.Tissue[0].Nconc = stem.NConcOptimum;
-            stem.Tissue[1].Nconc = stem.NConcOptimum;
-            stem.Tissue[2].Nconc = stem.NConcOptimum;
-            stem.Tissue[3].Nconc = stem.NConcOptimum;
-            stolon.Tissue[0].Nconc = stolon.NConcOptimum;
-            stolon.Tissue[1].Nconc = stolon.NConcOptimum;
-            stolon.Tissue[2].Nconc = stolon.NConcOptimum;
-            root[0].Tissue[0].Nconc = root[0].NConcOptimum;
+            root[0].Reset(root[0].MinimumLiveDM, RootDepthMinimum);
 
             // 4. Set phenological stage to vegetative
             phenologicStage = 1;
@@ -3173,63 +3103,28 @@
         /// <summary>Initialises the default biomass removal fractions.</summary>
         private void InitBiomassRemovals()
         {
-            // leaves, harvest
-            OrganBiomassRemovalType removalFractions = new OrganBiomassRemovalType();
-            removalFractions.FractionLiveToRemove = 0.5;
-            removalFractions.FractionDeadToRemove = 0.5;
-            removalFractions.FractionLiveToResidue = 0.0;
-            removalFractions.FractionDeadToResidue = 0.0;
+            // leaves, stems
+            var removalFractions = new OrganBiomassRemovalType()
+            {
+                FractionLiveToRemove = 0.5,
+                FractionDeadToRemove = 0.5
+            };
             leaf.SetRemovalFractions("Harvest", removalFractions);
-            // graze
-            removalFractions.FractionLiveToRemove = 0.5;
-            removalFractions.FractionDeadToRemove = 0.5;
-            removalFractions.FractionLiveToResidue = 0.0;
-            removalFractions.FractionDeadToResidue = 0.0;
             leaf.SetRemovalFractions("Graze", removalFractions);
-            // Cut
-            removalFractions.FractionLiveToRemove = 0.5;
-            removalFractions.FractionDeadToRemove = 0.5;
-            removalFractions.FractionLiveToResidue = 0.0;
-            removalFractions.FractionDeadToResidue = 0.0;
             leaf.SetRemovalFractions("Cut", removalFractions);
-
-            // stems, harvest
-            removalFractions.FractionLiveToRemove = 0.5;
-            removalFractions.FractionDeadToRemove = 0.5;
-            removalFractions.FractionLiveToResidue = 0.0;
-            removalFractions.FractionDeadToResidue = 0.0;
             stem.SetRemovalFractions("Harvest", removalFractions);
-            // graze
-            removalFractions.FractionLiveToRemove = 0.5;
-            removalFractions.FractionDeadToRemove = 0.5;
-            removalFractions.FractionLiveToResidue = 0.0;
-            removalFractions.FractionDeadToResidue = 0.0;
             stem.SetRemovalFractions("Graze", removalFractions);
-            // Cut
-            removalFractions.FractionLiveToRemove = 0.5;
-            removalFractions.FractionDeadToRemove = 0.5;
-            removalFractions.FractionLiveToResidue = 0.0;
-            removalFractions.FractionDeadToResidue = 0.0;
             stem.SetRemovalFractions("Cut", removalFractions);
 
-            // Stolons, harvest
-            removalFractions.FractionLiveToRemove = 0.5;
-            removalFractions.FractionDeadToRemove = 0.0;
-            removalFractions.FractionLiveToResidue = 0.0;
-            removalFractions.FractionDeadToResidue = 0.0;
-            stolon.SetRemovalFractions("Harvest", removalFractions);
-            // graze
-            removalFractions.FractionLiveToRemove = 0.5;
-            removalFractions.FractionDeadToRemove = 0.0;
-            removalFractions.FractionLiveToResidue = 0.0;
-            removalFractions.FractionDeadToResidue = 0.0;
-            stolon.SetRemovalFractions("Graze", removalFractions);
-            // Cut
-            removalFractions.FractionLiveToRemove = 0.5;
-            removalFractions.FractionDeadToRemove = 0.0;
-            removalFractions.FractionLiveToResidue = 0.0;
-            removalFractions.FractionDeadToResidue = 0.0;
-            stolon.SetRemovalFractions("Cut", removalFractions);
+            // stolon
+            var stolonRemovalFractions2 = new OrganBiomassRemovalType()
+            {
+                FractionLiveToRemove = 0.5,
+                FractionDeadToRemove = 0.0
+            };
+            stolon.SetRemovalFractions("Harvest", stolonRemovalFractions2);
+            stolon.SetRemovalFractions("Graze", stolonRemovalFractions2);
+            stolon.SetRemovalFractions("Cut", stolonRemovalFractions2);
         }
 
         #endregion  --------------------------------------------------------------------------------------------------------

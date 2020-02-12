@@ -140,7 +140,6 @@
     <Compile Include="AgPasture\GenericTissue.cs" />
     <Compile Include="AgPasture\RootTissue.cs" />
     <Compile Include="AgPasture\RootZone.cs" />
-    <Compile Include="AgPasture\SpeciesBasicStateSettings.cs" />
     <Compile Include="Agroforestry\AgroforestrySystem.cs" />
     <Compile Include="Agroforestry\LocalMicroClimate.cs" />
     <Compile Include="Agroforestry\TreeProxy.cs" />

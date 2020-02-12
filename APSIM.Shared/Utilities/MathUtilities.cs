@@ -191,7 +191,7 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         public static double Divide(double value1, double value2, double errVal)
         {
-            return (value2 == 0.0) ? errVal : value1 / value2;
+            return MathUtilities.FloatsAreEqual(value2, 0.0) ? errVal : value1 / value2;
         }
 
         /// <summary>
