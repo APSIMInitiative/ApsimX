@@ -27,8 +27,6 @@
         [Link] ISummary summary = null;
         [Link] List<IPlantDamage> forages = null;
 
-        private DateTime NoGrazingStart;
-        private DateTime NoGrazingEnd;
         private double residualBiomass;
         private CSharpExpressionFunction expressionFunction;
 
@@ -77,16 +75,16 @@
         public int SimpleGrazingFrequency { get; set; }
 
         /// <summary></summary>
+        [Description("Minimum grazeable dry matter to trigger grazing (kgDM/ha). Set to zero to turn off.")]
+        [Units("kgDM/ha")]
+        [Display(EnabledCallback = "IsSimpleGrazingTurnedOn")]
+        public double SimpleMinGrazable { get; set; }
+
+        /// <summary></summary>
         [Description("Residual pasture mass after grazing (kgDM/ha)")]
         [Units("kgDM/ha")]
         [Display(EnabledCallback = "IsSimpleGrazingTurnedOn")]
         public double SimpleGrazingResidual { get; set; }
-
-        /// <summary></summary>
-        [Description("Minimum grazeable dry matter to trigger grazing (kgDM/ha)")]
-        [Units("kgDM/ha")]
-        [Display(EnabledCallback = "IsSimpleGrazingTurnedOn")]
-        public double SimpleMinGrazable { get; set; }
 
         /// <summary></summary>
         [Separator("Settings for the 'Target Mass' - all values by month from January")]
@@ -271,11 +269,6 @@
 
             if (Verbose)
                 summary.WriteMessage(this, "Finished initialising the Manager for grazing, urine return and reporting");
-
-            if (NoGrazingStartString != null)
-                NoGrazingStart = DateUtilities.GetDate(NoGrazingStartString);
-            if (NoGrazingEndString != null)
-                NoGrazingEnd = DateUtilities.GetDate(NoGrazingEndString);
         }
 
         /// <summary>This method is invoked at the beginning of each day to perform management actions.</summary>
@@ -314,10 +307,9 @@
             else if (GrazingRotationType == GrazingRotationTypeEnum.Flexible)
                 grazeNow = FlexibleTiming();
 
-            if (NoGrazingStart != null &&
-                NoGrazingEnd != null &&
-                clock.Today.DayOfYear >= NoGrazingStart.DayOfYear &&
-                clock.Today.DayOfYear <= NoGrazingEnd.DayOfYear)
+            if (NoGrazingStartString != null &&
+                NoGrazingEndString != null &&
+                DateUtilities.WithinDates(NoGrazingStartString, clock.Today, NoGrazingEndString))
                 grazeNow = false;
 
             // Perform grazing if necessary.
@@ -392,7 +384,7 @@
                 (DaysSinceGraze >= SimpleGrazingFrequency && SimpleGrazingFrequency > 0))
             {
                 residualBiomass = SimpleGrazingResidual;
-                return PreGrazeDM > SimpleGrazingResidual + SimpleMinGrazable;
+                return PreGrazeDM > SimpleMinGrazable;
             }
             return false;
         }

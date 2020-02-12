@@ -73,20 +73,6 @@
               "SimpleGrazingResidual": 2000.0,
               "SimpleMinGrazable": 3500.0,
               "PreGrazeDMArray": [
-                1000.0,
-                1000.0,
-                1000.0,
-                1000.0,
-                1000.0,
-                1000.0,
-                1000.0,
-                1000.0,
-                1000.0,
-                1000.0,
-                1000.0,
-                1000.0
-              ],
-              "PostGrazeDMArray": [
                 2000.0,
                 2000.0,
                 2000.0,
@@ -99,6 +85,20 @@
                 2000.0,
                 2000.0,
                 2000.0
+              ],
+              "PostGrazeDMArray": [
+                1000.0,
+                1000.0,
+                1000.0,
+                1000.0,
+                1000.0,
+                1000.0,
+                1000.0,
+                1000.0,
+                1000.0,
+                1000.0,
+                1000.0,
+                1000.0
               ],
               "MaximumRotationLengthArray": null,
               "MinimumRotationLengthArray": null,
