@@ -4442,7 +4442,7 @@
             // Set outputs and check balance
             defoliatedDM = preRemovalDMShoot - AboveGroundWt;
             defoliatedN = preRemovalNShoot - AboveGroundN;
-            if (Math.Abs(defoliatedDM - amountToRemove) > Epsilon)
+            if (!MathUtilities.FloatsAreEqual(defoliatedDM, amountToRemove))
                 throw new ApsimXException(this, "  AgPasture " + Name + " - removal of DM resulted in loss of mass balance");
             else
                 mySummary.WriteMessage(this, " Biomass removed from " + Name + " by grazing: " + defoliatedDM.ToString("#0.0") + "kg/ha");
