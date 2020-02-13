@@ -61,6 +61,18 @@ namespace Models.PMF.Struct.Sorghum
 		protected SorghumArbitrator arbitrator = null;
 
 		/// <summary>
+		/// Vertical Offset for Largest Leaf Calc.
+		/// </summary>
+		[Link(Type = LinkType.Child, ByName = true)]
+		protected IFunction aMaxVert = null;
+
+		/// <summary>
+		/// Additional Vertical Offset for each additional Tiller.
+		/// </summary>
+		[Link(Type = LinkType.Child, ByName = true)]
+		protected IFunction aTillerVert = null;
+
+		/// <summary>
 		/// Expansion stress.
 		/// </summary>
 		[Link(Type = LinkType.Child, ByName = true)]
@@ -140,6 +152,25 @@ namespace Models.PMF.Struct.Sorghum
 
 		[Link(Type = LinkType.Child, ByName = true)]
 		private IFunction leafNoAtEmergence = null;
+
+		/// <summary>
+		/// Propensity to tiller.
+		/// </summary>
+		[Link(Type = LinkType.Child, ByName = true)]
+		protected IFunction tilleringPropensity = null;
+
+		/// <summary>
+		/// Tiller supply/demand ratio ratio slope.
+		/// </summary>
+		[Link(Type = LinkType.Child, ByName = true)]
+		protected IFunction tillerSdSlope = null;
+
+		/// <summary>
+		/// SLA Range.
+		/// </summary>
+		[Units("%")]
+		[Link(Type = LinkType.Child, ByName = true)]
+		protected IFunction tillerSlaBound = null;
 
 		/// <summary>
 		/// Number of tillers added.
@@ -234,16 +265,6 @@ namespace Models.PMF.Struct.Sorghum
 		protected double verticalAdjustment;
 
 		/// <summary>
-		/// Vertical Offset for Largest Leaf Calc.
-		/// </summary>
-		protected double aMaxVert;
-
-		/// <summary>
-		/// Additional Vertical Offset for each additional Tiller.
-		/// </summary>
-		protected double aTillerVert;
-
-		/// <summary>
 		/// Number of calculated tillers?
 		/// </summary>
 		protected double calculatedTillers;
@@ -310,22 +331,6 @@ namespace Models.PMF.Struct.Sorghum
 		protected const int endThermalQuotientLeafNo = 5;
 
 		/// <summary>
-		/// Propensity to tiller.
-		/// </summary>
-		protected double tilleringPropensity;
-
-		/// <summary>
-		/// Tiller supply/demand ratio ratio slope.
-		/// </summary>
-		protected double tillerSdSlope;
-
-		/// <summary>
-		/// SLA Range.
-		/// </summary>
-		[Units("%")]
-		protected double tillerSlaBound;
-
-		/// <summary>
 		/// Linear LAI.
 		/// </summary>
 		protected double linearLAI;
@@ -338,8 +343,6 @@ namespace Models.PMF.Struct.Sorghum
 		public LeafCulms()
 		{
 			verticalAdjustment = 0.1;
-			aMaxVert = 0.3;
-			aTillerVert = 0.05;
 			avgRadiation = 0.0;
 			calculatedTillers = 0.0;
 			thermalTimeCount = 0.0;
@@ -401,6 +404,7 @@ namespace Models.PMF.Struct.Sorghum
 			FinalLeafNo = 0;
 			dltLeafNo = 0;
 			tpla = 0;
+			radiationValues = new List<double>();
 		}
 
 		/// <summary>
@@ -533,7 +537,7 @@ namespace Models.PMF.Struct.Sorghum
 			// calculate new sla and see if it is less than slaMax
 			// if so then reduce tillers
 
-			double eTT = ttEmergToFlag.Value(); ;
+			double eTT = ttEmergToFlag.Value();
 
 			if (stage > 4 && stage < 6) //   if(stage >= endJuv && stage < flag)?
 			{
@@ -546,7 +550,7 @@ namespace Models.PMF.Struct.Sorghum
 
 				// max SLN (thinnest leaf) possible using Reeves (1960's Kansas) SLA = 429.72 - 18.158 * LeafNo
 				double maxSLA = 429.72 - 18.158 * (NLeaves + dltLeafNo);
-				maxSLA *= ((100 - tillerSlaBound) / 100.0);     // sla bound vary 30 - 40%
+				maxSLA *= ((100 - tillerSlaBound.Value()) / 100.0);     // sla bound vary 30 - 40%
 				maxSLA = Math.Min(400, maxSLA);
 				maxSLA = Math.Max(150, maxSLA);
 
@@ -677,7 +681,7 @@ namespace Models.PMF.Struct.Sorghum
 				//double tilleringPropensity = 2.3;
 				//double tillerSdSlope = 0.13;
 				double sd = supply / demand;
-				calculatedTillers = tilleringPropensity + tillerSdSlope * sd;
+				calculatedTillers = tilleringPropensity.Value() + tillerSdSlope.Value() * sd;
 				calculatedTillers = Math.Max(calculatedTillers, 0.0);
 				//	calculatedTillers = min(calculatedTillers, 5.0);
 
@@ -772,7 +776,7 @@ namespace Models.PMF.Struct.Sorghum
 				//T6 = 7 leaves
 				newCulm.setCulmNo(Culms.Count);
 				newCulm.setCurrentLeafNo(0);//currentLeaf);
-				verticalAdjustment = aMaxVert + (tillersAdded * aTillerVert);
+				verticalAdjustment = aMaxVert.Value() + (tillersAdded * aTillerVert.Value());
 				newCulm.setVertLeafAdj(verticalAdjustment);
 				newCulm.setProportion(fraction);
 				newCulm.calcFinalLeafNo();
