@@ -105,19 +105,13 @@ namespace Models.CLEM.Resources
                     }
                 }
 
-                //foreach (AnimalPriceGroup item in Apsim.Children(PriceList, typeof(AnimalPriceGroup)).Cast<AnimalPriceGroup>().Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
-                //{
-                //    if (animalList.Filter(item).Count() == 1)
-                //    {
-                //        return item.Value * ((item.PricingStyle == PricingStyleType.perKg) ? ind.Weight : 1.0);
-                //    }
-                //}
                 // no price match found.
-                string warning = "No " + purchaseStyle.ToString() + " price entry was found for an indiviudal with details [f=age: " + ind.Age + "] [f=herd: " + ind.HerdName + "] [f=gender: " + ind.GenderAsString + "] [f=weight: " + ind.Weight.ToString("##0") + "]";
-                if (!Warnings.Exists(warning))
+                string warningString = $"No [{purchaseStyle.ToString()}] price entry was found for [r={ind.Breed}] meeting the required criteria [f=age: {ind.Age}] [f=gender: {ind.GenderAsString}] [f=weight: {ind.Weight.ToString("##0")}]";
+
+                if (!Warnings.Exists(warningString))
                 {
-                    Warnings.Add(warning);
-                    Summary.WriteWarning(this, warning);
+                    Warnings.Add(warningString);
+                    Summary.WriteWarning(this, warningString);
                 }
             }
             return 0;
