@@ -8,6 +8,7 @@
     using Models.Soils.Arbitrator;
     using System;
     using System.Linq;
+    using System.Xml.Serialization;
 
     /// <summary>Describes a generic below ground organ of a pasture species.</summary>
     [Serializable]
@@ -37,7 +38,6 @@
         /// <param name="minNconc">The minimum N concentration</param>
         /// <param name="maxNconc">The maximum N concentration</param>
         /// <param name="minLiveDM">The minimum biomass for this organ</param>
-        /// <param name="fractionLuxNremobilisable">Fraction of luxury N that can be remobilise in one day</param>
         /// <param name="specificRootLength">The specific root length (m/g)</param>
         /// <param name="rootDepthMaximum">The maximum root depth</param>
         /// <param name="rootDistributionDepthParam">Parameter to compute root distribution, depth with constant root</param>
@@ -57,7 +57,7 @@
         public PastureBelowGroundOrgan(string nameOfSpecies, int numTissues,
                                        double initialDM, double initialDepth,
                                        double optNconc, double minNconc, double maxNconc,
-                                       double minLiveDM, double fractionLuxNremobilisable,
+                                       double minLiveDM,
                                        double specificRootLength, double rootDepthMaximum,
                                        double rootDistributionDepthParam, double rootDistributionExponent,
                                        double rootBottomDistributionFactor,
@@ -85,7 +85,6 @@
             NConcMinimum = minNconc;
             NConcMaximum = maxNconc;
             MinimumLiveDM = minLiveDM;
-            Tissue[0].FractionNLuxuryRemobilisable = fractionLuxNremobilisable;
             mySpecificRootLength = specificRootLength;
             myRootDepthMaximum = rootDepthMaximum;
             myRootDistributionDepthParam = rootDistributionDepthParam;
@@ -129,13 +128,16 @@
         internal string myZoneName { get; private set; }
 
         /// <summary>Gets or sets the N concentration for optimum growth (kg/kg).</summary>
-        internal double NConcOptimum = 2.0;
-
-        /// <summary>Gets or sets the maximum N concentration, for luxury uptake (kg/kg).</summary>
-        internal double NConcMaximum = 2.5;
+        [XmlIgnore]
+        public double NConcOptimum { get; set; } = 2.0;
 
         /// <summary>Gets or sets the minimum N concentration, structural N (kg/kg).</summary>
-        internal double NConcMinimum = 0.6;
+        [XmlIgnore]
+        public double NConcMinimum { get; set; } = 0.6;
+
+        /// <summary>Gets or sets the maximum N concentration, for luxury uptake (kg/kg).</summary>
+        [XmlIgnore]
+        public double NConcMaximum { get; set; } = 2.5;
 
         /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
         internal double MinimumLiveDM = 0.0;
@@ -515,6 +517,21 @@
         #endregion ---------------------------------------------------------------------------------------------------------
 
         #region Organ methods  ---------------------------------------------------------------------------------------------
+
+
+        /// <summary>
+        /// Reset this root organ's state.
+        /// </summary>
+        /// <param name="rootWt">The amount of root biomass (kg/ha).</param>
+        /// <param name="rootDepth">The depth of roots (mm).</param>
+        public void Reset(double rootWt, double rootDepth)
+        {
+            Depth = rootDepth;
+
+            var rootFractions = CurrentRootDistributionTarget();
+            for (int i = 0; i < nLayers; i++)
+                Tissue[0].DMLayer[i] = rootWt * rootFractions[i];
+        }
 
         /// <summary>Reset all amounts to zero in all tissues of this organ.</summary>
         internal void DoResetOrgan()
