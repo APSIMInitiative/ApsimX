@@ -351,6 +351,8 @@ namespace APSIM.Shared.Utilities
             else
             {
                 DateTime.TryParse(dateStr, out d);
+                if (d == DateTime.MinValue)
+                    return null;
                 returnDate = d.ToString("yyyy-MM-dd");
             }
             return returnDate;
