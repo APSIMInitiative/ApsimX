@@ -70,7 +70,7 @@ namespace Models.Functions
             var namespaceList = new SortedSet<string>();
             foreach (var model in models)
             {
-                links.Append("[Link] ");
+                links.Append("[Link(ByName=true)] ");
                 links.Append(model.GetType().FullName);
                 links.Append(' ');
                 links.Append(model.Name);

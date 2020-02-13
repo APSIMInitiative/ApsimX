@@ -128,10 +128,9 @@
         {
             // Create a data table that will later be turned into a table on a html page.
             var documentationTable = new DataTable();
-            documentationTable.Columns.Add("Name");
-            documentationTable.Columns.Add("Auto-generated");
-            documentationTable.Columns.Add("Params/Inputs/Outputs");
-            documentationTable.Columns.Add("Detailed");
+            var columns = instructions["Columns"] as JArray;
+            foreach (var column in columns)
+                documentationTable.Columns.Add(column.ToString());
 
             // Loop through all models and document.
             bool errorsFound = false;
@@ -202,7 +201,7 @@
                         Console.WriteLine("Creating documentation from " + fileName);
 
                         // Whole of simulation document.
-                        var createDoc = new CreateDocCommand(explorerPresenter, destinationFolder);
+                        var createDoc = new CreateFileDocumentationCommand(explorerPresenter, destinationFolder);
                         createDoc.Do(null);
                         href = Path.GetFileName(createDoc.FileNameWritten);
                     }
@@ -215,7 +214,7 @@
                         var model = Apsim.Find(simulations, modelNameToDocument) as IModel;
                         if (model == null)
                             return null;
-                        var createDoc = new CreateModelDescriptionDocCommand(explorerPresenter, model, destinationFolder);
+                        var createDoc = new CreateParamsInputsOutputsDocCommand(explorerPresenter, model, destinationFolder);
                         createDoc.Do(null);
                         href = Path.GetFileName(createDoc.FileNameWritten);
                     }

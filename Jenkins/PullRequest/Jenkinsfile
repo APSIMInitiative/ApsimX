@@ -26,6 +26,9 @@ pipeline {
 					agent {
 						label "windows && heavyweight"
 					}
+					environment {
+						SOYBEAN_PASSWORD = credentials('soybean-validation-password')
+					}
 					steps {
 						bat '''
 							@echo off

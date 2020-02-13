@@ -245,6 +245,7 @@
             }
 
             fieldList.Remove("CheckpointID");
+            fieldList.Remove("CheckpointName");
             fieldList.Remove("SimulationName");
             fieldList.Remove("SimulationID");
 

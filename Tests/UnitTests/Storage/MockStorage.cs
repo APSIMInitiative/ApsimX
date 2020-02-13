@@ -265,5 +265,10 @@ namespace UnitTests.Storage
         {
             throw new NotImplementedException();
         }
+
+        public void DeleteTable(string tableName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

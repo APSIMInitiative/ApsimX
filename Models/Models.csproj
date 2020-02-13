@@ -256,6 +256,7 @@
     <Compile Include="Core\Run\Runner.cs" />
     <Compile Include="Core\Run\SimulationDescription.cs" />
     <Compile Include="Factorial\Permutation.cs" />
+    <Compile Include="Functions\AccumulateResetAtStage.cs" />
     <Compile Include="Functions\DecumulateFunction.cs" />
     <Compile Include="Functions\EndOfDayFunction.cs" />
     <Compile Include="Functions\CSharpExpressionFunction.cs" />
@@ -277,11 +278,13 @@
     <Compile Include="Plant\Arbitrator\RetranslocateAvailableN.cs" />
     <Compile Include="Factorial\CompositeFactor.cs" />
     <Compile Include="Plant\Interfaces\IPlantDamage.cs" />
+    <Compile Include="Plant\Organs\BasialBuds.cs" />
     <Compile Include="Plant\Phenology\Phases\DAWSPhase.cs" />
     <Compile Include="Plant\Phenology\Scales\Age.cs" />
     <EmbeddedResource Include="Resources\Scripts\GraphPanelScriptTemplate.cs" />
     <EmbeddedResource Include="Resources\Scripts\CSharpExpressionTemplate.cs" />
     <Compile Include="Plant\Phenology\Scales\ZadokPMFWheat.cs" />
+    <Compile Include="PostSimulationTools\ExcelMultiInput.cs" />
     <Compile Include="Soils\Nutrients\INutrientPool.cs" />
     <Compile Include="Soils\SoilTemp\SoilTemperature.cs" />
     <Compile Include="Soils\Standardiser\Layers.cs" />

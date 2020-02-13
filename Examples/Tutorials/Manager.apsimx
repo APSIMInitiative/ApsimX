@@ -1,0 +1,1932 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 282,
+  "Version": 76,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-02-03",
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Memo, Models",
+      "Text": "# Manager Model Documentation and Examples\n\n\n\n**Manager** is the model in APSIM that is used to script the on-farm management of a simulation. The examples in this document increase in complexity. [Read this to better understand the structure of a manager script](https://apsimnextgeneration.netlify.com/usage/writemanagerscript)\n\n\n\n   \n\n\n\n\n",
+      "Name": "About this example",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "Name": "NTopupSimulation",
+      "Children": [
+        {
+          "$type": "Models.Memo, Models",
+          "Text": "# Change sowing fertiliser to a topup rule\n\nThis simulation started with the sowing fertiliser rule from the management toolbox.\n\n\t\tusing System;\n\t\tusing Models.Core;\n\t\tusing Models.PMF;\n\t\tnamespace Models\n\t\t{\n\t\t\t[Serializable]\n\t\t\tpublic class Script : Model\n\t\t\t{\n\t\t\t\t[Link] Clock Clock;\n\t\t\t\t[Link] Fertiliser Fertiliser;\n\t\t\t\t\n\t\t\t\t[Description(\"Crop to be fertilised\")]\n\t\t\t\tpublic IPlant Crop { get; set; }\n\n\t\t\t\t[Description(\"Type of fertiliser to apply? \")] \n\t\t\t\tpublic Fertiliser.Types FertiliserType { get; set; }\n\t\t\t\n\t\t\t\t[Description(\"Amount of fertiliser to be applied (kg/ha)\")]\n\t\t\t\tpublic double Amount { get; set; }\n\t\t\t\t\n\t\t\t\t[EventSubscribe(\"Sowing\")]\n\t\t\t\tprivate void OnSowing(object sender, EventArgs e)\n\t\t\t\t{\n\t\t\t\t\tModel crop = sender as Model;\n\t\t\t\t\tif (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())\n\t\t\t\t\t\tFertiliser.Apply(Amount: Amount, Type: FertiliserType);\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\nThis script has 3 user-input properties, the sown crop model that the rule applies to, the fertiliser type to apply and the amount of fertiliser to apply:\n\n\t\t[Description(\"Crop to be fertilised\")]\n\t\tpublic IPlant Crop { get; set; }\n\n\t\t[Description(\"Type of fertiliser to apply? \")] \n\t\tpublic Fertiliser.Types FertiliserType { get; set; }\n\n\t\t[Description(\"Amount of fertiliser to be applied (kg/ha)\")]\n\t\tpublic double Amount { get; set; }\n\n\nFor a simple N topup rule we don't need the crop or the fertiliser type and instead of specifying an amount to apply, we'll change this to a threshold amount to which the script will keep the NO3 level to. We'll rename this property to *NThreshold*:\n\n\t\t[Description(\"Threshold amount of NO3 below which fertiliser will be added (kg/ha)\")]\n\t\tpublic double NThreshold { get; set;}\n\n\nNext we need to add a link to the NO3 solute as we'll need this to determine how much to apply. The new Link will look like this:\n\n        [Link(ByName=true)] Solute NO3;\n\nThis link looks different to the others because there are multiple solutes in the simulation and we want to make sure we are getting the NO3 solute. A regular *[Link]* looks for a model of the correct type and doesn't use the name to perform the match. If we used a regular link for this solute then we will get a link to the first solute found which may not be NO3. To fix this we need to specify that ByName=true, meaning that the link will be resolved by looking at the name of the variable (NO3 in this case) to do the match.\n\nFor this link to work though, we need to include another namespace. The nutrient model and all solutes are contained in the *Models.Soils.Nutrients* namespace so we need to add this to the top of the script:\n\n\t\tusing Models.Soils.Nutrients;\n\nCurrently in the script there is a OnSowing method that gets called whenever a sowing event occurs. We need to change this to a method that gets called every day of the simulation. Most management scripts use DoManagement for this purpose. \n\n\t\t[EventSubscribe(\"DoManagement\")]\n\t\tprivate void OnDoManagement(object sender, EventArgs e)\n\nThe event name is *DoManagement* and this goes in the* EventSubscribe* attribute. The convention then is to name the method the same as the event but with *On* prefixed to the front of the event name.\n\nNow we can perform the calculation of the amount of NO3 to apply.\n\n\t\tdouble NAmount = Threshold - MathUtilities.Sum(NO3.kgha);\n\n*NO3.kgha* is an array variable (double[]) with one value per layer. We need to sum this over the whole array so we use a *MathUtilities.Sum* function to do this. For this to compile though we need to include another namespace at the top of the script \n\n\t\tusing APSIM.Shared.Utilities;\n\nWe can remove the existing references to *Crop* as this rule will apply all year around, not just within crop. We also hard code the fertiliser type on the apply line.\n\n\t\tFertiliser.Apply(Amount: NAmount, Type: Fertiliser.Types.NO3N);\n\nFinally, we rename the manager model to *NTopup*. The final script looks like:\n\n\t\tusing System;\n\t\tusing Models.Core;\n\t\tusing Models.PMF;\n\t\tusing Models.Soils.Nutrients;\n\t\tusing APSIM.Shared.Utilities;\n\t\tnamespace Models\n\t\t{\n\t\t\t[Serializable]\n\t\t\tpublic class Script : Model\n\t\t\t{\n\t\t\t\t[Link] Clock Clock;\n\t\t\t\t[Link] Fertiliser Fertiliser;\n\t\t\t\t[Link(ByName=true)] Solute NO3;\n\n\t\t\t\t[Description(\"Threshold amount of NO3 below which fertiliser will be added (kg/ha)\")]\n\t\t\t\tpublic double NThreshold { get; set;}\n\n\t\t\t\t\n\t\t\t\t[EventSubscribe(\"DoManagement\")]\n\t\t\t\tprivate void OnDoManagement(object sender, EventArgs e)\n\t\t\t\t{\n\t\t\t\t\tdouble NAmount = NThreshold - MathUtilities.Sum(NO3.kgha);\n\t\t\t\t\tFertiliser.Apply(Amount: NAmount, Type: Fertiliser.Types.NO3N);\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\n\n",
+          "Name": "Notes",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Clock, Models",
+          "Start": "1900-01-01T00:00:00",
+          "End": "1900-12-31T00:00:00",
+          "Name": "Clock",
+          "Children": [],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Summary, Models",
+          "CaptureErrors": true,
+          "CaptureWarnings": true,
+          "CaptureSummaryText": true,
+          "Name": "SummaryFile",
+          "Children": [],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Weather, Models",
+          "FileName": "%root%\\Examples\\WeatherFiles\\Dalby.met",
+          "ExcelWorkSheetName": null,
+          "Name": "Weather",
+          "Children": [],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
+          "Name": "SoilArbitrator",
+          "Children": [],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Zone, Models",
+          "Area": 1.0,
+          "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
+          "Name": "Field",
+          "Children": [
+            {
+              "$type": "Models.Report.Report, Models",
+              "VariableNames": [
+                "[Clock].Today",
+                "sum([NO3].kgha) as no3"
+              ],
+              "EventNames": [
+                "[Clock].EndOfDay"
+              ],
+              "Name": "Report",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Fertiliser, Models",
+              "Name": "Fertiliser",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Soils.Soil, Models",
+              "RecordNumber": 0,
+              "ASCOrder": "Vertosol",
+              "ASCSubOrder": "Black",
+              "SoilType": "Clay",
+              "LocalName": null,
+              "Site": "Norwin",
+              "NearestTown": "Norwin",
+              "Region": "Darling Downs and Granite Belt",
+              "State": "Queensland",
+              "Country": "Australia",
+              "NaturalVegetation": "Qld. Bluegrass, possible Qld. Blue gum",
+              "ApsoilNumber": "900",
+              "Latitude": -27.581836,
+              "Longitude": 151.320206,
+              "LocationAccuracy": " +/- 20m",
+              "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
+              "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
+              "Name": "Soil",
+              "Children": [
+                {
+                  "$type": "Models.Soils.Physical, Models",
+                  "Depth": [
+                    "0-15",
+                    "15-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-180"
+                  ],
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "ParticleSizeClay": null,
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
+                  "BD": [
+                    1.01056473311131,
+                    1.07145631083388,
+                    1.09393858528057,
+                    1.15861335018721,
+                    1.17301160318016,
+                    1.16287303586874,
+                    1.18749547755906
+                  ],
+                  "AirDry": [
+                    0.130250054518252,
+                    0.198689390775399,
+                    0.28,
+                    0.28,
+                    0.28,
+                    0.28,
+                    0.28
+                  ],
+                  "LL15": [
+                    0.260500109036505,
+                    0.248361738469248,
+                    0.28,
+                    0.28,
+                    0.28,
+                    0.28,
+                    0.28
+                  ],
+                  "DUL": [
+                    0.52100021807301,
+                    0.496723476938497,
+                    0.488437607673005,
+                    0.480296969355493,
+                    0.471583596524955,
+                    0.457070570557793,
+                    0.452331759845006
+                  ],
+                  "SAT": [
+                    0.588654817693846,
+                    0.565676863836273,
+                    0.557192986686577,
+                    0.532787415023694,
+                    0.527354112007486,
+                    0.531179986464627,
+                    0.521888499034317
+                  ],
+                  "KS": [
+                    20.0,
+                    20.0,
+                    20.0,
+                    20.0,
+                    20.0,
+                    20.0,
+                    20.0
+                  ],
+                  "BDMetadata": null,
+                  "AirDryMetadata": null,
+                  "LL15Metadata": null,
+                  "DULMetadata": null,
+                  "SATMetadata": null,
+                  "KSMetadata": null,
+                  "Name": "Physical",
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.261,
+                        0.248,
+                        0.28,
+                        0.306,
+                        0.36,
+                        0.392,
+                        0.446
+                      ],
+                      "KL": [
+                        0.06,
+                        0.06,
+                        0.06,
+                        0.04,
+                        0.04,
+                        0.02,
+                        0.01
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "WheatSoil",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.SoilWater, Models",
+                  "SummerDate": "1-Nov",
+                  "SummerU": 5.0,
+                  "SummerCona": 5.0,
+                  "WinterDate": "1-Apr",
+                  "WinterU": 5.0,
+                  "WinterCona": 5.0,
+                  "DiffusConst": 40.0,
+                  "DiffusSlope": 16.0,
+                  "Salb": 0.12,
+                  "CN2Bare": 73.0,
+                  "CNRed": 20.0,
+                  "CNCov": 0.8,
+                  "slope": "NaN",
+                  "discharge_width": "NaN",
+                  "catchment_area": "NaN",
+                  "max_pond": 0.0,
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "Depth": [
+                    "0-15",
+                    "15-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-180"
+                  ],
+                  "SWCON": [
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3
+                  ],
+                  "KLAT": null,
+                  "PrecipitationInterception": 0.0,
+                  "Name": "SoilWater",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Organic, Models",
+                  "Depth": [
+                    "0-15",
+                    "15-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-180"
+                  ],
+                  "FOMCNRatio": 40.0,
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "Carbon": [
+                    1.2,
+                    0.96,
+                    0.6,
+                    0.3,
+                    0.18,
+                    0.12,
+                    0.12
+                  ],
+                  "SoilCNRatio": [
+                    12.0,
+                    12.0,
+                    12.0,
+                    12.0,
+                    12.0,
+                    12.0,
+                    12.0
+                  ],
+                  "FBiom": [
+                    0.04,
+                    0.02,
+                    0.02,
+                    0.02,
+                    0.01,
+                    0.01,
+                    0.01
+                  ],
+                  "FInert": [
+                    0.4,
+                    0.6,
+                    0.8,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "FOM": [
+                    347.12903231275641,
+                    270.3443621919937,
+                    163.97214434990104,
+                    99.454132887040629,
+                    60.321980831124677,
+                    36.587130828674873,
+                    22.1912165985086
+                  ],
+                  "Name": "Organic",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Chemical, Models",
+                  "Depth": [
+                    "0-15",
+                    "15-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-180"
+                  ],
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "NO3N": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "NH4N": [
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1
+                  ],
+                  "PH": [
+                    8.0,
+                    8.0,
+                    8.0,
+                    8.0,
+                    8.0,
+                    8.0,
+                    8.0
+                  ],
+                  "CL": null,
+                  "EC": null,
+                  "ESP": null,
+                  "Name": "Chemical",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.InitialWater, Models",
+                  "PercentMethod": 1,
+                  "FractionFull": 1.0,
+                  "DepthWetSoil": "NaN",
+                  "RelativeTo": null,
+                  "Name": "InitialWater",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Sample, Models",
+                  "Depth": [
+                    "0-15",
+                    "15-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-180"
+                  ],
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "NO3N": null,
+                  "NH4N": null,
+                  "SW": [
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN"
+                  ],
+                  "OC": [
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN"
+                  ],
+                  "EC": [
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN"
+                  ],
+                  "CL": [
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN"
+                  ],
+                  "ESP": [
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN"
+                  ],
+                  "PH": [
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN"
+                  ],
+                  "SWUnits": 0,
+                  "OCUnits": 0,
+                  "PHUnits": 0,
+                  "Name": "InitialN",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.CERESSoilTemperature, Models",
+                  "Name": "CERESSoilTemperature",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                  "DirectedGraphInfo": {
+                    "$type": "Models.Graph.DirectedGraph, Models",
+                    "Nodes": [
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "Inert",
+                        "Location": "656, 254",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "SurfaceResidue",
+                        "Location": "566, 69",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "FOMLignin",
+                        "Location": "261, 69",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "FOMCellulose",
+                        "Location": "397, 70",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "FOMCarbohydrate",
+                        "Location": "123, 70",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "Microbial",
+                        "Location": "218, 299",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "Humic",
+                        "Location": "458, 293",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "Urea",
+                        "Location": "529, 419",
+                        "Colour": "86, 180, 233",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "NO3",
+                        "Location": "185, 435",
+                        "Colour": "86, 180, 233",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "NH4",
+                        "Location": "357, 422",
+                        "Colour": "86, 180, 233",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "Atmosphere",
+                        "Location": "48, 338",
+                        "Colour": "White",
+                        "OutlineColour": "White",
+                        "Transparent": true
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "PlantAvailableNO3",
+                        "Location": "688, 415",
+                        "Colour": "86, 180, 233",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "PlantAvailableNH4",
+                        "Location": "691, 421",
+                        "Colour": "86, 180, 233",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      }
+                    ],
+                    "Arcs": [
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "SurfaceResidue",
+                        "DestinationName": "Microbial",
+                        "Location": "415, 173",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "SurfaceResidue",
+                        "DestinationName": "Humic",
+                        "Location": "499, 172",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "FOMLignin",
+                        "DestinationName": "Microbial",
+                        "Location": "259, 221",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "FOMLignin",
+                        "DestinationName": "Humic",
+                        "Location": "255, 105",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "FOMCellulose",
+                        "DestinationName": "Microbial",
+                        "Location": "370, 184",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "FOMCellulose",
+                        "DestinationName": "Humic",
+                        "Location": "463, 224",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "FOMCarbohydrate",
+                        "DestinationName": "Microbial",
+                        "Location": "141, 131",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "FOMCarbohydrate",
+                        "DestinationName": "Humic",
+                        "Location": "204, 215",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "Microbial",
+                        "DestinationName": "Microbial",
+                        "Location": "335, 301",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "Microbial",
+                        "DestinationName": "Humic",
+                        "Location": "319, 278",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "Humic",
+                        "DestinationName": "Microbial",
+                        "Location": "334, 340",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "Urea",
+                        "DestinationName": "NH4",
+                        "Location": "433, 416",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "NO3",
+                        "DestinationName": "Atmosphere",
+                        "Location": "1, 319",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "NH4",
+                        "DestinationName": "NO3",
+                        "Location": "243, 409",
+                        "Colour": "Black",
+                        "Text": null
+                      }
+                    ]
+                  },
+                  "ResourceName": "Nutrient",
+                  "Name": "Nutrient",
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "Canopies": [],
+              "InitialResidueName": "wheat_stubble",
+              "InitialResidueType": "wheat",
+              "InitialResidueMass": 500.0,
+              "InitialStandingFraction": 0.0,
+              "InitialCPR": 0.0,
+              "InitialCNR": 100.0,
+              "FractionFaecesAdded": 1.0,
+              "ResourceName": "SurfaceOrganicMatter",
+              "Name": "SurfaceOrganicMatter",
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Plant, Models",
+              "CropType": "Wheat",
+              "IsEnding": false,
+              "DaysAfterEnding": 0,
+              "ResourceName": "Wheat",
+              "Name": "Wheat",
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.MicroClimate, Models",
+              "a_interception": 0.0,
+              "b_interception": 1.0,
+              "c_interception": 0.0,
+              "d_interception": 0.0,
+              "soil_albedo": 0.3,
+              "SoilHeatFluxFraction": 0.4,
+              "NightInterceptionFraction": 0.5,
+              "ReferenceHeight": 2.0,
+              "Name": "MicroClimate",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
+              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils.Nutrients;\r\nusing APSIM.Shared.Utilities;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link(ByName=true)] Solute NO3;\r\n\r\n\t\t[Description(\"Threshold amount of NO3 below which fertiliser will be added (kg/ha)\")]\r\n\t\tpublic double NThreshold { get; set;}\r\n\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n        \tdouble NAmount = NThreshold - MathUtilities.Sum(NO3.kgha);\r\n            Fertiliser.Apply(Amount: NAmount, Type: Fertiliser.Types.NO3N);\r\n        }\r\n    }\r\n}",
+              "Parameters": [
+                {
+                  "Key": "NThreshold",
+                  "Value": "200"
+                }
+              ],
+              "Name": "NTopup",
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
+              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Wheat;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Wheat.IsReadyForHarvesting)\r\n            {\r\n               Wheat.Harvest();\r\n               Wheat.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+              "Parameters": [],
+              "Name": "Harvest",
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
+              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Wheat;\r\n        [Link] Soil Soil; \r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName, PlantName = \"Wheat\")]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n        \r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&\r\n                !Wheat.IsAlive &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+              "Parameters": [
+                {
+                  "Key": "StartDate",
+                  "Value": "1-may"
+                },
+                {
+                  "Key": "EndDate",
+                  "Value": "10-jul"
+                },
+                {
+                  "Key": "MinESW",
+                  "Value": "100"
+                },
+                {
+                  "Key": "MinRain",
+                  "Value": "25"
+                },
+                {
+                  "Key": "RainDays",
+                  "Value": "7"
+                },
+                {
+                  "Key": "CultivarName",
+                  "Value": "Hartog"
+                },
+                {
+                  "Key": "SowingDepth",
+                  "Value": "30"
+                },
+                {
+                  "Key": "RowSpacing",
+                  "Value": "250"
+                },
+                {
+                  "Key": "Population",
+                  "Value": "120"
+                }
+              ],
+              "Name": "SowingRule1",
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": "The N is kept around the 200 kg/ha threshold level as set by the NTopup rule",
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": "Date",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": "NO3 (kg/ha)",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 0,
+          "LegendOrientation": 0,
+          "DisabledSeries": [],
+          "LegendOutsideGraph": false,
+          "Name": "NO3",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -1663232,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "Checkpoint": "Current",
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "no3",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": false,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "series",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "Name": "WaterAndNTopupSimulation",
+      "Children": [
+        {
+          "$type": "Models.Memo, Models",
+          "Text": "# Change N topup rule to N and water topup rule\n\nThis simulation extends the previous simulation by adding a water topup rule to the topup rule. This is useful when a potential crop/pasture yield is required.\n\nThis script has a single user-input property, the N threshold below which fertiliser will be applied. \n\n\t\t[Description(\"Threshold amount of NO3 below which fertiliser will be added (kg/ha)\")]\n\t\tpublic double NThreshold { get; set;}\n\nThis is still needed but we need to add a similar property for a water threshold.\n\n\t\t[Description(\"Threshold amount of water below which irrigation will be added (mm)\")]\n\t\tpublic double WaterThreshold { get; set;}\n\nNext we need to add a link to the Soil model as we'll need this to get the current value of soil water.\n\n\t\t[Link] Soil Soil;\n\nWe then need to add an irrigation model to our field. Then we can add a link to it.\n\n\t\t[Link] Irrigation Irrigation;\n\nFor this link to work though, we need to include another namespace. The soil model is contained in the *Models.Soils* namespace so we need to add this to the top of the script:\n\n\t\tusing Models.Soils;\n\nIn the *OnDoManagement* script, we can calculate the amount of water to add then then apply the irrigation if the amount is greater than zero.\n\t\tdouble SWAmount = WaterThreshold - MathUtilities.Sum(Soil.Water);\n\t\tif (SWAmount > 0)\n           \t\tIrrigation.Apply(SWAmount);\n\nFinally, the manager model should be renamed to something more meaningful e.g. *NAndWaterTopup*. The final script looks like:\n\n\t\tusing System;\n\t\tusing Models.Core;\n\t\tusing Models.PMF;\n\t\tusing Models.Soils.Nutrients;\n\t\tusing APSIM.Shared.Utilities;\n\t\tusing Models.Soils;\n\t\tnamespace Models\n\t\t{\n\t\t\t[Serializable]\n\t\t\tpublic class Script : Model\n\t\t\t{\n\t\t\t\t[Link] Clock Clock;\n\t\t\t\t[Link] Fertiliser Fertiliser;\n\t\t\t\t[Link(ByName=true)] Solute NO3;\n\t\t\t\t[Link] Soil Soil;\n\t\t\t\t[Link] Irrigation Irrigation;\n\n\t\t\t\t[Description(\"Threshold amount of NO3 below which fertiliser will be added (kg/ha)\")]\n\t\t\t\tpublic double NThreshold { get; set;}\n\n\t\t\t\t[Description(\"Threshold amount of water below which irrigation will be added (mm)\")]\n\t\t\t\tpublic double WaterThreshold { get; set;}\n\n\t\t\t\t\n\t\t\t\t[EventSubscribe(\"DoManagement\")]\n\t\t\t\tprivate void OnDoManagement(object sender, EventArgs e)\n\t\t\t\t{\n\t\t\t\t\tdouble NAmount = NThreshold - MathUtilities.Sum(NO3.kgha);\n\t\t\t\t\tFertiliser.Apply(Amount: NAmount, Type: Fertiliser.Types.NO3N);\n\n\t\t\t\t\tdouble SWAmount = WaterThreshold - MathUtilities.Sum(Soil.Water);\n\t\t\t\t\tif (SWAmount > 0)\n\t\t\t\t\t\tIrrigation.Apply(SWAmount);\n\t\t\t\t}\n\t\t\t}\n\t\t}\n",
+          "Name": "Notes",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Clock, Models",
+          "Start": "1900-01-01T00:00:00",
+          "End": "1900-12-31T00:00:00",
+          "Name": "Clock",
+          "Children": [],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Summary, Models",
+          "CaptureErrors": true,
+          "CaptureWarnings": true,
+          "CaptureSummaryText": true,
+          "Name": "SummaryFile",
+          "Children": [],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Weather, Models",
+          "FileName": "%root%\\Examples\\WeatherFiles\\Dalby.met",
+          "ExcelWorkSheetName": null,
+          "Name": "Weather",
+          "Children": [],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
+          "Name": "SoilArbitrator",
+          "Children": [],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Zone, Models",
+          "Area": 1.0,
+          "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
+          "Name": "Field",
+          "Children": [
+            {
+              "$type": "Models.Report.Report, Models",
+              "VariableNames": [
+                "[Clock].Today",
+                "sum([NO3].kgha) as no3",
+                "sum([Soil].Water) as SoilWater"
+              ],
+              "EventNames": [
+                "[Clock].EndOfDay"
+              ],
+              "Name": "Report",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Fertiliser, Models",
+              "Name": "Fertiliser",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Soils.Soil, Models",
+              "RecordNumber": 0,
+              "ASCOrder": "Vertosol",
+              "ASCSubOrder": "Black",
+              "SoilType": "Clay",
+              "LocalName": null,
+              "Site": "Norwin",
+              "NearestTown": "Norwin",
+              "Region": "Darling Downs and Granite Belt",
+              "State": "Queensland",
+              "Country": "Australia",
+              "NaturalVegetation": "Qld. Bluegrass, possible Qld. Blue gum",
+              "ApsoilNumber": "900",
+              "Latitude": -27.581836,
+              "Longitude": 151.320206,
+              "LocationAccuracy": " +/- 20m",
+              "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
+              "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
+              "Name": "Soil",
+              "Children": [
+                {
+                  "$type": "Models.Soils.Physical, Models",
+                  "Depth": [
+                    "0-15",
+                    "15-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-180"
+                  ],
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "ParticleSizeClay": null,
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
+                  "BD": [
+                    1.01056473311131,
+                    1.07145631083388,
+                    1.09393858528057,
+                    1.15861335018721,
+                    1.17301160318016,
+                    1.16287303586874,
+                    1.18749547755906
+                  ],
+                  "AirDry": [
+                    0.130250054518252,
+                    0.198689390775399,
+                    0.28,
+                    0.28,
+                    0.28,
+                    0.28,
+                    0.28
+                  ],
+                  "LL15": [
+                    0.260500109036505,
+                    0.248361738469248,
+                    0.28,
+                    0.28,
+                    0.28,
+                    0.28,
+                    0.28
+                  ],
+                  "DUL": [
+                    0.52100021807301,
+                    0.496723476938497,
+                    0.488437607673005,
+                    0.480296969355493,
+                    0.471583596524955,
+                    0.457070570557793,
+                    0.452331759845006
+                  ],
+                  "SAT": [
+                    0.588654817693846,
+                    0.565676863836273,
+                    0.557192986686577,
+                    0.532787415023694,
+                    0.527354112007486,
+                    0.531179986464627,
+                    0.521888499034317
+                  ],
+                  "KS": [
+                    20.0,
+                    20.0,
+                    20.0,
+                    20.0,
+                    20.0,
+                    20.0,
+                    20.0
+                  ],
+                  "BDMetadata": null,
+                  "AirDryMetadata": null,
+                  "LL15Metadata": null,
+                  "DULMetadata": null,
+                  "SATMetadata": null,
+                  "KSMetadata": null,
+                  "Name": "Physical",
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.261,
+                        0.248,
+                        0.28,
+                        0.306,
+                        0.36,
+                        0.392,
+                        0.446
+                      ],
+                      "KL": [
+                        0.06,
+                        0.06,
+                        0.06,
+                        0.04,
+                        0.04,
+                        0.02,
+                        0.01
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "WheatSoil",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.SoilWater, Models",
+                  "SummerDate": "1-Nov",
+                  "SummerU": 5.0,
+                  "SummerCona": 5.0,
+                  "WinterDate": "1-Apr",
+                  "WinterU": 5.0,
+                  "WinterCona": 5.0,
+                  "DiffusConst": 40.0,
+                  "DiffusSlope": 16.0,
+                  "Salb": 0.12,
+                  "CN2Bare": 73.0,
+                  "CNRed": 20.0,
+                  "CNCov": 0.8,
+                  "slope": "NaN",
+                  "discharge_width": "NaN",
+                  "catchment_area": "NaN",
+                  "max_pond": 0.0,
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "Depth": [
+                    "0-15",
+                    "15-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-180"
+                  ],
+                  "SWCON": [
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3
+                  ],
+                  "KLAT": null,
+                  "PrecipitationInterception": 0.0,
+                  "Name": "SoilWater",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Organic, Models",
+                  "Depth": [
+                    "0-15",
+                    "15-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-180"
+                  ],
+                  "FOMCNRatio": 40.0,
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "Carbon": [
+                    1.2,
+                    0.96,
+                    0.6,
+                    0.3,
+                    0.18,
+                    0.12,
+                    0.12
+                  ],
+                  "SoilCNRatio": [
+                    12.0,
+                    12.0,
+                    12.0,
+                    12.0,
+                    12.0,
+                    12.0,
+                    12.0
+                  ],
+                  "FBiom": [
+                    0.04,
+                    0.02,
+                    0.02,
+                    0.02,
+                    0.01,
+                    0.01,
+                    0.01
+                  ],
+                  "FInert": [
+                    0.4,
+                    0.6,
+                    0.8,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "FOM": [
+                    347.12903231275641,
+                    270.3443621919937,
+                    163.97214434990104,
+                    99.454132887040629,
+                    60.321980831124677,
+                    36.587130828674873,
+                    22.1912165985086
+                  ],
+                  "Name": "Organic",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Chemical, Models",
+                  "Depth": [
+                    "0-15",
+                    "15-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-180"
+                  ],
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "NO3N": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "NH4N": [
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1
+                  ],
+                  "PH": [
+                    8.0,
+                    8.0,
+                    8.0,
+                    8.0,
+                    8.0,
+                    8.0,
+                    8.0
+                  ],
+                  "CL": null,
+                  "EC": null,
+                  "ESP": null,
+                  "Name": "Chemical",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.InitialWater, Models",
+                  "PercentMethod": 1,
+                  "FractionFull": 1.0,
+                  "DepthWetSoil": "NaN",
+                  "RelativeTo": null,
+                  "Name": "InitialWater",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Sample, Models",
+                  "Depth": [
+                    "0-15",
+                    "15-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-180"
+                  ],
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "NO3N": null,
+                  "NH4N": null,
+                  "SW": [
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN"
+                  ],
+                  "OC": [
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN"
+                  ],
+                  "EC": [
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN"
+                  ],
+                  "CL": [
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN"
+                  ],
+                  "ESP": [
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN"
+                  ],
+                  "PH": [
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN"
+                  ],
+                  "SWUnits": 0,
+                  "OCUnits": 0,
+                  "PHUnits": 0,
+                  "Name": "InitialN",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.CERESSoilTemperature, Models",
+                  "Name": "CERESSoilTemperature",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                  "DirectedGraphInfo": {
+                    "$type": "Models.Graph.DirectedGraph, Models",
+                    "Nodes": [
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "Inert",
+                        "Location": "656, 254",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "SurfaceResidue",
+                        "Location": "566, 69",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "FOMLignin",
+                        "Location": "261, 69",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "FOMCellulose",
+                        "Location": "397, 70",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "FOMCarbohydrate",
+                        "Location": "123, 70",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "Microbial",
+                        "Location": "218, 299",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "Humic",
+                        "Location": "458, 293",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "Urea",
+                        "Location": "529, 419",
+                        "Colour": "86, 180, 233",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "NO3",
+                        "Location": "185, 435",
+                        "Colour": "86, 180, 233",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "NH4",
+                        "Location": "357, 422",
+                        "Colour": "86, 180, 233",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "Atmosphere",
+                        "Location": "48, 338",
+                        "Colour": "White",
+                        "OutlineColour": "White",
+                        "Transparent": true
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "PlantAvailableNO3",
+                        "Location": "688, 415",
+                        "Colour": "86, 180, 233",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "PlantAvailableNH4",
+                        "Location": "691, 421",
+                        "Colour": "86, 180, 233",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      }
+                    ],
+                    "Arcs": [
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "SurfaceResidue",
+                        "DestinationName": "Microbial",
+                        "Location": "415, 173",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "SurfaceResidue",
+                        "DestinationName": "Humic",
+                        "Location": "499, 172",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "FOMLignin",
+                        "DestinationName": "Microbial",
+                        "Location": "259, 221",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "FOMLignin",
+                        "DestinationName": "Humic",
+                        "Location": "255, 105",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "FOMCellulose",
+                        "DestinationName": "Microbial",
+                        "Location": "370, 184",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "FOMCellulose",
+                        "DestinationName": "Humic",
+                        "Location": "463, 224",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "FOMCarbohydrate",
+                        "DestinationName": "Microbial",
+                        "Location": "141, 131",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "FOMCarbohydrate",
+                        "DestinationName": "Humic",
+                        "Location": "204, 215",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "Microbial",
+                        "DestinationName": "Microbial",
+                        "Location": "335, 301",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "Microbial",
+                        "DestinationName": "Humic",
+                        "Location": "319, 278",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "Humic",
+                        "DestinationName": "Microbial",
+                        "Location": "334, 340",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "Urea",
+                        "DestinationName": "NH4",
+                        "Location": "433, 416",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "NO3",
+                        "DestinationName": "Atmosphere",
+                        "Location": "1, 319",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "NH4",
+                        "DestinationName": "NO3",
+                        "Location": "243, 409",
+                        "Colour": "Black",
+                        "Text": null
+                      }
+                    ]
+                  },
+                  "ResourceName": "Nutrient",
+                  "Name": "Nutrient",
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "Canopies": [],
+              "InitialResidueName": "wheat_stubble",
+              "InitialResidueType": "wheat",
+              "InitialResidueMass": 500.0,
+              "InitialStandingFraction": 0.0,
+              "InitialCPR": 0.0,
+              "InitialCNR": 100.0,
+              "FractionFaecesAdded": 1.0,
+              "ResourceName": "SurfaceOrganicMatter",
+              "Name": "SurfaceOrganicMatter",
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Plant, Models",
+              "CropType": "Wheat",
+              "IsEnding": false,
+              "DaysAfterEnding": 0,
+              "ResourceName": "Wheat",
+              "Name": "Wheat",
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.MicroClimate, Models",
+              "a_interception": 0.0,
+              "b_interception": 1.0,
+              "c_interception": 0.0,
+              "d_interception": 0.0,
+              "soil_albedo": 0.3,
+              "SoilHeatFluxFraction": 0.4,
+              "NightInterceptionFraction": 0.5,
+              "ReferenceHeight": 2.0,
+              "Name": "MicroClimate",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
+              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils.Nutrients;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link(ByName=true)] Solute NO3;\r\n        [Link] Soil Soil;\r\n        [Link] Irrigation Irrigation;\r\n\r\n\t\t[Description(\"Threshold amount of NO3 below which fertiliser will be added (kg/ha)\")]\r\n\t\tpublic double NThreshold { get; set;}\r\n\r\n\t    [Description(\"Threshold amount of water below which irrigation will be added (mm)\")]\r\n    \tpublic double WaterThreshold { get; set;}\r\n\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n        \tdouble NAmount = NThreshold - MathUtilities.Sum(NO3.kgha);\r\n            Fertiliser.Apply(Amount: NAmount, Type: Fertiliser.Types.NO3N);\r\n\r\n           \tdouble SWAmount = WaterThreshold - MathUtilities.Sum(Soil.Water);\r\n           \tif (SWAmount > 0)\r\n           \t\tIrrigation.Apply(SWAmount);\r\n        }\r\n    }\r\n}",
+              "Parameters": [
+                {
+                  "Key": "NThreshold",
+                  "Value": "200"
+                },
+                {
+                  "Key": "WaterThreshold",
+                  "Value": "700"
+                }
+              ],
+              "Name": "NAndWaterTopup",
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
+              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Wheat;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Wheat.IsReadyForHarvesting)\r\n            {\r\n               Wheat.Harvest();\r\n               Wheat.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+              "Parameters": [],
+              "Name": "Harvest",
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
+              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Wheat;\r\n        [Link] Soil Soil; \r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName, PlantName = \"Wheat\")]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n        \r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&\r\n                !Wheat.IsAlive &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+              "Parameters": [
+                {
+                  "Key": "StartDate",
+                  "Value": "1-may"
+                },
+                {
+                  "Key": "EndDate",
+                  "Value": "10-jul"
+                },
+                {
+                  "Key": "MinESW",
+                  "Value": "100"
+                },
+                {
+                  "Key": "MinRain",
+                  "Value": "25"
+                },
+                {
+                  "Key": "RainDays",
+                  "Value": "7"
+                },
+                {
+                  "Key": "CultivarName",
+                  "Value": "Hartog"
+                },
+                {
+                  "Key": "SowingDepth",
+                  "Value": "30"
+                },
+                {
+                  "Key": "RowSpacing",
+                  "Value": "250"
+                },
+                {
+                  "Key": "Population",
+                  "Value": "120"
+                }
+              ],
+              "Name": "SowingRule1",
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Irrigation, Models",
+              "Name": "Irrigation",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": "The water is kept close to the threshold level (700mm). It will go slightly below 700mm because the wheat crop will take water between when irrigation was applied and reporting.",
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": "Date",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": "Total soil water (mm)",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 0,
+          "LegendOrientation": 0,
+          "DisabledSeries": [],
+          "LegendOutsideGraph": false,
+          "Name": "Soil water",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -1663232,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "Checkpoint": "Current",
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "SoilWater",
+              "X2FieldName": "",
+              "Y2FieldName": "",
+              "ShowInLegend": false,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "series",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+}

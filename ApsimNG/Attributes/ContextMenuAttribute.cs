@@ -25,6 +25,11 @@ namespace Models.Core
         public Type[] AppliesTo { get; set; }
 
         /// <summary>
+        /// Gets or sets the model types that this menu DOES NOT apply to.
+        /// </summary>
+        public Type[] Excluding { get; set; }
+
+        /// <summary>
         /// Key to be treated as a shortcut for the menu item.
         /// </summary>
         public string ShortcutKey { get; set; }
