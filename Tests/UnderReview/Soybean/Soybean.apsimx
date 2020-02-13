@@ -2,7 +2,7 @@
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
   "Version": 78,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-02-13",
+  "ApsimVersion": "Version 0.0.0.0, built 2020-02-14",
   "Name": "Simulations",
   "Children": [
     {
@@ -7981,13 +7981,13 @@
                               "Operation": [
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "2015-10-14",
+                                  "Date": "2015-10-17",
                                   "Action": "[Soybean].Harvest();",
                                   "Enabled": true
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "2015-10-14",
+                                  "Date": "2015-10-17",
                                   "Action": "[Soybean].EndCrop();",
                                   "Enabled": true
                                 }
@@ -13366,13 +13366,13 @@
                               "Operation": [
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "2017-09-20",
+                                  "Date": "2017-10-20",
                                   "Action": "[Soybean].Harvest();",
                                   "Enabled": true
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "2017-09-20",
+                                  "Date": "2017-10-20",
                                   "Action": "[Soybean].EndCrop();",
                                   "Enabled": true
                                 }
@@ -19038,13 +19038,13 @@
                               "Operation": [
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "2015-10-09",
+                                  "Date": "2015-10-13",
                                   "Action": "[Soybean].Harvest();",
                                   "Enabled": true
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "2015-10-09",
+                                  "Date": "2015-10-13",
                                   "Action": "[Soybean].EndCrop();",
                                   "Enabled": true
                                 }
