@@ -350,6 +350,17 @@ namespace Models.PMF.Struct.Sorghum
 		}
 
 		/// <summary>
+		/// Individual leaf sizes.
+		/// </summary>
+		public double[] LeafSizes
+		{
+			get
+			{
+				return Culms[0].LeafSizes.ToArray();
+			}
+		}
+
+		/// <summary>
 		/// Remove all then add the first culm (which is the main culm).
 		/// Shouldn't be called once sown.
 		/// </summary>
@@ -796,7 +807,7 @@ namespace Models.PMF.Struct.Sorghum
 			}
 			double culmArea = 0.0;
 			// area of this tiller
-			List<double> ls = Culms[lastTiller].leafSizes;
+			List<double> ls = Culms[lastTiller].LeafSizes;
 			for (int i = 0; i < ls.Count; i++)
 				culmArea += ls[i];
 

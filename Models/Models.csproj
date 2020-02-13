@@ -281,6 +281,10 @@
     <Compile Include="Plant\Phenology\Scales\Age.cs" />
     <EmbeddedResource Include="Resources\Scripts\GraphPanelScriptTemplate.cs" />
     <EmbeddedResource Include="Resources\Scripts\CSharpExpressionTemplate.cs" />
+    <Compile Include="Plant\Structure\Sorghum\Culm.cs" />
+    <Compile Include="Plant\Structure\Sorghum\CulmParams.cs" />
+    <Compile Include="Plant\Structure\Sorghum\LeafCulms.cs" />
+    <Compile Include="Plant\Structure\Sorghum\LeafCulmsFixed.cs" />
     <Compile Include="PostSimulationTools\ExcelMultiInput.cs" />
     <Compile Include="Soils\Nutrients\INutrientPool.cs" />
     <Compile Include="Soils\SoilTemp\SoilTemperature.cs" />
@@ -322,10 +326,8 @@
     <Compile Include="Plant\Arbitrator\BaseArbitrator.cs" />
     <Compile Include="Plant\Arbitrator\RetranslocateNonStructural.cs" />
     <Compile Include="Plant\Interfaces\IRetranslocateMethod.cs" />
-    <Compile Include="Plant\Organs\Culm.cs" />
     <Compile Include="Plant\Organs\EnergyBalance.cs" />
     <Compile Include="Plant\Organs\SorghumLeaf.cs" />
-    <Compile Include="Plant\Structure\CulmStructure.cs" />
     <Compile Include="Sensitivity\FactorialAnova.cs" />
     <Compile Include="Sensitivity\SensitivityParameter.cs" />
     <Compile Include="Sensitivity\Sobol.cs" />

@@ -48,7 +48,7 @@ namespace Models.PMF.Struct.Sorghum
 		/// <summary>
 		/// 
 		/// </summary>
-		public List<double> leafSizes { get; set; }
+		public List<double> LeafSizes { get; set; }
 
 		// public Methods -------------------------------------------------------
 
@@ -80,7 +80,7 @@ namespace Models.PMF.Struct.Sorghum
 			proportion = 1.0;
 			totalLAI = 0.0;
 			culmNo = 0;
-			leafSizes = new List<double>();
+			LeafSizes = new List<double>();
 			//readParams();
 		}
 
@@ -335,7 +335,7 @@ namespace Models.PMF.Struct.Sorghum
 		public void calculateLeafSizes()
 		{
 			// calculate the leaf sizes for this culm
-			leafSizes.Clear();
+			LeafSizes.Clear();
 			List<double> sizes = new List<double>();
 			for (int i = 1; i < Math.Ceiling(finalLeafNo) + 1; i++)
 				sizes.Add(calcIndividualLeafSize(i));
@@ -344,7 +344,7 @@ namespace Models.PMF.Struct.Sorghum
 			if (culmNo > 0)
 				offset = 3 + culmNo;
 			for (int i = 0; i < Math.Ceiling(finalLeafNo - (offset)); i++)
-				leafSizes.Add(sizes[i + offset]);
+				LeafSizes.Add(sizes[i + offset]);
 		}
 
 		/// <summary>
@@ -363,13 +363,13 @@ namespace Models.PMF.Struct.Sorghum
 		{
 			// interpolate leaf sizes to get area of this leaf
 			// check upper
-			if (leafNo > leafSizes.Count)
-				return leafSizes.LastOrDefault();
+			if (leafNo > LeafSizes.Count)
+				return LeafSizes.LastOrDefault();
 			else
 			{
 				int leafIndx = (int)Math.Floor(leafNo) - 1;
 				double leafPart = leafNo - Math.Floor(leafNo);
-				double size = leafSizes[leafIndx] + (leafSizes[leafIndx + 1] - leafSizes[leafIndx]) * leafPart;
+				double size = LeafSizes[leafIndx] + (LeafSizes[leafIndx + 1] - LeafSizes[leafIndx]) * leafPart;
 				return size;
 			}
 		}

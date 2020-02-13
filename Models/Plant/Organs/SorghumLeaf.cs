@@ -293,10 +293,6 @@ namespace Models.PMF.Organs
         //[Link]
         //IFunction sdRatio = null;
 
-        /// <summary>The lai dead function</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        IFunction ExpansionStress = null;
-        
         ///// <summary>The structure</summary>
         //[Link(IsOptional = true)]
         //public Structure Structure = null;
@@ -378,9 +374,6 @@ namespace Models.PMF.Organs
         #endregion
 
         #region States and variables
-
-        /// <summary>The leaves</summary>
-        public List<Culm> Culms = new List<Culm>();
 
         /// <summary>Gets or sets the k dead.</summary>
         public double KDead { get; set; }                  // Extinction Coefficient (Dead)
@@ -526,26 +519,6 @@ namespace Models.PMF.Organs
 
         #region Component Process Functions
 
-        /// <summary>Add a culm to the plant.</summary>
-        public Culm AddCulm(CulmParameters parameters)
-        {
-            var culm = new Culm(parameters);
-            //culm.CulmNumber = parameters.CulmNumber;
-            //culm.Proportion = parameters.Proportion;
-            //culm.LeafNoAtAppearance = parameters.LeafAtAppearance;
-            //culm.VerticalAdjustment = parameters.VerticalAdjustment;
-            //culm.Density = SowingDensity;
-
-            //culm.calcLeafAppearance();
-
-            //culm.AX0 = (Apsim.Find(this, "aX0") as Functions.IFunction).Value();
-            //culm.AMaxSlope = (Apsim.Find(this, "aMaxSlope") as Functions.IFunction).Value();
-            //culm.AMaxIntercept = (Apsim.Find(this, "aMaxIntercept") as Functions.IFunction).Value();
-
-            Culms.Add(culm);
-            return culm;
-        }
-
         /// <summary>Clears this instance.</summary>
         public void Clear()
         {
@@ -562,8 +535,6 @@ namespace Models.PMF.Organs
             Removed.Clear();
             Height = 0;
 
-            Culms = new List<Culm>();
-        
             LeafInitialised = false;
             laiEqlbLightTodayQ = new Queue<double>(10);
             sdRatio = 0.0;
@@ -592,21 +563,6 @@ namespace Models.PMF.Organs
         }
         #endregion
 
-
-        ///// <summary>Temperature Stress Function</summary>
-        //[Link]
-        //SorghumArbitrator Arbitrator = null;
-
-        private double[] CalcLeafSize()
-        {
-            List<double> size = new List<double>();
-            if (Culms.Count > 0)
-                for (int i = 0; i < FinalLeafNo; i++)
-                    // Can get first culm to calc, should be ok
-                    size.Add(Culms[0].CalcIndividualLeafSize(i + 1));
-            return size.ToArray();
-        }
-
         #region Top Level time step functions
 
         [EventSubscribe("StartOfDay")]
@@ -630,7 +586,6 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            leafSize = CalcLeafSize();
             // save current state
             if (parentPlant.IsEmerged)
                 StartLive = ReflectionUtilities.Clone(Live) as Biomass;
@@ -638,26 +593,7 @@ namespace Models.PMF.Organs
             dltStressedLAI = 0;
             if (LeafInitialised)
             {
-                if (culms != null)
-                    culms.calcPotentialArea();
-                else
-                {
-                    // fixme
-                    int emergence = 3; //= phenology.StartStagePhaseIndex("Emergence");
-                    int flag = 6; //= phenology.StartStagePhaseIndex("FlagLeaf");
-                    if (phenology.Stage >= emergence && phenology.Stage <= flag)
-                    {
-                        // temp hack - fixme!!
-                        if (Plant.Name == "Sorghum")
-                            dltPotentialLAI = Culms.Sum(culm => culm.calcPotentialArea());
-                        else
-                            dltPotentialLAI = Culms[0].calcPotentialArea();
-
-                        // endhack
-
-                        dltStressedLAI = dltPotentialLAI * ExpansionStress.Value();
-                    }
-                }
+                culms.calcPotentialArea();
 
                 //old model calculated BiomRUE at the end of the day
                 //this is done at strat of the day
@@ -788,7 +724,6 @@ namespace Models.PMF.Organs
 
         private double nDeadLeaves;
         private double dltDeadLeaves;
-        private double[] leafSize;
         private double sdRatio;
         private double totalLaiEqlbLight;
         private double avgLaiEquilibLight;
@@ -932,8 +867,8 @@ namespace Models.PMF.Organs
             if (MathUtilities.IsPositive(deadLeaves))
             {
                 int leafDying = (int)Math.Ceiling(deadLeaves);
-                double areaDying = (deadLeaves % 1.0) * leafSize[leafDying - 1];
-                laiSenescenceAge = (leafSize.Take(leafDying - 1).Sum() + areaDying) * smm2sm * SowingDensity;
+                double areaDying = (deadLeaves % 1.0) * culms.LeafSizes[leafDying - 1];
+                laiSenescenceAge = (culms.LeafSizes.Take(leafDying - 1).Sum() + areaDying) * smm2sm * SowingDensity;
             }
             return Math.Max(laiSenescenceAge - SenescedLai, 0);
         }
