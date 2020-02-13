@@ -62,6 +62,9 @@ namespace Models.PMF.Struct
         [Link]
         private Phenology phenology = null;
 
+        [Link]
+        private Models.PMF.Struct.Sorghum.LeafCulms culms = null;
+
         //[Link]
         //private Phenology phenology = null;
 
@@ -152,6 +155,8 @@ namespace Models.PMF.Struct
         [EventSubscribe("EndOfDay")]
         private void UpdateVars(object sender, EventArgs args)
         {
+            if (culms != null)
+                return;
             // In old apsim, NLeaves is only updated at end of day.
             if (leaf?.Culms.Count > 0)
                 NLeaves = leaf.Culms[0].CurrentLeafNumber - leaf.Culms[0].DltNewLeafAppeared;
@@ -161,6 +166,9 @@ namespace Models.PMF.Struct
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowPlant2Type Sow)
         {
+            if (culms != null)
+                return;
+
             if (Sow.Plant == plant)
             {
                 Clear();
@@ -200,6 +208,9 @@ namespace Models.PMF.Struct
             if (MathUtilities.FloatsAreEqual(TTTargetFI, 0))
                 TTTargetFI = GetTTFi();
 
+            if (culms != null)
+                return;
+
             if (leavesInitialised)
             {
                 if (dayofEmergence)
@@ -232,6 +243,9 @@ namespace Models.PMF.Struct
         [EventSubscribe("PhaseChanged")]
         private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
         {
+            if (culms != null)
+                return;
+
             if (phaseChange.StageName == LeafInitialisationStage)
             {
                 leavesInitialised = true;

@@ -45,6 +45,9 @@ namespace Models.PMF.Organs
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
         public string CanopyType { get { return Plant.CropType; } }
 
+        /// <summary>Total TT required to get from emergence to floral init.</summary>
+        public double TTTargetFI { get; private set; }
+
         /// <summary>Albedo.</summary>
         [Description("Albedo")]
         public double Albedo { get; set; }
@@ -121,6 +124,10 @@ namespace Models.PMF.Organs
 
         [Link]
         private Phenology phenology = null;
+
+        [Link(IsOptional = true)]
+        private Models.PMF.Struct.Sorghum.LeafCulms culms = null;
+
 
         /// <summary>The met data</summary>
         [Link]
@@ -334,14 +341,6 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child, ByName = true)]
         public IFunction AX0 = null;
 
-        /// <summary> The aMaxSlope for this Culm </summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        public IFunction AMaxSlope = null;
-
-        /// <summary>The aMaxIntercept for this Culm</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        public IFunction AMaxIntercept = null;
-
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction senLightTimeConst = null;
 
@@ -426,7 +425,7 @@ namespace Models.PMF.Organs
         public double PhosphorusStress { get; set; }
 
         /// <summary> /// Final Leaf Number. /// </summary>
-        public double FinalLeafNo { get; set; }
+        public double FinalLeafNo { get { return culms.FinalLeafNo; } }
 
         /// <summary> /// Sowing Density (Population). /// </summary>
         public double SowingDensity { get; set; }
@@ -469,11 +468,19 @@ namespace Models.PMF.Organs
         [EventSubscribe("PrePhenology")]
         private void OnUpdateFinalLeafNo(object sender, EventArgs e)
         {
-            double fi = 5;
-            if (phenology.Stage <= fi)
-            {
-                FinalLeafNo = CalcFinalLeafNo();
-            }
+        //    if (MathUtilities.FloatsAreEqual(TTTargetFI, 0))
+                TTTargetFI = GetTTFi();
+
+            //double fi = 5;
+            //if (phenology.Stage <= fi && culms == null)
+            //{
+            //    FinalLeafNo = CalcFinalLeafNo();
+            //}
+        }
+
+        private double GetTTFi()
+        {
+            return (double)Apsim.Get(this, "[Phenology].TTEmergToFloralInit.Value()");
         }
 
         /// <summary>
@@ -581,6 +588,7 @@ namespace Models.PMF.Organs
             CoverDead = 0.0;
             LAIDead = 0.0;
             LossFromExpansionStress = 0.0;
+            TTTargetFI = 0;
         }
         #endregion
 
@@ -630,20 +638,25 @@ namespace Models.PMF.Organs
             dltStressedLAI = 0;
             if (LeafInitialised)
             {
-                // fixme
-                int emergence = 3; //= phenology.StartStagePhaseIndex("Emergence");
-                int flag = 6; //= phenology.StartStagePhaseIndex("FlagLeaf");
-                if (phenology.Stage >= emergence && phenology.Stage <= flag)
+                if (culms != null)
+                    culms.calcPotentialArea();
+                else
                 {
-                    // temp hack - fixme!!
-                    if (Plant.Name == "Sorghum")
-                        dltPotentialLAI = Culms.Sum(culm => culm.calcPotentialArea());
-                    else
-                        dltPotentialLAI = Culms[0].calcPotentialArea();
+                    // fixme
+                    int emergence = 3; //= phenology.StartStagePhaseIndex("Emergence");
+                    int flag = 6; //= phenology.StartStagePhaseIndex("FlagLeaf");
+                    if (phenology.Stage >= emergence && phenology.Stage <= flag)
+                    {
+                        // temp hack - fixme!!
+                        if (Plant.Name == "Sorghum")
+                            dltPotentialLAI = Culms.Sum(culm => culm.calcPotentialArea());
+                        else
+                            dltPotentialLAI = Culms[0].calcPotentialArea();
 
-                    // endhack
+                        // endhack
 
-                    dltStressedLAI = dltPotentialLAI * ExpansionStress.Value();
+                        dltStressedLAI = dltPotentialLAI * ExpansionStress.Value();
+                    }
                 }
 
                 //old model calculated BiomRUE at the end of the day
@@ -661,12 +674,15 @@ namespace Models.PMF.Organs
         /// <summary>Update area.</summary>
         public void UpdateArea()
         {
+            //this will recalculate LAI given avaiable DM
+            //areaActual in old model
             if (Plant.IsEmerged)
             {
-                //this will recalculate LAI given avaiable DM
-                //areaActual in old model
-                var dltDmGreen = DMPotentialAllocation.Structural + DMPotentialAllocation.Metabolic;
-                DltLAI = dltLAIFunction.Value();
+                if (culms != null)
+                    culms.areaActual();
+                else
+                    DltLAI = dltLAIFunction.Value();
+
                 senesceArea();
             }
         }

@@ -1,0 +1,385 @@
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Models.PMF.Struct.Sorghum
+{
+	/// <summary>
+	/// 
+	/// </summary>
+	[Serializable]
+    public class Culm
+    {
+		private const double smm2sm = 1e-6;
+
+		private double leafNoAtAppearance;
+
+		//Birch, Hammer bell shaped curve parameters
+
+		private double largestLeafPlateau;
+
+		private double finalLeafNo;
+		private double dltLeafNo;
+		private double currentLeafNo;
+		//private double finalLeafCorrection;
+		private double vertAdjValue;
+		private double proportion;
+
+		/// <summary>
+		/// Changes each day.
+		/// </summary>
+		private double leafArea;
+
+		/// <summary>
+		/// Accumulated lai for this culm.
+		/// </summary>
+		private double totalLAI;
+
+		//double noEmergence;
+		//double initialTPLA;
+		//double tplaInflectionRatio,tplaProductionCoef;
+		// leaf appearance
+		private int culmNo;
+
+		private CulmParams parameters;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public List<double> leafSizes { get; set; }
+
+		// public Methods -------------------------------------------------------
+
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		/// <param name="leafAppearance"></param>
+		/// <param name="parameters"></param>
+		public Culm(double leafAppearance, CulmParams parameters)
+		{
+			//plant = p;
+			leafNoAtAppearance = leafAppearance;
+			this.parameters = parameters;
+			Initialize();
+			//doRegistrations();
+		}
+
+		/// <summary>
+		/// Perform initialisation.
+		/// </summary>
+		public virtual void Initialize()
+		{
+			// leaf number
+			finalLeafNo = 0.0;
+			dltLeafNo = 0.0;
+			largestLeafPlateau = 0; //value less than 1 means ignore it
+			currentLeafNo = 1.0;//noEmergence - is in Leaf
+			vertAdjValue = 0.0;
+			proportion = 1.0;
+			totalLAI = 0.0;
+			culmNo = 0;
+			leafSizes = new List<double>();
+			//readParams();
+		}
+
+		/// <summary>
+		/// TBI - but this may not be needed in apsimx.
+		/// </summary>
+		public virtual void ReadParams()
+		{
+			/*
+			// leaf area individual leaf
+			//Birch, Hammer bell shaped curve parameters
+			scienceAPI.read("aX0", "", false, aX0);    // Eqn 14
+													   //scienceAPI.read("aMaxA"       ,"", false, aMaxA); // Eqn 13
+			scienceAPI.read("aMaxI", "", false, aMaxI);
+			scienceAPI.read("aMaxS", "", false, aMaxS);
+			scienceAPI.read("largestLeafPlateau", "", true, largestLeafPlateau);
+
+			scienceAPI.read("leaf_no_correction", "", false, leafNoCorrection); //
+
+			// leaf appearance rates
+			scienceAPI.read("leaf_app_rate1", "", false, appearanceRate1);
+			scienceAPI.read("leaf_app_rate2", "", false, appearanceRate2);
+			scienceAPI.read("leaf_no_rate_change", "", false, noRateChange);
+
+			scienceAPI.read("leaf_no_seed", "", false, noSeed);
+			scienceAPI.read("leaf_init_rate", "", false, initRate);
+			//scienceAPI.read("leaf_no_at_emerg", "", false, noEmergence);
+			scienceAPI.read("leaf_no_min", "", false, minLeafNo);
+			scienceAPI.read("leaf_no_max", "", false, maxLeafNo);
+
+			density = plant->getPlantDensity();
+			*/
+		}
+
+		/// <summary>
+		/// Update Leaf state variables at the end of the day.
+		/// </summary>
+		public virtual void UpdateVars()
+		{
+			//currentLeafNo = currentLeafNo + dltLeafNo;
+		}
+
+		/// <summary>
+		/// Calculate final leaf number.
+		/// </summary>
+		public void calcFinalLeafNo()
+		{
+			double initRate = parameters.InitRate.Value();
+			double noSeed = parameters.NoSeed.Value();
+			double minLeafNo = parameters.MinLeafNo.Value();
+			double maxLeafNo = parameters.MaxLeafNo.Value();
+			double ttFi = parameters.TTEmergToFI.Value();
+
+			if ((Apsim.Find(parameters.TTEmergToFI as IModel, typeof(Clock)) as Clock).Today.DayOfYear == 14)
+			{
+
+			}
+
+			finalLeafNo = MathUtilities.Bound(MathUtilities.Divide(ttFi, initRate, 0) + noSeed, minLeafNo, maxLeafNo);
+		}
+
+		/// <summary>
+		/// Fixme - use public property.
+		/// </summary>
+		public double getCurrentLeafNo()
+		{
+			return currentLeafNo;
+		}
+
+		/// <summary>
+		/// Fixme - use public property.
+		/// </summary>
+		public void setCurrentLeafNo(double val)
+		{
+			currentLeafNo = val;
+		}
+
+		/// <summary>
+		/// Fixme - use public property.
+		/// </summary>
+		/// <returns></returns>
+		public double getFinalLeafNo()
+		{
+			return finalLeafNo;
+		}
+
+		/// <summary>
+		/// Calculate leaf appearance. Called from LeafCulms::calcLeafNo().
+		/// </summary>
+		public double calcLeafAppearance()
+		{
+			dltLeafNo = 0.0;
+			double remainingLeaves = finalLeafNo - leafNoAtAppearance - currentLeafNo;//nLeaves is used in partitionDM, so need to retain it in Leaf
+			if (remainingLeaves <= 0.0)
+			{
+				return 0.0;
+			}
+
+			// Peter's 2 stage version used here, modified to apply to last few leaves before flag
+			// i.e. c_leaf_no_rate_change is leaf number from the top down (e.g. 4)
+			double leafAppRate = parameters.AppearanceRate1.Value();
+			if (remainingLeaves <= parameters.NoRateChange.Value())
+			{
+				leafAppRate = parameters.AppearanceRate2.Value();
+			}
+
+			// if leaves are still growing, the cumulative number of phyllochrons or fully expanded
+			// leaves is calculated from thermal time for the day.
+			dltLeafNo = MathUtilities.Bound(MathUtilities.Divide(parameters.DltTT.Value(), leafAppRate, 0), 0.0, remainingLeaves);
+
+			currentLeafNo = currentLeafNo + dltLeafNo;
+			return dltLeafNo;
+		}
+
+		/// <summary>
+		/// Get leaf appearance rate.
+		/// </summary>
+		/// <param name="remainingLeaves"></param>
+		/// <returns></returns>
+		public double getLeafAppearanceRate(double remainingLeaves)
+		{
+			if (remainingLeaves <= parameters.NoRateChange.Value())
+				return parameters.AppearanceRate2.Value();
+			return parameters.AppearanceRate1.Value();
+		}
+
+		/// <summary>
+		/// Calculate potential leaf area.
+		/// </summary>
+		/// <returns></returns>
+		public double calcPotentialLeafArea()
+		{
+			//once leaf no is calculated leaf area of largest expanding leaf is determined
+			double leafNoEffective = Math.Min(currentLeafNo + parameters.LeafNoCorrection.Value(), finalLeafNo - leafNoAtAppearance);
+			leafArea = calcIndividualLeafSize(leafNoEffective);
+			//leafArea = getAreaOfCurrentLeaf(leafNoEffective);		HACK
+			//leafArea *= proportion; //proportion is 1 unless this tiller is a fraction ie: Fertile Tiller Number is 2.2, then 1 tiller is 0.2
+			leafArea = leafArea * smm2sm * parameters.Density * dltLeafNo; // in dltLai
+			totalLAI += leafArea;
+			return (leafArea * proportion);
+		}
+
+		/// <summary>
+		/// Note: this is using the sorghum code (not Maize!).
+		/// </summary>
+		/// <param name="leafNo"></param>
+		public double calcIndividualLeafSize(double leafNo)
+		{
+			// use finalLeafNo to calculate the size of the individual leafs
+			// Eqn 5 from Improved methods for predicting individual leaf area and leaf senescence in maize
+			// (Zea mays) C.J. Birch, G.L. Hammer and K.G. Ricket. Aust. J Agric. Res., 1998, 49, 249-62
+			//
+			double correctedFinalLeafNo = finalLeafNo;// - leafNoAtAppearance;
+			double largestLeafPos = parameters.AX0.Value() * correctedFinalLeafNo; //aX0 = position of the final leaf
+																//double leafPlateauStart = 24;
+																//adding new code to handle varieties that grow very high number of leaves
+			if (largestLeafPlateau > 1)
+			{
+				if (correctedFinalLeafNo > largestLeafPlateau)
+				{
+					largestLeafPos = parameters.AX0.Value() * largestLeafPlateau;
+
+					if (leafNo > largestLeafPos)
+					{
+						double tailCount = largestLeafPlateau - largestLeafPos;
+						if (leafNo < correctedFinalLeafNo - tailCount)
+						{
+							leafNo = largestLeafPos;
+						}
+						else
+						{
+							leafNo = largestLeafPlateau - (correctedFinalLeafNo - leafNo);
+						}
+					}
+				}
+			}
+			double a0 = -0.009, a1 = -0.2;
+			double b0 = 0.0006, b1 = -0.43;
+
+			double a = a0 - Math.Exp(a1 * correctedFinalLeafNo);
+			double b = b0 - Math.Exp(b1 * correctedFinalLeafNo);
+
+			//Relationship for calculating maximum individual leaf area from Total Leaf No
+			//Source: Modelling genotypic and environmental control of leaf area dynamics in grain sorghum. II. Individual leaf level 
+			//Carberry, Muchow, Hammer,1992
+			//written as Y = Y0*exp(a*pow(X-X0,2)+b*(pow(X-X0,3))) 
+			//pg314 -Leaf area production model
+
+			//Largest Leaf calculation
+			//originally from "Improved methods for predicting individual leaf area and leaf senescence in maize" - Birch, Hammer, Rickert 1998
+			//double aMaxB = 4.629148, aMaxC = 6.6261562; 
+			//double aMax = aMaxA * (1 - exp(-aMaxB * (finalLeafNo - aMaxC)));  // maximum individual leaf area
+			//Calculation then changed to use the relationship as described in the Carberry paper in Table 2
+			//The actual intercept and slope will be determined by the cultivar, and read from the config file (sorghum.xml)
+			//aMaxS = 19.5; //not 100% sure what this number should be - tried a range and this provided the best fit forthe test data
+			double largestLeafSize = parameters.AMaxS.Value() * finalLeafNo + parameters.AMaxI.Value(); //aMaxI is the intercept
+
+			//a vertical adjustment is applied to each tiller - this was discussed in a meeting on 22/08/12 and derived 
+			//from a set of graphs that I cant find that compared the curves of each tiller
+			//the effect is to decrease the size of the largest leaf by 10% 
+			largestLeafSize *= (1 - vertAdjValue);
+			double leafSize = largestLeafSize * Math.Exp(a * Math.Pow((leafNo - largestLeafPos), 2) + b * Math.Pow((leafNo - largestLeafPos), 3)) * 100;
+			return leafSize;
+		}
+
+		/// <summary>
+		/// Fixme - use public property.
+		/// </summary>
+		public void setVertLeafAdj(double adj)
+		{
+			vertAdjValue = adj;
+		}
+
+		/// <summary>
+		/// Fixme - use public property.
+		/// </summary>
+		public void setProportion(double val)
+		{
+			proportion = val;
+		}
+
+		/// <summary>
+		/// Fixme - use public property.
+		/// </summary>
+		/// <returns></returns>
+		public double getLeafArea()
+		{
+			return leafArea;
+		}
+
+		/// <summary>
+		/// TBI - doesn't exist in old model.
+		/// </summary>
+		public void setFinalLeafCorrection(double finalLeafCorrection)
+		{
+			// Oddly, there is no implementation for this method in the old sorghum model.
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Fixme - use public property.
+		/// </summary>
+		/// <returns></returns>
+		public double getProportion()
+		{
+			return proportion;
+		}
+
+		/// <summary>
+		/// Calculate leaf sizes.
+		/// </summary>
+		public void calculateLeafSizes()
+		{
+			// calculate the leaf sizes for this culm
+			leafSizes.Clear();
+			List<double> sizes = new List<double>();
+			for (int i = 1; i < Math.Ceiling(finalLeafNo) + 1; i++)
+				sizes.Add(calcIndividualLeafSize(i));
+			// offset for less leaves
+			int offset = 0;
+			if (culmNo > 0)
+				offset = 3 + culmNo;
+			for (int i = 0; i < Math.Ceiling(finalLeafNo - (offset)); i++)
+				leafSizes.Add(sizes[i + offset]);
+		}
+
+		/// <summary>
+		/// Fixme - use public property.
+		/// </summary>
+		public void setCulmNo(int _culmNo)
+		{
+			culmNo = _culmNo;
+		}
+
+		/// <summary>
+		/// Get area of current leaf.
+		/// </summary>
+		/// <param name="leafNo"></param>
+		public double getAreaOfCurrentLeaf(double leafNo)
+		{
+			// interpolate leaf sizes to get area of this leaf
+			// check upper
+			if (leafNo > leafSizes.Count)
+				return leafSizes.LastOrDefault();
+			else
+			{
+				int leafIndx = (int)Math.Floor(leafNo) - 1;
+				double leafPart = leafNo - Math.Floor(leafNo);
+				double size = leafSizes[leafIndx] + (leafSizes[leafIndx + 1] - leafSizes[leafIndx]) * leafPart;
+				return size;
+			}
+		}
+
+		/// <summary>
+		/// Fixme - use public property.
+		/// </summary>
+		public double getTotalLAI()
+		{
+			return totalLAI;
+		}
+	}
+}
