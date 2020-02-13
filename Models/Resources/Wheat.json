@@ -967,6 +967,45 @@
               "ReadOnly": false
             },
             {
+              "$type": "Models.Functions.OnEventFunction, Models",
+              "SetEvent": "Emergence",
+              "ReSetEvent": "never",
+              "Name": "EmergenceDAS",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "\nA function is used to provide flowering date as days after sowing(DAS).\n",
+                  "Name": "memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "PreEventValue",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].DaysAfterSowing",
+                  "Name": "PostEventValue",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
               "Name": "RewindDueToBiomassRemoved",
               "Children": [
@@ -6440,6 +6479,19 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 14",
+                    "[Phenology].VrnSensitivity.FixedValue = 1",
+                    "[Phenology].PpSensitivity.FixedValue = 2"
+                  ],
+                  "Name": "CRWT153",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
                     "[Phenology].MinimumLeafNumber.FixedValue = 8.5",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 0",
@@ -6737,1388 +6789,266 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.CultivarFolder, Models",
-              "Name": "Australia",
+          "$type": "Models.PMF.CultivarFolder, Models",
+          "Name": "Australia",
+          "Children": [
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 6",
+                "[Phenology].VrnSensitivity.FixedValue = 0",
+                "[Phenology].PpSensitivity.FixedValue = 1",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 1.3",
+                "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 4.4",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 88",
+                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.3"
+              ],
+              "Name": "Axe",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 6.7",
+                "[Phenology].VrnSensitivity.FixedValue = 2.3",
+                "[Phenology].PpSensitivity.FixedValue = 4.3",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 0.1",
+                "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 4.9",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 90",
+                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.3"
+              ],
+              "Name": "Bolac",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 7.0",
+                "[Phenology].PpSensitivity.FixedValue = 1.3",
+                "[Phenology].VrnSensitivity.FixedValue = 5.3",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 76",
+                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.7",
+                "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 5.4",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 1.1"
+              ],
+              "Name": "Cunningham",
               "Children": [
                 {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 5",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 0",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
-                  ],
-                  "Name": "Axe",
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Anlace",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 6",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
-                  ],
-                  "Name": "Bolac",
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Arrivato",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 6",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
-                  ],
-                  "Name": "Cunningham",
-                  "Children": [
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Anlace",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Arrivato",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Babbler",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Barham",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Baxter",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Bowie",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Buckley",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Buckly",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Burunga",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Camm",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Carinya",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "ChiefCLPlus",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "CLF_Janz",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Dagger",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "DBAAurora",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "ElmoreCLPlus",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Espada",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Frame",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Gazelle",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Halberd",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Hybrid_Meteor",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "JusticaCLPlus",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Preston",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Saphire",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Scout",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Stiletto",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Ventura",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Wallup",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 6",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
-                  ],
-                  "Name": "Derrimut",
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Babbler",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 6",
-                    "[Phenology].VrnSensitivity.FixedValue = 1",
-                    "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
-                  ],
-                  "Name": "EGAGregory",
-                  "Children": [
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Gregory",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Lancer",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 8",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 4"
-                  ],
-                  "Name": "GattonHartog",
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Barham",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 5",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 3.5",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
-                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 0",
-                    "[Phenology].EarlyReproductiveLongDayBase.FixedValue"
-                  ],
-                  "Name": "Gamenya",
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Baxter",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 5",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
-                  ],
-                  "Name": "Gauntlet",
-                  "Children": [
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Braewood",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Chara",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Clearfield_stl",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Drysdale",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Envoy",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Estoc",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Giles",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Harper",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Krichauff",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Magenta",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Mitch",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Phantom",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Pugsley",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Sentinel",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Silverstar",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Suneca",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Sunlin",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Sunvale",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Trojan",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Strzelecki",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 6",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 5",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
-                  ],
-                  "Name": "Gladius",
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Bowie",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 6",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 5",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
-                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 17"
-                  ],
-                  "Name": "Gutha",
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Buckley",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 6",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 20"
-                  ],
-                  "Name": "H45",
-                  "Children": [
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Saintly",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Tamarinrock",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Waagin",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Wollaroi",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Zippy",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 8",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
-                  ],
-                  "Name": "H46",
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Buckly",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 6",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 5",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
-                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041"
-                  ],
-                  "Name": "Hartog",
-                  "Children": [
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Annuello",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Carnamah",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Catalina",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "CLF_Stiletto",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Cobra",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Corack",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Correll",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Diamondbird",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Gladius",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Goroke",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "GrenadeCLPlus",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Guardian",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Halbred",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Impala",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Justica",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Kord",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Merlin",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Mitre",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Peake",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Shield",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Spitfire",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Sunguard",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Sunstate",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Yallaroi",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Yawa",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Yitpi",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 6",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
-                  ],
-                  "Name": "Hibred_Mercury",
-                  "Children": [
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Agtscythe",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Arrino",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Bonnie_rock",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Bowerbird",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Condo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Dart",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Dollarbird",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Emurock",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Hyperno",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "ImposeCLPlus",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Kalka",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Kirchauff",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Kukri",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Hunter",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "LRPBArrow",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Mace",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Ouyen",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Ruby",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Tamaroi",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Young",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Katana",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 6",
-                    "[Phenology].VrnSensitivity.FixedValue = 1",
-                    "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
-                  ],
-                  "Name": "Janz",
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Burunga",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 8",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
-                  ],
-                  "Name": "Kelallac",
-                  "Children": [
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Beaufort",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Calingiri",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Endure",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Forrest",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Scenario",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Zen",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 8",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
-                  ],
-                  "Name": "Kennedy",
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Camm",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 6",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 5",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
-                  ],
-                  "Name": "Lang",
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Carinya",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 5",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
-                  ],
-                  "Name": "Livingston",
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "ChiefCLPlus",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 6",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
-                  ],
-                  "Name": "Lincoln",
-                  "Children": [
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Crusader",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 6",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
-                  ],
-                  "Name": "Mace",
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "CLF_Janz",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 7",
-                    "[Phenology].VrnSensitivity.FixedValue = 5",
-                    "[Phenology].PpSensitivity.FixedValue = 5",
-                    "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 3.5 ",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
-                  ],
-                  "Name": "MacKellar",
-                  "Children": [
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Adagio",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Brennan",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Declic",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Revenue",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 7",
-                    "[Phenology].VrnSensitivity.FixedValue = 1",
-                    "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22"
-                  ],
-                  "Name": "Matong",
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Dagger",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 8",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 5",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 90"
-                  ],
-                  "Name": "McCubbin",
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "DBAAurora",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 7",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 3.5",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 80"
-                  ],
-                  "Name": "Mercury",
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "ElmoreCLPlus",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 8",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
-                  ],
-                  "Name": "Ruby",
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Espada",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 7",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
-                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.045"
-                  ],
-                  "Name": "Spear",
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Frame",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 7",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 5",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
-                  ],
-                  "Name": "Sunbri",
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Gazelle",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 6.5",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 3.5",
-                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
-                  ],
-                  "Name": "Sunco",
-                  "Children": [
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Advantage",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Bellaroi",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Caparoi",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Ellison",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Suntop",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Halberd",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 8",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
-                  ],
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Hybrid_Meteor",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "JusticaCLPlus",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Preston",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Saphire",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Scout",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Stiletto",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
                   "Name": "Ventura",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -8126,129 +7056,8 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 8",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
-                  ],
-                  "Name": "Wedgetail",
-                  "Children": [
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Lorikeet",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Rosella",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Whistler",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Wylah",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Eaglehawk",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 5",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
-                  ],
-                  "Name": "Westonia",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 6",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 20",
-                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.045"
-                  ],
-                  "Name": "Wilgoyne",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 8",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
-                  ],
-                  "Name": "Wyalkatchem",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 8",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 5",
-                    "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 2.5",
-                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 5",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 80"
-                  ],
-                  "Name": "Yitpi",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 8",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
-                  ],
-                  "Name": "Young",
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Wallup",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -8260,6 +7069,1403 @@
               "ReadOnly": false
             },
             {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 7",
+                "[Phenology].VrnSensitivity.FixedValue = 0",
+                "[Phenology].PpSensitivity.FixedValue = 3",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 1.8",
+                "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 4.3",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 83",
+                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.5"
+              ],
+              "Name": "Derrimut",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 7.3",
+                "[Phenology].PpSensitivity.FixedValue = 1.7",
+                "[Phenology].VrnSensitivity.FixedValue = 3.7",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 85",
+                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.4",
+                "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 4.3",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 1.1"
+              ],
+              "Name": "EGAGregory",
+              "Children": [
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Gregory",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Lancer",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 8",
+                "[Phenology].VrnSensitivity.FixedValue = 0",
+                "[Phenology].PpSensitivity.FixedValue = 4"
+              ],
+              "Name": "GattonHartog",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 5",
+                "[Phenology].VrnSensitivity.FixedValue = 0",
+                "[Phenology].PpSensitivity.FixedValue = 3.5",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 0",
+                "[Phenology].EarlyReproductiveLongDayBase.FixedValue"
+              ],
+              "Name": "Gamenya",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 6.7",
+                "[Phenology].PpSensitivity.FixedValue = 2.0",
+                "[Phenology].VrnSensitivity.FixedValue = 0.7",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 85",
+                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.3",
+                "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 5.1",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 0.6"
+              ],
+              "Name": "Gauntlet",
+              "Children": [
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Chara",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Clearfield_stl",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Drysdale",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Envoy",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Estoc",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Giles",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Harper",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Krichauff",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Mitch",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Phantom",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Pugsley",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Sentinel",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Silverstar",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Suneca",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Sunlin",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Sunvale",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Trojan",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Strzelecki",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 6",
+                "[Phenology].VrnSensitivity.FixedValue = 0",
+                "[Phenology].PpSensitivity.FixedValue = 5",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+              ],
+              "Name": "Gladius",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 6",
+                "[Phenology].VrnSensitivity.FixedValue = 0",
+                "[Phenology].PpSensitivity.FixedValue = 5",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
+                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
+                "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 17"
+              ],
+              "Name": "Gutha",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 6.3",
+                "[Phenology].PpSensitivity.FixedValue = 1.7\t",
+                "[Phenology].VrnSensitivity.FixedValue = 0.7",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 74",
+                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.5",
+                "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 5.9",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 0.2"
+              ],
+              "Name": "H45",
+              "Children": [
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Saintly",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Tamarinrock",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Waagin",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Wollaroi",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Zippy",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 8",
+                "[Phenology].VrnSensitivity.FixedValue = 0",
+                "[Phenology].PpSensitivity.FixedValue = 4",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+              ],
+              "Name": "H46",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 6",
+                "[Phenology].VrnSensitivity.FixedValue = 0",
+                "[Phenology].PpSensitivity.FixedValue = 5",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
+                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041"
+              ],
+              "Name": "Hartog",
+              "Children": [
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Annuello",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Carnamah",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Catalina",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "CLF_Stiletto",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Cobra",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Corack",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Correll",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Diamondbird",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Gladius",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Goroke",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "GrenadeCLPlus",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Guardian",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Halbred",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Impala",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Justica",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Kord",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Merlin",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Mitre",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Peake",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Shield",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Spitfire",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Sunguard",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Sunstate",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Yallaroi",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Yawa",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 6",
+                "[Phenology].VrnSensitivity.FixedValue = 0",
+                "[Phenology].PpSensitivity.FixedValue = 4",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+              ],
+              "Name": "Hibred_Mercury",
+              "Children": [
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Agtscythe",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Arrino",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Bonnie_rock",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Bowerbird",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Condo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Dart",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Dollarbird",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Emurock",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Hyperno",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "ImposeCLPlus",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Kalka",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Kirchauff",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Kukri",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Hunter",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "LRPBArrow",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Ouyen",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Ruby",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Tamaroi",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Katana",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 6.7",
+                "[Phenology].PpSensitivity.FixedValue = 3.0",
+                "[Phenology].VrnSensitivity.FixedValue = 1.0",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 78",
+                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.4",
+                "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 5.1",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 0.0"
+              ],
+              "Name": "Janz",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 6.7",
+                "[Phenology].PpSensitivity.FixedValue = 4.8",
+                "[Phenology].VrnSensitivity.FixedValue = 0.3",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 75",
+                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.5",
+                "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 6.1",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3.6"
+              ],
+                  "Name": "Kellalac",
+              "Children": [
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Beaufort",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Calingiri",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Endure",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Forrest",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Scenario",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Zen",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 8",
+                "[Phenology].VrnSensitivity.FixedValue = 0",
+                "[Phenology].PpSensitivity.FixedValue = 4",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+              ],
+              "Name": "Kennedy",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 6",
+                "[Phenology].VrnSensitivity.FixedValue = 0",
+                "[Phenology].PpSensitivity.FixedValue = 5",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+              ],
+              "Name": "Lang",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 5",
+                "[Phenology].VrnSensitivity.FixedValue = 0",
+                "[Phenology].PpSensitivity.FixedValue = 4",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+              ],
+              "Name": "Livingston",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 6",
+                "[Phenology].VrnSensitivity.FixedValue = 0",
+                "[Phenology].PpSensitivity.FixedValue = 4",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+              ],
+              "Name": "Lincoln",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 6.7",
+                "[Phenology].PpSensitivity.FixedValue = 1.3",
+                "[Phenology].VrnSensitivity.FixedValue = 4.3",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 84",
+                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.4",
+                "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 5.1",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 0.0"
+              ],
+              "Name": "Mace",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 7",
+                "[Phenology].VrnSensitivity.FixedValue = 5",
+                "[Phenology].PpSensitivity.FixedValue = 5",
+                "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 3.5 ",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+              ],
+              "Name": "MacKellar",
+              "Children": [
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Adagio",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Brennan",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Declic",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Revenue",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 7",
+                "[Phenology].VrnSensitivity.FixedValue = 1",
+                "[Phenology].PpSensitivity.FixedValue = 4",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
+                "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22"
+              ],
+              "Name": "Matong",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 8",
+                "[Phenology].VrnSensitivity.FixedValue = 0",
+                "[Phenology].PpSensitivity.FixedValue = 5",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 90"
+              ],
+              "Name": "McCubbin",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 7",
+                "[Phenology].VrnSensitivity.FixedValue = 0",
+                "[Phenology].PpSensitivity.FixedValue = 4",
+                "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 3.5",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 80"
+              ],
+              "Name": "Mercury",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 8",
+                "[Phenology].VrnSensitivity.FixedValue = 0",
+                "[Phenology].PpSensitivity.FixedValue = 4",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+              ],
+              "Name": "Ruby",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 7",
+                "[Phenology].VrnSensitivity.FixedValue = 0",
+                "[Phenology].PpSensitivity.FixedValue = 4",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
+                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.045"
+              ],
+              "Name": "Spear",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 8.0",
+                "[Phenology].PpSensitivity.FixedValue = 4.0",
+                "[Phenology].VrnSensitivity.FixedValue = 1.0",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 92",
+                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.2",
+                "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 3.5",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 6.8"
+              ],
+              "Name": "Sunbri",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 6.5",
+                "[Phenology].VrnSensitivity.FixedValue = 0",
+                "[Phenology].PpSensitivity.FixedValue = 3.5",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 4",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+              ],
+              "Name": "Sunco",
+              "Children": [
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Advantage",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Bellaroi",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Caparoi",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Suntop",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 8",
+                "[Phenology].VrnSensitivity.FixedValue = 0",
+                "[Phenology].PpSensitivity.FixedValue = 4",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+              ],
+              "Name": "Ventura",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 6",
+                "[Phenology].PpSensitivity.FixedValue = 3",
+                "[Phenology].VrnSensitivity.FixedValue = 4.3",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 97",
+                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.6",
+                "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 5.3",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2.4"
+              ],
+              "Name": "Wedgetail",
+              "Children": [
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Lorikeet",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Rosella",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Whistler",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Wylah",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Eaglehawk",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 5",
+                "[Phenology].VrnSensitivity.FixedValue = 0",
+                "[Phenology].PpSensitivity.FixedValue = 4",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+              ],
+              "Name": "Westonia",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 6",
+                "[Phenology].VrnSensitivity.FixedValue = 0",
+                "[Phenology].PpSensitivity.FixedValue = 4",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
+                "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 20",
+                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.045"
+              ],
+              "Name": "Wilgoyne",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 6.0",
+                "[Phenology].PpSensitivity.FixedValue = 1.7",
+                "[Phenology].VrnSensitivity.FixedValue = 2.7",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 92",
+                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.2",
+                "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 4.5",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 0.5"
+              ],
+              "Name": "Wyalkatchem",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 6.0",
+                "[Phenology].PpSensitivity.FixedValue = 5.0",
+                "[Phenology].VrnSensitivity.FixedValue = 3.3",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 97",
+                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.5",
+                "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 5.0",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 15.1"
+              ],
+              "Name": "Yitpi",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 7.0",
+                "[Phenology].PpSensitivity.FixedValue = 0.7",
+                "[Phenology].VrnSensitivity.FixedValue = 1.0",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 89",
+                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.3",
+                "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 4.6",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2.4"
+              ],
+              "Name": "Young",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 6.3",
+                "[Phenology].PpSensitivity.FixedValue = 1.7",
+                "[Phenology].VrnSensitivity.FixedValue = 5.0",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 99",
+                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.3",
+                "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 4.2",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 0.0"
+              ],
+              "Name": "Scepter",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 6.0",
+                "[Phenology].PpSensitivity.FixedValue = 2.0",
+                "[Phenology].VrnSensitivity.FixedValue = 6.7",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 75",
+                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.7",
+                "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 6.0",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 0.0"
+              ],
+              "Name": "Crusader",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 5.7",
+                "[Phenology].PpSensitivity.FixedValue = 5.3",
+                "[Phenology].VrnSensitivity.FixedValue = 2.3",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 98",
+                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.4",
+                "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 5.1",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 5.2"
+              ],
+              "Name": "Cutlass",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 6.0",
+                "[Phenology].PpSensitivity.FixedValue = 4.0",
+                "[Phenology].VrnSensitivity.FixedValue = 4.7",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 102",
+                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.5",
+                "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 4.2",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 1.3"
+              ],
+              "Name": "Ellison",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 8.0",
+                "[Phenology].PpSensitivity.FixedValue = 1.7",
+                "[Phenology].VrnSensitivity.FixedValue = 8.0",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 72",
+                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.8",
+                "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 4.3",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 1.6"
+              ],
+              "Name": "Longsword",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 6.7",
+                "[Phenology].PpSensitivity.FixedValue = 1.7",
+                "[Phenology].VrnSensitivity.FixedValue = 5.7",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 98",
+                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.4",
+                "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 4.5",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 0.9"
+              ],
+              "Name": "Magenta",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 7.3",
+                "[Phenology].PpSensitivity.FixedValue = 0.0",
+                "[Phenology].VrnSensitivity.FixedValue = 6.3",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 83",
+                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.5",
+                "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 3.7",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2.6"
+              ],
+              "Name": "CSIROW007",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 7.0",
+                "[Phenology].PpSensitivity.FixedValue = 1.7",
+                "[Phenology].VrnSensitivity.FixedValue = 5.3",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 91",
+                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.4",
+                "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 3.4",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 9.7"
+              ],
+              "Name": "CSIROW023",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 7.7",
+                "[Phenology].PpSensitivity.FixedValue = 1.3",
+                "[Phenology].VrnSensitivity.FixedValue = 6.3",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 85",
+                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.4",
+                "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 3.8",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2.8"
+              ],
+              "Name": "CSIROW073",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 7.3",
+                "[Phenology].PpSensitivity.FixedValue = 3.7",
+                "[Phenology].VrnSensitivity.FixedValue = 1.3",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 91",
+                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.2",
+                "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 4.3",
+                "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 8.5"
+              ],
+              "Name": "Braewood",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
               "$type": "Models.PMF.CultivarFolder, Models",
               "Name": "Turkey",
               "Children": [
