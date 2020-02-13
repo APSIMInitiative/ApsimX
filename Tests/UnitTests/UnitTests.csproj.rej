@@ -1,0 +1,10 @@
+diff a/Tests/UnitTests/UnitTests.csproj b/Tests/UnitTests/UnitTests.csproj	(rejected hunks)
+@@ -11,7 +11,7 @@
+     <AppDesignerFolder>Properties</AppDesignerFolder>
+     <RootNamespace>UnitTests</RootNamespace>
+     <AssemblyName>UnitTests</AssemblyName>
+-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
++    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+     <FileAlignment>512</FileAlignment>
+     <TargetFrameworkProfile />
+     <NuGetPackageImportStamp>

@@ -1,0 +1,7 @@
+diff a/Models/Importer/app.config b/Models/Importer/app.config	(rejected hunks)
+@@ -4,4 +4,4 @@
+     <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+     </assemblyBinding>
+   </runtime>
+-<startup><supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.6"/></startup></configuration>
++<startup><supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.7.2"/></startup></configuration>
