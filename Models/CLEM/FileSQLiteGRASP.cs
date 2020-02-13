@@ -419,15 +419,15 @@ namespace Models.CLEM
             }
 
             string sqlQuery = "SELECT  " +
-                RegionColumnName + "," +
-                LandIdColumnName + "," +
-                GrassBAColumnName + "," +
-                LandConColumnName + "," +
-                StkRateColumnName + "," +
-                YearColumnName + "," +
-                //"CutNum," +
-                MonthColumnName + "," +
-                GrowthColumnName;
+            RegionColumnName + "," +
+            LandIdColumnName + "," +
+            GrassBAColumnName + "," +
+            LandConColumnName + "," +
+            StkRateColumnName + "," +
+            YearColumnName + "," +
+            //"CutNum," +
+            MonthColumnName + "," +
+            GrowthColumnName;
             //"BP1," +
             //"BP2" +
 
@@ -541,10 +541,6 @@ namespace Models.CLEM
             }
 
             index = Array.BinarySearch(valuesToUse, value);
-            //if (index < 0)
-            //{
-            //    throw new ApsimXException(this, $"Unable to locate a suitable dataset for [{category}] with value [{value}] in [x={this.FileName}] using the [x={this.Name}] datareader");
-            //}
             return (index < 0) ? valuesToUse[~index] : valuesToUse[index];
         }
 
@@ -563,9 +559,11 @@ namespace Models.CLEM
         public List<PastureDataType> GetIntervalsPastureData(int region, string soil, double grassBasalArea, double landCondition, double stockingRate,
                                          DateTime ecolCalculationDate, int ecolCalculationInterval)
         {
-            if (validationResults.Count > 0)
+            List<PastureDataType> pastureDetails = new List<PastureDataType>();
+
+            if (validationResults.Count > 0 | ecolCalculationDate > clock.EndDate)
             {
-                return new List<PastureDataType>();
+                return pastureDetails;
             }
 
             int startYear = ecolCalculationDate.Year;
@@ -636,9 +634,9 @@ namespace Models.CLEM
             {
                 return null;
             }
+
             results.DefaultView.Sort = YearColumnName + ", " + MonthColumnName;
 
-            List<PastureDataType> pastureDetails = new List<PastureDataType>();
             foreach (DataRowView row in results.DefaultView)
             {
                 pastureDetails.Add(DataRow2PastureDataType(row));
