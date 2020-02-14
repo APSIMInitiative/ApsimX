@@ -126,7 +126,7 @@ namespace Models.PMF.Organs
         private Phenology phenology = null;
 
         [Link(IsOptional = true)]
-        private Models.PMF.Struct.Sorghum.LeafCulms culms = null;
+        private LeafCulms culms = null;
 
 
         /// <summary>The met data</summary>
@@ -593,7 +593,7 @@ namespace Models.PMF.Organs
             dltStressedLAI = 0;
             if (LeafInitialised)
             {
-                culms.calcPotentialArea();
+                culms.CalcPotentialArea();
 
                 //old model calculated BiomRUE at the end of the day
                 //this is done at strat of the day
@@ -615,7 +615,7 @@ namespace Models.PMF.Organs
             if (Plant.IsEmerged)
             {
                 if (culms != null)
-                    culms.areaActual();
+                    culms.AreaActual();
                 else
                     DltLAI = dltLAIFunction.Value();
 

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Models.PMF.Struct.Sorghum
+namespace Models.PMF.Struct
 {
     /// <summary>
     /// Input parameters passed to the Culm constructor.

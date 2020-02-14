@@ -10,10 +10,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Models.PMF.Struct.Sorghum
+namespace Models.PMF.Struct
 {
 	/// <summary>
-	/// LeafCulms model ported from old apsim's sorghum model.
+	/// LeafCulms model ported from LeafCulms and LeafCulms_Fixed in
+	/// the apsim classic sorghum model.
 	/// </summary>
 	/// <remarks>
 	/// # TODO:
@@ -22,61 +23,63 @@ namespace Models.PMF.Struct.Sorghum
 	/// </remarks>
 	[Serializable]
 	[ValidParent(ParentType = typeof(Plant))]
+	[ViewName("UserInterface.Views.GridView")]
+	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	public class LeafCulms : Model
 	{
 		/// <summary>
 		/// Link to the plant model.
 		/// </summary>
 		[Link]
-		protected Plant plant = null;
+		private Plant plant = null;
 
 		/// <summary>
 		/// Link to phenology model.
 		/// </summary>
 		[Link]
-		protected Phenology phenology = null;
+		private Phenology phenology = null;
 
 		/// <summary>
 		/// Link to leaf model.
 		/// </summary>
 		[Link]
-		protected SorghumLeaf leaf = null;
+		private SorghumLeaf leaf = null;
 
 		/// <summary>
 		/// Link to summary.
 		/// </summary>
 		[Link]
-		protected Summary summary = null;
+		private Summary summary = null;
 
 		/// <summary>
 		/// Link to weather.
 		/// </summary>
 		[Link]
-		protected IWeather weather = null;
+		private IWeather weather = null;
 
 		/// <summary>
 		/// Link to arbitrator for dltTT.
 		/// </summary>
 		[Link]
-		protected SorghumArbitrator arbitrator = null;
+		private SorghumArbitrator arbitrator = null;
 
 		/// <summary>
 		/// Vertical Offset for Largest Leaf Calc.
 		/// </summary>
 		[Link(Type = LinkType.Child, ByName = true)]
-		protected IFunction aMaxVert = null;
+		private IFunction aMaxVert = null;
 
 		/// <summary>
 		/// Additional Vertical Offset for each additional Tiller.
 		/// </summary>
 		[Link(Type = LinkType.Child, ByName = true)]
-		protected IFunction aTillerVert = null;
+		private IFunction aTillerVert = null;
 
 		/// <summary>
 		/// Expansion stress.
 		/// </summary>
 		[Link(Type = LinkType.Child, ByName = true)]
-		protected IFunction expansionStress = null;
+		private IFunction expansionStress = null;
 
 		/// <summary>
 		/// The Initial Appearance rate for phyllocron.
@@ -85,7 +88,7 @@ namespace Models.PMF.Struct.Sorghum
 		/// TODO: copy InitialAppearanceRate from CulmStructure.
 		/// </remarks>
 		[Link(Type = LinkType.Child, ByName = true)]
-		protected IFunction appearanceRate1 = null;
+		private IFunction appearanceRate1 = null;
 		
 		/// <summary>
 		/// The Final Appearance rate for phyllocron.
@@ -94,11 +97,15 @@ namespace Models.PMF.Struct.Sorghum
 		/// TODO: copy FinalAppearanceRate from CulmStructure.
 		/// </remarks>
 		[Link(Type = LinkType.Child, ByName = true)]
-		protected IFunction appearanceRate2 = null;
+		private IFunction appearanceRate2 = null;
 
 		/// <summary>
 		/// 
 		/// </summary>
+		/// <remarks>
+		/// fixme: temporarily making this protected so we don't get an
+		/// unused variable warning.
+		/// </remarks>
 		[Link(Type = LinkType.Child, ByName = true)]
 		protected IFunction appearanceRate3 = null;
 
@@ -153,44 +160,55 @@ namespace Models.PMF.Struct.Sorghum
 		[Link(Type = LinkType.Child, ByName = true)]
 		private IFunction leafNoAtEmergence = null;
 
+		[Link(Type = LinkType.Child, ByName = true)]
+		private IFunction slaMax = null;
+
 		/// <summary>
 		/// Propensity to tiller.
 		/// </summary>
 		[Link(Type = LinkType.Child, ByName = true)]
-		protected IFunction tilleringPropensity = null;
+		private IFunction tilleringPropensity = null;
 
 		/// <summary>
 		/// Tiller supply/demand ratio ratio slope.
 		/// </summary>
 		[Link(Type = LinkType.Child, ByName = true)]
-		protected IFunction tillerSdSlope = null;
+		private IFunction tillerSdSlope = null;
 
 		/// <summary>
 		/// SLA Range.
 		/// </summary>
 		[Units("%")]
 		[Link(Type = LinkType.Child, ByName = true)]
-		protected IFunction tillerSlaBound = null;
+		private IFunction tillerSlaBound = null;
+
+		/// <summary>
+		/// If true, tillering will be calculated on the fly.
+		/// Otherwise, number of tillers must be supplied via fertile
+		/// tiller number in the sowing rule.
+		/// </summary>
+		[Description("Dynamic tillering enabled")]
+		public bool DynamicTillering { get; set; }
 
 		/// <summary>
 		/// Number of tillers added.
 		/// </summary>
-		protected double tillersAdded;
+		private double tillersAdded;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		protected double tillers;
+		private double tillers;
 
 		/// <summary>
 		/// Phenological stage, updated at end-of-day.
 		/// </summary>
-		protected double stage;
+		private double stage;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		protected double dltLeafNo;
+		private double dltLeafNo;
 
 		/// <summary>
 		/// Final leaf number.
@@ -200,7 +218,7 @@ namespace Models.PMF.Struct.Sorghum
 		/// <summary>
 		/// Wrapper around leaf.DltPotentialLAI
 		/// </summary>
-		protected double dltPotentialLAI
+		private double dltPotentialLAI
 		{
 			get
 			{
@@ -215,7 +233,7 @@ namespace Models.PMF.Struct.Sorghum
 		/// <summary>
 		/// Wrapper around leaf.DltStressedLAI.
 		/// </summary>
-		protected double dltStressedLAI
+		private double dltStressedLAI
 		{
 			get
 			{
@@ -230,12 +248,12 @@ namespace Models.PMF.Struct.Sorghum
 		/// <summary>
 		/// Specific leaf area.
 		/// </summary>
-		protected double sla;
+		private double sla;
 
 		/// <summary>
 		/// Leaf area index.
 		/// </summary>
-		protected double lai { get { return leaf.LAI; } }
+		private double lai { get { return leaf.LAI; } }
 
 		/// <summary>
 		/// Number of leaves?
@@ -245,95 +263,105 @@ namespace Models.PMF.Struct.Sorghum
 		/// <summary>
 		/// 
 		/// </summary>
-		protected List<double> leafNo;
+		private List<double> leafNo;
 
 		/// <summary>
 		/// Total plant leaf area.
 		/// </summary>
-		protected double tpla;
+		private double tpla;
 
 		// All variables below here existed in old sorghum.
 
 		/// <summary>
 		/// fixme - start with lower-case.
 		/// </summary>
-		protected List<Culm> Culms;
+		private List<Culm> Culms;
 
 		/// <summary>
 		/// Vertical adjustment.
 		/// </summary>
-		protected double verticalAdjustment;
+		private double verticalAdjustment;
 
 		/// <summary>
 		/// Number of calculated tillers?
 		/// </summary>
-		protected double calculatedTillers;
+		private double calculatedTillers;
 
 		/// <summary>
 		/// Tiller supply factor.
 		/// </summary>
-		protected double supply;
+		private double supply;
 
 		/// <summary>
 		/// Tiller demand factor.
 		/// </summary>
-		protected double demand;
+		private double demand;
 
 		/// <summary>
 		/// Moving average of daily radiation during leaf 5 expansion.
 		/// </summary>
 		[Units("R/oCd")]
-		protected List<double> radiationValues;
+		private List<double> radiationValues;
 
 		/// <summary>
 		/// Don't think this is used anywhere.
 		/// </summary>
+		/// <remarks>
+		/// fixme: temporarily making this protected so it doesn't trigger an
+		/// unused variable warning.
+		/// </remarks>
 		protected double avgRadiation;
 
 		/// <summary>
 		/// Don't think this is used anywhere.
 		/// </summary>
+		/// <remarks>
+		/// fixme: temporarily making this protected so it doesn't trigger an
+		/// unused variable warning.
+		/// </remarks>
 		protected double thermalTimeCount;
 
 		/// <summary>
 		/// Fixme
 		/// </summary>
-		protected const int emergence = 3;
+		private const int emergence = 3;
 
 		/// <summary>
 		/// Fixme
 		/// </summary>
-		protected const int endJuv = 4;
+		private const int endJuv = 4;
 
 		/// <summary>
 		/// Fixme
 		/// </summary>
-		protected const int fi = 5;
+		private const int fi = 5;
 
 		/// <summary>
 		/// Fixme
 		/// </summary>
-		protected const int flag = 6;
+		private const int flag = 6;
 
 		/// <summary>
 		/// Maximum LAI for tillering. Fixme - move to tree.
 		/// </summary>
-		protected const double maxLAIForTillering = 0.325;
+		private const double maxLAIForTillering = 0.325;
 
 		/// <summary>
 		/// Leaf number at which to start aggregation of <see cref="radiationValues"/>.
 		/// </summary>
-		protected const int startThermalQuotientLeafNo = 3;
+		private const int startThermalQuotientLeafNo = 3;
 
 		/// <summary>
 		/// FTN is calculated after the emergence of this leaf number.
 		/// </summary>
-		protected const int endThermalQuotientLeafNo = 5;
+		private const int endThermalQuotientLeafNo = 5;
+
+		private const double smm2sm = 1e-6;
 
 		/// <summary>
 		/// Linear LAI.
 		/// </summary>
-		protected double linearLAI;
+		private double linearLAI;
 
 		private CulmParams culmParams;
 
@@ -367,7 +395,7 @@ namespace Models.PMF.Struct.Sorghum
 		/// Remove all then add the first culm (which is the main culm).
 		/// Shouldn't be called once sown.
 		/// </summary>
-		public virtual void initialize()
+		public void Initialize()
 		{
 			Culms.Clear();
 			culmParams = new CulmParams()
@@ -413,9 +441,9 @@ namespace Models.PMF.Struct.Sorghum
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		[EventSubscribe("StartOfSimulation")]
-		protected void StartOfSim(object sender, EventArgs e)
+		private void StartOfSim(object sender, EventArgs e)
 		{
-			initialize();
+			Initialize();
 		}
 
 		/// <summary>
@@ -424,7 +452,7 @@ namespace Models.PMF.Struct.Sorghum
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		[EventSubscribe("Sowing")]
-		protected void OnSowing(object sender, EventArgs e)
+		private void OnSowing(object sender, EventArgs e)
 		{
 			culmParams.Density = plant.SowingData.Population;
 		}
@@ -435,7 +463,7 @@ namespace Models.PMF.Struct.Sorghum
 		/// <param name="sender">Sender object.</param>
 		/// <param name="e">Event arguments.</param>
 		[EventSubscribe("EndOfDay")]
-		protected void UpdateVars(object sender, EventArgs e)
+		private void UpdateVars(object sender, EventArgs e)
 		{
 			if (!plant.IsAlive)
 				return;
@@ -465,16 +493,24 @@ namespace Models.PMF.Struct.Sorghum
 		/// <param name="sender">Sender object.</param>
 		/// <param name="e">Event arguments.</param>
 		[EventSubscribe("PrePhenology")]
-		protected void OnPrePhenology(object sender, EventArgs e)
+		private void OnPrePhenology(object sender, EventArgs e)
 		{
 			if (plant.IsAlive)
-				calcLeafNo();
+				CalcLeafNo();
 		}
 
 		/// <summary>
 		/// Calculate leaf number.
 		/// </summary>
-		public virtual void calcLeafNo()
+		public void CalcLeafNo()
+		{
+			if (DynamicTillering)
+				CalcLeafNoDynamic();
+			else
+				CalcLeafNoFixed();
+		}
+
+		private void CalcLeafNoDynamic()
 		{
 			//overriding this function to retain existing code on Leaf class, but changing this one to manage tillers and leaves
 			//first culm is the main one, that also provides timing for remaining tiller appearance
@@ -496,8 +532,8 @@ namespace Models.PMF.Struct.Sorghum
 				dltLeafNo = dltLeafNoMainCulm; //updates nLeaves
 				double newLeafNo = Culms[0].getCurrentLeafNo();
 
-				calcTillerNumber((int)Math.Floor(newLeafNo), (int)Math.Floor(currentLeafNo));
-				calcTillerAppearance((int)Math.Floor(newLeafNo), (int)Math.Floor(currentLeafNo));
+				CalcTillerNumber((int)Math.Floor(newLeafNo), (int)Math.Floor(currentLeafNo));
+				CalcTillerAppearance((int)Math.Floor(newLeafNo), (int)Math.Floor(currentLeafNo));
 
 				for (int i = 1; i < (int)Culms.Count; ++i)
 				{
@@ -512,9 +548,50 @@ namespace Models.PMF.Struct.Sorghum
 		}
 
 		/// <summary>
+		/// Calculate leaf number.
+		/// </summary>
+		private void CalcLeafNoFixed()
+		{
+			//overriding this function to retain existing code on Leaf class, but changing this one to manage tillers and leaves
+			//first culm is the main one, that also provides timing for remaining tiller appearance
+
+			// calculate final leaf number up to initiation - would finalLeafNo need a different calc for each culm?
+
+			if (Culms.Count > 0 && stage >= emergence)
+			{
+				//calc finalLeafNo for first culm (main), and then calc it's dltLeafNo
+				//add any new tillers and then calc each tiller in turn
+				if (stage <= fi)
+				{
+					Culms[0].calcFinalLeafNo();
+					Culms[0].setCulmNo(0);
+					FinalLeafNo = Culms[0].getFinalLeafNo();
+					Culms[0].calculateLeafSizes();
+
+				}
+				double currentLeafNo = Culms[0].getCurrentLeafNo();
+				double dltLeafNoMainCulm = Culms[0].calcLeafAppearance();
+				dltLeafNo = dltLeafNoMainCulm; //updates nLeaves
+				double newLeafNo = Culms[0].getCurrentLeafNo();
+
+				CalcTillerAppearance((int)Math.Floor(newLeafNo), (int)Math.Floor(currentLeafNo));
+
+				for (int i = 1; i < Culms.Count; i++)
+				{
+					if (stage <= fi)
+					{
+						Culms[i].calcFinalLeafNo();
+						Culms[i].calculateLeafSizes();
+					}
+					Culms[i].calcLeafAppearance();
+				}
+			}
+		}
+
+		/// <summary>
 		/// Calculate potential area. For now, this is manually called by leaf.
 		/// </summary>
-		public virtual void calcPotentialArea()
+		public void CalcPotentialArea()
 		{
 			dltPotentialLAI = 0.0;
 			dltStressedLAI = 0.0;
@@ -524,7 +601,7 @@ namespace Models.PMF.Struct.Sorghum
 				for (int i = 0; i < Culms.Count; ++i)
 				{
 					dltPotentialLAI += Culms[i].calcPotentialLeafArea();
-					dltStressedLAI = calcStressedLeafArea();        // dltPotentialLAI * totalStress(0-1)
+					dltStressedLAI = CalcStressedLeafArea();        // dltPotentialLAI * totalStress(0-1)
 				}
 			}
 		}
@@ -532,7 +609,15 @@ namespace Models.PMF.Struct.Sorghum
 		/// <summary>
 		/// Calculate dltLAI. For now, this is manually called by leaf.
 		/// </summary>
-		public virtual void areaActual()
+		public void AreaActual()
+		{
+			if (DynamicTillering)
+				AreaActualDynamic();
+			else
+				AreaActualFixed();
+		}
+
+		private void AreaActualDynamic()
 		{
 			// calculate new sla and see if it is less than slaMax
 			// if so then reduce tillers
@@ -624,11 +709,37 @@ namespace Models.PMF.Struct.Sorghum
 		}
 
 		/// <summary>
+		/// Calculate DltLAI. Called manually by leaf for now.
+		/// </summary>
+		private void AreaActualFixed()
+		{
+			if (phenology.Stage >= endJuv && phenology.Stage < flag)
+			{
+				double dltDmGreen = leaf.potentialDMAllocation.Structural;
+				leaf.DltLAI = Math.Min(dltStressedLAI, dltDmGreen * slaMax.Value() * smm2sm);
+				double stress = expansionStress.Value();
+
+				if (leaf.Live.Wt + dltDmGreen > 0.0)
+					sla = (lai + dltStressedLAI) / (leaf.Live.Wt + dltDmGreen) * 10000;  // (cm^2/g)
+			}
+			else
+				leaf.DltLAI = dltStressedLAI;
+		}
+
+		/// <summary>
 		/// Calculate tiller appearance.
 		/// </summary>
 		/// <param name="newLeafNo"></param>
 		/// <param name="currentLeafNo"></param>
-		public virtual void calcTillerAppearance(int newLeafNo, int currentLeafNo)
+		public void CalcTillerAppearance(int newLeafNo, int currentLeafNo)
+		{
+			if (DynamicTillering)
+				CalcTillerAppearanceDynamic(newLeafNo, currentLeafNo);
+			else
+				CalcTillerAppearanceFixed(newLeafNo, currentLeafNo);
+		}
+
+		private void CalcTillerAppearanceDynamic(int newLeafNo, int currentLeafNo)
 		{
 			//if there are still more tillers to add
 			//and the newleaf is greater than 3
@@ -648,7 +759,77 @@ namespace Models.PMF.Struct.Sorghum
 				fractionToAdd = 0.2;
 				if (newTiller)
 				{
-					addTiller(currentLeafNo, currentLeafNo - 1, fractionToAdd);
+					AddTiller(currentLeafNo, currentLeafNo - 1, fractionToAdd);
+				}
+			}
+		}
+
+		private void CalcTillerAppearanceFixed(int newLeafNo, int currentLeafNo)
+		{
+			//if there are still more tillers to add
+			//and the newleaf is greater than 3
+			if (plant.SowingData.BudNumber > tillersAdded)
+			{
+				//tiller emergence is more closely aligned with tip apearance, but we don't track tip, so will use ligule appearance
+				//could also use Thermal Time calcs if needed
+				//Environmental & Genotypic Control of Tillering in Sorghum ppt - Hae Koo Kim
+				//T2=L3, T3=L4, T4=L5, T5=L6
+
+				//logic to add new tillers depends on which tiller, which is defined by FTN (fertileTillerNo)
+				//this should be provided at sowing  //what if fertileTillers == 1?
+				//2 tillers = T3 + T4
+				//3 tillers = T2 + T3 + T4
+				//4 tillers = T2 + T3 + T4 + T5
+				//more than that is too many tillers - but will assume existing pattern for 3 and 4
+				//5 tillers = T2 + T3 + T4 + T5 + T6
+
+				bool newLeaf = newLeafNo > currentLeafNo;
+				bool newTiller = newLeaf && newLeafNo >= 3; //is it a new leaf, and it is leaf 3 or more
+				if (newTiller)
+				{
+					//tiller 2 emergences with leaf 3, and then adds 1 each time
+					//not sure what I'm supposed to do with tiller 1
+					//if there are only 2 tillers, then t2 is not present - T3 & T4 are
+					//if there is a fraction - between 2 and 3, 
+					//this can be interpreted as a proportion of plants that have 2 and a proportion that have 3. 
+					//to keep it simple, the fraction will be applied to the 2nd tiller
+					double leafAppearance = Culms.Count + 2; //first culm added will equal 3
+					double fraction = 1.0;
+					if (plant.SowingData.BudNumber > 2 && plant.SowingData.BudNumber < 3 && leafAppearance < 4)
+					{
+						fraction = plant.SowingData.BudNumber % 1;// fmod(plant->getFtn(), 1);
+																  //tillersAdded += fraction;
+					}
+					else
+					{
+						if (plant.SowingData.BudNumber - tillersAdded < 1)
+							fraction = plant.SowingData.BudNumber - tillersAdded;
+						//tillersAdded += 1;
+					}
+
+					AddTiller(leafAppearance, currentLeafNo, fraction);
+					////a new tiller is created with each new leaf, up the number of fertileTillers
+					//Culm* newCulm = new Culm(scienceAPI, plant, leafAppearance);
+					//newCulm->readParams();
+					//newCulm->setCurrentLeafNo(leafAppearance-1);
+					//verticalAdjustment = aMaxVert;
+					//verticalAdjustment += (Culms.size() - 1) * 0.05;
+					//newCulm->setVertLeafAdj(verticalAdjustment);
+					//newCulm->setProportion(fraction);
+					//newCulm->calcFinalLeafNo();
+					//newCulm->calcLeafAppearance();
+					//newCulm->calculateLeafSizes();
+					//Culms.push_back(newCulm);
+
+					//bell curve distribution is adjusted horizontally by moving the curve to the left.
+					//This will cause the first leaf to have the same value as the nth leaf on the main culm.
+					//T3&T4 were defined during dicussion at initial tillering meeting 27/06/12
+					//all others are an assumption
+					//T2 = 3 Leaves
+					//T3 = 4 Leaves
+					//T4 = 5 leaves
+					//T5 = 6 leaves
+					//T6 = 7 leaves
 				}
 			}
 		}
@@ -658,7 +839,7 @@ namespace Models.PMF.Struct.Sorghum
 		/// </summary>
 		/// <param name="newLeafNo"></param>
 		/// <param name="currentLeafNo"></param>
-		public void calcTillerNumber(int newLeafNo, int currentLeafNo)
+		public void CalcTillerNumber(int newLeafNo, int currentLeafNo)
 		{
 			//need to calculate the average R/oCd per day during leaf 5 expansion
 			if (newLeafNo == startThermalQuotientLeafNo)
@@ -716,18 +897,18 @@ namespace Models.PMF.Struct.Sorghum
 
 			if (calculatedTillers > 2)  //add 2, & 3 & 4
 			{
-				addTiller(3, 2, 1);
-				addTiller(4, 1, 1);
-				addTiller(5, 0, 1);
+				AddTiller(3, 2, 1);
+				AddTiller(4, 1, 1);
+				AddTiller(5, 0, 1);
 			}
 			else if (calculatedTillers > 1) //add 3&4
 			{
-				addTiller(4, 1, 1);
-				addTiller(5, 0, 1);
+				AddTiller(4, 1, 1);
+				AddTiller(5, 0, 1);
 			}
 			else if (calculatedTillers > 0)
 			{
-				addTiller(4, 1, 1); //add 3
+				AddTiller(4, 1, 1); //add 3
 			}
 
 			//bell curve distribution is adjusted horizontally by moving the curve to the left.
@@ -747,7 +928,7 @@ namespace Models.PMF.Struct.Sorghum
 		/// <param name="leafAtAppearance"></param>
 		/// <param name="Leaves"></param>
 		/// <param name="fractionToAdd"></param>
-		public void addTiller(double leafAtAppearance, double Leaves, double fractionToAdd)
+		private void AddTiller(double leafAtAppearance, double Leaves, double fractionToAdd)
 		{
 			double fraction = 1;
 			if (calculatedTillers - tillersAdded < 1)
@@ -795,7 +976,7 @@ namespace Models.PMF.Struct.Sorghum
 		/// Reduce tillers.
 		/// </summary>
 		/// <param name="reduceLAI"></param>
-		public virtual void reduceTillers(double reduceLAI)
+		public void ReduceTillers(double reduceLAI)
 		{
 			// when there is not enough biomass reduce the proportion of the last tiller to compensate
 			double reduceArea = reduceLAI / plant.SowingData.Population * 10000;
@@ -825,7 +1006,7 @@ namespace Models.PMF.Struct.Sorghum
 		/// Calculate stressed leaf area.
 		/// </summary>
 		/// <returns></returns>
-		private double calcStressedLeafArea()
+		private double CalcStressedLeafArea()
 		{
 			return dltPotentialLAI * expansionStress.Value();
 		}

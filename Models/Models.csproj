@@ -281,10 +281,9 @@
     <Compile Include="Plant\Phenology\Scales\Age.cs" />
     <EmbeddedResource Include="Resources\Scripts\GraphPanelScriptTemplate.cs" />
     <EmbeddedResource Include="Resources\Scripts\CSharpExpressionTemplate.cs" />
-    <Compile Include="Plant\Structure\Sorghum\Culm.cs" />
-    <Compile Include="Plant\Structure\Sorghum\CulmParams.cs" />
-    <Compile Include="Plant\Structure\Sorghum\LeafCulms.cs" />
-    <Compile Include="Plant\Structure\Sorghum\LeafCulmsFixed.cs" />
+    <Compile Include="Plant\Structure\Culm.cs" />
+    <Compile Include="Plant\Structure\CulmParams.cs" />
+    <Compile Include="Plant\Structure\LeafCulms.cs" />
     <Compile Include="PostSimulationTools\ExcelMultiInput.cs" />
     <Compile Include="Soils\Nutrients\INutrientPool.cs" />
     <Compile Include="Soils\SoilTemp\SoilTemperature.cs" />
