@@ -56,7 +56,7 @@ namespace UserInterface.Presenters
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
 
             stock.Genotypes = stockView.Genotypes;  // copies back to the model
-
+            stock.Animals = stockView.Animals;
         }
 
         /// <summary>
@@ -64,6 +64,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public void PopulateView()
         {
+            PopulateAnimals();
             PopulateGenotypes();
             stockView.SetValues();
         }
@@ -102,6 +103,14 @@ namespace UserInterface.Presenters
         private void PopulateGenotypes()
         {
             stockView.Genotypes = stock.Genotypes;  // copies the init value array into the View
+        }
+
+        /// <summary>
+        /// Initialise the list of animal groups
+        /// </summary>
+        private void PopulateAnimals()
+        {
+            stockView.Animals = stock.Animals;
         }
 
         private void OnGetGenoParams(object sender, GenotypeInitArgs e)
