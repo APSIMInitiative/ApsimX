@@ -105,9 +105,10 @@ namespace Models.PostSimulationTools
 
             table.Merge(existingTable);
 
-            table.Columns.Remove("SimulationID");
-            table.Columns.Remove("CheckpointID");
-            table.Columns.Remove("CheckpointName");
+            string[] columnsToRemove = new[] { "SimulationID", "CheckpointID", "CheckpointName" };
+            foreach (string column in columnsToRemove)
+                if (table.Columns.Contains(column))
+                    table.Columns.Remove(column);
         }
 
         private void ChangeColumnType(DataTable table, string columnName, Type dataType)
