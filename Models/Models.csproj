@@ -132,6 +132,7 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AgPasture\TissuesHelper.cs" />
     <Compile Include="AgPasture\SimpleGrazing.cs" />
     <Compile Include="AgPasture\PastureSpecies.cs" />
     <Compile Include="AgPasture\PastureAboveGroundOrgan.cs" />
@@ -139,7 +140,6 @@
     <Compile Include="AgPasture\GenericTissue.cs" />
     <Compile Include="AgPasture\RootTissue.cs" />
     <Compile Include="AgPasture\RootZone.cs" />
-    <Compile Include="AgPasture\SpeciesBasicStateSettings.cs" />
     <Compile Include="Agroforestry\AgroforestrySystem.cs" />
     <Compile Include="Agroforestry\LocalMicroClimate.cs" />
     <Compile Include="Agroforestry\TreeProxy.cs" />

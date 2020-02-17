@@ -17,7 +17,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 78; } }
+        public static int LatestVersion { get { return 79; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1546,6 +1546,45 @@
             foreach (var simpleGrazing in JsonUtilities.ChildrenOfType(root, "SimpleGrazing"))
             {
                 simpleGrazing["$type"] = "Models.AgPasture.SimpleGrazing, Models";
+            }
+        }
+
+        /// <summary>
+        /// Change manager method and AgPasture variable names.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion79(JObject root, string fileName)
+        {
+            Tuple<string, string>[] changes =
+            {
+                new Tuple<string, string>(".Graze(", ".RemoveBiomass("),
+                new Tuple<string, string>(".EmergingTissuesWt",   ".EmergingTissue.Wt"),
+                new Tuple<string, string>(".EmergingTissuesN",    ".EmergingTissue.N"),
+                new Tuple<string, string>(".DevelopingTissuesWt", ".DevelopingTissue.Wt"),
+                new Tuple<string, string>(".DevelopingTissuesN",  ".DevelopingTissue.N"),
+                new Tuple<string, string>(".MatureTissuesWt", ".MatureTissue.Wt"),
+                new Tuple<string, string>(".MatureTissuesN",  ".MatureTissue.N"),
+                new Tuple<string, string>(".DeadTissuesWt", ".DeadTissue.Wt"),
+                new Tuple<string, string>(".DeadTissuesN",  ".DeadTissue.N")
+            };
+
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                bool managerChanged = false;
+
+                foreach (var replacement in changes)
+                {
+                    if (manager.Replace(replacement.Item1, replacement.Item2))
+                        managerChanged = true;
+                }
+                if (managerChanged)
+                    manager.Save();
+            }
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            {
+                foreach (var replacement in changes)
+                    JsonUtilities.SearchReplaceReportVariableNames(report, replacement.Item1, replacement.Item2);
             }
         }
 
