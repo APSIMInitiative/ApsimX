@@ -38,7 +38,8 @@ raw$year <- case_when(
                 raw$year == "Emer1617" ~ "2016"
                 )
 
-yield <- raw %>% select(-fs_DAS, -ff_DAS, -fob_DAS, -cutOut_DAS, -mat_DAS, -defol_DAS)
+yield <- raw
+#yield <- raw %>% select(-fs_DAS, -ff_DAS, -fob_DAS, -cutOut_DAS, -mat_DAS, -defol_DAS)
 
 phenology <- raw %>% select(year, sowing, Variety, first_square = fs_DAS, first_flower = ff_DAS, first_open_boll = fob_DAS, cut_out = cutOut_DAS, maturity = mat_DAS, defoliation = defol_DAS)
 
