@@ -158,7 +158,7 @@
                   "XFMetadata": null,
                   "Name": "WheatSoil",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -196,12 +196,12 @@
                   "XFMetadata": null,
                   "Name": "MaizeSoil",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -254,7 +254,7 @@
               "PrecipitationInterception": 0.0,
               "Name": "SoilWater",
               "Children": [],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -326,7 +326,7 @@
               ],
               "Name": "Organic",
               "Children": [],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -382,7 +382,7 @@
               "ESP": null,
               "Name": "Chemical",
               "Children": [],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -394,7 +394,7 @@
               "RelativeTo": null,
               "Name": "InitialWater",
               "Children": [],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -431,7 +431,7 @@
               "PHUnits": 0,
               "Name": "InitialN",
               "Children": [],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -439,7 +439,7 @@
               "$type": "Models.Soils.CERESSoilTemperature, Models",
               "Name": "CERESSoilTemperature",
               "Children": [],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -670,12 +670,12 @@
               },
               "ResourceName": "Nutrient",
               "Name": "Nutrient",
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
+          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -730,12 +730,12 @@
           ],
           "Name": "WURReport",
           "Children": [],
-          "IncludeInDocumentation": true,
+          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         }
       ],
-      "IncludeInDocumentation": true,
+      "IncludeInDocumentation": false,
       "Enabled": true,
       "ReadOnly": false
     },
@@ -5972,7 +5972,7 @@
                       "Values": null,
                       "Name": "SoleCrop",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -5987,7 +5987,7 @@
                       "Values": null,
                       "Name": "60WM",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -6002,7 +6002,7 @@
                       "Values": null,
                       "Name": "02WM",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -6016,17 +6016,17 @@
                       "Values": null,
                       "Name": "62WM",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -9394,7 +9394,7 @@
                       "Values": null,
                       "Name": "SoleCrop",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -9409,7 +9409,7 @@
                       "Values": null,
                       "Name": "60WM",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -9424,7 +9424,7 @@
                       "Values": null,
                       "Name": "02WM",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -9438,7 +9438,7 @@
                       "Values": null,
                       "Name": "62WM",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -9454,17 +9454,17 @@
                       "Values": null,
                       "Name": "63WM",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
