@@ -163,6 +163,25 @@ namespace Models.PMF.Struct
 		[Link(Type = LinkType.Child, ByName = true)]
 		private IFunction slaMax = null;
 
+		[Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+		private IFunction leafAreaCalcTypeSwitch = null;
+
+		/// <summary>bellCurveParams[0]</summary>
+		[Link(Type = LinkType.Child, ByName = true)]
+		private IFunction a0 = null;
+
+		/// <summary>bellCurveParams[1]</summary>
+		[Link(Type = LinkType.Child, ByName = true)]
+		private IFunction a1 = null;
+
+		/// <summary>bellCurveParams[2]</summary>
+		[Link(Type = LinkType.Child, ByName = true)]
+		private IFunction b0 = null;
+
+		/// <summary>bellCurveParams[3]</summary>
+		[Link(Type = LinkType.Child, ByName = true)]
+		private IFunction b1 = null;
+
 		/// <summary>
 		/// Propensity to tiller.
 		/// </summary>
@@ -415,6 +434,10 @@ namespace Models.PMF.Struct
 				DltTT = dltTT,
 				AMaxS = aMaxSlope,
 				AMaxI = aMaxIntercept,
+				A0 = a0,
+				A1 = a1,
+				B0 = b0,
+				B1 = b1
 			};
 
 			// Initialise Main
@@ -598,6 +621,13 @@ namespace Models.PMF.Struct
 
 			if (phenology.Stage >= emergence && phenology.Stage <= flag)
 			{
+				// Fixme - this function can be simplified. Just need to double-check the effects of doing so.
+				if (leafAreaCalcTypeSwitch != null)
+				{
+					dltPotentialLAI = Culms[0].LeafAreaPotBellShapeCurve(leafNo.ToArray());
+					dltStressedLAI = CalcStressedLeafArea();
+				}
+
 				for (int i = 0; i < Culms.Count; ++i)
 				{
 					dltPotentialLAI += Culms[i].calcPotentialLeafArea();

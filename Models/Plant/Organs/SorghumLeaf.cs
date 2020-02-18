@@ -265,22 +265,6 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child, ByName = true)]
         public IFunction LargestLeafSize = null;
 
-        /// <summary>bellCurveParams[0]</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        public IFunction A0 { get; set; } = null;
-
-        /// <summary>bellCurveParams[1]</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        public IFunction A1 { get; set; } = null;
-
-        /// <summary>bellCurveParams[2]</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        public IFunction B0 { get; set; } = null;
-
-        /// <summary>bellCurveParams[3]</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        public IFunction B1 { get; set; } = null;
-
         /// <summary>The height function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction HeightFunction = null;

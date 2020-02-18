@@ -95,6 +95,26 @@ namespace Models.PMF.Struct
         public IFunction DltTT { get; set; }
 
         /// <summary>
+        /// bellCurveParams[0]
+        /// </summary>
+        public IFunction A0 { get; set; }
+
+        /// <summary>
+        /// bellCurveParams[1]
+        /// </summary>
+        public IFunction A1 { get; set; }
+
+        /// <summary>
+        /// bellCurveParams[2]
+        /// </summary>
+        public IFunction B0 { get; set; }
+
+        /// <summary>
+        /// bellCurveParams[3]
+        /// </summary>
+        public IFunction B1 { get; set; }
+
+        /// <summary>
         /// Function which fetches TT target from endjuv to floaral init.
         /// </summary>
         public Action<double> GetTTFI { get; set; }

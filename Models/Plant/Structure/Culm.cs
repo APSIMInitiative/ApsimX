@@ -348,6 +348,18 @@ namespace Models.PMF.Struct
 		}
 
 		/// <summary>
+		/// Calculate potential leaf area (used in Maize only - to be refactored out?).
+		/// </summary>
+		/// <param name="leafNo"></param>
+		public double LeafAreaPotBellShapeCurve(double[] leafNo)
+		{
+			//once leaf no is calculated leaf area of largest expanding leaf is determined
+			double leafNoEffective = Math.Min(leafNo.Sum() + parameters.LeafNoCorrection.Value(), finalLeafNo);
+
+			return dltLeafNo * calcIndividualLeafSize(leafNoEffective) * smm2sm * parameters.Density;
+		}
+
+		/// <summary>
 		/// Fixme - use public property.
 		/// </summary>
 		public void setCulmNo(int _culmNo)
