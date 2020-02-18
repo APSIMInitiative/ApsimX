@@ -1,7 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 73,
+  "Version": 79,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-02-18",
   "Name": "Simulations",
   "Children": [
     {
@@ -59,6 +60,8 @@
                 300.0
               ],
               "ParticleSizeClay": null,
+              "ParticleSizeSand": null,
+              "ParticleSizeSilt": null,
               "BD": [
                 1.4,
                 1.4,
@@ -745,7 +748,6 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileName": "Observed.xlsx",
-          "FileNameMetadata": null,
           "SheetNames": [
             "Observed",
             "ObservedOld"
@@ -874,6 +876,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.01056473311131,
                         1.07145631083388,
@@ -1510,7 +1514,7 @@
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 100.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": false,
@@ -1686,6 +1690,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.01056473311131,
                         1.07145631083388,
@@ -2322,7 +2328,7 @@
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 100.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": false,
@@ -2498,6 +2504,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.01056473311131,
                         1.07145631083388,
@@ -3134,7 +3142,7 @@
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 100.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": false,
@@ -3442,6 +3450,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.01056473311131,
                         1.07145631083388,
@@ -4078,7 +4088,7 @@
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 100.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": false,
@@ -4254,6 +4264,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.01056473311131,
                         1.07145631083388,
@@ -4890,7 +4902,7 @@
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 100.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": false,
@@ -5050,6 +5062,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.01056473311131,
                         1.07145631083388,
@@ -5686,7 +5700,7 @@
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 100.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": false,
@@ -6133,7 +6147,7 @@
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 100.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,
@@ -6182,6 +6196,8 @@
                             300.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.4,
                             1.4,
@@ -7100,6 +7116,8 @@
                             300.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.4,
                             1.4,
@@ -7736,7 +7754,7 @@
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 100.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,
@@ -9768,7 +9786,7 @@
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 100.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,
@@ -9817,6 +9835,8 @@
                             300.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.4,
                             1.4,
@@ -10719,6 +10739,8 @@
                             300.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.4,
                             1.4,
@@ -11355,7 +11377,7 @@
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 100.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,
