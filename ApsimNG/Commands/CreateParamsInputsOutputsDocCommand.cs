@@ -189,9 +189,6 @@
                     var descriptionAttribute = property.GetCustomAttribute<DescriptionAttribute>();
                     description = descriptionAttribute?.ToString();
                 }
-                // Truncate descriptions so they fit onto the page.
-                if (description?.Length > maxDescriptionLength)
-                    description = description.Remove(maxDescriptionLength) + "...";
 
                 row["Name"] = property.Name;
                 row["Type"] = typeName;
