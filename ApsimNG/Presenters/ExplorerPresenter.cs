@@ -1024,8 +1024,8 @@
         {
             TreeViewNode description = new TreeViewNode();
             description.Name = model.Name;
-
-            description.ResourceNameForImage = GetIconResourceName(model.GetType(), model.Name);
+            string resourceName = (model as ModelCollectionFromResource)?.ResourceName;
+            description.ResourceNameForImage = GetIconResourceName(model.GetType(), model.Name, resourceName);
 
             description.ToolTip = model.GetType().Name;
 
@@ -1053,38 +1053,40 @@
         /// </summary>
         /// <param name="modelType">The model type.</param>
         /// <param name="modelName">The model name.</param>
-        public static string GetIconResourceName(Type modelType, string modelName)
+        /// <param name="resourceName">Name of the model's resource file if one exists.null</param>
+        public static string GetIconResourceName(Type modelType, string modelName, string resourceName)
         {
             // We need to find an icon for this model. If the model is a ModelCollectionFromResource, we attempt to find 
-            // an image with the same name as the model.
+            // an image with the same resource name as the model (e.g. Wheat). If this fails, try the model type name.
             // Otherwise, we attempt to find an icon with the same name as the model's type.
             // e.g. A Graph called Biomass should use an icon called Graph.png
             // e.g. A Plant called Wheat should use an icon called Wheat.png
+            // e.g. A plant called Wheat with a resource name of Maize (don't do this) should use an icon called Maize.png.
 
             string resourceNameForImage;
-            if (modelType.GetInterface("ModelCollectionFromResource") != null && modelName != null)
-                resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelName + ".png";
+            ManifestResourceInfo info = null;
+            if (typeof(ModelCollectionFromResource).IsAssignableFrom(modelType) && modelName != null)
+            {
+                resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + resourceName + ".png";
+                info = Assembly.GetExecutingAssembly().GetManifestResourceInfo(resourceNameForImage);
+
+                // If there's no image for resource name (e.g. Wheat.png), try the model name (e.g. Plant.png)
+                if (info == null)
+                    resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelType.Name + ".png";
+            }
             else
             {
                 string modelNamespace = modelType.FullName.Split('.')[1] + ".";
                 resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelNamespace + modelType.Name + ".png";
 
                 if (MainView.MasterView != null && !MainView.MasterView.HasResource(resourceNameForImage))
-                {
                     resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelType.Name + ".png";
-                }
             }
 
             // Check to see if you can find the image in the resource for this project.
-            ManifestResourceInfo info = Assembly.GetExecutingAssembly().GetManifestResourceInfo(resourceNameForImage);
+            info = Assembly.GetExecutingAssembly().GetManifestResourceInfo(resourceNameForImage);
             if (info == null)
-            {
-                // Try the opposite.
-                if (modelType.GetInterface("ModelCollectionFromResource") != null && modelName != null)
-                    resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelType.Name + ".png";
-                else
-                    resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelName + ".png";
-            }
+                resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelName + ".png";
 
             return resourceNameForImage;
         }
