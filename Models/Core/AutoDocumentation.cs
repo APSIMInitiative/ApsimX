@@ -466,15 +466,20 @@ namespace Models.Core
             /// <summary>The indent level.</summary>
             public int indent;
 
+            /// <summary>Max width of each column (in terms of number of characters).</summary>
+            public int ColumnWidth { get; private set; }
+
             /// <summary>
             /// Initializes a new instance of the <see cref="Table"/> class.
             /// </summary>
             /// <param name="data">The column / row data.</param>
             /// <param name="indent">The indentation.</param>
-            public Table(DataTable data, int indent)
+            /// <param name="width">Max width of each column (in terms of number of characters).</param>
+            public Table(DataTable data, int indent, int width = 50)
             {
                 this.data = new DataView(data);
                 this.indent = indent;
+                this.ColumnWidth = width;
             }
 
             /// <summary>
@@ -482,10 +487,12 @@ namespace Models.Core
             /// </summary>
             /// <param name="data">The column / row data.</param>
             /// <param name="indent">The indentation.</param>
-            public Table(DataView data, int indent)
+            /// <param name="width">Max width of each column (in terms of number of characters).</param>
+            public Table(DataView data, int indent, int width = 50)
             {
                 this.data = data;
                 this.indent = indent;
+                this.ColumnWidth = width;
             }
         }
 

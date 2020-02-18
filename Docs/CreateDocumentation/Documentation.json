@@ -14,11 +14,11 @@
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\AgPasture\\AgPasture.apsimx"
+                            "FileName": "Tests/Validation/AgPasture/AgPasture.apsimx"
                         },
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\AgPasture\\AgPasture.apsimx",
+                            "FileName": "Tests/Validation/AgPasture/AgPasture.apsimx",
                             "ModelNameToDocument": "AGPRyegrass"
                         },
                         {
@@ -32,11 +32,11 @@
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\Barley\\Barley.apsimx"
+                            "FileName": "Tests/Validation/Barley/Barley.apsimx"
                         },
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\Barley\\Barley.apsimx",
+                            "FileName": "Tests/Validation/Barley/Barley.apsimx",
                             "ModelNameToDocument": "Barley"
                         }
                     ]
@@ -46,11 +46,11 @@
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\UnderReview\\Chickpea\\Chickpea.apsimx"
+                            "FileName": "Tests/UnderReview/Chickpea/Chickpea.apsimx"
                         },
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\UnderReview\\Chickpea\\Chickpea.apsimx",
+                            "FileName": "Tests/UnderReview/Chickpea/Chickpea.apsimx",
                             "ModelNameToDocument": "Chickpea"
                         }
                     ]
@@ -60,11 +60,11 @@
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\Chicory\\Chicory.apsimx"
+                            "FileName": "Tests/Validation/Chicory/Chicory.apsimx"
                         },
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\Chicory\\Chicory.apsimx",
+                            "FileName": "Tests/Validation/Chicory/Chicory.apsimx",
                             "ModelNameToDocument": "Chicory"
                         }
                     ]
@@ -74,7 +74,7 @@
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\Clock\\Clock.apsimx"
+                            "FileName": "Tests/Validation/Clock/Clock.apsimx"
                         }
                     ]
                 },
@@ -83,11 +83,11 @@
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\Eucalyptus\\Eucalyptus.apsimx"
+                            "FileName": "Tests/Validation/Eucalyptus/Eucalyptus.apsimx"
                         },
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\Eucalyptus\\Eucalyptus.apsimx",
+                            "FileName": "Tests/Validation/Eucalyptus/Eucalyptus.apsimx",
                             "ModelNameToDocument": "Eucalyptus"
                         }
                     ]
@@ -97,11 +97,11 @@
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\FodderBeet\\FodderBeet.apsimx"
+                            "FileName": "Tests/Validation/FodderBeet/FodderBeet.apsimx"
                         },
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\FodderBeet\\FodderBeet.apsimx",
+                            "FileName": "Tests/Validation/FodderBeet/FodderBeet.apsimx",
                             "ModelNameToDocument": "FodderBeet"
                         }
                     ]
@@ -111,11 +111,11 @@
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\Maize\\Maize.apsimx"
+                            "FileName": "Tests/Validation/Maize/Maize.apsimx"
                         },
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\Maize\\Maize.apsimx",
+                            "FileName": "Tests/Validation/Maize/Maize.apsimx",
                             "ModelNameToDocument": "Maize"
                         }
                     ]
@@ -125,11 +125,11 @@
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\MicroClimate\\MicroClimate.apsimx"
+                            "FileName": "Tests/Validation/MicroClimate/MicroClimate.apsimx"
                         },
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\MicroClimate\\MicroClimate.apsimx",
+                            "FileName": "Tests/Validation/MicroClimate/MicroClimate.apsimx",
                             "ModelNameToDocument": "MicroClimate"
                         }
                     ]
@@ -139,11 +139,11 @@
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\UnderReview\\Nutrient\\Nutrient.apsimx"
+                            "FileName": "Tests/UnderReview/Nutrient/Nutrient.apsimx"
                         },
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\UnderReview\\Nutrient\\Nutrient.apsimx",
+                            "FileName": "Tests/UnderReview/Nutrient/Nutrient.apsimx",
                             "ModelNameToDocument": "Nutrient"
                         }
                     ]
@@ -153,11 +153,11 @@
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\Oats\\Oats.apsimx"
+                            "FileName": "Tests/Validation/Oats/Oats.apsimx"
                         },
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\Oats\\Oats.apsimx",
+                            "FileName": "Tests/Validation/Oats/Oats.apsimx",
                             "ModelNameToDocument": "Oats"
                         }
                     ]
@@ -167,11 +167,11 @@
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\OilPalm\\OilPalm.apsimx"
+                            "FileName": "Tests/Validation/OilPalm/OilPalm.apsimx"
                         },
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\OilPalm\\OilPalm.apsimx",
+                            "FileName": "Tests/Validation/OilPalm/OilPalm.apsimx",
                             "ModelNameToDocument": "OilPalm"
                         }
                     ]
@@ -181,11 +181,11 @@
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\Plantain\\Plantain.apsimx"
+                            "FileName": "Tests/Validation/Plantain/Plantain.apsimx"
                         },
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\Plantain\\Plantain.apsimx",
+                            "FileName": "Tests/Validation/Plantain/Plantain.apsimx",
                             "ModelNameToDocument": "Plantain"
                         }
                     ]
@@ -195,11 +195,11 @@
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\Potato\\Potato.apsimx"
+                            "FileName": "Tests/Validation/Potato/Potato.apsimx"
                         },
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\Potato\\Potato.apsimx",
+                            "FileName": "Tests/Validation/Potato/Potato.apsimx",
                             "ModelNameToDocument": "Potato"
                         }
                     ]
@@ -209,11 +209,11 @@
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\RedClover\\RedClover.apsimx"
+                            "FileName": "Tests/Validation/RedClover/RedClover.apsimx"
                         },
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\RedClover\\RedClover.apsimx",
+                            "FileName": "Tests/Validation/RedClover/RedClover.apsimx",
                             "ModelNameToDocument": "RedClover"
                         }
                     ]
@@ -223,11 +223,11 @@
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\SCRUM\\SCRUM.apsimx"
+                            "FileName": "Tests/Validation/SCRUM/SCRUM.apsimx"
                         },
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\SCRUM\\SCRUM.apsimx",
+                            "FileName": "Tests/Validation/SCRUM/SCRUM.apsimx",
                             "ModelNameToDocument": "SCRUM"
                         }
                     ]
@@ -237,11 +237,11 @@
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\Slurp\\Slurp.apsimx"
+                            "FileName": "Tests/Validation/Slurp/Slurp.apsimx"
                         },
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\Slurp\\Slurp.apsimx",
+                            "FileName": "Tests/Validation/Slurp/Slurp.apsimx",
                             "ModelNameToDocument": "Slurp"
                         }
                     ]
@@ -251,11 +251,11 @@
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\SoilArbitrator\\SoilArbitrator.apsimx"
+                            "FileName": "Tests/Validation/SoilArbitrator/SoilArbitrator.apsimx"
                         },
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\SoilArbitrator\\SoilArbitrator.apsimx",
+                            "FileName": "Tests/Validation/SoilArbitrator/SoilArbitrator.apsimx",
                             "ModelNameToDocument": "SoilArbitrator"
                         }
                     ]
@@ -265,11 +265,11 @@
                     "Documents": [
                         {
                             "Name": "Validation",
-                            "FileName": "Tests\\Validation\\SoilWater\\SoilWater.apsimx"
+                            "FileName": "Tests/Validation/SoilWater/SoilWater.apsimx"
                         },
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\SoilWater\\SoilWater.apsimx",
+                            "FileName": "Tests/Validation/SoilWater/SoilWater.apsimx",
                             "ModelNameToDocument": "SoilWater"
                         }
                     ]
@@ -279,11 +279,11 @@
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\UnderReview\\Sorghum\\Sorghum.apsimx"
+                            "FileName": "Tests/UnderReview/Sorghum/Sorghum.apsimx"
                         },
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\UnderReview\\Sorghum\\Sorghum.apsimx",
+                            "FileName": "Tests/UnderReview/Sorghum/Sorghum.apsimx",
                             "ModelNameToDocument": "Sorghum"
                         }
                     ]
@@ -293,11 +293,11 @@
                     "Documents": [
                         {
                             "Name": "Validation",
-                            "FileName": "Tests\\Validation\\Sugarcane\\Sugarcane.apsimx"
+                            "FileName": "Tests/Validation/Sugarcane/Sugarcane.apsimx"
                         },
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\Sugarcane\\Sugarcane.apsimx",
+                            "FileName": "Tests/Validation/Sugarcane/Sugarcane.apsimx",
                             "ModelNameToDocument": "Sugarcane"
                         }
                     ]
@@ -307,11 +307,11 @@
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\Wheat\\Wheat.apsimx"
+                            "FileName": "Tests/Validation/Wheat/Wheat.apsimx"
                         },
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\Wheat\\Wheat.apsimx",
+                            "FileName": "Tests/Validation/Wheat/Wheat.apsimx",
                             "ModelNameToDocument": "Wheat"
                         }
                     ]
@@ -321,11 +321,11 @@
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\WhiteClover\\WhiteClover.apsimx"
+                            "FileName": "Tests/Validation/WhiteClover/WhiteClover.apsimx"
                         },
                         {
                             "Name": "PDF",
-                            "FileName": "Tests\\Validation\\WhiteClover\\WhiteClover.apsimx",
+                            "FileName": "Tests/Validation/WhiteClover/WhiteClover.apsimx",
                             "ModelNameToDocument": "WhiteClover"
                         }
                     ]
@@ -344,7 +344,7 @@
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Examples\\Tutorials\\ClimateController.apsimx"
+                            "FileName": "Examples/Tutorials/ClimateController.apsimx"
                         }
                     ]
                 },
@@ -353,7 +353,7 @@
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Examples\\Tutorials\\Lifecycle.apsimx"
+                            "FileName": "Examples/Tutorials/Lifecycle.apsimx"
                         }
                     ]
                 },
@@ -362,7 +362,7 @@
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Examples\\Tutorials\\Manager.apsimx"
+                            "FileName": "Examples/Tutorials/Manager.apsimx"
                         }
                     ]
                 },
@@ -371,7 +371,7 @@
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Examples\\Tutorials\\Sensitivity_MorrisMethod.apsimx"
+                            "FileName": "Examples/Tutorials/Sensitivity_MorrisMethod.apsimx"
                         }
                     ]
                 },
@@ -380,7 +380,7 @@
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Examples\\Tutorials\\Sensitivity_SobolMethod.apsimx"
+                            "FileName": "Examples/Tutorials/Sensitivity_SobolMethod.apsimx"
                         }
                     ]
                 },
@@ -389,7 +389,7 @@
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Examples\\Tutorials\\Sensitivity_FactorialANOVA.apsimx"
+                            "FileName": "Examples/Tutorials/Sensitivity_FactorialANOVA.apsimx"
                         }
                     ]
                 },
@@ -398,7 +398,7 @@
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Examples\\Tutorials\\Report.apsimx"
+                            "FileName": "Examples/Tutorials/Report.apsimx"
                         }
                     ]
                 }
@@ -422,11 +422,11 @@
                         },
                         {
                             "Name": "Cropping example",
-                            "FileName": "Examples\\CLEM\\CLEM_Example_Cropping.apsimx"
+                            "FileName": "Examples/CLEM/CLEM_Example_Cropping.apsimx"
                         },
                         {
                             "Name": "Grazing example",
-                            "FileName": "Examples\\CLEM\\CLEM_Example_Grazing.apsimx"
+                            "FileName": "Examples/CLEM/CLEM_Example_Grazing.apsimx"
                         }
                     ]
                 }
