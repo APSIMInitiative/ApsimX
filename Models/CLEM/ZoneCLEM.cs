@@ -45,13 +45,6 @@ namespace Models.CLEM
         public string SelectedTab { get; set; }
 
         /// <summary>
-        /// Iteration number for multiple simulations of stochasitc processes
-        /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(1)]
-        [Required, GreaterThanEqualValue(0)]
-        public int Iteration { get; set; }
-
-        /// <summary>
         /// Multiplier from single farm to regional number of farms for market transactions
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(1)]
