@@ -81,7 +81,7 @@
         /// <summary>The minimum height difference between canopies for a new layer to be created (m).</summary>
         [Description("The minimum height difference between canopies for a new layer to be created (m)")]
         [Units("m")]
-        public double MinimumHeightDiffForNewLayer { get; set; } = 2.5;
+        public double MinimumHeightDiffForNewLayer { get; set; } = 0.0;
 
         /// <summary>Height of the tallest canopy.</summary>
         [Units("mm")]
