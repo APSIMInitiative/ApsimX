@@ -247,7 +247,7 @@ namespace Models.CLEM.Resources
         /// Retrieve a ResourceType from a ResourceGroup with specified names
         /// </summary>
         /// <param name="requestingModel">name of model requesting resource</param>
-        /// <param name="resourceGroupAndItem">Period seperated list of resource group and type</param>
+        /// <param name="resourceGroupAndItem">Period separated list of resource group and type</param>
         /// <param name="missingResourceAction">Action to take if requested resource group not found</param>
         /// <param name="missingResourceTypeAction">Action to take if requested resource type not found</param>
         /// <returns>A reference to the item of type object</returns>
