@@ -73,7 +73,7 @@ namespace Models.PostSimulationTools
                         // Write all sheets that are specified in 'SheetNames' to the data store
                         foreach (DataTable table in dataSet.Tables)
                         {
-                            if (StringUtilities.IndexOfCaseInsensitive(this.SheetNames, table.TableName) != -1)
+                            if (SheetNames.Any(str => string.Equals(str.Trim(), table.TableName, StringComparison.InvariantCultureIgnoreCase)))
                             {
                                 ExcelInput.TruncateDates(table);
 
