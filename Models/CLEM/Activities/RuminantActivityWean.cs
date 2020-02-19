@@ -126,6 +126,7 @@ namespace Models.CLEM.Activities
 
                     if (readyToWean)
                     {
+                        this.Status = ActivityStatus.Success;
                         string reason = (ind.Age >= WeaningAge)? "Age" : "Weight";
                         ind.Wean(true, reason);
                         ind.Location = grazeStore;

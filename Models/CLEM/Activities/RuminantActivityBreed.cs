@@ -57,6 +57,8 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
+            this.AllocationStyle = ResourceAllocationStyle.Manual;
+
             // Assignment of mothers was moved to RuminantHerd resource to ensure this is done even if no breeding activity is included
             this.InitialiseHerd(false, true);
 
@@ -73,6 +75,13 @@ namespace Models.CLEM.Activities
                 if(!this.TimingExists)
                 {
                     Summary.WriteWarning(this, String.Format("Breeding with Artificial Insemination (AI) requires a Timer otherwise breeding will be undertaken every time step in activity [a={0}]", this.Name));
+                }
+            }
+            else
+            {
+                if (this.TimingExists)
+                {
+                    Summary.WriteWarning(this, String.Format("Uncontrolled/natural breeding will occur every month and the timer associated with [a={0}] will be ignored.", this.Name));
                 }
             }
 
@@ -189,7 +198,7 @@ namespace Models.CLEM.Activities
             // get list of all individuals of breeding age and condition
             // grouped by location
             var breeders = from ind in herd
-                            where ind.IsBreeder
+                            where ind.IsBreedingCondition
                             group ind by ind.Location into grp
                             select grp;
 
@@ -236,6 +245,7 @@ namespace Models.CLEM.Activities
             {
                 // report that this activity was performed as it does not use base GetResourcesRequired
                 this.TriggerOnActivityPerformed();
+                this.Status = ActivityStatus.NotNeeded;
             }
 
             // for each location where parts of this herd are located
@@ -302,10 +312,11 @@ namespace Models.CLEM.Activities
                             female.SucklingOffspringList.Add(newCalfRuminant);
                             // remove calf weight from female
                             female.WeightLossDueToCalf += newCalfRuminant.Weight;
+                            // this now reports for each individual born not a birth event as individual wean events are reported
+                            female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Birth, female, Clock.Today));
                         }
                         female.UpdateBirthDetails();
-                        // report conception status changed when last multiple birth dies.
-                        female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Birth, female, Clock.Today));
+                        this.Status = ActivityStatus.Success;
                     }
                 }
 
@@ -347,6 +358,7 @@ namespace Models.CLEM.Activities
                             }
                         }
                         numberServiced++;
+                        this.Status = ActivityStatus.Success;
                     }
 
                     // report change in breeding status
@@ -424,7 +436,7 @@ namespace Models.CLEM.Activities
 
             // get only breeders for labour calculations
             List<Ruminant> herd = CurrentHerd(true).Where(a => a.Gender == Sex.Female &&
-                            a.IsBreeder).ToList();
+                            a.IsBreedingCondition).ToList();
             int head = herd.Count();
             double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
 
@@ -507,6 +519,18 @@ namespace Models.CLEM.Activities
                 }
             }
             return ResourceRequestList;
+        }
+
+        /// <summary>
+        /// Property to check if timing of this activity is ok based on child and parent ActivityTimers in UI tree
+        /// </summary>
+        /// <returns>T/F</returns>
+        public override bool TimingOK
+        {
+            get
+            {
+                return (!UseAI) ? true : base.TimingOK;
+            }
         }
 
         /// <summary>

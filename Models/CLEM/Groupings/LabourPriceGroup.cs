@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Models.CLEM.Groupings
 {
@@ -20,7 +21,7 @@ namespace Models.CLEM.Groupings
     [Description("This labour price group sets the pay rate for a set group of individuals.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/LabourPriceGroup.htm")]
-    public class LabourPriceGroup : CLEMModel
+    public class LabourPriceGroup : CLEMModel, IFilterGroup
     {
         /// <summary>
         /// Pay rate
@@ -28,6 +29,12 @@ namespace Models.CLEM.Groupings
         [Description("Daily pay rate")]
         [Required, GreaterThanEqualValue(0)]
         public double Value { get; set; }
+
+        /// <summary>
+        /// Combined ML ruleset for LINQ expression tree
+        /// </summary>
+        [XmlIgnore]
+        public object CombinedRules { get; set; } = null;
 
         /// <summary>
         /// Constructor

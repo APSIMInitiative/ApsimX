@@ -27,8 +27,12 @@ namespace Models.CLEM.Groupings
                 rules.Add(new Rule(filter.Parameter.ToString(), op, filter.Value));
             }
 
-            var compiledRulesList = CompileRule(new List<LabourType>(), rules);
-            return GetItemsThatMatchAll<LabourType>(individuals, compiledRulesList).ToList<LabourType>();
+            if ((filterGroup as IFilterGroup).CombinedRules is null)
+            {
+                (filterGroup as IFilterGroup).CombinedRules = CompileRule(new List<LabourType>(), rules);
+            }
+
+            return GetItemsThatMatchAll<LabourType>(individuals, (filterGroup as IFilterGroup).CombinedRules as List<Func<LabourType, bool>>).ToList<LabourType>();
         }
 
         /// <summary>
@@ -51,9 +55,11 @@ namespace Models.CLEM.Groupings
                         maleProperties = true;
                         gender = "Male";
                         break;
+                    case RuminantFilterParameters.IsBreeder:
                     case RuminantFilterParameters.IsPregnant:
                     case RuminantFilterParameters.IsLactating:
                     case RuminantFilterParameters.IsHeifer:
+                    case RuminantFilterParameters.MonthsSinceLastBirth:
                         femaleProperties = true;
                         gender = "Female";
                         break;
@@ -81,18 +87,28 @@ namespace Models.CLEM.Groupings
             {
                 if (femaleProperties)
                 {
-                    var compiledRulesList = CompileRule(new List<RuminantFemale>(), rules);
-                    return GetItemsThatMatchAll<RuminantFemale>(individuals.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>(), compiledRulesList).ToList<Ruminant>();
+                    if ((filterGroup as IFilterGroup).CombinedRules is null)
+                    {
+                        (filterGroup as IFilterGroup).CombinedRules = CompileRule(new List<RuminantFemale>(), rules);
+                    }
+                    return GetItemsThatMatchAll<RuminantFemale>(individuals.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>(), (filterGroup as IFilterGroup).CombinedRules as List<Func<RuminantFemale, bool>>).ToList<Ruminant>();
+
                 }
                 else if (maleProperties)
                 {
-                    var compiledRulesList = CompileRule(new List<RuminantMale>(), rules);
-                    return GetItemsThatMatchAll<RuminantMale>(individuals.Where(a => a.Gender == Sex.Male).Cast<RuminantMale>(), compiledRulesList).ToList<Ruminant>();
+                    if ((filterGroup as IFilterGroup).CombinedRules is null)
+                    {
+                        (filterGroup as IFilterGroup).CombinedRules = CompileRule(new List<RuminantMale>(), rules);
+                    }
+                    return GetItemsThatMatchAll<RuminantMale>(individuals.Where(a => a.Gender == Sex.Male).Cast<RuminantMale>(), (filterGroup as IFilterGroup).CombinedRules as List<Func<RuminantMale, bool>>).ToList<Ruminant>();
                 }
                 else
                 {
-                    var compiledRulesList = CompileRule(new List<Ruminant>(), rules);
-                    return GetItemsThatMatchAll<Ruminant>(individuals, compiledRulesList).ToList<Ruminant>();
+                    if ((filterGroup as IFilterGroup).CombinedRules is null)
+                    {
+                        (filterGroup as IFilterGroup).CombinedRules = CompileRule(new List<Ruminant>(), rules);
+                    }
+                    return GetItemsThatMatchAll<Ruminant>(individuals, (filterGroup as IFilterGroup).CombinedRules as List<Func<Ruminant, bool>>).ToList<Ruminant>();
                 }
             }
         }
@@ -110,8 +126,11 @@ namespace Models.CLEM.Groupings
                 rules.Add(new Rule(filter.Parameter.ToString(), op, filter.Value));
             }
 
-            var compiledRulesList = CompileRule(new List<OtherAnimalsTypeCohort>(), rules);
-            return GetItemsThatMatchAll<OtherAnimalsTypeCohort>(individuals, compiledRulesList).ToList<OtherAnimalsTypeCohort>();
+            if ((filterGroup as IFilterGroup).CombinedRules is null)
+            {
+                (filterGroup as IFilterGroup).CombinedRules = CompileRule(new List<OtherAnimalsTypeCohort>(), rules);
+            }
+            return GetItemsThatMatchAll<OtherAnimalsTypeCohort>(individuals, (filterGroup as IFilterGroup).CombinedRules as List<Func<OtherAnimalsTypeCohort, bool>>).ToList<OtherAnimalsTypeCohort>();
         }
 
         private class Rule
