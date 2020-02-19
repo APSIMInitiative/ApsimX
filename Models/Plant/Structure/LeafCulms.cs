@@ -182,6 +182,18 @@ namespace Models.PMF.Struct
 		[Link(Type = LinkType.Child, ByName = true)]
 		private IFunction b1 = null;
 
+		/// <summary>largestLeafParams[0]</summary>
+		[Link(Type = LinkType.Child, ByName = true)]
+		private IFunction aMaxA = null;
+
+		/// <summary>largestLeafParams[1]</summary>
+		[Link(Type = LinkType.Child, ByName = true)]
+		private IFunction aMaxB = null;
+
+		/// <summary>largestLeafParams[2]</summary>
+		[Link(Type = LinkType.Child, ByName = true)]
+		private IFunction aMaxC = null;
+
 		/// <summary>
 		/// Propensity to tiller.
 		/// </summary>
@@ -437,7 +449,10 @@ namespace Models.PMF.Struct
 				A0 = a0,
 				A1 = a1,
 				B0 = b0,
-				B1 = b1
+				B1 = b1,
+				AMaxA = aMaxA,
+				AMaxB = aMaxB,
+				AMaxC = aMaxC,
 			};
 
 			// Initialise Main

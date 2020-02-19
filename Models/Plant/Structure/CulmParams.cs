@@ -115,6 +115,21 @@ namespace Models.PMF.Struct
         public IFunction B1 { get; set; }
 
         /// <summary>
+        /// largestLeafParams[0]
+        /// </summary>
+        public IFunction AMaxA { get; set; }
+
+        /// <summary>
+        /// largestLeafParams[1]
+        /// </summary>
+        public IFunction AMaxB { get; set; }
+
+        /// <summary>
+        /// largestLeafParams[2]
+        /// </summary>
+        public IFunction AMaxC { get; set; }
+
+        /// <summary>
         /// Function which fetches TT target from endjuv to floaral init.
         /// </summary>
         public Action<double> GetTTFI { get; set; }

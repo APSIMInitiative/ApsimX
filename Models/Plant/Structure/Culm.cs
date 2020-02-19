@@ -356,7 +356,20 @@ namespace Models.PMF.Struct
 			//once leaf no is calculated leaf area of largest expanding leaf is determined
 			double leafNoEffective = Math.Min(leafNo.Sum() + parameters.LeafNoCorrection.Value(), finalLeafNo);
 
-			return dltLeafNo * calcIndividualLeafSize(leafNoEffective) * smm2sm * parameters.Density;
+			double aMaxA = 0; //argestLeafParams[0];
+			double aMaxB = 0; //argestLeafParams[1];
+			double aMaxC = 0; //largestLeafParams[2];
+
+			double a = parameters.A0.Value() - Math.Exp(parameters.A1.Value() * finalLeafNo);                      // Eqn 18
+			double b = parameters.B0.Value() - Math.Exp(parameters.B1.Value() * finalLeafNo);                      // Eqn 19
+
+			double aMax = aMaxA * Math.Exp(aMaxB + aMaxC * finalLeafNo);         // Eqn 13
+
+			double x0 = parameters.AX0.Value() * finalLeafNo;                                          // Eqn 14
+
+			double individualLeafSize = aMax * Math.Exp(a * Math.Pow((leafNoEffective - x0), 2) + b * Math.Pow((leafNoEffective - x0), 3)) * 100;  // Eqn 5
+
+			return dltLeafNo * individualLeafSize /*calcIndividualLeafSize(leafNoEffective)*/ * smm2sm * parameters.Density;
 		}
 
 		/// <summary>
