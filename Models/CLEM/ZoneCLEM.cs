@@ -38,8 +38,6 @@ namespace Models.CLEM
         [Link]
         IDataStore DataStore = null;
 
-        private static Random randomGenerator;
-
         /// <summary>
         /// Identifies the last selected tab for display
         /// </summary>
@@ -47,19 +45,19 @@ namespace Models.CLEM
         public string SelectedTab { get; set; }
 
         /// <summary>
-        /// Seed for random number generator (0 uses clock)
+        /// Iteration number for multiple simulations of stochasitc processes
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(1)]
-        [Required, GreaterThanEqualValue(0) ]
-        [Description("Random number generator seed (0 to use clock)")]
-        public int RandomSeed { get; set; }
+        [Required, GreaterThanEqualValue(0)]
+        public int Iteration { get; set; }
 
         /// <summary>
-        /// Access the CLEM random number generator
+        /// Multiplier from single farm to regional number of farms for market transactions
         /// </summary>
-        [XmlIgnore]
-        [Description("Random number generator for simulation")]
-        public static Random RandomGenerator { get { return randomGenerator; } }
+        [System.ComponentModel.DefaultValueAttribute(1)]
+        [Required, GreaterThanEqualValue(0)]
+        [Description("Farm multiplier to supply and receive from market")]
+        public double FarmMultiplier { get; set; }
 
         /// <summary>
         /// Index of the simulation Climate Region
@@ -218,14 +216,6 @@ namespace Models.CLEM
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            if (RandomSeed==0)
-            {
-                randomGenerator = new Random(Guid.NewGuid().GetHashCode());
-            }
-            else
-            {
-                randomGenerator = new Random(RandomSeed);
-            }
             EcologicalIndicatorsCalculationInterval = 12;
         }
 
@@ -323,24 +313,32 @@ namespace Models.CLEM
         {
             string html = "";
             html += "\n<div class=\"holdermain\" style=\"opacity: " + ((!this.Enabled) ? "0.4" : "1") + "\">";
-            html += "\n<div class=\"clearfix defaultbanner\">";
-            html += "<div class=\"typediv\">" + this.GetType().Name + "</div>";
-            html += "</div>";
-            html += "\n<div class=\"defaultcontent\">";
-            html += "\n<div class=\"activityentry\">Random numbers are used in this simultion. ";
-            if (RandomSeed == 0)
-            {
-                html += "Every run of this simulation will be different.";
-            }
-            else
-            {
-                html += "Each run of this simulation will be identical using the seed <span class=\"setvalue\">" + RandomSeed.ToString() + "</span>";
-            }
-            html += "\n</div>";
-            html += "\n</div>";
 
             // get clock
             IModel parentSim = Apsim.Parent(this, typeof(Simulation));
+
+            // find random number generator
+            RandomNumberGenerator rnd = Apsim.Children(parentSim, typeof(RandomNumberGenerator)).FirstOrDefault() as RandomNumberGenerator;
+            if(rnd != null)
+            {
+                html += "\n<div class=\"clearfix defaultbanner\">";
+                html += "<div class=\"namediv\">" + rnd.Name + "</div>";
+                html += "<div class=\"typediv\">RandomNumberGenerator</div>";
+                html += "</div>";
+                html += "\n<div class=\"defaultcontent\">";
+                html += "\n<div class=\"activityentry\">Random numbers are provided for this simultion.<br />";
+                if (rnd.Seed == 0)
+                {
+                    html += "Every run of this simulation will be different.";
+                }
+                else
+                {
+                    html += "Each run of this simulation will be identical using the seed <span class=\"setvalue\">" + rnd.Seed.ToString() + "</span>";
+                }
+                html += "\n</div>";
+                html += "\n</div>";
+            }
+
             Clock clk = Apsim.Children(parentSim, typeof(Clock)).FirstOrDefault() as Clock;
             if (clk != null)
             {

@@ -142,7 +142,7 @@ namespace Models.CLEM.Activities
                                         // calculate conception
                                         Reporting.ConceptionStatus status = Reporting.ConceptionStatus.NotMated;
                                         double conceptionRate = ConceptionRate(female, out status) * maleLimiter;
-                                        if (ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
+                                        if (RandomNumberGenerator.Generator.NextDouble() <= conceptionRate)
                                         {
                                             female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, i);
                                             // report conception status changed
@@ -167,7 +167,7 @@ namespace Models.CLEM.Activities
                                         double conceptionRate = ConceptionRate(female, out status);
                                         if (numberServiced <= numberPossible) // labour/finance limited number
                                         {
-                                            if (ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
+                                            if (RandomNumberGenerator.Generator.NextDouble() <= conceptionRate)
                                             {
                                                 female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, i);
                                                 // report conception status changed
@@ -261,7 +261,7 @@ namespace Models.CLEM.Activities
                     // needs to be caclulated for each offspring carried.
                     for (int i = 0; i < female.CarryingCount; i++)
                     {
-                        if (ZoneCLEM.RandomGenerator.NextDouble() < (female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
+                        if (RandomNumberGenerator.Generator.NextDouble() < (female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
                         {
                             female.OneOffspringDies();
                             if (female.NumberOfOffspring == 0)
@@ -285,7 +285,7 @@ namespace Models.CLEM.Activities
                         {
                             // Foetal mortality is now performed each timestep at base of this method
                             object newCalf = null;
-                            bool isMale = (ZoneCLEM.RandomGenerator.NextDouble() <= female.BreedParams.ProportionOffspringMale);
+                            bool isMale = (RandomNumberGenerator.Generator.NextDouble() <= female.BreedParams.ProportionOffspringMale);
                             double weight = female.BreedParams.SRWBirth * female.StandardReferenceWeight * (1 - 0.33 * (1 - female.Weight / female.StandardReferenceWeight));
                             if (isMale)
                             {
@@ -351,7 +351,7 @@ namespace Models.CLEM.Activities
                         double conceptionRate = ConceptionRate(female, out status);
                         if (conceptionRate > 0)
                         {
-                            if (ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
+                            if (RandomNumberGenerator.Generator.NextDouble() <= conceptionRate)
                             {
                                 female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0);
                                 status = Reporting.ConceptionStatus.Conceived;
