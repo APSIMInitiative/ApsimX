@@ -49,7 +49,7 @@ namespace Models.PostSimulationTools
             {
                 string absoluteFileName = PathUtilities.GetAbsolutePath(fileName.Trim(), storage.FileName);
                 if (!File.Exists(absoluteFileName))
-                    continue;
+                    throw new Exception($"Error in {Name}: file '{absoluteFileName}' does not exist");
 
                 if (Path.GetExtension(absoluteFileName).Equals(".xls", StringComparison.CurrentCultureIgnoreCase))
                     throw new Exception($"EXCEL file '{absoluteFileName}' must be in .xlsx format.");
