@@ -12,7 +12,7 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <StyleCopTreatErrorsAsWarnings>True</StyleCopTreatErrorsAsWarnings>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
