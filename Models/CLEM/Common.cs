@@ -110,7 +110,15 @@ namespace Models.CLEM
         /// <summary>
         /// Initial herd
         /// </summary>
-        InitialHerd
+        InitialHerd,
+        /// <summary>
+        /// Fill initial herd to management levels
+        /// </summary>
+        FillInitialHerd,
+        /// <summary>
+        /// Reduce initial herd to management levels
+        /// </summary>
+        ReduceInitialHerd
     }
 
     /// <summary>

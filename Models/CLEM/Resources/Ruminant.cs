@@ -295,41 +295,27 @@ namespace Models.CLEM.Resources
                     case HerdChangeReason.None:
                         return 0;
                     case HerdChangeReason.DiedUnderweight:
-                        return -1;
                     case HerdChangeReason.DiedMortality:
-                        return -1;
-                    case HerdChangeReason.Born:
-                        return 1;
                     case HerdChangeReason.TradeSale:
-                        return -1;
                     case HerdChangeReason.DryBreederSale:
-                        return -1;
                     case HerdChangeReason.ExcessBreederSale:
-                        return -1;
                     case HerdChangeReason.ExcessBullSale:
-                        return -1;
                     case HerdChangeReason.MaxAgeSale:
-                        return -1;
                     case HerdChangeReason.AgeWeightSale:
-                        return -1;
-                    case HerdChangeReason.TradePurchase:
-                        return 1;
-                    case HerdChangeReason.BreederPurchase:
-                        return 1;
                     case HerdChangeReason.ExcessHeiferSale:
-                        return -1;
-                    case HerdChangeReason.SirePurchase:
-                        return 1;
                     case HerdChangeReason.Consumed:
-                        return -1;
                     case HerdChangeReason.DestockSale:
-                        return -1;
-                    case HerdChangeReason.RestockPurchase:
-                        return 1;
-                    case HerdChangeReason.InitialHerd:
-                        return 1;
+                    case HerdChangeReason.ReduceInitialHerd:
                     case HerdChangeReason.MarkedSale:
                         return -1;
+                    case HerdChangeReason.Born:
+                    case HerdChangeReason.TradePurchase:
+                    case HerdChangeReason.BreederPurchase:
+                    case HerdChangeReason.SirePurchase:
+                    case HerdChangeReason.RestockPurchase:
+                    case HerdChangeReason.InitialHerd:
+                    case HerdChangeReason.FillInitialHerd:
+                        return 1;
                     default:
                         return 0;
                 }
