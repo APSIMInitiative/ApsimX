@@ -1379,7 +1379,9 @@
                 if (RootFrontCalcSwitch?.Value() >= 1.0)
                 {
                     double senescedFrac = senescenceRate.Value();
-                    if (Live.Wt * (1.0 - senescedFrac) < BiomassToleranceValue)
+                    double dmGreen = Live.Wt - potentialDMAllocation.Structural;
+
+                    if (dmGreen * (1.0 - senescedFrac) < BiomassToleranceValue)
                         senescedFrac = 1.0;  // remaining amount too small, senesce all
 
 
@@ -1390,13 +1392,13 @@
 
                     var currentLayer = PlantZone.soil.LayerIndexOfDepth(PlantZone.Depth);
                     int layer = currentLayer;
-                    double dmSenesced = Live.StructuralWt * senescedFrac; //sorghum only uses structural // same as Loss.StructuralWt
-                    double senNConc = Live.N / Live.StructuralWt;
+                    double dmSenesced = dmGreen * senescedFrac; //sorghum only uses structural // same as Loss.StructuralWt
+                    double senNConc = Live.N / dmGreen;
                     double nSenesced = dmSenesced * senNConc; // = Live.N * senescedFrac
 
                     while (layer >= 0 && (MathUtilities.IsPositive(dmSenesced) || MathUtilities.IsPositive(nSenesced)))
                     {
-                        if (MathUtilities.IsPositive(dmSenesced))
+                        if (dmSenesced > 0)
                         {
                             if (PlantZone.LayerLive[layer].StructuralWt >= dmSenesced)
                             {
@@ -1411,7 +1413,7 @@
                                 PlantZone.LayerLive[layer].StructuralWt = 0.0;
                             }
                         }
-                        if(MathUtilities.IsPositive(nSenesced))
+                        if(nSenesced > 0)
                         { 
                             if (PlantZone.LayerLive[layer].N >= nSenesced)
                             {
