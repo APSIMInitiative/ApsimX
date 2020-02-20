@@ -49,7 +49,7 @@ namespace Models.PostSimulationTools
             {
                 string absoluteFileName = PathUtilities.GetAbsolutePath(fileName.Trim(), storage.FileName);
                 if (!File.Exists(absoluteFileName))
-                    continue;
+                    throw new Exception($"Error in {Name}: file '{absoluteFileName}' does not exist");
 
                 if (Path.GetExtension(absoluteFileName).Equals(".xls", StringComparison.CurrentCultureIgnoreCase))
                     throw new Exception($"EXCEL file '{absoluteFileName}' must be in .xlsx format.");
@@ -73,15 +73,9 @@ namespace Models.PostSimulationTools
                         // Write all sheets that are specified in 'SheetNames' to the data store
                         foreach (DataTable table in dataSet.Tables)
                         {
-                            if (StringUtilities.IndexOfCaseInsensitive(this.SheetNames, table.TableName) != -1)
+                            if (SheetNames.Any(str => string.Equals(str.Trim(), table.TableName, StringComparison.InvariantCultureIgnoreCase)))
                             {
                                 ExcelInput.TruncateDates(table);
-
-                                // If the DB already contains a table with this name, we want to append.
-                                // Note that this is only possible if another excel file with the same
-                                // sheet name has recently been read in.
-                                if (storage.Reader.TableNames.Contains(table.TableName))
-                                    Merge(table, storage.Reader.GetData(table.TableName));
 
                                 storage.Writer.WriteTable(table);
                                 storage.Writer.WaitForIdle();
@@ -90,43 +84,6 @@ namespace Models.PostSimulationTools
                     }
                 }
             }
-        }
-
-        private void Merge(DataTable table, DataTable existingTable)
-        {
-            for (int i = 0; i < table.Columns.Count; i++)
-            {
-                DataColumn newColumn = table.Columns[i];
-                DataColumn oldColumn = existingTable.Columns[newColumn.ColumnName];
-
-                if (oldColumn != null && oldColumn.DataType != newColumn.DataType)
-                    ChangeColumnType(table, newColumn.ColumnName, oldColumn.DataType);
-            }
-
-            table.Merge(existingTable);
-
-            string[] columnsToRemove = new[] { "SimulationID", "CheckpointID", "CheckpointName" };
-            foreach (string column in columnsToRemove)
-                if (table.Columns.Contains(column))
-                    table.Columns.Remove(column);
-        }
-
-        private void ChangeColumnType(DataTable table, string columnName, Type dataType)
-        {
-            DataColumn newColumn = new DataColumn(columnName + "_new", dataType);
-
-            int ord = table.Columns[columnName].Ordinal;
-            table.Columns.Add(newColumn);
-            newColumn.SetOrdinal(ord);
-
-            foreach (DataRow row in table.Rows)
-            {
-                object value = row[columnName];
-                row[newColumn.ColumnName] = value == DBNull.Value ? DBNull.Value : Convert.ChangeType(value, dataType);
-            }
-
-            table.Columns.Remove(columnName);
-            newColumn.ColumnName = columnName;
         }
     }
 }
