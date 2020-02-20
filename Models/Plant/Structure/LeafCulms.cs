@@ -437,8 +437,10 @@ namespace Models.PMF.Struct
 				InitRate = initRate,
 				AppearanceRate1 = appearanceRate1,
 				AppearanceRate2 = appearanceRate2,
+				AppearanceRate3 = appearanceRate3,
 				NoRateChange = noRateChange1,
 				NoRateChange2 = noRateChange2,
+				LeafNoAtEmergence = leafNoAtEmergence,
 				MinLeafNo = minLeafNo,
 				MaxLeafNo = maxLeafNo,
 				TTEmergToFI = ttEmergToFI,
@@ -604,9 +606,12 @@ namespace Models.PMF.Struct
 					Culms[0].calcFinalLeafNo();
 					Culms[0].setCulmNo(0);
 					FinalLeafNo = Culms[0].getFinalLeafNo();
-					Culms[0].calculateLeafSizes();
-
+					if (leafAreaCalcTypeSwitch == null)
+						Culms[0].calculateLeafSizes();
+					else
+						Culms[0].CalcLeafSizes();
 				}
+
 				double currentLeafNo = Culms[0].getCurrentLeafNo();
 				double dltLeafNoMainCulm = Culms[0].calcLeafAppearance();
 				dltLeafNo = dltLeafNoMainCulm; //updates nLeaves
@@ -619,7 +624,10 @@ namespace Models.PMF.Struct
 					if (stage <= fi)
 					{
 						Culms[i].calcFinalLeafNo();
-						Culms[i].calculateLeafSizes();
+						if (leafAreaCalcTypeSwitch == null)
+							Culms[i].calculateLeafSizes();
+						else
+							Culms[i].CalcLeafSizes();
 					}
 					Culms[i].calcLeafAppearance();
 				}
@@ -642,11 +650,13 @@ namespace Models.PMF.Struct
 					dltPotentialLAI = Culms[0].LeafAreaPotBellShapeCurve(leafNo.ToArray());
 					dltStressedLAI = CalcStressedLeafArea();
 				}
-
-				for (int i = 0; i < Culms.Count; ++i)
+				else
 				{
-					dltPotentialLAI += Culms[i].calcPotentialLeafArea();
-					dltStressedLAI = CalcStressedLeafArea();        // dltPotentialLAI * totalStress(0-1)
+					for (int i = 0; i < Culms.Count; ++i)
+					{
+						dltPotentialLAI += Culms[i].calcPotentialLeafArea();
+						dltStressedLAI = CalcStressedLeafArea();        // dltPotentialLAI * totalStress(0-1)
+					}
 				}
 			}
 		}

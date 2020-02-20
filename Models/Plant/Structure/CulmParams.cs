@@ -60,6 +60,11 @@ namespace Models.PMF.Struct
         public IFunction NoRateChange2 { get; set; }
 
         /// <summary>
+        /// Leaf number at emergence.
+        /// </summary>
+        public IFunction LeafNoAtEmergence { get; set; }
+
+        /// <summary>
         /// Min leaf number.
         /// </summary>
         public IFunction MinLeafNo { get; set; }
