@@ -299,7 +299,7 @@ namespace Models.CLEM.Resources
                     case HerdChangeReason.TradeSale:
                     case HerdChangeReason.DryBreederSale:
                     case HerdChangeReason.ExcessBreederSale:
-                    case HerdChangeReason.ExcessBullSale:
+                    case HerdChangeReason.ExcessSireSale:
                     case HerdChangeReason.MaxAgeSale:
                     case HerdChangeReason.AgeWeightSale:
                     case HerdChangeReason.ExcessHeiferSale:

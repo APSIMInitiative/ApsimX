@@ -21,6 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs the management of ruminant numbers based upon the current herd filtering. It requires a RuminantActivityBuySell to undertake the purchases and sales.")]
+    [Version(1, 0, 5, "Renamed all 'bulls' to 'sires' in properties. Requires resetting of values")]
     [Version(1, 0, 4, "Allow sires to be placed in different pasture to breeders")]
     [Version(1, 0, 3, "Allows herd to be adjusted to sires and max breeders kept at startup")]
     [Version(1, 0, 2, "Implements minimum breeders kept to define breeder purchase limits")]
@@ -28,19 +29,32 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantManage.htm")]
     public class RuminantActivityManage : CLEMRuminantActivityBase, IValidatableObject
     {
+        private int maximumBreedersKept;
+
         /// <summary>
         /// Maximum number of breeders that can be kept
         /// </summary>
-        [Category("General", "Breeders")]
+        [Category("General", "Breeding females")]
         [Description("Maximum number of female breeders to be kept")]
         [Required, GreaterThanEqualValue(0)]
         [GreaterThanEqual("MinimumBreedersKept")]
-        public int MaximumBreedersKept { get; set; }
+        public int MaximumBreedersKept 
+        { 
+            get
+            {
+                // if min breeders kept is greater than max kept, use min for max
+                return (MinimumBreedersKept > MaximumBreedersKept) ? MinimumBreedersKept : maximumBreedersKept;
+            }
+            set
+            {
+                maximumBreedersKept = value;
+            }
+        }
 
         /// <summary>
         /// Minimum number of breeders that can be kept
         /// </summary>
-        [Category("General", "Breeders")]
+        [Category("General", "Breeding females")]
         [Description("Minimum number of female breeders to be kept")]
         [Required, GreaterThanEqualValue(0)]
         public int MinimumBreedersKept { get; set; }
@@ -48,7 +62,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Maximum breeder age (months) for culling
         /// </summary>
-        [Category("General", "Breeders")]
+        [Category("General", "Breeding females")]
         [Description("Maximum female breeder age (months) for culling")]
         [Required, GreaterThanEqualValue(0)]
         [System.ComponentModel.DefaultValueAttribute(120)]
@@ -57,7 +71,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Proportion of min breeders in single purchase
         /// </summary>
-        [Category("General", "Breeders")]
+        [Category("General", "Breeding females")]
         [Description("Proportion of min female breeders in single purchase")]
         [System.ComponentModel.DefaultValueAttribute(1)]
         [Required, Proportion, GreaterThanEqualValue(0)]
@@ -66,7 +80,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// The number of 12 month age classes to spread breeder purchases across
         /// </summary>
-        [Category("General", "Breeders")]
+        [Category("General", "Breeding females")]
         [Description("Number of age classes to distribute female breeder purchases across")]
         [System.ComponentModel.DefaultValueAttribute(1)]
         [Required, Range(1, 4)]
@@ -94,22 +108,22 @@ namespace Models.CLEM.Activities
         public int SiresKept { get; set; }
 
         /// <summary>
-        /// Maximum bull age (months) for culling
+        /// Maximum sire age (months) for culling
         /// </summary>
         [Category("General", "Breeding males")]
-        [Description("Maximum male breeder age (months) for culling")]
+        [Description("Maximum sire age (months) for culling")]
         [Required, GreaterThanEqualValue(0)]
         [System.ComponentModel.DefaultValueAttribute(120)]
-        public double MaximumBullAge { get; set; }
+        public double MaximumSireAge { get; set; }
 
         /// <summary>
-        /// Bull age (months) at purchase
+        /// Sire age (months) at purchase
         /// </summary>
         [Category("General", "Breeding males")]
-        [Description("Male breeder age (months) at purchase")]
+        [Description("Sire age (months) at purchase")]
         [System.ComponentModel.DefaultValueAttribute(48)]
         [Required, GreaterThanValue(0)]
-        public double BullAgeAtPurchase { get; set; }
+        public double SireAgeAtPurchase { get; set; }
 
         /// <summary>
         /// Allow natural herd replacement of sires
@@ -167,7 +181,6 @@ namespace Models.CLEM.Activities
         [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(GrazeFoodStore) }, CLEMExtraEntries = new string[] { "Not specified - general yards" })]
         public string GrazeFoodStoreNameBreeders { get; set; }
 
-
         private string grazeStoreSires = "";
         private string grazeStoreBreeders = "";
 
@@ -182,7 +195,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Perform selling of young females the same as males
         /// </summary>
-        [Category("General", "Breeders")]
+        [Category("General", "Breeding females")]
         [Description("Perform selling of young females the same as males")]
         [Required]
         public bool SellFemalesLikeMales { get; set; }
@@ -336,7 +349,7 @@ namespace Models.CLEM.Activities
                         // fill to number needed
                         for (int i = numberPresent; i < SiresKept; i++)
                         {
-                            RuminantMale newbull = new RuminantMale(BullAgeAtPurchase, Sex.Male, 0, breedParams)
+                            RuminantMale newSire = new RuminantMale(SireAgeAtPurchase, Sex.Male, 0, breedParams)
                             {
                                 Breed = this.PredictedHerdBreed,
                                 HerdName = this.PredictedHerdName,
@@ -344,14 +357,14 @@ namespace Models.CLEM.Activities
                                 ID = herd.NextUniqueID,
                                 SaleFlag = HerdChangeReason.FillInitialHerd
                             };
-                            herd.AddRuminant(newbull, this);
+                            herd.AddRuminant(newSire, this);
                         }
                     }
                     else if(numberPresent > SiresKept)
                     {
                         // reduce initial herd.
                         int reduceBy = Math.Max(0,numberPresent - SiresKept);
-                        // reduce initial bull herd size
+                        // reduce initial sire herd size
                         // randomly select the individuals to remove form the breeder herd
                         List<RuminantMale> sires = rumHerd.Where(a => a.Gender == Sex.Male).Cast<RuminantMale>().Where(a => a.BreedingSire).OrderBy(x => Guid.NewGuid()).Take(reduceBy).ToList();
                         foreach (var item in sires)
@@ -475,7 +488,7 @@ namespace Models.CLEM.Activities
                 }
 
                 // check for maximum age (females and males have different cutoffs)
-                foreach (var ind in herd.Where(a => a.Age >= ((a.Gender == Sex.Female) ? MaximumBreederAge : MaximumBullAge)))
+                foreach (var ind in herd.Where(a => a.Age >= ((a.Gender == Sex.Female) ? MaximumBreederAge : MaximumSireAge)))
                 {
                     ind.SaleFlag = HerdChangeReason.MaxAgeSale;
 
@@ -492,7 +505,7 @@ namespace Models.CLEM.Activities
                 }
 
                 // MALES
-                // check for breeder bulls after sale of old individuals and buy/sell
+                // check for sires after sale of old individuals and buy/sell
                 int numberMaleSiresInHerd = herd.Where(a => a.Gender == Sex.Male && a.SaleFlag == HerdChangeReason.None).Cast<RuminantMale>().Where(a => a.BreedingSire).Count();
 
                 // Number of females
@@ -507,7 +520,7 @@ namespace Models.CLEM.Activities
 
                 if (numberMaleSiresInHerd > SiresKept)
                 {
-                    // sell bulls
+                    // sell sires
                     // What rule? oldest first as they may be lost soonest?
                     int numberToRemove = numberMaleSiresInHerd - SiresKept;
                     if (numberToRemove > 0)
@@ -515,7 +528,7 @@ namespace Models.CLEM.Activities
                         foreach (var male in herd.Where(a => a.Gender == Sex.Male).Cast<RuminantMale>().Where(a => a.BreedingSire).OrderByDescending(a => a.Age).Take(numberToRemove))
                         {
                             male.Location = grazeStoreSires;
-                            male.SaleFlag = HerdChangeReason.ExcessBullSale;
+                            male.SaleFlag = HerdChangeReason.ExcessSireSale;
                             this.Status = ActivityStatus.Success;
                             numberToRemove--;
                             if (numberToRemove == 0)
@@ -531,7 +544,7 @@ namespace Models.CLEM.Activities
                     {
                         if (AllowSireReplacement)
                         {
-                            // remove young bulls from sale herd to replace breed bulls (not those sold because too old)
+                            // remove young sires from sale herd to replace breed sires (not those sold because too old)
                             foreach (RuminantMale male in herd.Where(a => a.Gender == Sex.Male && a.SaleFlag == HerdChangeReason.AgeWeightSale).OrderByDescending(a => a.Weight))
                             {
                                 male.Location = grazeStoreSires;
@@ -547,7 +560,7 @@ namespace Models.CLEM.Activities
                             // remaining males assumed to be too small, so await next time-step
                         }
 
-                        // if still insufficient buy bulls.
+                        // if still insufficient buy sires.
                         if (numberMaleSiresInHerd < SiresKept && (MaximumSiresPerPurchase>0))
                         {
                             // limit by breeders as proportion of max breeders so we don't spend alot on sires when building the herd and females more valuable
@@ -563,7 +576,7 @@ namespace Models.CLEM.Activities
                                 {
                                     this.Status = ActivityStatus.Success;
 
-                                    RuminantMale newbull = new RuminantMale(BullAgeAtPurchase, Sex.Male, 0, breedParams)
+                                    RuminantMale newSire = new RuminantMale(SireAgeAtPurchase, Sex.Male, 0, breedParams)
                                     {
                                         Location = grazeStoreSires,
                                         Breed = this.PredictedHerdBreed,
@@ -575,7 +588,7 @@ namespace Models.CLEM.Activities
                                     };
 
                                     // add to purchase request list and await purchase in Buy/Sell
-                                    ruminantHerd.PurchaseIndividuals.Add(newbull);
+                                    ruminantHerd.PurchaseIndividuals.Add(newSire);
                                 }
                             }
                         }
@@ -873,7 +886,7 @@ namespace Models.CLEM.Activities
             }
             html += "</div>";
             html += "\n<div class=\"activityentry\">";
-            html += "Individuals will be sold when over <span class=\"setvalue\">" + MaximumBullAge.ToString("###") + "</span> months old";
+            html += "Individuals will be sold when over <span class=\"setvalue\">" + MaximumSireAge.ToString("###") + "</span> months old";
             html += "</div>";
             html += "</div>";
 

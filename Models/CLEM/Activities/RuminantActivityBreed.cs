@@ -38,9 +38,9 @@ namespace Models.CLEM.Activities
         Clock Clock = null;
 
         /// <summary>
-        /// Use artificial insemination (no bulls required)
+        /// Use artificial insemination (no sires required)
         /// </summary>
-        [Description("Use controlled mating/artificial insemination (no bulls required)")]
+        [Description("Use controlled mating/artificial insemination (no sires required)")]
         [Required]
         public bool UseAI { get; set; }
 

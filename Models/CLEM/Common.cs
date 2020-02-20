@@ -72,9 +72,9 @@ namespace Models.CLEM
         /// </summary>
         ExcessHeiferSale,
         /// <summary>
-        /// Excess bull sold
+        /// Excess sire sold
         /// </summary>
-        ExcessBullSale,
+        ExcessSireSale,
         /// <summary>
         /// Individual reached maximim age and sold
         /// </summary>
