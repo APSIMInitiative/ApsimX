@@ -104,6 +104,11 @@ namespace Models.PMF
         private IPhase previousPhase;
 
         /// <summary>
+        /// fixme
+        /// </summary>
+        public double AccumTT { get; set; }
+
+        /// <summary>
         /// (Fractional) number of days from floral init to start grain fill.
         /// FIXME - This doesn't belong in the arbitrator.
         /// </summary>
@@ -160,6 +165,7 @@ namespace Models.PMF
         private void OnEndOfDay(object sender, EventArgs e)
         {
             DltTT = (double)Apsim.Get(this, "[Phenology].DltTT.Value()");
+            AccumTT += DltTT;
         }
 
         [EventSubscribe("PhaseChanged")]
@@ -175,10 +181,9 @@ namespace Models.PMF
 
             if (DMPlantMax > 9990)
             {
-                double ttNow = phenology.AccumulatedTT;
                 double ttToFlowering = (double)Apsim.Get(this, "[Phenology].TTToFlowering.Value()");
                 double dmPlantMaxTT = (double)Apsim.Get(this, "[Grain].PgrT1.Value()");
-                if (ttNow > dmPlantMaxTT + ttToFlowering)
+                if (AccumTT > dmPlantMaxTT + ttToFlowering)
                     DMPlantMax = (double)Apsim.Get(this, "[Stem].Live.Wt");
             }
         }
@@ -195,6 +200,7 @@ namespace Models.PMF
         protected override void Clear()
         {
             base.Clear();
+            AccumTT = 0;
             DltTT = 0.0;
             WatSupply = 0.0;
             NMassFlowSupply = 0.0;
