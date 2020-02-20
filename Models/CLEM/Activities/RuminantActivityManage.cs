@@ -258,15 +258,15 @@ namespace Models.CLEM.Activities
 
                     if (cohorts != null)
                     {
-                        List<RuminantTypeCohort> cohortList = Apsim.Children(cohorts, typeof(RuminantTypeCohort)).Cast<RuminantTypeCohort>().Where(a => a.Gender == Sex.Female && (a.Age >= breedParams.MinimumAge1stMating & a.Age < this.MaximumBreederAge)).ToList();
+                        List<RuminantTypeCohort> cohortList = Apsim.Children(cohorts, typeof(RuminantTypeCohort)).Cast<RuminantTypeCohort>().Where(a => a.Gender == Sex.Female && (a.Age >= breedParams.MinimumAge1stMating & a.Age <= this.MaximumBreederAge)).ToList();
                         int initialBreeders = Convert.ToInt32(cohortList.Sum(a => a.Number));
                         if (initialBreeders < this.MinimumBreedersKept)
                         {
-                            double scaleFactor = Math.Max(1, this.MaximumBreedersKept / initialBreeders);
+                            double scaleFactor = this.MinimumBreedersKept / Convert.ToDouble(initialBreeders);
                             // add new individuals
                             foreach (var item in cohortList)
                             {
-                                int numberToAdd = Convert.ToInt32(Math.Round(item.Number * scaleFactor));
+                                int numberToAdd = Convert.ToInt32(Math.Round(item.Number * scaleFactor) - item.Number);
                                 foreach (var newind in item.CreateIndividuals(numberToAdd))
                                 {
                                     newind.SaleFlag = HerdChangeReason.FillInitialHerd;
@@ -296,7 +296,7 @@ namespace Models.CLEM.Activities
                             if (reduceBy > 0)
                             {
                                 // add warning
-                                string warn = $"Unable to reduce breeders at the start of the simulation to number required [{SiresKept}] using [a={this.Name}]";
+                                string warn = $"Unable to reduce breeders at the start of the simulation to number required [{this.MaximumBreedersKept}] using [a={this.Name}]";
                                 if (!Warnings.Exists(warn))
                                 {
                                     Summary.WriteWarning(this, warn);
@@ -584,6 +584,7 @@ namespace Models.CLEM.Activities
 
                 // FEMALES
                 // Breeding herd sold as heifers only, purchased as breeders (>= minAge1stMating)
+                // Feb2020 - Added ability to provide desticking groups to try and sell non heifer breeders before reverting to heifer sales.
                 int excessBreeders = 0;
 
                 // get the mortality rate for the herd if available or assume zero
@@ -821,23 +822,36 @@ namespace Models.CLEM.Activities
             html += "\n<div class=\"activitybannerlight\">Breeding females</div>";
             html += "\n<div class=\"activitycontentlight\">";
             html += "\n<div class=\"activityentry\">";
-            html += "The herd will be maintained ";
-            if (MinimumBreedersKept == MaximumBreedersKept)
+
+            if (MinimumBreedersKept > MaximumBreedersKept)
             {
-                html += "at <span class=\"setvalue\">" + MinimumBreedersKept.ToString("#,###") + "</span> individual"+((MinimumBreedersKept!=1)?"s":"") ;
+                html += "Error: <span class=\"errorlink\">Minimum breeders kept > Maximum breeders kept</span><br />";
             }
             else
             {
-                html += ((MinimumBreedersKept > 0) ? "between <span class=\"setvalue\">" + MinimumBreedersKept.ToString("#,###") + "</span> and " : "below ") + "<span class=\"setvalue\">" + MaximumBreedersKept.ToString("#,###") + " with purchases up to minimum breeders and only recruitment from minimum to maximum kept</span>";
+                html += "The herd will be maintained";
+                if (MinimumBreedersKept == 0)
+                {
+                    html += " using only natural recruitment up to <span class=\"setvalue\">" + MaximumBreedersKept.ToString("#,###") + "</span> breeders";
+                }
+                else if (MinimumBreedersKept > MaximumBreedersKept)
+                {
+                    html += "";
+                }
+                else
+                {
+                    html += " with breeder purchases up to <span class=\"setvalue\">" + MinimumBreedersKept.ToString("#,###") + "</span > and natural recruitment to <span class=\"setvalue\">" + MaximumBreedersKept.ToString("#,###") +"</span> breeders";
+                }
             }
             html += "</div>";
+
             html += "\n<div class=\"activityentry\">";
             html += "Individuals will be sold when over <span class=\"setvalue\">" + MaximumBreederAge.ToString("###") + "</span> months old";
             html += "</div>";
-            if (MaximumProportionBreedersPerPurchase < 1)
+            if (MaximumProportionBreedersPerPurchase < 1 & MinimumBreedersKept > 0)
             {
                 html += "\n<div class=\"activityentry\">";
-                html += "A maximum of <span class=\"setvalue\">" + MaximumProportionBreedersPerPurchase.ToString("#0.##%") + "</span> of the Maximum Breeders Kept can be purchased in a single transaction";
+                html += "A maximum of <span class=\"setvalue\">" + MaximumProportionBreedersPerPurchase.ToString("#0.##%") + "</span> of the Minimum Breeders Kept can be purchased in a single transaction";
                 html += "</div>";
             }
             html += "</div>";
