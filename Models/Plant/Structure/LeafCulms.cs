@@ -642,7 +642,7 @@ namespace Models.PMF.Struct
 			dltPotentialLAI = 0.0;
 			dltStressedLAI = 0.0;
 
-			if (phenology.Stage >= emergence && phenology.Stage <= flag)
+			if (stage >= emergence && stage <= flag)
 			{
 				// Fixme - this function can be simplified. Just need to double-check the effects of doing so.
 				if (leafAreaCalcTypeSwitch != null)
@@ -768,7 +768,7 @@ namespace Models.PMF.Struct
 		/// </summary>
 		private void AreaActualFixed()
 		{
-			if (phenology.Stage >= endJuv && phenology.Stage < flag)
+			if (stage >= endJuv && stage < flag)
 			{
 				double dltDmGreen = leaf.potentialDMAllocation.Structural;
 				leaf.DltLAI = Math.Min(dltStressedLAI, dltDmGreen * slaMax.Value() * smm2sm);
