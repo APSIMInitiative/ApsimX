@@ -134,11 +134,6 @@ namespace Models.PMF.Struct
 			double maxLeafNo = parameters.MaxLeafNo.Value();
 			double ttFi = parameters.TTEmergToFI.Value();
 
-			if ((Apsim.Find(parameters.TTEmergToFI as IModel, typeof(Clock)) as Clock).Today.DayOfYear == 14)
-			{
-
-			}
-
 			finalLeafNo = MathUtilities.Bound(MathUtilities.Divide(ttFi, initRate, 0) + noSeed, minLeafNo, maxLeafNo);
 		}
 
@@ -181,11 +176,14 @@ namespace Models.PMF.Struct
 
 			// Peter's 2 stage version used here, modified to apply to last few leaves before flag
 			// i.e. c_leaf_no_rate_change is leaf number from the top down (e.g. 4)
+			// dh - todo - need to check this works with sorghum.
 			double leafAppRate = parameters.AppearanceRate1.Value();
-			if (remainingLeaves <= parameters.NoRateChange.Value())
-			{
+			if (remainingLeaves <= parameters.NoRateChange2.Value())
+				leafAppRate = parameters.AppearanceRate3.Value();
+			else if (remainingLeaves <= parameters.NoRateChange.Value())
 				leafAppRate = parameters.AppearanceRate2.Value();
-			}
+			else
+				leafAppRate = parameters.AppearanceRate1.Value();
 
 			// if leaves are still growing, the cumulative number of phyllochrons or fully expanded
 			// leaves is calculated from thermal time for the day.
@@ -257,8 +255,10 @@ namespace Models.PMF.Struct
 					}
 				}
 			}
-			double a0 = -0.009, a1 = -0.2;
-			double b0 = 0.0006, b1 = -0.43;
+			double a0 = parameters.A0.Value();
+			double a1 = parameters.A1.Value();
+			double b0 = parameters.B0.Value();
+			double b1 = parameters.B1.Value();
 
 			double a = a0 - Math.Exp(a1 * correctedFinalLeafNo);
 			double b = b0 - Math.Exp(b1 * correctedFinalLeafNo);
@@ -348,6 +348,46 @@ namespace Models.PMF.Struct
 		}
 
 		/// <summary>
+		/// Calculate leaf sizes. Used when leafAreaCalcTypeSwitch is present.
+		/// </summary>
+		public void CalcLeafSizes()
+		{
+			LeafSizes.Clear();
+			for (int i = 0; i < finalLeafNo; i++)
+				LeafSizes.Add(calcIndividualLeafSize2(i + 1));
+		}
+
+		/// <summary>
+		/// Temp hack - fixme
+		/// </summary>
+		/// <param name="leafNo"></param>
+		private double calcIndividualLeafSize2(double leafNo)
+		{
+			// use finalLeafNo to calculate the size of the individual leafs
+			// Eqn 5 from Improved methods for predicting individual leaf area and leaf senescence in maize
+			// (Zea mays) C.J. Birch, G.L. Hammer and K.G. Ricket. Aust. J Agric. Res., 1998, 49, 249-62
+			// TODO	externalise these variables
+
+			double a0 = parameters.A0.Value();
+			double a1 = parameters.A1.Value();
+			double b0 = parameters.B0.Value();
+			double b1 = parameters.B1.Value();
+
+			double aMaxA = parameters.AMaxA.Value();
+			double aMaxB = parameters.AMaxB.Value();
+			double aMaxC = parameters.AMaxC.Value();
+
+			double a = a0 - Math.Exp(a1 * finalLeafNo);                      // Eqn 18
+			double b = b0 - Math.Exp(b1 * finalLeafNo);                      // Eqn 19
+
+			double aMax = aMaxA * Math.Exp(aMaxB + aMaxC * finalLeafNo);         // Eqn 13
+
+			double x0 = parameters.AX0.Value() * finalLeafNo;                                          // Eqn 14
+
+			return aMax * Math.Exp(a * Math.Pow((leafNo - x0), 2) + b * Math.Pow((leafNo - x0), 3)) * 100;  // Eqn 5
+		}
+
+		/// <summary>
 		/// Calculate potential leaf area (used in Maize only - to be refactored out?).
 		/// </summary>
 		/// <param name="leafNo"></param>
@@ -356,20 +396,7 @@ namespace Models.PMF.Struct
 			//once leaf no is calculated leaf area of largest expanding leaf is determined
 			double leafNoEffective = Math.Min(leafNo.Sum() + parameters.LeafNoCorrection.Value(), finalLeafNo);
 
-			double aMaxA = 0; //argestLeafParams[0];
-			double aMaxB = 0; //argestLeafParams[1];
-			double aMaxC = 0; //largestLeafParams[2];
-
-			double a = parameters.A0.Value() - Math.Exp(parameters.A1.Value() * finalLeafNo);                      // Eqn 18
-			double b = parameters.B0.Value() - Math.Exp(parameters.B1.Value() * finalLeafNo);                      // Eqn 19
-
-			double aMax = aMaxA * Math.Exp(aMaxB + aMaxC * finalLeafNo);         // Eqn 13
-
-			double x0 = parameters.AX0.Value() * finalLeafNo;                                          // Eqn 14
-
-			double individualLeafSize = aMax * Math.Exp(a * Math.Pow((leafNoEffective - x0), 2) + b * Math.Pow((leafNoEffective - x0), 3)) * 100;  // Eqn 5
-
-			return dltLeafNo * individualLeafSize /*calcIndividualLeafSize(leafNoEffective)*/ * smm2sm * parameters.Density;
+			return dltLeafNo * calcIndividualLeafSize2(leafNoEffective) * smm2sm * parameters.Density;
 		}
 
 		/// <summary>
