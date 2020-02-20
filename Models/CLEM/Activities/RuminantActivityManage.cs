@@ -278,7 +278,7 @@ namespace Models.CLEM.Activities
                             {
                                 throw new ApsimXException(this, $"Unable to scale breeding female population up to the maximum breeders kept at startup\nNo cohorts representing breeders were found in the initial herd structure [r=InitialCohorts] for [r={breedParams.Name}]\nAdd at least one initial cohort that meets the breeder criteria of age at first mating and max age kept");
                             }
-                            breederHerdSize = this.MinimumBreedersKept;
+                            breederHerdSize = initialBreeders + numberAdded;
                         }
                         else if (initialBreeders > this.MaximumBreedersKept)
                         {
