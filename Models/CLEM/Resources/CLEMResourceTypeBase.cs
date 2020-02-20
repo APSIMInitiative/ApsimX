@@ -24,6 +24,16 @@ namespace Models.CLEM.Resources
         Clock Clock = null;
 
         /// <summary>
+        /// A link to the equivalent market store for trading.
+        /// </summary>
+        protected CLEMResourceTypeBase equivalentMarketStore { get; set; }
+
+        /// <summary>
+        /// Detemrines if an equivalent resource has been found in the market
+        /// </summary>
+        protected bool equivalentMarketStoreDetermined { get; set; }
+
+        /// <summary>
         /// Determine whether transmutation has been defined for this foodtype
         /// </summary>
         [XmlIgnore]
@@ -32,6 +42,18 @@ namespace Models.CLEM.Resources
             get
             {
                 return Apsim.Children(this, typeof(Transmutation)).Count() > 0;
+            }
+        }
+
+        /// <summary>
+        /// Does pricing exist for this tyep
+        /// </summary>
+        public bool PricingExists 
+        {
+            get
+            {
+                // find pricing that is ok;
+                return Apsim.Children(this, typeof(ResourcePricing)).Where(a => (a as ResourcePricing).TimingOK).FirstOrDefault() != null;
             }
         }
 
@@ -50,16 +72,17 @@ namespace Models.CLEM.Resources
 
                 if (price == null)
                 {
-                    if (!Warnings.Exists("price"))
+                    string warn = "No pricing is available for [r=" + this.Parent.Name + "." + this.Name + "]";
+                    if (Apsim.Children(this, typeof(ResourcePricing)).Count > 0)
                     {
-                        string warn = "No pricing is available for [r=" + this.Parent.Name + "." + this.Name + "]";
-                        if (Apsim.Children(this, typeof(ResourcePricing)).Count > 0)
-                        {
-                            warn += " in month [" + Clock.Today.ToString("MM yyyy") + "]";
-                        }
-                        warn += "\nAdd [r=ResourcePricing] component to [r=" + this.Parent.Name + "." + this.Name + "] to include financial transactions for purchases and sales.";
+                        warn += " in month [" + Clock.Today.ToString("MM yyyy") + "]";
+                    }
+                    warn += "\nAdd [r=ResourcePricing] component to [r=" + this.Parent.Name + "." + this.Name + "] to include financial transactions for purchases and sales.";
+
+                    if (!Warnings.Exists(warn))
+                    {
                         Summary.WriteWarning(this, warn);
-                        Warnings.Add("price");
+                        Warnings.Add(warn);
                     }
                     return new ResourcePricing() { PricePerPacket=0, PacketSize=1, UseWholePackets=true };
                 }
@@ -93,7 +116,7 @@ namespace Models.CLEM.Resources
             }
             else
             {
-                ResourceUnitsConverter converter = Apsim.Children(this, typeof(ResourceUnitsConverter)).Where(a => a.Name.ToLower() == converterName.ToLower()).FirstOrDefault() as ResourceUnitsConverter;
+                ResourceUnitsConverter converter = Apsim.Children(this, typeof(ResourceUnitsConverter)).Where(a => string.Compare(a.Name, converterName, true) == 0).FirstOrDefault() as ResourceUnitsConverter;
                 if (converter != null)
                 {
                     double result = amount;
@@ -144,6 +167,53 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Locate the equivalent store in a market if available
+        /// </summary>
+        protected void FindEquivalentMarketStore()
+        {
+            // determine what resource types allow market transactions
+            switch (this.GetType().Name)
+            {
+                case "FinanceType":
+                case "HumanFoodStoreType":
+                case "WaterType":
+                case "AnimalFoodType":
+                case "EquipmentType":
+                case "GreenhousGasesType":
+                case "ProductStoreType":
+                    break;
+                default:
+                    throw new NotImplementedException($"\n[r={this.Parent.GetType().Name}] resource does not currently support transactions to and from a [m=Market]\nThis problem has arisen because a resource transaction in the code is flagged to exchange resources with the [m=Market]\nPlease contact developers for assistance.");
+            }
+
+            // if not already checked
+            if(!equivalentMarketStoreDetermined)
+            {
+                // havent already found a market store
+                if(equivalentMarketStore is null)
+                {
+                    // is there a market
+                    Market market = FindMarket();
+                    if(market != null)
+                    {
+                        // get the resources
+                        ResourcesHolder holder = Apsim.Child(market, typeof(ResourcesHolder)) as ResourcesHolder;
+                        if(holder != null)
+                        {
+                            object store = null;
+                            holder.ResourceTypeExists(this, out store);
+                            if (store != null)
+                            {
+                                equivalentMarketStore = store as CLEMResourceTypeBase;
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Add resources from various objects
         /// </summary>
         /// <param name="resourceAmount"></param>
@@ -171,6 +241,11 @@ namespace Models.CLEM.Resources
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Clone this resource type
+        /// </summary>
+        public object Clone { get { throw new NotImplementedException(); } }
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)

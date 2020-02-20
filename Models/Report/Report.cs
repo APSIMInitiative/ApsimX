@@ -39,6 +39,9 @@ namespace Models.Report
         [NonSerialized]
         private ReportData dataToWriteToDb = null;
 
+        /// <summary>List of strings representing dates to report on.</summary>
+        private List<string> dateStringsToReportOn = new List<string>();
+
         /// <summary>Link to a simulation</summary>
         [Link]
         private Simulation simulation = null;
@@ -89,7 +92,7 @@ namespace Models.Report
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
         [EventSubscribe("StartOfSimulation")]
-        private void OnCommencing(object sender, EventArgs e)
+        private void OnStartOfSimulation(object sender, EventArgs e)
         {
             DayAfterLastOutput = clock.Today;
             dataToWriteToDb = null;
@@ -110,6 +113,19 @@ namespace Models.Report
                 events.Subscribe(eventName, DoOutputEvent);
         }
 
+        /// <summary>An event handler called at the end of each day.</summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        [EventSubscribe("DoReport")]
+        private void OnDoReport(object sender, EventArgs e)
+        {
+            foreach (var dateString in dateStringsToReportOn)
+            {
+                if (DateUtilities.DatesAreEqual(dateString, clock.Today))
+                    DoOutput();
+            }
+        }
+
         /// <summary>
         /// Sanitises the event names and removes duplicates/comments.
         /// </summary>
@@ -127,7 +143,12 @@ namespace Models.Report
                     eventName = eventName.Substring(0, commentIndex);
 
                 if (!string.IsNullOrWhiteSpace(eventName))
-                    eventNames.Add(eventName.Trim());
+                {
+                    if (DateUtilities.validateDateString(eventName) != null)
+                        dateStringsToReportOn.Add(eventName);                       
+                    else
+                        eventNames.Add(eventName.Trim());
+                }
             }
 
             return eventNames.ToArray();

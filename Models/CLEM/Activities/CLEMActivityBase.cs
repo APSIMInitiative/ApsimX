@@ -79,7 +79,7 @@ namespace Models.CLEM.Activities
         /// Property to check if timing of this activity is ok based on child and parent ActivityTimers in UI tree
         /// </summary>
         /// <returns>T/F</returns>
-        public bool TimingOK
+        public virtual bool TimingOK
         {
             get
             {
@@ -260,7 +260,7 @@ namespace Models.CLEM.Activities
         {
             if (this.Enabled)
             {
-                if (this.TimingOK)
+                if (TimingOK)
                 {
                     ResourcesForAllActivities(model);
                 }
@@ -290,9 +290,9 @@ namespace Models.CLEM.Activities
         {
             // Get resources needed and use substitution if needed and provided, then move through children getting their resources.
 
-            if ((model.GetType() == typeof(ActivitiesHolder)&&this.AllocationStyle== ResourceAllocationStyle.Automatic)|| (model.GetType() != typeof(ActivitiesHolder)))
+            if ((model.GetType() == typeof(ActivitiesHolder) & this.AllocationStyle == ResourceAllocationStyle.Automatic) | (model.GetType() != typeof(ActivitiesHolder)))
             {
-                // this will be perfomred if
+                // this will be performed if
                 // (a) the call has come from the Activity Holder and is therefore using the GetResourcesRequired event and the allocation style is automatic, or
                 // (b) the call has come from the Activity
                 GetResourcesRequiredForActivity();

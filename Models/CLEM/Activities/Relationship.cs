@@ -94,7 +94,8 @@ namespace Models.CLEM.Activities
 
             if(linearInterpolation)
             {
-                return YValues[k] + (YValues[k + 1] - YValues[k]) / (XValues[k + 1] - XValues[k]) * (xValue - YValues[k]);
+//                return YValues[k] + (YValues[k + 1] - YValues[k]) / (XValues[k + 1] - XValues[k]) * (xValue - XValues[k]);
+                return YValues[k] + (YValues[k + 1] - YValues[k]) * (xValue - XValues[k])/(XValues[k + 1] - XValues[k]);
             }
             else
             {

@@ -13,6 +13,7 @@
     using System.Data;
     using System.Drawing;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
     using UserInterface.Classes;
     using UserInterface.Commands;
@@ -645,37 +646,15 @@
                     }
                 }
 
-                table.Columns[columnIndex].Width = Unit.FromPoint(maxSize + 10);
+                // maxWidth is the maximum allowed width of the column. E.g. if tableObj.ColumnWidth
+                // is 50, then maxWidth is the amount of space taken up by 50 characters.
+                // maxSize, on the other hand, is the length of the longest string in the column.
+                // The actual column width is whichever of these two values is smaller.
+                // MigraDoc will automatically wrap text to ensure the column respects this width.
+                double maxWidth = graphics.MeasureString(Enumerable.Repeat('m', tableObj.ColumnWidth).ToString(), gdiFont).Width;
+                table.Columns[columnIndex].Width = Unit.FromPoint(Math.Min(maxWidth, maxSize) + 10);
             }
-            //for (int rowIndex = 0; rowIndex < tableObj.data.Count; rowIndex++)
-            //{
-            //    row = table.AddRow();
-            //    for (int columnIndex = 0; columnIndex < tableObj.data.Table.Columns.Count; columnIndex++)
-            //    {
-            //        string cellText = tableObj.data[rowIndex][columnIndex].ToString();
-            //
-            //        var match = hrefRegEx.Match(cellText);
-            //        if (match.Success)
-            //        {
-            //            var paragraph = row.Cells[columnIndex].AddParagraph();
-            //            var hyperlink = paragraph.AddHyperlink(match.Groups[1].ToString().TrimStart('#'), HyperlinkType.Bookmark);
-            //            hyperlink.AddFormattedText(match.Groups[2].ToString(), TextFormat.Underline);
-            //        }
-            //        else
-            //        {
-            //            match = italicsRegEx.Match(cellText);
-            //            if (match.Success)
-            //            {
-            //                var para = row.Cells[columnIndex].AddParagraph(match.Groups[1].ToString());
-            //                para.AddLineBreak();
-            //                para.AddFormattedText(match.Groups[2].ToString(), TextFormat.Italic);
-            //            }
-            //            else
-            //                row.Cells[columnIndex].AddParagraph(cellText);
-            //        }
-            //    }
-            //
-            //}
+            
             section.AddParagraph();
         }
 

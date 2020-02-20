@@ -47,7 +47,7 @@ namespace Models.PostSimulationTools
 
             foreach (string fileName in FileNames)
             {
-                string absoluteFileName = PathUtilities.GetAbsolutePath(fileName, storage.FileName);
+                string absoluteFileName = PathUtilities.GetAbsolutePath(fileName.Trim(), storage.FileName);
                 if (!File.Exists(absoluteFileName))
                     continue;
 

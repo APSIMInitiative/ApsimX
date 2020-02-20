@@ -23,7 +23,7 @@ namespace Models.CLEM
         /// <param name="ecolCalculationDate"></param>
         /// <param name="ecolCalculationInterval"></param>
         /// <returns></returns>
-        List<PastureDataType> GetIntervalsPastureData(int region, string soil, int grassBasalArea, int landCondition, int stockingRate,
+        List<PastureDataType> GetIntervalsPastureData(int region, string soil, double grassBasalArea, double landCondition, double stockingRate,
                                          DateTime ecolCalculationDate, int ecolCalculationInterval);
 
     }

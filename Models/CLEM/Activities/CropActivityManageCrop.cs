@@ -173,6 +173,9 @@ namespace Models.CLEM.Activities
                     if (item.ActivityEnabled)
                     {
                         item.FirstTimeStepOfRotation = item.FirstTimeStepOfRotation = Clock.Today.AddDays(1).Year * 100 + Clock.Today.AddDays(1).Month;
+                        
+
+
                     }
                     else
                     {
