@@ -75,7 +75,7 @@ namespace Models.PMF.Struct
 			finalLeafNo = 0.0;
 			dltLeafNo = 0.0;
 			largestLeafPlateau = 0; //value less than 1 means ignore it
-			currentLeafNo = 1.0;//noEmergence - is in Leaf
+			currentLeafNo = parameters.LeafNoAtEmergence.Value();
 			vertAdjValue = 0.0;
 			proportion = 1.0;
 			totalLAI = 0.0;
