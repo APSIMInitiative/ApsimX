@@ -24,6 +24,7 @@ namespace Models.CLEM
     [HelpUri(@"Content/Features/RandomNumbersGenerator.htm")]
     public class RandomNumberGenerator: Model
     {
+        [ThreadStatic]
         private static Random generator = null;
 
         /// <summary>
