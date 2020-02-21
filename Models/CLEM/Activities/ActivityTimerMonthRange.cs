@@ -84,14 +84,14 @@ namespace Models.CLEM.Activities
             bool due = false;
             if (StartMonth <= EndMonth)
             {
-                if ((date.Month >= StartMonth) && (date.Month <= EndMonth))
+                if ((date.Month >= StartMonth) & (date.Month <= EndMonth))
                 {
                     due = true;
                 }
             }
             else
             {
-                if ((date.Month >= EndMonth) || (date.Month <= StartMonth))
+                if ((date.Month <= EndMonth) | (date.Month >= StartMonth))
                 {
                     due = true;
                 }

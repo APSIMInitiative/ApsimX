@@ -65,7 +65,6 @@ namespace Models.CLEM.Resources
 
         private IModel GetGroupByType(Type type)
         {
-            //            ResourceGroupList = Apsim.Children(this, typeof(IModel)).Where(a => a.Enabled).ToList();
             InitialiseResourceGroupList();
             return ResourceGroupList.Find(x => x.GetType() == type);
         }
@@ -103,7 +102,6 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public object GetResourceGroupByName(string name)
         {
-            //ResourceGroupList = Apsim.Children(this, typeof(IModel)).Where(a => a.Enabled & a.Name == name).ToList();
             InitialiseResourceGroupList();
             return ResourceGroupList.Find(x => x.Name == name);
         }
@@ -307,6 +305,48 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Returns the link to the matching resource in the market place if found or creates a new clone copy for future transactions
+        /// This allows this action to be performed once to store the link rather than at every transaction
+        /// This functionality allows resources not in the market at the start of the simulation to be traded.
+        /// </summary>
+        /// <param name="resourceType">The resource type to trade</param>
+        /// <param name="linkToResourceType">A link to the associated resource type</param>
+        /// <returns>Whether the search was successful</returns>
+        public bool ResourceTypeExists(CLEMResourceTypeBase resourceType, out object linkToResourceType)
+        {
+            linkToResourceType = null;
+
+            // find parent group type
+            ResourceBaseWithTransactions parent = (resourceType as Model).Parent as ResourceBaseWithTransactions;
+            ResourceBaseWithTransactions resGroup = GetResourceGroupByType(parent.GetType()) as ResourceBaseWithTransactions;
+            if (resGroup is null)
+            {
+                // add warning the market is not currently trading in this resource
+                string zoneName = Apsim.Parent(this, typeof(Zone)).Name;
+                Warnings.Add($"[{zoneName}] is currently not accepting resources of type [r={parent.GetType().ToString()}]\nOnly resources groups provided in the [r=ResourceHolder] in the simulation tree will be traded.");
+                return false;
+            }
+
+            // TODO: do some group checks. land units, currency
+
+            // TODO: if market and looking for finance only return or create "Bank"
+
+            // find resource type in group
+            var resType = resGroup.GetByName((resourceType as IModel).Name);
+            if( resType is null)
+            {
+                // clone resource
+                resType = resourceType.Clone as CLEMResourceTypeBase;
+                (resType as IModel).Parent = resGroup;
+
+                // wire up events
+                resGroup.AddChildEvents(resType as IResourceWithTransactionType);
+            }
+            linkToResourceType = resType;
+            return true;
+        }
+
+        /// <summary>
         /// Get the Resource Group for Products
         /// </summary>
         /// <returns></returns>
@@ -502,7 +542,7 @@ namespace Models.CLEM.Resources
                             if(!queryOnly)
                             {
                                 // Add resource
-                                (model as IResourceType).Add(unitsNeeded * trans.AmountPerUnitPurchase, trans, "");
+                                (model as IResourceType).Add(unitsNeeded * trans.AmountPerUnitPurchase, trans, "Transmutation");
                             }
                         }
                     }

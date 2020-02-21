@@ -15,6 +15,9 @@ namespace Models.CLEM.Resources
     {
         private RuminantFemale mother;
         private double weight;
+        private double age;
+        private double normalisedWeight;
+        private double adultEquivalent;
 
         /// <summary>
         /// Reference to the Breed Parameters.
@@ -73,7 +76,18 @@ namespace Models.CLEM.Resources
         /// Age (Months)
         /// </summary>
         /// <units>Months</units>
-        public double Age { get; private set; }
+        public double Age
+        {
+            get
+            {
+                return age;
+            }
+            private set
+            {
+                age = value;
+                normalisedWeight = StandardReferenceWeight - ((1 - BreedParams.SRWBirth) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * (Age * 30.4)) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
+            }
+        }
 
         /// <summary>
         /// The age (months) this individual entered the simulation.
@@ -118,6 +132,8 @@ namespace Models.CLEM.Resources
             {
                 weight = value;
 
+                adultEquivalent = Math.Pow(this.Weight, 0.75) / Math.Pow(this.BreedParams.BaseAnimalEquivalent, 0.75);
+
                 // if highweight has not been defined set to initial weight
                 if (HighWeight == 0)
                 {
@@ -142,7 +158,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The adult equivalent of this individual
         /// </summary>
-        public double AdultEquivalent { get { return Math.Pow(this.Weight, 0.75) / Math.Pow(this.BreedParams.BaseAnimalEquivalent, 0.75); } }
+        public double AdultEquivalent { get { return adultEquivalent; } }
         // Needs to include ind.Number*weight if ever added to this model
 
         /// <summary>
@@ -174,16 +190,17 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Is this individual a valid breeder
+        /// Is this individual a valid breeder and in condition
         /// </summary>
-        public bool IsBreeder 
+        public bool IsBreedingCondition 
         { 
             get
             {
-                return (Gender == Sex.Male && Age >= BreedParams.MinimumAge1stMating) ||
-                    (Gender == Sex.Female &&
-                    Age >= BreedParams.MinimumAge1stMating &&
-                    HighWeight >= (BreedParams.MinimumSize1stMating * StandardReferenceWeight)
+                return (Gender == Sex.Male & Age >= BreedParams.MinimumAge1stMating) |
+                    (Gender == Sex.Female &
+                    (Age >= BreedParams.MinimumAge1stMating &
+                    HighWeight >= BreedParams.MinimumSize1stMating * StandardReferenceWeight &
+                    Age <= BreedParams.MaximumAgeMating)
                     );
             }
         }
@@ -386,7 +403,8 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return StandardReferenceWeight - ((1 - BreedParams.SRWBirth) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * (Age * 30.4)) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
+                return normalisedWeight;
+                //return StandardReferenceWeight - ((1 - BreedParams.SRWBirth) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * (Age * 30.4)) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
             }
         }
 
@@ -517,10 +535,10 @@ namespace Models.CLEM.Resources
         /// </summary>
         public Ruminant(double setAge, Sex setGender, double setWeight, RuminantType setParams)
         {
-            this.Age = setAge;
-            this.AgeEnteredSimulation = setAge;
             this.Gender = setGender;
             this.BreedParams = setParams;
+            this.Age = setAge;
+            this.AgeEnteredSimulation = setAge;
 
             if (setWeight <= 0)
             {

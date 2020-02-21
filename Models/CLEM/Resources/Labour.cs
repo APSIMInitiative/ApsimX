@@ -339,7 +339,7 @@ namespace Models.CLEM.Resources
                     }
                 }
                 // no price match found.
-                string warningString = "No pay entry was found for indiviudal [" + ind.Name + "] with details [f=age: " + ind.Age + "] [f=gender: " + ind.Gender.ToString() + "]";
+                string warningString = $"No [Pay] price entry was found for individual [r={ind.Name}] with details [f=age: {ind.Age}] [f=gender: {ind.Gender.ToString()}]";
                 if (!WarningsNotFound.Contains(warningString))
                 {
                     WarningsNotFound.Add(warningString);
@@ -393,7 +393,7 @@ namespace Models.CLEM.Resources
                 if (matchCriteria == null)
                 {
                     // report specific criteria not found in price list
-                    string warningString = "No pay rate entry was found meeting the required criteria [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".");
+                    string warningString = "No [Pay] rate entry was found meeting the required criteria [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".");
 
                     if (matchIndividual != null)
                     {

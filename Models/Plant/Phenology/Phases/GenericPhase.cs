@@ -74,7 +74,7 @@ namespace Models.PMF.Phen
                 if (ProgressionForTimeStep > 0.0)
                 {
                     proceedToNextPhase = true;
-                    propOfDayToUse = (ProgressThroughPhase - Target) / ProgressionForTimeStep;
+                    propOfDayToUse *= (ProgressThroughPhase - Target) / ProgressionForTimeStep;
                     ProgressionForTimeStep *= (1 - propOfDayToUse);
                 }
                 ProgressThroughPhase = Target;

@@ -78,6 +78,7 @@ namespace Models.CLEM.Activities
                 foreach (RuminantFemale female in herd)
                 {
                     female.TakeMilk(female.MilkCurrentlyAvailable * labourLimit, MilkUseReason.Milked);
+                    this.Status = ActivityStatus.Success;
                 }
             }
             else

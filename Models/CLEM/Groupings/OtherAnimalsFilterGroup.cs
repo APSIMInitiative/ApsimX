@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
+using System.Xml.Serialization;
 
 namespace Models.CLEM.Groupings
 {
@@ -18,10 +19,16 @@ namespace Models.CLEM.Groupings
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This other animal filter group selects specific individuals from the other animals using any number of Other Animal Filters.")]
     [Version(1, 0, 1, "")]
-    public class OtherAnimalsFilterGroup: CLEMModel
+    public class OtherAnimalsFilterGroup: CLEMModel, IFilterGroup
     {
         [Link]
         private ResourcesHolder Resources = null;
+
+        /// <summary>
+        /// Combined ML ruleset for LINQ expression tree
+        /// </summary>
+        [XmlIgnore]
+        public object CombinedRules { get; set; } = null;
 
         /// <summary>
         /// Daily amount to supply selected individuals each month

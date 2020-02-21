@@ -23,6 +23,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(Simulation))]
     [Description("This represents a CLEM farm resources")]
     [HelpUri(@"Content/Features/CLEMComponent.htm")]
+    [Version(1, 0, 3, "Updated filtering logic to improve performance.")]
     [Version(1, 0, 2, "New ResourceUnitConverter functionality added that changes some reporting.\nThis change will cause errors for all previous custom resource ledger reports created using the APSIM Report component.\nTo fix errors add \".Name\" to all LastTransaction.ResourceType and LastTransaction.Activity entries in custom ledgers (i.e. LastTransaction.ResourceType.Name as Resource). The CLEM ReportResourceLedger component has been updated to automatically handle the changes.")]
     [Version(1,0,1,"")]
     [ScopedModel]

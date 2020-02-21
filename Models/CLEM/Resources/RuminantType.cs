@@ -56,6 +56,8 @@ namespace Models.CLEM.Resources
         [XmlIgnore]
         public AnimalPricing PriceList;
 
+        private List<AnimalPriceGroup> priceGroups = new List<AnimalPriceGroup>();
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -66,6 +68,8 @@ namespace Models.CLEM.Resources
             if(Apsim.Children(this, typeof(AnimalPricing)).Count() > 0)
             {
                 PriceList = (Apsim.Children(this, typeof(AnimalPricing)).FirstOrDefault() as AnimalPricing).Clone();
+
+                priceGroups = Apsim.Children(PriceList, typeof(AnimalPriceGroup)).Cast<AnimalPriceGroup>().ToList();
             }
 
             // get conception parameters and rate calculation method
@@ -92,19 +96,22 @@ namespace Models.CLEM.Resources
                 List<Ruminant> animalList = new List<Ruminant>() { ind };
 
                 // search through RuminantPriceGroups for first match with desired purchase or sale flag
-                foreach (AnimalPriceGroup item in Apsim.Children(PriceList, typeof(AnimalPriceGroup)).Cast<AnimalPriceGroup>().Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
+
+                foreach (AnimalPriceGroup item in priceGroups.Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
                 {
                     if (animalList.Filter(item).Count() == 1)
                     {
                         return item.Value * ((item.PricingStyle == PricingStyleType.perKg) ? ind.Weight : 1.0);
                     }
                 }
+
                 // no price match found.
-                string warning = "No " + purchaseStyle.ToString() + " price entry was found for an indiviudal with details [f=age: " + ind.Age + "] [f=herd: " + ind.HerdName + "] [f=gender: " + ind.GenderAsString + "] [f=weight: " + ind.Weight.ToString("##0") + "]";
-                if (!Warnings.Exists(warning))
+                string warningString = $"No [{purchaseStyle.ToString()}] price entry was found for [r={ind.Breed}] meeting the required criteria [f=age: {ind.Age}] [f=gender: {ind.GenderAsString}] [f=weight: {ind.Weight.ToString("##0")}]";
+
+                if (!Warnings.Exists(warningString))
                 {
-                    Warnings.Add(warning);
-                    Summary.WriteWarning(this, warning);
+                    Warnings.Add(warningString);
+                    Summary.WriteWarning(this, warningString);
                 }
             }
             return 0;
