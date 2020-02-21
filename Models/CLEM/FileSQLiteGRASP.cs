@@ -12,6 +12,7 @@ using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
 using Models.CLEM.Activities;
 using System.Globalization;
+using System.Linq;
 
 // -----------------------------------------------------------------------
 // <copyright file="FileSQLiteGRASP.cs" company="CSIRO">
@@ -188,6 +189,14 @@ namespace Models.CLEM
         public string TBAColumnName { get; set; }
 
         /// <summary>
+        /// Shuffle years
+        /// </summary>
+        [Summary]
+        [Description("Shuffle the years for stochastic analysis")]
+        [Models.Core.Display(Type = DisplayType.FileName)]
+        public bool ShuffleYears { get; set; }
+
+        /// <summary>
         /// APSIMx SQLite class
         /// </summary>
         [NonSerialized]
@@ -215,6 +224,35 @@ namespace Models.CLEM
         public bool FileExists
         {
             get { return File.Exists(this.FullFileName); }
+        }
+
+        [XmlIgnore]
+        private List<ShuffleYear> shuffledYears = new List<ShuffleYear>();
+
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMInitialiseResource")]
+        private void OnCLEMInitialiseResource(object sender, EventArgs e)
+        {
+            // shuffle years for proxy stochastic rainfall simulation
+            if (ShuffleYears)
+            {
+                int startYear = clock.StartDate.Year;
+                int endYear = clock.EndDate.Year;
+
+                for (int i = startYear; i <= endYear; i++)
+                {
+                    shuffledYears.Add(new ShuffleYear() { Year = i, RandomYear = i });
+                }
+                for (int i = 0; i < shuffledYears.Count(); i++)
+                {
+                    int randIndex = RandomNumberGenerator.Generator.Next(shuffledYears.Count());
+                    int keepValue = shuffledYears[i].RandomYear;
+                    shuffledYears[i].RandomYear = shuffledYears[randIndex].RandomYear;
+                    shuffledYears[randIndex].RandomYear = keepValue;
+                }
+            }
         }
 
         /// <summary>
@@ -582,11 +620,8 @@ namespace Models.CLEM
 
             string sqlQuery = "SELECT " +
                 YearColumnName + ", " +
-                //"CutNum," +
                 MonthColumnName + "," +
                 GrowthColumnName;
-                //"BP1," +
-                //"BP2" +
 
             if (ErosionColumnName != null && ErosionColumnName != "")
             {
@@ -616,23 +651,53 @@ namespace Models.CLEM
                 " AND "+LandConColumnName+" = " + landConditionCategory +
                 " AND "+StkRateColumnName+" = " + stkRateCategory;
 
-            if (startYear == endYear)
+            if (ShuffleYears)
             {
-                sqlQuery += " AND (( " + YearColumnName + " = " + startYear + " AND " + MonthColumnName + " >= " + startMonth + " AND " + MonthColumnName + " < " + endMonth + ")"
-                + ")";
+                int shuffleStartYear = shuffledYears.Where(a => a.Year == startYear).FirstOrDefault().RandomYear;
+                int shuffleEndYear = shuffledYears.Where(a => a.Year == endYear).FirstOrDefault().RandomYear;
+
+                // first year
+                sqlQuery += " AND (( " + YearColumnName + " = " + shuffleStartYear + " AND " + MonthColumnName + " >= " + startMonth + ")";
+
+                // any middle years
+                for (int i = startYear+1; i < endYear; i++)
+                {
+                    sqlQuery += " OR ( " + YearColumnName + " = " + shuffledYears[i] + ")";
+                }
+
+                //last year
+                sqlQuery += " OR ( " + YearColumnName + " = " + shuffleEndYear + " AND " + MonthColumnName + " <= " + endMonth + "))";
+
             }
             else
             {
-                sqlQuery += " AND (( " + YearColumnName + " = " + startYear + " AND " + MonthColumnName + " >= " + startMonth + ")"
-                + " OR  ( " + YearColumnName + " > " + startYear + " AND " + YearColumnName + " < " + endYear + ")"
-                + " OR  ( " + YearColumnName + " = " + endYear + " AND " + MonthColumnName + " < " + endMonth + ")"
-                + ")"; 
+                if (startYear == endYear)
+                {
+                    sqlQuery += " AND (( " + YearColumnName + " = " + startYear + " AND " + MonthColumnName + " >= " + startMonth + " AND " + MonthColumnName + " < " + endMonth + ")"
+                    + ")";
+                }
+                else
+                {
+                    sqlQuery += " AND (( " + YearColumnName + " = " + startYear + " AND " + MonthColumnName + " >= " + startMonth + ")"
+                    + " OR  ( " + YearColumnName + " > " + startYear + " AND " + YearColumnName + " < " + endYear + ")"
+                    + " OR  ( " + YearColumnName + " = " + endYear + " AND " + MonthColumnName + " < " + endMonth + ")"
+                    + ")";
+                }
             }
             
             DataTable results = SQLiteReader.ExecuteQuery(sqlQuery);
             if(results.Rows.Count == 0)
             {
                 return null;
+            }
+
+            // re-label shuffled years
+            if (ShuffleYears)
+            {
+                foreach (DataRow row in results.Rows)
+                {
+                    row["Year"] = shuffledYears.Where(a => a.RandomYear == Convert.ToInt32(row["Year"])).FirstOrDefault().Year;
+                }
             }
 
             results.DefaultView.Sort = YearColumnName + ", " + MonthColumnName;
@@ -692,11 +757,11 @@ namespace Models.CLEM
             }
 
             //Check months go right up until EndDate
-            if ((tempdate.Month != endDate.Month)&&(tempdate.Year != endDate.Year))
-            {
-                throw new ApsimXException(this, errormessageStart
-                        + "Missing entry for Year: " + tempdate.Year + " and Month: " + tempdate.Month);
-            }
+            //if ((tempdate.Month != endDate.Month)&&(tempdate.Year != endDate.Year))
+            //{
+            //    throw new ApsimXException(this, errormessageStart
+            //            + "Missing entry for Year: " + tempdate.Year + " and Month: " + tempdate.Month);
+            //}
         }
 
         private PastureDataType DataRow2PastureDataType(DataRowView dr)
@@ -870,13 +935,32 @@ namespace Models.CLEM
                     html += "\n<div class=\"activityentry\">Tree basal area data will be obtained from column named ";
                     html += "<span class=\"setvalue\">" + TBAColumnName + "</span></div>";
                 }
+                html += "\n</div>";
+                html += "\n</div>";
 
-                html += "\n</div>";
-                html += "\n</div>";
+                if (ShuffleYears)
+                {
+                    html += "\n<div class=\"warningbanner\">WARNING: Years are being shuffled as a proxy for stochastic rainfall variation in this simulation.<br />This is an advance bespoke feature for particular projects.</div>";
+                }
             }
             return html;
         }
 
     }
 
+    /// <summary>
+    /// Shuffled year structure
+    /// </summary>
+    [Serializable]
+    public class ShuffleYear
+    {
+        /// <summary>
+        /// Actual year
+        /// </summary>
+        public int Year;
+        /// <summary>
+        /// Shuffled year
+        /// </summary>
+        public int RandomYear;
+    }
 }
