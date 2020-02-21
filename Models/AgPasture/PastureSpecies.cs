@@ -4350,19 +4350,17 @@
             if (amountToRemove > Epsilon)
             {
                 // Compute the fraction of each tissue to be removed
-                double[] fracRemoving = new double[5];
+                double[] fracRemoving = new double[6];
                 if (amountToRemove - HarvestableWt > -Epsilon)
                 {
                     // All existing DM is removed
                     amountToRemove = HarvestableWt;
-                    for (int i = 0; i < 5; i++)
-                    {
-                        fracRemoving[0] = MathUtilities.Divide(leaf.DMLiveHarvestable, HarvestableWt, 0.0);
-                        fracRemoving[1] = MathUtilities.Divide(stem.DMLiveHarvestable, HarvestableWt, 0.0);
-                        fracRemoving[2] = MathUtilities.Divide(stolon.DMLiveHarvestable, HarvestableWt, 0.0);
-                        fracRemoving[3] = MathUtilities.Divide(leaf.DMDeadHarvestable, HarvestableWt, 0.0);
-                        fracRemoving[4] = MathUtilities.Divide(stem.DMDeadHarvestable, HarvestableWt, 0.0);
-                    }
+                    fracRemoving[0] = MathUtilities.Divide(leaf.DMLiveHarvestable, HarvestableWt, 0.0);
+                    fracRemoving[1] = MathUtilities.Divide(stem.DMLiveHarvestable, HarvestableWt, 0.0);
+                    fracRemoving[2] = MathUtilities.Divide(stolon.DMLiveHarvestable, HarvestableWt, 0.0);
+                    fracRemoving[3] = MathUtilities.Divide(leaf.DMDeadHarvestable, HarvestableWt, 0.0);
+                    fracRemoving[4] = MathUtilities.Divide(stem.DMDeadHarvestable, HarvestableWt, 0.0);
+                    fracRemoving[5] = MathUtilities.Divide(stolon.DMDeadHarvestable, HarvestableWt, 0.0);
                 }
                 else
                 {
@@ -4372,18 +4370,20 @@
                     fracRemoving[2] = stolon.DMLiveHarvestable * PreferenceForGreenOverDead;
                     fracRemoving[3] = leaf.DMDeadHarvestable * PreferenceForLeafOverStems;
                     fracRemoving[4] = stem.DMDeadHarvestable;
+                    fracRemoving[5] = stolon.DMDeadHarvestable;
 
                     // Get fraction potentially removable (maximum fraction of each tissue in the removing amount)
-                    double[] fracRemovable = new double[5];
+                    double[] fracRemovable = new double[6];
                     fracRemovable[0] = leaf.DMLiveHarvestable / amountToRemove;
                     fracRemovable[1] = stem.DMLiveHarvestable / amountToRemove;
                     fracRemovable[2] = stolon.DMLiveHarvestable / amountToRemove;
                     fracRemovable[3] = leaf.DMDeadHarvestable / amountToRemove;
                     fracRemovable[4] = stem.DMDeadHarvestable / amountToRemove;
+                    fracRemovable[5] = stolon.DMDeadHarvestable / amountToRemove;
 
                     // Normalise the fractions of each tissue to be removed, they should add to one
                     double totalFrac = fracRemoving.Sum();
-                    for (int i = 0; i < 5; i++)
+                    for (int i = 0; i < 6; i++)
                         fracRemoving[i] = Math.Min(fracRemovable[i], fracRemoving[i] / totalFrac);
 
                     // Iterate until sum of fractions to remove is equal to one
@@ -4396,22 +4396,21 @@
                     while (1.0 - totalFrac > Epsilon)
                     {
                         count += 1;
-                        for (int i = 0; i < 5; i++)
+                        for (int i = 0; i < 6; i++)
                             fracRemoving[i] = Math.Min(fracRemovable[i], fracRemoving[i] / totalFrac);
                         totalFrac = fracRemoving.Sum();
                         if (count > 1000)
                         {
-                            mySummary.WriteWarning(this, " AgPasture could not remove on graze all the DM required for " + Name);
+                            mySummary.WriteWarning(this, " AgPasture could not remove or graze all the DM required for " + Name);
                             break;
                         }
                     }
-                    //mySummary.WriteMessage(this, " AgPasture " + Name + " needed " + count + " iterations to solve partition of removed DM");
                 }
 
                 // Get digestibility of DM being harvested (do this before updating pools)
                 double greenDigestibility = (leaf.DigestibilityLive * fracRemoving[0]) + (stem.DigestibilityLive * fracRemoving[1])
                                             + (stolon.DigestibilityLive * fracRemoving[2]);
-                double deadDigestibility = (leaf.DigestibilityDead * fracRemoving[3]) + (stem.DigestibilityDead * fracRemoving[4]);
+                double deadDigestibility = (leaf.DigestibilityDead * fracRemoving[3]) + (stem.DigestibilityDead * fracRemoving[4]) + (stolon.DigestibilityDead * fracRemoving[5]);
                 defoliatedDigestibility = greenDigestibility + deadDigestibility;
 
                 // Remove biomass from the organs.
@@ -4431,7 +4430,7 @@
                     new OrganBiomassRemovalType()
                     {
                         FractionLiveToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[2], stolon.DMLive, 0.0)),
-                        FractionDeadToRemove = 0
+                        FractionDeadToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[5], stolon.DMDead, 0.0))
                     });
 
                 // Update LAI and herbage digestibility
