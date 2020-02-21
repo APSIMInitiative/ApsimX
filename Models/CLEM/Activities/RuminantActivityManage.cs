@@ -29,7 +29,7 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantManage.htm")]
     public class RuminantActivityManage : CLEMRuminantActivityBase, IValidatableObject
     {
-        private int maximumBreedersKept;
+        private int maxBreeders;
 
         /// <summary>
         /// Maximum number of breeders that can be kept
@@ -37,19 +37,7 @@ namespace Models.CLEM.Activities
         [Category("General", "Breeding females")]
         [Description("Maximum number of female breeders to be kept")]
         [Required, GreaterThanEqualValue(0)]
-        [GreaterThanEqual("MinimumBreedersKept")]
-        public int MaximumBreedersKept 
-        { 
-            get
-            {
-                // if min breeders kept is greater than max kept, use min for max
-                return (MinimumBreedersKept > MaximumBreedersKept) ? MinimumBreedersKept : maximumBreedersKept;
-            }
-            set
-            {
-                maximumBreedersKept = value;
-            }
-        }
+        public int MaximumBreedersKept { get; set; } 
 
         /// <summary>
         /// Minimum number of breeders that can be kept
@@ -254,6 +242,9 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
+            // create local version of max breeders so we can modify without affecting user set value
+            maxBreeders = Math.Max(this.MaximumBreedersKept, this.MinimumBreedersKept);
+
             this.InitialiseHerd(false, true);
             breedParams = Resources.GetResourceItem(this, typeof(RuminantHerd), this.PredictedHerdName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
 
@@ -293,9 +284,9 @@ namespace Models.CLEM.Activities
                             }
                             breederHerdSize = initialBreeders + numberAdded;
                         }
-                        else if (initialBreeders > this.MaximumBreedersKept)
+                        else if (initialBreeders > maxBreeders)
                         {
-                            int reduceBy = Math.Max(0, initialBreeders - this.MaximumBreedersKept);
+                            int reduceBy = Math.Max(0, initialBreeders - maxBreeders);
                             // reduce initial herd size
                             // randomly select the individuals to remove form the breeder herd
                             List<Ruminant> breeders = rumHerd.Where(a => a.Gender == Sex.Female && a.Age > breedParams.MinimumAge1stMating && a.Age < this.MaximumBreederAge).OrderBy(x => Guid.NewGuid()).Take(reduceBy).ToList();
@@ -309,14 +300,14 @@ namespace Models.CLEM.Activities
                             if (reduceBy > 0)
                             {
                                 // add warning
-                                string warn = $"Unable to reduce breeders at the start of the simulation to number required [{this.MaximumBreedersKept}] using [a={this.Name}]";
+                                string warn = $"Unable to reduce breeders at the start of the simulation to number required [{maxBreeders}] using [a={this.Name}]";
                                 if (!Warnings.Exists(warn))
                                 {
                                     Summary.WriteWarning(this, warn);
                                     Warnings.Add(warn);
                                 }
                             }
-                            breederHerdSize = this.MaximumBreedersKept;
+                            breederHerdSize = maxBreeders;
                         }
                     }
                     else
@@ -329,7 +320,7 @@ namespace Models.CLEM.Activities
             // max sires
             if (MaximumSiresKept < 1 & MaximumSiresKept > 0)
             {
-                SiresKept = Convert.ToInt32(Math.Ceiling(MaximumBreedersKept * breederHerdSize), CultureInfo.InvariantCulture);
+                SiresKept = Convert.ToInt32(Math.Ceiling(maxBreeders * breederHerdSize), CultureInfo.InvariantCulture);
             }
             else
             {
@@ -564,7 +555,7 @@ namespace Models.CLEM.Activities
                         if (numberMaleSiresInHerd < SiresKept && (MaximumSiresPerPurchase>0))
                         {
                             // limit by breeders as proportion of max breeders so we don't spend alot on sires when building the herd and females more valuable
-                            double propOfBreeders = (double)numberFemaleBreedingInHerd / (double)MaximumBreedersKept;
+                            double propOfBreeders = (double)numberFemaleBreedingInHerd / (double)maxBreeders;
                             propOfBreeders = 1;
 
                             int sires = Convert.ToInt32(Math.Ceiling(SiresKept * propOfBreeders), CultureInfo.InvariantCulture);
@@ -604,7 +595,7 @@ namespace Models.CLEM.Activities
                 double mortalityRate = breedParams.MortalityBase;
 
                 // shortfall between actual and desired numbers of breeders (-ve for shortfall)
-                excessBreeders = numberFemaleBreedingInHerd - MaximumBreedersKept;
+                excessBreeders = numberFemaleBreedingInHerd - maxBreeders;
                 // IAT-NABSA removes adjusts to account for the old animals that will be sold in the next year
                 // This is not required in CLEM as they have been sold in this method, and it wont be until this method is called again that the next lot are sold.
                 // Like IAT-NABSA we will account for mortality losses in the next year in our breeder purchases
@@ -836,25 +827,19 @@ namespace Models.CLEM.Activities
             html += "\n<div class=\"activitycontentlight\">";
             html += "\n<div class=\"activityentry\">";
 
-            if (MinimumBreedersKept > MaximumBreedersKept)
+            int maxBreed = Math.Max(MinimumBreedersKept, MaximumBreedersKept);
+            html += "The herd will be maintained";
+            if (MinimumBreedersKept == 0)
             {
-                html += "Error: <span class=\"errorlink\">Minimum breeders kept > Maximum breeders kept</span><br />";
+                html += " using only natural recruitment up to <span class=\"setvalue\">" + MaximumBreedersKept.ToString("#,###") + "</span> breeders";
+            }
+            else if(MinimumBreedersKept == maxBreed)
+            {
+                html += " with breeder purchases and natural recruitment up to <span class=\"setvalue\">" + MinimumBreedersKept.ToString("#,###") + "</span > breeders";
             }
             else
             {
-                html += "The herd will be maintained";
-                if (MinimumBreedersKept == 0)
-                {
-                    html += " using only natural recruitment up to <span class=\"setvalue\">" + MaximumBreedersKept.ToString("#,###") + "</span> breeders";
-                }
-                else if (MinimumBreedersKept > MaximumBreedersKept)
-                {
-                    html += "";
-                }
-                else
-                {
-                    html += " with breeder purchases up to <span class=\"setvalue\">" + MinimumBreedersKept.ToString("#,###") + "</span > and natural recruitment to <span class=\"setvalue\">" + MaximumBreedersKept.ToString("#,###") +"</span> breeders";
-                }
+                html += " with breeder purchases up to <span class=\"setvalue\">" + MinimumBreedersKept.ToString("#,###") + "</span > and natural recruitment to <span class=\"setvalue\">" + maxBreed.ToString("#,###") +"</span> breeders";
             }
             html += "</div>";
 
