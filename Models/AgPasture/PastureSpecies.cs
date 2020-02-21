@@ -3709,10 +3709,10 @@
             double postTotalN = AboveGroundN + BelowGroundN;
 
             // Check for loss of mass balance in the whole plant
-            if (Math.Abs(preTotalWt + dGrowthAfterNutrientLimitations - detachedShootDM - detachedRootDM - postTotalWt) > Epsilon)
+            if (!MathUtilities.FloatsAreEqual(preTotalWt + dGrowthAfterNutrientLimitations - detachedShootDM - detachedRootDM - postTotalWt,0))
                 throw new ApsimXException(this, "  " + Name + " - Growth and tissue turnover resulted in loss of mass balance");
 
-            if (Math.Abs(preTotalN + dNewGrowthN - senescedNRemobilised - luxuryNRemobilised - detachedShootN - detachedRootN - postTotalN) > Epsilon)
+            if (!MathUtilities.FloatsAreEqual(preTotalN + dNewGrowthN - senescedNRemobilised - luxuryNRemobilised - detachedShootN - detachedRootN - postTotalN,0))
                 throw new ApsimXException(this, "  " + Name + " - Growth and tissue turnover resulted in loss of mass balance");
 
             // Update LAI
