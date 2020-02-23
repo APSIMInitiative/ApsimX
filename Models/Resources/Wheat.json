@@ -997,6 +997,45 @@
           "ReadOnly": false
         },
         {
+              "$type": "Models.Functions.OnEventFunction, Models",
+              "SetEvent": "Emergence",
+              "ReSetEvent": "never",
+              "Name": "EmergenceDAS",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "\nA function is used to provide flowering date as days after sowing(DAS).\n",
+                  "Name": "memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "PreEventValue",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].DaysAfterSowing",
+                  "Name": "PostEventValue",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
           "$type": "Models.Functions.LinearInterpolationFunction, Models",
           "Name": "RewindDueToBiomassRemoved",
           "Children": [
@@ -6516,6 +6555,19 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 14",
+                    "[Phenology].VrnSensitivity.FixedValue = 1",
+                    "[Phenology].PpSensitivity.FixedValue = 2"
+                  ],
+                  "Name": "CRWT153",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
                 "[Phenology].MinimumLeafNumber.FixedValue = 8.5",
                 "[Phenology].VrnSensitivity.FixedValue = 0",
                 "[Phenology].PpSensitivity.FixedValue = 0",
@@ -7862,7 +7914,7 @@
                 "[Phenology].PpSensitivity.FixedValue = 4",
                 "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
               ],
-              "Name": "Kelallac",
+                  "Name": "Kellalac",
               "Children": [
                 {
                   "$type": "Models.Core.Alias, Models",
@@ -8325,6 +8377,84 @@
                 "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
               ],
               "Name": "Young",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 6.3",
+                "[Phenology].PpSensitivity.FixedValue = 1.7",
+                "[Phenology].VrnSensitivity.FixedValue = 5.0",
+              ],
+              "Name": "Scepter",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 5.7",
+                "[Phenology].PpSensitivity.FixedValue = 5.3",
+                "[Phenology].VrnSensitivity.FixedValue = 2.3",
+              ],
+              "Name": "Cutlass",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 8.0",
+                "[Phenology].PpSensitivity.FixedValue = 1.7",
+                "[Phenology].VrnSensitivity.FixedValue = 8.0",
+              ],
+              "Name": "Longsword",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 7.3",
+                "[Phenology].PpSensitivity.FixedValue = 0.0",
+                "[Phenology].VrnSensitivity.FixedValue = 6.3",
+              ],
+              "Name": "CSIROW007",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 7.0",
+                "[Phenology].PpSensitivity.FixedValue = 1.7",
+                "[Phenology].VrnSensitivity.FixedValue = 5.3",
+              ],
+              "Name": "CSIROW023",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 7.7",
+                "[Phenology].PpSensitivity.FixedValue = 1.3",
+                "[Phenology].VrnSensitivity.FixedValue = 6.3",
+              ],
+              "Name": "CSIROW073",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
