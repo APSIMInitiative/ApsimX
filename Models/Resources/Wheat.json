@@ -7222,6 +7222,14 @@
               "Children": [
                 {
                   "$type": "Models.Core.Alias, Models",
+                  "Name": "Braewood",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
                   "Name": "Chara",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -7279,6 +7287,14 @@
                 {
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Krichauff",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Magenta",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -7825,6 +7841,14 @@
                 },
                 {
                   "$type": "Models.Core.Alias, Models",
+                  "Name": "Mace",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
                   "Name": "Ouyen",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -7842,6 +7866,14 @@
                 {
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Tamaroi",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Young",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -7988,7 +8020,16 @@
                 "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
               ],
               "Name": "Lincoln",
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Crusader",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -8179,6 +8220,14 @@
                 },
                 {
                   "$type": "Models.Core.Alias, Models",
+                  "Name": "Ellison",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
                   "Name": "Suntop",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -8207,13 +8256,10 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].MinimumLeafNumber.FixedValue = 6",
-                "[Phenology].PpSensitivity.FixedValue = 3",
-                "[Phenology].VrnSensitivity.FixedValue = 4.3",
-                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 97",
-                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.6",
-                "[Phenology].HeadEmergenceLongDayBase.FixedValue = 5.3",
-                "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2.4"
+                "[Phenology].MinimumLeafNumber.FixedValue = 8",
+                "[Phenology].VrnSensitivity.FixedValue = 0",
+                "[Phenology].PpSensitivity.FixedValue = 4",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
               ],
               "Name": "Wedgetail",
               "Children": [
@@ -8342,29 +8388,8 @@
                 "[Phenology].MinimumLeafNumber.FixedValue = 6.3",
                 "[Phenology].PpSensitivity.FixedValue = 1.7",
                 "[Phenology].VrnSensitivity.FixedValue = 5.0",
-                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 99",
-                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.3",
-                "[Phenology].HeadEmergenceLongDayBase.FixedValue = 4.2",
-                "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.0"
               ],
               "Name": "Scepter",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                "[Phenology].MinimumLeafNumber.FixedValue = 6.0",
-                "[Phenology].PpSensitivity.FixedValue = 2.0",
-                "[Phenology].VrnSensitivity.FixedValue = 6.7",
-                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 75",
-                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.7",
-                "[Phenology].HeadEmergenceLongDayBase.FixedValue = 6.0",
-                "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.0"
-              ],
-              "Name": "Crusader",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -8376,29 +8401,8 @@
                 "[Phenology].MinimumLeafNumber.FixedValue = 5.7",
                 "[Phenology].PpSensitivity.FixedValue = 5.3",
                 "[Phenology].VrnSensitivity.FixedValue = 2.3",
-                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 98",
-                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.4",
-                "[Phenology].HeadEmergenceLongDayBase.FixedValue = 5.1",
-                "[Phenology].HeadEmergencePpSensitivity.FixedValue = 5.2"
               ],
               "Name": "Cutlass",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                "[Phenology].MinimumLeafNumber.FixedValue = 6.0",
-                "[Phenology].PpSensitivity.FixedValue = 4.0",
-                "[Phenology].VrnSensitivity.FixedValue = 4.7",
-                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 102",
-                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.5",
-                "[Phenology].HeadEmergenceLongDayBase.FixedValue = 4.2",
-                "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1.3"
-              ],
-              "Name": "Ellison",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -8410,29 +8414,8 @@
                 "[Phenology].MinimumLeafNumber.FixedValue = 8.0",
                 "[Phenology].PpSensitivity.FixedValue = 1.7",
                 "[Phenology].VrnSensitivity.FixedValue = 8.0",
-                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 72",
-                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.8",
-                "[Phenology].HeadEmergenceLongDayBase.FixedValue = 4.3",
-                "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1.6"
               ],
               "Name": "Longsword",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                "[Phenology].MinimumLeafNumber.FixedValue = 6.7",
-                "[Phenology].PpSensitivity.FixedValue = 1.7",
-                "[Phenology].VrnSensitivity.FixedValue = 5.7",
-                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 98",
-                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.4",
-                "[Phenology].HeadEmergenceLongDayBase.FixedValue = 4.5",
-                "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.9"
-              ],
-              "Name": "Magenta",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -8444,10 +8427,6 @@
                 "[Phenology].MinimumLeafNumber.FixedValue = 7.3",
                 "[Phenology].PpSensitivity.FixedValue = 0.0",
                 "[Phenology].VrnSensitivity.FixedValue = 6.3",
-                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 83",
-                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.5",
-                "[Phenology].HeadEmergenceLongDayBase.FixedValue = 3.7",
-                "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2.6"
               ],
               "Name": "CSIROW007",
               "Children": [],
@@ -8461,10 +8440,6 @@
                 "[Phenology].MinimumLeafNumber.FixedValue = 7.0",
                 "[Phenology].PpSensitivity.FixedValue = 1.7",
                 "[Phenology].VrnSensitivity.FixedValue = 5.3",
-                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 91",
-                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.4",
-                "[Phenology].HeadEmergenceLongDayBase.FixedValue = 3.4",
-                "[Phenology].HeadEmergencePpSensitivity.FixedValue = 9.7"
               ],
               "Name": "CSIROW023",
               "Children": [],
@@ -8478,29 +8453,8 @@
                 "[Phenology].MinimumLeafNumber.FixedValue = 7.7",
                 "[Phenology].PpSensitivity.FixedValue = 1.3",
                 "[Phenology].VrnSensitivity.FixedValue = 6.3",
-                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 85",
-                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.4",
-                "[Phenology].HeadEmergenceLongDayBase.FixedValue = 3.8",
-                "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2.8"
               ],
               "Name": "CSIROW073",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                "[Phenology].MinimumLeafNumber.FixedValue = 7.3",
-                "[Phenology].PpSensitivity.FixedValue = 3.7",
-                "[Phenology].VrnSensitivity.FixedValue = 1.3",
-                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 91",
-                "[Structure].Phyllochron.PhotoPeriodEffect.XYPairs.Y[1]=1.2",
-                "[Phenology].HeadEmergenceLongDayBase.FixedValue = 4.3",
-                "[Phenology].HeadEmergencePpSensitivity.FixedValue = 8.5"
-              ],
-              "Name": "Braewood",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
