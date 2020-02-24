@@ -89,6 +89,7 @@
 
             tags.Add(new AutoDocumentation.Heading((objectToDocument as IModel).Name, 1));
             AutoDocumentation.ParseTextForTags(AutoDocumentation.GetSummary(objectToDocument.GetType()), modelToDocument, tags, 1, 0,false);
+            AutoDocumentation.ParseTextForTags(AutoDocumentation.GetRemarks(objectToDocument.GetType()), modelToDocument, tags, 1, 0,false);
 
             // If there are parameters then write them to the tags.
             if (parameterNames != null)
@@ -124,6 +125,7 @@
 
             tags.Add(new AutoDocumentation.Heading(typeToDocument.Name, 1));
             AutoDocumentation.ParseTextForTags(AutoDocumentation.GetSummary(typeToDocument), modelToDocument, tags, 1, 0, false);
+            AutoDocumentation.ParseTextForTags(AutoDocumentation.GetRemarks(typeToDocument), modelToDocument, tags, 1, 0, false);
 
             var outputs = GetProperties(typeToDocument, PropertyType.NonParameters);
             if (outputs != null && outputs.Count > 0)
@@ -189,6 +191,9 @@
                     var descriptionAttribute = property.GetCustomAttribute<DescriptionAttribute>();
                     description = descriptionAttribute?.ToString();
                 }
+                string remarks = AutoDocumentation.GetRemarks(property);
+                if (!string.IsNullOrEmpty(remarks))
+                    description += Environment.NewLine + Environment.NewLine + remarks;
 
                 row["Name"] = property.Name;
                 row["Type"] = typeName;
@@ -380,6 +385,10 @@
                         parameters += GetTypeName(argument.ParameterType) + " " + argument.Name;
                     }
                     string description = AutoDocumentation.GetSummary(method);
+                    string remarks = AutoDocumentation.GetRemarks(method);
+                    if (!string.IsNullOrEmpty(remarks))
+                        description += Environment.NewLine + Environment.NewLine + remarks;
+
                     if (description != null)
                         description = "<i>" + description + "</i>"; // italics
                     var st = string.Format("<p>{0} {1}({2})</p>{3}",
