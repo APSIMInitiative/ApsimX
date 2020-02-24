@@ -70,6 +70,12 @@
         /// <summary>Gets or sets the amount of N remobilised into new growth (kg/ha).</summary>
         internal double NRemobilised { get; set; }
 
+        /// <summary>The amount of DM removed from this tissue (kg/ha).</summary>
+        internal double DMRemoved { get; private set; }
+
+        /// <summary>The amount of N removed from this tissue (kg/ha).</summary>
+        internal double NRemoved { get; private set; }
+
         #endregion ---------------------------------------------------------------------------------------------------------
 
         #region Derived properties (outputs)  ------------------------------------------------------------------------------
@@ -146,14 +152,28 @@
 
         #endregion ---------------------------------------------------------------------------------------------------------
 
+        /// <summary>EventHandler - preparation before the main daily processes.</summary>
+        /// <param name="sender">The sender model</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data</param>
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
+        {
+            DMRemoved = 0;
+            NRemoved = 0;
+        }
+
         /// <summary>Removes biomass from tissue.</summary>
-        /// <param name="fractionToRemove">The fraction of biomass to remove from the simulation.</param>
-        /// <param name="fractionToSoil">The fraction of biomass to send to soil.</param>
+        /// <param name="fractionToRemove">The fraction of the total biomass to remove from the simulation.</param>
+        /// <param name="fractionToSoil">The fraction of the total biomass to send to soil.</param>
         public void RemoveBiomass(double fractionToRemove, double fractionToSoil)
         {
             var dmToSoil = fractionToSoil * DM;
             var nToSoil = fractionToSoil * Namount;
             var totalFraction = fractionToRemove + fractionToSoil;
+
+            DMRemoved = totalFraction * DM;
+            NRemoved = totalFraction * Namount;
+
             if (totalFraction > 0)
             {
                 DM *= (1 - totalFraction);
