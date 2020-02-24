@@ -1,7 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 67,
+  "Version": 76,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-02-24",
   "Name": "Simulations",
   "Children": [
     {
@@ -49,12 +50,24 @@
           "ReadOnly": false
         },
         {
+          "$type": "Models.CLEM.RandomNumberGenerator, Models",
+          "Seed": 0,
+          "Iteration": 0,
+          "Name": "RandomNumbers",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.CLEM.ZoneCLEM, Models",
-          "RandomSeed": 0,
+          "FarmMultiplier": 0.0,
           "ClimateRegion": 0,
           "EcologicalIndicatorsCalculationMonth": 12,
           "Area": 0.0,
           "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
           "Name": "CLEM",
           "Children": [
             {
@@ -96,8 +109,6 @@
                       "GreenDietMax": 0.98,
                       "GreenDietCoefficient": 0.15,
                       "GreenDietZero": 0.04,
-                      "IntakeTropicalQuality": 0.16,
-                      "IntakeCoefficientQuality": 1.7,
                       "IntakeCoefficientBiomass": 0.006,
                       "StrictFeedingLimits": true,
                       "MilkIntakeCoefficient": 0.1206,
@@ -467,7 +478,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "AnimalFoodStoreBalance",
                   "Children": [
                     {
@@ -487,8 +500,8 @@
                       "TableName": "ReportResourceBalances",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "RiceStraw",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -533,7 +546,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "Liveweight_Individual",
                   "Children": [
                     {
@@ -553,8 +568,8 @@
                       "TableName": "HerdReport",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Weight",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -599,7 +614,9 @@
                     }
                   ],
                   "LegendPosition": 1,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "WeightGain_Individual",
                   "Children": [
                     {
@@ -619,8 +636,8 @@
                       "TableName": "HerdSummary",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "AvgWtGn",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -665,7 +682,9 @@
                     }
                   ],
                   "LegendPosition": 1,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "BankBalance",
                   "Children": [
                     {
@@ -685,8 +704,8 @@
                       "TableName": "ReportResourceBalances",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "General account",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
