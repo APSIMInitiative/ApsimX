@@ -132,6 +132,7 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AgPasture\TissuesHelper.cs" />
     <Compile Include="AgPasture\SimpleGrazing.cs" />
     <Compile Include="AgPasture\PastureSpecies.cs" />
     <Compile Include="AgPasture\PastureAboveGroundOrgan.cs" />
@@ -139,7 +140,6 @@
     <Compile Include="AgPasture\GenericTissue.cs" />
     <Compile Include="AgPasture\RootTissue.cs" />
     <Compile Include="AgPasture\RootZone.cs" />
-    <Compile Include="AgPasture\SpeciesBasicStateSettings.cs" />
     <Compile Include="Agroforestry\AgroforestrySystem.cs" />
     <Compile Include="Agroforestry\LocalMicroClimate.cs" />
     <Compile Include="Agroforestry\TreeProxy.cs" />
@@ -155,6 +155,7 @@
     <Compile Include="CLEM\Activities\LabourActivityPayHired.cs" />
     <Compile Include="CLEM\Activities\LabourActivityFeed.cs" />
     <Compile Include="CLEM\Activities\LabourAERelationship.cs" />
+    <Compile Include="CLEM\IFilterGroup.cs" />
     <Compile Include="CLEM\Market.cs" />
     <Compile Include="CLEM\Reporting\ConceptionStatus.cs" />
     <Compile Include="CLEM\Reporting\ConceptionStatusChangedEventArgs.cs" />
@@ -283,6 +284,7 @@
     <Compile Include="Plant\Phenology\Scales\Age.cs" />
     <EmbeddedResource Include="Resources\Scripts\GraphPanelScriptTemplate.cs" />
     <EmbeddedResource Include="Resources\Scripts\CSharpExpressionTemplate.cs" />
+    <Compile Include="Plant\Phenology\Scales\ZadokPMFWheat.cs" />
     <Compile Include="PostSimulationTools\ExcelMultiInput.cs" />
     <Compile Include="Soils\Nutrients\INutrientPool.cs" />
     <Compile Include="Soils\SoilTemp\SoilTemperature.cs" />

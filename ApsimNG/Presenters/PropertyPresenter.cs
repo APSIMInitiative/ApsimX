@@ -908,6 +908,11 @@ namespace UserInterface.Presenters
                 IGridCell cell = grid.GetCell(1, i);
                 cell.IsRowReadonly = !IsPropertyEnabled(i);
             }
+
+            // Model has been modified - need to refresh the grid.
+            // Note: Refresh() interrogates the model. grid.Refresh()
+            // updates the UI.
+            Refresh();
             grid.Refresh();
         }
 

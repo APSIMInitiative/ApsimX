@@ -23,6 +23,8 @@ namespace UserInterface.Interfaces
     public interface IStockView
     {
         SingleGenotypeInits[] Genotypes { get; set; }
+        
+        AnimalInits[] Animals { get; set; }
 
         void SetValues();
         void SetGenoParams(AnimalParamSet animalParams);

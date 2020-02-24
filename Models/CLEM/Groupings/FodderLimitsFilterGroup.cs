@@ -1,9 +1,11 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Resources;
+using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace Models.CLEM.Groupings
 {
@@ -15,7 +17,7 @@ namespace Models.CLEM.Groupings
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This grouping is not currently used.")]
     [Version(1, 0, 1, "")]
-    public class FodderLimitsFilterGroup: CLEMModel
+    public class FodderLimitsFilterGroup: CLEMModel, IFilterGroup
     {
         /// <summary>
         /// Monthly values to supply selected individuals
@@ -36,6 +38,12 @@ namespace Models.CLEM.Groupings
         /// Are set limits strict, or can individual continue eating if food available? 
         /// </summary>
         public bool StrictLimits { get; set; }
+
+        /// <summary>
+        /// Combined ML ruleset for LINQ expression tree
+        /// </summary>
+        [XmlIgnore]
+        public object CombinedRules { get; set; } = null;
 
     }
 }

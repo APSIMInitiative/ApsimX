@@ -5,6 +5,8 @@ using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.ApsimFile;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
+using System;
 
 namespace UnitTests.Resources
 {
@@ -46,6 +48,24 @@ namespace UnitTests.Resources
                     Assert.That(simulationsVersion == Converter.LatestVersion, $"Resource '{resourceName}' does not get converted to latest version when opened.");
                 }
             }
+        }
+
+        /// <summary>
+        /// This test will open a file containing the wheat model and will save the file.
+        /// The wheat model should *not* be serialized - what should be serialized is a
+        /// reference to the released model. Reproduces bug #4694.
+        /// </summary>
+        [Test]
+        public void EnsureReleasedModelsAreNotSaved()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.WheatModel.apsimx");
+            IModel topLevel = FileFormat.ReadFromString<Simulations>(json, out List<Exception> errors);
+            string serialized = FileFormat.WriteToString(topLevel);
+
+            JObject root = JObject.Parse(serialized);
+            JObject wheat = JsonUtilities.ChildWithName(JsonUtilities.ChildWithName(root, "Replacements"), "Wheat");
+            Assert.NotNull(wheat);
+            Assert.AreEqual(0, JsonUtilities.Children(wheat).Count);
         }
     }
 }

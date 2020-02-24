@@ -30,7 +30,6 @@ namespace Models.CLEM.Activities
         private Labour people = null;
         private HumanFoodStore food = null;
         private FinanceType bankAccount;
-        private ResourcePricing price;
 
         [Link]
         Clock Clock = null;
@@ -248,7 +247,7 @@ namespace Models.CLEM.Activities
                     }
                 }
             }
-            foodParcels.AddRange(marketFoodParcels.OrderBy(a => a.FoodStore.Price));
+            foodParcels.AddRange(marketFoodParcels.OrderBy(a => a.FoodStore.Price.PricePerPacket));
 
             double fundsAvailable = double.PositiveInfinity;
             if (bankAccount != null)
@@ -287,19 +286,21 @@ namespace Models.CLEM.Activities
 
                     foodParcels[parcelIndex].Proportion = Math.Min(propCanBeEaten, propToTarget);
 
-                    // work out if there will be a cost limitation
-                    double cost = (foodParcels[parcelIndex].Pool.Amount * foodParcels[parcelIndex].Proportion) / foodParcels[parcelIndex].FoodStore.Price.PacketSize * foodParcels[parcelIndex].FoodStore.Price.PricePerPacket;
+                    // work out if there will be a cost limitation, only if a price structure esists for the resource
                     double propToPrice = 1;
-                    if (cost > 0)
+                    if (foodParcels[parcelIndex].FoodStore.PricingExists)
                     {
-                        propToPrice = Math.Min(1, fundsAvailable / cost);
-                        // remove cost from running check tally
-                        fundsAvailable = Math.Max(0, fundsAvailable - (cost * propToPrice));
+                        double cost = (foodParcels[parcelIndex].Pool.Amount * foodParcels[parcelIndex].Proportion) / foodParcels[parcelIndex].FoodStore.Price.PacketSize * foodParcels[parcelIndex].FoodStore.Price.PricePerPacket;
+                        if (cost > 0)
+                        {
+                            propToPrice = Math.Min(1, fundsAvailable / cost);
+                            // remove cost from running check tally
+                            fundsAvailable = Math.Max(0, fundsAvailable - (cost * propToPrice));
 
-                        // real fanance transactions will happen in the do activity as stuff is allocated
-                        // there should not be shortfall as all the checks and reductions have happened here
+                            // real finance transactions will happen in the do activity as stuff is allocated
+                            // there should not be shortfall as all the checks and reductions have happened here
+                        }
                     }
-
                     foodParcels[parcelIndex].Proportion *= propToPrice;
 
                     // update intake
@@ -341,9 +342,10 @@ namespace Models.CLEM.Activities
                         ResourceRequest marketRequest = new ResourceRequest
                         {
                             ActivityModel = this,
-                            Required = amount/ item.Key.Price.PacketSize * item.Key.Price.PricePerPacket ,
+                            Required = amount / item.Key.Price.PacketSize * item.Key.Price.PricePerPacket,
                             AllowTransmutation = false,
-                            Reason = "Purchase food"
+                            Reason = "Food purchase",
+                            MarketTransactionMultiplier = 1
                         };
                         bankAccount.Remove(marketRequest);
                     }
@@ -610,27 +612,35 @@ namespace Models.CLEM.Activities
                         double amountSold = amountAvailable - amountStored;
                         if (amountSold > 0)
                         {
-                            price = foodStore.Price;
-                            double units = amountSold / price.PacketSize;
-                            if (price.UseWholePackets)
+                            ResourcePricing priceToUse = new ResourcePricing()
+                            {
+                                PacketSize = 1
+                            }; 
+                            if(foodStore.PricingExists)
+                            {
+                                priceToUse = foodStore.Price;
+                            }
+
+                            double units = amountSold / priceToUse.PacketSize;
+                            if (priceToUse.UseWholePackets)
                             {
                                 units = Math.Truncate(units);
                             }
-
                             // remove resource
                             ResourceRequest purchaseRequest = new ResourceRequest
                             {
                                 ActivityModel = this,
-                                Required = units * price.PacketSize,
+                                Required = units * priceToUse.PacketSize,
                                 AllowTransmutation = false,
-                                Reason = "Sell excess"
+                                Reason = "Sell excess",
+                                MarketTransactionMultiplier = 1
                             };
                             foodStore.Remove(purchaseRequest);
 
                             // transfer money earned
                             if (bankAccount != null)
                             {
-                                bankAccount.Add(units * price.PricePerPacket, this, $"Sales {foodStore.Name}");
+                                bankAccount.Add(units * priceToUse.PricePerPacket, this, $"Sales {foodStore.Name}");
                             }
                         } 
                     }

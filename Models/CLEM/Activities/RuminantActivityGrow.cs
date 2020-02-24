@@ -146,6 +146,7 @@ namespace Models.CLEM.Activities
             ind.MilkIntakePotential = 0;
 
             // calculate milk intake shortfall for sucklings
+            // all in units per day and multiplied at end of this section
             if (!ind.Weaned)
             {
                 // potential milk intake/animal/day
@@ -160,6 +161,8 @@ namespace Models.CLEM.Activities
                 {
                     potentialIntake = Math.Max(0.0, ind.Weight * ind.BreedParams.MaxJuvenileIntake - ind.MilkIntake * ind.BreedParams.ProportionalDiscountDueToMilk);
                 }
+
+                ind.MilkIntake *= 30.4;
             }
             else
             {

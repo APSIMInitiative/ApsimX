@@ -97,30 +97,31 @@ namespace Models.CLEM.Activities
 
             double amountNeeded = 0;
             List<Ruminant> herd = this.CurrentHerd(false);
-            switch (PaymentStyle)
+            if (herd.Count() != 0)
             {
-                case AnimalPaymentStyleType.Fixed:
-                    amountNeeded = Amount;
-                    break;
-                case AnimalPaymentStyleType.perHead:
-                    amountNeeded = Amount*herd.Count();
-                    break;
-                case AnimalPaymentStyleType.perAE:
-                    amountNeeded = Amount * herd.Sum(a => a.AdultEquivalent);
-                    break;
-                default:
-                    break;
+                switch (PaymentStyle)
+                {
+                    case AnimalPaymentStyleType.Fixed:
+                        amountNeeded = Amount;
+                        break;
+                    case AnimalPaymentStyleType.perHead:
+                        amountNeeded = Amount * herd.Count();
+                        break;
+                    case AnimalPaymentStyleType.perAE:
+                        amountNeeded = Amount * herd.Sum(a => a.AdultEquivalent);
+                        break;
+                    default:
+                        break;
+                }
             }
 
             if (amountNeeded > 0)
             {
                 // determine breed
-                string breedName = "Multiple breeds";
-                List<string> breeds = herd.Select(a => a.Breed).Distinct().ToList();
-                if (breeds.Count == 1)
-                {
-                    breedName = breeds[0];
-                }
+                // this is too much overhead for a simple reason field, especially given large herds.
+                //List<string> res = herd.Select(a => a.Breed).Distinct().ToList();
+                //string breedName = (res.Count() > 1) ? "Multiple breeds" : res.First();
+                string breedName = "Herd cost";
 
                 resourcesNeeded = new List<ResourceRequest>()
                 {

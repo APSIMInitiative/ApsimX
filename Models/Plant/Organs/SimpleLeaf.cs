@@ -333,6 +333,7 @@
         /// <summary>
         /// Extinction coefficient (dead).
         /// </summary>
+        [Description("Extinction coefficient for Dead Leaf")]
         public double KDead { get; set; }
 
         /// <summary>

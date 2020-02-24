@@ -1,7 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 73,
+  "Version": 79,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-02-18",
   "Name": "Simulations",
   "Children": [
     {
@@ -59,6 +60,8 @@
                 300.0
               ],
               "ParticleSizeClay": null,
+              "ParticleSizeSand": null,
+              "ParticleSizeSilt": null,
               "BD": [
                 1.4,
                 1.4,
@@ -155,7 +158,7 @@
                   "XFMetadata": null,
                   "Name": "WheatSoil",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -193,12 +196,12 @@
                   "XFMetadata": null,
                   "Name": "MaizeSoil",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -251,7 +254,7 @@
               "PrecipitationInterception": 0.0,
               "Name": "SoilWater",
               "Children": [],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -323,7 +326,7 @@
               ],
               "Name": "Organic",
               "Children": [],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -379,7 +382,7 @@
               "ESP": null,
               "Name": "Chemical",
               "Children": [],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -391,7 +394,7 @@
               "RelativeTo": null,
               "Name": "InitialWater",
               "Children": [],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -428,7 +431,7 @@
               "PHUnits": 0,
               "Name": "InitialN",
               "Children": [],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -436,7 +439,7 @@
               "$type": "Models.Soils.CERESSoilTemperature, Models",
               "Name": "CERESSoilTemperature",
               "Children": [],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -667,12 +670,12 @@
               },
               "ResourceName": "Nutrient",
               "Name": "Nutrient",
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
+          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -727,12 +730,12 @@
           ],
           "Name": "WURReport",
           "Children": [],
-          "IncludeInDocumentation": true,
+          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         }
       ],
-      "IncludeInDocumentation": true,
+      "IncludeInDocumentation": false,
       "Enabled": true,
       "ReadOnly": false
     },
@@ -745,7 +748,6 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileName": "Observed.xlsx",
-          "FileNameMetadata": null,
           "SheetNames": [
             "Observed",
             "ObservedOld"
@@ -874,6 +876,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.01056473311131,
                         1.07145631083388,
@@ -1510,7 +1514,7 @@
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 100.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": false,
@@ -1686,6 +1690,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.01056473311131,
                         1.07145631083388,
@@ -2322,7 +2328,7 @@
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 100.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": false,
@@ -2498,6 +2504,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.01056473311131,
                         1.07145631083388,
@@ -3134,7 +3142,7 @@
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 100.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": false,
@@ -3442,6 +3450,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.01056473311131,
                         1.07145631083388,
@@ -4078,7 +4088,7 @@
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 100.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": false,
@@ -4254,6 +4264,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.01056473311131,
                         1.07145631083388,
@@ -4890,7 +4902,7 @@
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 100.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": false,
@@ -5050,6 +5062,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.01056473311131,
                         1.07145631083388,
@@ -5686,7 +5700,7 @@
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 100.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": false,
@@ -5958,7 +5972,7 @@
                       "Values": null,
                       "Name": "SoleCrop",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -5973,7 +5987,7 @@
                       "Values": null,
                       "Name": "60WM",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -5988,7 +6002,7 @@
                       "Values": null,
                       "Name": "02WM",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -6002,17 +6016,17 @@
                       "Values": null,
                       "Name": "62WM",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -6133,7 +6147,7 @@
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 100.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,
@@ -6182,6 +6196,8 @@
                             300.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.4,
                             1.4,
@@ -7100,6 +7116,8 @@
                             300.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.4,
                             1.4,
@@ -7736,7 +7754,7 @@
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 100.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,
@@ -9376,7 +9394,7 @@
                       "Values": null,
                       "Name": "SoleCrop",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -9391,7 +9409,7 @@
                       "Values": null,
                       "Name": "60WM",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -9406,7 +9424,7 @@
                       "Values": null,
                       "Name": "02WM",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -9420,7 +9438,7 @@
                       "Values": null,
                       "Name": "62WM",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -9436,17 +9454,17 @@
                       "Values": null,
                       "Name": "63WM",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -9768,7 +9786,7 @@
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 100.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,
@@ -9817,6 +9835,8 @@
                             300.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.4,
                             1.4,
@@ -10719,6 +10739,8 @@
                             300.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.4,
                             1.4,
@@ -11355,7 +11377,7 @@
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 100.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,

@@ -316,9 +316,9 @@ namespace Models.GrazPlan
         {
             get
             {
-                AnimalInits[] animal = new AnimalInits[1];
-                StockVars.MakeAnimalValue(this.stockModel, ref animal);
-                return animal;
+                //AnimalInits[] animal = new AnimalInits[1];
+                //StockVars.MakeAnimalValue(this.stockModel, ref animal);
+                return this.animalInits;
             }
             set
             {

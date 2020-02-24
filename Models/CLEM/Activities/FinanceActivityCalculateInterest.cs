@@ -40,68 +40,12 @@ namespace Models.CLEM.Activities
         /// <summary>An event handler to allow us to make all payments when needed</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("EndOfMonth")]
-        private void OnEndOfMonth(object sender, EventArgs e)
+        [EventSubscribe("CLEMEndOfTimeStep")]
+        private void OnCLEMEndOfTimeStep(object sender, EventArgs e)
         {
             // Interest is paid and earned on the last day of the month after all other acitivites have made financial transactions.
             // Interest payment does not occur in the Activity order.
 
-            Status = ActivityStatus.NotNeeded;
-            if (financesExist)
-            {
-                // make interest payments on bank accounts
-                foreach (FinanceType accnt in Apsim.Children(Resources.FinanceResource(), typeof(FinanceType)))
-                {
-                    if (accnt.Balance > 0)
-                    {
-                        accnt.Add(accnt.Balance * accnt.InterestRatePaid / 1200, this, "Interest earned");
-                        SetStatusSuccess();
-                    }
-                    else
-                    {
-                        double interest = Math.Round(Math.Abs(accnt.Balance) * accnt.InterestRateCharged / 1200, 2, MidpointRounding.ToEven);
-                        if (Math.Abs(accnt.Balance) * accnt.InterestRateCharged / 1200 != 0)
-                        {
-                            ResourceRequest interestRequest = new ResourceRequest
-                            {
-                                ActivityModel = this,
-                                Required = interest,
-                                AllowTransmutation = false,
-                                Reason = "Pay interest charged"
-                            };
-                            accnt.Remove(interestRequest);
-    
-                            // report status
-                            if(interestRequest.Required > interestRequest.Provided)
-                            {
-                                interestRequest.ResourceType = typeof(Finance);
-                                interestRequest.ResourceTypeName = accnt.Name;
-                                interestRequest.Available = accnt.FundsAvailable;
-                                ResourceRequestEventArgs rre = new ResourceRequestEventArgs() { Request = interestRequest };
-                                OnShortfallOccurred(rre);
-
-                                switch (OnPartialResourcesAvailableAction)
-                                {
-                                    case OnPartialResourcesAvailableActionTypes.ReportErrorAndStop:
-                                        throw new ApsimXException(this, String.Format("Insufficient funds in [r={0}] to pay interest charged.\nConsider changing OnPartialResourcesAvailableAction to Skip or Use Partial.", accnt.Name));
-                                    case OnPartialResourcesAvailableActionTypes.SkipActivity:
-                                        Status = ActivityStatus.Ignored;
-                                        break;
-                                    case OnPartialResourcesAvailableActionTypes.UseResourcesAvailable:
-                                        Status = ActivityStatus.Partial;
-                                        break;
-                                    default:
-                                        break;
-                                }
-                            }
-                            else
-                            {
-                                Status = ActivityStatus.Success;
-                            }
-                        }
-                    }
-                }
-            }
         }
 
         /// <summary>
@@ -164,7 +108,65 @@ namespace Models.CLEM.Activities
         /// </summary>
         public override void DoActivity()
         {
-            return;
+            Status = ActivityStatus.NotNeeded;
+            if (financesExist)
+            {
+                // make interest payments on bank accounts
+                foreach (FinanceType accnt in Apsim.Children(Resources.FinanceResource(), typeof(FinanceType)))
+                {
+                    if (accnt.Balance > 0)
+                    {
+                        if (accnt.InterestRatePaid > 0)
+                        {
+                            accnt.Add(accnt.Balance * accnt.InterestRatePaid / 1200, this, "Interest earned");
+                            SetStatusSuccess();
+                        }
+                    }
+                    else if (accnt.Balance < 0)
+                    {
+                        double interest = Math.Round(Math.Abs(accnt.Balance) * accnt.InterestRateCharged / 1200, 2, MidpointRounding.ToEven);
+                        if (Math.Abs(accnt.Balance) * accnt.InterestRateCharged / 1200 != 0)
+                        {
+                            ResourceRequest interestRequest = new ResourceRequest
+                            {
+                                ActivityModel = this,
+                                Required = interest,
+                                AllowTransmutation = false,
+                                Reason = "Pay interest charged"
+                            };
+                            accnt.Remove(interestRequest);
+
+                            // report status
+                            if (interestRequest.Required > interestRequest.Provided)
+                            {
+                                interestRequest.ResourceType = typeof(Finance);
+                                interestRequest.ResourceTypeName = accnt.Name;
+                                interestRequest.Available = accnt.FundsAvailable;
+                                ResourceRequestEventArgs rre = new ResourceRequestEventArgs() { Request = interestRequest };
+                                OnShortfallOccurred(rre);
+
+                                switch (OnPartialResourcesAvailableAction)
+                                {
+                                    case OnPartialResourcesAvailableActionTypes.ReportErrorAndStop:
+                                        throw new ApsimXException(this, String.Format("Insufficient funds in [r={0}] to pay interest charged.\nConsider changing OnPartialResourcesAvailableAction to Skip or Use Partial.", accnt.Name));
+                                    case OnPartialResourcesAvailableActionTypes.SkipActivity:
+                                        Status = ActivityStatus.Ignored;
+                                        break;
+                                    case OnPartialResourcesAvailableActionTypes.UseResourcesAvailable:
+                                        Status = ActivityStatus.Partial;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                Status = ActivityStatus.Success;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>

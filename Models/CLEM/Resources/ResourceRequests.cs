@@ -21,7 +21,7 @@ namespace Models.CLEM.Resources
         [XmlIgnore]
         public IResourceType Resource { get; set; }
         ///<summary>
-        /// Link to resource being requested 
+        /// Type of resource being requested 
         ///</summary> 
         [XmlIgnore]
         public Type ResourceType { get; set; }
@@ -74,6 +74,12 @@ namespace Models.CLEM.Resources
         /// Allow transmutation
         ///</summary> 
         public bool TransmutationPossible { get; set; }
+        ///<summary>
+        /// Market transcation multiplier
+        /// 0 (default) = not a market transaction
+        ///</summary> 
+        public double MarketTransactionMultiplier { get; set; }
+
         ///<summary>
         /// ResourceRequest constructor
         ///</summary> 

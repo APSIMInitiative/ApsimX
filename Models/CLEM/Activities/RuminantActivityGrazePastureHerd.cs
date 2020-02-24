@@ -284,7 +284,7 @@ namespace Models.CLEM.Activities
                 List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == this.GrazeFoodStoreModel.Name && a.HerdName == this.RuminantTypeModel.Name).ToList();
                 if (herd.Count() > 0)
                 {
-                    //Get total amount
+                    // Get total amount
                     // assumes animals will stop eating at potential intake if they have been feed before grazing.
                     // hours grazed is not adjusted for this reduced feeding. Used to be 1.2 * Potential
                     double totalDesired = 0;
