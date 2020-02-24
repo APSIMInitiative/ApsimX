@@ -7,6 +7,7 @@
     using System;
     using System.Collections.Generic;
     using System.Xml.Serialization;
+    using System.Linq;
 
     /// <summary>Describes a generic above ground organ of a pasture species.</summary>
     [Serializable]
@@ -303,6 +304,12 @@
             get { return Tissue[Tissue.Length - 1].NTransferedOut; }
         }
 
+        /// <summary>The amount of DM removed from this tissue (kg/ha).</summary>
+        public double DMRemoved { get { return Tissue.Sum(t => t.DMRemoved); } }
+
+        /// <summary>The amount of N removed from this tissue (kg/ha).</summary>
+        public double NRemoved { get { return Tissue.Sum(t => t.NRemoved); } }
+
         /// <summary>Gets the average digestibility of all biomass for this organ (kg/kg).</summary>
         public double DigestibilityTotal
         {
@@ -381,11 +388,18 @@
         }
 
         /// <summary>
-        /// Biomass removal logic for this organ.
+        /// Remove biomass from organ
         /// </summary>
-        /// <param name="biomassToRemove">Biomass to remove</param>
+        /// <param name="biomassToRemove">The fraction of the harvestable biomass to remove</param>
         public void RemoveBiomass(OrganBiomassRemovalType biomassToRemove)
         {
+            // The fractions passed in are based on the harvestable biomass. Convert these to
+            // fractions of total biomass so that we can pass these to the tissue RemoveBiomass methods.
+            biomassToRemove.FractionLiveToRemove = MathUtilities.Divide(biomassToRemove.FractionLiveToRemove * DMLiveHarvestable, DMLive, 0);
+            biomassToRemove.FractionDeadToRemove = MathUtilities.Divide(biomassToRemove.FractionDeadToRemove * DMDeadHarvestable, DMDead, 0);
+            biomassToRemove.FractionLiveToResidue  = MathUtilities.Divide(biomassToRemove.FractionLiveToResidue * DMLiveHarvestable, DMLive, 0);
+            biomassToRemove.FractionDeadToResidue  = MathUtilities.Divide(biomassToRemove.FractionDeadToResidue * DMDeadHarvestable, DMDead, 0);
+
             // Live removal
             for (int t = 0; t < Tissue.Length - 1; t++)
                 Tissue[t].RemoveBiomass(biomassToRemove.FractionLiveToRemove, biomassToRemove.FractionLiveToResidue);

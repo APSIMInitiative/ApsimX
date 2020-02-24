@@ -1634,17 +1634,11 @@
 
         ////- Harvest and digestibility >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        /// <summary>Dry matter weight harvested (kg/ha).</summary>
-        private double defoliatedDM;
-
         /// <summary>Fraction of standing DM harvested (0-1).</summary>
         private double defoliatedFraction;
 
         /// <summary>Fraction of standing DM harvested (0-1), used on tissue turnover.</summary>
         private double myDefoliatedFraction;
-
-        /// <summary>Amount of N in the harvested material (kg/ha).</summary>
-        private double defoliatedN;
 
         /// <summary>Digestibility of defoliated material (0-1).</summary>
         private double defoliatedDigestibility;
@@ -2778,13 +2772,9 @@
             }
         }
 
-        /// <summary>Gets the amount of plant dry matter removed by harvest (kgDM/ha).</summary>
-        //[Description("Amount of plant dry matter removed by harvest")]
+        /// <summary>The amount of plant dry matter removed by harvest (kgDM/ha).</summary>
         [Units("kg/ha")]
-        public double HarvestedWt
-        {
-            get { return defoliatedDM; }
-        }
+        public double HarvestedWt { get { return leaf.DMRemoved + stem.DMRemoved + stolon.DMRemoved; } }
 
         /// <summary>Gets the fraction of available dry matter actually harvested ().</summary>
         //[Description("Fraction of available dry matter actually harvested")]
@@ -2794,13 +2784,9 @@
             get { return defoliatedFraction; }
         }
 
-        /// <summary>Gets the amount of plant N removed by harvest (kgN/ha).</summary>
-        //[Description("Amount of plant N removed by harvest")]
+        /// <summary>The amount of N removed by harvest (kg/ha).</summary>
         [Units("kg/ha")]
-        public double HarvestedN
-        {
-            get { return defoliatedN; }
-        }
+        public double HarvestedN { get { return leaf.NRemoved + stem.NRemoved + stolon.NRemoved; } }
 
         /// <summary>Gets the average N concentration in harvested material (kgN/kgDM).</summary>
         //[Description("Average N concentration in harvested material")]
@@ -3145,9 +3131,7 @@
         internal void RefreshVariables()
         {
             // reset variables for whole plant
-            defoliatedDM = 0.0;
             defoliatedFraction = 0.0;
-            defoliatedN = 0.0;
             defoliatedDigestibility = 0.0;
 
             grossPhotosynthesis = 0.0;
@@ -4417,20 +4401,20 @@
                 leaf.RemoveBiomass(
                     new OrganBiomassRemovalType() 
                     {
-                        FractionLiveToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[0], leaf.DMLive, 0.0)),
-                        FractionDeadToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[3], leaf.DMDead, 0.0))
+                        FractionLiveToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[0], leaf.DMLiveHarvestable, 0.0)),
+                        FractionDeadToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[3], leaf.DMDeadHarvestable, 0.0))
                     });
                 stem.RemoveBiomass(
                     new OrganBiomassRemovalType()
                     {
-                        FractionLiveToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[1], stem.DMLive, 0.0)),
-                        FractionDeadToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[4], stem.DMDead, 0.0))
+                        FractionLiveToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[1], stem.DMLiveHarvestable, 0.0)),
+                        FractionDeadToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[4], stem.DMDeadHarvestable, 0.0))
                     });
                 stolon.RemoveBiomass(
                     new OrganBiomassRemovalType()
                     {
-                        FractionLiveToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[2], stolon.DMLive, 0.0)),
-                        FractionDeadToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[5], stolon.DMDead, 0.0))
+                        FractionLiveToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[2], stolon.DMLiveHarvestable, 0.0)),
+                        FractionDeadToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[5], stolon.DMDeadHarvestable, 0.0))
                     });
 
                 // Update LAI and herbage digestibility
@@ -4439,8 +4423,8 @@
             }
 
             // Set outputs and check balance
-            defoliatedDM = preRemovalDMShoot - AboveGroundWt;
-            defoliatedN = preRemovalNShoot - AboveGroundN;
+            var defoliatedDM = preRemovalDMShoot - AboveGroundWt;
+            var defoliatedN = preRemovalNShoot - AboveGroundN;
             if (!MathUtilities.FloatsAreEqual(defoliatedDM, amountToRemove))
                 throw new ApsimXException(this, "  AgPasture " + Name + " - removal of DM resulted in loss of mass balance");
             else
