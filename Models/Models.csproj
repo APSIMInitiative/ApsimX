@@ -157,6 +157,7 @@
     <Compile Include="CLEM\Activities\LabourAERelationship.cs" />
     <Compile Include="CLEM\IFilterGroup.cs" />
     <Compile Include="CLEM\Market.cs" />
+    <Compile Include="CLEM\RandomNumberGenerator.cs" />
     <Compile Include="CLEM\Reporting\ConceptionStatus.cs" />
     <Compile Include="CLEM\Reporting\ConceptionStatusChangedEventArgs.cs" />
     <Compile Include="CLEM\Resources\LabourDietComponent.cs" />

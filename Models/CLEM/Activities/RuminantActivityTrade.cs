@@ -164,8 +164,8 @@ namespace Models.CLEM.Activities
                     {
                         object ruminantBase = null;
 
-                        double u1 = ZoneCLEM.RandomGenerator.NextDouble();
-                        double u2 = ZoneCLEM.RandomGenerator.NextDouble();
+                        double u1 = RandomNumberGenerator.Generator.NextDouble();
+                        double u2 = RandomNumberGenerator.Generator.NextDouble();
                         double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
                                      Math.Sin(2.0 * Math.PI * u2);
                         double weight = purchasetype.Weight + purchasetype.WeightSD * randStdNormal;
