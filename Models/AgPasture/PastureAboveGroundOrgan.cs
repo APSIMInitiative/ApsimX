@@ -6,6 +6,8 @@
     using Models.PMF.Interfaces;
     using System;
     using System.Collections.Generic;
+    using System.Xml.Serialization;
+    using System.Linq;
 
     /// <summary>Describes a generic above ground organ of a pasture species.</summary>
     [Serializable]
@@ -15,43 +17,43 @@
         [Link(Type = LinkType.Child)]
         public GenericTissue[] Tissue;
 
-        /// <summary>
-        /// Biomass removal logic for this organ.
-        /// </summary>
-        /// <param name="biomassToRemove">Biomass to remove</param>
-        public void RemoveBiomass(OrganBiomassRemovalType biomassToRemove)
-        {
-            // Live removal
-            for (int t = 0; t < Tissue.Length - 1; t++)
-                Tissue[t].RemoveBiomass(biomassToRemove.FractionLiveToRemove, biomassToRemove.FractionLiveToResidue);
+        /// <summary>The emerging tissue.</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        public GenericTissue EmergingTissue { get; private set; }
 
-            // Dead removal
-            Tissue[Tissue.Length - 1].RemoveBiomass(biomassToRemove.FractionDeadToRemove, biomassToRemove.FractionDeadToResidue);
-        }
+        /// <summary>The developing tissue.</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        public GenericTissue DevelopingTissue { get; private set; }
 
-        #region Organ specific characteristics  ----------------------------------------------------------------------------
+        /// <summary>The mature tissue.</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        public GenericTissue MatureTissue { get; private set; }
 
-        /// <summary>Gets or sets the N concentration for optimum growth (kg/kg).</summary>
-        internal double NConcOptimum = 0.04;
-
-        /// <summary>Gets or sets the maximum N concentration, for luxury uptake (kg/kg).</summary>
-        internal double NConcMaximum = 0.05;
-
-        /// <summary>Gets or sets the minimum N concentration, structural N (kg/kg).</summary>
-        internal double NConcMinimum = 0.012;
-
-        /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
-        internal double MinimumLiveDM = 0.0;
-
-        /// <summary>Proportion of organ DM that is standing, available to harvest (0-1).</summary>
-        internal double FractionStanding = 1.0;
+        /// <summary>The mature tissue.</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        public GenericTissue DeadTissue { get; private set; }
 
         /// <summary>List of BiomassRemovalTypes with default biomass removal fractions for given removal types.</summary>
         private Dictionary<string, OrganBiomassRemovalType> defaultRemovalFractions = new Dictionary<string, OrganBiomassRemovalType>();
 
-        #endregion ---------------------------------------------------------------------------------------------------------
+        /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
+        public double MinimumLiveDM = 0.0;
 
-        #region Organ properties (summary of tissues)  ---------------------------------------------------------------------
+        /// <summary>Gets or sets the N concentration for optimum growth (kg/kg).</summary>
+        [XmlIgnore]
+        public double NConcOptimum { get; set; } = 0.04;
+
+        /// <summary>Gets or sets the minimum N concentration, structural N (kg/kg).</summary>
+        [XmlIgnore]
+        public double NConcMinimum { get; set; } = 0.012;
+
+        /// <summary>Gets or sets the maximum N concentration, for luxury uptake (kg/kg).</summary>
+        [XmlIgnore]
+        public double NConcMaximum { get; set; } = 0.05;
+
+        /// <summary>Proportion of organ DM that is standing, available to harvest (0-1).</summary>
+        [XmlIgnore]
+        public double FractionStanding { get; set; } = 1.0;
 
         /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
         public bool IsAboveGround { get { return true; } }
@@ -61,11 +63,12 @@
         {
             get
             {
-                Biomass live = new Biomass();
-                live.StructuralWt = DMLive * 0.10 * FractionStanding;
-                live.StructuralN = NLive * 0.10 * FractionStanding;
-                live.DMDOfStructural = DigestibilityLive;
-                return live;
+                return new Biomass()
+                {
+                    StructuralWt = DMLiveHarvestable / 10,  // to g/m2
+                    StructuralN = NLiveHarvestable / 10,    // to g/m2
+                    DMDOfStructural = DigestibilityLive
+                };
             }
         }
 
@@ -74,16 +77,17 @@
         {
             get
             {
-                Biomass dead = new Biomass();
-                dead.StructuralWt = DMDead * 0.10 * FractionStanding;
-                dead.StructuralN = NDead * 0.10 * FractionStanding;
-                dead.DMDOfStructural = DigestibilityDead;
-                return dead;
+                return new Biomass()
+                {
+                    StructuralWt = DMDeadHarvestable / 10,  // to g/m2
+                    StructuralN = NDeadHarvestable / 10,    // to g/m2
+                    DMDOfStructural = DigestibilityDead
+                };
             }
         }
 
         /// <summary>Gets the total dry matter in this organ (kg/ha).</summary>
-        internal double DMTotal
+        public double DMTotal
         {
             get
             {
@@ -96,7 +100,7 @@
         }
 
         /// <summary>Gets the dry matter in the live (green) tissues (kg/ha).</summary>
-        internal double DMLive
+        public double DMLive
         {
             get
             {
@@ -110,25 +114,73 @@
 
         /// <summary>Gets the dry matter in the dead tissues (kg/ha).</summary>
         /// <remarks>Last tissues is assumed to represent dead material.</remarks>
-        internal double DMDead
+        public double DMDead
         {
             get { return Tissue[Tissue.Length - 1].DM; }
         }
 
-        /// <summary>The dry matter in the live (green) tissues available to harvest (kg/ha).</summary>
-        internal double DMLiveHarvestable
+        /// <summary>The total harvestable dry matter (kg/ha).</summary>
+        public double DMTotalHarvestable { get { return DMLiveHarvestable + DMDeadHarvestable; } }
+
+        /// <summary>The harvestable dry matter in the live (green) tissues (kg/ha).</summary>
+        public double DMLiveHarvestable { get { return Math.Max(0.0, Math.Min(DMLive - MinimumLiveDM, DMLive * FractionStanding)); } }
+
+        /// <summary>The harvestable dry matter in the dead tissues (kg/ha).</summary>
+        public virtual double DMDeadHarvestable { get { return DMDead * FractionStanding; } }
+
+        /// <summary>Dry matter weight of standing herbage (kgDM/ha).</summary>
+        [Units("kg/ha")]
+        public double StandingHerbageWt
         {
-            get { return Math.Max(0.0, Math.Min(DMLive - MinimumLiveDM, DMLive * FractionStanding)); }
+            get { return DMTotal * FractionStanding; }
         }
 
-        /// <summary>The dry matter in the dead tissues available to harvest (kg/ha).</summary>
-        internal virtual double DMDeadHarvestable
+        /// <summary>Dry matter weight of live standing herbage (kgDM/ha).</summary>
+        [Units("kg/ha")]
+        public double StandingLiveHerbageWt
+        {
+            get { return DMLive * FractionStanding; }
+        }
+
+        /// <summary>Dry matter weight of dead standing herbage (kgDM/ha).</summary>
+        [Units("kg/ha")]
+        public double StandingDeadHerbageWt
         {
             get { return DMDead * FractionStanding; }
         }
 
+        /// <summary>N concent of the standing herbage (kg/ha).</summary>
+        [Units("kg/ha")]
+        public double StandingHerbageN
+        {
+            get { return NTotal * FractionStanding; }
+        }
+
+        /// <summary>N concent of the live standing herbage (kg/ha).</summary>
+        [Units("kg/ha")]
+        public double StandingLiveHerbageN
+        {
+            get { return NLive * FractionStanding; }
+        }
+
+        /// <summary>N concent of the dead standing herbage (kg/ha).</summary>
+        [Units("kg/ha")]
+        public double StandingDeadHerbageN
+        {
+            get { return NDead * FractionStanding; }
+        }
+
+        /// <summary>The amount of N in the total harvestable dry matter (kg/ha).</summary>
+        public double NTotalHarvestable { get { return NLiveHarvestable + NDeadHarvestable; } }
+
+        /// <summary>The amount of N in the harvestable dry matter in the live (green) tissues (kg/ha).</summary>
+        public double NLiveHarvestable { get { return DMLiveHarvestable / DMLive * NLive; } }
+
+        /// <summary>The amount of N in the harvestable dry matter in the dead tissues (kg/ha).</summary>
+        public virtual double NDeadHarvestable { get { return DMDeadHarvestable / DMDead * NDead; } }
+
         /// <summary>The total N amount in this tissue (kg/ha).</summary>
-        internal double NTotal
+        public double NTotal
         {
             get
             {
@@ -141,7 +193,7 @@
         }
 
         /// <summary>Gets the N amount in the live (green) tissues (kg/ha).</summary>
-        internal double NLive
+        public double NLive
         {
             get
             {
@@ -155,43 +207,43 @@
 
         /// <summary>Gets the N amount in the dead tissues (kg/ha).</summary>
         /// <remarks>Last tissues is assumed to represent dead material.</remarks>
-        internal double NDead
+        public double NDead
         {
             get { return Tissue[Tissue.Length - 1].Namount; }
         }
 
         /// <summary>Gets the average N concentration in this organ (kg/kg).</summary>
-        internal double NconcTotal
+        public double NconcTotal
         {
             get { return MathUtilities.Divide(NTotal, DMTotal, 0.0); }
         }
 
         /// <summary>Gets the average N concentration in the live tissues (kg/kg).</summary>
-        internal double NconcLive
+        public double NconcLive
         {
             get { return MathUtilities.Divide(NLive, DMLive, 0.0); }
         }
 
         /// <summary>Gets the average N concentration in dead tissues (kg/kg).</summary>
-        internal double NconcDead
+        public double NconcDead
         {
             get { return MathUtilities.Divide(NDead, DMDead, 0.0); }
         }
 
         /// <summary>Gets the amount of senesced N available for remobilisation (kg/ha).</summary>
-        internal double NSenescedRemobilisable
+        public double NSenescedRemobilisable
         {
             get { return Tissue[Tissue.Length - 1].NRemobilisable; }
         }
 
         /// <summary>Gets the amount of senesced N remobilised into new growth (kg/ha).</summary>
-        internal double NSenescedRemobilised
+        public double NSenescedRemobilised
         {
             get { return Tissue[Tissue.Length - 1].NRemobilised; }
         }
 
         /// <summary>Gets the amount of luxury N available for remobilisation (kg/ha).</summary>
-        internal double NLuxuryRemobilisable
+        public double NLuxuryRemobilisable
         {
             get
             {
@@ -204,7 +256,7 @@
         }
 
         /// <summary>Gets the amount of luxury N remobilised into new growth (kg/ha).</summary>
-        internal double NLuxuryRemobilised
+        public double NLuxuryRemobilised
         {
             get
             {
@@ -217,43 +269,49 @@
         }
 
         /// <summary>Gets the DM amount added to this organ via growth (kg/ha).</summary>
-        internal double DMGrowth
+        public double DMGrowth
         {
             get { return Tissue[0].DMTransferedIn; }
         }
 
         /// <summary>Gets the amount of N added to this organ via growth (kg/ha).</summary>
-        internal double NGrowth
+        public double NGrowth
         {
             get { return Tissue[0].NTransferedIn; }
         }
 
         /// <summary>Gets the DM amount senescing from this organ (kg/ha).</summary>
-        internal double DMSenesced
+        public double DMSenesced
         {
             get { return Tissue[Tissue.Length - 2].DMTransferedOut; }
         }
 
         /// <summary>Gets the amount of N senescing from this organ (kg/ha).</summary>
-        internal double NSenesced
+        public double NSenesced
         {
             get { return Tissue[Tissue.Length - 2].NTransferedOut; }
         }
 
         /// <summary>Gets the DM amount detached from this organ (kg/ha).</summary>
-        internal double DMDetached
+        public double DMDetached
         {
             get { return Tissue[Tissue.Length - 1].DMTransferedOut; }
         }
 
         /// <summary>Gets the amount of N detached from this organ (kg/ha).</summary>
-        internal double NDetached
+        public double NDetached
         {
             get { return Tissue[Tissue.Length - 1].NTransferedOut; }
         }
 
+        /// <summary>The amount of DM removed from this tissue (kg/ha).</summary>
+        public double DMRemoved { get { return Tissue.Sum(t => t.DMRemoved); } }
+
+        /// <summary>The amount of N removed from this tissue (kg/ha).</summary>
+        public double NRemoved { get { return Tissue.Sum(t => t.NRemoved); } }
+
         /// <summary>Gets the average digestibility of all biomass for this organ (kg/kg).</summary>
-        internal double DigestibilityTotal
+        public double DigestibilityTotal
         {
             get
             {
@@ -266,7 +324,7 @@
         }
 
         /// <summary>Gets the average digestibility of live biomass for this organ (kg/kg).</summary>
-        internal double DigestibilityLive
+        public double DigestibilityLive
         {
             get
             {
@@ -280,17 +338,78 @@
 
         /// <summary>Gets the average digestibility of dead biomass for this organ (kg/kg).</summary>
         /// <remarks>Last tissues is assumed to represent dead material.</remarks>
-        internal double DigestibilityDead
+        public double DigestibilityDead
         {
             get { return Tissue[Tissue.Length - 1].Digestibility; }
         }
 
-        #endregion ---------------------------------------------------------------------------------------------------------
+        /// <summary>Digestibility of standing herbage.</summary>
+        [Units("kg/kg")]
+        public double StandingDigestibility { get { return DigestibilityTotal * FractionStanding; } }
 
-        #region Organ methods  ---------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Reset this organ's state.
+        /// </summary>
+        /// <param name="emergingWt">The amount of emerging biomass (kg/ha).</param>
+        /// <param name="developingWt">The amount of developing biomass (kg/ha).</param>
+        /// <param name="matureWt">The amount of developing biomass (kg/ha).</param>
+        /// <param name="deadWt">The amount of developing biomass (kg/ha).</param>
+        public void Reset(double emergingWt, double developingWt, double matureWt, double deadWt)
+        {
+            EmergingTissue.DM = emergingWt;
+            DevelopingTissue.DM = developingWt;
+            MatureTissue.DM = matureWt;
+            DeadTissue.DM = deadWt;
+
+            EmergingTissue.Namount = emergingWt * NConcOptimum;
+            DevelopingTissue.Namount = developingWt * NConcOptimum;
+            MatureTissue.Namount = matureWt * NConcOptimum;
+            DeadTissue.Namount = deadWt * NConcMinimum;
+        }
+
+        /// <summary>
+        /// Reset this organ's state at emergence.
+        /// </summary>
+        /// <param name="emergingWt">The amount of emerging biomass (kg/ha).</param>
+        /// <param name="developingWt">The amount of developing biomass (kg/ha).</param>
+        /// <param name="matureWt">The amount of developing biomass (kg/ha).</param>
+        /// <param name="deadWt">The amount of developing biomass (kg/ha).</param>
+        public void ResetEmergence(double emergingWt, double developingWt, double matureWt, double deadWt)
+        {
+            EmergingTissue.DM = emergingWt;
+            DevelopingTissue.DM = developingWt;
+            MatureTissue.DM = matureWt;
+            DeadTissue.DM = deadWt;
+
+            EmergingTissue.Namount = emergingWt * NConcOptimum;
+            DevelopingTissue.Namount = developingWt * NConcOptimum;
+            MatureTissue.Namount = matureWt * NConcOptimum;
+            DeadTissue.Namount = deadWt * NConcOptimum;
+        }
+
+        /// <summary>
+        /// Remove biomass from organ
+        /// </summary>
+        /// <param name="biomassToRemove">The fraction of the harvestable biomass to remove</param>
+        public void RemoveBiomass(OrganBiomassRemovalType biomassToRemove)
+        {
+            // The fractions passed in are based on the harvestable biomass. Convert these to
+            // fractions of total biomass so that we can pass these to the tissue RemoveBiomass methods.
+            biomassToRemove.FractionLiveToRemove = MathUtilities.Divide(biomassToRemove.FractionLiveToRemove * DMLiveHarvestable, DMLive, 0);
+            biomassToRemove.FractionDeadToRemove = MathUtilities.Divide(biomassToRemove.FractionDeadToRemove * DMDeadHarvestable, DMDead, 0);
+            biomassToRemove.FractionLiveToResidue  = MathUtilities.Divide(biomassToRemove.FractionLiveToResidue * DMLiveHarvestable, DMLive, 0);
+            biomassToRemove.FractionDeadToResidue  = MathUtilities.Divide(biomassToRemove.FractionDeadToResidue * DMDeadHarvestable, DMDead, 0);
+
+            // Live removal
+            for (int t = 0; t < Tissue.Length - 1; t++)
+                Tissue[t].RemoveBiomass(biomassToRemove.FractionLiveToRemove, biomassToRemove.FractionLiveToResidue);
+
+            // Dead removal
+            Tissue[Tissue.Length - 1].RemoveBiomass(biomassToRemove.FractionDeadToRemove, biomassToRemove.FractionDeadToResidue);
+        }
 
         /// <summary>Reset all amounts to zero in all tissues of this organ.</summary>
-        internal void DoResetOrgan()
+        public void DoResetOrgan()
         {
             for (int t = 0; t < Tissue.Length; t++)
             {
@@ -302,7 +421,7 @@
         }
 
         /// <summary>Reset the transfer amounts in all tissues of this organ.</summary>
-        internal void DoCleanTransferAmounts()
+        public void DoCleanTransferAmounts()
         {
             for (int t = 0; t < Tissue.Length; t++)
             {
@@ -317,9 +436,9 @@
 
         /// <summary>Kills part of the organ (transfer DM and N to dead tissue).</summary>
         /// <param name="fraction">The fraction to kill in each tissue</param>
-        internal void DoKillOrgan(double fraction = 1.0)
+        public void DoKillOrgan(double fraction = 1.0)
         {
-            if (1.0 - fraction > Epsilon)
+            if (MathUtilities.IsGreaterThan(1.0 - fraction, 0))
             {
                 double fractionRemaining = 1.0 - fraction;
                 for (int t = 0; t < Tissue.Length - 1; t++)
@@ -345,7 +464,7 @@
         /// <summary>Computes the DM and N amounts turned over for all tissues.</summary>
         /// <param name="turnoverRate">The turnover rate for each tissue</param>
         /// <returns>The DM and N amount detached from this organ</returns>
-        internal void DoTissueTurnover(double[] turnoverRate)
+        public void DoTissueTurnover(double[] turnoverRate)
         {
             double turnedoverDM;
             double turnedoverN;
@@ -382,7 +501,7 @@
 
         /// <summary>Updates each tissue, make changes in DM and N effective.</summary>
         /// <returns>A flag whether mass balance was maintained or not</returns>
-        internal bool DoOrganUpdate()
+        public bool DoOrganUpdate()
         {
             // save current state
             double previousDM = DMTotal;
@@ -393,15 +512,15 @@
                 Tissue[t].DoUpdateTissue();
 
             // check mass balance
-            bool dmIsOk = Math.Abs(previousDM + DMGrowth - DMDetached - DMTotal) <= Epsilon;
-            bool nIsOk = Math.Abs(previousN + NGrowth - NSenescedRemobilised - NDetached - NTotal) <= Epsilon;
+            bool dmIsOk = MathUtilities.FloatsAreEqual(Math.Abs(previousDM + DMGrowth - DMDetached - DMTotal), 0);
+            bool nIsOk = MathUtilities.FloatsAreEqual(Math.Abs(previousN + NGrowth - NSenescedRemobilised - NDetached - NTotal), 0);
             return (dmIsOk || nIsOk);
         }
 
         /// <summary>Adds a removal type to the defaultRemovalFractions.</summary>
         /// <param name="typeName">The name of the removal type</param>
         /// <param name="removalFractions">The default removal fractions</param>
-        internal void SetRemovalFractions(string typeName, OrganBiomassRemovalType removalFractions)
+        public void SetRemovalFractions(string typeName, OrganBiomassRemovalType removalFractions)
         {
             defaultRemovalFractions.Add(typeName, removalFractions);
         }
@@ -409,20 +528,12 @@
         /// <summary>Gets the default removal fractions for a given removal type.</summary>
         /// <param name="typeName">The type of removal</param>
         /// <returns>The default removal fractions</returns>
-        internal OrganBiomassRemovalType GetRemovalFractions(string typeName)
+        public OrganBiomassRemovalType GetRemovalFractions(string typeName)
         {
             if (defaultRemovalFractions.ContainsKey(typeName))
                 return defaultRemovalFractions[typeName];
             else
                 return null;
         }
-
-        #endregion ---------------------------------------------------------------------------------------------------------
-
-        /// <summary>Average carbon content in plant dry matter (kg/kg).</summary>
-        const double CarbonFractionInDM = 0.4;
-
-        /// <summary>Minimum significant difference between two values.</summary>
-        const double Epsilon = 0.000000001;
     }
 }

@@ -64,7 +64,7 @@
             var rootNode = new TreeViewNode()
             {
                 Name = "Models",
-                ResourceNameForImage = ExplorerPresenter.GetIconResourceName(typeof(Simulations), null)
+                ResourceNameForImage = ExplorerPresenter.GetIconResourceName(typeof(Simulations), null, null)
             };
 
             foreach (var modelThatCanBeAdded in models)
@@ -90,7 +90,7 @@
                     node = new TreeViewNode()
                     {
                         Name = namespaceWord,
-                        ResourceNameForImage = ExplorerPresenter.GetIconResourceName(typeof(Folder), null)
+                        ResourceNameForImage = ExplorerPresenter.GetIconResourceName(typeof(Folder), null, null)
                     };
                     parent.Children.Add(node);
                 }
@@ -101,7 +101,7 @@
             var description = new TreeViewNode()
             {
                 Name = modelThatCanBeAdded.ModelName,
-                ResourceNameForImage = ExplorerPresenter.GetIconResourceName(modelThatCanBeAdded.ModelType, modelThatCanBeAdded.ModelName)
+                ResourceNameForImage = ExplorerPresenter.GetIconResourceName(modelThatCanBeAdded.ModelType, modelThatCanBeAdded.ModelName, modelThatCanBeAdded.ResourceString)
             };
             parent.Children.Add(description);
         }

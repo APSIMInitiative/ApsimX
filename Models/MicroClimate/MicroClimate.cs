@@ -78,6 +78,11 @@
         [Units("MJ/MJ")]
         public double SoilHeatFluxFraction { get; set; }
 
+        /// <summary>The minimum height difference between canopies for a new layer to be created (m).</summary>
+        [Description("The minimum height difference between canopies for a new layer to be created (m)")]
+        [Units("m")]
+        public double MinimumHeightDiffForNewLayer { get; set; } = 0.0;
+
         /// <summary>Height of the tallest canopy.</summary>
         [Units("mm")]
         public double CanopyHeight
@@ -208,6 +213,13 @@
             get { return microClimatesZones[0].CanopyCover; }
         }
 
+        /// <summary>The number of canopy layers.</summary>
+        [Description("Number of canopy layers")]
+        public int NumLayers
+        {
+            get { return microClimatesZones[0].DeltaZ.Length; }
+        }
+
         /// <summary>Called when simulation starts.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The event data.</param>
@@ -216,9 +228,9 @@
         {
             microClimatesZones = new List<MicroClimateZone>();
             foreach (Zone newZone in Apsim.ChildrenRecursively(this.Parent, typeof(Zone)))
-                microClimatesZones.Add(new MicroClimateZone(clock, newZone));
+                microClimatesZones.Add(new MicroClimateZone(clock, newZone, MinimumHeightDiffForNewLayer));
             if (microClimatesZones.Count == 0)
-                microClimatesZones.Add(new MicroClimateZone(clock, this.Parent as Zone));
+                microClimatesZones.Add(new MicroClimateZone(clock, this.Parent as Zone, MinimumHeightDiffForNewLayer));
         }
 
         /// <summary>Called when the canopy energy balance needs to be calculated.</summary>
