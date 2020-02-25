@@ -126,7 +126,7 @@ namespace Models.CLEM.Resources
             int birthCount = 1;
             if (this.BreedParams.MultipleBirthRate != null)
             {
-                double rnd = ZoneCLEM.RandomGenerator.NextDouble();
+                double rnd = RandomNumberGenerator.Generator.NextDouble();
                 double birthProb = 0;
                 foreach (double i in this.BreedParams.MultipleBirthRate)
                 {

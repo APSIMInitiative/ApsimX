@@ -23,6 +23,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages ruminant stocking during the dry season based upon wet season pasture biomass. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
+    [Version(1, 0, 3, "Avoids double accounting while removing individuals")]
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Updated assessment calculations and ability to report results")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantPredictiveStocking.htm")]
@@ -225,12 +226,11 @@ namespace Models.CLEM.Activities
                 while (cnt < herd.Count() && animalEquivalentsforSale > 0)
                 {
                     this.Status = ActivityStatus.Success;
-                    animalEquivalentsforSale -= herd[cnt].AdultEquivalent;
-                    herd[cnt].SaleFlag = HerdChangeReason.DestockSale;
-                    //if (animalEquivalentsforSale < herd.Min(a => a.AdultEquivalent))
-                    //{
-                    //    animalEquivalentsforSale = 0;
-                    //}
+                    if(herd[cnt].SaleFlag != HerdChangeReason.DestockSale)
+                    {
+                        animalEquivalentsforSale -= herd[cnt].AdultEquivalent;
+                        herd[cnt].SaleFlag = HerdChangeReason.DestockSale;
+                    }
                     cnt++;
                 }
                 if (animalEquivalentsforSale <= 0)
