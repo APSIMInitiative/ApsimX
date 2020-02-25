@@ -1,4 +1,4 @@
-[weather.input.weather]
+[weather.met.weather]
 !station number =
 !station name = ACRI Main
 latitude = -30.12  (DECIMAL DEGREES)
@@ -1023,4 +1023,3 @@ year day  radn   maxt  mint  rain  evap   vp   code
 2008 282   25.5  20.5   6.8   0.2   6.8   9.0 222222
 2008 283   22.6  21.6   7.7   0.0   6.0  10.0 222222
 2008 284   25.6  26.5  11.9   0.0   5.6  14.0 222222
-                              
