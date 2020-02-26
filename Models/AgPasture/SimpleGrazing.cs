@@ -89,13 +89,13 @@
 
         /// <summary></summary>
         [Separator("Settings for the 'Target Mass' - all values by month from January")]
-        [Description("Monthly target mass of pasture to trigger grazing event (kgDM/ha)")]
+        [Description("Target mass of pasture to trigger grazing event, monthly values (kgDM/ha)")]
         [Units("kgDM/ha")]
         [Display(EnabledCallback = "IsTargetMassTurnedOn")]
         public double[] PreGrazeDMArray { get; set; }
 
         /// <summary></summary>
-        [Description("Monthly mass of pasture post grazing (kgDM/ha)")]
+        [Description("Residual mass of pasture post grazing, monthly values (kgDM/ha)")]
         [Units("kgDM/ha")]
         [Display(EnabledCallback = "IsTargetMassTurnedOn")]
         public double[] PostGrazeDMArray { get; set; }
