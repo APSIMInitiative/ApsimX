@@ -1532,14 +1532,7 @@ namespace Models.GrazPlan
         {
             return BreedSRW * BirthWtScale[iNoYoung];
         }
-        /// <summary>
-        /// Flag that is set when PotMilkYield is assigned
-        /// </summary>
-        /*public bool bUseDairyCurve
-        {
-            get { return FUseDairyCurve; }                                  // Flag that is set when PotMilkYield is assigned
-        }*/
-
+        
         private const double SIGVAL = 5.88878;                              // 2*ln(0.95/0.05)                         
         private const double DAYSPERYR = 365.25;
         private const double NC = 2.5;                                      // 2.5 cycles joining is assumed            
