@@ -115,34 +115,42 @@
             filterEdit.Changed -= OnFilterChanged;
         }
 
+        private Apsim.ModelDescription GetModelDescription(string namePath)
+        {
+            Type selectedType = typeof(IModel).Assembly.GetType(tree.SelectedNode);
+            if (selectedType != null)
+                return allowableChildModels.FirstOrDefault(m => m.ModelType == selectedType);
+
+            // Try a resource model (e.g. wheat).
+            string modelName = tree.SelectedNode.Split('.').Last();
+            Apsim.ModelDescription[] resourceModels = allowableChildModels.Where(c => !string.IsNullOrEmpty(c.ResourceString)).ToArray();
+            return resourceModels.FirstOrDefault(m => m.ModelName == modelName);
+        }
+
         /// <summary>The user has clicked the add button.</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
         private void OnAddButtonClicked(object sender, EventArgs e)
         {
-            var namespaceWords = tree.SelectedNode.Split(".".ToCharArray()).ToList();
-            var modelName = namespaceWords.Last();
-
-            var selectedModelType = this.allowableChildModels.FirstOrDefault(m => m.ModelName == modelName);
-            if (selectedModelType != null)
+            try
             {
-                this.explorerPresenter.MainPresenter.ShowWaitCursor(true);
-                try
-                {
-                    IModel child = (IModel)Activator.CreateInstance(selectedModelType.ModelType, true);
-                    child.Name = modelName;
-                    if (child is ModelCollectionFromResource)
-                        (child as ModelCollectionFromResource).ResourceName = selectedModelType.ModelName;
+                Apsim.ModelDescription selectedModelType = GetModelDescription(tree.SelectedNode);
 
-                    var command = new AddModelCommand(Apsim.FullPath(this.model),
-                                                      child,
-                                                      explorerPresenter);
+                if (selectedModelType != null)
+                {
+                    this.explorerPresenter.MainPresenter.ShowWaitCursor(true);
+                    IModel child = (IModel)Activator.CreateInstance(selectedModelType.ModelType, true);
+                    child.Name = selectedModelType.ModelName;
+                    if (child is ModelCollectionFromResource resource)
+                        resource.ResourceName = selectedModelType.ModelName;
+
+                    var command = new AddModelCommand(Apsim.FullPath(this.model), child, explorerPresenter);
                     explorerPresenter.CommandHistory.Add(command, true);
                 }
-                finally
-                {
-                    this.explorerPresenter.MainPresenter.ShowWaitCursor(false);
-                }
+            }
+            finally
+            {
+                this.explorerPresenter.MainPresenter.ShowWaitCursor(false);
             }
         }
 
