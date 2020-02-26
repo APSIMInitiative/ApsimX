@@ -77,7 +77,7 @@ namespace APSIM.Shared.Utilities
         private List<ApsimConstant> _Constants = new List<ApsimConstant>();
 
         /// <summary>Is the file a CSV file</summary>
-        private bool IsCSVFile = false;
+        public bool IsCSVFile { get; set; } = false;
 
         /// <summary>The inStreamReader - used for text and csv files</summary>
         private StreamReaderRandomAccess inStreamReader;
@@ -175,7 +175,6 @@ namespace APSIM.Shared.Utilities
         public void Open(Stream stream)
         {
             _FileName = "Memory stream";
-            IsCSVFile = false;
             inStreamReader = new StreamReaderRandomAccess(stream);
             Open();
         }
