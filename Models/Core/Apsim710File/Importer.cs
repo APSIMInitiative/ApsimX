@@ -320,6 +320,18 @@
                 {
                     newNode = this.ImportWater(compNode, destParent, newNode);
                 }
+                else if (compNode.Name.ToLower() == "layerstructure")
+                {
+                    newNode = CopyNode(compNode, destParent, "LayerStructure");
+                }
+                else if (compNode.Name.ToLower() == "swim")
+                {
+                    newNode = CopyNode(compNode, destParent, "Swim3");
+                    this.AddCompNode(destParent, "SoilNitrogen", "SoilNitrogen");
+                    this.AddCompNode(destParent, "CERESSoilTemperature", "CERESSoilTemperature");
+
+                    // may need to copy more details for SoilNitrogen
+                }
                 else if (compNode.Name.ToLower() == "soilwater")
                 {
                     newNode = CopyNode(compNode, destParent, "SoilWater");
