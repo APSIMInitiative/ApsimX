@@ -3547,6 +3547,7 @@ namespace Models.GrazPlan
             double heatFactor;
             double lactFactor;
             int lactNum;
+            double shapeParam;
 
             Calc_Weights();                                                             // Compute size and condition               
 
@@ -3603,11 +3604,20 @@ namespace Models.GrazPlan
             if (((this.ReproStatus == GrazType.ReproType.Male || this.ReproStatus == GrazType.ReproType.Castrated)) || (this.Mothers != null))
                 lactFactor = 1.0;
             else
+            {
+                if (this.NoSuckling() > 0)
+                {
+                    shapeParam = AParams.IntakeC[9];
+                }
+                else
+                {
+                    shapeParam = AParams.IntakeC[21];
+                }
                 lactFactor = 1.0 + this.AParams.IntakeLactC[lactNum]
                                      * ((1.0 - this.AParams.IntakeC[15]) + this.AParams.IntakeC[15] * this.ConditionAtBirthing)
-                                     * this.WOOD(lactTime, this.AParams.IntakeC[8], this.AParams.IntakeC[9])
+                                     * this.WOOD(lactTime, this.AParams.IntakeC[8], shapeParam)
                                      * this.LactAdjust;
-
+            }
             this.IntakeLimit = this.AParams.IntakeC[1] * this.StdRefWt * this.Size * (this.AParams.IntakeC[2] - this.Size)
                            * condFactor * youngFactor * heatFactor * lactFactor * this.FIntakeModifier;
         }
@@ -4091,15 +4101,15 @@ namespace Models.GrazPlan
             double dayRatio;                                                                // Today's value of Milk_MJProd:PotMilkMJ   
 
             condFactor = 1.0 - this.AParams.IntakeC[15] + this.AParams.IntakeC[15] * ConditionAtBirthing;
-            if (!this.AParams.bUseDairyCurve)                                                    // Potential milk production in MJ          
+            if (this.NoSuckling() > 0)                                                      // Potential milk production in MJ          
                 potMilkMJ = this.AParams.PeakLactC[this.NoSuckling()]
                              * Math.Pow(this.StdRefWt, 0.75) * this.Size
                              * condFactor * this.LactAdjust
                              * this.WOOD(this.DaysLactating + this.AParams.LactC[1], this.AParams.LactC[2], this.AParams.LactC[3]);
             else
-                potMilkMJ = this.AParams.LactC[5] * this.AParams.LactC[6] * this.AParams.PeakMilk
+                potMilkMJ = this.AParams.LactC[5] * this.AParams.LactC[6] * this.AParams.PeakMilk // peakmilk must have a value
                              * condFactor * this.LactAdjust
-                             * this.WOOD(this.DaysLactating + this.AParams.LactC[1], this.AParams.LactC[2], this.AParams.LactC[4]);
+                             * this.WOOD(this.DaysLactating + this.AParams.LactC[1], this.AParams.LactC[2], this.AParams.LactC[4]); 
 
             energySurplus = this.AnimalState.ME_Intake.Total - this.AnimalState.EnergyUse.Maint - this.AnimalState.EnergyUse.Preg;
             availMJ = AParams.LactC[5] * this.AnimalState.Efficiency.Lact * energySurplus;

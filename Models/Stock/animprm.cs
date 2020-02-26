@@ -88,18 +88,14 @@ namespace Models.GrazPlan
         private double FPotFleeceWt;
 
         private double FDairyIntakePeak;
-        private double FDairyIntakeTime;
-        private double FDairyIntakeShape;
-        private bool FUseDairyCurve;
-
+        
         private Ancestry[] FParentage = new Ancestry[0];
 
         private void setSRW(double fValue)
         {
             FBreedSRW = fValue;
             FPotFleeceWt = FleeceRatio * fValue;
-            if (bUseDairyCurve)
-                setPeakMilk(IntakeC[11] * fValue);
+            setPeakMilk(IntakeC[11] * fValue);
         }
         private void setPotGFW(double fValue)
         {
@@ -110,16 +106,15 @@ namespace Models.GrazPlan
         {
             double fRelPeakMilk;
 
-            if (Animal == GrazType.AnimalType.Cattle)
+            if (this.bDairyBreed)
             {
-                FUseDairyCurve = true;
                 PeakMilk = fValue;
                 fRelPeakMilk = PeakMilk / (IntakeC[11] * BreedSRW);
 
-                IntakeC[8] = FDairyIntakeTime;
-                IntakeC[9] = FDairyIntakeShape;
                 IntakeLactC[0] = FDairyIntakePeak * ((1.0 - IntakeC[10]) + IntakeC[10] * fRelPeakMilk);
             }
+            else
+                PeakMilk = fValue;
         }
 
         /// <summary>
@@ -301,9 +296,6 @@ namespace Models.GrazPlan
                 FBreedSRW = prmSet.FBreedSRW;
                 FPotFleeceWt = prmSet.FPotFleeceWt;
                 FDairyIntakePeak = prmSet.FDairyIntakePeak;
-                FDairyIntakeTime = prmSet.FDairyIntakeTime;
-                FDairyIntakeShape = prmSet.FDairyIntakeShape;
-                FUseDairyCurve = prmSet.FUseDairyCurve;
                 Array.Resize(ref FParentage, prmSet.FParentage.Length);
                 for (Idx = 0; Idx <= FParentage.Length - 1; Idx++)
                     FParentage[Idx] = prmSet.FParentage[Idx];
@@ -381,9 +373,8 @@ namespace Models.GrazPlan
             DefineParameters("c-mu", TYPEREAL);
             DefineParameters("c-srs-castr;male", TYPEREAL);
             DefineParameters("c-n-1:4", TYPEREAL);
-            DefineParameters("c-i-1:20", TYPEREAL);
-            DefineParameters("c-idy-1:3", TYPEREAL);
-            DefineParameters("c-imx-1:3", TYPEREAL);
+            DefineParameters("c-i-1:21", TYPEREAL);
+            DefineParameters("c-imx-0:3", TYPEREAL);
             DefineParameters("c-r-1:20", TYPEREAL);
             DefineParameters("c-k-1:16", TYPEREAL);
             DefineParameters("c-m-1:17", TYPEREAL);
@@ -445,20 +436,8 @@ namespace Models.GrazPlan
                         result = GrowthC[Idx];
                     else if (sTagList[1] == "i")
                         result = IntakeC[Idx];
-                    else if (sTagList[1] == "idy")
-                    {
-                        switch (Idx)
-                        {
-                            case 1: result = FDairyIntakePeak;
-                                break;
-                            case 2: result = FDairyIntakeTime;
-                                break;
-                            case 3: result = FDairyIntakeShape;
-                                break;
-                        }
-                    }
                     else if (sTagList[1] == "imx")
-                        result = IntakeLactC[Idx];
+                        result = IntakeLactC[Idx];  
                     else if (sTagList[1] == "r")
                         result = GrazeC[Idx];
                     else if (sTagList[1] == "k")
@@ -624,20 +603,12 @@ namespace Models.GrazPlan
                         GrowthC[Idx] = fValue;
                     else if (sTagList[1] == "i")
                         IntakeC[Idx] = fValue;
-                    else if (sTagList[1] == "idy")
-                    {
-                        switch (Idx)
-                        {
-                            case 1: FDairyIntakePeak = fValue;
-                                break;
-                            case 2: FDairyIntakeTime = fValue;
-                                break;
-                            case 3: FDairyIntakeShape = fValue;
-                                break;
-                        }
-                    }
                     else if (sTagList[1] == "imx")
+                    {
                         IntakeLactC[Idx] = fValue;
+                        if (Idx == 0)
+                          FDairyIntakePeak = fValue;
+                    }
                     else if (sTagList[1] == "r")
                         GrazeC[Idx] = fValue;
                     else if (sTagList[1] == "k")
@@ -682,30 +653,40 @@ namespace Models.GrazPlan
                     {
                         switch (Idx)
                         {
-                            case 1: MortRate[1] = fValue;
+                            case 1:
+                                MortRate[1] = fValue;
                                 break;
-                            case 2: MortIntensity = fValue;
+                            case 2:
+                                MortIntensity = fValue;
                                 break;
-                            case 3: MortCondConst = fValue;
+                            case 3:
+                                MortCondConst = fValue;
                                 break;
                             case 4:
-                            case 5: ToxaemiaSigs[Idx - 4] = fValue;
+                            case 5:
+                                ToxaemiaSigs[Idx - 4] = fValue;
                                 break;
                             case 6:
-                            case 7: DystokiaSigs[Idx - 6] = fValue;
+                            case 7:
+                                DystokiaSigs[Idx - 6] = fValue;
                                 break;
                             case 8:
                             case 9:
                             case 10:
-                            case 11: ExposureConsts[Idx - 8] = fValue;
+                            case 11:
+                                ExposureConsts[Idx - 8] = fValue;
                                 break;
-                            case 12: MortWtDiff = fValue;
+                            case 12:
+                                MortWtDiff = fValue;
                                 break;
-                            case 13: MortRate[2] = fValue;
+                            case 13:
+                                MortRate[2] = fValue;
                                 break;
-                            case 14: MortAge[1] = fValue;
+                            case 14:
+                                MortAge[1] = fValue;
                                 break;
-                            case 15: MortAge[2] = fValue;
+                            case 15:
+                                MortAge[2] = fValue;
                                 break;
                         }
                     }
@@ -831,7 +812,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// C(I)
         /// </summary>
-        public double[] IntakeC = new double[21];                                             
+        public double[] IntakeC = new double[22];                                             
         /// <summary>
         /// C(I,15)
         /// </summary>
@@ -1089,15 +1070,12 @@ namespace Models.GrazPlan
                 Animal = Breed0.Animal;
                 bDairyBreed = Breed0.bDairyBreed;
                 MaxYoung = Breed0.MaxYoung;
-                FUseDairyCurve = Breed0.FUseDairyCurve;
                 OvulationPeriod = Breed0.OvulationPeriod;
                 Puberty = Breed0.Puberty;
 
                 FBreedSRW = fPropn0 * Breed0.FBreedSRW + fPropn1 * Breed1.FBreedSRW;
                 FPotFleeceWt = fPropn0 * Breed0.FPotFleeceWt + fPropn1 * Breed1.FPotFleeceWt;
                 FDairyIntakePeak = fPropn0 * Breed0.FDairyIntakePeak + fPropn1 * Breed1.FDairyIntakePeak;
-                FDairyIntakeTime = fPropn0 * Breed0.FDairyIntakeTime + fPropn1 * Breed1.FDairyIntakeTime;
-                FDairyIntakeShape = fPropn0 * Breed0.FDairyIntakeShape + fPropn1 * Breed1.FDairyIntakeShape;
                 FleeceRatio = fPropn0 * Breed0.FleeceRatio + fPropn1 * Breed1.FleeceRatio;
                 MaxFleeceDiam = fPropn0 * Breed0.MaxFleeceDiam + fPropn1 * Breed1.MaxFleeceDiam;
                 PeakMilk = fPropn0 * Breed0.PeakMilk + fPropn1 * Breed1.PeakMilk;
@@ -1256,7 +1234,6 @@ namespace Models.GrazPlan
                 MaxYoung++;
 
             FPotFleeceWt = FBreedSRW * FleeceRatio;
-            FUseDairyCurve = false;
             if (Animal == GrazType.AnimalType.Cattle)
                 PeakMilk = IntakeC[11] * BreedSRW;
 
@@ -1558,10 +1535,10 @@ namespace Models.GrazPlan
         /// <summary>
         /// Flag that is set when PotMilkYield is assigned
         /// </summary>
-        public bool bUseDairyCurve
+        /*public bool bUseDairyCurve
         {
             get { return FUseDairyCurve; }                                  // Flag that is set when PotMilkYield is assigned
-        }
+        }*/
 
         private const double SIGVAL = 5.88878;                              // 2*ln(0.95/0.05)                         
         private const double DAYSPERYR = 365.25;
