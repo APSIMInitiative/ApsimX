@@ -2,7 +2,7 @@
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
   "Version": 79,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-02-25",
+  "ApsimVersion": "Version 0.0.0.0, built 2020-02-27",
   "Name": "Simulations",
   "Children": [
     {
@@ -77931,11 +77931,11 @@
                       "FractionOfBiomassToUrine": [
                         0.3
                       ],
-                      "DepthUrineIsAdded": 10.0,
+                      "DepthUrineIsAdded": 250.0,
                       "FractionOfBiomassToDung": [
-                        0.3
+                        0.6
                       ],
-                      "CNRatioDung": 10.0,
+                      "CNRatioDung": 0.0,
                       "DaysSinceGraze": 0,
                       "GrazingInterval": 0,
                       "GrazedDM": 0.0,
