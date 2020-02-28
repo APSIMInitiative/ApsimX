@@ -1,7 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 278,
-  "Version": 69,
+  "Version": 79,
+  "ApsimVersion": "Version 2020.2.26.4761, built 2020-02-26",
   "Name": "Simulations",
   "Children": [
     {
@@ -74,7 +75,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 14.0,
+                          "FixedValue": 15.0,
                           "Units": "days",
                           "Name": "BaseTarget",
                           "Children": [],
@@ -84,7 +85,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "Phenology.AccChillMar1st.Value()",
+                          "VariableName": "Phenology.AccChillMar1st",
                           "Name": "AccChillMar1st",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -104,6 +105,7 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
+                            2.0,
                             4.0,
                             8.0,
                             20.0
@@ -111,6 +113,7 @@
                           "Y": [
                             1.0,
                             1.0,
+                            0.91,
                             0.0,
                             0.0
                           ],
@@ -166,8 +169,8 @@
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Grapevine.Phenology.EndoDormancy.ThermalTime.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Grapevine.Phenology.EndoDormancy.ThermalTime.XYPairs.Y",
-                                  "X2FieldName": null,
-                                  "Y2FieldName": null,
+                                  "X2FieldName": "",
+                                  "Y2FieldName": "",
                                   "ShowInLegend": false,
                                   "IncludeSeriesNameInLegend": false,
                                   "Cumulative": false,
@@ -224,99 +227,10 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 45.0,
+                          "FixedValue": 63.0,
                           "Units": null,
                           "Name": "Base",
                           "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.ExponentialFunction, Models",
-                          "A": 0.4,
-                          "B": 0.936,
-                          "C": -0.3,
-                          "Name": "ChillingTadjustment",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Budding].AccChill.Value()",
-                              "Name": "AccChill",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.AddFunction, Models",
-                      "Name": "AccChill",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.AccumulateFunction, Models",
-                          "StartStageName": "Endodormancy",
-                          "EndStageName": "BudBurst",
-                          "ResetStageName": "Veraison",
-                          "FractionRemovedOnCut": 0.0,
-                          "FractionRemovedOnHarvest": 0.0,
-                          "FractionRemovedOnGraze": 0.0,
-                          "FractionRemovedOnPrune": 0.0,
-                          "Name": "AccChillMay1st",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].EndoDormancy.Progression.Value()",
-                              "Name": "ThermalTime",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "Phenology.AccChillMar1st.Value()",
-                          "Name": "AccChillMar1st",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.AccumulateByNumericPhase, Models",
-                          "StartStageName": 2.5877,
-                          "EndStageName": 3.0,
-                          "ResetStageName": "5",
-                          "FractionRemovedOnCut": 0.0,
-                          "FractionRemovedOnHarvest": 0.0,
-                          "FractionRemovedOnGraze": 0.0,
-                          "FractionRemovedOnPrune": 0.0,
-                          "Name": "AccumulateByNumericPhase",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].EndoDormancy.Progression.Value()",
-                              "Name": "ThermalTime",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -349,7 +263,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime.Value()",
+                      "VariableName": "[Phenology].ThermalTime",
                       "Name": "Progression",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -379,7 +293,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime.Value()",
+                      "VariableName": "[Phenology].ThermalTime",
                       "Name": "Progression",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -413,7 +327,6 @@
                         },
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Grapevine].Leaf.LAI",
                           "Name": "LAIAdjustment",
                           "Children": [
                             {
@@ -439,6 +352,15 @@
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Grapevine].Leaf.LAI",
+                              "Name": "XValue",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
                           "IncludeInDocumentation": true,
@@ -452,7 +374,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime.Value()",
+                      "VariableName": "[Phenology].ThermalTime",
                       "Name": "Progression",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -472,7 +394,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime.Value()",
+                      "VariableName": "[Phenology].ThermalTime",
                       "Name": "ThermalTime",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -531,7 +453,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Grapevine].DOYFromJuly1st.Value()",
+                      "VariableName": "[Grapevine].DOYFromJuly1st",
                       "Name": "PostEventValue1",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -570,7 +492,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].DoyJuly1st.Value()",
+                      "VariableName": "[Phenology].DoyJuly1st",
                       "Name": "PostEventValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -700,7 +622,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].EndoDormancy.Progression.Value()",
+                      "VariableName": "[Phenology].EndoDormancy.Progression",
                       "Name": "ThermalTime",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -798,7 +720,6 @@
                         },
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Leaf].AppearedCohortNo",
                           "Name": "LinearInterpolationFunction",
                           "Children": [
                             {
@@ -816,6 +737,15 @@
                                 1.0
                               ],
                               "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].AppearedCohortNo",
+                              "Name": "XValue",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -852,7 +782,6 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Structure].LeafTipsAppeared",
                       "Name": "Potential_Branching_Rate",
                       "Children": [
                         {
@@ -878,6 +807,15 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Structure].LeafTipsAppeared",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -886,7 +824,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Leaf].CoverGreen",
                       "Name": "LinearInterpolationFunction",
                       "Children": [
                         {
@@ -906,6 +843,15 @@
                             0.0
                           ],
                           "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].CoverGreen",
+                          "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -958,7 +904,6 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Grapevine].Phenology.AccumulatedEmergedTT",
                       "Name": "LinearInterpolationFunction",
                       "Children": [
                         {
@@ -1023,8 +968,8 @@
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Grapevine.Structure.HeightModel.LinearInterpolationFunction.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Grapevine.Structure.HeightModel.LinearInterpolationFunction.XYPairs.Y",
-                                  "X2FieldName": null,
-                                  "Y2FieldName": null,
+                                  "X2FieldName": "",
+                                  "Y2FieldName": "",
                                   "ShowInLegend": false,
                                   "IncludeSeriesNameInLegend": false,
                                   "Cumulative": false,
@@ -1091,8 +1036,8 @@
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Grapevine.Structure.HeightModel.LinearInterpolationFunction.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Grapevine.Structure.HeightModel.LinearInterpolationFunction.XYPairs.Y",
-                                  "X2FieldName": null,
-                                  "Y2FieldName": null,
+                                  "X2FieldName": "",
+                                  "Y2FieldName": "",
                                   "ShowInLegend": false,
                                   "IncludeSeriesNameInLegend": false,
                                   "Cumulative": false,
@@ -1110,6 +1055,15 @@
                               "ReadOnly": false
                             }
                           ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Grapevine].Phenology.AccumulatedEmergedTT",
+                          "Name": "XValue",
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -1183,7 +1137,6 @@
                         },
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Grapevine].Cordon.CordonDiameter.Value()",
                           "Name": "CordonDiameterEffect",
                           "Children": [
                             {
@@ -1199,6 +1152,15 @@
                                 1.0
                               ],
                               "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Grapevine].Cordon.CordonDiameter",
+                              "Name": "XValue",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -1255,7 +1217,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Structure].ThermalTime.Value()",
+                  "VariableName": "[Structure].ThermalTime",
                   "Name": "ThermalTime",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1371,7 +1333,6 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Structure].RelativeNodeApperance",
                       "Name": "MaxArea",
                       "Children": [
                         {
@@ -1391,6 +1352,15 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Structure].RelativeNodeApperance",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -1399,7 +1369,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Structure].RelativeNodeApperance",
                       "Name": "GrowthDuration",
                       "Children": [
                         {
@@ -1468,8 +1437,8 @@
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Grapevine.Leaf.CohortParameters.GrowthDuration.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Grapevine.Leaf.CohortParameters.GrowthDuration.XYPairs.Y",
-                                  "X2FieldName": null,
-                                  "Y2FieldName": null,
+                                  "X2FieldName": "",
+                                  "Y2FieldName": "",
                                   "ShowInLegend": false,
                                   "IncludeSeriesNameInLegend": false,
                                   "Cumulative": false,
@@ -1536,8 +1505,8 @@
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Grapevine.Leaf.CohortParameters.GrowthDuration.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Grapevine.Leaf.CohortParameters.GrowthDuration.XYPairs.Y",
-                                  "X2FieldName": null,
-                                  "Y2FieldName": null,
+                                  "X2FieldName": "",
+                                  "Y2FieldName": "",
                                   "ShowInLegend": false,
                                   "IncludeSeriesNameInLegend": false,
                                   "Cumulative": false,
@@ -1558,6 +1527,15 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Structure].RelativeNodeApperance",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -1566,7 +1544,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Structure].RelativeNodeApperance",
                       "Name": "LagDuration",
                       "Children": [
                         {
@@ -1592,6 +1569,15 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Structure].RelativeNodeApperance",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -1600,7 +1586,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Structure].RelativeNodeApperance",
                       "Name": "SenescenceDuration",
                       "Children": [
                         {
@@ -1616,6 +1601,15 @@
                             1200.0
                           ],
                           "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Structure].RelativeNodeApperance",
+                          "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -1648,7 +1642,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Structure].RelativeNodeApperance",
                       "Name": "SpecificLeafAreaMax",
                       "Children": [
                         {
@@ -1662,6 +1655,15 @@
                             25000.0
                           ],
                           "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Structure].RelativeNodeApperance",
+                          "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -1744,7 +1746,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Grapevine].Leaf.Fw",
                       "Name": "ExpansionStress",
                       "Children": [
                         {
@@ -1809,8 +1810,8 @@
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Grapevine.Leaf.CohortParameters.ExpansionStress.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Grapevine.Leaf.CohortParameters.ExpansionStress.XYPairs.Y",
-                                  "X2FieldName": null,
-                                  "Y2FieldName": null,
+                                  "X2FieldName": "",
+                                  "Y2FieldName": "",
                                   "ShowInLegend": false,
                                   "IncludeSeriesNameInLegend": false,
                                   "Cumulative": false,
@@ -1828,6 +1829,15 @@
                               "ReadOnly": false
                             }
                           ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Grapevine].Leaf.Fw",
+                          "Name": "XValue",
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -1859,7 +1869,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Leaf].CohortCurrentRankCoverAbove",
                       "Name": "ShadeInducedSenescenceRate",
                       "Children": [
                         {
@@ -1877,6 +1886,15 @@
                             0.0
                           ],
                           "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].CohortCurrentRankCoverAbove",
+                          "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -2109,7 +2127,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Leaf].Fn",
                       "Name": "FN",
                       "Children": [
                         {
@@ -2125,6 +2142,15 @@
                             1.0
                           ],
                           "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Fn",
+                          "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -2167,7 +2193,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Leaf].Fw",
                       "Name": "FW",
                       "Children": [
                         {
@@ -2187,6 +2212,15 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Fw",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -2195,7 +2229,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Leaf].Photosynthesis.VPD",
                       "Name": "FVPD",
                       "Children": [
                         {
@@ -2211,6 +2244,15 @@
                             1.0
                           ],
                           "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Photosynthesis.VPD",
+                          "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -2241,7 +2283,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Photosynthesis.FT.Value()",
+                      "VariableName": "[Leaf].Photosynthesis.FT",
                       "Name": "RUE_FT",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -2254,7 +2296,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].Photosynthesis.FN.Value()",
+                          "VariableName": "[Leaf].Photosynthesis.FN",
                           "Name": "RUE_FN",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2263,7 +2305,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].Photosynthesis.FVPD.Value()",
+                          "VariableName": "[Leaf].Photosynthesis.FVPD",
                           "Name": "RUE_FVPD",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2377,7 +2419,6 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Weather].MinT",
                       "Name": "LinearInterpolationFunction",
                       "Children": [
                         {
@@ -2391,6 +2432,15 @@
                             0.0
                           ],
                           "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Weather].MinT",
+                          "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -2469,6 +2519,7 @@
               "DMDemand": null,
               "NDemand": null,
               "potentialDMAllocation": null,
+              "IsAboveGround": true,
               "Name": "Shoot",
               "Children": [
                 {
@@ -2513,7 +2564,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Phenology].Stage",
                   "Name": "MaximumNConc",
                   "Children": [
                     {
@@ -2529,6 +2579,15 @@
                         0.025
                       ],
                       "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].Stage",
+                      "Name": "XValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -2668,7 +2727,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Shoot].MinimumNConc.Value()",
+                  "VariableName": "[Shoot].MinimumNConc",
                   "Name": "CriticalNConc",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -2767,7 +2826,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Shoot].DMDemands.Structural.StructuralFraction.Value()",
+                              "VariableName": "[Shoot].DMDemands.Structural.StructuralFraction",
                               "Name": "StructuralFraction",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -2799,7 +2858,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Shoot].minimumNconc.Value()",
+                          "VariableName": "[Shoot].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2830,7 +2889,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Shoot].criticalNConc.Value()",
+                              "VariableName": "[Shoot].criticalNConc",
                               "Name": "CritNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -2839,7 +2898,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Shoot].minimumNconc.Value()",
+                              "VariableName": "[Shoot].minimumNconc",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -2871,7 +2930,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Shoot].nitrogenDemandSwitch.Value()",
+                          "VariableName": "[Shoot].nitrogenDemandSwitch",
                           "Name": "NitrogenDemandSwitch",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2880,7 +2939,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Shoot].maximumNconc.Value()",
+                          "VariableName": "[Shoot].maximumNconc",
                           "Name": "MaxNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2918,6 +2977,7 @@
               "DMDemand": null,
               "NDemand": null,
               "potentialDMAllocation": null,
+              "IsAboveGround": true,
               "Name": "Cordon",
               "Children": [
                 {
@@ -2972,7 +3032,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Phenology].Stage",
                   "Name": "MaximumNConc",
                   "Children": [
                     {
@@ -2988,6 +3047,15 @@
                         0.025
                       ],
                       "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].Stage",
+                      "Name": "XValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -3117,7 +3185,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Cordon].MinimumNConc.Value()",
+                  "VariableName": "[Cordon].MinimumNConc",
                   "Name": "CriticalNConc",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -3226,7 +3294,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Cordon].DMDemands.Structural.StructuralFraction.Value()",
+                              "VariableName": "[Cordon].DMDemands.Structural.StructuralFraction",
                               "Name": "StructuralFraction",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -3258,7 +3326,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Cordon].minimumNconc.Value()",
+                          "VariableName": "[Cordon].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3289,7 +3357,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Cordon].criticalNConc.Value()",
+                              "VariableName": "[Cordon].criticalNConc",
                               "Name": "CritNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -3298,7 +3366,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Cordon].minimumNconc.Value()",
+                              "VariableName": "[Cordon].minimumNconc",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -3330,7 +3398,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Cordon].nitrogenDemandSwitch.Value()",
+                          "VariableName": "[Cordon].nitrogenDemandSwitch",
                           "Name": "NitrogenDemandSwitch",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3339,7 +3407,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Cordon].maximumNconc.Value()",
+                          "VariableName": "[Cordon].maximumNconc",
                           "Name": "MaxNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3377,6 +3445,7 @@
               "DMDemand": null,
               "NDemand": null,
               "potentialDMAllocation": null,
+              "IsAboveGround": true,
               "Name": "Trunk",
               "Children": [
                 {
@@ -3421,7 +3490,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Phenology].Stage",
                   "Name": "MaximumNConc",
                   "Children": [
                     {
@@ -3437,6 +3505,15 @@
                         0.025
                       ],
                       "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].Stage",
+                      "Name": "XValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -3576,7 +3653,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Trunk].MinimumNConc.Value()",
+                  "VariableName": "[Trunk].MinimumNConc",
                   "Name": "CriticalNConc",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -3675,7 +3752,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Trunk].DMDemands.Structural.StructuralFraction.Value()",
+                              "VariableName": "[Trunk].DMDemands.Structural.StructuralFraction",
                               "Name": "StructuralFraction",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -3707,7 +3784,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Trunk].minimumNconc.Value()",
+                          "VariableName": "[Trunk].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3738,7 +3815,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Trunk].criticalNConc.Value()",
+                              "VariableName": "[Trunk].criticalNConc",
                               "Name": "CritNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -3747,7 +3824,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Trunk].minimumNconc.Value()",
+                              "VariableName": "[Trunk].minimumNconc",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -3779,7 +3856,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Trunk].nitrogenDemandSwitch.Value()",
+                          "VariableName": "[Trunk].nitrogenDemandSwitch",
                           "Name": "NitrogenDemandSwitch",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3788,7 +3865,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Trunk].maximumNconc.Value()",
+                          "VariableName": "[Trunk].maximumNconc",
                           "Name": "MaxNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3938,8 +4015,8 @@
                                       "TableName": null,
                                       "XFieldName": ".Simulations.Replacements.Grapevine.Berry.MeanTempInitiation.Temperature.AirTemperatureFunction.XYPairs.X",
                                       "YFieldName": ".Simulations.Replacements.Grapevine.Berry.MeanTempInitiation.Temperature.AirTemperatureFunction.XYPairs.Y",
-                                      "X2FieldName": null,
-                                      "Y2FieldName": null,
+                                      "X2FieldName": "",
+                                      "Y2FieldName": "",
                                       "ShowInLegend": false,
                                       "IncludeSeriesNameInLegend": false,
                                       "Cumulative": false,
@@ -4171,7 +4248,6 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Arbitrator].FDM",
                           "Name": "CHOSupplyDemand",
                           "Children": [
                             {
@@ -4187,6 +4263,15 @@
                                 1.0
                               ],
                               "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Arbitrator].FDM",
+                              "Name": "XValue",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -4250,7 +4335,6 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Arbitrator].FDM",
                           "Name": "CHOSupplyDemand",
                           "Children": [
                             {
@@ -4266,6 +4350,15 @@
                                 1.0
                               ],
                               "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Arbitrator].FDM",
+                              "Name": "XValue",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -4329,7 +4422,6 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Arbitrator].FDM",
                           "Name": "CHOSupplyDemand",
                           "Children": [
                             {
@@ -4345,6 +4437,15 @@
                                 1.0
                               ],
                               "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Arbitrator].FDM",
+                              "Name": "XValue",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -4409,7 +4510,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Berry].MeanTempInitiation.Value()",
+                      "VariableName": "[Berry].MeanTempInitiation",
                       "Name": "PostEventValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -4492,7 +4593,6 @@
                         },
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Berry].MeanTempInitiationY0.Value()",
                           "Name": "TempInitiation",
                           "Children": [
                             {
@@ -4520,6 +4620,15 @@
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Berry].MeanTempInitiationY0",
+                              "Name": "XValue",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
                           "IncludeInDocumentation": true,
@@ -4528,7 +4637,6 @@
                         },
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Berry].MeanCHOInitiationY0.Value()",
                           "Name": "CHOInitiation",
                           "Children": [
                             {
@@ -4595,8 +4703,8 @@
                                       "TableName": null,
                                       "XFieldName": ".Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.CHOInitiation.XYPairs.X",
                                       "YFieldName": ".Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.CHOInitiation.XYPairs.Y",
-                                      "X2FieldName": null,
-                                      "Y2FieldName": null,
+                                      "X2FieldName": "",
+                                      "Y2FieldName": "",
                                       "ShowInLegend": false,
                                       "IncludeSeriesNameInLegend": false,
                                       "Cumulative": false,
@@ -4617,6 +4725,15 @@
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Berry].MeanCHOInitiationY0",
+                              "Name": "XValue",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
                           "IncludeInDocumentation": true,
@@ -4625,7 +4742,6 @@
                         },
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Structure].PrimaryBudNo",
                           "Name": "RetainedBudNum",
                           "Children": [
                             {
@@ -4694,8 +4810,8 @@
                                       "TableName": null,
                                       "XFieldName": ".Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.CHOBudBurst.XYPairs.X",
                                       "YFieldName": ".Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.CHOBudBurst.XYPairs.Y",
-                                      "X2FieldName": null,
-                                      "Y2FieldName": null,
+                                      "X2FieldName": "",
+                                      "Y2FieldName": "",
                                       "ShowInLegend": false,
                                       "IncludeSeriesNameInLegend": false,
                                       "Cumulative": false,
@@ -4762,8 +4878,8 @@
                                       "TableName": null,
                                       "XFieldName": ".Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.RetainedBudNum.XYPairs.X",
                                       "YFieldName": ".Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.RetainedBudNum.XYPairs.Y",
-                                      "X2FieldName": null,
-                                      "Y2FieldName": null,
+                                      "X2FieldName": "",
+                                      "Y2FieldName": "",
                                       "ShowInLegend": false,
                                       "IncludeSeriesNameInLegend": false,
                                       "Cumulative": false,
@@ -4830,8 +4946,8 @@
                                       "TableName": null,
                                       "XFieldName": ".Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.RetainedBudNum.XYPairs.X",
                                       "YFieldName": ".Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.RetainedBudNum.XYPairs.Y",
-                                      "X2FieldName": null,
-                                      "Y2FieldName": null,
+                                      "X2FieldName": "",
+                                      "Y2FieldName": "",
                                       "ShowInLegend": false,
                                       "IncludeSeriesNameInLegend": false,
                                       "Cumulative": false,
@@ -4852,6 +4968,15 @@
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Structure].PrimaryBudNo",
+                              "Name": "XValue",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
                           "IncludeInDocumentation": true,
@@ -4860,7 +4985,6 @@
                         },
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Cordon].CordonDiameter.Value()",
                           "Name": "CordonDiameter",
                           "Children": [
                             {
@@ -4925,8 +5049,8 @@
                                       "TableName": null,
                                       "XFieldName": ".Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.CordonDiameter.XYPairs.X",
                                       "YFieldName": ".Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.CordonDiameter.XYPairs.Y",
-                                      "X2FieldName": null,
-                                      "Y2FieldName": null,
+                                      "X2FieldName": "",
+                                      "Y2FieldName": "",
                                       "ShowInLegend": false,
                                       "IncludeSeriesNameInLegend": false,
                                       "Cumulative": false,
@@ -4993,8 +5117,8 @@
                                       "TableName": null,
                                       "XFieldName": ".Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.CordonDiameter.XYPairs.X",
                                       "YFieldName": ".Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.CordonDiameter.XYPairs.Y",
-                                      "X2FieldName": null,
-                                      "Y2FieldName": null,
+                                      "X2FieldName": "",
+                                      "Y2FieldName": "",
                                       "ShowInLegend": false,
                                       "IncludeSeriesNameInLegend": false,
                                       "Cumulative": false,
@@ -5061,8 +5185,8 @@
                                       "TableName": null,
                                       "XFieldName": ".Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.CordonDiameter.XYPairs.X",
                                       "YFieldName": ".Simulations.Replacements.Grapevine.Berry.BunchesPerShoot.PostEventValue.CordonDiameter.XYPairs.Y",
-                                      "X2FieldName": null,
-                                      "Y2FieldName": null,
+                                      "X2FieldName": "",
+                                      "Y2FieldName": "",
                                       "ShowInLegend": false,
                                       "IncludeSeriesNameInLegend": false,
                                       "Cumulative": false,
@@ -5080,6 +5204,15 @@
                                   "ReadOnly": false
                                 }
                               ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Cordon].CordonDiameter",
+                              "Name": "XValue",
+                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -5124,7 +5257,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Berry].MeanTempInitiationY0.Value()",
                       "Name": "TempInitiation",
                       "Children": [
                         {
@@ -5152,6 +5284,15 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Berry].MeanTempInitiationY0",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -5160,7 +5301,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Berry].MeanTempBudBurst.Value()",
                       "Name": "TempBudBurst",
                       "Children": [
                         {
@@ -5186,6 +5326,15 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Berry].MeanTempBudBurst",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -5194,7 +5343,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Berry].MeanCHOInitiationY0.Value()",
                       "Name": "CHOInitiation",
                       "Children": [
                         {
@@ -5259,8 +5407,8 @@
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Grapevine.Berry.FlowersPerBunch.CHOInitiation.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Grapevine.Berry.FlowersPerBunch.CHOInitiation.XYPairs.Y",
-                                  "X2FieldName": null,
-                                  "Y2FieldName": null,
+                                  "X2FieldName": "",
+                                  "Y2FieldName": "",
                                   "ShowInLegend": false,
                                   "IncludeSeriesNameInLegend": false,
                                   "Cumulative": false,
@@ -5281,6 +5429,15 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Berry].MeanCHOInitiationY0",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -5289,7 +5446,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Berry].MeanCHOBudBurst.Value()",
                       "Name": "CHOBudBurst",
                       "Children": [
                         {
@@ -5354,8 +5510,8 @@
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Grapevine.Berry.FlowersPerBunch.CHOBudBurst.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Grapevine.Berry.FlowersPerBunch.CHOBudBurst.XYPairs.Y",
-                                  "X2FieldName": null,
-                                  "Y2FieldName": null,
+                                  "X2FieldName": "",
+                                  "Y2FieldName": "",
                                   "ShowInLegend": false,
                                   "IncludeSeriesNameInLegend": false,
                                   "Cumulative": false,
@@ -5373,6 +5529,15 @@
                               "ReadOnly": false
                             }
                           ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Berry].MeanCHOBudBurst",
+                          "Name": "XValue",
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -5402,7 +5567,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Berry].FlowersPerBunch.Value()",
+                      "VariableName": "[Berry].FlowersPerBunch",
                       "Name": "FlowersPerBunch",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -5411,7 +5576,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Berry].MeanTempFlowering.Value()",
                       "Name": "TempFlowering",
                       "Children": [
                         {
@@ -5484,8 +5648,8 @@
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Grapevine.Berry.BerriesPerBunch.TempFlowering.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Grapevine.Berry.BerriesPerBunch.TempFlowering.XYPairs.Y",
-                                  "X2FieldName": null,
-                                  "Y2FieldName": null,
+                                  "X2FieldName": "",
+                                  "Y2FieldName": "",
                                   "ShowInLegend": false,
                                   "IncludeSeriesNameInLegend": false,
                                   "Cumulative": false,
@@ -5552,8 +5716,8 @@
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Grapevine.Berry.BerriesPerBunch.TempFlowering.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Grapevine.Berry.BerriesPerBunch.TempFlowering.XYPairs.Y",
-                                  "X2FieldName": null,
-                                  "Y2FieldName": null,
+                                  "X2FieldName": "",
+                                  "Y2FieldName": "",
                                   "ShowInLegend": false,
                                   "IncludeSeriesNameInLegend": false,
                                   "Cumulative": false,
@@ -5574,6 +5738,15 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Berry].MeanTempFlowering",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -5582,7 +5755,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Berry].MeanCHOFlowering.Value()",
                       "Name": "CHOFlowering",
                       "Children": [
                         {
@@ -5647,8 +5819,8 @@
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Grapevine.Berry.BerriesPerBunch.CHOFlowering.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Grapevine.Berry.BerriesPerBunch.CHOFlowering.XYPairs.Y",
-                                  "X2FieldName": null,
-                                  "Y2FieldName": null,
+                                  "X2FieldName": "",
+                                  "Y2FieldName": "",
                                   "ShowInLegend": false,
                                   "IncludeSeriesNameInLegend": false,
                                   "Cumulative": false,
@@ -5669,6 +5841,15 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Berry].MeanCHOFlowering",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -5677,7 +5858,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Berry].FlowersPerBunch.Value()",
                       "Name": "FlowerNum",
                       "Children": [
                         {
@@ -5744,8 +5924,8 @@
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Grapevine.Berry.BerriesPerBunch.FlowerNum.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Grapevine.Berry.BerriesPerBunch.FlowerNum.XYPairs.Y",
-                                  "X2FieldName": null,
-                                  "Y2FieldName": null,
+                                  "X2FieldName": "",
+                                  "Y2FieldName": "",
                                   "ShowInLegend": false,
                                   "IncludeSeriesNameInLegend": false,
                                   "Cumulative": false,
@@ -5763,6 +5943,15 @@
                               "ReadOnly": false
                             }
                           ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Berry].FlowersPerBunch",
+                          "Name": "XValue",
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -5792,7 +5981,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Berry].BunchesPerShoot.Value()",
+                      "VariableName": "[Berry].BunchesPerShoot",
                       "Name": "BunchesPerShoot",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -5801,7 +5990,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Berry].BerriesPerBunch.Value()",
+                      "VariableName": "[Berry].BerriesPerBunch",
                       "Name": "BerriesPerBunch",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -5828,7 +6017,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Berry].MeanTempFlowering.Value()",
                       "Name": "TempFlowering",
                       "Children": [
                         {
@@ -5856,6 +6044,15 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Berry].MeanTempFlowering",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -5864,7 +6061,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Grapevine].Leaf.Fw",
                       "Name": "WaterFlowering",
                       "Children": [
                         {
@@ -5878,6 +6074,15 @@
                             1.0
                           ],
                           "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Grapevine].Leaf.Fw",
+                          "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -5911,7 +6116,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Structure].ThermalTime.Value()",
+                          "VariableName": "[Structure].ThermalTime",
                           "Name": "TT",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5925,7 +6130,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Berry].NumberFunction.Value()",
+                      "VariableName": "[Berry].NumberFunction",
                       "Name": "BerryNumber",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -5934,7 +6139,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Berry].PotentialBerrySizeAdj.Value()",
+                      "VariableName": "[Berry].PotentialBerrySizeAdj",
                       "Name": "potentialBerrySizeAdj",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -5964,7 +6169,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Structure].ThermalTime.Value()",
+                          "VariableName": "[Structure].ThermalTime",
                           "Name": "TT",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5978,7 +6183,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Berry].NumberFunction.Value()",
+                      "VariableName": "[Berry].NumberFunction",
                       "Name": "BerryNumber",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -5987,7 +6192,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Berry].PotentialBerrySizeAdj.Value()",
+                      "VariableName": "[Berry].PotentialBerrySizeAdj",
                       "Name": "potentialBerrySizeAdj",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -6012,7 +6217,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime.Value()",
+                      "VariableName": "[Phenology].ThermalTime",
                       "Name": "ThermalTime",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -6037,7 +6242,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime.Value()",
+                      "VariableName": "[Phenology].ThermalTime",
                       "Name": "ThermalTime",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -6058,7 +6263,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Berry].DaysAfterVeraison.Value()",
+                      "VariableName": "[Berry].DaysAfterVeraison",
                       "Name": "ThermalTime",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -6072,7 +6277,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Berry].ThermalTimeAfterVeraison.Value()",
                   "Name": "ReadyForHarvest",
                   "Children": [
                     {
@@ -6088,6 +6292,15 @@
                         1.0
                       ],
                       "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Berry].ThermalTimeAfterVeraison",
+                      "Name": "XValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -6239,7 +6452,6 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Berry].ThermalTimeAfterVeraison.Value()",
                           "Name": "LinearInterpolationFunction",
                           "Children": [
                             {
@@ -6261,6 +6473,15 @@
                                 0.15
                               ],
                               "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Berry].ThermalTimeAfterVeraison",
+                              "Name": "XValue",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -6325,9 +6546,7 @@
               "potentialDMAllocation": null,
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
-              "RootLengthDensityModifierDueToDamage": 1.0,
               "RootAngle": 45.0,
-              "SWAvailabilityRatio": 0.0,
               "Name": "Root",
               "Children": [
                 {
@@ -6372,7 +6591,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Leaf].LAI",
                   "Name": "KLModifier",
                   "Children": [
                     {
@@ -6437,8 +6655,8 @@
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Grapevine.Root.KLModifier.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Grapevine.Root.KLModifier.XYPairs.Y",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -6459,6 +6677,15 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].LAI",
+                      "Name": "XValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -6467,7 +6694,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Leaf].FractionDied",
                   "Name": "SenescenceRate",
                   "Children": [
                     {
@@ -6532,8 +6758,8 @@
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Grapevine.Root.SenescenceRate.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Grapevine.Root.SenescenceRate.XYPairs.Y",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -6551,6 +6777,15 @@
                           "ReadOnly": false
                         }
                       ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].FractionDied",
+                      "Name": "XValue",
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -6619,7 +6854,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Root].RWC",
                   "Name": "NUptakeSWFactor",
                   "Children": [
                     {
@@ -6633,6 +6867,15 @@
                         1.0
                       ],
                       "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Root].RWC",
+                      "Name": "XValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -6825,7 +7068,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].DMDemands.Structural.StructuralFraction.Value()",
+                              "VariableName": "[Root].DMDemands.Structural.StructuralFraction",
                               "Name": "StructuralFraction",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -6857,7 +7100,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].minimumNconc.Value()",
+                          "VariableName": "[Root].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -6888,7 +7131,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].criticalNConc.Value()",
+                              "VariableName": "[Root].criticalNConc",
                               "Name": "CritNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -6897,7 +7140,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].minimumNconc.Value()",
+                              "VariableName": "[Root].minimumNconc",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -6929,7 +7172,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].nitrogenDemandSwitch.Value()",
+                          "VariableName": "[Root].nitrogenDemandSwitch",
                           "Name": "NitrogenDemandSwitch",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -6938,7 +7181,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].maximumNconc.Value()",
+                          "VariableName": "[Root].maximumNconc",
                           "Name": "MaxNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -7054,17 +7297,17 @@
             "[Clock].Today",
             "[Clock].Today.Year",
             "[Clock].Today.DayOfYear",
-            "[Grapevine].Phenology.CurrentSeason.Value() as CurrentSeason",
+            "[Grapevine].Phenology.CurrentSeason as CurrentSeason",
             "[Grapevine].Phenology.Stage",
             "[Grapevine].Phenology.AccumulatedEmergedTT",
-            "[Grapevine].Phenology.BudBurstDOY.Value() as BudBurstDOY",
-            "[Grapevine].Phenology.FloweringDOY.Value() as FloweringDOY",
-            "[Grapevine].Phenology.DoyJuly1st.Value() as DoyJuly1st",
-            "[Grapevine].Phenology.VeraisonDOY.Value() as VeraisonDOY",
+            "[Grapevine].Phenology.BudBurstDOY as BudBurstDOY",
+            "[Grapevine].Phenology.FloweringDOY as FloweringDOY",
+            "[Grapevine].Phenology.DoyJuly1st as DoyJuly1st",
+            "[Grapevine].Phenology.VeraisonDOY as VeraisonDOY",
             "[Grapevine].Phenology.CurrentStageName as CurrentStageName",
-            "[Grapevine].Phenology.Budding.AccChill.Value() ",
-            "[Grapevine].Phenology.AccChillMar1st.Value()",
-            "[Grapevine].Phenology.Budding.FractionOfBudBurst.Value()",
+            "[Grapevine].Phenology.Budding.AccChill ",
+            "[Grapevine].Phenology.AccChillMar1st",
+            "[Grapevine].Phenology.Budding.FractionOfBudBurst",
             "[Grapevine].Structure.PrimaryBudNo",
             "[Grapevine].Structure.MainStemPopn",
             "[Grapevine].Structure.LeafTipsAppeared",
@@ -7087,14 +7330,14 @@
             "[Grapevine].Arbitrator.DM.TotalFixationSupply",
             "",
             "[Berry].Live.Wt",
-            "[Berry].BerryFreshWeight.Value()",
-            "[Berry].MeanTempInitiationY0.Value()",
-            "[Berry].MeanTempFlowering.Value()",
-            "[Berry].BunchesPerShoot.Value()",
-            "[Berry].FlowersPerBunch.Value()",
-            "[Berry].BerriesPerBunch.Value()",
-            "[Berry].NumberFunction.Value()",
-            "[Berry].NumberFunction.Shoots.Value()"
+            "[Berry].BerryFreshWeight",
+            "[Berry].MeanTempInitiationY0",
+            "[Berry].MeanTempFlowering",
+            "[Berry].BunchesPerShoot",
+            "[Berry].FlowersPerBunch",
+            "[Berry].BerriesPerBunch",
+            "[Berry].NumberFunction",
+            "[Berry].NumberFunction.Shoots"
           ],
           "EventNames": [
             "[Clock].DoReport"
@@ -7119,7 +7362,6 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileName": "Observations\\Marlborough_Sauvignon_blanc_PhenologyObs.xlsx",
-          "FileNameMetadata": null,
           "SheetNames": [
             "Data"
           ],
@@ -7271,6 +7513,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.2,
                         1.2,
@@ -7683,7 +7927,7 @@
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 80.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": true,
@@ -7698,6 +7942,7 @@
                   "d_interception": 0.0,
                   "soil_albedo": 0.23,
                   "SoilHeatFluxFraction": 0.4,
+                  "MinimumHeightDiffForNewLayer": 0.0,
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
@@ -7729,7 +7974,6 @@
                   "DaysAfterEnding": 0,
                   "ResourceName": "Grapevine",
                   "Name": "Grapevine",
-                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -7916,9 +8160,9 @@
                   "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "Clock.Today",
-                  "YFieldName": "Berry.MeanTempFlowering.Value()",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "YFieldName": "Berry.MeanTempFlowering",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
@@ -7946,9 +8190,9 @@
                   "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "Clock.Today",
-                  "YFieldName": "Berry.MeanTempInitiationY0.Value()",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "YFieldName": "Berry.MeanTempInitiationY0",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
@@ -8025,9 +8269,9 @@
                   "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "Clock.Today",
-                  "YFieldName": "Berry.NumberFunction.Shoots.Value()",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "YFieldName": "Berry.NumberFunction.Shoots",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
@@ -8055,9 +8299,9 @@
                   "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "Clock.Today",
-                  "YFieldName": "Berry.BunchesPerShoot.Value()",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "YFieldName": "Berry.BunchesPerShoot",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
@@ -8134,9 +8378,9 @@
                   "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "Clock.Today",
-                  "YFieldName": "Berry.BerriesPerBunch.Value()",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "YFieldName": "Berry.BerriesPerBunch",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
@@ -8164,9 +8408,9 @@
                   "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "Clock.Today",
-                  "YFieldName": "Berry.NumberFunction.Value()",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "YFieldName": "Berry.NumberFunction",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
@@ -8243,9 +8487,9 @@
                   "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "Clock.Today",
-                  "YFieldName": "Berry.BerryFreshWeight.Value()",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "YFieldName": "Berry.BerryFreshWeight",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": false,
                   "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
@@ -8274,8 +8518,8 @@
                   "TableName": "Report",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "Berry.Live.Wt",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": false,
                   "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
@@ -8347,8 +8591,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "CurrentStageName",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -8415,8 +8659,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Grapevine.Leaf.InitialisedCohortNo",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": false,
@@ -8445,8 +8689,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Grapevine.Leaf.AppearedCohortNo",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -8475,8 +8719,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Grapevine.Leaf.DeadCohortNo",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -8543,8 +8787,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Grapevine.Leaf.CohortSize(1)",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -8573,8 +8817,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Grapevine.Leaf.CohortSize(2)",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -8603,8 +8847,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Grapevine.Leaf.CohortSize(3)",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -8633,8 +8877,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Grapevine.Leaf.CohortSize(4)",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -8663,8 +8907,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Grapevine.Leaf.CohortSize(5)",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -8693,8 +8937,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Grapevine.Leaf.CohortSize(6)",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -8723,8 +8967,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Grapevine.Leaf.CohortSize(7)",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -8753,8 +8997,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Grapevine.Leaf.CohortSize(8)",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -8783,8 +9027,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Grapevine.Leaf.CohortSize(9)",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -8813,8 +9057,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Grapevine.Leaf.CohortSize(10)",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -8843,8 +9087,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Grapevine.Leaf.CohortSize(11)",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -8873,8 +9117,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Grapevine.Leaf.CohortSize(12)",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -8903,8 +9147,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Grapevine.Leaf.CohortSize(13)",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -8933,8 +9177,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Grapevine.Leaf.CohortSize(14)",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -8963,8 +9207,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Grapevine.Leaf.CohortSize(15)",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -8993,8 +9237,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Grapevine.Leaf.CohortSize(16)",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -9023,8 +9267,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Grapevine.Leaf.CohortSize(17)",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -9053,8 +9297,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Grapevine.Leaf.CohortSize(18)",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -9121,8 +9365,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Grapevine.Leaf.LAI",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -9189,8 +9433,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Grapevine.Leaf.Live.Wt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -9257,8 +9501,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Grapevine.Shoot.Live.Wt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -9325,8 +9569,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Grapevine.Cordon.Live.StructuralWt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -9393,8 +9637,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Grapevine.Trunk.Live.Wt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -9461,8 +9705,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Grapevine.Root.Live.Wt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -9528,9 +9772,9 @@
               "Checkpoint": "Current",
               "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "Grapevine.Phenology.Budding.AccChill.Value()",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "YFieldName": "Grapevine.Phenology.Budding.AccChill",
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -9597,8 +9841,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Grapevine.Arbitrator.FDM",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": false,
@@ -9686,9 +9930,9 @@
               "Checkpoint": "Current",
               "TableName": "Report",
               "XFieldName": "Clock.Today.Year",
-              "YFieldName": "Grapevine.Phenology.Budding.FractionOfBudBurst.Value()",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "YFieldName": "Grapevine.Phenology.Budding.FractionOfBudBurst",
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": false,
@@ -9717,8 +9961,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today.Year",
               "YFieldName": "Grapevine.Structure.PrimaryBudNo",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": false,
@@ -9785,8 +10029,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Grapevine.Leaf.Fn",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": false,
@@ -9826,8 +10070,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Grapevine.Leaf.Fw",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": false,
@@ -9905,8 +10149,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Grapevine.Arbitrator.DM.TotalFixationSupply",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -10056,6 +10300,8 @@
                             300.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.2,
                             1.2,
@@ -10468,7 +10714,7 @@
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 80.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": true,
@@ -10483,6 +10729,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
@@ -10514,7 +10761,6 @@
                       "DaysAfterEnding": 0,
                       "ResourceName": "Grapevine",
                       "Name": "Grapevine",
-                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -10652,8 +10898,8 @@
               "TableName": "PhenoPredObs",
               "XFieldName": "Observed.BudBurstDOY",
               "YFieldName": "Predicted.BudBurstDOY",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -10732,8 +10978,8 @@
               "TableName": "PhenoPredObs",
               "XFieldName": "Observed.FloweringDOY",
               "YFieldName": "Predicted.FloweringDOY",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -10812,8 +11058,8 @@
               "TableName": "PhenoPredObs",
               "XFieldName": "Observed.VeraisonDOY",
               "YFieldName": "Predicted.VeraisonDOY",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -10993,6 +11239,8 @@
                             300.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.2,
                             1.2,
@@ -11414,7 +11662,7 @@
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 80.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": true,
@@ -11429,6 +11677,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
@@ -11460,7 +11709,6 @@
                       "DaysAfterEnding": 0,
                       "ResourceName": "Grapevine",
                       "Name": "Grapevine",
-                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
