@@ -45,9 +45,6 @@ namespace Models.PMF.Organs
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
         public string CanopyType { get { return Plant.CropType; } }
 
-        /// <summary>Total TT required to get from emergence to floral init.</summary>
-        public double TTTargetFI { get; private set; }
-
         /// <summary>Albedo.</summary>
         [Description("Albedo")]
         public double Albedo { get; set; }
@@ -445,19 +442,11 @@ namespace Models.PMF.Organs
         [EventSubscribe("PrePhenology")]
         private void OnUpdateFinalLeafNo(object sender, EventArgs e)
         {
-        //    if (MathUtilities.FloatsAreEqual(TTTargetFI, 0))
-                TTTargetFI = GetTTFi();
-
             //double fi = 5;
             //if (phenology.Stage <= fi && culms == null)
             //{
             //    FinalLeafNo = CalcFinalLeafNo();
             //}
-        }
-
-        private double GetTTFi()
-        {
-            return (double)Apsim.Get(this, "[Phenology].TTEmergToFloralInit.Value()");
         }
 
         /// <summary>
@@ -543,7 +532,6 @@ namespace Models.PMF.Organs
             CoverDead = 0.0;
             LAIDead = 0.0;
             LossFromExpansionStress = 0.0;
-            TTTargetFI = 0;
         }
         #endregion
 

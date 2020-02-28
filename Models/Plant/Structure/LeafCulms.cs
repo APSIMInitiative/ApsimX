@@ -5,6 +5,7 @@ using Models.Interfaces;
 using Models.PMF;
 using Models.PMF.Organs;
 using Models.PMF.Phen;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -394,6 +395,10 @@ namespace Models.PMF.Struct
 		/// </summary>
 		private double linearLAI;
 
+		/// <summary>Total TT required to get from emergence to floral init.</summary>
+		[JsonIgnore]
+		public double TTTargetFI { get; private set; }
+
 		private CulmParams culmParams;
 
 		/// <summary>
@@ -464,6 +469,7 @@ namespace Models.PMF.Struct
 			supply = 0;
 			demand = 0;
 			tillers = 0.0;
+			TTTargetFI = 0;
 
 			//Culms[0]->initialize();
 
@@ -536,7 +542,16 @@ namespace Models.PMF.Struct
 		private void OnPrePhenology(object sender, EventArgs e)
 		{
 			if (plant.IsAlive)
+			{
+				TTTargetFI = GetTTFi();
 				CalcLeafNo();
+			}
+		}
+
+		private double GetTTFi()
+		{
+			// fixme
+			return (double)Apsim.Get(this, "[Phenology].TTEmergToFloralInit.Value()");
 		}
 
 		/// <summary>
