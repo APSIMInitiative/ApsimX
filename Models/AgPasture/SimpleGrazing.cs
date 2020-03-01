@@ -12,6 +12,7 @@
     using Models.Soils.Nutrients;
     using Models.Surface;
     using Models.Functions;
+    using System.Linq;
 
     /// <summary>
     /// 
@@ -88,13 +89,13 @@
 
         /// <summary></summary>
         [Separator("Settings for the 'Target Mass' - all values by month from January")]
-        [Description("Monthly target mass of pasture to trigger grazing event (kgDM/ha)")]
+        [Description("Target mass of pasture to trigger grazing event, monthly values (kgDM/ha)")]
         [Units("kgDM/ha")]
         [Display(EnabledCallback = "IsTargetMassTurnedOn")]
         public double[] PreGrazeDMArray { get; set; }
 
         /// <summary></summary>
-        [Description("Monthly mass of pasture post grazing (kgDM/ha)")]
+        [Description("Residual mass of pasture post grazing, monthly values (kgDM/ha)")]
         [Units("kgDM/ha")]
         [Display(EnabledCallback = "IsTargetMassTurnedOn")]
         public double[] PostGrazeDMArray { get; set; }
@@ -289,11 +290,10 @@
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
-            // Calculate herbage mass.
+            // Calculate pre-grazed dry matter.
             PreGrazeDM = 0.0;
             foreach (var forage in forages)
-                foreach (var forageOrgan in forage.Organs)
-                    PreGrazeDM += forageOrgan.Live.Wt + forageOrgan.Dead.Wt;
+                PreGrazeDM += forage.AboveGround.Wt;
 
             // Convert to kg/ha
             PreGrazeDM *= 10;
@@ -314,7 +314,14 @@
 
             // Perform grazing if necessary.
             if (grazeNow)
+            {
                 GrazeToResidual(residualBiomass);
+
+                // Calculate post-grazed dry matter.
+                PostGrazeDM = 0.0;
+                foreach (var forage in forages)
+                    PostGrazeDM += forage.AboveGround.Wt;
+            }
         }
 
         /// <summary>Perform grazing.</summary>
@@ -428,56 +435,38 @@
         }
 
         /// <summary>Remove biomass from the specified forage.</summary>
-        /// <param name="amountToRemove">The total amount to remove from all forages.</param>
-        private void RemoveDMFromPlants(double amountToRemove)
+        /// <param name="removeAmount">The total amount to remove from all forages.</param>
+        private void RemoveDMFromPlants(double removeAmount)
         {
             // This is a simple implementation. It proportionally removes biomass from organs.
             // What about non harvestable biomass?
             // What about PreferenceForGreenOverDead and PreferenceForLeafOverStems?
 
-            if (amountToRemove > 0)
+            if (removeAmount > 0)
             {
+                // Remove a proportion of required DM from each species
+                double totalHarvestableWt = 0.0;
                 foreach (var forage in forages)
-                    foreach (var organ in forage.Organs)
-                    {
-                        // These calculations convert organ live weight from g/m2 to kg/ha
-                        var amountLiveToRemove = organ.Live.Wt * 10 / PreGrazeDM * amountToRemove;
-                        var amountDeadToRemove = organ.Dead.Wt * 10 / PreGrazeDM * amountToRemove;
-                        var fractionLiveToRemove = MathUtilities.Divide(amountLiveToRemove, (organ.Live.Wt * 10), 0);
-                        var fractionDeadToRemove = MathUtilities.Divide(amountDeadToRemove, (organ.Dead.Wt * 10), 0);
-                        var grazedDigestibility = organ.Live.DMDOfStructural * fractionLiveToRemove
-                                                    + organ.Dead.DMDOfStructural * fractionDeadToRemove;
-                        var grazedMetabolisableEnergy = PotentialMEOfHerbage * grazedDigestibility;
-                        var grazedDM = amountLiveToRemove + amountDeadToRemove;
-                        var grazedN = organ.Live.N * 10 * fractionLiveToRemove + organ.Dead.N * 10 * fractionDeadToRemove;
-                        if (grazedDM > 0)
-                        {
-                            GrazedDM += grazedDM;
-                            GrazedN += grazedN;
-                            GrazedME += grazedMetabolisableEnergy * grazedDM;
+                    totalHarvestableWt += forage.Organs.Sum(organ => organ.Live.Wt + organ.Dead.Wt);
 
-                            forage.RemoveBiomass(organ.Name, "Graze",
-                                                 new OrganBiomassRemovalType()
-                                                 {
-                                                     FractionLiveToRemove = fractionLiveToRemove,  
-                                                     FractionDeadToRemove = fractionDeadToRemove   
-                                                 });
+                foreach (var forage in forages)
+                {
+                    var harvestableWt = forage.Organs.Sum(organ => organ.Live.Wt + organ.Dead.Wt);
+                    var amountToRemove = removeAmount * harvestableWt / totalHarvestableWt;
+                    var grazed = forage.RemoveBiomass(amountToRemove);
 
-                            PostGrazeDM += (organ.Live.Wt + organ.Dead.Wt) * 10;
+                    const double CToDMRatio = 0.4; // 0.4 is C:DM ratio.
 
-                            const double CToDMRatio = 0.4; // 0.4 is C:DM ratio.
+                    double dungCReturned;
+                    var dungNReturned = GetValueFromMonthArray(FractionOfBiomassToDung) * grazed.N;
+                    if (CNRatioDung == 0)
+                        dungCReturned = (1 - grazed.DMDOfStructural) * grazed.Wt * CToDMRatio;
+                    else
+                        dungCReturned = dungNReturned * CNRatioDung * CToDMRatio;
 
-                            double dungCReturned;
-                            var dungNReturned = GetValueFromMonthArray(FractionOfBiomassToDung) * grazedN;
-                            if (CNRatioDung == 0)
-                                dungCReturned = (1 - grazedDigestibility) * grazedDM * CToDMRatio;
-                            else
-                                dungCReturned = dungNReturned * CNRatioDung * CToDMRatio;
-
-                            AmountDungNReturned += dungNReturned;
-                            AmountDungCReturned += dungCReturned;
-                        }
-                    }
+                    AmountDungNReturned += dungNReturned;
+                    AmountDungCReturned += dungCReturned;
+                }
             }
         }
     }
