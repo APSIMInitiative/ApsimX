@@ -159,8 +159,16 @@ namespace Models.Core
             {
                 string unitString = null;
                 UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(UnitsAttribute), false) as UnitsAttribute;
+                PropertyInfo unitsInfo = this.Object.GetType().GetProperty(this.property.Name + "Units");
                 if (unitsAttribute != null)
+                {
                     unitString = unitsAttribute.ToString();
+                }
+                else if (unitsInfo != null)
+                {
+                    object val = unitsInfo.GetValue(this.Object, null);
+                    unitString = val.ToString();
+                }
                 return unitString;
             }
             set
