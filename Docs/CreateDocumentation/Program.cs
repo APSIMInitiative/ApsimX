@@ -214,12 +214,13 @@
                         var model = Apsim.Find(simulations, modelNameToDocument) as IModel;
                         if (model == null)
                             return null;
-                        var createDoc = new CreateParamsInputsOutputsDocCommand(explorerPresenter, model, destinationFolder);
+                        var outputFileName = documentObject["OutputFileName"]?.ToString();
+                        var createDoc = new CreateParamsInputsOutputsDocCommand(explorerPresenter, model, destinationFolder, outputFileName);
                         createDoc.Do(null);
                         href = Path.GetFileName(createDoc.FileNameWritten);
                     }
 
-                    return string.Format("<p><a href=\"{0}/{1}\" target=\"_blank\">{2}</a></p>", destinationUrl, href, hrefName);
+                    return string.Format("<p><a href=\"{0}{1}\" target=\"_blank\">{2}</a></p>", destinationUrl, href, hrefName);
                 }
                 else
                     return null;
