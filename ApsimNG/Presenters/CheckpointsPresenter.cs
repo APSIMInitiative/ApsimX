@@ -105,6 +105,7 @@ namespace UserInterface.Presenters
                     try
                     {
                         storage.Writer.DeleteCheckpoint(checkpointName);
+                        storage.Reader.Refresh();
                         PopulateList();
                         explorerPresenter.MainPresenter.ShowMessage("Checkpoint deleted", Simulation.MessageType.Information);
                     }

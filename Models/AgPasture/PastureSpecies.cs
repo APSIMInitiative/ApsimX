@@ -4299,7 +4299,7 @@
                 if (type.ToLower() == "setresidueamount")
                 {
                     // Remove all DM above given residual amount
-                    amountRequired = Math.Max(0.0, StandingHerbageWt - amount);
+                    amountRequired = Math.Max(0.0, AboveGroundWt - amount);
                 }
                 else if (type.ToLower() == "setremoveamount")
                 {
@@ -4325,7 +4325,7 @@
 
         /// <summary>Removes a given amount of biomass (and N) from the plant.</summary>
         /// <param name="amountToRemove">The amount of biomass to remove (kg/ha)</param>
-        public void RemoveBiomass(double amountToRemove)
+        public Biomass RemoveBiomass(double amountToRemove)
         {
             // get existing DM and N amounts
             double preRemovalDMShoot = AboveGroundWt;
@@ -4429,6 +4429,13 @@
                 throw new ApsimXException(this, "  AgPasture " + Name + " - removal of DM resulted in loss of mass balance");
             else
                 mySummary.WriteMessage(this, " Biomass removed from " + Name + " by grazing: " + defoliatedDM.ToString("#0.0") + "kg/ha");
+
+            return new Biomass()
+            {
+                StructuralWt = defoliatedDM,
+                StructuralN = defoliatedN,
+                DMDOfStructural = defoliatedDigestibility
+            };
         }
 
         /// <summary>

@@ -62,7 +62,7 @@ namespace UserInterface.Presenters
             activityGridPresenter.SimulationName = simulation.Name;
             activityGridPresenter.ZoneName = paddock.Name;
             activityGridPresenter.Attach(dataStore, this.view.DisplayView, explorerPresenter);
-            this.view.DataStoreView.TableList.SelectedValue = this.report.Name;
+            dataStorePresenter.tableDropDown.SelectedValue = this.report.Name;
         }
 
         /// <summary>Detach the model from the view.</summary>

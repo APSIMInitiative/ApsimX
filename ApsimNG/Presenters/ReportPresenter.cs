@@ -106,7 +106,7 @@ namespace UserInterface.Presenters
                 dataStorePresenter.SimulationFilter = simulation;
 
             dataStorePresenter.Attach(dataStore, this.view.DataStoreView, explorerPresenter);
-            this.view.DataStoreView.TableList.SelectedValue = this.report.Name;
+            dataStorePresenter.tableDropDown.SelectedValue = this.report.Name;
             this.view.TabIndex = this.report.ActiveTabIndex;
         }
 

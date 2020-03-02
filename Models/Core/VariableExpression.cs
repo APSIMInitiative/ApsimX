@@ -211,5 +211,11 @@ namespace Models.Core
         /// <param name="attributeType">Type of attribute to find</param>
         /// <returns>The attribute or null if not found</returns>
         public override Attribute GetAttribute(Type attributeType) { return null; }
+
+        /// <summary>Return the summary comments from the source code.</summary>
+        public override string Summary { get { return null; } }
+
+        /// <summary>Return the remarks comments from the source code.</summary>
+        public override string Remarks { get { return null; } }
     }
 }

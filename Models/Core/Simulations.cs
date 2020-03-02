@@ -136,7 +136,10 @@ namespace Models.Core
             filesReferenced.AddRange(FindAllReferencedFiles());
             DataStore storage = Apsim.Find(this, typeof(DataStore)) as DataStore;
             if (storage != null)
+            {
                 storage.Writer.AddCheckpoint(checkpointName, filesReferenced);
+                storage.Reader.Refresh();
+            }
         }
 
         /// <summary>
@@ -148,7 +151,10 @@ namespace Models.Core
         {
             IDataStore storage = Apsim.Find(this, typeof(DataStore)) as DataStore;
             if (storage != null)
+            {
                 storage.Writer.RevertCheckpoint(checkpointName);
+                storage.Reader.Refresh();
+            }
             List<Exception> creationExceptions = new List<Exception>();
             return FileFormat.ReadFromFile<Simulations>(FileName, out creationExceptions);
         }
