@@ -48,7 +48,7 @@ soilwater <- soilwater %>% select(Clock.Today, SimulationName, everything())
 # WRITE TO SPREADSHEET
 # --------------------
 
-sheets <- list(Phenology = phenology, Yield = yield, Fruit = fruit, SoilWater = soilwater)  
+sheets <- list(Emerald_Phenology = phenology, Emerald_Yield = yield, Emerald_Fruit = fruit, Emerald_SoilWater = soilwater)  
 write_xlsx(x = sheets, path = "./output/emerald.xlsx")
 
 
