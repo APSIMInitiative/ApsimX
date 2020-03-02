@@ -19,7 +19,7 @@
     /// A storage service for reading and writing to/from a database.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.DataStoreView")]
+    [ViewName("ApsimNG.Resources.Glade.DataStoreView.glade")]
     [PresenterName("UserInterface.Presenters.DataStorePresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
     public class DataStore : Model, IDataStore, IDisposable
