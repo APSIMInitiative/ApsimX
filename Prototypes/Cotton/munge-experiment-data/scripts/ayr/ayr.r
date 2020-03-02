@@ -57,7 +57,7 @@ bolls <- bind_rows(bolls_2009, bolls_2010, bolls_2011, bolls_2012) #nb. 2008 dat
 # WRITE TO SPREADSHEET
 # --------------------
 
-sheets <- list(Phenology = phenology, Harvest = harvest, Plant = plant, Light = light_interception, Nodes = nodes_over_time, Bolls = bolls)  
+sheets <- list(Ayr_Phenology = phenology, Ayr_Harvest = harvest, Ayr_Plant = plant, Ayr_Light = light_interception, Ayr_Nodes = nodes_over_time, Ayr_Bolls = bolls)  
 write_xlsx(x = sheets, path = "./output/ayr.xlsx")
 
 
