@@ -1034,41 +1034,6 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
-            },
-            {
-          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-          "Name": "RewindDueToBiomassRemoved",
-          "Children": [
-            {
-              "$type": "Models.Functions.XYPairs, Models",
-              "X": [
-                0.0,
-                0.1,
-                0.4,
-                0.5,
-                1.0
-              ],
-              "Y": [
-                0.0,
-                0.08,
-                0.4,
-                0.5,
-                1.0
-              ],
-              "Name": "XYPairs",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Phenology].FractionBiomassRemoved",
-              "Name": "XValue",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -7721,7 +7686,7 @@
               "Children": [
                 {
                   "$type": "Models.Core.Alias, Models",
-                  "Name": "Agtscythe",
+                  "Name": "Scythe",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -7882,6 +7847,30 @@
                 {
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Katana",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+				{
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Hume",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+				{
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Merinda",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+				{
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Wills",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
