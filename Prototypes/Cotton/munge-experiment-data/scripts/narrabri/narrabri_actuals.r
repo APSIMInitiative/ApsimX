@@ -78,8 +78,10 @@ sites_2006 <- sites_2006 %>% pivot_longer(cols = sites, names_to = "variable", v
 
 plant_2006 <- bind_rows(lai_2006, sites_2006, bolls_2006)
 plant_2006 <- plant_2006 %>% pivot_wider(names_from = variable, values_from = values)
-plant_2006 <- plant_2006 %>% mutate(year = 2006) %>% select(year, das, Treatment, everything())
+plant_2006 <- plant_2006 %>% mutate(date = dmy("10/10/2006") + days(das))
+plant_2006 <- plant_2006 %>% mutate(year = 2006) %>% select(year, Treatment, date, das, everything())
 
+yield_2006 <- yield_2006 %>% mutate(date = dmy("10/10/2006") + days(163)) # I have no idea what the harvest date was so I used das=163 because last value in long table in "Actuals 0607" worksheet
 yield_2006 <- yield_2006 %>% mutate(year = 2006) %>% select(year, Treatment, everything())
 
 
@@ -97,9 +99,13 @@ sites_2007 <- sites_2007 %>% pivot_longer(cols = sites, names_to = "variable", v
 
 plant_2007 <- bind_rows(lai_2007, sites_2007, squares_2007, bolls_2007)
 plant_2007 <- plant_2007 %>% pivot_wider(names_from = variable, values_from = values)
-plant_2007 <- plant_2007 %>% mutate(year = 2007) %>% select(year, das, Treatment, everything())
+plant_2007 <- plant_2007 %>% mutate(date = dmy("15/10/2007") + days(das))
+plant_2007 <- plant_2007 %>% mutate(year = 2007) %>% select(year, Treatment, date, das, everything())
 
+
+yield_2007 <- yield_2007 %>% mutate(date = dmy("15/10/2007") + days(218)) # I have no idea what the harvest date was so I used das=218 because last value in long table in "Actuals 0607" worksheet
 yield_2007 <- yield_2007 %>% mutate(year = 2007) %>% select(year, Treatment, everything())
+
 
 
 # 2008
@@ -120,8 +126,10 @@ openbolls_2008 <- openbolls_2008 %>% pivot_longer(cols = openbolls, names_to = "
 
 plant_2008 <- bind_rows(lai_2008, sites_2008, squares_2008, bolls_2008, greenbolls_2008, openbolls_2008)
 plant_2008 <- plant_2008 %>% pivot_wider(names_from = variable, values_from = values)
-plant_2008 <- plant_2008 %>% mutate(year = 2008) %>% select(year, das, Treatment, everything())
+plant_2008 <- plant_2008 %>% mutate(date = dmy("15/10/2008") + days(das))
+plant_2008 <- plant_2008 %>% mutate(year = 2008) %>% select(year, Treatment, date, das, everything())
 
+yield_2008 <- yield_2008 %>% mutate(date = dmy("15/10/2008") + days(218)) # I have no idea what the harvest date was so I used das=218 because last value in long table in "Actuals 0607" worksheet
 yield_2008 <- yield_2008 %>% mutate(year = 2008) %>% select(year, Treatment, everything())
 
 
@@ -131,6 +139,8 @@ yield_2008 <- yield_2008 %>% mutate(year = 2008) %>% select(year, Treatment, eve
 plant <- bind_rows(plant_2006, plant_2007, plant_2008)
 
 yield <- bind_rows(yield_2006, yield_2007, yield_2008)
+
+
 
 
 

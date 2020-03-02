@@ -2,7 +2,7 @@
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
   "Version": 79,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-02-24",
+  "ApsimVersion": "Version 0.0.0.0, built 2020-02-27",
   "Name": "Simulations",
   "Children": [
     {
@@ -6511,9 +6511,10 @@
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileName": "emerald.xlsx",
           "SheetNames": [
-            "Yield",
-            "Fruit",
-            "SoilWater"
+            "Emerald_Phenology",
+            "Emerald_Yield",
+            "Emerald_Fruit",
+            "Emerald_SoilWater"
           ],
           "Name": "Emerald",
           "Children": [],
@@ -6522,9 +6523,23 @@
           "ReadOnly": false
         },
         {
+          "$type": "Models.PostSimulationTools.ExcelInput, Models",
+          "FileName": "narrabri.xlsx",
+          "SheetNames": [
+            "Narrabri_Yield",
+            "Narrabri_Plant",
+            "Narrabri_SoilWater"
+          ],
+          "Name": "Narrabri",
+          "Children": [],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.PostSimulationTools.PredictedObserved, Models",
           "PredictedTableName": "DailyReport",
-          "ObservedTableName": "Fruit",
+          "ObservedTableName": "Emerald_Fruit",
           "FieldNameUsedForMatch": "Clock.Today",
           "FieldName2UsedForMatch": null,
           "FieldName3UsedForMatch": null,
