@@ -6748,10 +6748,10 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "This trial was conducted on deep fertile soils, in central Iowa (Ames) and in northwest Iowa (Sutherland), USA, in years 2015, 2016 and 2017. In each year two planting date were studied, early versus late. Row spacing was 76 cm, and plant population was around 35 plants/m2 (see details in APSIM managers). No nitrogen or irrigation applied. This region has shallow water tables (about 1.2 m below surface, range 0.3 to 3m) and the soil has no subsurface drainage. Data from years 2015 and 2017 have been incorporated while data from year 2016 will be added later. Local weather data (the station was positioned 10 m from the trial) and actual soil profile data (measured in Nov 2014 up to 1.2 meter, soil organic matter, texture, and pH by layer) were used. Additional soil data were taken from ssurgo. The following measurements were taken per plot (each treatment was replicated 3 times): Phenology (visual observations in the field using the V/R coding system); biomass samplings 6-9 times per season and per treatment (destructive sampling of 1 m2 per plot); biomass partitioning and dry weight of each plant tissue including green and yellow leaves, stem plus petioles, and pod-walls plus seeds (note that seeds were separated at the final harvest only); carbon and nitrogen concentration of each plant tissue (LECO CN analyzer); green leaf area index (LI Area Meter); node number and pod number per plant; leaf area per node in year 2015 only; root front depth over time (manual soil core technique) and maximum root depth, mass and length (mechanical gidding prode technique, depth of 240 cm) at approximately middle grain fill stage; daily soil water and temperature at two depths, 15 and 45 cm (5TM sensors placed horizontally, METEO group), daily water table depth (CTD-10 sensors, METEO group), and soil nitrate and ammonium approximately 10 times over each season and treatment at two depths 0-30 and 30-60 cm (sample was extracted in 2 M potassium chloride), and N-fixation over time (Isotope dilution method); soybean leaf senescence (gages to measure drop leaves dry matter and CN concentration, 1m2 size, 3-4 measurements per season per treatment); crop residue dry matter, soil cover and soil nitrogen and water measurements (manual samplings 10 times from crop harvest to planting of the next crop). This dataset is licensed by the Iowa State University Research Foundation.\n \nArchontoulis SV, Castellano M, Licht M, Nichols V, Baum M, Huber I, Martinez-Feria R, Puntel L, Ordóñez R, Iqbal J, Wright E, Dietzel R, Helmers M, Vanloocke A, Liebman M, Hatfield J, Herzmann D, Córdova S, Edmonds E, Togliatti \nK, Kessler A, Danalatos G, Pasley H, Pederson C, Lamkey K, 2019. Predicting crop yields and soil-plant nitrogen dynamics in the US Corn Belt. Crop Science (under review). \n\nNichols V, Ordóñez A, Wright E, Castellano M, Liebman M, Hatfield J, Helmers M, Archontoulis SV, 2019. Maize root distributions strongly associated with water tables in Iowa, USA. Plant Soil, https://doi.org/10.1007/s11104-019-04269-6  \n\nCordova C, Castellano M, Dietzel R, Licht M, Togliatti K, Martinez-Feria R, Archontoulis S, 2019. Soybean nitrogen fixation dynamics in Iowa. Field Crops Research 236: 165–176. \n\nEbrahimi-Mollabashi E, Huth NI, Holzwoth DP, Ordonez RS, Hatfield JL, Huber I, Castellano MJ, Archontoulis SV, 2019. Enhancing APSIM to simulate excessive moisture effects on root growth. Field Crops Research 236: 58–67\n\nOrdonez R, Castellano M, Hatfield J, Licht M, Wright E, Archontoulis SV, 2018. A solution for sampling position errors in maize and soybean root mass and length estimates. European J of Agronomy 96: 156–162.  \n\nOrdonez R, Castellano M, Hatfield J, Helmers M, Licht M, Liebman M, Dietzel R, Martinez-Feria R, Iqbal J, Puntel L, Cordova C, Togliatti K, Wright E, Archontoulis SV, 2018. Corn and soybean root front velocity and maximum depth in Iowa, USA. Field Crops Research 215: 122-131   \n",
+                  "Text": "This trial was conducted on deep fertile soils, in central Iowa (Ames) and in northwest Iowa (Sutherland), USA, in years 2015, 2016 and 2017. In each year two planting date were studied, early versus late. Row spacing was 76 cm, and plant population was around 35 plants/m2 (see details in APSIM managers). No nitrogen or irrigation applied. This region has shallow water tables (about 1.2 m below surface, range 0.3 to 3m) and the soil has no subsurface drainage. Data from years 2015 and 2017 have been incorporated while data from year 2016 will be added later. Local weather data (the station was positioned 10 m from the trial) and actual soil profile data (measured in Nov 2014 up to 1.2 meter, soil organic matter, texture, and pH by layer) were used. Additional soil data were taken from ssurgo. The following measurements were taken per plot (each treatment was replicated 3 times): Phenology (visual observations in the field using the V/R coding system); biomass samplings 6-9 times per season and per treatment (destructive sampling of 1 m2 per plot); biomass partitioning and dry weight of each plant tissue including green and yellow leaves, stem plus petioles, and pod-walls plus seeds (note that seeds were separated at the final harvest only); carbon and nitrogen concentration of each plant tissue (LECO CN analyzer); green leaf area index (LI Area Meter); node number and pod number per plant; leaf area per node in year 2015 only; root front depth over time (manual soil core technique) and maximum root depth, mass and length (mechanical gidding prode technique, depth of 240 cm) at approximately middle grain fill stage; daily soil water and temperature at two depths, 15 and 45 cm (5TM sensors placed horizontally, METEO group), daily water table depth (CTD-10 sensors, METEO group), and soil nitrate and ammonium approximately 10 times over each season and treatment at two depths 0-30 and 30-60 cm (sample was extracted in 2 M potassium chloride), and N-fixation over time (Isotope dilution method); soybean leaf senescence (gages to measure drop leaves dry matter and CN concentration, 1m2 size, 3-4 measurements per season per treatment); crop residue dry matter, soil cover and soil nitrogen and water measurements (manual samplings 10 times from crop harvest to planting of the next crop). This dataset is licensed by the Iowa State University Research Foundation.\n \n",
                   "Name": "FACTS data description",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6778,7 +6778,7 @@
                               "Values": null,
                               "Name": "Early",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -6791,17 +6791,17 @@
                               "Values": null,
                               "Name": "Late",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": false,
+                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -6815,7 +6815,7 @@
                           "End": "2015-12-31T00:00:00",
                           "Name": "clock",
                           "Children": [],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -6826,7 +6826,7 @@
                           "CaptureSummaryText": true,
                           "Name": "summaryfile",
                           "Children": [],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -6836,7 +6836,7 @@
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -6844,7 +6844,7 @@
                           "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
                           "Name": "Soil Arbitrator",
                           "Children": [],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -6869,7 +6869,7 @@
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -6877,7 +6877,7 @@
                               "$type": "Models.Irrigation, Models",
                               "Name": "Irrigation",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -6885,7 +6885,7 @@
                               "$type": "Models.Fertiliser, Models",
                               "Name": "fertiliser",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -6901,7 +6901,7 @@
                               "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -7011,7 +7011,7 @@
                               ],
                               "Name": "DailyReport",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -7041,7 +7041,7 @@
                                 }
                               ],
                               "Name": "SowingRule",
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -7058,7 +7058,7 @@
                               ],
                               "Name": "HarvestReport",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -7067,7 +7067,7 @@
                               "Operation": null,
                               "Name": "Operations",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -7078,7 +7078,7 @@
                               "DaysAfterEnding": 0,
                               "ResourceName": "Soybean",
                               "Name": "Soybean",
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -7310,12 +7310,12 @@
                                       "XFMetadata": null,
                                       "Name": "SoybeanSoil",
                                       "Children": [],
-                                      "IncludeInDocumentation": false,
+                                      "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -7443,7 +7443,7 @@
                                   ],
                                   "Name": "Organic",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -7539,7 +7539,7 @@
                                   "ESP": null,
                                   "Name": "Chemical",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -7608,7 +7608,7 @@
                                   "PHUnits": 0,
                                   "Name": "Initial nitrogen",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -7667,7 +7667,7 @@
                                   "PrecipitationInterception": 0.0,
                                   "Name": "SoilWater",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -7675,7 +7675,7 @@
                                   "$type": "Models.Soils.CERESSoilTemperature, Models",
                                   "Name": "CERESSoilTemperature",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -7906,12 +7906,12 @@
                                   },
                                   "ResourceName": "Nutrient",
                                   "Name": "Nutrient",
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -7929,7 +7929,7 @@
                               ],
                               "Name": "FACTSReport",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -7955,7 +7955,7 @@
                                 }
                               ],
                               "Name": "WaterTableManager",
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -7977,17 +7977,17 @@
                               ],
                               "Name": "Harvesting",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": false,
+                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -8060,7 +8060,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -8090,12 +8090,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -8158,7 +8158,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -8188,12 +8188,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -8550,7 +8550,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -8580,12 +8580,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -8748,7 +8748,7 @@
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -8816,7 +8816,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -8846,12 +8846,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -8920,12 +8920,12 @@
                                       "SimulationName": null,
                                       "Name": "EventNamesOnGraph",
                                       "Children": [],
-                                      "IncludeInDocumentation": false,
+                                      "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -8955,7 +8955,7 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -8985,12 +8985,12 @@
                                   "Filter": null,
                                   "Name": "Predicted1",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -9053,7 +9053,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -9083,17 +9083,17 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -10171,7 +10171,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -10201,12 +10201,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -10269,7 +10269,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -10299,12 +10299,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -10661,7 +10661,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -10691,12 +10691,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -10799,7 +10799,7 @@
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -11465,7 +11465,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -11495,7 +11495,7 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -11525,17 +11525,17 @@
                                   "Filter": null,
                                   "Name": "Predicted1",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -12128,12 +12128,12 @@
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": false,
+                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -12162,7 +12162,7 @@
                               "Values": null,
                               "Name": "Early",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -12177,17 +12177,17 @@
                               "Values": null,
                               "Name": "Late",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": false,
+                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -12201,7 +12201,7 @@
                           "End": "2017-12-31T00:00:00",
                           "Name": "clock",
                           "Children": [],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -12212,7 +12212,7 @@
                           "CaptureSummaryText": true,
                           "Name": "summaryfile",
                           "Children": [],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -12222,7 +12222,7 @@
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -12230,7 +12230,7 @@
                           "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
                           "Name": "Soil Arbitrator",
                           "Children": [],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -12255,7 +12255,7 @@
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -12263,7 +12263,7 @@
                               "$type": "Models.Irrigation, Models",
                               "Name": "Irrigation",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -12271,7 +12271,7 @@
                               "$type": "Models.Fertiliser, Models",
                               "Name": "fertiliser",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -12287,7 +12287,7 @@
                               "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -12397,7 +12397,7 @@
                               ],
                               "Name": "DailyReport",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -12427,7 +12427,7 @@
                                 }
                               ],
                               "Name": "SowingRule",
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -12444,7 +12444,7 @@
                               ],
                               "Name": "HarvestReport",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -12453,7 +12453,7 @@
                               "Operation": null,
                               "Name": "Operations",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -12464,7 +12464,7 @@
                               "DaysAfterEnding": 0,
                               "ResourceName": "Soybean",
                               "Name": "Soybean",
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -12696,12 +12696,12 @@
                                       "XFMetadata": null,
                                       "Name": "SoybeanSoil",
                                       "Children": [],
-                                      "IncludeInDocumentation": false,
+                                      "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -12829,7 +12829,7 @@
                                   ],
                                   "Name": "Organic",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -12925,7 +12925,7 @@
                                   "ESP": null,
                                   "Name": "Chemical",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -12994,7 +12994,7 @@
                                   "PHUnits": 0,
                                   "Name": "Initial nitrogen",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -13053,7 +13053,7 @@
                                   "PrecipitationInterception": 0.0,
                                   "Name": "SoilWater",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -13061,7 +13061,7 @@
                                   "$type": "Models.Soils.CERESSoilTemperature, Models",
                                   "Name": "CERESSoilTemperature",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -13292,12 +13292,12 @@
                                   },
                                   "ResourceName": "Nutrient",
                                   "Name": "Nutrient",
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -13315,7 +13315,7 @@
                               ],
                               "Name": "FACTSReport",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -13341,7 +13341,7 @@
                                 }
                               ],
                               "Name": "WaterTableManager",
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -13363,17 +13363,17 @@
                               ],
                               "Name": "Harvesting",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": false,
+                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -13446,7 +13446,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -13476,12 +13476,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -13544,7 +13544,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -13574,12 +13574,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -13988,7 +13988,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -14018,12 +14018,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -14363,7 +14363,7 @@
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -14437,12 +14437,12 @@
                                       "SimulationName": null,
                                       "Name": "EventNamesOnGraph",
                                       "Children": [],
-                                      "IncludeInDocumentation": false,
+                                      "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -14472,12 +14472,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -14546,12 +14546,12 @@
                                       "SimulationName": null,
                                       "Name": "EventNamesOnGraph",
                                       "Children": [],
-                                      "IncludeInDocumentation": false,
+                                      "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -14581,7 +14581,7 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -14611,12 +14611,12 @@
                                   "Filter": null,
                                   "Name": "Predicted1",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -14679,7 +14679,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -14709,12 +14709,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -14777,17 +14777,17 @@
                                   "Filter": null,
                                   "Name": "PPModifier",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -15865,7 +15865,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -15895,12 +15895,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -15963,7 +15963,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -15993,12 +15993,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -16061,7 +16061,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -16091,12 +16091,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -16159,7 +16159,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -16189,12 +16189,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -16257,7 +16257,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -16287,12 +16287,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -16355,7 +16355,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -16385,12 +16385,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -16453,7 +16453,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -16483,17 +16483,17 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -17237,7 +17237,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -17267,17 +17267,17 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -17762,12 +17762,12 @@
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": false,
+                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -17796,7 +17796,7 @@
                               "Values": null,
                               "Name": "Early",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -17811,17 +17811,17 @@
                               "Values": null,
                               "Name": "Late",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": false,
+                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -17835,7 +17835,7 @@
                           "End": "2015-12-31T00:00:00",
                           "Name": "clock",
                           "Children": [],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -17846,7 +17846,7 @@
                           "CaptureSummaryText": true,
                           "Name": "summaryfile",
                           "Children": [],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -17856,7 +17856,7 @@
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -17864,7 +17864,7 @@
                           "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
                           "Name": "Soil Arbitrator",
                           "Children": [],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -17889,7 +17889,7 @@
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -17897,7 +17897,7 @@
                               "$type": "Models.Irrigation, Models",
                               "Name": "Irrigation",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -17905,7 +17905,7 @@
                               "$type": "Models.Fertiliser, Models",
                               "Name": "fertiliser",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -17921,7 +17921,7 @@
                               "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -18031,7 +18031,7 @@
                               ],
                               "Name": "DailyReport",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -18061,7 +18061,7 @@
                                 }
                               ],
                               "Name": "SowingRule",
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -18078,7 +18078,7 @@
                               ],
                               "Name": "HarvestReport",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -18160,7 +18160,7 @@
                               ],
                               "Name": "Operations",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -18171,7 +18171,7 @@
                               "DaysAfterEnding": 0,
                               "ResourceName": "Soybean",
                               "Name": "Soybean",
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -18387,12 +18387,12 @@
                                       "XFMetadata": null,
                                       "Name": "SoybeanSoil",
                                       "Children": [],
-                                      "IncludeInDocumentation": false,
+                                      "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -18520,7 +18520,7 @@
                                   ],
                                   "Name": "Organic",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -18616,7 +18616,7 @@
                                   "ESP": null,
                                   "Name": "Chemical",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -18685,7 +18685,7 @@
                                   "PHUnits": 0,
                                   "Name": "Initial nitrogen",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -18693,7 +18693,7 @@
                                   "$type": "Models.Soils.CERESSoilTemperature, Models",
                                   "Name": "CERESSoilTemperature",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -18752,7 +18752,7 @@
                                   "PrecipitationInterception": 0.0,
                                   "Name": "SoilWater",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -18983,12 +18983,12 @@
                                   },
                                   "ResourceName": "Nutrient",
                                   "Name": "Nutrient",
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -19014,7 +19014,7 @@
                                 }
                               ],
                               "Name": "WaterTableManager",
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -19036,7 +19036,7 @@
                               ],
                               "Name": "Harvesting",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -19055,17 +19055,17 @@
                               ],
                               "Name": "FACTSReport",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": false,
+                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -19138,7 +19138,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -19168,12 +19168,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -19236,7 +19236,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -19266,12 +19266,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -19334,7 +19334,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -19364,12 +19364,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -19432,7 +19432,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -19462,12 +19462,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -19530,7 +19530,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -19560,17 +19560,17 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -19638,7 +19638,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -19668,12 +19668,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -19736,7 +19736,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -19766,12 +19766,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -19834,7 +19834,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -19864,17 +19864,17 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -20027,114 +20027,6 @@
                         {
                           "$type": "Models.Core.Folder, Models",
                           "ShowPageOfGraphs": true,
-                          "Name": "Pod Number",
-                          "Children": [
-                            {
-                              "$type": "Models.Graph.Graph, Models",
-                              "Caption": null,
-                              "Axis": [
-                                {
-                                  "$type": "Models.Graph.Axis, Models",
-                                  "Type": 3,
-                                  "Title": null,
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": true,
-                                  "CrossesAtZero": false
-                                },
-                                {
-                                  "$type": "Models.Graph.Axis, Models",
-                                  "Type": 0,
-                                  "Title": null,
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": false,
-                                  "CrossesAtZero": false
-                                }
-                              ],
-                              "LegendPosition": 0,
-                              "LegendOrientation": 0,
-                              "DisabledSeries": [],
-                              "LegendOutsideGraph": false,
-                              "Name": "PodNumber",
-                              "Children": [
-                                {
-                                  "$type": "Models.Graph.Series, Models",
-                                  "Type": 1,
-                                  "XAxis": 3,
-                                  "YAxis": 0,
-                                  "ColourArgb": -16777216,
-                                  "FactorToVaryColours": "Sow",
-                                  "FactorToVaryMarkers": null,
-                                  "FactorToVaryLines": null,
-                                  "Marker": 11,
-                                  "MarkerSize": 0,
-                                  "Line": 0,
-                                  "LineThickness": 0,
-                                  "Checkpoint": "Current",
-                                  "TableName": "DailyReport",
-                                  "XFieldName": "Clock.Today",
-                                  "YFieldName": "Soybean.Shell.PodNumber",
-                                  "X2FieldName": "",
-                                  "Y2FieldName": "",
-                                  "ShowInLegend": false,
-                                  "IncludeSeriesNameInLegend": false,
-                                  "Cumulative": false,
-                                  "CumulativeX": false,
-                                  "Filter": null,
-                                  "Name": "Predicted",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Graph.Series, Models",
-                                  "Type": 1,
-                                  "XAxis": 3,
-                                  "YAxis": 0,
-                                  "ColourArgb": -16777216,
-                                  "FactorToVaryColours": "Sow",
-                                  "FactorToVaryMarkers": null,
-                                  "FactorToVaryLines": null,
-                                  "Marker": 0,
-                                  "MarkerSize": 0,
-                                  "Line": 4,
-                                  "LineThickness": 0,
-                                  "Checkpoint": "Current",
-                                  "TableName": "Observed",
-                                  "XFieldName": "Clock.Today",
-                                  "YFieldName": "Soybean.Shell.PodNumber",
-                                  "X2FieldName": "",
-                                  "Y2FieldName": "",
-                                  "ShowInLegend": false,
-                                  "IncludeSeriesNameInLegend": false,
-                                  "Cumulative": false,
-                                  "CumulativeX": false,
-                                  "Filter": null,
-                                  "Name": "Observed",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Core.Folder, Models",
-                          "ShowPageOfGraphs": true,
                           "Name": "Fixation",
                           "Children": [
                             {
@@ -20196,7 +20088,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -20226,7 +20118,7 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -20256,12 +20148,12 @@
                                   "Filter": null,
                                   "Name": "Predicted1",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -20324,7 +20216,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -20354,17 +20246,17 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -20432,7 +20324,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -20462,12 +20354,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -20530,7 +20422,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -20560,12 +20452,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -20922,7 +20814,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -20952,12 +20844,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -21060,7 +20952,7 @@
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -22055,12 +21947,12 @@
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": false,
+                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -22087,7 +21979,7 @@
                               "Values": null,
                               "Name": "Early",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -22100,17 +21992,17 @@
                               "Values": null,
                               "Name": "Late",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": false,
+                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -22124,7 +22016,7 @@
                           "End": "2017-12-31T00:00:00",
                           "Name": "clock",
                           "Children": [],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -22135,7 +22027,7 @@
                           "CaptureSummaryText": true,
                           "Name": "summaryfile",
                           "Children": [],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -22145,7 +22037,7 @@
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
                           "Children": [],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -22153,7 +22045,7 @@
                           "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
                           "Name": "Soil Arbitrator",
                           "Children": [],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -22178,7 +22070,7 @@
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -22186,7 +22078,7 @@
                               "$type": "Models.Irrigation, Models",
                               "Name": "Irrigation",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -22194,7 +22086,7 @@
                               "$type": "Models.Fertiliser, Models",
                               "Name": "fertiliser",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -22210,7 +22102,7 @@
                               "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -22320,7 +22212,7 @@
                               ],
                               "Name": "DailyReport",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -22350,7 +22242,7 @@
                                 }
                               ],
                               "Name": "SowingRule",
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -22359,7 +22251,7 @@
                               "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {      \r\n        [Link] Plant Soybean;          \r\n        [Link] Zone zone;            \r\n                    \r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n        }       \r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n        if (Soybean.Phenology.CurrentPhaseName==\"ReadyForHarvesting\")\r\n           {\r\n           Soybean.Harvest();\r\n           Soybean.EndCrop();\r\n           }\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            \r\n        }\r\n    }\r\n}\r\n       \r\n",
                               "Parameters": [],
                               "Name": "HarvestRule",
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -22376,7 +22268,7 @@
                               ],
                               "Name": "HarvestReport",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -22458,7 +22350,7 @@
                               ],
                               "Name": "Operations",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -22469,7 +22361,7 @@
                               "DaysAfterEnding": 0,
                               "ResourceName": "Soybean",
                               "Name": "Soybean",
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -22685,12 +22577,12 @@
                                       "XFMetadata": null,
                                       "Name": "SoybeanSoil",
                                       "Children": [],
-                                      "IncludeInDocumentation": false,
+                                      "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -22818,7 +22710,7 @@
                                   ],
                                   "Name": "Organic",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -22914,7 +22806,7 @@
                                   "ESP": null,
                                   "Name": "Chemical",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -22983,7 +22875,7 @@
                                   "PHUnits": 0,
                                   "Name": "Initial nitrogen",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -22991,7 +22883,7 @@
                                   "$type": "Models.Soils.CERESSoilTemperature, Models",
                                   "Name": "CERESSoilTemperature",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -23050,7 +22942,7 @@
                                   "PrecipitationInterception": 0.0,
                                   "Name": "SoilWater",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -23281,12 +23173,12 @@
                                   },
                                   "ResourceName": "Nutrient",
                                   "Name": "Nutrient",
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -23312,7 +23204,7 @@
                                 }
                               ],
                               "Name": "WaterTableManager",
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -23330,17 +23222,17 @@
                               ],
                               "Name": "FACTSReport",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": false,
+                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -23413,7 +23305,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -23443,12 +23335,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -23511,7 +23403,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -23541,12 +23433,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -23903,7 +23795,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -23933,12 +23825,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -24101,7 +23993,7 @@
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -24169,7 +24061,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -24199,12 +24091,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -24267,7 +24159,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -24297,12 +24189,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -24365,7 +24257,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -24395,17 +24287,17 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -24795,7 +24687,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -24825,12 +24717,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -24893,7 +24785,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -24923,12 +24815,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -25285,7 +25177,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -25315,12 +25207,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -25423,7 +25315,7 @@
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -26167,7 +26059,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -26197,17 +26089,17 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -27202,12 +27094,12 @@
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": false,
+                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -27702,7 +27594,7 @@
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -50500,7 +50392,7 @@
                               "Filter": null,
                               "Name": "Temp",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -50530,12 +50422,12 @@
                               "Filter": null,
                               "Name": "Photoperiod",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -50598,12 +50490,12 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -50666,12 +50558,12 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -50734,17 +50626,17 @@
                               "Filter": null,
                               "Name": "Predicted",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
