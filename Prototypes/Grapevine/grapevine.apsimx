@@ -11113,26 +11113,8 @@
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factor, Models",
-                      "Specification": "[ParameterTest].Script.chill_a = 0.4",
-                      "Name": "ChillA",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Factorial.Factor, Models",
                       "Specification": "[Weather].FileName = Site1001_BRA.met,Site1002_OYB.met,Site1003_SEA.met,Site1004_RPC.met",
                       "Name": "Climate",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Factorial.Factor, Models",
-                      "Specification": "[ParameterTest].Script.chill_c = -0.28, -0.3, -0.32, -0.35",
-                      "Name": "ChillC",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -11788,7 +11770,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Zone zone;\r\n        [Link] Summary Summary;\r\n\r\n        //[Description(\"BudBurstBase\")]\r\n        //public double BudBurstBase  {get; set;}\r\n        [Description(\"chill_a\")]\r\n        public double chill_a  {get; set;}\r\n\r\n        [Description(\"chill_c\")]\r\n        public double chill_c  {get; set;}\r\n    \r\n        //Description(\"EndoTarget\")]\r\n        //public double EndoTarget  {get; set;}\r\n        //[Description(\"FloweringTarget\")]\r\n        //public double FloweringTarget  {get; set;}\r\n\r\n                \r\n        [EventSubscribe(\"PlantSowing\")]\r\n        private void OnPlantSowing(object sender, EventArgs e)\r\n        {\r\n            //zone.Set(\"Grapevine.Phenology.Budding.Target.Base.FixedValue\", BudBurstBase);\r\n            zone.Set(\"Grapevine.Phenology.Budding.Target.ChillingTadjustment.A\", chill_a);\r\n            zone.Set(\"Grapevine.Phenology.Budding.Target.ChillingTadjustment.C\", chill_c);\r\n            //zone.Set(\"Grapevine.Phenology.EndoDormancy.Target.FixedValue\", EndoTarget);\r\n            //zone.Set(\"Grapevine.Phenology.Flowering.Target.FixedValue\", FloweringTarget);                      \r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
+                  "Code": "\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Zone zone;\r\n        [Link] Summary Summary;\r\n\r\n        //[Description(\"BudBurstBase\")]\r\n        //public double BudBurstBase  {get; set;}\r\n      //  [Description(\"chill_a\")]\r\n       // public double chill_a  {get; set;}\r\n\r\n       // [Description(\"chill_c\")]\r\n       // public double chill_c  {get; set;}\r\n    \r\n        //Description(\"EndoTarget\")]\r\n        //public double EndoTarget  {get; set;}\r\n        //[Description(\"FloweringTarget\")]\r\n        //public double FloweringTarget  {get; set;}\r\n\r\n                \r\n        [EventSubscribe(\"PlantSowing\")]\r\n        private void OnPlantSowing(object sender, EventArgs e)\r\n        {\r\n            //zone.Set(\"Grapevine.Phenology.Budding.Target.Base.FixedValue\", BudBurstBase);\r\n            //zone.Set(\"Grapevine.Phenology.Budding.Target.ChillingTadjustment.A\", chill_a);\r\n           // zone.Set(\"Grapevine.Phenology.Budding.Target.ChillingTadjustment.C\", chill_c);\r\n            //zone.Set(\"Grapevine.Phenology.EndoDormancy.Target.FixedValue\", EndoTarget);\r\n            //zone.Set(\"Grapevine.Phenology.Flowering.Target.FixedValue\", FloweringTarget);                      \r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
                   "Parameters": [
                     {
                       "Key": "chill_a",
