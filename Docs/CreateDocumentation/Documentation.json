@@ -10,7 +10,7 @@
             ],
             "Rows": [
                 {
-                    "Name": "AGPRyegrass, AGPWhiteClover (AgPasture)",
+                    "Name": "AGPRyegrass (AgPasture)",
                     "Documents": [
                         {
                             "Name": "PDF",
@@ -19,7 +19,27 @@
                         {
                             "Name": "PDF",
                             "FileName": "Tests/Validation/AgPasture/AgPasture.apsimx",
+                            "OutputFileName": "AGPRyegrass.pdf",
                             "ModelNameToDocument": "AGPRyegrass"
+                        },
+                        {
+                            "Name": "PDF",
+                            "URL": "https://apsimdev.apsim.info/ApsimX/Documents/AgPastureScience.pdf"
+                        }
+                    ]
+                },
+                {
+                    "Name": "AGPWhiteClover (AgPasture)",
+                    "Documents": [
+                        {
+                            "Name": "PDF",
+                            "FileName": "Tests/Validation/AgPasture/AgPasture.apsimx"
+                        },
+                        {
+                            "Name": "PDF",
+                            "FileName": "Tests/Validation/AgPasture/AgPasture.apsimx",
+                            "OutputFileName": "AGPWhiteClover.pdf",
+                            "ModelNameToDocument": "AGPWhiteClover"
                         },
                         {
                             "Name": "PDF",

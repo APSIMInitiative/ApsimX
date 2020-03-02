@@ -651,7 +651,7 @@
                 // maxSize, on the other hand, is the length of the longest string in the column.
                 // The actual column width is whichever of these two values is smaller.
                 // MigraDoc will automatically wrap text to ensure the column respects this width.
-                double maxWidth = graphics.MeasureString(Enumerable.Repeat('m', tableObj.ColumnWidth).ToString(), gdiFont).Width;
+                double maxWidth = graphics.MeasureString(new string('m', tableObj.ColumnWidth), gdiFont).Width;
                 table.Columns[columnIndex].Width = Unit.FromPoint(Math.Min(maxWidth, maxSize) + 10);
             }
             
