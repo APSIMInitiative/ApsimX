@@ -111,9 +111,11 @@ namespace Models.Functions
                     IModel xValue = (IModel)Apsim.Get(this, "XValue");
                     string xName = xValue.Name;
                     
-                    tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + "</i> is calculated as a function of <i>" + xName + "</i>", indent));
+                    tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + "</i> is calculated using linear interpolation", indent));
 
                     tags.Add(new AutoDocumentation.GraphAndTable(XYPairs, string.Empty, xName, LookForYAxisTitle(this), indent));
+
+                    AutoDocumentation.DocumentModel(xValue, tags, headingLevel + 1, indent);
                 }
             }
         }
