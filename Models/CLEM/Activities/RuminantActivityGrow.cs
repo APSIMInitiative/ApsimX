@@ -617,7 +617,7 @@ namespace Models.CLEM.Activities
                     mortalityRate = 1 - (1 - ind.BreedParams.MortalityBase) * (1 - Math.Exp(Math.Pow(-(ind.BreedParams.MortalityCoefficient * (ind.Weight / ind.NormalisedAnimalWeight - ind.BreedParams.MortalityIntercept)), ind.BreedParams.MortalityExponent)));
                 }
                 // convert mortality from annual (calculated) to monthly (applied).
-                if (ZoneCLEM.RandomGenerator.NextDouble() <= (mortalityRate/12))
+                if (RandomNumberGenerator.Generator.NextDouble() <= (mortalityRate/12))
                 {
                     ind.Died = true;
                 }

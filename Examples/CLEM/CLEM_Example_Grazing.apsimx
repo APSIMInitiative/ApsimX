@@ -1,7 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 382,
-  "Version": 73,
+  "Version": 76,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-02-24",
   "Name": "Simulations",
   "Children": [
     {
@@ -63,8 +64,18 @@
               "ReadOnly": false
             },
             {
+              "$type": "Models.CLEM.RandomNumberGenerator, Models",
+              "Seed": 0,
+              "Iteration": 0,
+              "Name": "RandomNumbers",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
               "$type": "Models.CLEM.ZoneCLEM, Models",
-              "RandomSeed": 1,
+              "FarmMultiplier": 0.0,
               "ClimateRegion": 0,
               "EcologicalIndicatorsCalculationMonth": 12,
               "Area": 0.0,
@@ -798,15 +809,17 @@
                           "MaximumBreederAge": 120.0,
                           "MaximumProportionBreedersPerPurchase": 1.0,
                           "NumberOfBreederPurchaseAgeClasses": 1,
+                          "AdjustBreedingFemalesAtStartup": false,
                           "MaximumSiresKept": 1.0,
-                          "MaximumBullAge": 96.0,
-                          "BullAgeAtPurchase": 48.0,
+                          "MaximumSireAge": 96.0,
+                          "SireAgeAtPurchase": 24.0,
                           "AllowSireReplacement": false,
                           "MaximumSiresPerPurchase": 1,
-                          "FillBreedingMalesAtStartup": false,
+                          "AdjustBreedingMalesAtStartup": false,
                           "MaleSellingAge": 18.0,
                           "MaleSellingWeight": 350.0,
-                          "GrazeFoodStoreName": "GrazeFoodStore.NativePasture",
+                          "GrazeFoodStoreNameSires": "GrazeFoodStore.NativePasture",
+                          "GrazeFoodStoreNameBreeders": "GrazeFoodStore.NativePasture",
                           "MinimumPastureBeforeRestock": 1500.0,
                           "SellFemalesLikeMales": true,
                           "ContinuousMaleSales": false,
