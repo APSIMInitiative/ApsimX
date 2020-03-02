@@ -6816,7 +6816,7 @@
                       "Children": [
                         {
                           "$type": "Models.Core.Alias, Models",
-                          "Name": "Agtscythe",
+                          "Name": "Scythe",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
