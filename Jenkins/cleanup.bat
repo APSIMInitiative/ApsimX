@@ -17,3 +17,4 @@ if errorlevel 1 (
 git merge --abort
 
 popd>nul
+exit /b 0
