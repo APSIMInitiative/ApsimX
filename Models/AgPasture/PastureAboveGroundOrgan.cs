@@ -123,10 +123,10 @@
         public double DMTotalHarvestable { get { return DMLiveHarvestable + DMDeadHarvestable; } }
 
         /// <summary>The harvestable dry matter in the live (green) tissues (kg/ha).</summary>
-        public double DMLiveHarvestable { get { return Math.Max(0.0, Math.Min(DMLive - MinimumLiveDM, DMLive * FractionStanding)); } }
+        public double DMLiveHarvestable { get { return Math.Max(0, StandingLiveHerbageWt - MinimumLiveDM); } }
 
         /// <summary>The harvestable dry matter in the dead tissues (kg/ha).</summary>
-        public virtual double DMDeadHarvestable { get { return DMDead * FractionStanding; } }
+        public virtual double DMDeadHarvestable { get { return StandingDeadHerbageWt; } }
 
         /// <summary>Dry matter weight of standing herbage (kgDM/ha).</summary>
         [Units("kg/ha")]

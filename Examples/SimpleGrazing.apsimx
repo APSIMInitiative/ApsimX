@@ -2,7 +2,7 @@
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
   "Version": 79,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-02-24",
+  "ApsimVersion": "Version 0.0.0.0, built 2020-02-27",
   "Name": "Simulations",
   "Children": [
     {
@@ -83,20 +83,6 @@
               "SimpleMinGrazable": 3500.0,
               "SimpleGrazingResidual": 2000.0,
               "PreGrazeDMArray": [
-                1000.0,
-                1000.0,
-                1000.0,
-                1000.0,
-                1000.0,
-                1000.0,
-                1000.0,
-                1000.0,
-                1000.0,
-                1000.0,
-                1000.0,
-                1000.0
-              ],
-              "PostGrazeDMArray": [
                 2000.0,
                 2000.0,
                 2000.0,
@@ -109,6 +95,20 @@
                 2000.0,
                 2000.0,
                 2000.0
+              ],
+              "PostGrazeDMArray": [
+                1000.0,
+                1000.0,
+                1000.0,
+                1000.0,
+                1000.0,
+                1000.0,
+                1000.0,
+                1000.0,
+                1000.0,
+                1000.0,
+                1000.0,
+                1000.0
               ],
               "MaximumRotationLengthArray": null,
               "MinimumRotationLengthArray": null,

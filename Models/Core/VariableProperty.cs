@@ -47,7 +47,7 @@ namespace Models.Core
         /// <param name="arraySpecifier">An optional array specification e.g. 1:3</param>
         public VariableProperty(object model, PropertyInfo property, string arraySpecifier = null)
         {
-            if (model == null || property == null)
+            if (property == null)
             {
                 throw new ApsimXException(null, "Cannot create an instance of class VariableProperty with a null model or propertyInfo");
             }
@@ -800,5 +800,11 @@ namespace Models.Core
                 }
             }
         }
+
+        /// <summary>Return the summary comments from the source code.</summary>
+        public override string Summary { get { return AutoDocumentation.GetSummary(property); } }
+
+        /// <summary>Return the remarks comments from the source code.</summary>
+        public override string Remarks { get { return AutoDocumentation.GetRemarks(property); } }
     }
 }
