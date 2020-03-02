@@ -700,8 +700,12 @@
                     {
                         ShowDescriptionInRightHandPanel(descriptionName?.ToString());
                     }
+                    if (viewName != null && viewName.ToString().Contains(".glade"))
+                        ShowInRightHandPanel(model,
+                                             newView: new ViewBase(view as ViewBase, viewName.ToString()),
+                                             presenter: Assembly.GetExecutingAssembly().CreateInstance(presenterName.ToString()) as IPresenter);
 
-                    if (viewName != null && presenterName != null)
+                    else if (viewName != null && presenterName != null)
                         ShowInRightHandPanel(model, viewName.ToString(), presenterName.ToString());
                 }
             }
