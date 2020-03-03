@@ -2,7 +2,7 @@
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
   "Version": 79,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-02",
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-03",
   "Name": "Simulations",
   "Children": [
     {
@@ -7226,8 +7226,8 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Atmosphere",
                                         "Location": "48, 338",
-                                        "Colour": "255, 255, 255",
-                                        "OutlineColour": "255, 255, 255",
+                                        "Colour": "White",
+                                        "OutlineColour": "White",
                                         "Transparent": true
                                       },
                                       {
@@ -9292,8 +9292,8 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Atmosphere",
                                         "Location": "48, 338",
-                                        "Colour": "255, 255, 255",
-                                        "OutlineColour": "255, 255, 255",
+                                        "Colour": "White",
+                                        "OutlineColour": "White",
                                         "Transparent": true
                                       },
                                       {
@@ -11339,8 +11339,8 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Atmosphere",
                                         "Location": "48, 338",
-                                        "Colour": "255, 255, 255",
-                                        "OutlineColour": "255, 255, 255",
+                                        "Colour": "White",
+                                        "OutlineColour": "White",
                                         "Transparent": true
                                       },
                                       {
@@ -13386,8 +13386,8 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Atmosphere",
                                         "Location": "48, 338",
-                                        "Colour": "255, 255, 255",
-                                        "OutlineColour": "255, 255, 255",
+                                        "Colour": "White",
+                                        "OutlineColour": "White",
                                         "Transparent": true
                                       },
                                       {
@@ -15659,8 +15659,8 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Atmosphere",
                                         "Location": "48, 338",
-                                        "Colour": "255, 255, 255",
-                                        "OutlineColour": "255, 255, 255",
+                                        "Colour": "White",
+                                        "OutlineColour": "White",
                                         "Transparent": true
                                       },
                                       {
@@ -15955,7 +15955,12 @@
                                   ],
                                   "NO3N": [
                                     46.85,
-                                    46.85
+                                    46.85,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
                                   ],
                                   "NH4N": null,
                                   "SW": null,
@@ -17854,8 +17859,8 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Atmosphere",
                                         "Location": "48, 338",
-                                        "Colour": "255, 255, 255",
-                                        "OutlineColour": "255, 255, 255",
+                                        "Colour": "White",
+                                        "OutlineColour": "White",
                                         "Transparent": true
                                       },
                                       {
@@ -18150,7 +18155,12 @@
                                   ],
                                   "NO3N": [
                                     46.85,
-                                    46.85
+                                    46.85,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
                                   ],
                                   "NH4N": null,
                                   "SW": null,
@@ -20077,8 +20087,8 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Atmosphere",
                                         "Location": "48, 338",
-                                        "Colour": "255, 255, 255",
-                                        "OutlineColour": "255, 255, 255",
+                                        "Colour": "White",
+                                        "OutlineColour": "White",
                                         "Transparent": true
                                       },
                                       {
@@ -20373,7 +20383,12 @@
                                   ],
                                   "NO3N": [
                                     41.9,
-                                    41.9
+                                    41.9,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
                                   ],
                                   "NH4N": null,
                                   "SW": null,
