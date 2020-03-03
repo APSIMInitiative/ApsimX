@@ -104,6 +104,21 @@
         /// <summary>A list of exceptions thrown before and after the simulation runs. Will be null when no exceptions found.</summary>
         public List<Exception> PrePostExceptionsThrown { get; private set; }
 
+        /// <summary>Find and return a list of duplicate simulation names.</summary>
+        private List<string> FindDuplicateSimulationNames()
+        {
+            if (rootModel == null)
+                return new List<string>();
+
+            List<IModel> allSims = Apsim.ChildrenRecursively(rootModel, typeof(ISimulationDescriptionGenerator));
+            List<string> allSimNames = allSims.Select(s => s.Name).ToList();
+            var duplicates = allSimNames
+                .GroupBy(i => i)
+                .Where(g => g.Count() > 1)
+                .Select(g => g.Key);
+            return duplicates.ToList();
+        }
+
         /// <summary>Called once to do initialisation before any jobs are run. Should throw on error.</summary>
         protected override void PreRun()
         {
@@ -181,6 +196,10 @@
                     else if (rootModel is Simulation)
                         FileName = (rootModel as Simulation).FileName;
 
+                    // Check for duplicate simulation names.
+                    string[] duplicates = FindDuplicateSimulationNames().ToArray();
+                    if (duplicates != null && duplicates.Any())
+                        throw new Exception($"Duplicate simulation names found: {string.Join(", ", duplicates)}");
 
                     // Publish BeginRun event.
                     var e = new Events(rootModel);
