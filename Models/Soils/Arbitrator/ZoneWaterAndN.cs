@@ -13,8 +13,6 @@
     {
         private ISolute NO3Solute;
         private ISolute NH4Solute;
-        private ISolute PlantAvailableNO3Solute;
-        private ISolute PlantAvailableNH4Solute;
 
         private Soil soilInZone;
 
@@ -65,8 +63,6 @@
         {
             NO3Solute = from.NO3Solute;
             NH4Solute = from.NH4Solute;
-            PlantAvailableNO3Solute = from.PlantAvailableNO3Solute;
-            PlantAvailableNH4Solute = from.PlantAvailableNH4Solute;
             soilInZone = from.soilInZone;
             Zone = from.Zone;
 
@@ -94,8 +90,6 @@
         {
             NO3Solute = Apsim.Find(soilInZone, "NO3") as ISolute;
             NH4Solute = Apsim.Find(soilInZone, "NH4") as ISolute;
-            PlantAvailableNO3Solute = Apsim.Find(soilInZone, "PlantAvailableNO3") as ISolute;
-            PlantAvailableNH4Solute = Apsim.Find(soilInZone, "PlantAvailableNH4") as ISolute;
         }
 
         /// <summary>Initialises this instance.</summary>
@@ -104,8 +98,9 @@
             Water = soilInZone.Water;
             NO3N = NO3Solute.kgha;
             NH4N = NH4Solute.kgha;
-            PlantAvailableNO3N = PlantAvailableNO3Solute.kgha;
-            PlantAvailableNH4N = PlantAvailableNH4Solute.kgha;
+            // Assume all N is available
+            PlantAvailableNO3N = NO3Solute.kgha;
+            PlantAvailableNH4N = NH4Solute.kgha;
         }
 
         /// <summary>Implements the operator *.</summary>
