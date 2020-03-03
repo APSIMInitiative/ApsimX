@@ -2443,7 +2443,10 @@
             try
             {
                 IGridCell cell = GetCurrentCell;
-                if (cell != null && cell.EditorType == EditorTypeEnum.Button)
+                if (cell == null)
+                    return;
+
+                if (cell.EditorType == EditorTypeEnum.Button || cell.EditorType == EditorTypeEnum.MultiFiles)
                 {
                     string oldValue = cell.Value.ToString();
                     GridCellChangedArgs changedArgs = new GridCellChangedArgs(cell.RowIndex, cell.ColumnIndex, oldValue, oldValue);
