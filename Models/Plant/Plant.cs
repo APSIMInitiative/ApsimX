@@ -107,7 +107,29 @@
                 return new List<string>(cultivarNames).ToArray();
             }
         }
-        
+
+        /// <summary>Gets a list of cultivar names</summary>
+        public string[] CultivarList
+        {
+            get
+            {
+                List<string> cultivarNames = new List<string>();
+                foreach (Cultivar cultivar in this.Cultivars)
+                {
+                    string name = cultivar.Name;
+                    cultivarNames.Add(name);
+                    if (cultivar.Alias != null)
+                    {
+                        foreach (string alias in cultivar.Alias)
+                            cultivarNames.Add(alias);
+                    }
+                }
+                cultivarNames.Sort();
+                return cultivarNames.ToArray();
+            }
+        }
+
+
         /// <summary>A property to return all cultivar definitions.</summary>
         private List<Cultivar> Cultivars
         {
@@ -267,6 +289,9 @@
             IsEnding = false;
             DaysAfterEnding = 0;
             Clear();
+            IEnumerable<string> duplicates = CultivarList.GroupBy(x => x).Where(g => g.Count() > 1).Select(x => x.Key);
+            if (duplicates.Count() > 0)
+                throw new Exception("Duplicate Names in " + this.Name + " has duplicate cultivar names " + string.Join(",",duplicates));
         }
 
         /// <summary>Called when [phase changed].</summary>
