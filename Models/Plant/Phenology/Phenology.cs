@@ -129,9 +129,9 @@ namespace Models.PMF.Phen
             }
         }
 
-        /// <summary>A temporary flag for sorghum to reset the thermal time at change of phase.</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        public IFunction SorghumFlag  = null;
+        // /// <summary>A temporary flag for sorghum to reset the thermal time at change of phase.</summary>
+        //[Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        //public IFunction SorghumFlag  = null;
 
         ///6. Public methods
         /// -----------------------------------------------------------------------------------------------------------
@@ -381,7 +381,7 @@ namespace Models.PMF.Phen
 
                 //sorghum resets the stage variable to 0 on the day the phase changes
                 //it will resume again normally the day after
-                double resetSorghumStage = SorghumFlag != null && incrementPhase ? 0.0 : 1.0;
+//                double resetSorghumStage = SorghumFlag != null && incrementPhase ? 0.0 : 1.0;
                 
                 while (incrementPhase)
                 {
@@ -400,28 +400,29 @@ namespace Models.PMF.Phen
                         PhaseChangedData.StageName = CurrentPhase.Start;
                         PhaseChanged?.Invoke(plant, PhaseChangedData);
 
-                    if(SorghumFlag != null && CurrentPhase is EmergingPhase)
-                    {
-                        // void accumulate(...)
-                        double dltPhase = 1.0 + Stage % 1.0;
-                        double newStage = Math.Floor(Stage) + dltPhase;
-                        double dltStage = newStage - Stage;
-                        double pIndex = Stage;
-                        double dltIndex = dltStage;
-                        double indexDevel = pIndex - Math.Floor(pIndex) + dltIndex;
-                        double portionInOld = 1 - APSIM.Shared.Utilities.MathUtilities.Divide(indexDevel - 1, dltIndex, 0);
-                        propOfDayToUse = 1 - portionInOld;
-                    }
+                    //if(SorghumFlag != null && CurrentPhase is EmergingPhase)
+                    //{
+                    //    // void accumulate(...)
+                    //    double dltPhase = 1.0 + Stage % 1.0;
+                    //    double newStage = Math.Floor(Stage) + dltPhase;
+                    //    double dltStage = newStage - Stage;
+                    //    double pIndex = Stage;
+                    //    double dltIndex = dltStage;
+                    //    double indexDevel = pIndex - Math.Floor(pIndex) + dltIndex;
+                    //    double portionInOld = 1 - APSIM.Shared.Utilities.MathUtilities.Divide(indexDevel - 1, dltIndex, 0);
+                    //    propOfDayToUse = 1 - portionInOld;
+                    //}
                     incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
-                    if (SorghumFlag != null && CurrentStageName == "Emergence")
-                        AccumulatedEmergedTT -= (1 - propOfDayToUse) * thermalTime.Value();
+                    //if (SorghumFlag != null && CurrentStageName == "Emergence")
+                    //    AccumulatedEmergedTT -= (1 - propOfDayToUse) * thermalTime.Value();
                 }
 
                 AccumulatedTT += thermalTime.Value();
                 if (Emerged)
                     AccumulatedEmergedTT += thermalTime.Value();
 
-                Stage = (currentPhaseIndex + 1) + resetSorghumStage * CurrentPhase.FractionComplete;
+                Stage = (currentPhaseIndex + 1) + CurrentPhase.FractionComplete;
+//                Stage = (currentPhaseIndex + 1) + resetSorghumStage * CurrentPhase.FractionComplete;
 
                 if (plant != null && plant.IsAlive && PostPhenology != null)
                         PostPhenology.Invoke(this, new EventArgs());

@@ -99,30 +99,30 @@ namespace Models.PMF
         #endregion
         private List<IModel> uptakeModels = null;
         private List<IModel> zones = null;
-        private bool doIncrement;
+        //private bool doIncrement;
         private double stage;
         private IPhase previousPhase;
         private double accumTT;
 
-        /// <summary>
-        /// (Fractional) number of days from floral init to start grain fill.
-        /// FIXME - This doesn't belong in the arbitrator.
-        /// </summary>
-        public double NDaysFIToSgf
-        {
-            get
-            {
-                int fi = 1 + phenology.StartStagePhaseIndex("FloralInitiation");
-                int sgf = phenology.StartStagePhaseIndex("StartGrainFill");
-                return MathUtilities.Sum(DaysTotal.ToArray(), fi, sgf);
-            }
-        }
+//        /// <summary>
+//        /// (Fractional) number of days from floral init to start grain fill.
+//        /// FIXME - This doesn't belong in the arbitrator.
+//        /// </summary>
+        //public double NDaysFIToSgf
+        //{
+        //    get
+        //    {
+        //        int fi = 1 + phenology.StartStagePhaseIndex("FloralInitiation");
+        //        int sgf = phenology.StartStagePhaseIndex("StartGrainFill");
+        //        return MathUtilities.Sum(DaysTotal.ToArray(), fi, sgf);
+        //    }
+        //}
 
-        /// <summary>
-        /// DaysTotal - equivalent of phenology->daysTotal in old apsim.
-        /// </summary>
-        [JsonIgnore]
-        public List<double> DaysTotal { get; private set; } = new List<double>();
+//        /// <summary>
+//        /// DaysTotal - equivalent of phenology->daysTotal in old apsim.
+//        /// </summary>
+        //[JsonIgnore]
+        //public List<double> DaysTotal { get; private set; } = new List<double>();
 
         /// <summary>
         /// Total TTFM accumulated from flowering.
@@ -145,7 +145,7 @@ namespace Models.PMF
             stage = phenology.Stage;
             uptakeModels = Apsim.ChildrenRecursively(Parent, typeof(IUptake));
             zones = Apsim.ChildrenRecursively(this.Parent, typeof(Zone));
-            DaysTotal = new List<double>();
+//            DaysTotal = new List<double>();
             previousPhase = phenology.CurrentPhase;
             DMPlantMax = 9999;
         }
@@ -153,7 +153,7 @@ namespace Models.PMF
         [EventSubscribe("StartOfDay")]
         private void OnStartOfDay(object sender, EventArgs e)
         {
-            doIncrement = true;
+            //doIncrement = true;
             WAllocated = 0;
         }
 
@@ -202,7 +202,7 @@ namespace Models.PMF
             NMassFlowSupply = 0.0;
             NDiffusionSupply = 0.0;
             TTFMFromFlowering = 0.0;
-            DaysTotal = new List<double>();
+ //           DaysTotal = new List<double>();
 
             SWAvailRatio = 0.0;
             SDRatio = 0.0;
@@ -221,65 +221,65 @@ namespace Models.PMF
         /// <param name="calcNewStage"></param>
         private void IncrementDaysTotal(bool calcNewStage)
         {
-            if (doIncrement)
-            {
-                double newStage = phenology.Stage;
-                if (calcNewStage)
-                    newStage = Math.Floor(newStage) + 1; // 😭
+            //if (doIncrement)
+            //{
+            //    double newStage = phenology.Stage;
+            //    if (calcNewStage)
+            //        newStage = Math.Floor(newStage) + 1; // 😭
 
-                int phaseIndex = Convert.ToInt32(Math.Floor(newStage));
-                while (DaysTotal.Count <= phaseIndex)
-                    DaysTotal.Add(0);
+            //    int phaseIndex = Convert.ToInt32(Math.Floor(newStage));
+            //    while (DaysTotal.Count <= phaseIndex)
+            //        DaysTotal.Add(0);
 
-                if (phaseIndex == Convert.ToInt32(Math.Floor(stage)))
-                    DaysTotal[phaseIndex]++;
-                else if (previousPhase is GenericPhase phase)
-                {
-                    double dltTT = phase.ProgressionForTimeStep;
-                    double potDltTT = DltTT;
+            //    if (phaseIndex == Convert.ToInt32(Math.Floor(stage)))
+            //        DaysTotal[phaseIndex]++;
+            //    else if (previousPhase is GenericPhase phase)
+            //    {
+            //        double dltTT = phase.ProgressionForTimeStep;
+            //        double potDltTT = DltTT;
 
-                    // TT proportions should be based on dlt in prev phase / total daily dlTT.
-                    // If after flowering, use dltTTFM instead. If on day of flowering, we want
-                    // to mimic a bug in old apsim where the proportion is still based on dltTT.
-                    if (phenology.Between("Flowering", "Maturity") && phaseIndex != 7)
-                        potDltTT = (double?)Apsim.Get(this, "[Phenology].DltTTFM.Value()") ?? (double)Apsim.Get(this, "[Phenology].ThermalTime.Value()");
+            //        // TT proportions should be based on dlt in prev phase / total daily dlTT.
+            //        // If after flowering, use dltTTFM instead. If on day of flowering, we want
+            //        // to mimic a bug in old apsim where the proportion is still based on dltTT.
+            //        if (phenology.Between("Flowering", "Maturity") && phaseIndex != 7)
+            //            potDltTT = (double?)Apsim.Get(this, "[Phenology].DltTTFM.Value()") ?? (double)Apsim.Get(this, "[Phenology].ThermalTime.Value()");
 
-                    // Amount of TT which goes to next phase = total TT - amount allocated to previous phase.
-                    double portionInNew = Math.Max(0, potDltTT - dltTT);
+            //        // Amount of TT which goes to next phase = total TT - amount allocated to previous phase.
+            //        double portionInNew = Math.Max(0, potDltTT - dltTT);
 
-                    double propInNew = MathUtilities.Divide(portionInNew, potDltTT, 0);
-                    double propInOld = 1 - propInNew;
+            //        double propInNew = MathUtilities.Divide(portionInNew, potDltTT, 0);
+            //        double propInOld = 1 - propInNew;
 
-                    DaysTotal[phaseIndex] += propInNew;
-                    if (phaseIndex > 0)
-                        DaysTotal[phaseIndex - 1] += propInOld;
-                }
-                else if (previousPhase is EmergingPhase emerg)
-                {
-                    double dltTT = emerg.TTForTimeStep;
-                    double potDltTT = DltTT;
+            //        DaysTotal[phaseIndex] += propInNew;
+            //        if (phaseIndex > 0)
+            //            DaysTotal[phaseIndex - 1] += propInOld;
+            //    }
+            //    else if (previousPhase is EmergingPhase emerg)
+            //    {
+            //        double dltTT = emerg.TTForTimeStep;
+            //        double potDltTT = DltTT;
 
-                    // Amount of TT which goes to next phase = total TT - amount allocated to previous phase.
-                    double portionInNew = Math.Max(0, potDltTT - dltTT);
-                    double propInNew = MathUtilities.Divide(portionInNew, potDltTT, 0);
-                    double propInOld = 1 - propInNew;
+            //        // Amount of TT which goes to next phase = total TT - amount allocated to previous phase.
+            //        double portionInNew = Math.Max(0, potDltTT - dltTT);
+            //        double propInNew = MathUtilities.Divide(portionInNew, potDltTT, 0);
+            //        double propInOld = 1 - propInNew;
 
-                    DaysTotal[phaseIndex] += propInNew;
-                    if (phaseIndex > 0)
-                        DaysTotal[phaseIndex - 1] += propInOld;
-                }
-                else
-                {
-                    double propInOld = phaseIndex - stage;
-                    double propInNew = 1 - propInOld;
-                    DaysTotal[phaseIndex] += propInNew;
-                    DaysTotal[phaseIndex - 1] += propInOld;
-                }
+            //        DaysTotal[phaseIndex] += propInNew;
+            //        if (phaseIndex > 0)
+            //            DaysTotal[phaseIndex - 1] += propInOld;
+            //    }
+            //    else
+            //    {
+            //        double propInOld = phaseIndex - stage;
+            //        double propInNew = 1 - propInOld;
+            //        DaysTotal[phaseIndex] += propInNew;
+            //        DaysTotal[phaseIndex - 1] += propInOld;
+            //    }
 
-                stage = newStage;
-                previousPhase = phenology.CurrentPhase;
-                doIncrement = false;
-            }
+            //    stage = newStage;
+            //    previousPhase = phenology.CurrentPhase;
+            //    doIncrement = false;
+            //}
         }
 
         #region IUptake interface
