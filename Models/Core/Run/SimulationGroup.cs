@@ -111,12 +111,17 @@
                 return new List<string>();
 
             List<IModel> allSims = Apsim.ChildrenRecursively(rootModel, typeof(ISimulationDescriptionGenerator));
-            List<string> allSimNames = allSims.Select(s => s.Name).ToList();
-            var duplicates = allSimNames
-                .GroupBy(i => i)
-                .Where(g => g.Count() > 1)
-                .Select(g => g.Key);
-            return duplicates.ToList();
+
+            List<string> dupes = new List<string>();
+            foreach (var simType in allSims.GroupBy(s => s.GetType()))
+            {
+                dupes.AddRange(simType.Select(s => s.Name)
+                    .GroupBy(i => i)
+                    .Where(g => g.Count() > 1)
+                    .Select(g => g.Key));
+            }
+
+            return dupes;
         }
 
         /// <summary>Called once to do initialisation before any jobs are run. Should throw on error.</summary>
