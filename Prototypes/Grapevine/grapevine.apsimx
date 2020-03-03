@@ -2,7 +2,7 @@
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 278,
   "Version": 79,
-  "ApsimVersion": "Version 2020.2.26.4761, built 2020-02-26",
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-04",
   "Name": "Simulations",
   "Children": [
     {
@@ -85,7 +85,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "Phenology.AccChillMar1st",
+                          "VariableName": "[Phenology].AccChillMar1st",
                           "Name": "AccChillMar1st",
                           "Children": [],
                           "IncludeInDocumentation": true,
