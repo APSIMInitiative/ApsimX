@@ -1599,7 +1599,8 @@
             // Rename ExcelInput.FileName to FileNames and make it an array.
             foreach (JObject excelInput in JsonUtilities.ChildrenRecursively(root, "ExcelInput"))
             {
-                excelInput["FileNames"] = new JArray(excelInput["FileName"].Value<string>());
+                if (excelInput["FileName"] != null)
+                    excelInput["FileNames"] = new JArray(excelInput["FileName"].Value<string>());
             }
 
             // Replace ExcelMultiInput with an ExcelInput.
