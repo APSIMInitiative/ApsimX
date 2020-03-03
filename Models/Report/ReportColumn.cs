@@ -396,6 +396,8 @@
                         result = MathUtilities.Sum(this.valuesToAggregate.Cast<int>());
                     else
                         throw new Exception("Unable to use sum function for variable of type " + this.valuesToAggregate[0].GetType().ToString());
+                else if (this.aggregationFunction.Equals("prod", StringComparison.CurrentCultureIgnoreCase))
+                    result = MathUtilities.Prod(this.valuesToAggregate);
                 else if (this.aggregationFunction.Equals("mean", StringComparison.CurrentCultureIgnoreCase))
                     result = MathUtilities.Average(this.valuesToAggregate);
                 else if (this.aggregationFunction.Equals("min", StringComparison.CurrentCultureIgnoreCase))

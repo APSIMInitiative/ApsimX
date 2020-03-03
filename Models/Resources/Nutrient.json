@@ -96,22 +96,6 @@
             "Colour": "White",
             "OutlineColour": "White",
             "Transparent": true
-          },
-          {
-            "$type": "Models.Graph.Node, Models",
-            "Name": "PlantAvailableNO3",
-            "Location": "688, 415",
-            "Colour": "86, 180, 233",
-            "OutlineColour": "Black",
-            "Transparent": false
-          },
-          {
-            "$type": "Models.Graph.Node, Models",
-            "Name": "PlantAvailableNH4",
-            "Location": "691, 421",
-            "Colour": "86, 180, 233",
-            "OutlineColour": "Black",
-            "Transparent": false
           }
         ],
         "Arcs": [
@@ -1501,44 +1485,6 @@
           "Expression": "([Soil].BD*[Soil].Thickness)/100",
           "Name": "ppm2kgha",
           "Children": [],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Soils.Nutrients.Solute, Models",
-          "kgha": null,
-          "Name": "PlantAvailableNO3",
-          "Children": [
-            {
-              "$type": "Models.Memo, Models",
-              "Text": "This pool is required as part of the interface for some plant models.  Currently, no functionality is provided for this pool.",
-              "Name": "Memo",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Soils.Nutrients.Solute, Models",
-          "kgha": null,
-          "Name": "PlantAvailableNH4",
-          "Children": [
-            {
-              "$type": "Models.Memo, Models",
-              "Text": "This pool is required as part of the interface for some plant models.  Currently, no functionality is provided for this pool.",
-              "Name": "Memo",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
