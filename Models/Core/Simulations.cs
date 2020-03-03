@@ -177,18 +177,6 @@ namespace Models.Core
             SetFileNameInAllSimulations();
         }
 
-        /// <summary>Find and return a list of duplicate simulation names.</summary>
-        public List<string> FindDuplicateSimulationNames()
-        {
-            List<IModel> allSims = Apsim.ChildrenRecursively(this, typeof(Simulation));
-            List<string> allSimNames = allSims.Select(s => s.Name).ToList();
-            var duplicates = allSimNames
-                .GroupBy(i => i)
-                .Where(g => g.Count() > 1)
-                .Select(g => g.Key);
-            return duplicates.ToList();
-        }
-
         /// <summary>Look through all models. For each simulation found set the filename.</summary>
         private void SetFileNameInAllSimulations()
         {

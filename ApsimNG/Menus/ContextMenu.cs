@@ -434,23 +434,14 @@ namespace UserInterface.Presenters
         {
             if (this.explorerPresenter.Save())
             {
-                List<string> duplicates = this.explorerPresenter.ApsimXFile.FindDuplicateSimulationNames();
-                if (duplicates.Count > 0)
-                {
-                    string errorMessage = "Duplicate simulation names found " + StringUtilities.BuildString(duplicates.ToArray(), ", ");
-                    explorerPresenter.MainPresenter.ShowError(errorMessage);
-                }
-                else
-                {
-                    Runner.RunTypeEnum typeOfRun = Runner.RunTypeEnum.MultiThreaded;
-                    if (multiProcessRunner)
-                        typeOfRun = Runner.RunTypeEnum.MultiProcess;
+                Runner.RunTypeEnum typeOfRun = Runner.RunTypeEnum.MultiThreaded;
+                if (multiProcessRunner)
+                    typeOfRun = Runner.RunTypeEnum.MultiProcess;
 
-                    Model model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
-                    var runner = new Runner(model, runType:typeOfRun, wait: false);
-                    this.command = new RunCommand(model.Name, runner, this.explorerPresenter);
-                    this.command.Do(null);
-                }
+                Model model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
+                var runner = new Runner(model, runType:typeOfRun, wait: false);
+                this.command = new RunCommand(model.Name, runner, this.explorerPresenter);
+                this.command.Do(null);
             }
         }
 
