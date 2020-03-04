@@ -51,13 +51,16 @@ namespace Models.Core
             {
                 throw new ApsimXException(null, "Cannot create an instance of class VariableProperty with a null model or propertyInfo");
             }
-
             this.Object = model;
             this.property = property;
             this.lowerArraySpecifier = 0;
             this.upperArraySpecifier = 0;
 
             ProcessArraySpecifier(arraySpecifier);
+
+            // If the array specifier was specified and it was a zero then issue error
+            if (arraySpecifier != null && lowerArraySpecifier == 0)
+                throw new Exception("Array indexing in APSIM (report) is one based. Cannot have an index of zero. Variable called " + property.Name);
         }
 
         /// <summary>

@@ -10,6 +10,7 @@
     using System.Data;
     using System.Globalization;
     using System.IO;
+    using System.Linq;
 
     /// <summary>
     /// # [Name]
@@ -21,7 +22,7 @@
     [ValidParent(ParentType=typeof(DataStore))]
     public class ExcelInput : Model, IPostSimulationTool, IReferenceExternalFiles
     {
-        private string _filename;
+        private string[] filenames;
 
         /// <summary>
         /// The DataStore.
@@ -32,22 +33,22 @@
         /// <summary>
         /// Gets or sets the file name to read from.
         /// </summary>
-        [Description("EXCEL file name (must be .xlsx)")]
-        [Display(Type=DisplayType.FileName)]
-        public string FileName
+        [Description("EXCEL file names")]
+        [Tooltip("Can contain more than one file name, separated by commas.")]
+        [Display(Type=DisplayType.FileNames)]
+        public string[] FileNames
         {
             get
             {
-                return this._filename;
+                return this.filenames;
             }
-
             set
             {
                 Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
                 if (simulations != null && simulations.FileName != null)
-                    this._filename = PathUtilities.GetRelativePath(value, simulations.FileName);
+                    this.filenames = value.Select(v => PathUtilities.GetRelativePath(v, simulations.FileName)).ToArray();
                 else
-                    this._filename = value;
+                    this.filenames = value;
             }
         }
 
@@ -89,17 +90,7 @@
         /// <summary>Return our input filenames</summary>
         public IEnumerable<string> GetReferencedFileNames()
         {
-            return new string[] { FileName };
-        }
-
-        /// <summary>Gets the absolute file name.</summary>
-        private string AbsoluteFileName
-        {
-            get
-            {
-                //var storage = Apsim.Find(this, typeof(IDataStore)) as IDataStore;
-                return PathUtilities.GetAbsolutePath(this.FileName, storage.FileName);
-            }
+            return FileNames;
         }
 
         /// <summary>
@@ -107,49 +98,48 @@
         /// </summary>
         public void Run()
         {
-            string fullFileName = AbsoluteFileName;
-            if (fullFileName != null && File.Exists(fullFileName))
-            {
-                // Open the file
-                FileStream stream = File.Open(fullFileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+            foreach (string sheet in SheetNames)
+                if (storage.Reader.TableNames.Contains(sheet))
+                    storage.Writer.DeleteTable(sheet);
 
-                // Create a reader.
-                IExcelDataReader excelReader;
-                if (Path.GetExtension(fullFileName).Equals(".xls", StringComparison.CurrentCultureIgnoreCase))
-                    throw new Exception("EXCEL file must be in .xlsx format. Filename: " + fullFileName);
-                else
+            foreach (string fileName in FileNames)
+            {
+                string absoluteFileName = PathUtilities.GetAbsolutePath(fileName.Trim(), storage.FileName);
+                if (!File.Exists(absoluteFileName))
+                    throw new Exception($"Error in {Name}: file '{absoluteFileName}' does not exist");
+
+                if (Path.GetExtension(absoluteFileName).Equals(".xls", StringComparison.CurrentCultureIgnoreCase))
+                    throw new Exception($"EXCEL file '{absoluteFileName}' must be in .xlsx format.");
+
+                // Open the file
+                using (FileStream stream = File.Open(absoluteFileName, FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
                     // Reading from a OpenXml Excel file (2007 format; *.xlsx)
-                    excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream);
-                }
-
-                // Read all sheets from the EXCEL file as a data set
-                // excelReader.IsFirstRowAsColumnNames = true;
-                DataSet dataSet = excelReader.AsDataSet(new ExcelDataSetConfiguration()
-                {
-                    ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+                    using (IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream))
                     {
-                        UseHeaderRow = true
-                    }
-                });
+                        // Read all sheets from the EXCEL file as a data set.
+                        DataSet dataSet = excelReader.AsDataSet(new ExcelDataSetConfiguration()
+                        {
+                            UseColumnDataType = true,
+                            ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+                            {
+                                UseHeaderRow = true
+                            }
+                        });
 
-                // Write all sheets that are specified in 'SheetNames' to the data store
-                foreach (DataTable table in dataSet.Tables)
-                {
-                    bool keep = StringUtilities.IndexOfCaseInsensitive(this.SheetNames, table.TableName) != -1;
-                    if (keep)
-                    {
-                        TruncateDates(table);
-                        storage.Writer.WriteTable(table);
+                        // Write all sheets that are specified in 'SheetNames' to the data store
+                        foreach (DataTable table in dataSet.Tables)
+                        {
+                            if (SheetNames.Any(str => string.Equals(str.Trim(), table.TableName, StringComparison.InvariantCultureIgnoreCase)))
+                            {
+                                TruncateDates(table);
+
+                                storage.Writer.WriteTable(table);
+                                storage.Writer.WaitForIdle();
+                            }
+                        }
                     }
                 }
-
-                // Close the reader and free resources.
-                excelReader.Close();
-            }
-            else
-            {
-                throw new ApsimXException(this, string.Format("Unable to read Excel file '{0}': file does not exist.", fullFileName));
             }
         }
 
