@@ -1626,6 +1626,10 @@
             // Replace ExcelMultiInput with an ExcelInput.
             foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
             {
+                manager.Replace("Models.Report", "Models");
+                manager.Replace("using Report", "using Models");
+                //manager.ReplaceRegex("(using Models.+)using Models", "$1");
+                manager.Replace("Report.Report", "Report");
                 manager.Replace("Report", "Report");
                 manager.Save();
             }
