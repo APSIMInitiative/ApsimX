@@ -563,10 +563,10 @@
                     }
                 }
 
-                string pngFileName = Path.Combine(WorkingDirectory,
-                                                  graphPage.graphs[0].Parent.Parent.Name +
-                                                  graphPage.graphs[0].Parent.Name +
-                                                  graphPage.name + ".png");
+                string basePngFileName = Apsim.FullPath(graphPage.graphs[0].Parent) + "." +
+                                                        graphPage.name + ".png";
+                basePngFileName = basePngFileName.TrimStart('.');
+                string pngFileName = Path.Combine(WorkingDirectory, basePngFileName);
                 image.Save(pngFileName, System.Drawing.Imaging.ImageFormat.Png);
 
                 MigraDoc.DocumentObjectModel.Shapes.Image sectionImage = section.AddImage(pngFileName);

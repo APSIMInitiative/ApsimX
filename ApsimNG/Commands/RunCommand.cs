@@ -139,7 +139,9 @@
         /// <param name="e"></param>
         private void OnTimerTick(object sender, ElapsedEventArgs e)
         {
-            if (jobRunner.TotalNumberOfSimulations > 0)
+            if (jobRunner == null)
+                timer?.Stop();
+            else if (jobRunner.TotalNumberOfSimulations > 0)
             {
                 explorerPresenter.MainPresenter.ShowMessage(jobName + " running (" +
                          jobRunner.NumberOfSimulationsCompleted + " of " +

@@ -171,10 +171,39 @@
         /// Initializes a new instance of the <see cref="GridView" /> class.
         /// </summary>
         /// <param name="owner">The owning view.</param>
+        public GridView() : base()
+        {
+
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GridView" /> class.
+        /// </summary>
+        /// <param name="owner">The owning view.</param>
         public GridView(ViewBase owner) : base(owner)
         {
+            Initialise(owner, null);
+        }
+
+        /// <summary>
+        /// A method used when a view is wrapping a gtk control.
+        /// </summary>
+        /// <param name="ownerView">The owning view.</param>
+        /// <param name="gtkControl">The gtk control being wrapped.</param>
+        protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
+        {
+            owner = ownerView;
+            
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.GridView.glade");
             hboxContainer = (HBox)builder.GetObject("hbox1");
+            if (gtkControl != null)
+            {
+                // Use the gtkControl argument as the parent widget and make the builders hbox a child of it.
+                var child = hboxContainer;
+                hboxContainer = gtkControl as HBox;
+                hboxContainer.PackStart(child);
+            }
+
             scrollingWindow = (ScrolledWindow)builder.GetObject("scrolledwindow1");
             Grid = (Gtk.TreeView)builder.GetObject("gridview");
             fixedColView = (Gtk.TreeView)builder.GetObject("fixedcolview");
@@ -207,7 +236,7 @@
             splitter.Child1.NoShowAll = true;
             mainWidget.Destroyed += MainWidgetDestroyed;
         }
-
+        
         /// <summary>
         /// Invoked when the user wants to copy a range of cells to the clipboard.
         /// </summary>
