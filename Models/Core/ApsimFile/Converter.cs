@@ -1631,6 +1631,9 @@
                 //manager.ReplaceRegex("(using Models.+)using Models", "$1");
                 manager.Replace("Report.Report", "Report");
                 manager.Replace("Report", "Report");
+
+                manager.SetUsingStatements(manager.GetUsingStatements().Distinct());
+
                 manager.Save();
             }
         }
