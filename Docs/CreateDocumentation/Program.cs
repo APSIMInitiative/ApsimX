@@ -220,7 +220,7 @@
                         href = Path.GetFileName(createDoc.FileNameWritten);
                     }
 
-                    return string.Format("<p><a href=\"{0}{1}\" target=\"_blank\">{2}</a></p>", destinationUrl, href, hrefName);
+                    return string.Format("<p><a href=\"{0}/{1}\" target=\"_blank\">{2}</a></p>", destinationUrl, href, hrefName);
                 }
                 else
                     return null;
