@@ -209,8 +209,21 @@
 
             // Create a row ready for writing.
             List<object> valuesToWrite = new List<object>();
+            List<string> invalidVariables = new List<string>();
             for (int i = 0; i < columns.Count; i++)
-                valuesToWrite.Add(columns[i].GetValue());
+            {
+                try
+                {
+                    valuesToWrite.Add(columns[i].GetValue());
+                }
+                catch// (Exception err)
+                {
+                    // Should we include exception message?
+                    invalidVariables.Add(columns[i].Name);
+                }
+            }
+            if (invalidVariables != null && invalidVariables.Count > 0)
+                throw new Exception($"Invalid report variables found:\n{string.Join("\n", invalidVariables)}");
 
             // Add row to our table that will be written to the db file
             dataToWriteToDb.Rows.Add(valuesToWrite);

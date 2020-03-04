@@ -354,16 +354,18 @@
         private object GetVariableValue()
         {
             object value = null;
-            try
-            {
+            //try
+            //{
                 value = locator.Get(variableName);
-            }
-            catch (Exception)
-            {
-                // Swallow exception because reporting sum(Wheat.Root.PlantZone.WaterUptake) will
-                // throw an exception before the crop is sown. We don't want this to stop the
-                // simulation. Instead, simply report null.
-            }
+            //}
+            //catch (Exception)
+            //{
+            //    // Swallow exception because reporting sum(Wheat.Root.PlantZone.WaterUptake) will
+            //    // throw an exception before the crop is sown. We don't want this to stop the
+            //    // simulation. Instead, simply report null.
+            //}
+            if (value == null)
+                throw new Exception($"Unable to locate report variable: {variableName}");
             if (value is IFunction function)
                 value = function.Value();
             else if (value != null && (value.GetType().IsArray || value.GetType().IsClass))
