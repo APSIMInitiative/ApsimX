@@ -701,9 +701,12 @@
                 for (int m = 0; m < 12; m++)
                 {
                     monthlyMeans[m, y] = monthlySums[m, y] / monthlyDays[m, y];  // calc monthly mean
-                    sumOfMeans += monthlyMeans[m, y];
-                    maxMean = Math.Max(monthlyMeans[m, y], maxMean);
-                    minMean = Math.Min(monthlyMeans[m, y], minMean);
+                    if (monthlyDays[m, y] != 0)
+                    {
+                        sumOfMeans += monthlyMeans[m, y];
+                        maxMean = Math.Max(monthlyMeans[m, y], maxMean);
+                        minMean = Math.Min(monthlyMeans[m, y], minMean);
+                    }
                 }
 
                 yearlySumMeans += sumOfMeans / 12.0;        // accum the ave of monthly means
