@@ -17,7 +17,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 80; } }
+        public static int LatestVersion { get { return 81; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1601,6 +1601,35 @@
             {
                 if (excelInput["FileName"] != null)
                     excelInput["FileNames"] = new JArray(excelInput["FileName"].Value<string>());
+            }
+
+            // Replace ExcelMultiInput with an ExcelInput.
+            foreach (JObject excelMultiInput in JsonUtilities.ChildrenRecursively(root, "ExcelMultiInput"))
+            {
+                excelMultiInput["$type"] = "Models.PostSimulationTools.ExcelInput, Models";
+            }
+        }
+
+        /// <summary>
+        /// Add Critical N Conc (if not existing) to all Root Objects by copying the maximum N conc
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion81(JObject root, string fileName)
+        {
+
+            foreach (JObject r in JsonUtilities.ChildrenRecursively(root, "Root"))
+            {
+                if (JsonUtilities.ChildWithName(r, "CriticalNConc") == null)
+                {
+                    JObject maxNConc = JsonUtilities.ChildWithName(r, "MaximumNConc");
+                    if (maxNConc == null)
+                        throw new Exception("Root has no CriticalNConc or MaximumNConc");
+
+                    JObject critNConc = maxNConc.DeepClone() as JObject;
+                    critNConc["Name"] = "CriticalNConc";
+                    (r["Children"] as JArray).Add(critNConc);
+                }
             }
 
             // Replace ExcelMultiInput with an ExcelInput.

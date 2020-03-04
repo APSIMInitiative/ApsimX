@@ -114,10 +114,6 @@
 
         /// <summary>The nitrogen root calc switch</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        private IFunction NitrogenRootCalcSwitch = null;
-
-        /// <summary>The nitrogen root calc switch</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         public IFunction RootFrontCalcSwitch = null;
 
         /// <summary>The N retranslocation factor</summary>
@@ -160,6 +156,11 @@
         [Units("g/g")]
         private IFunction minimumNConc = null;
 
+        /// <summary>The critical N concentration</summary>
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        [Units("g/g")]
+        private IFunction criticalNConc = null;
+ 
         /// <summary>The maximum daily N uptake</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("kg N/ha")]
@@ -566,7 +567,7 @@
         [EventSubscribe("SetNDemand")]
         private void SetNDemand(object sender, EventArgs e)
         {
-            if(NitrogenRootCalcSwitch != null && nDemands != null && NitrogenRootCalcSwitch.Value() > 0.9)
+            if(nDemands != null)
             {
                 //use interface NDemand functions - used for sorghum model
                 CalculateNDemandsUsingSimpleFunctions();
@@ -590,6 +591,8 @@
 
                 for (int i = 0; i < Z.LayerLive.Length; i++)
                 {
+                    double criticalN = (criticalNConc == null) ? minimumNConc.Value() : criticalNConc.Value();
+
                     Z.StructuralNDemand[i] = Z.PotentialDMAllocated[i] * minNConc;
                     NDeficit = Math.Max(0.0, maxNConc * (Z.LayerLive[i].Wt + Z.PotentialDMAllocated[i]) - (Z.LayerLive[i].N + Z.StructuralNDemand[i]));
                     Z.StorageNDemand[i] = Math.Max(0, NDeficit - Z.StructuralNDemand[i]);
