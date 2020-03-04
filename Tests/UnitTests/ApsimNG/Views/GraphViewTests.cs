@@ -59,7 +59,7 @@ namespace UnitTests.ApsimNG.Views
                                 Area = 1,
                                 Children = new List<Model>()
                                 {
-                                    new Models.Report.Report()
+                                    new Models.Report()
                                     {
                                         Name = "Report",
                                         VariableNames = new string[]

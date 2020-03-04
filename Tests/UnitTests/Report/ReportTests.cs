@@ -6,7 +6,6 @@
     using Models.Core.ApsimFile;
     using Models.Core.Run;
     using Models.Interfaces;
-    using Models.Report;
     using Models.Storage;
     using NUnit.Framework;
     using System;
@@ -293,7 +292,7 @@
         [Test]
         public static void TestReportingOnModelEvents()
         {
-            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Report.ReportOnEvents.apsimx");
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.ReportOnEvents.apsimx");
             Simulations file = FileFormat.ReadFromString<Simulations>(json, out List<Exception> fileErrors);
 
             if (fileErrors != null && fileErrors.Count > 0)

@@ -42,7 +42,7 @@
       <FileName>Manager.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Models.Report" Collapsed="true">
+  <Class Name="Models" Collapsed="true">
     <Position X="41.5" Y="5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAABAAAAAAAAABiAAAAAAAAQEBAAAAAc=</HashCode>

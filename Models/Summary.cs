@@ -12,7 +12,7 @@
     using MigraDoc.RtfRendering;
     using Models.Core;
     using Models.Soils.Standardiser;
-    using Report;
+    using Models;
     using Storage;
 
     /// <summary>

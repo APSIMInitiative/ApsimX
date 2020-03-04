@@ -21,7 +21,7 @@ namespace UnitTests
 
             string reportName = "Report";
 
-            Models.Report.Report report = Apsim.Find(file, typeof(Models.Report.Report)) as Models.Report.Report;
+            Models.Report report = Apsim.Find(file, typeof(Models.Report)) as Models.Report;
             report.VariableNames = new string[] { "[Clock].Today.DayOfYear as n", "2 * [Clock].Today.DayOfYear as 2n" };
             report.EventNames = new string[] { "[Clock].DoReport" };
             report.Name = reportName;

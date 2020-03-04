@@ -13,7 +13,6 @@ namespace UserInterface.Presenters
     using Models;
     using Models.Core;
     using Models.Factorial;
-    using Models.Report;
     using Models.Storage;
     using Views;
     using System.Linq;

@@ -1,5 +1,5 @@
 ﻿using System;
-using Models.Report;
+using Models;
 using Models.Core;
 
 namespace UnitTests.Core

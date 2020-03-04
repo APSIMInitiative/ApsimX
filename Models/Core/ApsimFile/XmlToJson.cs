@@ -35,7 +35,7 @@ namespace Models.Core.ApsimFile
             "Models.WaterModel.RunoffModel","Models.WaterModel.SaturatedFlowModel",
             "Models.WaterModel.WaterBalance","Models.WaterModel.UnsaturatedFlowModel",
             "Models.WaterModel.WaterTableModel","Models.Surface.SurfaceOrganicMatterCollectionFromResource",
-            "Models.Surface.ResidueTypes","Models.Report.Report",
+            "Models.Surface.ResidueTypes","Models.Report",
             "Models.PostSimulationTools.Probability","Models.PostSimulationTools.ExcelInput",
             "Models.PostSimulationTools.TimeSeriesStats","Models.PostSimulationTools.PredictedObserved",
             "Models.PostSimulationTools.Input","Models.GrazPlan.Supplement",
