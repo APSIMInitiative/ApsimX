@@ -3,7 +3,7 @@
 //     Copyright (c) APSIM Initiative
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Models.Report
+namespace Models
 {
     using APSIM.Shared.Utilities;
     using Models.Core;

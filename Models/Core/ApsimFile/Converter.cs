@@ -17,7 +17,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 80; } }
+        public static int LatestVersion { get { return 81; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1607,6 +1607,27 @@
             foreach (JObject excelMultiInput in JsonUtilities.ChildrenRecursively(root, "ExcelMultiInput"))
             {
                 excelMultiInput["$type"] = "Models.PostSimulationTools.ExcelInput, Models";
+            }
+        }
+
+        /// <summary>
+        /// Rename report namespace to Reporting.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion81(JObject root, string fileName)
+        {
+            // Fix type of Report nodes
+            foreach (JObject report in JsonUtilities.ChildrenRecursively(root, "Report"))
+            {
+                report["$type"] = report["$type"].ToString().Replace("Report.Report", "Report");
+            }
+
+            // Replace ExcelMultiInput with an ExcelInput.
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+            {
+                manager.Replace("Report.Report", "Report");
+                manager.Save();
             }
         }
 
