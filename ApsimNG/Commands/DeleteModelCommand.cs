@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="DeleteModelCommand.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Commands
+﻿namespace UserInterface.Commands
 {
     using Models.Core;
     using Interfaces;

@@ -1,9 +1,3 @@
-// -----------------------------------------------------------------------
-// <copyright file="xmlpsr.cs" company="CSIRO">
-//      Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
 namespace CMPServices
 {
     using System.Xml;

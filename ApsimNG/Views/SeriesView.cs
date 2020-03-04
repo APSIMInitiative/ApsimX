@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="SeriesView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using Interfaces;
     using Gtk;

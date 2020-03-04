@@ -1,17 +1,8 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="VariableExpression.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-
-namespace Models.Core
+﻿namespace Models.Core
 {
+    using APSIM.Shared.Utilities;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Collections;
-    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// TODO: Update summary.

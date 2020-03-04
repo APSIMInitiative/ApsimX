@@ -1,18 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="VariableProperty.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.Core
+﻿namespace Models.Core
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Reflection;
-    using Models.Soils;
-    using System.Globalization;
-    using APSIM.Shared.Utilities;
-    using System.Collections;
 
     /// <summary>
     /// Encapsulates a discovered method of a model. 
