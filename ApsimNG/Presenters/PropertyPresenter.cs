@@ -1,8 +1,3 @@
-//-----------------------------------------------------------------------
-// <copyright file="PropertyPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
 namespace UserInterface.Presenters
 {
     using System;

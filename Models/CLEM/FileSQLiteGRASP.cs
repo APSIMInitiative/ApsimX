@@ -14,11 +14,6 @@ using Models.CLEM.Activities;
 using System.Globalization;
 using System.Linq;
 
-// -----------------------------------------------------------------------
-// <copyright file="FileSQLiteGRASP.cs" company="CSIRO">
-//     Copyright (c) CSIRO
-// </copyright>
-//-----------------------------------------------------------------------
 namespace Models.CLEM
 {
     ///<summary>

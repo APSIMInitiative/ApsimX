@@ -1,12 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="IGridCell.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-using System;
-using System.Drawing;
-
-namespace UserInterface.Interfaces
+﻿namespace UserInterface.Interfaces
 {
     /// <summary>
     /// An enumeration that specifies the allowed editor types for the cell.

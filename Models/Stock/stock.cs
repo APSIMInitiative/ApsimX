@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="stock.cs" company="CSIRO">
-//      Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace Models.GrazPlan
+﻿namespace Models.GrazPlan
 {
     using System;
     using System.Collections.Generic;

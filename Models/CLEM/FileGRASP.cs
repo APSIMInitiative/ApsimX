@@ -1,23 +1,14 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Xml.Serialization;
 using Models.Core;
 using APSIM.Shared.Utilities;
-using Models.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
-using Models.CLEM.Activities;
 using System.Globalization;
 
-// -----------------------------------------------------------------------
-// <copyright file="FileGRASP.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
 namespace Models.CLEM
 {
     ///<summary>

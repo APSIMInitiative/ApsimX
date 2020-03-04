@@ -1,14 +1,6 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="LinkAttribute.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Core
+﻿namespace Models.Core
 {
-    using PMF;
-    using Functions;
     using System;
-    using System.Reflection;
     using System.Xml.Serialization;
 
     /// <summary>
