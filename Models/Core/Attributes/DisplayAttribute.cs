@@ -36,6 +36,11 @@ namespace Models.Core
         FileName,
 
         /// <summary>
+        /// Allows selection of more than one file name.
+        /// </summary>
+        FileNames,
+
+        /// <summary>
         /// A field name editor.
         /// </summary>
         FieldName,

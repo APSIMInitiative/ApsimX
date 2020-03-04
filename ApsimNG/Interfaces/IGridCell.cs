@@ -39,9 +39,17 @@ namespace UserInterface.Interfaces
         DropDown,
 
         /// <summary>
-        /// A button editor
+        /// A button editor - clicking on the
+        /// button opens a file selection dialog.
         /// </summary>
-        Button
+        Button,
+
+        /// <summary>
+        /// A button editor - allows for
+        /// a file selection dialog which can
+        /// select multiple files.
+        /// </summary>
+        MultiFiles,
     }
 
     /// <summary>
