@@ -1,7 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 70,
+  "Version": 79,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-04",
   "Name": "Simulations",
   "Children": [
     {
@@ -30,7 +31,7 @@
           "$type": "Models.Report.Report, Models",
           "VariableNames": [
             "[Clock].Today",
-            "[Eucalyptus].Age.Value()",
+            "[Eucalyptus].Age",
             "[Eucalyptus].AboveGround.Wt",
             "[Eucalyptus].BelowGround.Wt",
             "[Eucalyptus].Leaf.Dead.Wt",
@@ -44,13 +45,13 @@
             "[Eucalyptus].Leaf.CoverGreen",
             "[Eucalyptus].Leaf.LAI",
             "[Eucalyptus].TotalLive.Wt",
-            "[Eucalyptus].IndividualTreeLiveWt.Value()",
-            "[Eucalyptus].IndividualTreeStemWt.Value()",
-            "[Eucalyptus].Stem.DBH.Value()",
-            "[Eucalyptus].Stem.Ht.Value()",
-            "[Eucalyptus].RootShootRatio.Value()",
-            "[Eucalyptus].Stem.Vol.Value()",
-            "[Eucalyptus].Stem.MAI.Value()",
+            "[Eucalyptus].IndividualTreeLiveWt",
+            "[Eucalyptus].IndividualTreeStemWt",
+            "[Eucalyptus].Stem.DBH",
+            "[Eucalyptus].Stem.Ht",
+            "[Eucalyptus].RootShootRatio",
+            "[Eucalyptus].Stem.Vol",
+            "[Eucalyptus].Stem.MAI",
             "[SCRUM].Stover.LAI",
             "[SCRUM].Stover.Wt"
           ],
@@ -68,11 +69,11 @@
           "VariableNames": [
             "[Clock].Today",
             "[Eucalyptus].Leaf.CoverGreen",
-            "[Eucalyptus].Age.Value()",
-            "[Eucalyptus].Stem.DBH.Value()",
-            "[Eucalyptus].Stem.Ht.Value()",
-            "[Eucalyptus].Stem.Vol.Value()",
-            "[Eucalyptus].Stem.MAI.Value()"
+            "[Eucalyptus].Age",
+            "[Eucalyptus].Stem.DBH",
+            "[Eucalyptus].Stem.Ht",
+            "[Eucalyptus].Stem.Vol",
+            "[Eucalyptus].Stem.MAI"
           ],
           "EventNames": [
             "[Clock].EndOfWeek"
@@ -87,11 +88,11 @@
           "$type": "Models.Report.Report, Models",
           "VariableNames": [
             "[Clock].Today",
-            "[Eucalyptus].Stem.DBH.Value()",
-            "[Eucalyptus].Stem.Ht.Value()",
-            "[Eucalyptus].RootShootRatio.Value()",
-            "[Eucalyptus].Stem.Vol.Value()",
-            "[Eucalyptus].Stem.MAI.Value()"
+            "[Eucalyptus].Stem.DBH",
+            "[Eucalyptus].Stem.Ht",
+            "[Eucalyptus].RootShootRatio",
+            "[Eucalyptus].Stem.Vol",
+            "[Eucalyptus].Stem.MAI"
           ],
           "EventNames": [
             "[Eucalyptus].Harvesting"
@@ -125,7 +126,6 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileName": "Observed.xlsx",
-          "FileNameMetadata": null,
           "SheetNames": [
             "Observed"
           ],
@@ -264,8 +264,8 @@
                   "TableName": "PredictedObserved",
                   "XFieldName": "Predicted.Eucalyptus.Wood.Wt",
                   "YFieldName": "Observed.Eucalyptus.Wood.Wt",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
@@ -306,8 +306,8 @@
                   "TableName": "PredictedObserved",
                   "XFieldName": "Predicted.Eucalyptus.Wood.Wt",
                   "YFieldName": "Observed.Eucalyptus.Wood.Wt",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
@@ -386,8 +386,8 @@
                   "TableName": "PredictedObserved",
                   "XFieldName": "Predicted.Eucalyptus.Stem.Live.Wt",
                   "YFieldName": "Observed.Eucalyptus.Stem.Live.Wt",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
@@ -466,8 +466,8 @@
                   "TableName": "PredictedObserved",
                   "XFieldName": "Predicted.Eucalyptus.Branch.Live.Wt",
                   "YFieldName": "Observed.Eucalyptus.Branch.Live.Wt",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
@@ -546,8 +546,8 @@
                   "TableName": "PredictedObserved",
                   "XFieldName": "Predicted.Eucalyptus.Leaf.Live.Wt",
                   "YFieldName": "Observed.Eucalyptus.Leaf.Live.Wt",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
@@ -624,10 +624,10 @@
                   "LineThickness": 1,
                   "Checkpoint": "Current",
                   "TableName": "PredictedObserved",
-                  "XFieldName": "Predicted.Eucalyptus.RootShootRatio.Value()",
-                  "YFieldName": "Observed.Eucalyptus.RootShootRatio.Value()",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "XFieldName": "Predicted.Eucalyptus.RootShootRatio",
+                  "YFieldName": "Observed.Eucalyptus.RootShootRatio",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
@@ -706,8 +706,8 @@
                   "TableName": "PredictedObserved",
                   "XFieldName": "Predicted.Eucalyptus.Leaf.LAI",
                   "YFieldName": "Observed.Eucalyptus.Leaf.LAI",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
@@ -784,10 +784,10 @@
                   "LineThickness": 1,
                   "Checkpoint": "Current",
                   "TableName": "PredictedObserved",
-                  "XFieldName": "Predicted.Eucalyptus.Stem.DBH.Value()",
-                  "YFieldName": "Observed.Eucalyptus.Stem.DBH.Value()",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "XFieldName": "Predicted.Eucalyptus.Stem.DBH",
+                  "YFieldName": "Observed.Eucalyptus.Stem.DBH",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
@@ -864,10 +864,10 @@
                   "LineThickness": 1,
                   "Checkpoint": "Current",
                   "TableName": "PredictedObserved",
-                  "XFieldName": "Predicted.Eucalyptus.Stem.Ht.Value()",
-                  "YFieldName": "Observed.Eucalyptus.Stem.Ht.Value()",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "XFieldName": "Predicted.Eucalyptus.Stem.Ht",
+                  "YFieldName": "Observed.Eucalyptus.Stem.Ht",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
@@ -946,8 +946,8 @@
                   "TableName": "PredictedObserved",
                   "XFieldName": "Predicted.Eucalyptus.AboveGround.Wt",
                   "YFieldName": "Observed.Eucalyptus.AboveGround.Wt",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
@@ -1107,6 +1107,8 @@
                                 1000.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.5,
                                 1.6,
@@ -1556,22 +1558,6 @@
                                     "Colour": "White",
                                     "OutlineColour": "White",
                                     "Transparent": true
-                                  },
-                                  {
-                                    "$type": "Models.Graph.Node, Models",
-                                    "Name": "PlantAvailableNO3",
-                                    "Location": "688, 415",
-                                    "Colour": "86, 180, 233",
-                                    "OutlineColour": "Black",
-                                    "Transparent": false
-                                  },
-                                  {
-                                    "$type": "Models.Graph.Node, Models",
-                                    "Name": "PlantAvailableNH4",
-                                    "Location": "691, 421",
-                                    "Colour": "86, 180, 233",
-                                    "OutlineColour": "Black",
-                                    "Transparent": false
                                   }
                                 ],
                                 "Arcs": [
@@ -1725,7 +1711,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 80.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -1740,6 +1726,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.13,
                           "SoilHeatFluxFraction": 0.0,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.0,
                           "ReferenceHeight": 0.0,
                           "Name": "MicroClimate",
@@ -1859,8 +1846,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.AboveGround.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": false,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -1889,8 +1876,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.AboveGround.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": false,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -1957,8 +1944,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Leaf.Live.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -1987,8 +1974,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Leaf.Dead.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -2017,8 +2004,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Leaf.Detached.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -2047,8 +2034,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Leaf.Live.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": false,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -2115,8 +2102,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Leaf.LAI",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": false,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -6576,6 +6563,8 @@
                                     1000.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.5,
                                     1.6,
@@ -7025,22 +7014,6 @@
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNO3",
-                                        "Location": "688, 415",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNH4",
-                                        "Location": "691, 421",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
                                       }
                                     ],
                                     "Arcs": [
@@ -7194,7 +7167,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 80.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": false,
@@ -7209,6 +7182,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.13,
                               "SoilHeatFluxFraction": 0.0,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.0,
                               "ReferenceHeight": 0.0,
                               "Name": "MicroClimate",
@@ -9434,8 +9408,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Leaf.LAI",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": false,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -9464,8 +9438,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Leaf.LAI",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -9532,8 +9506,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.AboveGround.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": false,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -9562,8 +9536,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.AboveGround.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -9630,8 +9604,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Leaf.Live.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": false,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -9660,8 +9634,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Leaf.Live.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -9727,9 +9701,9 @@
                       "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "Eucalyptus.Stem.DBH.Value()",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "YFieldName": "Eucalyptus.Stem.DBH",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": false,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -9757,9 +9731,9 @@
                       "Checkpoint": "Current",
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "Eucalyptus.Stem.DBH.Value()",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "YFieldName": "Eucalyptus.Stem.DBH",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -9902,6 +9876,8 @@
                                 1000.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.5,
                                 1.6,
@@ -10392,22 +10368,6 @@
                                     "Colour": "White",
                                     "OutlineColour": "White",
                                     "Transparent": true
-                                  },
-                                  {
-                                    "$type": "Models.Graph.Node, Models",
-                                    "Name": "PlantAvailableNO3",
-                                    "Location": "688, 415",
-                                    "Colour": "86, 180, 233",
-                                    "OutlineColour": "Black",
-                                    "Transparent": false
-                                  },
-                                  {
-                                    "$type": "Models.Graph.Node, Models",
-                                    "Name": "PlantAvailableNH4",
-                                    "Location": "691, 421",
-                                    "Colour": "86, 180, 233",
-                                    "OutlineColour": "Black",
-                                    "Transparent": false
                                   }
                                 ],
                                 "Arcs": [
@@ -10561,7 +10521,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 80.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -10576,6 +10536,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.13,
                           "SoilHeatFluxFraction": 0.0,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.0,
                           "ReferenceHeight": 0.0,
                           "Name": "MicroClimate",
@@ -10834,8 +10795,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Leaf.LAI",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -10864,8 +10825,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Leaf.LAI",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -10894,8 +10855,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "SCRUM.Stover.LAI",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -10973,8 +10934,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.AboveGround.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -11003,8 +10964,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "SCRUM.Stover.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -11033,8 +10994,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.AboveGround.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -11101,8 +11062,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Wood.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": false,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -11131,8 +11092,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Wood.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": false,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -11199,8 +11160,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Leaf.Detached.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": false,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -11229,8 +11190,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Litterfall",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": false,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -11297,8 +11258,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Leaf.Detached.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": false,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": true,
@@ -11327,8 +11288,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Litterfall",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": false,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": true,
@@ -11513,6 +11474,8 @@
                                     42.0,
                                     42.0
                                   ],
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.45,
                                     1.53,
@@ -11952,22 +11915,6 @@
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNO3",
-                                        "Location": "688, 415",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNH4",
-                                        "Location": "691, 421",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
                                       }
                                     ],
                                     "Arcs": [
@@ -12121,7 +12068,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 80.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": false,
@@ -12136,6 +12083,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.13,
                               "SoilHeatFluxFraction": 0.0,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.0,
                               "ReferenceHeight": 0.0,
                               "Name": "MicroClimate",
@@ -12286,10 +12234,10 @@
                       "LineThickness": 0,
                       "Checkpoint": "Current",
                       "TableName": "Report",
-                      "XFieldName": "Eucalyptus.Age.Value()",
+                      "XFieldName": "Eucalyptus.Age",
                       "YFieldName": "Eucalyptus.AboveGround.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -12318,8 +12266,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Age",
                       "YFieldName": "Eucalyptus.AboveGround.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": false,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -12384,10 +12332,10 @@
                       "LineThickness": 0,
                       "Checkpoint": "Current",
                       "TableName": "Report",
-                      "XFieldName": "Eucalyptus.Age.Value()",
-                      "YFieldName": "Eucalyptus.IndividualTreeLiveWt.Value()",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "XFieldName": "Eucalyptus.Age",
+                      "YFieldName": "Eucalyptus.IndividualTreeLiveWt",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -12454,8 +12402,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Leaf.LAI",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -12484,8 +12432,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Leaf.LAI",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": false,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -13297,6 +13245,8 @@
                                     0.0,
                                     0.0
                                   ],
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.6,
                                     1.6,
@@ -13738,22 +13688,6 @@
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNO3",
-                                        "Location": "688, 415",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNH4",
-                                        "Location": "691, 421",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
                                       }
                                     ],
                                     "Arcs": [
@@ -13907,7 +13841,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 80.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": false,
@@ -13922,6 +13856,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.13,
                               "SoilHeatFluxFraction": 0.0,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.0,
                               "ReferenceHeight": 0.0,
                               "Name": "MicroClimate",
@@ -14648,8 +14583,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.AboveGround.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -14678,8 +14613,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.AboveGround.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -14746,8 +14681,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Leaf.LAI",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": false,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -14776,8 +14711,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Leaf.LAI",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -14843,9 +14778,9 @@
                       "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "Eucalyptus.Stem.Ht.Value()",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "YFieldName": "Eucalyptus.Stem.Ht",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -14873,9 +14808,9 @@
                       "Checkpoint": "Current",
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "Eucalyptus.Stem.Ht.Value()",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "YFieldName": "Eucalyptus.Stem.Ht",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -15088,6 +15023,8 @@
                                     80.71,
                                     80.71
                                   ],
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.5,
                                     1.5,
@@ -15568,22 +15505,6 @@
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNO3",
-                                        "Location": "688, 415",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNH4",
-                                        "Location": "691, 421",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
                                       }
                                     ],
                                     "Arcs": [
@@ -15737,7 +15658,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 80.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": false,
@@ -15752,6 +15673,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.13,
                               "SoilHeatFluxFraction": 0.0,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.0,
                               "ReferenceHeight": 0.0,
                               "Name": "MicroClimate",
@@ -15913,8 +15835,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.AboveGround.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -15943,8 +15865,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.AboveGround.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -16011,8 +15933,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Leaf.LAI",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -16041,8 +15963,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Leaf.LAI",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -16108,9 +16030,9 @@
                       "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "Eucalyptus.Stem.DBH.Value()",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "YFieldName": "Eucalyptus.Stem.DBH",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -16138,9 +16060,9 @@
                       "Checkpoint": "Current",
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "Eucalyptus.Stem.DBH.Value()",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "YFieldName": "Eucalyptus.Stem.DBH",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -16206,9 +16128,9 @@
                       "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "Eucalyptus.Stem.Ht.Value()",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "YFieldName": "Eucalyptus.Stem.Ht",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -16236,9 +16158,9 @@
                       "Checkpoint": "Current",
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "Eucalyptus.Stem.Ht.Value()",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "YFieldName": "Eucalyptus.Stem.Ht",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -16451,6 +16373,8 @@
                                     3.38,
                                     3.38
                                   ],
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.6,
                                     1.6,
@@ -16895,22 +16819,6 @@
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNO3",
-                                        "Location": "688, 415",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNH4",
-                                        "Location": "691, 421",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
                                       }
                                     ],
                                     "Arcs": [
@@ -17064,7 +16972,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 80.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": false,
@@ -17079,6 +16987,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.13,
                               "SoilHeatFluxFraction": 0.0,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.0,
                               "ReferenceHeight": 0.0,
                               "Name": "MicroClimate",
@@ -17231,8 +17140,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.AboveGround.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -17261,8 +17170,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.AboveGround.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -17329,8 +17238,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Leaf.LAI",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -17359,8 +17268,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Leaf.LAI",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": false,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -17427,8 +17336,8 @@
                       "TableName": "PredictedObserved",
                       "XFieldName": "Observed.Eucalyptus.AboveGround.Wt",
                       "YFieldName": "Predicted.Eucalyptus.AboveGround.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -17506,9 +17415,9 @@
                       "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "Eucalyptus.Stem.DBH.Value()",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "YFieldName": "Eucalyptus.Stem.DBH",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -17536,9 +17445,9 @@
                       "Checkpoint": "Current",
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "Eucalyptus.Stem.DBH.Value()",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "YFieldName": "Eucalyptus.Stem.DBH",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -17604,9 +17513,9 @@
                       "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "Eucalyptus.Stem.Ht.Value()",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "YFieldName": "Eucalyptus.Stem.Ht",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -17634,9 +17543,9 @@
                       "Checkpoint": "Current",
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "Eucalyptus.Stem.Ht.Value()",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "YFieldName": "Eucalyptus.Stem.Ht",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -17777,6 +17686,8 @@
                                 1000.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.6,
                                 1.6,
@@ -18218,22 +18129,6 @@
                                     "Colour": "White",
                                     "OutlineColour": "White",
                                     "Transparent": true
-                                  },
-                                  {
-                                    "$type": "Models.Graph.Node, Models",
-                                    "Name": "PlantAvailableNO3",
-                                    "Location": "688, 415",
-                                    "Colour": "86, 180, 233",
-                                    "OutlineColour": "Black",
-                                    "Transparent": false
-                                  },
-                                  {
-                                    "$type": "Models.Graph.Node, Models",
-                                    "Name": "PlantAvailableNH4",
-                                    "Location": "691, 421",
-                                    "Colour": "86, 180, 233",
-                                    "OutlineColour": "Black",
-                                    "Transparent": false
                                   }
                                 ],
                                 "Arcs": [
@@ -18387,7 +18282,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 80.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -18402,6 +18297,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.13,
                           "SoilHeatFluxFraction": 0.0,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.0,
                           "ReferenceHeight": 0.0,
                           "Name": "MicroClimate",
@@ -18592,6 +18488,8 @@
                                 2000.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.6,
                                 1.6,
@@ -19033,22 +18931,6 @@
                                     "Colour": "White",
                                     "OutlineColour": "White",
                                     "Transparent": true
-                                  },
-                                  {
-                                    "$type": "Models.Graph.Node, Models",
-                                    "Name": "PlantAvailableNO3",
-                                    "Location": "688, 415",
-                                    "Colour": "86, 180, 233",
-                                    "OutlineColour": "Black",
-                                    "Transparent": false
-                                  },
-                                  {
-                                    "$type": "Models.Graph.Node, Models",
-                                    "Name": "PlantAvailableNH4",
-                                    "Location": "691, 421",
-                                    "Colour": "86, 180, 233",
-                                    "OutlineColour": "Black",
-                                    "Transparent": false
                                   }
                                 ],
                                 "Arcs": [
@@ -19202,7 +19084,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 80.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -19217,6 +19099,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.13,
                           "SoilHeatFluxFraction": 0.0,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.0,
                           "ReferenceHeight": 0.0,
                           "Name": "MicroClimate",
@@ -19352,8 +19235,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.AboveGround.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -19382,8 +19265,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.AboveGround.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -19450,8 +19333,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Leaf.LAI",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -19480,8 +19363,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Leaf.LAI",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -19710,6 +19593,8 @@
                                     2030.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.6,
                                     1.6,
@@ -20151,22 +20036,6 @@
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNO3",
-                                        "Location": "688, 415",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNH4",
-                                        "Location": "691, 421",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
                                       }
                                     ],
                                     "Arcs": [
@@ -20320,7 +20189,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 80.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": false,
@@ -20335,6 +20204,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.13,
                               "SoilHeatFluxFraction": 0.0,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.0,
                               "ReferenceHeight": 0.0,
                               "Name": "MicroClimate",
@@ -20475,8 +20345,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.AboveGround.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -20505,8 +20375,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.AboveGround.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -20573,8 +20443,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Leaf.LAI",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -20603,8 +20473,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Leaf.LAI",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -20833,6 +20703,8 @@
                                     2030.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.6,
                                     1.6,
@@ -21274,22 +21146,6 @@
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNO3",
-                                        "Location": "688, 415",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNH4",
-                                        "Location": "691, 421",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
                                       }
                                     ],
                                     "Arcs": [
@@ -21443,7 +21299,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 80.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": false,
@@ -21458,6 +21314,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.13,
                               "SoilHeatFluxFraction": 0.0,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.0,
                               "ReferenceHeight": 0.0,
                               "Name": "MicroClimate",
@@ -21611,8 +21468,8 @@
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Eucalyptus.AboveGround.Wt",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
@@ -21641,8 +21498,8 @@
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Eucalyptus.AboveGround.Wt",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
@@ -21709,8 +21566,8 @@
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Eucalyptus.Leaf.LAI",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -21739,8 +21596,8 @@
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Eucalyptus.Leaf.LAI",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -21807,8 +21664,8 @@
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Eucalyptus.Leaf.Fn",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -21875,8 +21732,8 @@
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Eucalyptus.Leaf.Fw",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -21948,8 +21805,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.AboveGround.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -21978,8 +21835,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.AboveGround.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -22046,8 +21903,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Leaf.LAI",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -22076,8 +21933,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Leaf.LAI",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -22306,6 +22163,8 @@
                                     2030.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.6,
                                     1.6,
@@ -22747,22 +22606,6 @@
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNO3",
-                                        "Location": "688, 415",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNH4",
-                                        "Location": "691, 421",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
                                       }
                                     ],
                                     "Arcs": [
@@ -22916,7 +22759,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 80.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": false,
@@ -22931,6 +22774,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.13,
                               "SoilHeatFluxFraction": 0.0,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.0,
                               "ReferenceHeight": 0.0,
                               "Name": "MicroClimate",
@@ -23080,8 +22924,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Wood.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -23110,8 +22954,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Wood.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -23178,8 +23022,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Leaf.LAI",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -23208,8 +23052,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Leaf.LAI",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -23429,6 +23273,8 @@
                                     2030.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.6,
                                     1.6,
@@ -23858,8 +23704,8 @@
                                       "TableName": null,
                                       "XFieldName": "[Soil].LL15",
                                       "YFieldName": "[Soil].DepthMidPoints",
-                                      "X2FieldName": null,
-                                      "Y2FieldName": null,
+                                      "X2FieldName": "",
+                                      "Y2FieldName": "",
                                       "ShowInLegend": true,
                                       "IncludeSeriesNameInLegend": false,
                                       "Cumulative": false,
@@ -23888,8 +23734,8 @@
                                       "TableName": null,
                                       "XFieldName": "[Soil].LL15",
                                       "YFieldName": "[Soil]l.DepthMidPoints",
-                                      "X2FieldName": null,
-                                      "Y2FieldName": null,
+                                      "X2FieldName": "",
+                                      "Y2FieldName": "",
                                       "ShowInLegend": false,
                                       "IncludeSeriesNameInLegend": false,
                                       "Cumulative": false,
@@ -23918,8 +23764,8 @@
                                       "TableName": null,
                                       "XFieldName": "[Soil].AirDry",
                                       "YFieldName": "[Soil].DepthMidPoints",
-                                      "X2FieldName": null,
-                                      "Y2FieldName": null,
+                                      "X2FieldName": "",
+                                      "Y2FieldName": "",
                                       "ShowInLegend": true,
                                       "IncludeSeriesNameInLegend": false,
                                       "Cumulative": false,
@@ -23948,8 +23794,8 @@
                                       "TableName": null,
                                       "XFieldName": "[Soil].DUL",
                                       "YFieldName": "[Soil].DepthMidPoints",
-                                      "X2FieldName": null,
-                                      "Y2FieldName": null,
+                                      "X2FieldName": "",
+                                      "Y2FieldName": "",
                                       "ShowInLegend": true,
                                       "IncludeSeriesNameInLegend": false,
                                       "Cumulative": false,
@@ -23978,8 +23824,8 @@
                                       "TableName": null,
                                       "XFieldName": "[Soil].SAT",
                                       "YFieldName": "[Soil].DepthMidPoints",
-                                      "X2FieldName": null,
-                                      "Y2FieldName": null,
+                                      "X2FieldName": "",
+                                      "Y2FieldName": "",
                                       "ShowInLegend": true,
                                       "IncludeSeriesNameInLegend": false,
                                       "Cumulative": false,
@@ -24088,22 +23934,6 @@
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNO3",
-                                        "Location": "688, 415",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNH4",
-                                        "Location": "691, 421",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
                                       }
                                     ],
                                     "Arcs": [
@@ -24257,7 +24087,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 80.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": false,
@@ -24272,6 +24102,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.13,
                               "SoilHeatFluxFraction": 0.0,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.0,
                               "ReferenceHeight": 0.0,
                               "Name": "MicroClimate",
@@ -24439,8 +24270,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.AboveGround.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -24469,8 +24300,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.AboveGround.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -24537,8 +24368,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Leaf.LAI",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -24567,8 +24398,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Leaf.LAI",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -24676,10 +24507,10 @@
                   "LineThickness": 0,
                   "Checkpoint": "Current",
                   "TableName": "SensibilityReport",
-                  "XFieldName": "Eucalyptus.Age.Value()",
-                  "YFieldName": "Eucalyptus.Stem.MAI.Value()",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "XFieldName": "Eucalyptus.Age",
+                  "YFieldName": "Eucalyptus.Stem.MAI",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
@@ -24803,6 +24634,8 @@
                             1000.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.5,
                             1.6,
@@ -25252,22 +25085,6 @@
                                 "Colour": "White",
                                 "OutlineColour": "White",
                                 "Transparent": true
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "PlantAvailableNO3",
-                                "Location": "688, 415",
-                                "Colour": "86, 180, 233",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "PlantAvailableNH4",
-                                "Location": "691, 421",
-                                "Colour": "86, 180, 233",
-                                "OutlineColour": "Black",
-                                "Transparent": false
                               }
                             ],
                             "Arcs": [
@@ -25421,7 +25238,7 @@
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 80.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,
@@ -25436,6 +25253,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.13,
                       "SoilHeatFluxFraction": 0.0,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.0,
                       "ReferenceHeight": 0.0,
                       "Name": "MicroClimate",
@@ -25621,6 +25439,8 @@
                             1000.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.5,
                             1.6,
@@ -26070,22 +25890,6 @@
                                 "Colour": "White",
                                 "OutlineColour": "White",
                                 "Transparent": true
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "PlantAvailableNO3",
-                                "Location": "688, 415",
-                                "Colour": "86, 180, 233",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "PlantAvailableNH4",
-                                "Location": "691, 421",
-                                "Colour": "86, 180, 233",
-                                "OutlineColour": "Black",
-                                "Transparent": false
                               }
                             ],
                             "Arcs": [
@@ -26239,7 +26043,7 @@
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 80.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,
@@ -26254,6 +26058,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.13,
                       "SoilHeatFluxFraction": 0.0,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.0,
                       "ReferenceHeight": 0.0,
                       "Name": "MicroClimate",
@@ -26439,6 +26244,8 @@
                             1000.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.5,
                             1.6,
@@ -26888,22 +26695,6 @@
                                 "Colour": "White",
                                 "OutlineColour": "White",
                                 "Transparent": true
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "PlantAvailableNO3",
-                                "Location": "688, 415",
-                                "Colour": "86, 180, 233",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "PlantAvailableNH4",
-                                "Location": "691, 421",
-                                "Colour": "86, 180, 233",
-                                "OutlineColour": "Black",
-                                "Transparent": false
                               }
                             ],
                             "Arcs": [
@@ -27057,7 +26848,7 @@
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 80.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,
@@ -27072,6 +26863,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.13,
                       "SoilHeatFluxFraction": 0.0,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.0,
                       "ReferenceHeight": 0.0,
                       "Name": "MicroClimate",
@@ -27257,6 +27049,8 @@
                             1000.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.5,
                             1.6,
@@ -27706,22 +27500,6 @@
                                 "Colour": "White",
                                 "OutlineColour": "White",
                                 "Transparent": true
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "PlantAvailableNO3",
-                                "Location": "688, 415",
-                                "Colour": "86, 180, 233",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "PlantAvailableNH4",
-                                "Location": "691, 421",
-                                "Colour": "86, 180, 233",
-                                "OutlineColour": "Black",
-                                "Transparent": false
                               }
                             ],
                             "Arcs": [
@@ -27875,7 +27653,7 @@
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 80.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,
@@ -27890,6 +27668,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.13,
                       "SoilHeatFluxFraction": 0.0,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.0,
                       "ReferenceHeight": 0.0,
                       "Name": "MicroClimate",
@@ -28137,7 +27916,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 80.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -28152,6 +27931,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.13,
                           "SoilHeatFluxFraction": 0.0,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.0,
                           "ReferenceHeight": 0.0,
                           "Name": "MicroClimate",
@@ -28276,6 +28056,8 @@
                                 1000.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.5,
                                 1.6,
@@ -28725,22 +28507,6 @@
                                     "Colour": "White",
                                     "OutlineColour": "White",
                                     "Transparent": true
-                                  },
-                                  {
-                                    "$type": "Models.Graph.Node, Models",
-                                    "Name": "PlantAvailableNO3",
-                                    "Location": "688, 415",
-                                    "Colour": "86, 180, 233",
-                                    "OutlineColour": "Black",
-                                    "Transparent": false
-                                  },
-                                  {
-                                    "$type": "Models.Graph.Node, Models",
-                                    "Name": "PlantAvailableNH4",
-                                    "Location": "691, 421",
-                                    "Colour": "86, 180, 233",
-                                    "OutlineColour": "Black",
-                                    "Transparent": false
                                   }
                                 ],
                                 "Arcs": [
@@ -28941,10 +28707,10 @@
                   "LineThickness": 0,
                   "Checkpoint": "Current",
                   "TableName": "SensibilityReport",
-                  "XFieldName": "Eucalyptus.Age.Value()",
-                  "YFieldName": "Eucalyptus.Stem.MAI.Value()",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "XFieldName": "Eucalyptus.Age",
+                  "YFieldName": "Eucalyptus.Stem.MAI",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
@@ -29009,10 +28775,10 @@
                   "LineThickness": 0,
                   "Checkpoint": "Current",
                   "TableName": "SensibilityReport",
-                  "XFieldName": "Eucalyptus.Age.Value()",
+                  "XFieldName": "Eucalyptus.Age",
                   "YFieldName": "Eucalyptus.Leaf.CoverGreen",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
@@ -29390,7 +29156,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 80.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -29405,6 +29171,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.13,
                           "SoilHeatFluxFraction": 0.0,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.0,
                           "ReferenceHeight": 0.0,
                           "Name": "MicroClimate",
@@ -29529,6 +29296,8 @@
                                 1000.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.5,
                                 1.6,
@@ -29978,22 +29747,6 @@
                                     "Colour": "White",
                                     "OutlineColour": "White",
                                     "Transparent": true
-                                  },
-                                  {
-                                    "$type": "Models.Graph.Node, Models",
-                                    "Name": "PlantAvailableNO3",
-                                    "Location": "688, 415",
-                                    "Colour": "86, 180, 233",
-                                    "OutlineColour": "Black",
-                                    "Transparent": false
-                                  },
-                                  {
-                                    "$type": "Models.Graph.Node, Models",
-                                    "Name": "PlantAvailableNH4",
-                                    "Location": "691, 421",
-                                    "Colour": "86, 180, 233",
-                                    "OutlineColour": "Black",
-                                    "Transparent": false
                                   }
                                 ],
                                 "Arcs": [
@@ -30194,10 +29947,10 @@
                   "LineThickness": 0,
                   "Checkpoint": "Current",
                   "TableName": "SensibilityReport",
-                  "XFieldName": "Eucalyptus.Age.Value()",
-                  "YFieldName": "Eucalyptus.Stem.MAI.Value()",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "XFieldName": "Eucalyptus.Age",
+                  "YFieldName": "Eucalyptus.Stem.MAI",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
@@ -30492,6 +30245,8 @@
                                 1500.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.14,
                                 1.2,
@@ -30941,22 +30696,6 @@
                                     "Colour": "White",
                                     "OutlineColour": "White",
                                     "Transparent": true
-                                  },
-                                  {
-                                    "$type": "Models.Graph.Node, Models",
-                                    "Name": "PlantAvailableNO3",
-                                    "Location": "688, 415",
-                                    "Colour": "86, 180, 233",
-                                    "OutlineColour": "Black",
-                                    "Transparent": false
-                                  },
-                                  {
-                                    "$type": "Models.Graph.Node, Models",
-                                    "Name": "PlantAvailableNH4",
-                                    "Location": "691, 421",
-                                    "Colour": "86, 180, 233",
-                                    "OutlineColour": "Black",
-                                    "Transparent": false
                                   }
                                 ],
                                 "Arcs": [
@@ -31110,7 +30849,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 80.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": true,
@@ -31125,6 +30864,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.13,
                           "SoilHeatFluxFraction": 0.0,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.0,
                           "ReferenceHeight": 0.0,
                           "Name": "MicroClimate",
@@ -31506,9 +31246,9 @@
                       "Checkpoint": "Current",
                       "TableName": "SensibilityReport",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "Eucalyptus.Stem.MAI.Value()",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "YFieldName": "Eucalyptus.Stem.MAI",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -31574,9 +31314,9 @@
                       "Checkpoint": "Current",
                       "TableName": "SensibilityReport",
                       "XFieldName": "N",
-                      "YFieldName": "Eucalyptus.Stem.MAI.Value()",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "YFieldName": "Eucalyptus.Stem.MAI",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -31643,8 +31383,8 @@
                       "TableName": "SensibilityReport",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Leaf.CoverGreen",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -31710,9 +31450,9 @@
                       "Checkpoint": "Current",
                       "TableName": "SensibilityReport",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "Eucalyptus.Stem.DBH.Value()",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "YFieldName": "Eucalyptus.Stem.DBH",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -31778,9 +31518,9 @@
                       "Checkpoint": "Current",
                       "TableName": "SensibilityReport",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "Eucalyptus.Stem.Ht.Value()",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "YFieldName": "Eucalyptus.Stem.Ht",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -32061,6 +31801,8 @@
                                 1500.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.14,
                                 1.2,
@@ -32510,22 +32252,6 @@
                                     "Colour": "White",
                                     "OutlineColour": "White",
                                     "Transparent": true
-                                  },
-                                  {
-                                    "$type": "Models.Graph.Node, Models",
-                                    "Name": "PlantAvailableNO3",
-                                    "Location": "688, 415",
-                                    "Colour": "86, 180, 233",
-                                    "OutlineColour": "Black",
-                                    "Transparent": false
-                                  },
-                                  {
-                                    "$type": "Models.Graph.Node, Models",
-                                    "Name": "PlantAvailableNH4",
-                                    "Location": "691, 421",
-                                    "Colour": "86, 180, 233",
-                                    "OutlineColour": "Black",
-                                    "Transparent": false
                                   }
                                 ],
                                 "Arcs": [
@@ -32679,7 +32405,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 80.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": true,
@@ -32694,6 +32420,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.13,
                           "SoilHeatFluxFraction": 0.0,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.0,
                           "ReferenceHeight": 0.0,
                           "Name": "MicroClimate",
@@ -33075,9 +32802,9 @@
                       "Checkpoint": "Current",
                       "TableName": "SensibilityReport",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "Eucalyptus.Stem.MAI.Value()",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "YFieldName": "Eucalyptus.Stem.MAI",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -33143,9 +32870,9 @@
                       "Checkpoint": "Current",
                       "TableName": "SensibilityReport",
                       "XFieldName": "N",
-                      "YFieldName": "Eucalyptus.Stem.MAI.Value()",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "YFieldName": "Eucalyptus.Stem.MAI",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -33212,8 +32939,8 @@
                       "TableName": "SensibilityReport",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Eucalyptus.Leaf.CoverGreen",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -33279,9 +33006,9 @@
                       "Checkpoint": "Current",
                       "TableName": "SensibilityReport",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "Eucalyptus.Stem.DBH.Value()",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "YFieldName": "Eucalyptus.Stem.DBH",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -33347,9 +33074,9 @@
                       "Checkpoint": "Current",
                       "TableName": "SensibilityReport",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "Eucalyptus.Stem.Ht.Value()",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "YFieldName": "Eucalyptus.Stem.Ht",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
@@ -33484,6 +33211,8 @@
                                         300.0
                                       ],
                                       "ParticleSizeClay": null,
+                                      "ParticleSizeSand": null,
+                                      "ParticleSizeSilt": null,
                                       "BD": [
                                         1.48,
                                         1.57,
@@ -33849,82 +33578,216 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Soils.SoilNitrogen, Models",
-                                      "fom_types": [
-                                        "default",
-                                        "manure",
-                                        "mucuna",
-                                        "lablab",
-                                        "shemp",
-                                        "stable"
-                                      ],
-                                      "fract_carb": [
-                                        0.2,
-                                        0.3,
-                                        0.54,
-                                        0.57,
-                                        0.45,
-                                        0.0
-                                      ],
-                                      "fract_cell": [
-                                        0.7,
-                                        0.3,
-                                        0.37,
-                                        0.37,
-                                        0.47,
-                                        0.1
-                                      ],
-                                      "fract_lign": [
-                                        0.1,
-                                        0.4,
-                                        0.09,
-                                        0.06,
-                                        0.08,
-                                        0.9
-                                      ],
-                                      "Name": "SoilNitrogen",
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Soils.SoilNitrogenNO3, Models",
-                                          "Name": "NO3",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Soils.SoilNitrogenNH4, Models",
-                                          "Name": "NH4",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Soils.SoilNitrogenUrea, Models",
-                                          "Name": "Urea",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
-                                          "Name": "PlantAvailableNO3",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
-                                          "Name": "PlantAvailableNH4",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
+                                      "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                                      "DirectedGraphInfo": {
+                                        "$type": "Models.Graph.DirectedGraph, Models",
+                                        "Nodes": [
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "Inert",
+                                            "Location": "656, 254",
+                                            "Colour": "0, 158, 115",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "SurfaceResidue",
+                                            "Location": "566, 69",
+                                            "Colour": "0, 158, 115",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "FOMLignin",
+                                            "Location": "261, 69",
+                                            "Colour": "0, 158, 115",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "FOMCellulose",
+                                            "Location": "397, 70",
+                                            "Colour": "0, 158, 115",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "FOMCarbohydrate",
+                                            "Location": "123, 70",
+                                            "Colour": "0, 158, 115",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "Microbial",
+                                            "Location": "218, 299",
+                                            "Colour": "0, 158, 115",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "Humic",
+                                            "Location": "458, 293",
+                                            "Colour": "0, 158, 115",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "Urea",
+                                            "Location": "529, 419",
+                                            "Colour": "86, 180, 233",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "NO3",
+                                            "Location": "185, 435",
+                                            "Colour": "86, 180, 233",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "NH4",
+                                            "Location": "357, 422",
+                                            "Colour": "86, 180, 233",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "Atmosphere",
+                                            "Location": "48, 338",
+                                            "Colour": "255, 255, 255",
+                                            "OutlineColour": "255, 255, 255",
+                                            "Transparent": true
+                                          }
+                                        ],
+                                        "Arcs": [
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "SurfaceResidue",
+                                            "DestinationName": "Microbial",
+                                            "Location": "415, 173",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "SurfaceResidue",
+                                            "DestinationName": "Humic",
+                                            "Location": "499, 172",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "FOMLignin",
+                                            "DestinationName": "Microbial",
+                                            "Location": "259, 221",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "FOMLignin",
+                                            "DestinationName": "Humic",
+                                            "Location": "255, 105",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "FOMCellulose",
+                                            "DestinationName": "Microbial",
+                                            "Location": "370, 184",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "FOMCellulose",
+                                            "DestinationName": "Humic",
+                                            "Location": "463, 224",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "FOMCarbohydrate",
+                                            "DestinationName": "Microbial",
+                                            "Location": "141, 131",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "FOMCarbohydrate",
+                                            "DestinationName": "Humic",
+                                            "Location": "204, 215",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "Microbial",
+                                            "DestinationName": "Microbial",
+                                            "Location": "335, 301",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "Microbial",
+                                            "DestinationName": "Humic",
+                                            "Location": "319, 278",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "Humic",
+                                            "DestinationName": "Microbial",
+                                            "Location": "334, 340",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "Urea",
+                                            "DestinationName": "NH4",
+                                            "Location": "433, 416",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "NO3",
+                                            "DestinationName": "Atmosphere",
+                                            "Location": "1, 319",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "NH4",
+                                            "DestinationName": "NO3",
+                                            "Location": "243, 409",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          }
+                                        ]
+                                      },
+                                      "ResourceName": "Nutrient",
+                                      "Name": "Nutrient",
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -34029,6 +33892,8 @@
                                         300.0
                                       ],
                                       "ParticleSizeClay": null,
+                                      "ParticleSizeSand": null,
+                                      "ParticleSizeSilt": null,
                                       "BD": [
                                         1.41,
                                         1.53,
@@ -34457,82 +34322,216 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Soils.SoilNitrogen, Models",
-                                      "fom_types": [
-                                        "default",
-                                        "manure",
-                                        "mucuna",
-                                        "lablab",
-                                        "shemp",
-                                        "stable"
-                                      ],
-                                      "fract_carb": [
-                                        0.2,
-                                        0.3,
-                                        0.54,
-                                        0.57,
-                                        0.45,
-                                        0.0
-                                      ],
-                                      "fract_cell": [
-                                        0.7,
-                                        0.3,
-                                        0.37,
-                                        0.37,
-                                        0.47,
-                                        0.1
-                                      ],
-                                      "fract_lign": [
-                                        0.1,
-                                        0.4,
-                                        0.09,
-                                        0.06,
-                                        0.08,
-                                        0.9
-                                      ],
-                                      "Name": "SoilNitrogen",
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Soils.SoilNitrogenNO3, Models",
-                                          "Name": "NO3",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Soils.SoilNitrogenNH4, Models",
-                                          "Name": "NH4",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Soils.SoilNitrogenUrea, Models",
-                                          "Name": "Urea",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
-                                          "Name": "PlantAvailableNO3",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
-                                          "Name": "PlantAvailableNH4",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
+                                      "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                                      "DirectedGraphInfo": {
+                                        "$type": "Models.Graph.DirectedGraph, Models",
+                                        "Nodes": [
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "Inert",
+                                            "Location": "656, 254",
+                                            "Colour": "0, 158, 115",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "SurfaceResidue",
+                                            "Location": "566, 69",
+                                            "Colour": "0, 158, 115",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "FOMLignin",
+                                            "Location": "261, 69",
+                                            "Colour": "0, 158, 115",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "FOMCellulose",
+                                            "Location": "397, 70",
+                                            "Colour": "0, 158, 115",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "FOMCarbohydrate",
+                                            "Location": "123, 70",
+                                            "Colour": "0, 158, 115",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "Microbial",
+                                            "Location": "218, 299",
+                                            "Colour": "0, 158, 115",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "Humic",
+                                            "Location": "458, 293",
+                                            "Colour": "0, 158, 115",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "Urea",
+                                            "Location": "529, 419",
+                                            "Colour": "86, 180, 233",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "NO3",
+                                            "Location": "185, 435",
+                                            "Colour": "86, 180, 233",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "NH4",
+                                            "Location": "357, 422",
+                                            "Colour": "86, 180, 233",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "Atmosphere",
+                                            "Location": "48, 338",
+                                            "Colour": "255, 255, 255",
+                                            "OutlineColour": "255, 255, 255",
+                                            "Transparent": true
+                                          }
+                                        ],
+                                        "Arcs": [
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "SurfaceResidue",
+                                            "DestinationName": "Microbial",
+                                            "Location": "415, 173",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "SurfaceResidue",
+                                            "DestinationName": "Humic",
+                                            "Location": "499, 172",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "FOMLignin",
+                                            "DestinationName": "Microbial",
+                                            "Location": "259, 221",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "FOMLignin",
+                                            "DestinationName": "Humic",
+                                            "Location": "255, 105",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "FOMCellulose",
+                                            "DestinationName": "Microbial",
+                                            "Location": "370, 184",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "FOMCellulose",
+                                            "DestinationName": "Humic",
+                                            "Location": "463, 224",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "FOMCarbohydrate",
+                                            "DestinationName": "Microbial",
+                                            "Location": "141, 131",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "FOMCarbohydrate",
+                                            "DestinationName": "Humic",
+                                            "Location": "204, 215",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "Microbial",
+                                            "DestinationName": "Microbial",
+                                            "Location": "335, 301",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "Microbial",
+                                            "DestinationName": "Humic",
+                                            "Location": "319, 278",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "Humic",
+                                            "DestinationName": "Microbial",
+                                            "Location": "334, 340",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "Urea",
+                                            "DestinationName": "NH4",
+                                            "Location": "433, 416",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "NO3",
+                                            "DestinationName": "Atmosphere",
+                                            "Location": "1, 319",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "NH4",
+                                            "DestinationName": "NO3",
+                                            "Location": "243, 409",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          }
+                                        ]
+                                      },
+                                      "ResourceName": "Nutrient",
+                                      "Name": "Nutrient",
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -34637,6 +34636,8 @@
                                         300.0
                                       ],
                                       "ParticleSizeClay": null,
+                                      "ParticleSizeSand": null,
+                                      "ParticleSizeSilt": null,
                                       "BD": [
                                         1.41,
                                         1.53,
@@ -35065,82 +35066,216 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Soils.SoilNitrogen, Models",
-                                      "fom_types": [
-                                        "default",
-                                        "manure",
-                                        "mucuna",
-                                        "lablab",
-                                        "shemp",
-                                        "stable"
-                                      ],
-                                      "fract_carb": [
-                                        0.2,
-                                        0.3,
-                                        0.54,
-                                        0.57,
-                                        0.45,
-                                        0.0
-                                      ],
-                                      "fract_cell": [
-                                        0.7,
-                                        0.3,
-                                        0.37,
-                                        0.37,
-                                        0.47,
-                                        0.1
-                                      ],
-                                      "fract_lign": [
-                                        0.1,
-                                        0.4,
-                                        0.09,
-                                        0.06,
-                                        0.08,
-                                        0.9
-                                      ],
-                                      "Name": "SoilNitrogen",
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Soils.SoilNitrogenNO3, Models",
-                                          "Name": "NO3",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Soils.SoilNitrogenNH4, Models",
-                                          "Name": "NH4",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Soils.SoilNitrogenUrea, Models",
-                                          "Name": "Urea",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
-                                          "Name": "PlantAvailableNO3",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
-                                          "Name": "PlantAvailableNH4",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
+                                      "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                                      "DirectedGraphInfo": {
+                                        "$type": "Models.Graph.DirectedGraph, Models",
+                                        "Nodes": [
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "Inert",
+                                            "Location": "656, 254",
+                                            "Colour": "0, 158, 115",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "SurfaceResidue",
+                                            "Location": "566, 69",
+                                            "Colour": "0, 158, 115",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "FOMLignin",
+                                            "Location": "261, 69",
+                                            "Colour": "0, 158, 115",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "FOMCellulose",
+                                            "Location": "397, 70",
+                                            "Colour": "0, 158, 115",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "FOMCarbohydrate",
+                                            "Location": "123, 70",
+                                            "Colour": "0, 158, 115",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "Microbial",
+                                            "Location": "218, 299",
+                                            "Colour": "0, 158, 115",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "Humic",
+                                            "Location": "458, 293",
+                                            "Colour": "0, 158, 115",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "Urea",
+                                            "Location": "529, 419",
+                                            "Colour": "86, 180, 233",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "NO3",
+                                            "Location": "185, 435",
+                                            "Colour": "86, 180, 233",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "NH4",
+                                            "Location": "357, 422",
+                                            "Colour": "86, 180, 233",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "Atmosphere",
+                                            "Location": "48, 338",
+                                            "Colour": "255, 255, 255",
+                                            "OutlineColour": "255, 255, 255",
+                                            "Transparent": true
+                                          }
+                                        ],
+                                        "Arcs": [
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "SurfaceResidue",
+                                            "DestinationName": "Microbial",
+                                            "Location": "415, 173",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "SurfaceResidue",
+                                            "DestinationName": "Humic",
+                                            "Location": "499, 172",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "FOMLignin",
+                                            "DestinationName": "Microbial",
+                                            "Location": "259, 221",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "FOMLignin",
+                                            "DestinationName": "Humic",
+                                            "Location": "255, 105",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "FOMCellulose",
+                                            "DestinationName": "Microbial",
+                                            "Location": "370, 184",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "FOMCellulose",
+                                            "DestinationName": "Humic",
+                                            "Location": "463, 224",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "FOMCarbohydrate",
+                                            "DestinationName": "Microbial",
+                                            "Location": "141, 131",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "FOMCarbohydrate",
+                                            "DestinationName": "Humic",
+                                            "Location": "204, 215",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "Microbial",
+                                            "DestinationName": "Microbial",
+                                            "Location": "335, 301",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "Microbial",
+                                            "DestinationName": "Humic",
+                                            "Location": "319, 278",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "Humic",
+                                            "DestinationName": "Microbial",
+                                            "Location": "334, 340",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "Urea",
+                                            "DestinationName": "NH4",
+                                            "Location": "433, 416",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "NO3",
+                                            "DestinationName": "Atmosphere",
+                                            "Location": "1, 319",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "NH4",
+                                            "DestinationName": "NO3",
+                                            "Location": "243, 409",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          }
+                                        ]
+                                      },
+                                      "ResourceName": "Nutrient",
+                                      "Name": "Nutrient",
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -35245,6 +35380,8 @@
                                         300.0
                                       ],
                                       "ParticleSizeClay": null,
+                                      "ParticleSizeSand": null,
+                                      "ParticleSizeSilt": null,
                                       "BD": [
                                         1.55,
                                         1.55,
@@ -35673,82 +35810,216 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Soils.SoilNitrogen, Models",
-                                      "fom_types": [
-                                        "default",
-                                        "manure",
-                                        "mucuna",
-                                        "lablab",
-                                        "shemp",
-                                        "stable"
-                                      ],
-                                      "fract_carb": [
-                                        0.2,
-                                        0.3,
-                                        0.54,
-                                        0.57,
-                                        0.45,
-                                        0.0
-                                      ],
-                                      "fract_cell": [
-                                        0.7,
-                                        0.3,
-                                        0.37,
-                                        0.37,
-                                        0.47,
-                                        0.1
-                                      ],
-                                      "fract_lign": [
-                                        0.1,
-                                        0.4,
-                                        0.09,
-                                        0.06,
-                                        0.08,
-                                        0.9
-                                      ],
-                                      "Name": "SoilNitrogen",
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Soils.SoilNitrogenNO3, Models",
-                                          "Name": "NO3",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Soils.SoilNitrogenNH4, Models",
-                                          "Name": "NH4",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Soils.SoilNitrogenUrea, Models",
-                                          "Name": "Urea",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
-                                          "Name": "PlantAvailableNO3",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
-                                          "Name": "PlantAvailableNH4",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
+                                      "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                                      "DirectedGraphInfo": {
+                                        "$type": "Models.Graph.DirectedGraph, Models",
+                                        "Nodes": [
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "Inert",
+                                            "Location": "656, 254",
+                                            "Colour": "0, 158, 115",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "SurfaceResidue",
+                                            "Location": "566, 69",
+                                            "Colour": "0, 158, 115",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "FOMLignin",
+                                            "Location": "261, 69",
+                                            "Colour": "0, 158, 115",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "FOMCellulose",
+                                            "Location": "397, 70",
+                                            "Colour": "0, 158, 115",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "FOMCarbohydrate",
+                                            "Location": "123, 70",
+                                            "Colour": "0, 158, 115",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "Microbial",
+                                            "Location": "218, 299",
+                                            "Colour": "0, 158, 115",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "Humic",
+                                            "Location": "458, 293",
+                                            "Colour": "0, 158, 115",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "Urea",
+                                            "Location": "529, 419",
+                                            "Colour": "86, 180, 233",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "NO3",
+                                            "Location": "185, 435",
+                                            "Colour": "86, 180, 233",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "NH4",
+                                            "Location": "357, 422",
+                                            "Colour": "86, 180, 233",
+                                            "OutlineColour": "Black",
+                                            "Transparent": false
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Node, Models",
+                                            "Name": "Atmosphere",
+                                            "Location": "48, 338",
+                                            "Colour": "255, 255, 255",
+                                            "OutlineColour": "255, 255, 255",
+                                            "Transparent": true
+                                          }
+                                        ],
+                                        "Arcs": [
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "SurfaceResidue",
+                                            "DestinationName": "Microbial",
+                                            "Location": "415, 173",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "SurfaceResidue",
+                                            "DestinationName": "Humic",
+                                            "Location": "499, 172",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "FOMLignin",
+                                            "DestinationName": "Microbial",
+                                            "Location": "259, 221",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "FOMLignin",
+                                            "DestinationName": "Humic",
+                                            "Location": "255, 105",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "FOMCellulose",
+                                            "DestinationName": "Microbial",
+                                            "Location": "370, 184",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "FOMCellulose",
+                                            "DestinationName": "Humic",
+                                            "Location": "463, 224",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "FOMCarbohydrate",
+                                            "DestinationName": "Microbial",
+                                            "Location": "141, 131",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "FOMCarbohydrate",
+                                            "DestinationName": "Humic",
+                                            "Location": "204, 215",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "Microbial",
+                                            "DestinationName": "Microbial",
+                                            "Location": "335, 301",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "Microbial",
+                                            "DestinationName": "Humic",
+                                            "Location": "319, 278",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "Humic",
+                                            "DestinationName": "Microbial",
+                                            "Location": "334, 340",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "Urea",
+                                            "DestinationName": "NH4",
+                                            "Location": "433, 416",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "NO3",
+                                            "DestinationName": "Atmosphere",
+                                            "Location": "1, 319",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          },
+                                          {
+                                            "$type": "Models.Graph.Arc, Models",
+                                            "SourceName": "NH4",
+                                            "DestinationName": "NO3",
+                                            "Location": "243, 409",
+                                            "Colour": "Black",
+                                            "Text": null
+                                          }
+                                        ]
+                                      },
+                                      "ResourceName": "Nutrient",
+                                      "Name": "Nutrient",
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -35871,7 +36142,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 80.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -35886,6 +36157,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.13,
                           "SoilHeatFluxFraction": 0.0,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.0,
                           "ReferenceHeight": 0.0,
                           "Name": "MicroClimate",
@@ -35984,6 +36256,8 @@
                                 1000.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.5,
                                 1.6,
@@ -36433,22 +36707,6 @@
                                     "Colour": "White",
                                     "OutlineColour": "White",
                                     "Transparent": true
-                                  },
-                                  {
-                                    "$type": "Models.Graph.Node, Models",
-                                    "Name": "PlantAvailableNO3",
-                                    "Location": "688, 415",
-                                    "Colour": "86, 180, 233",
-                                    "OutlineColour": "Black",
-                                    "Transparent": false
-                                  },
-                                  {
-                                    "$type": "Models.Graph.Node, Models",
-                                    "Name": "PlantAvailableNH4",
-                                    "Location": "691, 421",
-                                    "Colour": "86, 180, 233",
-                                    "OutlineColour": "Black",
-                                    "Transparent": false
                                   }
                                 ],
                                 "Arcs": [
@@ -36581,11 +36839,11 @@
                           "$type": "Models.Report.Report, Models",
                           "VariableNames": [
                             "[Clock].Today",
-                            "[Eucalyptus].Stem.DBH.Value()",
-                            "[Eucalyptus].Stem.Ht.Value()",
-                            "[Eucalyptus].RootShootRatio.Value()",
-                            "[Eucalyptus].Stem.Vol.Value()",
-                            "[Eucalyptus].Stem.MAI.Value()"
+                            "[Eucalyptus].Stem.DBH",
+                            "[Eucalyptus].Stem.Ht",
+                            "[Eucalyptus].RootShootRatio",
+                            "[Eucalyptus].Stem.Vol",
+                            "[Eucalyptus].Stem.MAI"
                           ],
                           "EventNames": [
                             "[Eucalyptus].Harvesting"
@@ -36733,9 +36991,9 @@
                   "Checkpoint": "Current",
                   "TableName": "HarvestReport",
                   "XFieldName": "Site",
-                  "YFieldName": "Eucalyptus.Stem.MAI.Value()",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "YFieldName": "Eucalyptus.Stem.MAI",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
