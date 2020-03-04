@@ -1,14 +1,8 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="GridCellsChangedArgs.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.EventArguments
+﻿namespace UserInterface.EventArguments
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Interfaces;
 
     /// <summary>
     /// TODO: Update summary.

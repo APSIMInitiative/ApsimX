@@ -1,19 +1,13 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Graph.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.Graph
+﻿namespace Models.Graph
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Xml.Serialization;
-    using Models.Core;
     using Factorial;
+    using Models.Core;
+    using Models.Storage;
+    using System;
+    using System.Collections.Generic;
     using System.Data;
     using System.Linq;
-    using Models.Storage;
+    using System.Xml.Serialization;
 
     /// <summary>
     /// Represents a graph

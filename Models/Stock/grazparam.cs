@@ -1,14 +1,7 @@
-// -----------------------------------------------------------------------
-// <copyright file="grazparam.cs" company="CSIRO">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
 namespace Models.GrazPlan
 {
     using System;
     using System.Globalization;
-    using CMPServices;
 
     /// <summary>
     /// ParameterDefinition                                                         

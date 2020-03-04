@@ -1,8 +1,3 @@
-// -----------------------------------------------------------------------
-// <copyright file="SQLite.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
 namespace APSIM.Shared.Utilities
 {
     using System;
