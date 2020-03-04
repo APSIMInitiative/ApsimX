@@ -1620,7 +1620,7 @@
             // Fix type of Report nodes
             foreach (JObject report in JsonUtilities.ChildrenRecursively(root, "Report"))
             {
-                report["$type"] = report["$type"].ToString().Replace("Report", "Report");
+                report["$type"] = report["$type"].ToString().Replace("Report.Report", "Report");
             }
 
             // Replace ExcelMultiInput with an ExcelInput.
