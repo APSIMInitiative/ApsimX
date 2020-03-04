@@ -115,15 +115,6 @@
       "Name": "DataStore",
       "Children": [
         {
-          "$type": "Models.PostSimulationTools.Input, Models",
-          "FileName": "EucalyptusValidationData.txt",
-          "Name": "Input",
-          "Children": [],
-          "IncludeInDocumentation": false,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileName": "Observed.xlsx",
           "SheetNames": [
