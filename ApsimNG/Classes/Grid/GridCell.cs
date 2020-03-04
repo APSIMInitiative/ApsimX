@@ -111,7 +111,7 @@ namespace UserInterface.Classes
                             /// TBI this.gridView.Grid[this.ColumnIndex, this.RowIndex] = new CalendarCell();
                             break;
                         }
-
+                    case EditorTypeEnum.MultiFiles:
                     case EditorTypeEnum.Button:
                         {
                             Tuple<int, int> key = new Tuple<int, int>(this.RowIndex, this.ColumnIndex);
