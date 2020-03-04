@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 278,
-  "Version": 79,
-  "ApsimVersion": "Version 2020.2.26.4761, built 2020-02-26",
+  "Version": 80,
+  "ApsimVersion": "Version 2020.3.4.4029, built 2020-03-04",
   "Name": "Simulations",
   "Children": [
     {
@@ -75,7 +75,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 6.0,
+                          "FixedValue": 8.0,
                           "Units": "days",
                           "Name": "BaseTarget",
                           "Children": [],
@@ -223,7 +223,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 75.0,
+                      "FixedValue": 80.0,
                       "Units": "days",
                       "Name": "Target",
                       "Children": [],
@@ -244,7 +244,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 28.0,
+                      "FixedValue": 27.0,
                       "Units": null,
                       "Name": "Target",
                       "Children": [],
@@ -411,15 +411,6 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Grapevine].DOYFromJuly1st",
-                      "Name": "PostEventValue1",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -455,15 +446,6 @@
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Phenology].DoyJuly1st",
                       "Name": "PostEventValue",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Clock].Today.DayOfYear",
-                      "Name": "PostEventValue1",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -6616,7 +6598,9 @@
       "Children": [
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
-          "FileName": "Observations\\Marlborough_Sauvignon_blanc_PhenologyObs.xlsx",
+          "FileNames": [
+            "Observations\\Marlborough_Sauvignon_blanc_PhenologyObs.xlsx"
+          ],
           "SheetNames": [
             "Data"
           ],
@@ -10336,8 +10320,8 @@
                     },
                     {
                       "$type": "Models.Factorial.Factor, Models",
-                      "Specification": "[ParameterTest].Script.VeraTarget\r\n = 37, 38, 39, 40, 41, 42, 43, 44, 45",
-                      "Name": "VeraTarget",
+                      "Specification": "[ParameterTest].Script.FlowerTarget = 26, 27, 28, 29, 30, 31",
+                      "Name": "FlowerTarget",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -10993,15 +10977,11 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Zone zone;\r\n        [Link] Summary Summary;\r\n\r\n        [Description(\"FlowerTarget\")]\r\n        public double FlowerTarget {get; set;}\r\n\r\n        [Description(\"VeraTarget\")]\r\n        public double VeraTarget {get; set;}\r\n      //  [Description(\"chill_a\")]\r\n       // public double chill_a  {get; set;}\r\n\r\n       // [Description(\"chill_c\")]\r\n       // public double chill_c  {get; set;}\r\n    \r\n        //Description(\"EndoTarget\")]\r\n        //public double EndoTarget  {get; set;}\r\n        //[Description(\"FloweringTarget\")]\r\n        //public double FloweringTarget  {get; set;}\r\n\r\n                \r\n        [EventSubscribe(\"PlantSowing\")]\r\n        private void OnPlantSowing(object sender, EventArgs e)\r\n        {\r\n            zone.Set(\"Grapevine.Phenology.Flowering.Target.FixedValue\", FlowerTarget);\r\n            zone.Set(\"Grapevine.Phenology.BerryDevelopment.Target.Base.FixedValue\", VeraTarget);\r\n            //zone.Set(\"Grapevine.Phenology.Budding.Target.ChillingTadjustment.A\", chill_a);\r\n           // zone.Set(\"Grapevine.Phenology.Budding.Target.ChillingTadjustment.C\", chill_c);\r\n            //zone.Set(\"Grapevine.Phenology.EndoDormancy.Target.FixedValue\", EndoTarget);\r\n            //zone.Set(\"Grapevine.Phenology.Flowering.Target.FixedValue\", FloweringTarget);                      \r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
+                  "Code": "\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Zone zone;\r\n        [Link] Summary Summary;\r\n\r\n        //[Description(\"endotarget\")]\r\n        //public double endotarget {get; set;}\r\n\r\n        //[Description(\"budding\")]\r\n        //public double budding {get; set;}\r\n\r\n        [Description(\"FlowerTarget\")]\r\n        public double FlowerTarget {get; set;}\r\n\r\n        //[Description(\"VeraTarget\")]\r\n        //public double VeraTarget {get; set;}\r\n      //  [Description(\"chill_a\")]\r\n       // public double chill_a  {get; set;}\r\n\r\n       // [Description(\"chill_c\")]\r\n       // public double chill_c  {get; set;}\r\n    \r\n        //Description(\"EndoTarget\")]\r\n        //public double EndoTarget  {get; set;}\r\n        //[Description(\"FloweringTarget\")]\r\n        //public double FloweringTarget  {get; set;}\r\n\r\n                \r\n        [EventSubscribe(\"PlantSowing\")]\r\n        private void OnPlantSowing(object sender, EventArgs e)\r\n        {\r\n        \t//zone.Set(\"Grapevine.Phenology.EndoDormancy.Target.BaseTarget.FixedValue\", endotarget);\r\n            //zone.Set(\"Grapevine.Phenology.Budding.Target.FixedValue\", budding);\r\n\r\n            zone.Set(\"Grapevine.Phenology.Flowering.Target.FixedValue\", FlowerTarget);\r\n            //zone.Set(\"Grapevine.Phenology.BerryDevelopment.Target.Base.FixedValue\", VeraTarget);\r\n\r\n            //zone.Set(\"Grapevine.Phenology.Budding.Target.ChillingTadjustment.A\", chill_a);\r\n            //zone.Set(\"Grapevine.Phenology.Budding.Target.ChillingTadjustment.C\", chill_c);\r\n            //zone.Set(\"Grapevine.Phenology.EndoDormancy.Target.FixedValue\", EndoTarget);\r\n            //zone.Set(\"Grapevine.Phenology.Flowering.Target.FixedValue\", FloweringTarget);                      \r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
                   "Parameters": [
                     {
                       "Key": "FlowerTarget",
                       "Value": "28"
-                    },
-                    {
-                      "Key": "VeraTarget",
-                      "Value": "41"
                     }
                   ],
                   "Name": "ParameterTest",
