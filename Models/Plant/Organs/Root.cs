@@ -107,10 +107,6 @@
         [Units("m/g")]
         private IFunction specificRootLength = null;
 
-        /// <summary>The nitrogen demand switch</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction nitrogenDemandSwitch = null;
-
         /// <summary>The N demand function</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         [Units("g/m2/d")]
@@ -163,11 +159,6 @@
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/g")]
         private IFunction minimumNConc = null;
-
-        /// <summary>The critical N concentration</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        [Units("g/g")]
-        private IFunction criticalNConc = null;
 
         /// <summary>The maximum daily N uptake</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -448,18 +439,8 @@
 
         /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
         [XmlIgnore]
-        public double Nconc
-        {
-            get
-            {
-                if (Wt > 0.0)
-                    return N / Wt;
-                else
-                    return 0.0;
-            }
-        }
-
-
+        public double Nconc { get{ return MathUtilities.Divide(N,Wt,0.0);}}
+        
         /// <summary>Gets or sets the n fixation cost.</summary>
         [XmlIgnore]
         public double NFixationCost { get { return 0; } }
@@ -594,9 +575,6 @@
             // This is basically the old/original function with added metabolicN.
             // Calculate N demand based on amount of N needed to bring root N content in each layer up to maximum.
 
-            double NitrogenSwitch = (nitrogenDemandSwitch == null) ? 1.0 : nitrogenDemandSwitch.Value();
-            double criticalN = (criticalNConc == null) ? minimumNConc.Value() : criticalNConc.Value();
-
             structuralNDemand = 0.0;
             metabolicNDemand = 0.0;
             storageNDemand = 0.0;
@@ -612,9 +590,9 @@
 
                 for (int i = 0; i < Z.LayerLive.Length; i++)
                 {
-                    Z.StructuralNDemand[i] = Z.PotentialDMAllocated[i] * minNConc * NitrogenSwitch;
+                    Z.StructuralNDemand[i] = Z.PotentialDMAllocated[i] * minNConc;
                     NDeficit = Math.Max(0.0, maxNConc * (Z.LayerLive[i].Wt + Z.PotentialDMAllocated[i]) - (Z.LayerLive[i].N + Z.StructuralNDemand[i]));
-                    Z.StorageNDemand[i] = Math.Max(0, NDeficit - Z.StructuralNDemand[i]) * NitrogenSwitch;
+                    Z.StorageNDemand[i] = Math.Max(0, NDeficit - Z.StructuralNDemand[i]);
 
                     structuralNDemand += Z.StructuralNDemand[i];
                     storageNDemand += Z.StorageNDemand[i];
