@@ -2,7 +2,7 @@
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 278,
   "Version": 79,
-  "ApsimVersion": "Version 2020.2.26.4761, built 2020-02-26",
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-04",
   "Name": "Simulations",
   "Children": [
     {
@@ -75,7 +75,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 15.0,
+                          "FixedValue": 6.0,
                           "Units": "days",
                           "Name": "BaseTarget",
                           "Children": [],
@@ -85,7 +85,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "Phenology.AccChillMar1st",
+                          "VariableName": "[Phenology].AccChillMar1st",
                           "Name": "AccChillMar1st",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -148,7 +148,7 @@
                               ],
                               "LegendPosition": 3,
                               "LegendOrientation": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
@@ -222,20 +222,11 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 75.0,
+                      "Units": "days",
                       "Name": "Target",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 63.0,
-                          "Units": null,
-                          "Name": "Base",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -248,12 +239,12 @@
                 {
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "BudBurst",
-                  "End": "StartFlowering",
+                  "End": "Flowering",
                   "Name": "Flowering",
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 29.0,
+                      "FixedValue": 28.0,
                       "Units": null,
                       "Name": "Target",
                       "Children": [],
@@ -277,37 +268,7 @@
                 },
                 {
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
-                  "Start": "StartFlowering",
-                  "End": "FruitSet",
-                  "Name": "FruitSet",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 7.0,
-                      "Units": "d",
-                      "Name": "Target",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime",
-                      "Name": "Progression",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Phen.GenericPhase, Models",
-                  "Start": "FruitSet",
+                  "Start": "Flowering",
                   "End": "Veraison",
                   "Name": "BerryDevelopment",
                   "Children": [
@@ -317,7 +278,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 31.0,
+                          "FixedValue": 40.0,
                           "Units": null,
                           "Name": "Base",
                           "Children": [],
@@ -340,12 +301,12 @@
                                 5.0
                               ],
                               "Y": [
-                                1.5,
-                                1.2,
-                                1.1,
                                 1.0,
-                                0.9,
-                                0.8
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
                               ],
                               "Name": "XYPairs",
                               "Children": [],
@@ -467,7 +428,7 @@
                 },
                 {
                   "$type": "Models.Functions.OnEventFunction, Models",
-                  "SetEvent": "StartFlowering",
+                  "SetEvent": "Flowering",
                   "ReSetEvent": "Endodormancy",
                   "Name": "FloweringDOY",
                   "Children": [
@@ -899,7 +860,7 @@
                 },
                 {
                   "$type": "Models.Functions.HoldFunction, Models",
-                  "WhenToHold": "FruitSet",
+                  "WhenToHold": "Flowering",
                   "Name": "HeightModel",
                   "Children": [
                     {
@@ -2051,7 +2012,7 @@
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
                           "Start": "BudBurst",
-                          "End": "FruitSet",
+                          "End": "Flowering",
                           "Name": "Juvenile",
                           "Children": [
                             {
@@ -2071,7 +2032,7 @@
                         },
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "FruitSet",
+                          "Start": "Flowering",
                           "End": "Veraison",
                           "Name": "Vegetative",
                           "Children": [
@@ -3940,9 +3901,9 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.AccumulateFunction, Models",
-                      "StartStageName": "StartFlowering",
+                      "StartStageName": "Flowering",
                       "EndStageName": "Veraison",
-                      "ResetStageName": "StartFlowering",
+                      "ResetStageName": "Flowering",
                       "FractionRemovedOnCut": 0.0,
                       "FractionRemovedOnHarvest": 0.0,
                       "FractionRemovedOnGraze": 0.0,
@@ -4050,9 +4011,9 @@
                     },
                     {
                       "$type": "Models.Functions.AccumulateFunction, Models",
-                      "StartStageName": "StartFlowering",
+                      "StartStageName": "Flowering",
                       "EndStageName": "Veraison",
-                      "ResetStageName": "StartFlowering",
+                      "ResetStageName": "Flowering",
                       "FractionRemovedOnCut": 0.0,
                       "FractionRemovedOnHarvest": 0.0,
                       "FractionRemovedOnGraze": 0.0,
@@ -4161,9 +4122,9 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.AccumulateFunction, Models",
-                      "StartStageName": "StartFlowering",
-                      "EndStageName": "FruitSet",
-                      "ResetStageName": "StartFlowering",
+                      "StartStageName": "Flowering",
+                      "EndStageName": "Veraison",
+                      "ResetStageName": "Flowering",
                       "FractionRemovedOnCut": 0.0,
                       "FractionRemovedOnHarvest": 0.0,
                       "FractionRemovedOnGraze": 0.0,
@@ -4202,9 +4163,9 @@
                     },
                     {
                       "$type": "Models.Functions.AccumulateFunction, Models",
-                      "StartStageName": "StartFlowering",
-                      "EndStageName": "FruitSet",
-                      "ResetStageName": "StartFlowering",
+                      "StartStageName": "Flowering",
+                      "EndStageName": "Veraison",
+                      "ResetStageName": "Flowering",
                       "FractionRemovedOnCut": 0.0,
                       "FractionRemovedOnHarvest": 0.0,
                       "FractionRemovedOnGraze": 0.0,
@@ -4237,9 +4198,9 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.AccumulateFunction, Models",
-                      "StartStageName": "StartFlowering",
+                      "StartStageName": "Flowering",
                       "EndStageName": "Veraison",
-                      "ResetStageName": "StartFlowering",
+                      "ResetStageName": "Flowering",
                       "FractionRemovedOnCut": 0.0,
                       "FractionRemovedOnHarvest": 0.0,
                       "FractionRemovedOnGraze": 0.0,
@@ -4289,9 +4250,9 @@
                     },
                     {
                       "$type": "Models.Functions.AccumulateFunction, Models",
-                      "StartStageName": "StartFlowering",
+                      "StartStageName": "Flowering",
                       "EndStageName": "Veraison",
-                      "ResetStageName": "StartFlowering",
+                      "ResetStageName": "Flowering",
                       "FractionRemovedOnCut": 0.0,
                       "FractionRemovedOnHarvest": 0.0,
                       "FractionRemovedOnGraze": 0.0,
@@ -4411,9 +4372,9 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.AccumulateFunction, Models",
-                      "StartStageName": "StartFlowering",
-                      "EndStageName": "FruitSet",
-                      "ResetStageName": "StartFlowering",
+                      "StartStageName": "Flowering",
+                      "EndStageName": "Veraison",
+                      "ResetStageName": "Flowering",
                       "FractionRemovedOnCut": 0.0,
                       "FractionRemovedOnHarvest": 0.0,
                       "FractionRemovedOnGraze": 0.0,
@@ -4463,9 +4424,9 @@
                     },
                     {
                       "$type": "Models.Functions.AccumulateFunction, Models",
-                      "StartStageName": "StartFlowering",
-                      "EndStageName": "FruitSet",
-                      "ResetStageName": "StartFlowering",
+                      "StartStageName": "Flowering",
+                      "EndStageName": "Veraison",
+                      "ResetStageName": "Flowering",
                       "FractionRemovedOnCut": 0.0,
                       "FractionRemovedOnHarvest": 0.0,
                       "FractionRemovedOnGraze": 0.0,
@@ -4495,7 +4456,7 @@
                 {
                   "$type": "Models.Functions.OnEventFunction, Models",
                   "SetEvent": "Veraison",
-                  "ReSetEvent": "StartFlowering",
+                  "ReSetEvent": "Flowering",
                   "Name": "MeanTempInitiationY0",
                   "Children": [
                     {
@@ -4525,7 +4486,7 @@
                 {
                   "$type": "Models.Functions.OnEventFunction, Models",
                   "SetEvent": "Veraison",
-                  "ReSetEvent": "StartFlowering",
+                  "ReSetEvent": "Flowering",
                   "Name": "MeanCHOInitiationY0",
                   "Children": [
                     {
@@ -6231,9 +6192,9 @@
                 },
                 {
                   "$type": "Models.Functions.AccumulateFunction, Models",
-                  "StartStageName": "FruitSet",
+                  "StartStageName": "Flowering",
                   "EndStageName": "LeafFall",
-                  "ResetStageName": "FruitSet",
+                  "ResetStageName": "Flowering",
                   "FractionRemovedOnCut": 0.0,
                   "FractionRemovedOnHarvest": 0.0,
                   "FractionRemovedOnGraze": 0.0,
@@ -7297,6 +7258,8 @@
             "[Clock].Today",
             "[Clock].Today.Year",
             "[Clock].Today.DayOfYear",
+            "[Weather].DaysSinceWinterSolstice as DAWS",
+            "",
             "[Grapevine].Phenology.CurrentSeason as CurrentSeason",
             "[Grapevine].Phenology.Stage",
             "[Grapevine].Phenology.AccumulatedEmergedTT",
@@ -11119,6 +11082,15 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.Factor, Models",
+                      "Specification": "[ParameterTest].Script.VeraTarget\r\n = 37, 38, 39, 40, 41, 42, 43, 44, 45",
+                      "Name": "VeraTarget",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -11770,15 +11742,15 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Zone zone;\r\n        [Link] Summary Summary;\r\n\r\n        //[Description(\"BudBurstBase\")]\r\n        //public double BudBurstBase  {get; set;}\r\n      //  [Description(\"chill_a\")]\r\n       // public double chill_a  {get; set;}\r\n\r\n       // [Description(\"chill_c\")]\r\n       // public double chill_c  {get; set;}\r\n    \r\n        //Description(\"EndoTarget\")]\r\n        //public double EndoTarget  {get; set;}\r\n        //[Description(\"FloweringTarget\")]\r\n        //public double FloweringTarget  {get; set;}\r\n\r\n                \r\n        [EventSubscribe(\"PlantSowing\")]\r\n        private void OnPlantSowing(object sender, EventArgs e)\r\n        {\r\n            //zone.Set(\"Grapevine.Phenology.Budding.Target.Base.FixedValue\", BudBurstBase);\r\n            //zone.Set(\"Grapevine.Phenology.Budding.Target.ChillingTadjustment.A\", chill_a);\r\n           // zone.Set(\"Grapevine.Phenology.Budding.Target.ChillingTadjustment.C\", chill_c);\r\n            //zone.Set(\"Grapevine.Phenology.EndoDormancy.Target.FixedValue\", EndoTarget);\r\n            //zone.Set(\"Grapevine.Phenology.Flowering.Target.FixedValue\", FloweringTarget);                      \r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
+                  "Code": "\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Zone zone;\r\n        [Link] Summary Summary;\r\n\r\n        [Description(\"FlowerTarget\")]\r\n        public double FlowerTarget {get; set;}\r\n\r\n        [Description(\"VeraTarget\")]\r\n        public double VeraTarget {get; set;}\r\n      //  [Description(\"chill_a\")]\r\n       // public double chill_a  {get; set;}\r\n\r\n       // [Description(\"chill_c\")]\r\n       // public double chill_c  {get; set;}\r\n    \r\n        //Description(\"EndoTarget\")]\r\n        //public double EndoTarget  {get; set;}\r\n        //[Description(\"FloweringTarget\")]\r\n        //public double FloweringTarget  {get; set;}\r\n\r\n                \r\n        [EventSubscribe(\"PlantSowing\")]\r\n        private void OnPlantSowing(object sender, EventArgs e)\r\n        {\r\n            zone.Set(\"Grapevine.Phenology.Flowering.Target.FixedValue\", FlowerTarget);\r\n            zone.Set(\"Grapevine.Phenology.BerryDevelopment.Target.Base.FixedValue\", VeraTarget);\r\n            //zone.Set(\"Grapevine.Phenology.Budding.Target.ChillingTadjustment.A\", chill_a);\r\n           // zone.Set(\"Grapevine.Phenology.Budding.Target.ChillingTadjustment.C\", chill_c);\r\n            //zone.Set(\"Grapevine.Phenology.EndoDormancy.Target.FixedValue\", EndoTarget);\r\n            //zone.Set(\"Grapevine.Phenology.Flowering.Target.FixedValue\", FloweringTarget);                      \r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
                   "Parameters": [
                     {
-                      "Key": "chill_a",
-                      "Value": "0"
+                      "Key": "FlowerTarget",
+                      "Value": "28"
                     },
                     {
-                      "Key": "chill_c",
-                      "Value": "0"
+                      "Key": "VeraTarget",
+                      "Value": "41"
                     }
                   ],
                   "Name": "ParameterTest",

@@ -295,6 +295,22 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
+        /// Product of an array of doubles 
+        /// </summary>
+        public static double Prod(IEnumerable Values)
+        {
+            double prod = 1.0;
+            foreach (object Value in Values)
+            {
+                if (Value != null && !double.IsNaN(Convert.ToDouble(Value, CultureInfo.InvariantCulture)))
+                {
+                    prod *= Convert.ToDouble(Value, CultureInfo.InvariantCulture);
+                }
+            }
+            return prod;
+        }
+
+        /// <summary>
         /// Average an array of doubles 
         /// </summary>
         public static double Average(IEnumerable Values)

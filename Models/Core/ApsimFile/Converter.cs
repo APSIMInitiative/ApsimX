@@ -17,7 +17,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 79; } }
+        public static int LatestVersion { get { return 80; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1585,6 +1585,28 @@
             {
                 foreach (var replacement in changes)
                     JsonUtilities.SearchReplaceReportVariableNames(report, replacement.Item1, replacement.Item2);
+            }
+        }
+
+        /// <summary>
+        /// Replace ExcelMultiInput with ExcelInput.
+        /// Change ExcelInput.FileName from a string into a string[].
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion80(JObject root, string fileName)
+        {
+            // Rename ExcelInput.FileName to FileNames and make it an array.
+            foreach (JObject excelInput in JsonUtilities.ChildrenRecursively(root, "ExcelInput"))
+            {
+                if (excelInput["FileName"] != null)
+                    excelInput["FileNames"] = new JArray(excelInput["FileName"].Value<string>());
+            }
+
+            // Replace ExcelMultiInput with an ExcelInput.
+            foreach (JObject excelMultiInput in JsonUtilities.ChildrenRecursively(root, "ExcelMultiInput"))
+            {
+                excelMultiInput["$type"] = "Models.PostSimulationTools.ExcelInput, Models";
             }
         }
 
