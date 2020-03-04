@@ -1625,6 +1625,14 @@
             foreach (JObject model in JsonUtilities.ChildrenRecursively(root))
                 model["$type"] = model["$type"].ToString().Replace("Models.Graph", "Models");
 
+            // Fix graph axes - these are a property of graphs, not a model themselves
+            foreach (JObject graph in JsonUtilities.ChildrenRecursively(root, "Graph"))
+            {
+                JArray axes = graph["Axis"] as JArray;
+                foreach (JObject axis in axes)
+                    axis["$type"] = axis["$type"].ToString().Replace("Models.Graph", "Models");
+            }
+
             // Replace ExcelMultiInput with an ExcelInput.
             foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
             {
@@ -1632,9 +1640,15 @@
                 manager.Replace("using Report", "using Models");
                 //manager.ReplaceRegex("(using Models.+)using Models", "$1");
                 manager.Replace("Report.Report", "Report");
-                manager.Replace("Report", "Report");
 
-                manager.SetUsingStatements(manager.GetUsingStatements().Distinct());
+                manager.Replace("Models.Graph", "Models");
+                manager.Replace("Graph.Graph", "Graph");
+
+                List<string> usingStatements = manager.GetUsingStatements().ToList();
+                usingStatements.Remove("Models.Graph");
+                usingStatements.Remove("Graph");
+
+                manager.SetUsingStatements(usingStatements.Distinct());
 
                 manager.Save();
             }
