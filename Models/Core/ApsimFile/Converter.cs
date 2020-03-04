@@ -1619,9 +1619,11 @@
         {
             // Fix type of Report nodes
             foreach (JObject report in JsonUtilities.ChildrenRecursively(root, "Report"))
-            {
                 report["$type"] = report["$type"].ToString().Replace("Report.Report", "Report");
-            }
+
+            // Fix type of all models in the now-removed Models.Graph namespace
+            foreach (JObject model in JsonUtilities.ChildrenRecursively(root))
+                model["$type"] = model["$type"].ToString().Replace("Models.Graph", "Models");
 
             // Replace ExcelMultiInput with an ExcelInput.
             foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
