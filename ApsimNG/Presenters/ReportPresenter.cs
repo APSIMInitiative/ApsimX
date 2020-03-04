@@ -6,6 +6,7 @@
     using Models.Factorial;
     using Models.Storage;
     using Views;
+    using Models;
 
     /// <summary>
     /// The Report presenter class
