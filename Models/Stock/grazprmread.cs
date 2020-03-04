@@ -1,9 +1,3 @@
-// -----------------------------------------------------------------------
-// <copyright file="grazprmread.cs" company="CSIRO">
-//      CSIRO Agriculture & Food
-// </copyright>
-// -----------------------------------------------------------------------
-
 // Classes for I/O of the generic parameter set class, ParameterSet.           
 
 namespace Models.GrazPlan

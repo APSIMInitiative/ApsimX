@@ -1,8 +1,3 @@
-// -----------------------------------------------------------------------
-// <copyright file="TreeView.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
 namespace UserInterface.Views
 {
     using APSIM.Shared.Utilities;

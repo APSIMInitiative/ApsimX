@@ -1,22 +1,16 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Report.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
 namespace Models
 {
     using APSIM.Shared.Utilities;
+    using Models.CLEM;
     using Models.Core;
-    using Newtonsoft.Json;
-    using Models.Core.Run;
     using Models.Storage;
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Data;
     using System.IO;
     using System.Linq;
     using System.Xml.Serialization;
-    using Models.CLEM;
 
     /// <summary>
     /// A report class for writing output to the data store.

@@ -1,8 +1,3 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ReportColumnForFactorValue.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
 namespace Models
 {
     using System;

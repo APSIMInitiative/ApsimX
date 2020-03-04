@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="LegendClickArgs.cs" company="CSIRO">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.EventArguments
+﻿namespace UserInterface.EventArguments
 {
     using System;
 

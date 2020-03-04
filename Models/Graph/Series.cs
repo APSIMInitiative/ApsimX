@@ -1,23 +1,17 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Series.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
 namespace Models
 {
-    using System;
-    using System.Drawing;
-    using System.Xml.Serialization;
-    using System.Data;
-    using System.Collections.Generic;
-    using System.Linq;
     using APSIM.Shared.Utilities;
-    using System.Collections;
+    using Models.CLEM;
     using Models.Core;
+    using Models.Core.Run;
     using Models.Factorial;
     using Storage;
-    using Models.Core.Run;
-    using Models.CLEM;
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Drawing;
+    using System.Linq;
+    using System.Xml.Serialization;
 
     /// <summary>The class represents a single series on a graph</summary>
     [ValidParent(ParentType = typeof(Graph))]

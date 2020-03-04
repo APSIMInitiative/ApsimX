@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="PathUtilities.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace APSIM.Shared.Utilities
+﻿namespace APSIM.Shared.Utilities
 {
     using System;
     using System.IO;

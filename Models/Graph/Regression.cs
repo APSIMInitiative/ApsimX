@@ -1,19 +1,12 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Regression.cs" company="CSIRO">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
 namespace Models
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Collections;
     using APSIM.Shared.Utilities;
-    using System.Drawing;
     using Models.Core;
     using Models.Storage;
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Drawing;
 
     /// <summary>
     /// A regression model.

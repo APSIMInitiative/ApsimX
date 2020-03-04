@@ -14,11 +14,6 @@ using Models.Core.Attributes;
 using Models.CLEM.Activities;
 using System.Globalization;
 
-// -----------------------------------------------------------------------
-// <copyright file="FileCrop.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
 namespace Models.CLEM
 {
     ///<summary>

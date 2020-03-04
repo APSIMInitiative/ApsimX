@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="GraphView.cs" company="CSIRO">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using System;
     using System.Collections;

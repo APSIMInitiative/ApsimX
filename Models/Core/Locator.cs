@@ -1,18 +1,12 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Locater.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.Core
+﻿namespace Models.Core
 {
+    using APSIM.Shared.Utilities;
     using System;
+    using System.Collections;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Reflection;
-    using APSIM.Shared.Utilities;
-    using System.Collections;
-    using Functions;
-    using System.Globalization;
 
     /// <summary>
     /// This class is responsible for the location and retrieval of variables or models 

@@ -1,8 +1,3 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="EventNamesOnGraph.cs" company="CSIRO">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
 namespace Models
 {
     using APSIM.Shared.Utilities;

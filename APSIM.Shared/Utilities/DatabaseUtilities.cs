@@ -1,18 +1,7 @@
-// -----------------------------------------------------------------------
-// <copyright file="DatabaseUtilties.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
 namespace APSIM.Shared.Utilities
 {
-    using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Data;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
 
     /// <summary>
     /// Some utilities for manipulating a data base connection.

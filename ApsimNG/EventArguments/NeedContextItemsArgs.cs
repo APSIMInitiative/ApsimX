@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="NeedContextItemsArgs.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace UserInterface.EventArguments
+﻿namespace UserInterface.EventArguments
 {
     using System;
     using System.Collections;
