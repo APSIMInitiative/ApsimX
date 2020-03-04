@@ -1,12 +1,6 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ReportColumnForFactorValue.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.Report
+﻿namespace Models.Report
 {
     using System;
-    using System.Collections.Generic;
 
     /// <summary>A class for outputting a constant value in a report column.</summary>
     [Serializable]

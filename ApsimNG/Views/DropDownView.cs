@@ -1,13 +1,6 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="DropDownView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using System;
-    using System.Collections.Generic;
     using Gtk;
 
     /// <summary>An interface for a drop down</summary>

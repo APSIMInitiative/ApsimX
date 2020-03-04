@@ -1,17 +1,10 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="PivotTableView.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-using Models.Core;
+﻿using Models.Core;
 using Models.CLEM;
 using Models.CLEM.Reporting;
 using System;
 using System.Collections.Generic;
 using Gtk;
 using UserInterface.Views;
-using static ApsimNG.Views.CLEM.PivotTableView;
 
 namespace ApsimNG.Views.CLEM
 {

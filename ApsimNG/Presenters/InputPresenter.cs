@@ -1,16 +1,10 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="InputPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System;
-    using global::UserInterface.Interfaces;
     using Models;
     using Models.Core;
     using Utility;
+    using Interfaces;
     using Views;
 
     /// <summary>
