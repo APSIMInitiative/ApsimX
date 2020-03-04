@@ -14,7 +14,7 @@ namespace UserInterface.Presenters
     using APSIM.Shared.Utilities;
     using Interfaces;
     using Models.Core;
-    using Models.Graph;
+    using Models;
     using Views;
     using Commands;
     using Models.Storage;

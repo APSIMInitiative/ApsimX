@@ -6,7 +6,7 @@
 namespace ApsimNG.Classes.DirectedGraph
 {
     using Cairo;
-    using Models.Graph;
+    using Models;
     using OxyPlot;
     using OxyPlot.GtkSharp;
     using System;

@@ -48,9 +48,9 @@ namespace UnitTests.ApsimNG.Presenters
             // For some reason, sending a double click event doesn't trigger the ActivateRow signal.
             // Therefore, we need to manually activate the row.
             //GtkUtilities.ClickOnTreeView(treeView, path, 0, EventType.TwoButtonPress, ModifierType.None, GtkUtilities.ButtonPressType.LeftClick);
-            ActivateNode(addModelsTree, ".Models.Graph");
+            ActivateNode(addModelsTree, ".Models");
             Assert.AreEqual(1, paddock.Children.Count);
-            if (paddock.Children.Any(child => child is Models.Graph.Graph))
+            if (paddock.Children.Any(child => child is Models.Graph))
                 throw new Exception($"Double clicking on graph namespaces folder should not add a graph");
 
             // While we're at it, let's make sure we can add resource models - e.g. wheat.
@@ -71,7 +71,7 @@ namespace UnitTests.ApsimNG.Presenters
             tree.SelectedNode = path;
 
             Gtk.TreeView treeView = (Gtk.TreeView)ReflectionUtilities.GetValueOfFieldOrProperty("treeview1", tree);
-            Gtk.TreePath treePath = GetTreePath(tree, ".Models.Graph");
+            Gtk.TreePath treePath = GetTreePath(tree, ".Models");
             treeView.ActivateRow(treePath, treeView.Columns[0]);
             GtkUtilities.WaitForGtkEvents();
         }

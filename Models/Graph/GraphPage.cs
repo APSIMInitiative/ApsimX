@@ -1,5 +1,5 @@
 ﻿
-namespace Models.Graph
+namespace Models
 {
     using Core;
     using System.Collections.Generic;

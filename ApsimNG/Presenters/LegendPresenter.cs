@@ -8,7 +8,7 @@ namespace UserInterface.Presenters
 {
     using System;
     using System.Collections.Generic;
-    using Models.Graph;
+    using Models;
     using Views;
 
     /// <summary>

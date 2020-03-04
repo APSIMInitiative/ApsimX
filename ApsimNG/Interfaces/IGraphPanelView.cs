@@ -1,4 +1,4 @@
-﻿using Models.Graph;
+﻿using Models;
 using System.Collections.Generic;
 using UserInterface.Presenters;
 using UserInterface.Views;

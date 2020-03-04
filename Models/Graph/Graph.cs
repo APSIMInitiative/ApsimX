@@ -3,7 +3,7 @@
 //     Copyright (c) APSIM Initiative
 // </copyright>
 //-----------------------------------------------------------------------
-namespace Models.Graph
+namespace Models
 {
     using System;
     using System.Collections;
@@ -180,7 +180,7 @@ namespace Models.Graph
         private void EnsureAllAxesExist()
         {
             // Get a list of all axis types that are referenced by the series.
-            List<Models.Graph.Axis.AxisType> allAxisTypes = new List<Models.Graph.Axis.AxisType>();
+            List<Models.Axis.AxisType> allAxisTypes = new List<Models.Axis.AxisType>();
             foreach (Series series in Series)
             {
                 allAxisTypes.Add(series.XAxis);

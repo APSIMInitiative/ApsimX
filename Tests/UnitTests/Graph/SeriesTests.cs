@@ -2,7 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
-    using Models.Graph;
+    using Models;
     using Models.Storage;
     using NUnit.Framework;
     using System.Collections.Generic;

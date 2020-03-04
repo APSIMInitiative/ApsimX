@@ -8,7 +8,7 @@ namespace UserInterface.Interfaces
     using System;
     using System.Collections;
     using System.Drawing;
-    using Models.Graph;
+    using Models;
     using EventArguments;
 
     /// <summary>
@@ -103,13 +103,13 @@ namespace UserInterface.Interfaces
              string xFieldName,
              string yFieldName,
              IEnumerable error,
-             Models.Graph.Axis.AxisType xAxisType, 
-             Models.Graph.Axis.AxisType yAxisType,
+             Models.Axis.AxisType xAxisType, 
+             Models.Axis.AxisType yAxisType,
              Color colour,
-             Models.Graph.LineType lineType,
-             Models.Graph.MarkerType markerType,
-             Models.Graph.LineThicknessType lineThickness,
-             Models.Graph.MarkerSizeType markerSize,
+             Models.LineType lineType,
+             Models.MarkerType markerType,
+             Models.LineThicknessType lineThickness,
+             Models.MarkerSizeType markerSize,
              bool showInLegend);
 
         /// <summary>
@@ -126,8 +126,8 @@ namespace UserInterface.Interfaces
             string title, 
             IEnumerable x, 
             IEnumerable y, 
-            Models.Graph.Axis.AxisType xAxisType, 
-            Models.Graph.Axis.AxisType yAxisType, 
+            Models.Axis.AxisType xAxisType, 
+            Models.Axis.AxisType yAxisType, 
             Color colour,
             bool showInLegend);
 
@@ -150,8 +150,8 @@ namespace UserInterface.Interfaces
             IEnumerable y1,
             IEnumerable x2,
             IEnumerable y2,
-            Models.Graph.Axis.AxisType xAxisType,
-            Models.Graph.Axis.AxisType yAxisType,
+            Models.Axis.AxisType xAxisType,
+            Models.Axis.AxisType yAxisType,
             Color colour,
             bool showInLegend);
 
@@ -192,8 +192,8 @@ namespace UserInterface.Interfaces
             string title,
             object[] x,
             double[] y,
-            Models.Graph.Axis.AxisType xAxisType,
-            Models.Graph.Axis.AxisType yAxisType,
+            Models.Axis.AxisType xAxisType,
+            Models.Axis.AxisType yAxisType,
             Color colour,
             bool showOnLegend);
 
@@ -238,8 +238,8 @@ namespace UserInterface.Interfaces
             object y,
             bool leftAlign,
             double textRotation,
-            Models.Graph.Axis.AxisType xAxisType,
-            Models.Graph.Axis.AxisType yAxisType,
+            Models.Axis.AxisType xAxisType,
+            Models.Axis.AxisType yAxisType,
             Color colour);
 
         /// <summary>
@@ -261,8 +261,8 @@ namespace UserInterface.Interfaces
             object y1,
             object x2,
             object y2,
-            Models.Graph.LineType type,
-            Models.Graph.LineThicknessType thickness,
+            Models.LineType type,
+            Models.LineThicknessType thickness,
             Color colour,
             bool inFrontOfSeries,
             string toolTip);
@@ -278,7 +278,7 @@ namespace UserInterface.Interfaces
         /// <param name="interval">Axis scale interval</param>
         /// <param name="crossAtZero">Axis crosses at zero?</param>
         void FormatAxis(
-            Models.Graph.Axis.AxisType axisType, 
+            Models.Axis.AxisType axisType, 
             string title,
             bool inverted,
             double minimum,
@@ -291,7 +291,7 @@ namespace UserInterface.Interfaces
         /// </summary>
         /// <param name="legendPositionType">Position of the legend</param>
         /// <param name="orientation">Orientation of items in the legend.</param>
-        void FormatLegend(Models.Graph.Graph.LegendPositionType legendPositionType, Graph.LegendOrientationType orientation);
+        void FormatLegend(Models.Graph.LegendPositionType legendPositionType, Graph.LegendOrientationType orientation);
 
         /// <summary>
         /// Format the title.
@@ -337,17 +337,17 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Gets the maximum scale of the specified axis.
         /// </summary>
-        double AxisMaximum(Models.Graph.Axis.AxisType axisType);
+        double AxisMaximum(Models.Axis.AxisType axisType);
 
         /// <summary>
         /// Gets the minimum scale of the specified axis.
         /// </summary>
-        double AxisMinimum(Models.Graph.Axis.AxisType axisType);
+        double AxisMinimum(Models.Axis.AxisType axisType);
 
         /// <summary>
         /// Gets the interval (major step) of the specified axis.
         /// </summary>
-        double AxisMajorStep(Models.Graph.Axis.AxisType axisType);
+        double AxisMajorStep(Models.Axis.AxisType axisType);
         
         /// <summary>Gets the series names.</summary>
         /// <returns></returns>

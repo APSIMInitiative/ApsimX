@@ -6,7 +6,7 @@
 namespace UserInterface.Presenters
 {
     using System;
-    using Models.Graph;
+    using Models;
     using Views;
     using Interfaces;
 

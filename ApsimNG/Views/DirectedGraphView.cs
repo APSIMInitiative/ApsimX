@@ -8,7 +8,7 @@ namespace UserInterface.Views
     using ApsimNG.Classes.DirectedGraph;
     using Cairo;
     using Gtk;
-    using Models.Graph;
+    using Models;
     using System;
     using System.Collections.Generic;
     using System.Drawing;

@@ -3,7 +3,7 @@
 // TODO: Update copyright text.
 // </copyright>
 // -----------------------------------------------------------------------
-namespace Models.Graph
+namespace Models
 {
     using System;
     using System.Collections.Generic;

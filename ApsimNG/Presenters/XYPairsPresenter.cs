@@ -13,7 +13,7 @@ namespace UserInterface.Presenters
     using EventArguments;
     using Interfaces;
     using Models.Core;
-    using Models.Graph;
+    using Models;
     using Models.Functions;
     using Views;
 
