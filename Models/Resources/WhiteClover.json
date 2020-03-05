@@ -7363,7 +7363,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.025,
+              "FixedValue": 0.03,
               "Units": "gN/gDM",
               "Name": "CriticalNConc",
               "Children": [],
