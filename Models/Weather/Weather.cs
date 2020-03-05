@@ -217,16 +217,16 @@
                 if (Latitude <= 0)
                 {
                     if (DateTime.IsLeapYear(clock.Today.Year))
-                        return 174;
-                    else
                         return 173;
+                    else
+                        return 172;
                 }
                 else
                 {
                     if (DateTime.IsLeapYear(clock.Today.Year))
-                        return 357;
-                    else
                         return 356;
+                    else
+                        return 355;
                 }
                 }
         }
