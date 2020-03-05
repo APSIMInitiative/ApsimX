@@ -223,7 +223,7 @@
                 }
             }
             if (invalidVariables != null && invalidVariables.Count > 0)
-                throw new Exception($"Invalid report variables found:\n{string.Join("\n", invalidVariables)}");
+                throw new Exception($"Error in report {Name}: Invalid report variables found:\n{string.Join("\n", invalidVariables)}");
 
             // Add row to our table that will be written to the db file
             dataToWriteToDb.Rows.Add(valuesToWrite);
