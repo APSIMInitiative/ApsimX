@@ -10,6 +10,7 @@
     /// Water table is the depth (in mm) below the ground surface of the first layer which is above saturation.
     /// </summary>
     [Serializable]
+    [ValidParent(ParentType = typeof(WaterBalance))]
     public class WaterTableModel : Model, IFunction
     {
         /// <summary>The water movement model.</summary>
@@ -23,10 +24,10 @@
         /// <summary>Calculate water table depth.</summary>
         public double Value(int arrayIndex = -1)
         {
-            double[] Thickness = soil.Properties.Water.Thickness;
+            double[] Thickness = soil.Properties.Thickness;
             double[] SW = soil.Water;
-            double[] SAT = MathUtilities.Multiply(soil.Properties.Water.SAT, Thickness);
-            double[] DUL = MathUtilities.Multiply(soil.Properties.Water.DUL, Thickness);
+            double[] SAT = MathUtilities.Multiply(soil.Properties.SAT, Thickness);
+            double[] DUL = MathUtilities.Multiply(soil.Properties.DUL, Thickness);
 
 
             // Find the first saturated layer

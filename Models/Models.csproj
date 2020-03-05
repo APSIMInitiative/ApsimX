@@ -635,7 +635,6 @@
     <Compile Include="Soils\WaterModel\CNReductionForTillage.cs" />
     <Compile Include="Soils\WaterModel\Conversions.cs" />
     <Compile Include="Soils\WaterModel\EvaporationModel.cs" />
-    <Compile Include="Soils\WaterModel\ISoil.cs" />
     <Compile Include="Soils\WaterModel\LateralFlow.cs" />
     <Compile Include="Soils\WaterModel\Runoff.cs" />
     <Compile Include="Soils\WaterModel\SaturatedFlow.cs" />

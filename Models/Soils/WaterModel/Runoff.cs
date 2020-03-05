@@ -40,6 +40,9 @@
     /// cumulative rain, ie.roughness is smoothed out by rain. 
     /// </summary>
     [Serializable]
+    [ViewName("UserInterface.Views.ProfileView")]
+    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
+    [ValidParent(ParentType = typeof(WaterBalance))]
     public class RunoffModel : Model, IFunction
     {
         // --- Links -------------------------------------------------------------------------
@@ -50,11 +53,11 @@
 
         /// <summary>A function for reducing CN due to cover.</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction reductionForCover = null;
+        private IFunction cnReductionForCover = null;
 
         /// <summary>A function for reducing CN due to tillage.</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction reductionForTillage = null;
+        private IFunction cnReductionForTillage = null;
 
         // --- Privates ----------------------------------------------------------------------
 
@@ -63,8 +66,12 @@
 
         // --- Settable properties -----------------------------------------------------------
 
-        /// <summary>Gets or sets the c n2 bare.</summary>
-        [DescriptionAttribute("Bare soil runoff curve number")]
+        /// <summary>
+        /// Runoff Curve Number (CN) for bare soil with average moisture
+        /// </summary>
+        [Bounds(Lower = 1.0, Upper = 100.0)]
+        [Caption("CN bare")]
+        [Description("Runoff Curve Number (CN) for bare soil with average moisture")]
         public double CN2Bare { get; set; }
 
         // --- Outputs -----------------------------------------------------------------------
@@ -76,7 +83,7 @@
 
             if (soil.PotentialRunoff > 0.0)
             {
-                double cn2New = CN2Bare - reductionForCover.Value(arrayIndex) - reductionForTillage.Value(arrayIndex);
+                double cn2New = CN2Bare - cnReductionForCover.Value(arrayIndex) - cnReductionForTillage.Value(arrayIndex);
 
                 // cut off response to cover at high covers
                 cn2New = MathUtilities.Bound(cn2New, 0.0, 100.0);
@@ -84,10 +91,10 @@
                 // Calculate CN proportional in dry range (dul to ll15)
                 double[] runoff_wf = RunoffWeightingFactor();
                 double[] SW = soil.Water;
-                double[] LL15 = MathUtilities.Multiply(soil.Properties.Water.LL15, soil.Properties.Water.Thickness);
-                double[] DUL = MathUtilities.Multiply(soil.Properties.Water.DUL, soil.Properties.Water.Thickness);
+                double[] LL15 = MathUtilities.Multiply(soil.Properties.LL15, soil.Properties.Thickness);
+                double[] DUL = MathUtilities.Multiply(soil.Properties.DUL, soil.Properties.Thickness);
                 double cnpd = 0.0;
-                for (int i = 0; i < soil.Properties.Water.Thickness.Length; i++)
+                for (int i = 0; i < soil.Properties.Thickness.Length; i++)
                 {
                     double DULFraction = MathUtilities.Divide((SW[i] - LL15[i]), (DUL[i] - LL15[i]), 0.0);
                     cnpd = cnpd + DULFraction * runoff_wf[i];
@@ -131,18 +138,18 @@
             double cumRunoffWeightingFactor = 0.0;
 
             // Get sumulative depth (mm)
-            double[] cumThickness = APSIM.Shared.APSoil.SoilUtilities.ToCumThickness(soil.Properties.Water.Thickness);
+            double[] cumThickness = APSIM.Shared.APSoil.SoilUtilities.ToCumThickness(soil.Properties.Thickness);
 
             // Ensure hydro effective depth doesn't go below bottom of soil.
-            hydrolEffectiveDepth = Math.Min(hydrolEffectiveDepth, MathUtilities.Sum(soil.Properties.Water.Thickness));
+            hydrolEffectiveDepth = Math.Min(hydrolEffectiveDepth, MathUtilities.Sum(soil.Properties.Thickness));
 
             // Scaling factor for wf function to sum to 1
             double scaleFactor = 1.0 / (1.0 - Math.Exp(-4.16));
 
             // layer number that the effective depth occurs
-            int hydrolEffectiveLayer = APSIM.Shared.APSoil.SoilUtilities.FindLayerIndex(soil.Properties, hydrolEffectiveDepth);
+            int hydrolEffectiveLayer =soil.Properties.LayerIndexOfDepth(hydrolEffectiveDepth);
 
-            double[] runoffWeightingFactor = new double[soil.Properties.Water.Thickness.Length];
+            double[] runoffWeightingFactor = new double[soil.Properties.Thickness.Length];
             for (int i = 0; i <= hydrolEffectiveLayer; i++)
             {
                 double cumDepth = cumThickness[i];

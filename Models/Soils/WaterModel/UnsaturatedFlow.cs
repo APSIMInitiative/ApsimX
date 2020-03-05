@@ -23,27 +23,31 @@
     ///    Flow = Diffusivity x Volumetric Soil Water Gradient
     /// </summary>
     [Serializable]
+    [ViewName("UserInterface.Views.ProfileView")]
+    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
+    [ValidParent(ParentType = typeof(WaterBalance))]
     public class UnsaturatedFlowModel : Model
     {
         /// <summary>The water movement model.</summary>
         [Link]
         private WaterBalance soil = null;
 
-
-
-
         /// <summary>
-        /// Gets or sets the diffusivity constant for soil texture
+        /// Constant in the soil water diffusivity calculation (mm2/day)
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1000.0)]
-        [DescriptionAttribute("Diffusivity constant for soil texture")]
+        [Units("mm2/day")]
+        [Caption("Diffusivity constant")]
+        [Description("Constant in the soil water diffusivity calculation")]
         public double DiffusConst { get; set; }
 
         /// <summary>
-        /// Gets or sets the diffusivity slope for diffusivity/soil water content relationship
+        /// Effect of soil water storage above the lower limit on soil water diffusivity (/mm)
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 100.0)]
-        [DescriptionAttribute("Diffusivity slope for diffusivity/soil water content relationship")]
+        [Units("/mm")]
+        [Caption("Diffusivity slope")]
+        [Description("Effect of soil water storage above the lower limit on soil water diffusivity")]
         public double DiffusSlope { get; set; }
 
 
@@ -54,10 +58,10 @@
             {
                 const double gravity_gradient = 0.00002;
 
-                double[] Thickness = soil.Properties.Water.Thickness;
+                double[] Thickness = soil.Properties.Thickness;
                 double[] SW = soil.Water;
-                double[] LL15 = MathUtilities.Multiply(soil.Properties.Water.LL15, soil.Properties.Water.Thickness);
-                double[] DUL = MathUtilities.Multiply(soil.Properties.Water.DUL, soil.Properties.Water.Thickness);
+                double[] LL15 = MathUtilities.Multiply(soil.Properties.LL15, soil.Properties.Thickness);
+                double[] DUL = MathUtilities.Multiply(soil.Properties.DUL, soil.Properties.Thickness);
 
                 int second_last_layer = Thickness.Length - 2;
 

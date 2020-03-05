@@ -25,6 +25,9 @@
     /// KLAT has no effect and does not alter the amount of water coming into the layer. 
     /// KLAT only alters the amount of water flowing out of the layer
     /// </summary>
+    [ViewName("UserInterface.Views.ProfileView")]
+    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
+    [ValidParent(ParentType = typeof(WaterBalance))]
     [Serializable]
     public class LateralFlowModel : Model
     {
@@ -32,16 +35,48 @@
         [Link]
         private WaterBalance soil = null;
 
-        /// <summary>The discharge_width (m)</summary>
+        /// <summary>
+        /// Basal width of the downslope boundary of the catchment for lateral flow calculations (m)
+        /// </summary>
+        [Bounds(Lower = 0.0, Upper = 1.0e8F)]
+        [Units("m")]
+        [Caption("Basal width")]
+        [Description("Basal width of the downslope boundary of the catchment for lateral flow calculations")]
         public double DischargeWidth { get; set; }
 
-        /// <summary>The slope</summary>
-        public double Slope { get; set; } 
+        /// <summary>
+        /// Slope of the catchment area for lateral flow calculations
+        /// </summary>
+        /// <remarks>
+        /// DSG: The units of slope are metres/metre.  Hence a slope = 0 means horizontal soil layers, and no lateral flows will occur.
+        /// A slope = 1 means basically a 45 degree angle slope, which we thought would be the most anyone would be wanting to simulate.  Hence the bounds 0-1.  I still think this is fine.
+        /// </remarks>
+        [Bounds(Lower = 0.0, Upper = 1.0)]
+        [Caption("Slope")]
+        [Description("Slope of the catchment area for lateral flow calculations")]
+        public double Slope { get; set; }
 
-        /// <summary>The catchment_area (m2)</summary>
+        /// <summary>
+        /// Catchment area for later flow calculations (m2)
+        /// </summary>
+        [Bounds(Lower = 0.0, Upper = 1.0e8F)]
+        [Units("m2")]
+        [Caption("Catchment")]
+        [Description("Catchment area for lateral flow calculations")]
         public double CatchmentArea { get; set; }
 
-        /// <summary>The KLAT (mm/day)</summary>
+        /// <summary>
+        /// Lateral saturated hydraulic conductivity (KLAT)
+        /// </summary>
+        /// <remarks>
+        /// Lateral flow soil water conductivity constant for each soil layer.
+        /// At thicknesses specified in "SoilWater" node of GUI.
+        /// Use Soil.KLAT for KLAT in standard thickness
+        /// </remarks>
+        [Bounds(Lower = 0, Upper = 1.0e3F)]
+        [Units("mm/d")]
+        [Caption("Klat")]
+        [Description("Lateral saturated hydraulic conductivity (KLAT)")]
         public double[] KLAT { get; set; }
 
         /// <summary>The amount of incoming water (mm)</summary>
@@ -63,19 +98,19 @@
             {
                 // Lateral flow does not move solutes. We should add this feature one day.
                 if (InFlow == null)
-                    return new double[0];
+                    return null;
 
                 else
                 {
                     double[] Out = new double[InFlow.Length];
                     double[] SW = MathUtilities.Add(soil.Water, InFlow);
-                    double[] DUL = MathUtilities.Multiply(soil.Properties.Water.DUL, soil.Properties.Water.Thickness);
-                    double[] SAT = MathUtilities.Multiply(soil.Properties.Water.SAT, soil.Properties.Water.Thickness);
+                    double[] DUL = MathUtilities.Multiply(soil.Properties.DUL, soil.Properties.Thickness);
+                    double[] SAT = MathUtilities.Multiply(soil.Properties.SAT, soil.Properties.Thickness);
 
-                    for (int layer = 0; layer < soil.Properties.Water.Thickness.Length; layer++)
+                    for (int layer = 0; layer < soil.Properties.Thickness.Length; layer++)
                     {
                         // Calculate depth of water table (m)
-                        double depthWaterTable = soil.Properties.Water.Thickness[layer] * MathUtilities.Divide((SW[layer] - DUL[layer]), (SAT[layer] - DUL[layer]), 0.0);
+                        double depthWaterTable = soil.Properties.Thickness[layer] * MathUtilities.Divide((SW[layer] - DUL[layer]), (SAT[layer] - DUL[layer]), 0.0);
                         depthWaterTable = Math.Max(0.0, depthWaterTable);  // water table depth in layer must be +ve
 
                         // Calculate out flow (mm)

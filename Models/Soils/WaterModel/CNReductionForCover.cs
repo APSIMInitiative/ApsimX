@@ -75,13 +75,6 @@ namespace Models.WaterModel
         {
             CNCov = 0.8;
             CNRed = 20;
-
-            double[] canopyFactHeight = { 0, 600, 1800, 30000 };
-            double[] canopyFact = new double[] { 1, 1, 0, 0 };
-
-            EffectiveCoverMultiplier = new LinearInterpolationFunction("[CNReductionForCover].CanopyHeights", canopyFactHeight, canopyFact);
-            EffectiveCoverMultiplier.Parent = this;
-            Children.Add(EffectiveCoverMultiplier);
         }
 
 

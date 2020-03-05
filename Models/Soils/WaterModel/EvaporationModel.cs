@@ -38,11 +38,14 @@
     ///    Es = U x t + CONA x Sqrt(t-t<sub>1</sub>)
     /// </summary>
     [Serializable]
+    [ViewName("UserInterface.Views.ProfileView")]
+    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
+    [ValidParent(ParentType = typeof(WaterBalance))]
     public class EvaporationModel : Model
     {
         /// <summary>The water movement model.</summary>
         [Link]
-        private ISoil soil = null;
+        private WaterBalance soil = null;
 
         [Link]
         private IClock clock = null;
@@ -64,29 +67,59 @@
         private double sumes2;
 
         /// <summary>time after 2nd-stage soil evaporation begins (d)</summary>
-        public double t;            
+        public double t;
 
-
-        /// <summary>Gets or sets the soil albedo.</summary>
-        [UnitsAttribute("0-1")]
-        public double SALB { get; set; }
-
-        /// <summary>Gets or sets the summer cona.</summary>
+        /// <summary>
+        /// Drying coefficient for stage 2 soil water evaporation in summer (a.k.a. ConA) 
+        /// </summary>
+        [Bounds(Lower = 0.0, Upper = 10.0)]
+        [Caption("Summer ConA")]
+        [Description("Drying coefficient for stage 2 soil water evaporation in summer (a.k.a. ConA)")]
         public double SummerCona { get; set; }
 
-        /// <summary>Gets or sets the winter cona.</summary>
+        /// <summary>
+        /// Drying coefficient for stage 2 soil water evaporation in winter (a.k.a. ConA) 
+        /// </summary>
+        [Bounds(Lower = 0.0, Upper = 10.0)]
+        [Caption("Winter ConA")]
+        [Description("Drying coefficient for stage 2 soil water evaporation in winter (a.k.a. ConA)")]
         public double WinterCona { get; set; }
 
-        /// <summary>Gets or sets the summer U.</summary>
+        /// <summary>
+        /// Cummulative soil water evaporation to reach the end of stage 1 soil water evaporation in summer (a.k.a. U)
+        /// </summary>
+        [Bounds(Lower = 0.0, Upper = 40.0)]
+        [Units("mm")]
+        [Caption("Summer U")]
+        [Description("Cummulative soil water evaporation to reach the end of stage 1 soil water evaporation in summer (a.k.a. U)")]
         public double SummerU { get; set; }
 
-        /// <summary>Gets or sets the winter U.</summary>
+        /// <summary>
+        /// Cummulative soil water evaporation to reach the end of stage 1 soil water evaporation in winter (a.k.a. U) 
+        /// </summary>
+        /// <value>
+        /// The winter u.
+        /// </value>
+        [Bounds(Lower = 0.0, Upper = 10.0)]
+        [Units("mm")]
+        [Caption("Winter U")]
+        [Description("Cummulative soil water evaporation to reach the end of stage 1 soil water evaporation in winter (a.k.a. U).")]
         public double WinterU { get; set; }
 
-        /// <summary>Gets or sets the winter date (e.g. "1-nov").</summary>
+        /// <summary>
+        /// Start date for switch to summer parameters for soil water evaporation (dd-mmm)
+        /// </summary>
+        [Units("dd-mmm")]
+        [Caption("Summer date")]
+        [Description("Start date for switch to summer parameters for soil water evaporation")]
         public string SummerDate{ get; set; }
 
-        /// <summary>Gets or sets the winter date (e.g. "1-apr").</summary>
+        /// <summary>
+        /// Start date for switch to winter parameters for soil water evaporation (dd-mmm)
+        /// </summary>
+        [Units("dd-mmm")]
+        [Caption("Winter date")]
+        [Description("Start date for switch to winter parameters for soil water evaporation")]
         public string WinterDate { get; set; }
 
         /// <summary>Atmospheric potential evaporation (mm)</summary>
@@ -134,7 +167,6 @@
             WinterCona = 2.5;
             SummerU = 6;
             WinterU = 4;
-            SALB = 0.12;
         }
 
         /// <summary>Calculate soil evaporation.</summary>
@@ -162,7 +194,7 @@
             const double max_albedo = 0.23;
 
             double coverGreenSum = canopies.Sum(c => c.CoverGreen);
-            double albedo = max_albedo - (max_albedo - SALB) * (1.0 - coverGreenSum);
+            double albedo = max_albedo - (max_albedo - soil.Salb) * (1.0 - coverGreenSum);
 
             // weighted mean temperature for the day (oC)
             double wt_ave_temp = (0.60 * weather.MaxT) + (0.40 * weather.MinT);
@@ -276,7 +308,7 @@
             Es = 0.0;
 
             // Calculate available soil water in top layer for actual soil evaporation (mm)
-            double avail_sw_top = soil.Water[0] - soil.Properties.Water.AirDry[0];
+            double avail_sw_top = soil.Water[0] - soil.Properties.AirDry[0];
             avail_sw_top = MathUtilities.Bound(avail_sw_top, 0.0, Eo);
 
             // Calculate actual soil water evaporation
