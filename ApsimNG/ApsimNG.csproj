@@ -476,13 +476,13 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourAERelationship.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RandomNumberGenerator.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourActivityFeedTargetPurchase.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\Market.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\ProtectedDivideFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\StorageNDemandFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\ShadedBarsOnGraph.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourAdultEquivalentRelationship.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\GraphPanel.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\AGPWhiteClover.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\AGPRyegrass.png" />
