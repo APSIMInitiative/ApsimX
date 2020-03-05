@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 79,
+  "Version": 80,
   "Name": "Simulations",
   "Children": [
 {
@@ -538,7 +538,7 @@
         {
           "$type": "Models.PMF.Phen.NodeNumberPhase, Models",
           "Start": "Emergence",
-          "End": "TerminalSpikelet",
+          "End": "FloralInitiation",
           "Name": "Vegetative",
           "Children": [
             {
@@ -554,6 +554,36 @@
               "$type": "Models.Functions.VariableReference, Models",
               "VariableName": "[Structure].HaunStageTerminalSpikelet",
               "Name": "CompletionNodeNumber",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PMF.Phen.GenericPhase, Models",
+          "Start": "FloralInitiation",
+          "End": "TerminalSpikelet",
+          "Name": "SpikeletDifferentiation",
+          "Children": [
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Phenology].ThermalTime",
+              "Name": "Progression",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "Target",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -1489,10 +1519,12 @@
                     5.0,
                     6.0,
                     7.0,
-                    8.0
+                    8.0,
+                    9.0
                   ],
                   "Y": [
                     10.0,
+                    200.0,
                     200.0,
                     1000.0,
                     1000.0,
@@ -2841,10 +2873,12 @@
                                   "$type": "Models.Functions.XYPairs, Models",
                                   "X": [
                                     3.0,
-                                    4.0
+                                    4.0,
+                                    5.0
                                   ],
                                   "Y": [
                                     0.5,
+                                    0.2,
                                     0.2
                                   ],
                                   "Name": "XYPairs",
@@ -3500,11 +3534,13 @@
                       "X": [
                         3.0,
                         3.45,
-                        4.0
+                        4.0,
+                        5.0
                       ],
                       "Y": [
                         0.1,
                         0.5,
+                        1.0,
                         1.0
                       ],
                       "Name": "XYPairs",
@@ -3572,10 +3608,12 @@
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         3.0,
-                        4.0
+                        4.0,
+                        5.0
                       ],
                       "Y": [
                         0.4,
+                        1.0,
                         1.0
                       ],
                       "Name": "XYPairs",
@@ -3753,9 +3791,11 @@
                     4.0,
                     5.0,
                     6.0,
-                    7.0
+                    7.0,
+                    8.0
                   ],
                   "Y": [
+                    0.05,
                     0.05,
                     0.05,
                     0.035,
@@ -3797,9 +3837,11 @@
                         4.0,
                         5.0,
                         6.0,
-                        7.0
+                        7.0,
+                        8.0
                       ],
                       "Y": [
+                        0.04,
                         0.04,
                         0.04,
                         0.0275,
@@ -3876,9 +3918,11 @@
                     4.0,
                     5.0,
                     6.0,
-                    7.0
+                    7.0,
+                    8.0
                   ],
                   "Y": [
+                    0.01,
                     0.01,
                     0.01,
                     0.01,
@@ -4060,10 +4104,12 @@
                     4.0,
                     5.0,
                     6.0,
-                    7.0
+                    7.0,
+                    8.0
                   ],
                   "Y": [
                     17000.0,
+                    20000.0,
                     20000.0,
                     18500.0,
                     17000.0,
@@ -4642,10 +4688,14 @@
                   "$type": "Models.Functions.XYPairs, Models",
                   "X": [
                     3.0,
-                    4.7,
-                    5.0
+                    4.0,
+                    5.0,
+                    5.7,
+                    6.0
                   ],
                   "Y": [
+                    1.0,
+                    1.0,
                     1.0,
                     1.0,
                     1.2
@@ -4808,13 +4858,17 @@
             {
               "$type": "Models.Functions.XYPairs, Models",
               "X": [
+                3.0,
                 4.0,
-                4.5,
+                5.0,
                 5.5,
-                6.0,
-                7.0
+                6.5,
+                7.0,
+                8.0
               ],
               "Y": [
+                0.01,
+                0.01,
                 0.01,
                 0.01,
                 0.025,
@@ -5115,10 +5169,12 @@
                 4.0,
                 5.0,
                 6.0,
-                7.0
+                7.0,
+                8.0
               ],
               "Y": [
                 0.07,
+                0.04,
                 0.04,
                 0.015,
                 0.012,
@@ -5175,14 +5231,16 @@
                           "X": [
                             3.0,
                             4.0,
-                            4.7,
                             5.0,
+                            5.7,
                             6.0,
                             7.0,
                             8.0,
-                            8.000001
+                            9.0,
+                            9.000001
                           ],
                           "Y": [
+                            0.0,
                             0.0,
                             0.0,
                             0.01,
@@ -5471,9 +5529,11 @@
                 7.0,
                 8.0,
                 9.0,
-                10.0
+                10.0,
+                11.0
               ],
               "Y": [
+                0.0,
                 0.0,
                 0.0,
                 0.0,
@@ -5524,10 +5584,12 @@
                 4.0,
                 5.0,
                 6.0,
-                7.0
+                7.0,
+                8.0
               ],
               "Y": [
                 0.07,
+                0.04,
                 0.04,
                 0.015,
                 0.012,
@@ -6539,8 +6601,8 @@
                 "[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 0,0,0,0,4,7,12,20",
                 "[Grain].MaximumNConc.FixedValue = 0.025",
                 "[Grain].MaxNConcDailyGrowth.FixedValue = 0.025",
-                "[Leaf].ExtinctionCoeff.DevelopmentFactor.XYPairs.Y = 1,1,1.4",
-                "[Leaf].CohortParameters.MinimumNConc.XYPairs.Y = 0.01,0.008,0.008, 0.008, 0.008",
+                "[Leaf].ExtinctionCoeff.DevelopmentFactor.XYPairs.Y = 1,1,1,1,1.4",
+                "[Leaf].CohortParameters.MinimumNConc.XYPairs.Y = 0.01,0.008, 0.008,0.008, 0.008, 0.008",
                 "[Stem].MinimumNConc.FixedValue = 0.006",
                 "[Spike].DMRetranslocationFactor.ReproductiveGrowth.DMRetranslocationFactor.FixedValue = 0.05"
               ],
@@ -8714,8 +8776,7 @@
   "IncludeInDocumentation": true,
   "Enabled": true,
   "ReadOnly": false
-}
-  ],
+}  ],
   "IncludeInDocumentation": true,
   "Enabled": true,
   "ReadOnly": false

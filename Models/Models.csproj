@@ -277,6 +277,7 @@
     <Compile Include="Lifecycle\PlantOrganConsumption.cs" />
     <Compile Include="Lifecycle\PlantMortality.cs" />
     <Compile Include="Interfaces\ILeaf.cs" />
+    <Compile Include="Plant\Arbitrator\PriorityArbitrator.cs" />
     <Compile Include="Plant\Arbitrator\RetranslocateAvailableN.cs" />
     <Compile Include="Factorial\CompositeFactor.cs" />
     <Compile Include="Plant\Interfaces\IPlantDamage.cs" />
@@ -286,7 +287,6 @@
     <EmbeddedResource Include="Resources\Scripts\GraphPanelScriptTemplate.cs" />
     <EmbeddedResource Include="Resources\Scripts\CSharpExpressionTemplate.cs" />
     <Compile Include="Plant\Phenology\Scales\ZadokPMFWheat.cs" />
-    <Compile Include="PostSimulationTools\ExcelMultiInput.cs" />
     <Compile Include="Soils\Nutrients\INutrientPool.cs" />
     <Compile Include="Soils\SoilTemp\SoilTemperature.cs" />
     <Compile Include="Soils\Standardiser\Layers.cs" />

@@ -1,8 +1,3 @@
-// -----------------------------------------------------------------------
-// <copyright file="MathUtilities.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
 namespace APSIM.Shared.Utilities
 {
     using System;
@@ -292,6 +287,22 @@ namespace APSIM.Shared.Utilities
                 foreach (var value in values)
                     result += value;
             return result;
+        }
+
+        /// <summary>
+        /// Product of an array of doubles 
+        /// </summary>
+        public static double Prod(IEnumerable Values)
+        {
+            double prod = 1.0;
+            foreach (object Value in Values)
+            {
+                if (Value != null && !double.IsNaN(Convert.ToDouble(Value, CultureInfo.InvariantCulture)))
+                {
+                    prod *= Convert.ToDouble(Value, CultureInfo.InvariantCulture);
+                }
+            }
+            return prod;
         }
 
         /// <summary>
