@@ -21,6 +21,7 @@
         {
           "$type": "Models.PMF.Plant, Models",
           "CropType": "Grapevine",
+          "IsAlive": false,
           "IsEnding": false,
           "DaysAfterEnding": 0,
           "ResourceName": null,
@@ -223,7 +224,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 80.0,
+                      "FixedValue": 79.0,
                       "Units": "days",
                       "Name": "Target",
                       "Children": [],
@@ -6518,11 +6519,11 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Prune Date\")]\r\n        public string PruneDateString { get; set; }\r\n        [Description(\"CordonDiameter_mm\")]         \r\n        public double CordonDiameter { get; set; }  //mm\r\n\r\n        [XmlIgnore] private DateTime PruneDate { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            PruneDate = DateTime.Parse(PruneDateString);\r\n                        \r\n            if (PruneDate.Month == Clock.Today.Month && PruneDate.Day == Clock.Today.Day)\r\n            {\r\n                Remove.SetPhenologyStage = 1;\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove);\r\n            }\r\n\r\n            {\r\n            zone.Set(\"Grapevine.Cordon.CordonDiameter.FixedValue\", CordonDiameter);   \r\n            //calculate the biomass by length 1 meter time 2 cordons time density (0.0005 g/mm3)\r\n            zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", 3.14*(CordonDiameter/2)*(CordonDiameter/2)*2000*0.0005); \r\n\r\n                }\r\n\r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
+              "Code": "using System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n       \r\n        [Description(\"Pruning_DAWS\")]         \r\n        public int Pruning_DAWS { get; set; }  //day\r\n\r\n        [Description(\"CordonDiameter_mm\")]         \r\n        public double CordonDiameter { get; set; }  //mm\r\n\r\n        [XmlIgnore] private DateTime PruneDate { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            //PruneDate = DateTime.Parse(PruneDateString);\r\n                        \r\n            if (weather.DaysSinceWinterSolstice == Pruning_DAWS)\r\n            {\r\n                Remove.SetPhenologyStage = 1;\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove);\r\n            }\r\n\r\n            {\r\n            zone.Set(\"Grapevine.Cordon.CordonDiameter.FixedValue\", CordonDiameter);   \r\n            //calculate the biomass by length 1 meter time 2 cordons time density (0.0005 g/mm3)\r\n            zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", 3.14*(CordonDiameter/2)*(CordonDiameter/2)*2000*0.0005); \r\n\r\n                }\r\n\r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
               "Parameters": [
                 {
-                  "Key": "PruneDateString",
-                  "Value": "1-May"
+                  "Key": "Pruning_DAWS",
+                  "Value": "314"
                 },
                 {
                   "Key": "CordonDiameter",
@@ -7228,6 +7229,7 @@
                 {
                   "$type": "Models.PMF.Plant, Models",
                   "CropType": "Grapevine",
+                  "IsAlive": false,
                   "IsEnding": false,
                   "DaysAfterEnding": 0,
                   "ResourceName": "Grapevine",
@@ -9974,6 +9976,7 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Grapevine",
+                      "IsAlive": false,
                       "IsEnding": false,
                       "DaysAfterEnding": 0,
                       "ResourceName": "Grapevine",
@@ -10332,15 +10335,6 @@
                       "$type": "Models.Factorial.Factor, Models",
                       "Specification": "[Weather].FileName = Site1001_BRA.met,Site1002_OYB.met,Site1003_SEA.met,Site1004_RPC.met",
                       "Name": "Climate",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Factorial.Factor, Models",
-                      "Specification": "[ParameterTest].Script.FlowerTarget = 26, 27, 28, 29, 30, 31",
-                      "Name": "FlowerTarget",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -10913,6 +10907,7 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Grapevine",
+                      "IsAlive": false,
                       "IsEnding": false,
                       "DaysAfterEnding": 0,
                       "ResourceName": "Grapevine",
@@ -10996,11 +10991,15 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Zone zone;\r\n        [Link] Summary Summary;\r\n\r\n        //[Description(\"endotarget\")]\r\n        //public double endotarget {get; set;}\r\n\r\n        //[Description(\"budding\")]\r\n        //public double budding {get; set;}\r\n\r\n        [Description(\"FlowerTarget\")]\r\n        public double FlowerTarget {get; set;}\r\n\r\n        //[Description(\"VeraTarget\")]\r\n        //public double VeraTarget {get; set;}\r\n      //  [Description(\"chill_a\")]\r\n       // public double chill_a  {get; set;}\r\n\r\n       // [Description(\"chill_c\")]\r\n       // public double chill_c  {get; set;}\r\n    \r\n        //Description(\"EndoTarget\")]\r\n        //public double EndoTarget  {get; set;}\r\n        //[Description(\"FloweringTarget\")]\r\n        //public double FloweringTarget  {get; set;}\r\n\r\n                \r\n        [EventSubscribe(\"PlantSowing\")]\r\n        private void OnPlantSowing(object sender, EventArgs e)\r\n        {\r\n        \t//zone.Set(\"Grapevine.Phenology.EndoDormancy.Target.BaseTarget.FixedValue\", endotarget);\r\n            //zone.Set(\"Grapevine.Phenology.Budding.Target.FixedValue\", budding);\r\n\r\n            zone.Set(\"Grapevine.Phenology.Flowering.Target.FixedValue\", FlowerTarget);\r\n            //zone.Set(\"Grapevine.Phenology.BerryDevelopment.Target.Base.FixedValue\", VeraTarget);\r\n\r\n            //zone.Set(\"Grapevine.Phenology.Budding.Target.ChillingTadjustment.A\", chill_a);\r\n            //zone.Set(\"Grapevine.Phenology.Budding.Target.ChillingTadjustment.C\", chill_c);\r\n            //zone.Set(\"Grapevine.Phenology.EndoDormancy.Target.FixedValue\", EndoTarget);\r\n            //zone.Set(\"Grapevine.Phenology.Flowering.Target.FixedValue\", FloweringTarget);                      \r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
+                  "Code": "\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Zone zone;\r\n        [Link] Summary Summary;\r\n\r\n        [Description(\"endotarget\")]\r\n        public double endotarget {get; set;}\r\n\r\n        [Description(\"budding\")]\r\n        public double budding {get; set;}\r\n\r\n        //[Description(\"FlowerTarget\")]\r\n        //public double FlowerTarget {get; set;}\r\n\r\n        //[Description(\"VeraTarget\")]\r\n        //public double VeraTarget {get; set;}\r\n      //  [Description(\"chill_a\")]\r\n       // public double chill_a  {get; set;}\r\n\r\n       // [Description(\"chill_c\")]\r\n       // public double chill_c  {get; set;}\r\n    \r\n        //Description(\"EndoTarget\")]\r\n        //public double EndoTarget  {get; set;}\r\n        //[Description(\"FloweringTarget\")]\r\n        //public double FloweringTarget  {get; set;}\r\n\r\n                \r\n        [EventSubscribe(\"PlantSowing\")]\r\n        private void OnPlantSowing(object sender, EventArgs e)\r\n        {\r\n        \tzone.Set(\"Grapevine.Phenology.EndoDormancy.Target.BaseTarget.FixedValue\", endotarget);\r\n            zone.Set(\"Grapevine.Phenology.Budding.Target.FixedValue\", budding);\r\n\r\n            //zone.Set(\"Grapevine.Phenology.Flowering.Target.FixedValue\", FlowerTarget);\r\n            //zone.Set(\"Grapevine.Phenology.BerryDevelopment.Target.Base.FixedValue\", VeraTarget);\r\n\r\n            //zone.Set(\"Grapevine.Phenology.Budding.Target.ChillingTadjustment.A\", chill_a);\r\n            //zone.Set(\"Grapevine.Phenology.Budding.Target.ChillingTadjustment.C\", chill_c);\r\n            //zone.Set(\"Grapevine.Phenology.EndoDormancy.Target.FixedValue\", EndoTarget);\r\n            //zone.Set(\"Grapevine.Phenology.Flowering.Target.FixedValue\", FloweringTarget);                      \r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
                   "Parameters": [
                     {
-                      "Key": "FlowerTarget",
-                      "Value": "28"
+                      "Key": "endotarget",
+                      "Value": "8"
+                    },
+                    {
+                      "Key": "budding",
+                      "Value": "80"
                     }
                   ],
                   "Name": "ParameterTest",
