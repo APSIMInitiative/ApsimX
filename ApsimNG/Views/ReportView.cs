@@ -1,14 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ReportView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using System;
     using Gtk;
-    using EventArguments;
 
     interface IReportView
     {

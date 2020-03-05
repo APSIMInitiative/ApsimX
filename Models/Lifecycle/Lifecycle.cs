@@ -1,15 +1,8 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="LifeCycle.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace Models.LifeCycle
+﻿namespace Models.LifeCycle
 {
+    using Models.Core;
     using System;
     using System.Collections.Generic;
-    using Models.Core;
-    using Models.PMF.Interfaces;
 
     /// <summary>
     /// # [Name]

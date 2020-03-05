@@ -1,15 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="AddModelCommand.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Commands
+﻿namespace UserInterface.Commands
 {
-    using Views;
-    using Models.Core;
-    using System.Xml;
-    using System;
     using Interfaces;
+    using Models.Core;
 
     /// <summary>
     /// This command moves a model up or down one spot in the siblings

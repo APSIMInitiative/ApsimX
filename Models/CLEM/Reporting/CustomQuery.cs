@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="CustomQuery.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-using Models.Core;
+﻿using Models.Core;
 using Models.Core.Attributes;
 using Models.Core.Run;
 using Models.Storage;

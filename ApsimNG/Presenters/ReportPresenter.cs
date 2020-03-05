@@ -1,22 +1,12 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ReportPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System;
-    using System.Data;
-    using APSIM.Shared.Utilities;
     using EventArguments;
-    using Interfaces;
-    using Models;
     using Models.Core;
     using Models.Factorial;
     using Models.Report;
     using Models.Storage;
     using Views;
-    using System.Linq;
 
     /// <summary>
     /// The Report presenter class

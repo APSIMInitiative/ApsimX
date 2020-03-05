@@ -1,20 +1,14 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="AutoDocumentation.cs" company="APSIM Initiative">
-// Copyright APSIM Initiative.
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Core
+﻿namespace Models.Core
 {
+    using APSIM.Shared.Utilities;
+    using Models.Functions;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Reflection;
-    using APSIM.Shared.Utilities;
-    using System.Xml;
-    using System.IO;
-    using Models.Functions;
     using System.Data;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using System.Xml;
 
     /// <summary>
     /// A class of auto-documentation methods and HTML building widgets.

@@ -1,12 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="IModel.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
+﻿
 namespace Models.Core
 {
     using System.Collections.Generic;
-using System.IO;
 
     /// <summary>
     /// The IModel interface specifies the properties and methods that all

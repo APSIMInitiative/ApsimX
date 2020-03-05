@@ -1,9 +1,3 @@
-// -----------------------------------------------------------------------
-// <copyright file="stdmath.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
 namespace StdUnits
 {
     using System;
