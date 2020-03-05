@@ -1622,11 +1622,11 @@
             {
                 if (JsonUtilities.ChildWithName(r, "CriticalNConc") == null)
                 {
-                    JObject maxNConc = JsonUtilities.ChildWithName(r, "MaximumNConc");
-                    if (maxNConc == null)
+                    JObject minNConc = JsonUtilities.ChildWithName(r, "MinimumNConc");
+                    if (minNConc == null)
                         throw new Exception("Root has no CriticalNConc or MaximumNConc");
 
-                    JObject critNConc = maxNConc.DeepClone() as JObject;
+                    JObject critNConc = minNConc.DeepClone() as JObject;
                     critNConc["Name"] = "CriticalNConc";
                     (r["Children"] as JArray).Add(critNConc);
                 }
