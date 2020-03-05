@@ -1064,6 +1064,46 @@
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+              "Name": "RewindDueToBiomassRemoved",
+              "Children": [
+                {
+                  "$type": "Models.Functions.XYPairs, Models",
+                  "X": [
+                    0.0,
+                    0.1,
+                    0.4,
+                    0.5,
+                    1.0
+                  ],
+                  "Y": [
+                    0.0,
+                    0.08,
+                    0.4,
+                    0.5,
+                    1.0
+                  ],
+                  "Name": "XYPairs",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].FractionBiomassRemoved",
+                  "Name": "XValue",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
         }
       ],
       "IncludeInDocumentation": true,
