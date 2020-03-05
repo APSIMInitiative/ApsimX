@@ -2,7 +2,7 @@
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 278,
   "Version": 80,
-  "ApsimVersion": "Version 2020.3.4.4029, built 2020-03-04",
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-05",
   "Name": "Simulations",
   "Children": [
     {
@@ -85,8 +85,8 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].AccChillMar1st",
-                          "Name": "AccChillMar1st",
+                          "VariableName": "[Phenology].AccChillBefPrune",
+                          "Name": "AccChillBefPrune",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -405,7 +405,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Clock].Today.DayOfYear",
+                      "VariableName": "[Weather].DaysSinceWinterSolstice",
                       "Name": "PostEventValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -444,7 +444,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].DoyJuly1st",
+                      "VariableName": "[Weather].DaysSinceWinterSolstice",
                       "Name": "PostEventValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -483,7 +483,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Clock].Today.DayOfYear",
+                      "VariableName": "[Weather].DaysSinceWinterSolstice",
                       "Name": "PostEventValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -535,39 +535,59 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.AccumulateByDate, Models",
-                  "StartDate": "01-JUL",
-                  "EndDate": "30-JUN",
-                  "ResetDate": "30-JUN",
-                  "Name": "DoyJuly1st",
+                  "$type": "Models.Functions.AccumulateFunction, Models",
+                  "StartStageName": "Veraison",
+                  "EndStageName": "LeafFall",
+                  "ResetStageName": "Flowering",
+                  "FractionRemovedOnCut": 0.0,
+                  "FractionRemovedOnHarvest": 0.0,
+                  "FractionRemovedOnGraze": 0.0,
+                  "FractionRemovedOnPrune": 0.0,
+                  "Name": "AccChillBefPrune",
                   "Children": [
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": "days/day",
-                      "Name": "Days",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.AccumulateByDate, Models",
-                  "StartDate": "01-MAR",
-                  "EndDate": "1-MAY",
-                  "ResetDate": "30-JUN",
-                  "Name": "AccChillMar1st",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].EndoDormancy.Progression",
-                      "Name": "ThermalTime",
-                      "Children": [],
+                      "$type": "Models.Functions.LessThanFunction, Models",
+                      "Name": "LessThanFunction",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Weather].DaysSinceWinterSolstice",
+                          "Name": "DAWS",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 314.0,
+                          "Units": null,
+                          "Name": "PruningTime",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].EndoDormancy.Progression",
+                          "Name": "ChillingUnit",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "Zero",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -6532,11 +6552,10 @@
             "[Grapevine].Phenology.AccumulatedEmergedTT",
             "[Grapevine].Phenology.BudBurstDOY as BudBurstDOY",
             "[Grapevine].Phenology.FloweringDOY as FloweringDOY",
-            "[Grapevine].Phenology.DoyJuly1st as DoyJuly1st",
             "[Grapevine].Phenology.VeraisonDOY as VeraisonDOY",
             "[Grapevine].Phenology.CurrentStageName as CurrentStageName",
-            "[Grapevine].Phenology.Budding.AccChill ",
             "[Grapevine].Phenology.AccChillMar1st",
+            "[Grapevine].Phenology.AccChillBefPrune",
             "[Grapevine].Phenology.Budding.FractionOfBudBurst",
             "[Grapevine].Structure.PrimaryBudNo",
             "[Grapevine].Structure.MainStemPopn",
@@ -8970,7 +8989,7 @@
               "Checkpoint": "Current",
               "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "Grapevine.Phenology.Budding.AccChill",
+              "YFieldName": "Grapevine.Phenology.AccChillBefPrune",
               "X2FieldName": "",
               "Y2FieldName": "",
               "ShowInLegend": false,
@@ -8978,7 +8997,7 @@
               "Cumulative": false,
               "CumulativeX": false,
               "Filter": null,
-              "Name": "Series",
+              "Name": "Series1",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,

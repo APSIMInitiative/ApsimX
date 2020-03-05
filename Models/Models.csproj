@@ -277,6 +277,7 @@
     <Compile Include="Lifecycle\PlantOrganConsumption.cs" />
     <Compile Include="Lifecycle\PlantMortality.cs" />
     <Compile Include="Interfaces\ILeaf.cs" />
+    <Compile Include="Plant\Arbitrator\PriorityArbitrator.cs" />
     <Compile Include="Plant\Arbitrator\RetranslocateAvailableN.cs" />
     <Compile Include="Factorial\CompositeFactor.cs" />
     <Compile Include="Plant\Interfaces\IPlantDamage.cs" />

@@ -206,7 +206,12 @@
             }
         }
 
-        private int WinterSolsticeDOY
+        /// <summary>
+        /// days since winter solstice (day)
+        /// </summary>
+        [Units("day")]
+        [XmlIgnore]
+        public int WinterSolsticeDOY
         {
             get {
                 if (Latitude <= 0)
@@ -225,7 +230,8 @@
                 }
                 }
         }
-        
+
+        private bool First = true;
         /// <summary>
         /// Number of days lapsed since the winter solstice
         /// </summary>
@@ -545,7 +551,23 @@
             if (this.PreparingNewWeatherData != null)
                 this.PreparingNewWeatherData.Invoke(this, new EventArgs());
 
-            if (clock.Today.DayOfYear == WinterSolsticeDOY)
+            if (First)
+            {
+                //StartDAWS = met.DaysSinceWinterSolstice;
+                if (clock.Today.DayOfYear < WinterSolsticeDOY)
+                {
+                    if (DateTime.IsLeapYear(clock.Today.Year))
+                        DaysSinceWinterSolstice = 366 - WinterSolsticeDOY + clock.Today.DayOfYear -1;  //minus 1 as we set the first day as zero
+                    else
+                        DaysSinceWinterSolstice = 365 - WinterSolsticeDOY + clock.Today.DayOfYear -1; 
+                }
+                else
+                    DaysSinceWinterSolstice = clock.Today.DayOfYear - WinterSolsticeDOY;
+                    
+                First = false;
+            }
+
+            if (clock.Today.DayOfYear == WinterSolsticeDOY & First == false)
                 DaysSinceWinterSolstice = 0;
             else DaysSinceWinterSolstice += 1;
 
