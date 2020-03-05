@@ -210,9 +210,19 @@
         {
             get {
                 if (Latitude <= 0)
-                    return 173;
+                {
+                    if (DateTime.IsLeapYear(clock.Today.Year))
+                        return 174;
+                    else
+                        return 173;
+                }
                 else
-                    return 356;
+                {
+                    if (DateTime.IsLeapYear(clock.Today.Year))
+                        return 357;
+                    else
+                        return 356;
+                }
                 }
         }
         
