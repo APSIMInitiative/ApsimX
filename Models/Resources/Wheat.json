@@ -7164,16 +7164,8 @@
                 "[Phenology].PpSensitivity.FixedValue = 4",
                 "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
               ],
-              "Name": "EGAGregory",
+              "Name": "Gregory",
               "Children": [
-                {
-                  "$type": "Models.Core.Alias, Models",
-                  "Name": "Gregory",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
                 {
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Lancer",
