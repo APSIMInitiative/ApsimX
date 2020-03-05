@@ -1,20 +1,14 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="AutoDocumentation.cs" company="APSIM Initiative">
-// Copyright APSIM Initiative.
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Core
+﻿namespace Models.Core
 {
+    using APSIM.Shared.Utilities;
+    using Models.Functions;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Reflection;
-    using APSIM.Shared.Utilities;
-    using System.Xml;
-    using System.IO;
-    using Models.Functions;
     using System.Data;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using System.Xml;
 
     /// <summary>
     /// A class of auto-documentation methods and HTML building widgets.
@@ -110,7 +104,6 @@ namespace Models.Core
                 ParseTextForTags(summaryNode.InnerXml, model, tags, headingLevel, indent, documentAllChildren);
         }
 
-
         /// <summary>
         /// Get the summary of a member (field, property)
         /// </summary>
@@ -127,12 +120,36 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Get the summary of a member (field, property)
+        /// Get the summary of a type.
         /// </summary>
         /// <param name="t">The type to get the summary for.</param>
         public static string GetSummary(Type t)
         {
             return GetSummary(t.FullName, 'T');
+        }
+
+        /// <summary>
+        /// Get the remarks tag of a type (if it exists).
+        /// </summary>
+        /// <param name="t">The type.</param>
+        public static string GetRemarks(Type t)
+        {
+            return GetRemarks(t.FullName, 'T');
+        }
+
+        /// <summary>
+        /// Get the remarks of a member (field, property) if it exists.
+        /// </summary>
+        /// <param name="member">The member.</param>
+        public static string GetRemarks(MemberInfo member)
+        {
+            var fullName = member.ReflectedType + "." + member.Name;
+            if (member is PropertyInfo)
+                return GetRemarks(fullName, 'P');
+            else if (member is FieldInfo)
+                return GetRemarks(fullName, 'F');
+            else
+                return GetRemarks(fullName, 'M');
         }
 
         /// <summary>
@@ -152,6 +169,30 @@ namespace Models.Core
             path = path.Replace("+", ".");
 
             string nameToFindInSummary = string.Format("members/{0}:{1}/summary", typeLetter, path);
+            XmlNode summaryNode = XmlUtilities.Find(doc.DocumentElement, nameToFindInSummary);
+            if (summaryNode != null)
+                return summaryNode.InnerXml;
+            return null;
+        }
+
+        /// <summary>
+        /// Get the remarks of a member (class, field, property).
+        /// </summary>
+        /// <param name="path">The path to the member.</param>
+        /// <param name="typeLetter">Type letter: 'T' for type, 'F' for field, 'P' for property.</param>
+        /// <returns></returns>
+        private static string GetRemarks(string path, char typeLetter)
+        {
+            if (doc == null)
+            {
+                string fileName = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".xml");
+                doc = new XmlDocument();
+                doc.Load(fileName);
+            }
+
+            path = path.Replace("+", ".");
+
+            string nameToFindInSummary = string.Format("members/{0}:{1}/remarks", typeLetter, path);
             XmlNode summaryNode = XmlUtilities.Find(doc.DocumentElement, nameToFindInSummary);
             if (summaryNode != null)
                 return summaryNode.InnerXml;

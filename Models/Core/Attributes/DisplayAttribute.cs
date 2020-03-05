@@ -1,10 +1,5 @@
-﻿using System.Collections.Generic;
+﻿
 
-// -----------------------------------------------------------------------
-// <copyright file="DisplayAttribute.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
 namespace Models.Core
 {
     using System;
@@ -34,6 +29,11 @@ namespace Models.Core
         /// A file name editor.
         /// </summary>
         FileName,
+
+        /// <summary>
+        /// Allows selection of more than one file name.
+        /// </summary>
+        FileNames,
 
         /// <summary>
         /// A field name editor.

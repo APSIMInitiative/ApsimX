@@ -72,9 +72,9 @@ namespace Models.CLEM
         /// </summary>
         ExcessHeiferSale,
         /// <summary>
-        /// Excess bull sold
+        /// Excess sire sold
         /// </summary>
-        ExcessBullSale,
+        ExcessSireSale,
         /// <summary>
         /// Individual reached maximim age and sold
         /// </summary>
@@ -110,7 +110,15 @@ namespace Models.CLEM
         /// <summary>
         /// Initial herd
         /// </summary>
-        InitialHerd
+        InitialHerd,
+        /// <summary>
+        /// Fill initial herd to management levels
+        /// </summary>
+        FillInitialHerd,
+        /// <summary>
+        /// Reduce initial herd to management levels
+        /// </summary>
+        ReduceInitialHerd
     }
 
     /// <summary>

@@ -1,13 +1,5 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ISurfaceOrganicMatter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.Interfaces
+﻿namespace Models.Interfaces
 {
-    using System;
-    using System.Collections.Generic;
-
     /// <summary>Surface organic matter interface.</summary>
     public interface ISurfaceOrganicMatter
     {

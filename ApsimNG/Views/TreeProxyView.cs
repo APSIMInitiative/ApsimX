@@ -217,7 +217,7 @@
         /// <param name="shadeModifiers">Shade Modifiers to be displayed in the shade modifiers column.</param>
         public void SetupHeights(DateTime[] dates, double[] heights, double[] nDemands, double[] shadeModifiers)
         {
-            string[] colLabels = new string[] { "Date", "Height (m)", "N Demands (g/m2)", "Shade Modifier (0-1)" };
+            string[] colLabels = new string[] { "Date", "Height (m)", "N Demands (g/m2)", "Shade Modifier (>=0)" };
             DataTable table = new DataTable("Height Data");
 
             // Use the string column type for everything.

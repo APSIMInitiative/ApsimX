@@ -358,7 +358,6 @@
     <Compile Include="Views\CheckBoxView.cs" />
     <Compile Include="Views\CloudJobView.cs" />
     <Compile Include="Views\ColourDropDownView.cs" />
-    <Compile Include="Views\DataStoreView.cs" />
     <Compile Include="Views\DoubleEditView.cs" />
     <Compile Include="Views\DropDownView.cs" />
     <Compile Include="Views\EditBoxView.cs" />
@@ -476,6 +475,7 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RandomNumberGenerator.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourActivityFeedTargetPurchase.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\Market.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\ProtectedDivideFunction.png" />

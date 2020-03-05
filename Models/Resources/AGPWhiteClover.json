@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 79,
+  "Version": 80,
   "Name": "Simulations",
   "Children": [
     {
@@ -53,7 +53,7 @@
       "FractionToStolon": 0.2,
       "SpecificLeafArea": 32.0,
       "SpecificRootLength": 45.0,
-      "StolonEffectOnLAI": 0.3,
+      "StolonEffectOnLAI": 0.0,
       "ShootMaxEffectOnLAI": 500.0,
       "MaxStemEffectOnLAI": 0.5,
       "LiveLeavesPerTiller": 3.0,
@@ -75,7 +75,7 @@
       "NDillutionCoefficient": 1.0,
       "GlfGeneric": 1.0,
       "GlfSoilFertility": 1.0,
-      "PlantHeightMinimum": 300.0,
+      "PlantHeightMinimum": 25.0,
       "PlantHeightMaximum": 300.0,
       "PlantHeightMassForMax": 7500.0,
       "PlantHeightExponent": 2.5,

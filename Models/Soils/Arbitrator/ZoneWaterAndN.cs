@@ -104,8 +104,14 @@
             Water = soilInZone.Water;
             NO3N = NO3Solute.kgha;
             NH4N = NH4Solute.kgha;
-            PlantAvailableNO3N = PlantAvailableNO3Solute.kgha;
-            PlantAvailableNH4N = PlantAvailableNH4Solute.kgha;
+            if (PlantAvailableNO3Solute != null)
+                PlantAvailableNO3N = PlantAvailableNO3Solute.kgha;
+            else
+                PlantAvailableNO3N = NO3Solute.kgha;
+            if (PlantAvailableNH4Solute != null)
+                PlantAvailableNH4N = PlantAvailableNH4Solute.kgha;
+            else
+                PlantAvailableNH4N = NH4Solute.kgha;
         }
 
         /// <summary>Implements the operator *.</summary>

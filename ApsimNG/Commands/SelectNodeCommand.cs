@@ -1,12 +1,5 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="SelectNodeCommand.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Commands
+﻿namespace UserInterface.Commands
 {
-    using Views;
-    using Models.Core;
     using Interfaces;
 
     /// <summary>This command changes the 'CurrentNode' in the ExplorerView.</summary>

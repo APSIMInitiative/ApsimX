@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 79,
+  "Version": 80,
   "Name": "Simulations",
   "Children": [
     {
@@ -75,7 +75,7 @@
       "NDillutionCoefficient": 0.25,
       "GlfGeneric": 1.0,
       "GlfSoilFertility": 1.0,
-      "PlantHeightMinimum": 300.0,
+      "PlantHeightMinimum": 50.0,
       "PlantHeightMaximum": 300.0,
       "PlantHeightMassForMax": 10000.0,
       "PlantHeightExponent": 2.8,

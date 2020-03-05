@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="LifeStageReproductionProcess.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace Models.LifeCycle
+﻿namespace Models.LifeCycle
 {
     using System;
     using System.Collections.Generic;

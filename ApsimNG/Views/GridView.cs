@@ -171,10 +171,39 @@
         /// Initializes a new instance of the <see cref="GridView" /> class.
         /// </summary>
         /// <param name="owner">The owning view.</param>
+        public GridView() : base()
+        {
+
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GridView" /> class.
+        /// </summary>
+        /// <param name="owner">The owning view.</param>
         public GridView(ViewBase owner) : base(owner)
         {
+            Initialise(owner, null);
+        }
+
+        /// <summary>
+        /// A method used when a view is wrapping a gtk control.
+        /// </summary>
+        /// <param name="ownerView">The owning view.</param>
+        /// <param name="gtkControl">The gtk control being wrapped.</param>
+        protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
+        {
+            owner = ownerView;
+            
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.GridView.glade");
             hboxContainer = (HBox)builder.GetObject("hbox1");
+            if (gtkControl != null)
+            {
+                // Use the gtkControl argument as the parent widget and make the builders hbox a child of it.
+                var child = hboxContainer;
+                hboxContainer = gtkControl as HBox;
+                hboxContainer.PackStart(child);
+            }
+
             scrollingWindow = (ScrolledWindow)builder.GetObject("scrolledwindow1");
             Grid = (Gtk.TreeView)builder.GetObject("gridview");
             fixedColView = (Gtk.TreeView)builder.GetObject("fixedcolview");
@@ -207,7 +236,7 @@
             splitter.Child1.NoShowAll = true;
             mainWidget.Destroyed += MainWidgetDestroyed;
         }
-
+        
         /// <summary>
         /// Invoked when the user wants to copy a range of cells to the clipboard.
         /// </summary>
@@ -653,8 +682,12 @@
         {
             ColRenderAttributes colAttr;
             if (colAttributes.TryGetValue(col, out colAttr))
-            {
                 colAttr.ForegroundColor = color;
+            else
+            {
+                colAttr = new ColRenderAttributes();
+                colAttr.ForegroundColor = color;
+                colAttributes.Add(col, colAttr);
             }
         }
 
@@ -1548,17 +1581,12 @@
             fixedColView.ModifyText(StateType.Active, Grid.Style.Text(StateType.Selected));
             Grid.QueryTooltip += OnQueryTooltip;
 
+            if (Grid.IsRealized)
+                SetDefaultAttributes();
+
             // Now set up the grid columns
             for (int i = 0; i < numCols; i++)
             {
-                ColRenderAttributes attrib = new ColRenderAttributes();
-                if (!colAttributes.TryGetValue(i, out _))
-                {
-                    // Only fallback to defaults if no custom colour specified.
-                    attrib.ForegroundColor = Grid.Style.Foreground(StateType.Normal);
-                    attrib.BackgroundColor = Grid.Style.Base(StateType.Normal);
-                    colAttributes.Add(i, attrib);
-                }
                 // Design plan: include renderers for text, toggles and combos, but hide all but one of them
                 CellRendererText textRender = new CellRendererText();
                 CellRendererToggle toggleRender = new CellRendererToggle();
@@ -1652,6 +1680,24 @@
                 MasterView.MainWindow.Cursor = null;
         }
 
+        private void SetDefaultAttributes()
+        {
+            if (DataSource == null)
+                return;
+
+            for (int i = 0; i < DataSource.Columns.Count; i++)
+            {
+                // Only fallback to defaults if no custom colour specified.
+                if (!colAttributes.TryGetValue(i, out _))
+                {
+                    ColRenderAttributes attrib = new ColRenderAttributes();
+                    attrib.ForegroundColor = Grid.Style.Foreground(StateType.Normal);
+                    attrib.BackgroundColor = Grid.Style.Base(StateType.Normal);
+                    colAttributes.Add(i, attrib);
+                }
+            }
+        }
+
         /// <summary>
         /// Grid has been Realized (drawn) on the screen. The implication is that it will have
         /// loaded the rc file style settings, so we can now specify some default colours based
@@ -1663,7 +1709,7 @@
         {
             try
             {
-                // We only want to run this code once, so disconnect the event handler.
+                // We only want to run this code once.
                 if (Grid != null)
                     Grid.Realized -= GridRealized;
 
@@ -1673,17 +1719,7 @@
                 if (DataSource == null)
                     return;
 
-                for (int i = 0; i < DataSource.Columns.Count; i++)
-                {
-                    ColRenderAttributes attrib = new ColRenderAttributes();
-                    if (!colAttributes.TryGetValue(i, out _))
-                    {
-                        // Only fallback to defaults if no custom colour specified.
-                        attrib.ForegroundColor = Grid.Style.Foreground(StateType.Normal);
-                        attrib.BackgroundColor = Grid.Style.Base(StateType.Normal);
-                        colAttributes.Add(i, attrib);
-                    }
-                }
+                SetDefaultAttributes();
             }
             catch (Exception err)
             {
@@ -2436,7 +2472,10 @@
             try
             {
                 IGridCell cell = GetCurrentCell;
-                if (cell != null && cell.EditorType == EditorTypeEnum.Button)
+                if (cell == null)
+                    return;
+
+                if (cell.EditorType == EditorTypeEnum.Button || cell.EditorType == EditorTypeEnum.MultiFiles)
                 {
                     string oldValue = cell.Value.ToString();
                     GridCellChangedArgs changedArgs = new GridCellChangedArgs(cell.RowIndex, cell.ColumnIndex, oldValue, oldValue);

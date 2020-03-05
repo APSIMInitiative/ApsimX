@@ -563,10 +563,10 @@
                     }
                 }
 
-                string pngFileName = Path.Combine(WorkingDirectory,
-                                                  graphPage.graphs[0].Parent.Parent.Name +
-                                                  graphPage.graphs[0].Parent.Name +
-                                                  graphPage.name + ".png");
+                string basePngFileName = Apsim.FullPath(graphPage.graphs[0].Parent) + "." +
+                                                        graphPage.name + ".png";
+                basePngFileName = basePngFileName.TrimStart('.');
+                string pngFileName = Path.Combine(WorkingDirectory, basePngFileName);
                 image.Save(pngFileName, System.Drawing.Imaging.ImageFormat.Png);
 
                 MigraDoc.DocumentObjectModel.Shapes.Image sectionImage = section.AddImage(pngFileName);
@@ -651,7 +651,7 @@
                 // maxSize, on the other hand, is the length of the longest string in the column.
                 // The actual column width is whichever of these two values is smaller.
                 // MigraDoc will automatically wrap text to ensure the column respects this width.
-                double maxWidth = graphics.MeasureString(Enumerable.Repeat('m', tableObj.ColumnWidth).ToString(), gdiFont).Width;
+                double maxWidth = graphics.MeasureString(new string('m', tableObj.ColumnWidth), gdiFont).Width;
                 table.Columns[columnIndex].Width = Unit.FromPoint(Math.Min(maxWidth, maxSize) + 10);
             }
             

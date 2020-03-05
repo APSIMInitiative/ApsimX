@@ -1,8 +1,3 @@
-// -----------------------------------------------------------------------
-// <copyright file="SQLite.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
 namespace APSIM.Shared.Utilities
 {
     using System;
@@ -729,7 +724,7 @@ namespace APSIM.Shared.Utilities
         /// <returns></returns>
         public List<string> GetColumnNames(string tableName)
         {
-            string sql = "select * from " + tableName + " LIMIT 0";
+            string sql = "select * from [" + tableName + "] LIMIT 0";
 
             //prepare the statement
             IntPtr stmHandle = Prepare(sql);
@@ -915,9 +910,9 @@ namespace APSIM.Shared.Utilities
         public string CreateInsertSQL(string tableName, IEnumerable<string> columnNames)
         {
             StringBuilder sql = new StringBuilder();
-            sql.Append("INSERT INTO ");
+            sql.Append("INSERT INTO [");
             sql.Append(tableName);
-            sql.Append('(');
+            sql.Append("](");
 
             foreach (var columnName in columnNames)
             {
@@ -1079,7 +1074,7 @@ namespace APSIM.Shared.Utilities
                     sql.Append(colTypes[c]);
             }
 
-            sql.Insert(0, "CREATE TABLE " + tableName + " (");
+            sql.Insert(0, "CREATE TABLE [" + tableName + "] (");
             sql.Append(')');
             ExecuteNonQuery(sql.ToString());
         }

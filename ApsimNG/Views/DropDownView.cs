@@ -1,13 +1,6 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="DropDownView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using System;
-    using System.Collections.Generic;
     using Gtk;
 
     /// <summary>An interface for a drop down</summary>
@@ -51,9 +44,26 @@ namespace UserInterface.Views
         private CellRendererText comboRender = new CellRendererText();
 
         /// <summary>Constructor which also creates a ComboBox</summary>
+        public DropDownView() : base()
+        {
+        }
+
+        /// <summary>Constructor which also creates a ComboBox</summary>
         public DropDownView(ViewBase owner) : base(owner)
         {
             combobox1 = new ComboBox(comboModel);
+            SetupCombo();
+        }
+
+        /// <summary>
+        /// A method used when a view is wrapping a gtk control.
+        /// </summary>
+        /// <param name="ownerView">The owning view.</param>
+        /// <param name="gtkControl">The gtk control being wrapped.</param>
+        protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
+        {
+            owner = ownerView;
+            combobox1 = (ComboBox)gtkControl;
             SetupCombo();
         }
 
@@ -78,6 +88,7 @@ namespace UserInterface.Views
         private void SetupCombo()
         {
             mainWidget = combobox1;
+            combobox1.Model = comboModel;
             combobox1.PackStart(comboRender, false);
             combobox1.AddAttribute(comboRender, "text", 0);
             combobox1.Changed += OnSelectionChanged;
@@ -134,7 +145,7 @@ namespace UserInterface.Views
                     // if (comboModel.IterNChildren() > 0)
                     //     combobox1.Active = 0;
                     // else
-                    combobox1.Active = -1;
+                    combobox1.Active = 1;
                 }
                 finally
                 {

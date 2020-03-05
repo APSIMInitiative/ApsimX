@@ -1,8 +1,3 @@
-//-----------------------------------------------------------------------
-// <copyright file="PropertyPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
 namespace UserInterface.Presenters
 {
     using System;
@@ -496,6 +491,10 @@ namespace UserInterface.Presenters
                 {
                     cell.EditorType = EditorTypeEnum.Button;
                 }
+                else if (properties[i].Display != null && properties[i].Display.Type == DisplayType.FileNames)
+                {
+                    cell.EditorType = EditorTypeEnum.MultiFiles;
+                }
                 else if (properties[i].Display != null && 
                          properties[i].Display.Type == DisplayType.FieldName)
                 {
@@ -908,6 +907,11 @@ namespace UserInterface.Presenters
                 IGridCell cell = grid.GetCell(1, i);
                 cell.IsRowReadonly = !IsPropertyEnabled(i);
             }
+
+            // Model has been modified - need to refresh the grid.
+            // Note: Refresh() interrogates the model. grid.Refresh()
+            // updates the UI.
+            Refresh();
             grid.Refresh();
         }
 
@@ -961,7 +965,9 @@ namespace UserInterface.Presenters
                 Prompt = "Select file path",
                 InitialDirectory = e.OldValue
             };
-            string fileName = fileChooser.GetFile();
+
+            IGridCell cell = grid.GetCell(e.ColIndex, e.RowIndex);
+            string fileName = properties[e.RowIndex].Display.Type == DisplayType.FileNames ? string.Join(", ", fileChooser.GetFiles()) : fileChooser.GetFile();
 
             if (!string.IsNullOrWhiteSpace(fileName) && fileName != e.OldValue)
             {

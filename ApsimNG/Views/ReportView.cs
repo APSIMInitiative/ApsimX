@@ -1,14 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ReportView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using System;
     using Gtk;
-    using EventArguments;
 
     interface IReportView
     {
@@ -19,7 +12,7 @@ namespace UserInterface.Views
         IEditorView EventList { get; }
 
         /// <summary>Provides access to the DataGrid.</summary>
-        IDataStoreView DataStoreView { get; }
+        ViewBase DataStoreView { get; }
 
         /// <summary>
         /// Indicates the index of the currently active tab
@@ -36,7 +29,7 @@ namespace UserInterface.Views
 
         private EditorView variableEditor;
         private EditorView frequencyEditor;
-        private DataStoreView dataStoreView1;
+        private ViewBase dataStoreView1;
 
         /// <summary>Constructor</summary>
         public ReportView(ViewBase owner) : base(owner)
@@ -56,7 +49,7 @@ namespace UserInterface.Views
             frequencyEditor.StyleChanged += OnStyleChanged;
             vbox2.PackStart(frequencyEditor.MainWidget, true, true, 0);
 
-            dataStoreView1 = new DataStoreView(this);
+            dataStoreView1 = new ViewBase(this, "ApsimNG.Resources.Glade.DataStoreView.glade");
             alignment1.Add(dataStoreView1.MainWidget);
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
@@ -109,7 +102,7 @@ namespace UserInterface.Views
         public IEditorView EventList { get { return frequencyEditor; } }
 
         /// <summary>Provides access to the DataGrid.</summary>
-        public IDataStoreView DataStoreView { get { return dataStoreView1; } }
+        public ViewBase DataStoreView { get { return dataStoreView1; } }
 
         /// <summary>
         /// Indicates the index of the currently active tab

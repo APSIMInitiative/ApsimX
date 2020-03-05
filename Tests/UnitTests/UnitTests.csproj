@@ -134,6 +134,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApsimNG\Presenters\AddModelPresenterTests.cs" />
     <Compile Include="ApsimNG\Presenters\ProfileGridTests.cs" />
     <Compile Include="ApsimNG\UITestsMain.cs" />
     <Compile Include="ApsimNG\Utilities\GtkUtilities.cs" />

@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Summary.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.EventArguments
+﻿namespace UserInterface.EventArguments
 {
     /// <summary>
     /// Event arguments used when handling a copy event.
