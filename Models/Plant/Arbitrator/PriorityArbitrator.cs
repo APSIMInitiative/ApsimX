@@ -37,29 +37,26 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IPlant))]
-    public class PriorityArbitrator : Model, IUptake, ICustomDocumentation
+    public class PriorityArbitrator : Model, IUptake, IArbitrator, ICustomDocumentation
     {
-        ///  Links and Input parameters
-
-        /// <summary>APSIMs clock model</summary>
-        [Link]
-        public Clock Clock = null;
+        ///1. Links
+        ///------------------------------------------------------------------------------------------------
 
         /// <summary>The top level plant object in the Plant Modelling Framework</summary>
         [Link]
-        public Plant Plant = null;
-
-        /// <summary>The soil</summary>
-        [Link]
-        public Soils.Soil Soil = null;
+        private Plant plant = null;
 
         /// <summary>The method used to arbitrate N allocations</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        protected IArbitrationMethod NArbitrator = null;
+        protected IArbitrationMethod nArbitrator = null;
 
         /// <summary>The method used to arbitrate N allocations</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        protected IArbitrationMethod DMArbitrator = null;
+        protected IArbitrationMethod dmArbitrator = null;
+
+        
+        ///2. Private And Protected Fields
+        /// -------------------------------------------------------------------------------------------------
 
         /// <summary>The kgha2gsm</summary>
         protected const double kgha2gsm = 0.1;
@@ -70,13 +67,9 @@ namespace Models.PMF
         /// <summary>A list of organs or suborgans that have watardemands</summary>
         protected List<IHasWaterDemand> WaterDemands = new List<IHasWaterDemand>();
 
-        /// <summary>The variables for DM</summary>
-        [XmlIgnore]
-        public BiomassArbitrationType DM { get; private set; }
-
-        /// <summary>The variables for N</summary>
-        [XmlIgnore]
-        public BiomassArbitrationType N { get; private set; }
+        
+        ///4. Public Events And Enums
+        /// -------------------------------------------------------------------------------------------------
 
         /// <summary>Occurs when a plant is about to be sown.</summary>
         public event EventHandler SetDMSupply;
@@ -87,9 +80,19 @@ namespace Models.PMF
         /// <summary>Occurs when a plant is about to be sown.</summary>
         public event EventHandler SetNDemand;
 
-        ///  Main outputs
+        
+        ///5. Public Properties
+        /// --------------------------------------------------------------------------------------------------
 
-        /// <summary>Gets the dry mass supply relative to dry mass demand.</summary>
+        /// <summary>The variables for DM</summary>
+        [XmlIgnore]
+        public BiomassArbitrationType DM { get; private set; }
+
+        /// <summary>The variables for N</summary>
+        [XmlIgnore]
+        public BiomassArbitrationType N { get; private set; }
+
+        //// <summary>Gets the dry mass supply relative to dry mass demand.</summary>
         /// <value>The dry mass supply.</value>
         [XmlIgnore]
         public double FDM { get { return DM == null ? 0 : MathUtilities.Divide(DM.TotalPlantSupply, DM.TotalPlantDemand, 0); } }
@@ -123,14 +126,78 @@ namespace Models.PMF
         [XmlIgnore]
         public double WAllocated { get; protected set; }
 
-       /// IUptake interface
+
+        ///6. Public methods
+        /// -----------------------------------------------------------------------------------------------------------
+
+        /// <summary>Things the plant model does when the simulation starts</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        virtual protected void OnSimulationCommencing(object sender, EventArgs e) { Clear(); }
+        
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantSowing")]
+        virtual protected void OnPlantSowing(object sender, SowPlant2Type data)
+        {
+            List<IArbitration> organsToArbitrate = new List<IArbitration>();
+            List<IHasWaterDemand> Waterdemands = new List<IHasWaterDemand>();
+
+            foreach (Model Can in Apsim.FindAll(plant, typeof(IHasWaterDemand)))
+                Waterdemands.Add(Can as IHasWaterDemand);
+
+            foreach (IOrgan organ in plant.Organs)
+                if (organ is IArbitration)
+                    organsToArbitrate.Add(organ as IArbitration);
+
+
+            Organs = organsToArbitrate;
+            WaterDemands = Waterdemands;
+            DM = new BiomassArbitrationType("DM", Organs);
+            N = new BiomassArbitrationType("N", Organs);
+        }
+
+        
+        /// First get all demands and supplies, send potential DM allocations and do N reallocation so N uptake demand can be calculated
+        
+        /// <summary>Does the water limited dm allocations.  Water constaints to growth are accounted for in the calculation of DM supply
+        /// and does initial N calculations to work out how much N uptake is required to pass to SoilArbitrator</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoPotentialPlantPartioning")]
+        virtual protected void OnDoPotentialPlantPartioning(object sender, EventArgs e)
+        {
+            if (plant.IsEmerged)
+            {
+                DM.Clear();
+                N.Clear();
+
+                DMSupplies();
+                DMDemands();
+
+                Reallocation(Organs.ToArray(), DM, dmArbitrator);         // Allocate supply of reallocated DM to organs
+                AllocateFixation(Organs.ToArray(), DM, dmArbitrator);             // Allocate supply of fixed DM (photosynthesis) to organs
+                Retranslocation(Organs.ToArray(), DM, dmArbitrator);      // Allocate supply of retranslocated DM to organs
+                SendPotentialDMAllocations(Organs.ToArray());               // Tell each organ what their potential growth is so organs can calculate their N demands
+
+                NSupplies();
+                NDemands();
+
+                Reallocation(Organs.ToArray(), N, nArbitrator);           // Allocate N available from reallocation to each organ
+            }
+        }
+        
+        
+        /// The the soil Arbitrator kicks in to work out N uptake.  Here sits the IUptake interface for doing that
 
         /// <summary>
         /// Calculate the potential sw uptake for today
         /// </summary>
         public List<ZoneWaterAndN> GetWaterUptakeEstimates(SoilState soilstate)
         {
-            if (Plant.IsAlive)
+            if (plant.IsAlive)
             {
                 // Get all water supplies.
                 double waterSupply = 0;  //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
@@ -154,7 +221,7 @@ namespace Models.PMF
                 double waterDemand = 0; //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
 
                 foreach (IHasWaterDemand WD in WaterDemands)
-                    waterDemand += WD.CalculateWaterDemand() * Plant.Zone.Area;
+                    waterDemand += WD.CalculateWaterDemand() * plant.Zone.Area;
 
                 // Calculate demand / supply ratio.
                 double fractionUsed = 0;
@@ -198,7 +265,7 @@ namespace Models.PMF
             WDemand = 0.0; //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
             foreach (IArbitration o in Organs)
                 if (o is IHasWaterDemand)
-                    WDemand += (o as IHasWaterDemand).CalculateWaterDemand() * Plant.Zone.Area;
+                    WDemand += (o as IHasWaterDemand).CalculateWaterDemand() * plant.Zone.Area;
 
             // Calculate the fraction of water demand that has been given to us.
             double fraction = 1;
@@ -207,28 +274,27 @@ namespace Models.PMF
 
             // Proportionally allocate supply across organs.
             WAllocated = 0.0;
-  
+
             foreach (IHasWaterDemand WD in WaterDemands)
-                {
-                    double demand = WD.CalculateWaterDemand();
-                    double allocation = fraction * demand;
-                    WD.WaterAllocation = allocation;
-                    WAllocated += allocation;
-                }
+            {
+                double demand = WD.CalculateWaterDemand();
+                double allocation = fraction * demand;
+                WD.WaterAllocation = allocation;
+                WAllocated += allocation;
+            }
 
             // Give the water uptake for each zone to Root so that it can perform the uptake
             // i.e. Root will do pass the uptake to the soil water balance.
             foreach (ZoneWaterAndN Z in zones)
-                Plant.Root.DoWaterUptake(Z.Water, Z.Zone.Name);
+                plant.Root.DoWaterUptake(Z.Water, Z.Zone.Name);
         }
-
 
         /// <summary>
         /// Calculate the potential N uptake for today. Should return null if crop is not in the ground.
         /// </summary>
         public virtual List<Soils.Arbitrator.ZoneWaterAndN> GetNitrogenUptakeEstimates(SoilState soilstate)
         {
-            if (Plant.IsEmerged)
+            if (plant.IsEmerged)
             {
                 double NSupply = 0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
 
@@ -255,13 +321,13 @@ namespace Models.PMF
                             (Organs[i] as IWaterNitrogenUptake).CalculateNitrogenSupply(zone, ref organNO3Supply, ref organNH4Supply);
                             UptakeDemands.NO3N = MathUtilities.Add(UptakeDemands.NO3N, organNO3Supply); //Add uptake supply from each organ to the plants total to tell the Soil arbitrator
                             UptakeDemands.NH4N = MathUtilities.Add(UptakeDemands.NH4N, organNH4Supply);
-                            N.UptakeSupply[i] += (MathUtilities.Sum(organNH4Supply) + MathUtilities.Sum(organNO3Supply)) * kgha2gsm * zone.Zone.Area / Plant.Zone.Area;
+                            N.UptakeSupply[i] += (MathUtilities.Sum(organNH4Supply) + MathUtilities.Sum(organNO3Supply)) * kgha2gsm * zone.Zone.Area / plant.Zone.Area;
                             NSupply += (MathUtilities.Sum(organNH4Supply) + MathUtilities.Sum(organNO3Supply)) * zone.Zone.Area;
                         }
                     zones.Add(UptakeDemands);
                 }
 
-                double NDemand = (N.TotalPlantDemand - N.TotalReallocation) / kgha2gsm * Plant.Zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
+                double NDemand = (N.TotalPlantDemand - N.TotalReallocation) / kgha2gsm * plant.Zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
 
                 if (NSupply > NDemand)
                 {
@@ -283,7 +349,7 @@ namespace Models.PMF
         /// </summary>
         public virtual void SetActualNitrogenUptakes(List<ZoneWaterAndN> zones)
         {
-            if (Plant.IsEmerged)
+            if (plant.IsEmerged)
             {
                 // Calculate the total no3 and nh4 across all zones.
                 double NSupply = 0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
@@ -293,69 +359,42 @@ namespace Models.PMF
                 //Reset actual uptakes to each organ based on uptake allocated by soil arbitrator and the organs proportion of potential uptake
                 //NUptakeSupply units should be g/m^2
                 for (int i = 0; i < Organs.Count; i++)
-                    N.UptakeSupply[i] = NSupply / Plant.Zone.Area * N.UptakeSupply[i] / N.TotalUptakeSupply * kgha2gsm;
+                    N.UptakeSupply[i] = NSupply / plant.Zone.Area * N.UptakeSupply[i] / N.TotalUptakeSupply * kgha2gsm;
 
                 //Allocate N that the SoilArbitrator has allocated the plant to each organ
-                AllocateUptake(Organs.ToArray(), N, NArbitrator);
-                Plant.Root.DoNitrogenUptake(zones);
+                AllocateUptake(Organs.ToArray(), N, nArbitrator);
+                plant.Root.DoNitrogenUptake(zones);
             }
         }
-        /// Plant interface methods
 
-        /// <summary>Things the plant model does when the simulation starts</summary>
+        //Then do the rest of the N partitioning, revise DM allocations if N is limited and do DM and N allocations
+        
+        /// <summary>Does the nutrient allocations.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        virtual protected void OnSimulationCommencing(object sender, EventArgs e) { Clear(); }
+        [EventSubscribe("DoActualPlantPartioning")]
+        virtual protected void OnDoActualPlantPartioning(object sender, EventArgs e)
+        {
+            if (plant.IsEmerged)
+            {
+                AllocateFixation(Organs.ToArray(), N, nArbitrator);               //Allocate supply of fixable Nitrogen to each organ
+                Retranslocation(Organs.ToArray(), N, nArbitrator);      //Allocate supply of retranslocatable N to each organ
+                CalculatedNutrientConstrainedDMAllocation(Organs.ToArray());               //Work out how much DM can be assimilated by each organ based on allocated nutrients
+                SetDryMatterAllocations(Organs.ToArray());                               //Tell each organ how DM they are getting folling allocation
+                SetNitrogenAllocations(Organs.ToArray());                         //Tell each organ how much nutrient they are getting following allocaition
+            }
+        }
 
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantSowing")]
-        virtual protected void OnPlantSowing(object sender, SowPlant2Type data)
-        {
-            List<IArbitration> organsToArbitrate = new List<IArbitration>();
-           List<IHasWaterDemand> Waterdemands = new List<IHasWaterDemand>();
-
-            foreach (Model Can in Apsim.FindAll(Plant, typeof(IHasWaterDemand)))
-                Waterdemands.Add(Can as IHasWaterDemand);
-
-            foreach (IOrgan organ in Plant.Organs)
-                if (organ is IArbitration)
-                    organsToArbitrate.Add(organ as IArbitration);
-
-            
-            Organs = organsToArbitrate;
-            WaterDemands = Waterdemands;
-            DM = new BiomassArbitrationType("DM", Organs);
-            N = new BiomassArbitrationType("N", Organs);
-        }
-
-
-        /// <summary>Does the water limited dm allocations.  Water constaints to growth are accounted for in the calculation of DM supply
-        /// and does initial N calculations to work out how much N uptake is required to pass to SoilArbitrator</summary>
-        /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoPotentialPlantPartioning")]
-        virtual protected void OnDoPotentialPlantPartioning(object sender, EventArgs e)
+        [EventSubscribe("PlantEnding")]
+        virtual protected void OnPlantEnding(object sender, EventArgs e)
         {
-            if (Plant.IsEmerged)
-            {
-                DM.Clear();
-                N.Clear();
-
-                DMSupplies();
-                DMDemands();
-                PotentialDMAllocation();
-
-                NSupplies();
-                NDemands();
-
-                Reallocation(Organs.ToArray(), N, NArbitrator);           // Allocate N available from reallocation to each organ
-            }
+            Clear();
         }
 
-
+        /// Local methods for setting up supplies and demands
         /// <summary>Accumulate all of the Organ DM Supplies </summary>
         public virtual void DMSupplies()
         {
@@ -375,16 +414,6 @@ namespace Models.PMF
             SetDMDemand?.Invoke(this, new EventArgs());
             BiomassPoolType[] demands = Organs.Select(organ => organ.DMDemand).ToArray();
             DM.GetDemands(demands);
-        }
-
-        /// <summary>Calculate all of the Organ DM Demands </summary>
-        public virtual void PotentialDMAllocation()
-        {
-            Reallocation(Organs.ToArray(), DM, DMArbitrator);         // Allocate supply of reallocated DM to organs
-            AllocateFixation(Organs.ToArray(), DM, DMArbitrator);             // Allocate supply of fixed DM (photosynthesis) to organs
-            Retranslocation(Organs.ToArray(), DM, DMArbitrator);      // Allocate supply of retranslocated DM to organs
-            SendPotentialDMAllocations(Organs.ToArray());               // Tell each organ what their potential growth is so organs can calculate their N demands
-
         }
 
         /// <summary>Calculate all of the Organ N Supplies </summary>
@@ -408,32 +437,6 @@ namespace Models.PMF
 
         }
 
-        /// <summary>Does the nutrient allocations.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoActualPlantPartioning")]
-        virtual protected void OnDoActualPlantPartioning(object sender, EventArgs e)
-        {
-            if (Plant.IsEmerged)
-            {
-                AllocateFixation(Organs.ToArray(), N, NArbitrator);               //Allocate supply of fixable Nitrogen to each organ
-                Retranslocation(Organs.ToArray(), N, NArbitrator);      //Allocate supply of retranslocatable N to each organ
-                CalculatedNutrientConstrainedDMAllocation(Organs.ToArray());               //Work out how much DM can be assimilated by each organ based on allocated nutrients
-                SetDryMatterAllocations(Organs.ToArray());                               //Tell each organ how DM they are getting folling allocation
-                SetNitrogenAllocations(Organs.ToArray());                         //Tell each organ how much nutrient they are getting following allocaition
-            }
-        }
-
-
-        /// <summary>Called when crop is ending</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantEnding")]
-        virtual protected void OnPlantEnding(object sender, EventArgs e)
-        {
-            Clear();
-        }
-
         /// <summary>Clears this instance.</summary>
         virtual protected void Clear()
         {
@@ -443,7 +446,6 @@ namespace Models.PMF
         }
 
         /// Arbitration step functions
-
 
         /// <summary>Sends the potential dm allocations.</summary>
         /// <param name="Organs">The organs.</param>
@@ -752,8 +754,7 @@ namespace Models.PMF
             DM.Allocated = DM.TotalStructuralAllocation + DM.TotalMetabolicAllocation + DM.TotalStorageAllocation;
             DM.NutrientLimitation = (PreNStressDMAllocation - DM.Allocated);
         }
-
-
+        
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>

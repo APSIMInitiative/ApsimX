@@ -37,7 +37,7 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class OrganArbitrator : BaseArbitrator
+    public class OrganArbitrator : BaseArbitrator, IArbitrator
     {
         
         /// <summary>Accumulate all of the Organ DM Supplies </summary>
