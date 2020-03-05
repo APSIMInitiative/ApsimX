@@ -37,7 +37,7 @@
         public Phenology Phenology = null;
         /// <summary>The arbitrator</summary>
         [Link(IsOptional = true)]
-        public OrganArbitrator Arbitrator = null;
+        public IArbitrator Arbitrator = null;
         /// <summary>The structure</summary>
         [Link(IsOptional = true)]
         public Structure Structure = null;
