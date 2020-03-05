@@ -1,7 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 67,
+  "Version": 80,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-06",
   "Name": "Simulations",
   "Children": [
     {
@@ -12,8 +13,9 @@
       "Children": [
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
-          "FileName": "%root%\\Tests\\Validation\\Slurp\\ShallowSoilTest\\SoilWaterContent.xlsx",
-          "FileNameMetadata": null,
+          "FileNames": [
+            "%root%\\Tests\\Validation\\Slurp\\ShallowSoilTest\\SoilWaterContent.xlsx"
+          ],
           "SheetNames": [
             "ProfileSWC"
           ],
@@ -25,8 +27,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
-          "FileName": "%root%\\Tests\\Validation\\Slurp\\ShallowSoilTest\\SoilWaterContent.xlsx",
-          "FileNameMetadata": null,
+          "FileNames": [
+            "%root%\\Tests\\Validation\\Slurp\\ShallowSoilTest\\SoilWaterContent.xlsx"
+          ],
           "SheetNames": [
             "LayerSWC"
           ],
@@ -38,8 +41,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
-          "FileName": "%root%\\Tests\\Validation\\Slurp\\ShallowSoilTest\\CoverDataObs.xlsx",
-          "FileNameMetadata": null,
+          "FileNames": [
+            "%root%\\Tests\\Validation\\Slurp\\ShallowSoilTest\\CoverDataObs.xlsx"
+          ],
           "SheetNames": [
             "Cover"
           ],
@@ -51,7 +55,6 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "ErrorMessage": "Specified cast is not valid.",
           "FileName": "%root%\\Tests\\Validation\\Slurp\\ShallowSoilTest\\CoverInterpolated.csv",
           "Name": "Input",
           "Children": [],
@@ -202,6 +205,8 @@
           "$type": "Models.Core.Zone, Models",
           "Area": 1.0,
           "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
           "Name": "Field",
           "Children": [
             {
@@ -307,6 +312,8 @@
                     300.0
                   ],
                   "ParticleSizeClay": null,
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
                   "BD": [
                     1.2,
                     1.2,
@@ -481,6 +488,7 @@
                     0.0,
                     0.0
                   ],
+                  "PrecipitationInterception": 0.0,
                   "Name": "SoilWater",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -687,22 +695,6 @@
                         "Colour": "White",
                         "OutlineColour": "White",
                         "Transparent": true
-                      },
-                      {
-                        "$type": "Models.Graph.Node, Models",
-                        "Name": "PlantAvailableNO3",
-                        "Location": "688, 415",
-                        "Colour": "0, 158, 115",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Graph.Node, Models",
-                        "Name": "PlantAvailableNH4",
-                        "Location": "691, 421",
-                        "Colour": "0, 158, 115",
-                        "OutlineColour": "Black",
-                        "Transparent": false
                       }
                     ],
                     "Arcs": [
@@ -834,6 +826,7 @@
             {
               "$type": "Models.PMF.Plant, Models",
               "CropType": "Slurp",
+              "IsAlive": false,
               "IsEnding": false,
               "DaysAfterEnding": 0,
               "ResourceName": "Slurp",
@@ -850,6 +843,7 @@
               "d_interception": 0.0,
               "soil_albedo": 0.23,
               "SoilHeatFluxFraction": 0.4,
+              "MinimumHeightDiffForNewLayer": 0.0,
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
@@ -898,13 +892,14 @@
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "Canopies": [],
               "InitialResidueName": "wheat",
               "InitialResidueType": "wheat",
               "InitialResidueMass": 2000.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 80.0,
-              "FractionFaecesAdded": 0.5,
+              "FractionFaecesAdded": 1.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "surface organic matter",
               "IncludeInDocumentation": false,
@@ -1063,7 +1058,9 @@
             }
           ],
           "LegendPosition": 2,
+          "LegendOrientation": 0,
           "DisabledSeries": null,
+          "LegendOutsideGraph": false,
           "Name": "N balance components",
           "Children": [
             {
@@ -1083,8 +1080,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Slurp.Root.NUptake",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": true,
@@ -1113,8 +1110,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Mineralisation",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": true,
@@ -1143,8 +1140,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Denitrification",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": true,
@@ -1173,8 +1170,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Fertiliser.NitrogenApplied",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": true,
@@ -1203,8 +1200,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Leach",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": true,
@@ -1249,7 +1246,9 @@
             }
           ],
           "LegendPosition": 2,
+          "LegendOrientation": 0,
           "DisabledSeries": null,
+          "LegendOutsideGraph": false,
           "Name": "WaterBalanceComponents",
           "Children": [
             {
@@ -1269,8 +1268,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Soil.SoilWater.Eo",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": true,
@@ -1299,8 +1298,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Slurp.Leaf.Transpiration",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": true,
@@ -1329,8 +1328,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Soil.SoilWater.Es",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": true,
@@ -1359,8 +1358,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Soil.SoilWater.Drainage",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": true,
@@ -1389,8 +1388,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Soil.SoilWater.Runoff",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": true,
@@ -1419,8 +1418,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Weather.Rain",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": true,
@@ -1449,8 +1448,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Irrigation.IrrigationApplied",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": true,
@@ -1479,8 +1478,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "SoilWaterDeficit",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": false,
@@ -1525,7 +1524,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": null,
+          "LegendOutsideGraph": false,
           "Name": "Plant Biomass components",
           "Children": [
             {
@@ -1545,8 +1546,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Slurp.Leaf.Live.Wt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": false,
@@ -1575,8 +1576,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Slurp.Root.Live.Wt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": false,
@@ -1621,7 +1622,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": null,
+          "LegendOutsideGraph": false,
           "Name": "Plant Nitrogen components",
           "Children": [
             {
@@ -1641,8 +1644,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Slurp.Leaf.Live.N",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": false,
@@ -1671,8 +1674,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Slurp.Root.Live.N",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": false,
@@ -1728,7 +1731,9 @@
             }
           ],
           "LegendPosition": 1,
+          "LegendOrientation": 0,
           "DisabledSeries": null,
+          "LegendOutsideGraph": false,
           "Name": "Crop structure",
           "Children": [
             {
@@ -1748,8 +1753,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Slurp.Leaf.CoverTotal",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": false,
@@ -1778,8 +1783,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Slurp.Leaf.LAI",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": false,
@@ -1808,8 +1813,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Slurp.Root.Depth",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": false,
@@ -1854,7 +1859,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": null,
+          "LegendOutsideGraph": false,
           "Name": "Stress Factors",
           "Children": [
             {
@@ -1874,8 +1881,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Slurp.Leaf.Fw",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": false,
@@ -1904,8 +1911,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Slurp.Leaf.Fn",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": false,
