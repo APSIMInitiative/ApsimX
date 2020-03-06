@@ -94,10 +94,10 @@
         public double Runon { get; set; }
 
         /// <summary>The efficiency (0-1) that solutes move down with water.</summary>
-        public double SoluteFluxEfficiency { get; set; }
+        public double SoluteFluxEfficiency { get; set; } = 1;
 
         /// <summary>The efficiency (0-1) that solutes move up with water.</summary>
-        public double SoluteFlowEfficiency { get; set; }
+        public double SoluteFlowEfficiency { get; set; } = 1;
 
         /// <summary> This is set by Microclimate and is rainfall less that intercepted by the canopy and residue components </summary>
         [XmlIgnore]
@@ -210,7 +210,7 @@
 
         /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>
         [XmlIgnore]
-        public double[] FlowNO3 => throw new NotImplementedException();
+        public double[] FlowNO3 { get; private set; }
 
         /// <summary>Amount of N leaching as NH4 from each soil layer (kg /ha)</summary>
         [XmlIgnore]
@@ -287,10 +287,11 @@
             double[] NH4Values = NH4.kgha;
 
             // Calcualte solute movement down with water.
+            SoluteFluxEfficiency = 1;
             double[] NO3Down = CalculateSoluteMovementDown(NO3Values, Water, Flux, SoluteFluxEfficiency);
-            double[] NH4Down = CalculateSoluteMovementDown(NH4Values, Water, Flux, SoluteFluxEfficiency);
+            //double[] NH4Down = CalculateSoluteMovementDown(NH4Values, Water, Flux, SoluteFluxEfficiency);
             MoveDown(NO3Values, NO3Down);
-            MoveDown(NH4Values, NH4Down);
+            //MoveDown(NH4Values, NH4Down);
 
             double es = evaporationModel.Calculate();
             Water[0] = Water[0] - es;
@@ -300,15 +301,16 @@
 
             CheckForErrors();
 
+            SoluteFlowEfficiency = 1;
             double waterTableDepth = waterTableModel.Value();
-            double[] NO3Up = CalculateSoluteMovementUpDown(NO3.kgha, Water, Flow, SoluteFlowEfficiency);
-            double[] NH4Up = CalculateSoluteMovementUpDown(NH4.kgha, Water, Flow, SoluteFlowEfficiency);
-            MoveUp(NO3Values, NO3Up);
-            MoveUp(NH4Values, NH4Up);
+            FlowNO3 = CalculateSoluteMovementUp(NO3Values, Water, Flow, SoluteFlowEfficiency);
+            //double[] NH4Up = CalculateSoluteMovementUpDown(NH4.kgha, Water, Flow, SoluteFlowEfficiency);
+            MoveUp(NO3Values, FlowNO3);
+            //MoveUp(NH4Values, NH4Up);
 
             // Set deltas
-            NO3.SetKgHa(SoluteSetterType.Soil, MathUtilities.Subtract(NO3.kgha, NO3Values));
-            NH4.SetKgHa(SoluteSetterType.Soil, MathUtilities.Subtract(NH4.kgha, NH4Values));
+            NO3.SetKgHa(SoluteSetterType.Soil, NO3Values);
+            //NH4.SetKgHa(SoluteSetterType.Soil, NH4Values);
         }
 
         /// <summary>Move water down the profile</summary>
@@ -332,10 +334,10 @@
         {
             for (int i = 0; i < water.Length; i++)
             {
-                if (i < water.Length-1)
-                    water[i] = water[i] + flow[i+1] - flow[i];
+                if (i == 0)
+                    water[i] = water[i] + flow[i];
                 else
-                    water[i] = water[i] - flow[i];
+                    water[i] = water[i] + flow[i] - flow[i-1];
             }
         }
 
@@ -350,11 +352,11 @@
             double[] soluteFlux = new double[solute.Length];
             for (int i = 0; i < solute.Length; i++)
             {
-                double proportionMoving = flux[i] / water[i];
                 if (i == 0)
-                    soluteFlux[i] = solute[i] * proportionMoving * efficiency;
+                    soluteFlux[i] = flux[i] * solute[i] / (water[i] + flux[i]);
                 else
-                    soluteFlux[i] = (solute[i] + soluteFlux[i-1]) * proportionMoving * efficiency;
+                    soluteFlux[i] = flux[i] * (solute[i] + soluteFlux[i-1]) / (water[i] + flux[i]);
+                    //soluteFlux[i] = (solute[i] + soluteFlux[i-1]) * proportionMoving * efficiency;
             }
 
             return soluteFlux;
@@ -369,7 +371,7 @@
         private static double[] CalculateSoluteMovementUpDown(double[] solute, double[] water, double[] flux, double efficiency)
         {
             double[] soluteUp = CalculateSoluteMovementUp(solute, water, flux, efficiency);
-            MoveUp(solute, soluteUp);
+            //MoveUp(solute, soluteUp);
             double[] soluteDown = CalculateSoluteMovementDown(solute, water, flux, efficiency);
             return MathUtilities.Subtract(soluteUp, soluteDown);
         }
