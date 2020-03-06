@@ -14,11 +14,6 @@ using Models.CLEM.Activities;
 using System.Globalization;
 using System.Linq;
 
-// -----------------------------------------------------------------------
-// <copyright file="FileSQLiteGRASP.cs" company="CSIRO">
-//     Copyright (c) CSIRO
-// </copyright>
-//-----------------------------------------------------------------------
 namespace Models.CLEM
 {
     ///<summary>
@@ -44,9 +39,10 @@ namespace Models.CLEM
         /// A link to the clock model.
         /// </summary>
         [Link]
-        private Clock clock = null;
+        private readonly Clock clock = null;
 
         private List<ValidationResult> validationResults;
+        private RainfallShuffler shuffler = null;
 
         /// <summary>
         /// All the distinct Stocking Rates that were found in the database
@@ -189,14 +185,6 @@ namespace Models.CLEM
         public string TBAColumnName { get; set; }
 
         /// <summary>
-        /// Shuffle years
-        /// </summary>
-        [Summary]
-        [Description("Shuffle the years for stochastic analysis")]
-        [Models.Core.Display(Type = DisplayType.FileName)]
-        public bool ShuffleYears { get; set; }
-
-        /// <summary>
         /// APSIMx SQLite class
         /// </summary>
         [NonSerialized]
@@ -226,33 +214,14 @@ namespace Models.CLEM
             get { return File.Exists(this.FullFileName); }
         }
 
-        [XmlIgnore]
-        private List<ShuffleYear> shuffledYears = new List<ShuffleYear>();
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            // shuffle years for proxy stochastic rainfall simulation
-            if (ShuffleYears)
-            {
-                int startYear = clock.StartDate.Year;
-                int endYear = clock.EndDate.Year;
-
-                for (int i = startYear; i <= endYear; i++)
-                {
-                    shuffledYears.Add(new ShuffleYear() { Year = i, RandomYear = i });
-                }
-                for (int i = 0; i < shuffledYears.Count(); i++)
-                {
-                    int randIndex = RandomNumberGenerator.Generator.Next(shuffledYears.Count());
-                    int keepValue = shuffledYears[i].RandomYear;
-                    shuffledYears[i].RandomYear = shuffledYears[randIndex].RandomYear;
-                    shuffledYears[randIndex].RandomYear = keepValue;
-                }
-            }
+            // look for a shuffler
+            shuffler = Apsim.Children(this, typeof(RainfallShuffler)).FirstOrDefault() as RainfallShuffler;
         }
 
         /// <summary>
@@ -424,8 +393,7 @@ namespace Models.CLEM
         {
             get
             {
-                Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
-                if (simulation != null && this.FileName != null)
+                if (Apsim.Parent(this, typeof(Simulation)) is Simulation simulation && this.FileName != null)
                 {
                     return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
                 }
@@ -559,8 +527,6 @@ namespace Models.CLEM
         /// <returns></returns>
         private double FindClosestCategory(string category, double value)
         {
-            // sorting not needed as now done at array creation
-            int index = 0;
             double[] valuesToUse;
             switch (category)
             {
@@ -578,7 +544,8 @@ namespace Models.CLEM
                     throw new ApsimXException(this, $"Unknown GRASP data cetegory [{category}] used in code behind [x={this.Name}]");
             }
 
-            index = Array.BinarySearch(valuesToUse, value);
+            // sorting not needed as now done at array creation
+            int index = Array.BinarySearch(valuesToUse, value);
             return (index < 0) ? valuesToUse[~index] : valuesToUse[index];
         }
 
@@ -651,10 +618,10 @@ namespace Models.CLEM
                 " AND "+LandConColumnName+" = " + landConditionCategory +
                 " AND "+StkRateColumnName+" = " + stkRateCategory;
 
-            if (ShuffleYears)
+            if (shuffler != null)
             {
-                int shuffleStartYear = shuffledYears.Where(a => a.Year == startYear).FirstOrDefault().RandomYear;
-                int shuffleEndYear = shuffledYears.Where(a => a.Year == endYear).FirstOrDefault().RandomYear;
+                int shuffleStartYear = shuffler.ShuffledYears.Where(a => a.Year == startYear).FirstOrDefault().RandomYear;
+                int shuffleEndYear = shuffler.ShuffledYears.Where(a => a.Year == endYear).FirstOrDefault().RandomYear;
 
                 // first year
                 sqlQuery += " AND (( " + YearColumnName + " = " + shuffleStartYear + " AND " + MonthColumnName + " >= " + startMonth + ")";
@@ -662,7 +629,7 @@ namespace Models.CLEM
                 // any middle years
                 for (int i = startYear+1; i < endYear; i++)
                 {
-                    sqlQuery += " OR ( " + YearColumnName + " = " + shuffledYears[i] + ")";
+                    sqlQuery += " OR ( " + YearColumnName + " = " + shuffler.ShuffledYears[i] + ")";
                 }
 
                 //last year
@@ -692,11 +659,11 @@ namespace Models.CLEM
             }
 
             // re-label shuffled years
-            if (ShuffleYears)
+            if (shuffler != null)
             {
                 foreach (DataRow row in results.Rows)
                 {
-                    row["Year"] = shuffledYears.Where(a => a.RandomYear == Convert.ToInt32(row["Year"])).FirstOrDefault().Year;
+                    row["Year"] = shuffler.ShuffledYears.Where(a => a.RandomYear == Convert.ToInt32(row["Year"])).FirstOrDefault().Year;
                 }
             }
 
@@ -755,13 +722,6 @@ namespace Models.CLEM
                 }
                 tempdate = tempdate.AddMonths(1);
             }
-
-            //Check months go right up until EndDate
-            //if ((tempdate.Month != endDate.Month)&&(tempdate.Year != endDate.Year))
-            //{
-            //    throw new ApsimXException(this, errormessageStart
-            //            + "Missing entry for Year: " + tempdate.Year + " and Month: " + tempdate.Month);
-            //}
         }
 
         private PastureDataType DataRow2PastureDataType(DataRowView dr)
@@ -769,11 +729,8 @@ namespace Models.CLEM
             PastureDataType pasturedata = new PastureDataType
             {
                 Year = int.Parse(dr["Year"].ToString(), CultureInfo.InvariantCulture),
-                //CutNum = int.Parse(dr["CutNum"].ToString(), CultureInfo.InvariantCulture),
                 Month = int.Parse(dr["Month"].ToString(), CultureInfo.InvariantCulture),
                 Growth = double.Parse(dr["Growth"].ToString(), CultureInfo.InvariantCulture),
-                //BP1 = double.Parse(dr["BP1"].ToString(), CultureInfo.InvariantCulture),
-                //BP2 = double.Parse(dr["BP2"].ToString(), CultureInfo.InvariantCulture)
                 SoilLoss = ((ErosionColumnName!="" & dr.DataView.Table.Columns.Contains(ErosionColumnName))?double.Parse(dr[ErosionColumnName].ToString(), CultureInfo.InvariantCulture):0),
                 Runoff = ((RunoffColumnName != "" & dr.DataView.Table.Columns.Contains(RunoffColumnName)) ? double.Parse(dr[RunoffColumnName].ToString(), CultureInfo.InvariantCulture) : 0),
                 Rainfall = ((RainfallColumnName != "" & dr.DataView.Table.Columns.Contains(RainfallColumnName)) ? double.Parse(dr[RainfallColumnName].ToString(), CultureInfo.InvariantCulture) : 0),
@@ -937,30 +894,8 @@ namespace Models.CLEM
                 }
                 html += "\n</div>";
                 html += "\n</div>";
-
-                if (ShuffleYears)
-                {
-                    html += "\n<div class=\"warningbanner\">WARNING: Years are being shuffled as a proxy for stochastic rainfall variation in this simulation.<br />This is an advance bespoke feature for particular projects.</div>";
-                }
             }
             return html;
         }
-
-    }
-
-    /// <summary>
-    /// Shuffled year structure
-    /// </summary>
-    [Serializable]
-    public class ShuffleYear
-    {
-        /// <summary>
-        /// Actual year
-        /// </summary>
-        public int Year;
-        /// <summary>
-        /// Shuffled year
-        /// </summary>
-        public int RandomYear;
     }
 }
