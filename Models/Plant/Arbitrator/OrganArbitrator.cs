@@ -37,21 +37,9 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class OrganArbitrator : BaseArbitrator
+    public class OrganArbitrator : BaseArbitrator, IArbitrator
     {
-        #region Links and Input parameters
-
-        #endregion
-
-        #region Main outputs
-
-        #endregion
-
-        #region IUptake interface
-
-        #endregion
-
-        #region Plant interface methods
+        
         /// <summary>Accumulate all of the Organ DM Supplies </summary>
         public override void DMSupplies()
         {
@@ -148,10 +136,7 @@ namespace Models.PMF
             DM.Allocated = DM.TotalStructuralAllocation + DM.TotalMetabolicAllocation + DM.TotalStorageAllocation;
             DM.NutrientLimitation = (PreNStressDMAllocation - DM.Allocated);
         }
-        #endregion
-
-        #region Arbitration step functions
-
+        
         /// <summary>Does the fixation.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="BAT">The bat.</param>
@@ -242,7 +227,6 @@ namespace Models.PMF
                 }
             }
         }
-        #endregion
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>

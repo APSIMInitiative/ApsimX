@@ -35,5 +35,13 @@ namespace UnitTests.ApsimNG
             File.WriteAllText(fileName, json);
             return UITestsMain.MasterPresenter.OpenApsimXFileInTab(fileName, onLeftTabControl: true);
         }
+
+        public static ExplorerPresenter OpenBasicFileInGui()
+        {
+            Simulations sims = UnitTests.Utilities.GetRunnableSim();
+            string fileName = Path.ChangeExtension(Path.GetTempFileName(), ".apsimx");
+            sims.Write(fileName);
+            return UITestsMain.MasterPresenter.OpenApsimXFileInTab(fileName, onLeftTabControl: true);
+        }
     }
 }

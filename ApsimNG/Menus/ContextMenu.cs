@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ContextMenu.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System;
     using System.Collections.Generic;
@@ -434,23 +429,14 @@ namespace UserInterface.Presenters
         {
             if (this.explorerPresenter.Save())
             {
-                List<string> duplicates = this.explorerPresenter.ApsimXFile.FindDuplicateSimulationNames();
-                if (duplicates.Count > 0)
-                {
-                    string errorMessage = "Duplicate simulation names found " + StringUtilities.BuildString(duplicates.ToArray(), ", ");
-                    explorerPresenter.MainPresenter.ShowError(errorMessage);
-                }
-                else
-                {
-                    Runner.RunTypeEnum typeOfRun = Runner.RunTypeEnum.MultiThreaded;
-                    if (multiProcessRunner)
-                        typeOfRun = Runner.RunTypeEnum.MultiProcess;
+                Runner.RunTypeEnum typeOfRun = Runner.RunTypeEnum.MultiThreaded;
+                if (multiProcessRunner)
+                    typeOfRun = Runner.RunTypeEnum.MultiProcess;
 
-                    Model model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
-                    var runner = new Runner(model, runType:typeOfRun, wait: false);
-                    this.command = new RunCommand(model.Name, runner, this.explorerPresenter);
-                    this.command.Do(null);
-                }
+                Model model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
+                var runner = new Runner(model, runType:typeOfRun, wait: false);
+                this.command = new RunCommand(model.Name, runner, this.explorerPresenter);
+                this.command.Do(null);
             }
         }
 
@@ -794,12 +780,60 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// Event handler for 'Enabled' menu item.
+        /// </summary>
+        [ContextMenu(MenuName = "Read-only", IsToggle = true)]
+        public void ReadOnly(object sender, EventArgs e)
+        {
+            try
+            {
+                IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+                if (model == null)
+                    return;
+                
+                // Don't allow users to change read-only status of released models.
+                if (Apsim.Parent(model, typeof(ModelCollectionFromResource)) is ModelCollectionFromResource)
+                    return;
+
+                bool readOnly = !model.ReadOnly;
+                List<ChangeProperty.Property> changes = new List<ChangeProperty.Property>();
+                
+                // Toggle read-only on the model and all descendants.
+                changes.Add(new ChangeProperty.Property(model, "ReadOnly", readOnly));
+                foreach (IModel child in Apsim.ChildrenRecursively(model))
+                    changes.Add(new ChangeProperty.Property(child, "ReadOnly", readOnly));
+
+                // Apply changes.
+                ChangeProperty command = new ChangeProperty(changes);
+                explorerPresenter.CommandHistory.Add(command);
+
+                // Refresh the context menu.
+                explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
+                explorerPresenter.Refresh();
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
+        }
+
+        /// <summary>
         /// Event handler for checkbox for 'Enabled' menu item.
         /// </summary>
         public bool EnabledChecked()
         {
             IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
             return model.Enabled;
+        }
+
+        /// <summary>
+        /// Event handler for checkbox for 'ReadOnly' menu item.
+        /// </summary>
+        /// <returns></returns>
+        public bool ReadOnlyChecked()
+        {
+            IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+            return model.ReadOnly;
         }
 
         /// <summary>

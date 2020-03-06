@@ -1,20 +1,9 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="CheckpointsPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using APSIM.Shared.Utilities;
-    using Interfaces;
     using Models.Core;
-    using Views;
     using Models.Storage;
+    using System;
+    using Views;
 
     /// <summary>This presenter lets the user add/delete checkpoints</summary>
     public class CheckpointsPresenter : IPresenter
@@ -105,6 +94,7 @@ namespace UserInterface.Presenters
                     try
                     {
                         storage.Writer.DeleteCheckpoint(checkpointName);
+                        storage.Reader.Refresh();
                         PopulateList();
                         explorerPresenter.MainPresenter.ShowMessage("Checkpoint deleted", Simulation.MessageType.Information);
                     }

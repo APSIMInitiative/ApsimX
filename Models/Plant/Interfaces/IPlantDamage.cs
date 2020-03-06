@@ -13,6 +13,9 @@
         /// <summary>A list of organs that can be damaged.</summary>
         List<IOrganDamage> Organs { get; }
 
+        /// <summary>Total amount of above ground biomass.</summary>
+        Biomass AboveGround { get;  }
+
         /// <summary>Plant population.</summary>
         double Population { get; }
 
@@ -21,6 +24,13 @@
 
         /// <summary>Amount of assimilate available to be damaged.</summary>
         double AssimilateAvailable { get; }
+
+        /// <summary>
+        /// Remove biomass from a plant.
+        /// </summary>
+        /// <param name="amount">Amount of biomass to remove (kg/ha).</param>
+        /// <returns>Amount of biomass removed.</returns>
+        Biomass RemoveBiomass(double amount);
 
         /// <summary>
         /// Remove biomass from an organ.

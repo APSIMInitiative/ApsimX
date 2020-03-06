@@ -29,7 +29,7 @@
         private MainMenu mainMenu;
 
         /// <summary>The context menu</summary>
-        private ContextMenu contextMenu;
+        public ContextMenu ContextMenu { get; private set; }
 
         /// <summary>Show tick on tree nodes where models will be included in auto-doc?</summary>
         private bool showDocumentationStatus;
@@ -127,8 +127,8 @@
             this.ApsimXFile = model as Simulations;
             this.view = view as IExplorerView;
             this.mainMenu = new MainMenu(this);
-            this.contextMenu = new ContextMenu(this);
-            ApsimXFile.Links.Resolve(contextMenu);
+            this.ContextMenu = new ContextMenu(this);
+            ApsimXFile.Links.Resolve(ContextMenu);
 
             this.view.Tree.SelectedNodeChanged += this.OnNodeSelected;
             this.view.Tree.DragStarted += this.OnDragStart;
@@ -178,7 +178,7 @@
                 (this.view as Views.ExplorerView).MainWidget.Destroy();
             }
 
-            this.contextMenu = null;
+            this.ContextMenu = null;
             this.mainMenu = null;
             this.CommandHistory.Clear();
             this.ApsimXFile.ClearSimulationReferences();
@@ -583,7 +583,7 @@
                         MethodInfo enableMethod = typeof(ContextMenu).GetMethod(method.Name + "Enabled");
                         if (enableMethod != null)
                         {
-                            desc.Enabled = (bool)enableMethod.Invoke(this.contextMenu, null);
+                            desc.Enabled = (bool)enableMethod.Invoke(this.ContextMenu, null);
                         }
                         else
                         {
@@ -594,14 +594,14 @@
                         MethodInfo checkMethod = typeof(ContextMenu).GetMethod(method.Name + "Checked");
                         if (checkMethod != null)
                         {
-                            desc.Checked = (bool)checkMethod.Invoke(this.contextMenu, null);
+                            desc.Checked = (bool)checkMethod.Invoke(this.ContextMenu, null);
                         }
                         else
                         {
                             desc.Checked = false;
                         }
 
-                        EventHandler handler = (EventHandler)Delegate.CreateDelegate(typeof(EventHandler), this.contextMenu, method);
+                        EventHandler handler = (EventHandler)Delegate.CreateDelegate(typeof(EventHandler), this.ContextMenu, method);
                         desc.OnClick = handler;
 
                         descriptions.Add(desc);
@@ -700,8 +700,12 @@
                     {
                         ShowDescriptionInRightHandPanel(descriptionName?.ToString());
                     }
+                    if (viewName != null && viewName.ToString().Contains(".glade"))
+                        ShowInRightHandPanel(model,
+                                             newView: new ViewBase(view as ViewBase, viewName.ToString()),
+                                             presenter: Assembly.GetExecutingAssembly().CreateInstance(presenterName.ToString()) as IPresenter);
 
-                    if (viewName != null && presenterName != null)
+                    else if (viewName != null && presenterName != null)
                         ShowInRightHandPanel(model, viewName.ToString(), presenterName.ToString());
                 }
             }

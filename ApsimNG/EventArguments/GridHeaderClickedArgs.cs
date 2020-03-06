@@ -1,13 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="GridHeaderClickedArgs.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.EventArguments
+﻿namespace UserInterface.EventArguments
 {
-    using System;
-    using System.Collections.Generic;
     using Interfaces;
+    using System;
 
     /// <summary>
     /// Structure to hold information about clicks that have occurred on 

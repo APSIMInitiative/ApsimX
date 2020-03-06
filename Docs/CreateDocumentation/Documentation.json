@@ -10,7 +10,7 @@
             ],
             "Rows": [
                 {
-                    "Name": "AGPRyegrass, AGPWhiteClover (AgPasture)",
+                    "Name": "AGPRyegrass (AgPasture)",
                     "Documents": [
                         {
                             "Name": "PDF",
@@ -19,11 +19,45 @@
                         {
                             "Name": "PDF",
                             "FileName": "Tests/Validation/AgPasture/AgPasture.apsimx",
+                            "OutputFileName": "AGPRyegrass.pdf",
                             "ModelNameToDocument": "AGPRyegrass"
                         },
                         {
                             "Name": "PDF",
                             "URL": "https://apsimdev.apsim.info/ApsimX/Documents/AgPastureScience.pdf"
+                        }
+                    ]
+                },
+                {
+                    "Name": "AGPWhiteClover (AgPasture)",
+                    "Documents": [
+                        {
+                            "Name": "PDF",
+                            "FileName": "Tests/Validation/AgPasture/AgPasture.apsimx"
+                        },
+                        {
+                            "Name": "PDF",
+                            "FileName": "Tests/Validation/AgPasture/AgPasture.apsimx",
+                            "OutputFileName": "AGPWhiteClover.pdf",
+                            "ModelNameToDocument": "AGPWhiteClover"
+                        },
+                        {
+                            "Name": "PDF",
+                            "URL": "https://apsimdev.apsim.info/ApsimX/Documents/AgPastureScience.pdf"
+                        }
+                    ]
+                },
+                {
+                    "Name": "Agroforestry (under review)",
+                    "Documents": [
+                        {
+                            "Name": "PDF",
+                            "FileName": "Tests/Validation/Agroforestry/AgroforestrySystem.apsimx"
+                        },
+                        {
+                            "Name": "PDF",
+                            "FileName": "Tests/Validation/Agroforestry/AgroforestrySystem.apsimx",
+                            "ModelNameToDocument": "TreeProxy"
                         }
                     ]
                 },
@@ -38,20 +72,6 @@
                             "Name": "PDF",
                             "FileName": "Tests/Validation/Barley/Barley.apsimx",
                             "ModelNameToDocument": "Barley"
-                        }
-                    ]
-                },
-                {
-                    "Name": "Chickpea (under review)",
-                    "Documents": [
-                        {
-                            "Name": "PDF",
-                            "FileName": "Tests/UnderReview/Chickpea/Chickpea.apsimx"
-                        },
-                        {
-                            "Name": "PDF",
-                            "FileName": "Tests/UnderReview/Chickpea/Chickpea.apsimx",
-                            "ModelNameToDocument": "Chickpea"
                         }
                     ]
                 },
@@ -285,6 +305,20 @@
                             "Name": "PDF",
                             "FileName": "Tests/UnderReview/Sorghum/Sorghum.apsimx",
                             "ModelNameToDocument": "Sorghum"
+                        }
+                    ]
+                },
+                {
+                    "Name": "Soybean (under review)",
+                    "Documents": [
+                        {
+                            "Name": "PDF",
+                            "FileName": "Tests/UnderReview/Soybean/Soybean.apsimx"
+                        },
+                        {
+                            "Name": "PDF",
+                            "FileName": "Tests/UnderReview/Soybean/Soybean.apsimx",
+                            "ModelNameToDocument": "Soybean"
                         }
                     ]
                 },

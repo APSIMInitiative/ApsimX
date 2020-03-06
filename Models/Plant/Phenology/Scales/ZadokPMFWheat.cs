@@ -52,6 +52,9 @@ namespace Models.PMF.Phen
         [Link]
         Structure Structure = null;
 
+        [Link]
+        private IPlant plant = null;
+
         /// <summary>Gets the stage.</summary>
         /// <value>The stage.</value>
         [Description("Zadok Stage")]
@@ -61,12 +64,14 @@ namespace Models.PMF.Phen
             {
                 double fracInCurrent = Phenology.FractionInCurrentPhase;
                 double zadok_stage = 0.0;
+                if (plant != null && !plant.IsAlive)
+                    return 0;
                 if (Phenology.InPhase("Germinating"))
                     zadok_stage = 5.0f * fracInCurrent;
                 else if (Phenology.InPhase("Emerging"))
                     zadok_stage = 5.0f + 5 * fracInCurrent;
                 else if ((Phenology.InPhase("Vegetative") && fracInCurrent <= 0.9)
-                    || (!Phenology.InPhase("ReadyForHarvesting")&&Phenology.Stage<4.3))
+                    || (!Phenology.InPhase("ReadyForHarvesting")&&Phenology.Stage<5.3))
                 {
                     if (Structure.BranchNumber <= 0.0)
                         zadok_stage = 10.0f + Structure.LeafTipsAppeared;
@@ -79,7 +84,7 @@ namespace Models.PMF.Phen
                 else if (!Phenology.InPhase("ReadyForHarvesting"))
                 {
                     double[] zadok_code_y = { 30.0, 33, 39.0, 55.0, 65.0, 71.0, 87.0, 90.0};
-                    double[] zadok_code_x = { 4.3, 4.9, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0};
+                    double[] zadok_code_x = { 5.3, 5.9, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0};
                     bool DidInterpolate;
                     zadok_stage = MathUtilities.LinearInterpReal(Phenology.Stage,
                                                                zadok_code_x, zadok_code_y,

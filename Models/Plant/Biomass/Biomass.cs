@@ -229,11 +229,15 @@ namespace Models.PMF
             _StructuralN = 0.0;
             _StorageN = 0.0;
             _MetabolicN = 0.0;
+            _DMDOfStructural = 0.0;
         }
         /// <summary>Adds the specified a.</summary>
         /// <param name="a">a.</param>
         public void Add(Biomass a)
         {
+            _DMDOfStructural = MathUtilities.Divide(_DMDOfStructural * _StructuralWt + a._DMDOfStructural * a._StructuralWt
+                                                    , _StructuralWt + a._StructuralWt
+                                                    , 0);
             _StructuralWt += a._StructuralWt;
             _StorageWt += a._StorageWt;
             _MetabolicWt += a._MetabolicWt;
@@ -245,6 +249,9 @@ namespace Models.PMF
         /// <param name="a">a.</param>
         public void Subtract(Biomass a)
         {
+            _DMDOfStructural = MathUtilities.Divide(_DMDOfStructural * _StructuralWt - a._DMDOfStructural * a._StructuralWt
+                                                    , _StructuralWt - a._StructuralWt
+                                                    , 0);
             _StructuralWt -= a._StructuralWt;
             _StorageWt -= a._StorageWt;
             _MetabolicWt -= a._MetabolicWt;
@@ -262,6 +269,7 @@ namespace Models.PMF
             _StructuralN *= scalar;
             _StorageN *= scalar;
             _MetabolicN *= scalar;
+            _DMDOfStructural *= scalar;
         }
         /// <summary>Sets to.</summary>
         /// <param name="a">a.</param>
@@ -273,6 +281,7 @@ namespace Models.PMF
             _StructuralN = a.StructuralN;
             _StorageN = a.StorageN;
             _MetabolicN = a.MetabolicN;
+            _DMDOfStructural = a._DMDOfStructural;
         }
         /// <summary>Implements the operator +.</summary>
         /// <param name="a">a.</param>
@@ -287,7 +296,10 @@ namespace Models.PMF
                 MetabolicWt = a.MetabolicWt + b.MetabolicWt,
                 StructuralN = a.StructuralN + b.StructuralN,
                 StorageN = a.StorageN + b.StorageN,
-                MetabolicN = a.MetabolicN + b.MetabolicN
+                MetabolicN = a.MetabolicN + b.MetabolicN,
+                DMDOfStructural = MathUtilities.Divide(a.DMDOfStructural * a.StructuralWt + b.DMDOfStructural * b.StructuralWt
+                                                       , a.StructuralWt + b.StructuralWt
+                                                       , 0)
             };
 
         }
@@ -304,7 +316,10 @@ namespace Models.PMF
                 MetabolicWt = a.MetabolicWt - b.MetabolicWt,
                 StructuralN = a.StructuralN - b.StructuralN,
                 StorageN = a.StorageN - b.StorageN,
-                MetabolicN = a.MetabolicN - b.MetabolicN
+                MetabolicN = a.MetabolicN - b.MetabolicN,
+                DMDOfStructural = MathUtilities.Divide(a.DMDOfStructural * a.StructuralWt - b.DMDOfStructural * b.StructuralWt
+                                                       , a.StructuralWt - b.StructuralWt
+                                                       , 0)
             };
 
         }
@@ -321,7 +336,8 @@ namespace Models.PMF
                 MetabolicWt = a.MetabolicWt * Fraction,
                 StructuralN = a.StructuralN * Fraction,
                 StorageN = a.StorageN * Fraction,
-                MetabolicN = a.MetabolicN * Fraction
+                MetabolicN = a.MetabolicN * Fraction,
+                DMDOfStructural = a.DMDOfStructural * Fraction
             };
         }
     }

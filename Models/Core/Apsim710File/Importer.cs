@@ -315,10 +315,32 @@
                 else if (compNode.Name.ToLower() == "sample")
                 {
                     newNode = CopyNode(compNode, destParent, "Sample");
+                    StripMissingValues(newNode, "Depth");
+                    StripMissingValues(newNode, "Thickness");
+                    StripMissingValues(newNode, "NO3");
+                    StripMissingValues(newNode, "NH4");
+                    StripMissingValues(newNode, "SW");
+                    StripMissingValues(newNode, "OC");
+                    StripMissingValues(newNode, "EC");
+                    StripMissingValues(newNode, "PH");
+                    StripMissingValues(newNode, "CL");
+                    StripMissingValues(newNode, "ESP");
                 }
                 else if (compNode.Name.ToLower() == "water")
                 {
                     newNode = this.ImportWater(compNode, destParent, newNode);
+                }
+                else if (compNode.Name.ToLower() == "layerstructure")
+                {
+                    newNode = CopyNode(compNode, destParent, "LayerStructure");
+                }
+                else if (compNode.Name.ToLower() == "swim")
+                {
+                    newNode = CopyNode(compNode, destParent, "Swim3");
+                    this.AddCompNode(destParent, "SoilNitrogen", "SoilNitrogen");
+                    this.AddCompNode(destParent, "CERESSoilTemperature", "CERESSoilTemperature");
+
+                    // may need to copy more details for SoilNitrogen
                 }
                 else if (compNode.Name.ToLower() == "soilwater")
                 {
@@ -340,6 +362,12 @@
                 else if (compNode.Name == "Analysis")
                 {
                     newNode = CopyNode(compNode, destParent, "Analysis");
+                    StripMissingValues(newNode, "Depth");
+                    StripMissingValues(newNode, "Thickness");
+                    StripMissingValues(newNode, "EC");
+                    StripMissingValues(newNode, "PH");
+                    StripMissingValues(newNode, "CL");
+                    StripMissingValues(newNode, "ESP");
                 }
                 else if (compNode.Name == "SoilCrop")
                 {
@@ -410,6 +438,17 @@
                 throw new Exception("Cannot import " + compNode.Name + " :Error - " + exp.ToString() + "\n");
             }
             return newNode;
+        }
+
+        private void StripMissingValues(XmlNode newNode, string arrayName)
+        {
+            var values = XmlUtilities.Values(newNode, arrayName + "/double");
+            var indexOfFirstMissing = values.FindIndex(value => string.IsNullOrEmpty(value) || value == "999999" || value == "NaN");
+            if (indexOfFirstMissing != -1)
+            {
+                values.RemoveRange(indexOfFirstMissing, values.Count - indexOfFirstMissing);
+                XmlUtilities.SetValues(newNode, arrayName + "/double", values);
+            }
         }
 
         /// <summary>

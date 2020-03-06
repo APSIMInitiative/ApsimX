@@ -358,7 +358,6 @@
     <Compile Include="Views\CheckBoxView.cs" />
     <Compile Include="Views\CloudJobView.cs" />
     <Compile Include="Views\ColourDropDownView.cs" />
-    <Compile Include="Views\DataStoreView.cs" />
     <Compile Include="Views\DoubleEditView.cs" />
     <Compile Include="Views\DropDownView.cs" />
     <Compile Include="Views\EditBoxView.cs" />
