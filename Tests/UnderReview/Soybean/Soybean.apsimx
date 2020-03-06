@@ -2,7 +2,7 @@
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
   "Version": 79,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-03",
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-04",
   "Name": "Simulations",
   "Children": [
     {
@@ -7771,22 +7771,6 @@
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNO3",
-                                        "Location": "688, 415",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNH4",
-                                        "Location": "691, 421",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
                                       }
                                     ],
                                     "Arcs": [
@@ -8920,12 +8904,12 @@
                                       "SimulationName": null,
                                       "Name": "EventNamesOnGraph",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -8955,7 +8939,7 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -8985,12 +8969,12 @@
                                   "Filter": null,
                                   "Name": "Predicted1",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -9053,7 +9037,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -9083,12 +9067,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -13157,22 +13141,6 @@
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNO3",
-                                        "Location": "688, 415",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNH4",
-                                        "Location": "691, 421",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
                                       }
                                     ],
                                     "Arcs": [
@@ -14546,12 +14514,12 @@
                                       "SimulationName": null,
                                       "Name": "EventNamesOnGraph",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -14581,7 +14549,7 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -14611,12 +14579,12 @@
                                   "Filter": null,
                                   "Name": "Predicted1",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -14679,7 +14647,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -14709,80 +14677,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Graph.Graph, Models",
-                              "Caption": null,
-                              "Axis": [
-                                {
-                                  "$type": "Models.Graph.Axis, Models",
-                                  "Type": 3,
-                                  "Title": null,
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": true,
-                                  "CrossesAtZero": false
-                                },
-                                {
-                                  "$type": "Models.Graph.Axis, Models",
-                                  "Type": 0,
-                                  "Title": null,
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": false,
-                                  "CrossesAtZero": false
-                                }
-                              ],
-                              "LegendPosition": 0,
-                              "LegendOrientation": 0,
-                              "DisabledSeries": [],
-                              "LegendOutsideGraph": false,
-                              "Name": "PP",
-                              "Children": [
-                                {
-                                  "$type": "Models.Graph.Series, Models",
-                                  "Type": 1,
-                                  "XAxis": 3,
-                                  "YAxis": 0,
-                                  "ColourArgb": -16777216,
-                                  "FactorToVaryColours": "Sow",
-                                  "FactorToVaryMarkers": null,
-                                  "FactorToVaryLines": null,
-                                  "Marker": 11,
-                                  "MarkerSize": 0,
-                                  "Line": 0,
-                                  "LineThickness": 0,
-                                  "Checkpoint": "Current",
-                                  "TableName": "DailyReport",
-                                  "XFieldName": "Clock.Today",
-                                  "YFieldName": "Soybean.Phenology.Photoperiod",
-                                  "X2FieldName": "",
-                                  "Y2FieldName": "",
-                                  "ShowInLegend": false,
-                                  "IncludeSeriesNameInLegend": false,
-                                  "Cumulative": false,
-                                  "CumulativeX": false,
-                                  "Filter": null,
-                                  "Name": "PPModifier",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -16061,7 +15961,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -16091,12 +15991,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -16159,7 +16059,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -16189,12 +16089,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -16257,7 +16157,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -16287,12 +16187,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -16453,7 +16353,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -16483,12 +16383,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -17237,7 +17137,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -17267,17 +17167,17 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -18848,22 +18748,6 @@
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNO3",
-                                        "Location": "688, 415",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNH4",
-                                        "Location": "691, 421",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
                                       }
                                     ],
                                     "Arcs": [
@@ -19334,7 +19218,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -19364,12 +19248,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -19432,7 +19316,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -19462,12 +19346,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -19530,7 +19414,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -19551,6 +19435,104 @@
                                   "TableName": "Observed",
                                   "XFieldName": "Clock.Today",
                                   "YFieldName": "Soybean.Grain.Wt",
+                                  "X2FieldName": "",
+                                  "Y2FieldName": "",
+                                  "ShowInLegend": false,
+                                  "IncludeSeriesNameInLegend": false,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Observed",
+                                  "Children": [],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Graph.Graph, Models",
+                              "Caption": null,
+                              "Axis": [
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 3,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": true,
+                                  "CrossesAtZero": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 0,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                }
+                              ],
+                              "LegendPosition": 0,
+                              "LegendOrientation": 0,
+                              "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
+                              "Name": "PodWt",
+                              "Children": [
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -16777216,
+                                  "FactorToVaryColours": "Sow",
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": null,
+                                  "Marker": 11,
+                                  "MarkerSize": 0,
+                                  "Line": 0,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "DailyReport",
+                                  "XFieldName": "Clock.Today",
+                                  "YFieldName": "Soybean.Pod.Wt",
+                                  "X2FieldName": "",
+                                  "Y2FieldName": "",
+                                  "ShowInLegend": false,
+                                  "IncludeSeriesNameInLegend": false,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Predicted",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -16777216,
+                                  "FactorToVaryColours": "Sow",
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": null,
+                                  "Marker": 0,
+                                  "MarkerSize": 0,
+                                  "Line": 4,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "Observed",
+                                  "XFieldName": "Clock.Today",
+                                  "YFieldName": "Soybean.Pod.Wt",
                                   "X2FieldName": "",
                                   "Y2FieldName": "",
                                   "ShowInLegend": false,
@@ -19736,7 +19718,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -19766,12 +19748,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -19834,7 +19816,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -19864,12 +19846,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -20147,104 +20129,6 @@
                                   "CumulativeX": false,
                                   "Filter": null,
                                   "Name": "Predicted1",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Graph.Graph, Models",
-                              "Caption": null,
-                              "Axis": [
-                                {
-                                  "$type": "Models.Graph.Axis, Models",
-                                  "Type": 3,
-                                  "Title": null,
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": true,
-                                  "CrossesAtZero": false
-                                },
-                                {
-                                  "$type": "Models.Graph.Axis, Models",
-                                  "Type": 0,
-                                  "Title": null,
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": false,
-                                  "CrossesAtZero": false
-                                }
-                              ],
-                              "LegendPosition": 0,
-                              "LegendOrientation": 0,
-                              "DisabledSeries": [],
-                              "LegendOutsideGraph": false,
-                              "Name": "Biomass",
-                              "Children": [
-                                {
-                                  "$type": "Models.Graph.Series, Models",
-                                  "Type": 1,
-                                  "XAxis": 3,
-                                  "YAxis": 0,
-                                  "ColourArgb": -16777216,
-                                  "FactorToVaryColours": "Sow",
-                                  "FactorToVaryMarkers": null,
-                                  "FactorToVaryLines": null,
-                                  "Marker": 11,
-                                  "MarkerSize": 0,
-                                  "Line": 0,
-                                  "LineThickness": 0,
-                                  "Checkpoint": "Current",
-                                  "TableName": "DailyReport",
-                                  "XFieldName": "Clock.Today",
-                                  "YFieldName": "Soybean.AboveGround.Wt",
-                                  "X2FieldName": "",
-                                  "Y2FieldName": "",
-                                  "ShowInLegend": false,
-                                  "IncludeSeriesNameInLegend": false,
-                                  "Cumulative": false,
-                                  "CumulativeX": false,
-                                  "Filter": null,
-                                  "Name": "Predicted",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Graph.Series, Models",
-                                  "Type": 1,
-                                  "XAxis": 3,
-                                  "YAxis": 0,
-                                  "ColourArgb": -16777216,
-                                  "FactorToVaryColours": "Sow",
-                                  "FactorToVaryMarkers": null,
-                                  "FactorToVaryLines": null,
-                                  "Marker": 0,
-                                  "MarkerSize": 0,
-                                  "Line": 4,
-                                  "LineThickness": 0,
-                                  "Checkpoint": "Current",
-                                  "TableName": "Observed",
-                                  "XFieldName": "Clock.Today",
-                                  "YFieldName": "Soybean.AboveGround.Wt",
-                                  "X2FieldName": "",
-                                  "Y2FieldName": "",
-                                  "ShowInLegend": false,
-                                  "IncludeSeriesNameInLegend": false,
-                                  "Cumulative": false,
-                                  "CumulativeX": false,
-                                  "Filter": null,
-                                  "Name": "Observed",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -23038,22 +22922,6 @@
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNO3",
-                                        "Location": "688, 415",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNH4",
-                                        "Location": "691, 421",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
                                       }
                                     ],
                                     "Arcs": [
@@ -24159,7 +24027,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -24189,12 +24057,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -24257,7 +24125,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -24287,12 +24155,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -24687,7 +24555,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -24717,12 +24585,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -24785,7 +24653,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -24815,12 +24683,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -25177,7 +25045,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -25207,12 +25075,12 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -25315,7 +25183,7 @@
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -26059,7 +25927,7 @@
                                   "Filter": null,
                                   "Name": "Predicted",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -26089,17 +25957,17 @@
                                   "Filter": null,
                                   "Name": "Observed",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -28363,22 +28231,6 @@
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNO3",
-                                        "Location": "688, 415",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNH4",
-                                        "Location": "691, 421",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
                                       }
                                     ],
                                     "Arcs": [
@@ -29273,22 +29125,6 @@
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNO3",
-                                        "Location": "688, 415",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNH4",
-                                        "Location": "691, 421",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
                                       }
                                     ],
                                     "Arcs": [
@@ -30183,22 +30019,6 @@
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNO3",
-                                        "Location": "688, 415",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNH4",
-                                        "Location": "691, 421",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
                                       }
                                     ],
                                     "Arcs": [
@@ -31631,22 +31451,6 @@
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNO3",
-                                        "Location": "688, 415",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNH4",
-                                        "Location": "691, 421",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
                                       }
                                     ],
                                     "Arcs": [
@@ -32722,22 +32526,6 @@
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNO3",
-                                        "Location": "688, 415",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNH4",
-                                        "Location": "691, 421",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
                                       }
                                     ],
                                     "Arcs": [
@@ -34612,22 +34400,6 @@
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNO3",
-                                        "Location": "688, 415",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNH4",
-                                        "Location": "691, 421",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
                                       }
                                     ],
                                     "Arcs": [
@@ -35595,22 +35367,6 @@
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNO3",
-                                        "Location": "688, 415",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNH4",
-                                        "Location": "691, 421",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
                                       }
                                     ],
                                     "Arcs": [
@@ -36951,22 +36707,6 @@
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNO3",
-                                        "Location": "688, 415",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNH4",
-                                        "Location": "691, 421",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
                                       }
                                     ],
                                     "Arcs": [
@@ -40617,22 +40357,6 @@
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNO3",
-                                        "Location": "688, 415",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNH4",
-                                        "Location": "691, 421",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
                                       }
                                     ],
                                     "Arcs": [
@@ -44159,22 +43883,6 @@
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNO3",
-                                        "Location": "688, 415",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNH4",
-                                        "Location": "691, 421",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
                                       }
                                     ],
                                     "Arcs": [
@@ -45734,22 +45442,6 @@
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNO3",
-                                        "Location": "688, 415",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNH4",
-                                        "Location": "691, 421",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
                                       }
                                     ],
                                     "Arcs": [
@@ -49581,22 +49273,6 @@
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNO3",
-                                        "Location": "688, 415",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNH4",
-                                        "Location": "691, 421",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
                                       }
                                     ],
                                     "Arcs": [
@@ -50110,17 +49786,17 @@
                                   "showEquation": true,
                                   "Name": "Regression",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -50190,22 +49866,22 @@
                                   "showEquation": true,
                                   "Name": "Regression",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -51610,22 +51286,6 @@
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNO3",
-                                        "Location": "688, 415",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNH4",
-                                        "Location": "691, 421",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
                                       }
                                     ],
                                     "Arcs": [
@@ -53361,22 +53021,6 @@
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNO3",
-                                        "Location": "688, 415",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNH4",
-                                        "Location": "691, 421",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
                                       }
                                     ],
                                     "Arcs": [
@@ -54866,22 +54510,6 @@
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNO3",
-                                        "Location": "688, 415",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNH4",
-                                        "Location": "691, 421",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
                                       }
                                     ],
                                     "Arcs": [
@@ -56823,22 +56451,6 @@
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNO3",
-                                        "Location": "688, 415",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNH4",
-                                        "Location": "691, 421",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
                                       }
                                     ],
                                     "Arcs": [
@@ -58882,22 +58494,6 @@
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNO3",
-                                        "Location": "688, 415",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNH4",
-                                        "Location": "691, 421",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
                                       }
                                     ],
                                     "Arcs": [
@@ -59995,22 +59591,6 @@
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNO3",
-                                        "Location": "688, 415",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNH4",
-                                        "Location": "691, 421",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
                                       }
                                     ],
                                     "Arcs": [
@@ -61028,86 +60608,6 @@
               "LegendOrientation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
-              "Name": "RootDepth",
-              "Children": [
-                {
-                  "$type": "Models.Graph.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Experiment",
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 0,
-                  "MarkerSize": 0,
-                  "Line": 4,
-                  "LineThickness": 0,
-                  "Checkpoint": "Current",
-                  "TableName": "PredictedObserved",
-                  "XFieldName": "Observed.Soybean.Root.Depth",
-                  "YFieldName": "Predicted.Soybean.Root.Depth",
-                  "X2FieldName": "",
-                  "Y2FieldName": "",
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Series1",
-                  "Children": [
-                    {
-                      "$type": "Models.Graph.Regression, Models",
-                      "ForEachSeries": false,
-                      "showOneToOne": true,
-                      "showEquation": true,
-                      "Name": "Regression",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 3,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 0,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                }
-              ],
-              "LegendPosition": 3,
-              "LegendOrientation": 0,
-              "DisabledSeries": [],
-              "LegendOutsideGraph": false,
               "Name": "PodWt",
               "Children": [
                 {
@@ -62034,22 +61534,6 @@
                                     "Colour": "White",
                                     "OutlineColour": "White",
                                     "Transparent": true
-                                  },
-                                  {
-                                    "$type": "Models.Graph.Node, Models",
-                                    "Name": "PlantAvailableNO3",
-                                    "Location": "688, 415",
-                                    "Colour": "86, 180, 233",
-                                    "OutlineColour": "Black",
-                                    "Transparent": false
-                                  },
-                                  {
-                                    "$type": "Models.Graph.Node, Models",
-                                    "Name": "PlantAvailableNH4",
-                                    "Location": "691, 421",
-                                    "Colour": "86, 180, 233",
-                                    "OutlineColour": "Black",
-                                    "Transparent": false
                                   }
                                 ],
                                 "Arcs": [
@@ -63279,22 +62763,6 @@
                                     "Colour": "White",
                                     "OutlineColour": "White",
                                     "Transparent": true
-                                  },
-                                  {
-                                    "$type": "Models.Graph.Node, Models",
-                                    "Name": "PlantAvailableNO3",
-                                    "Location": "688, 415",
-                                    "Colour": "86, 180, 233",
-                                    "OutlineColour": "Black",
-                                    "Transparent": false
-                                  },
-                                  {
-                                    "$type": "Models.Graph.Node, Models",
-                                    "Name": "PlantAvailableNH4",
-                                    "Location": "691, 421",
-                                    "Colour": "86, 180, 233",
-                                    "OutlineColour": "Black",
-                                    "Transparent": false
                                   }
                                 ],
                                 "Arcs": [
@@ -64631,22 +64099,6 @@
                                     "Colour": "White",
                                     "OutlineColour": "White",
                                     "Transparent": true
-                                  },
-                                  {
-                                    "$type": "Models.Graph.Node, Models",
-                                    "Name": "PlantAvailableNO3",
-                                    "Location": "688, 415",
-                                    "Colour": "86, 180, 233",
-                                    "OutlineColour": "Black",
-                                    "Transparent": false
-                                  },
-                                  {
-                                    "$type": "Models.Graph.Node, Models",
-                                    "Name": "PlantAvailableNH4",
-                                    "Location": "691, 421",
-                                    "Colour": "86, 180, 233",
-                                    "OutlineColour": "Black",
-                                    "Transparent": false
                                   }
                                 ],
                                 "Arcs": [
