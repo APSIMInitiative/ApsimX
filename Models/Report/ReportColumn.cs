@@ -216,17 +216,13 @@
             this.Name = columnName;
             this.locator = locator;
             this.clock = clock;
-            try
+            IVariable var = locator.GetObject(variableName);
+            if (var != null)
             {
-                IVariable var = locator.GetObject(variableName);
-                if (var != null)
-                {
-                    Units = var.UnitsLabel;
-                    if (Units != null && Units.StartsWith("(") && Units.EndsWith(")"))
-                        Units = Units.Substring(1, Units.Length - 2);
-                }
+                Units = var.UnitsLabel;
+                if (Units != null && Units.StartsWith("(") && Units.EndsWith(")"))
+                    Units = Units.Substring(1, Units.Length - 2);
             }
-            catch (Exception) { }
         }
 
         /// <summary>
@@ -353,17 +349,7 @@
         /// </summary>
         private object GetVariableValue()
         {
-            object value = null;
-            //try
-            //{
-                value = locator.Get(variableName);
-            //}
-            //catch (Exception)
-            //{
-            //    // Swallow exception because reporting sum(Wheat.Root.PlantZone.WaterUptake) will
-            //    // throw an exception before the crop is sown. We don't want this to stop the
-            //    // simulation. Instead, simply report null.
-            //}
+            object value = locator.Get(variableName);
             if (value == null)
                 throw new Exception($"Unable to locate report variable: {variableName}");
             if (value is IFunction function)
