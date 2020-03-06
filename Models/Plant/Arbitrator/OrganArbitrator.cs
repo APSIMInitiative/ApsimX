@@ -37,7 +37,7 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IPlant))]
-    public class PriorityArbitrator : Model, IUptake, IArbitrator, ICustomDocumentation
+    public class OrganArbitrator : Model, IUptake, IArbitrator, ICustomDocumentation
     {
         ///1. Links
         ///------------------------------------------------------------------------------------------------
