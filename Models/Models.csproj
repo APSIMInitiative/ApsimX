@@ -272,6 +272,9 @@
     <Compile Include="Graph\MultiDescriptorPainter.cs" />
     <Compile Include="Graph\SequentialPainter.cs" />
     <Compile Include="Graph\SeriesDefinition.cs" />
+    <Compile Include="Lifecycle\ILifeStageProcess.cs" />
+    <Compile Include="Lifecycle\LifestageTransfer.cs" />
+    <Compile Include="Lifecycle\LifestageGrowth.cs" />
     <Compile Include="Lifecycle\PlantAssimilateConsumption.cs" />
     <Compile Include="Lifecycle\PlantOrganFunctionalDimensionReduction.cs" />
     <Compile Include="Lifecycle\PlantOrganConsumption.cs" />
@@ -335,7 +338,7 @@
     <Compile Include="Sensitivity\SensitivityParameter.cs" />
     <Compile Include="Sensitivity\Sobol.cs" />
     <Compile Include="Sensitivity\Morris.cs" />
-    <Compile Include="Lifecycle\LifestageImmigrationProcess.cs" />
+    <Compile Include="Lifecycle\LifestageImmigration.cs" />
     <Compile Include="Functions\AccumulateByDate.cs" />
     <Compile Include="Functions\AccumulateByNumericPhase.cs" />
     <Compile Include="Functions\TrackerFunction.cs" />
@@ -386,8 +389,8 @@
     <Compile Include="Lifecycle\Cohort.cs" />
     <Compile Include="Lifecycle\Lifecycle.cs" />
     <Compile Include="Lifecycle\Lifestage.cs" />
-    <Compile Include="Lifecycle\LifestageProcess.cs" />
-    <Compile Include="Lifecycle\LifestageReproductionProcess.cs" />
+    <Compile Include="Lifecycle\LifestageMortality.cs" />
+    <Compile Include="Lifecycle\LifestageReproduction.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="MicroClimate\MicroClimateCanopy.cs" />
     <Compile Include="MicroClimate\MicroClimateZone.cs" />
