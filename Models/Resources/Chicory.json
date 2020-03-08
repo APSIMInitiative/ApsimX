@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 80,
+  "Version": 81,
   "Name": "Simulations",
   "Children": [
     {
@@ -6144,6 +6144,26 @@
                       "ReadOnly": false
                     }
                   ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.014,
+              "Units": "gN/gDM",
+              "Name": "CriticalNConc",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "This lowest N concentration for roots and represents the N content for structural tissues.  Published values suggest that the concentration in roots is much less variable than for taproots and it is on average higher too.  The lower values vary around 1.4% ([BausenweinEtAl_2001]; [ZagalEtAl_2001]; [JurgonskiEtAl_2011]). ",
+                  "Name": "Description",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
