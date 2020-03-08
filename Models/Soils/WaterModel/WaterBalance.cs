@@ -303,7 +303,7 @@
 
             SoluteFlowEfficiency = 1;
             double waterTableDepth = waterTableModel.Value();
-            FlowNO3 = CalculateSoluteMovementUpDown(NO3Values, Water, Flow, SoluteFlowEfficiency);
+            FlowNO3 = CalculateSoluteMovementUp(NO3Values, Water, Flow, SoluteFlowEfficiency);
             //double[] NH4Up = CalculateSoluteMovementUpDown(NH4.kgha, Water, Flow, SoluteFlowEfficiency);
             MoveUp(NO3Values, FlowNO3);
             //MoveUp(NH4Values, NH4Up);
@@ -373,7 +373,6 @@
             double[] soluteUp = CalculateSoluteMovementUp(solute, water, flux, efficiency);
             //MoveUp(solute, soluteUp);
             double[] soluteDown = CalculateSoluteMovementDown(solute, water, flux, efficiency);
-            //MoveDown(solute, soluteDown);
             return MathUtilities.Subtract(soluteUp, soluteDown);
         }
 
@@ -385,13 +384,31 @@
         /// <returns></returns>
         private static double[] CalculateSoluteMovementUp(double[] solute, double[] water, double[] flow, double efficiency)
         {
+            // flow[i] is the water coming into a layer from the layer below
             double[] soluteFlow = new double[solute.Length];
-            for (int i = solute.Length-1; i >= 0;  i--)
+            for (int i = solute.Length - 1; i > 0; i--)
             {
                 if (i == solute.Length - 1)
+                    // soluteFlow[i] = 0;?
                     soluteFlow[i] = flow[i] * solute[i] / (water[i] - flow[i]);
                 else
-                    soluteFlow[i] = flow[i] * (solute[i] + soluteFlow[i + 1]) / (water[i] - flow[i] + flow[i+1]);
+                {
+                    double initialWater = water[i];
+                    double waterComingIn = flow[i];
+                    double waterMovingOut = flow[i - 1];
+                    double totalWater = initialWater + waterComingIn - waterMovingOut;
+
+                    double initialSolute = solute[i];
+
+                    // soluteFlow[i] is the solutes flowing into this layer from the layer below.
+                    // this is the water moving into this layer * solute concentration. That is,
+                    // water in this layer * solute in this layer / water in this layer.
+                    //
+                    // todo: should this be solute[i + 1] because solute concenctration in the water
+                    // should actually be the solute concenctration in the water moving into this layer
+                    // from the layer below.
+                    soluteFlow[i] = flow[i] * solute[i] / totalWater;
+                }
             }
 
             return soluteFlow;
