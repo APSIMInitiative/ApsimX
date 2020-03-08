@@ -303,7 +303,7 @@
 
             SoluteFlowEfficiency = 1;
             double waterTableDepth = waterTableModel.Value();
-            FlowNO3 = CalculateSoluteMovementUp(NO3Values, Water, Flow, SoluteFlowEfficiency);
+            FlowNO3 = CalculateSoluteMovementUpDown(NO3Values, Water, Flow, SoluteFlowEfficiency);
             //double[] NH4Up = CalculateSoluteMovementUpDown(NH4.kgha, Water, Flow, SoluteFlowEfficiency);
             MoveUp(NO3Values, FlowNO3);
             //MoveUp(NH4Values, NH4Up);
@@ -373,6 +373,7 @@
             double[] soluteUp = CalculateSoluteMovementUp(solute, water, flux, efficiency);
             //MoveUp(solute, soluteUp);
             double[] soluteDown = CalculateSoluteMovementDown(solute, water, flux, efficiency);
+            //MoveDown(solute, soluteDown);
             return MathUtilities.Subtract(soluteUp, soluteDown);
         }
 
@@ -387,11 +388,10 @@
             double[] soluteFlow = new double[solute.Length];
             for (int i = solute.Length-1; i >= 0;  i--)
             {
-                double proportionMoving = flow[i] / water[i];
                 if (i == solute.Length - 1)
-                    soluteFlow[i] = solute[i] * proportionMoving * efficiency;
+                    soluteFlow[i] = flow[i] * solute[i] / (water[i] - flow[i]);
                 else
-                    soluteFlow[i] = (solute[i] + soluteFlow[i + 1]) * proportionMoving * efficiency;
+                    soluteFlow[i] = flow[i] * (solute[i] + soluteFlow[i + 1]) / (water[i] - flow[i] + flow[i+1]);
             }
 
             return soluteFlow;
