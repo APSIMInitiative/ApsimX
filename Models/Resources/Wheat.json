@@ -1183,15 +1183,6 @@
               "ReadOnly": false
             },
             {
-                  "$type": "Models.Functions.ExpressionFunction, Models",
-                  "Expression": "1/(0.004996+(([Structure].MaxLAR-0.004996)*[Structure].PTQ)/ (1.9807+[Structure].PTQ))",
-                  "Name": "PhyllochroPTQ",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-	    {
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 120.0,
               "Units": "oC.d",
@@ -1241,9 +1232,19 @@
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
+	  
         },
         {
-          "$type": "Models.Functions.MultiplyFunction, Models",
+                            "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Expression": "1/(0.004996+(([Structure].MaxLAR-0.004996)*[Structure].PTQ)/ (1.9807+[Structure].PTQ))",
+                  "Name": "PhyllochroPTQ",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+	    {
+	  "$type": "Models.Functions.MultiplyFunction, Models",
           "Name": "BranchingRate",
           "Children": [
             {
