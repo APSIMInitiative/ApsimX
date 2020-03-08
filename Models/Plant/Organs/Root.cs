@@ -624,13 +624,15 @@
             {
                 Z.StructuralNDemand = new double[Z.soil.Thickness.Length];
                 Z.StorageNDemand = new double[Z.soil.Thickness.Length];
+                Z.MetabolicNDemand = new double[Z.soil.Thickness.Length];
                 //Note: MetabolicN is assumed to be zero
 
                 double[] RAw = Z.CalculateRootActivityValues();
                 for (int i = 0; i < Z.LayerLive.Length; i++)
                 {
-                    Z.StructuralNDemand[i] = NDemand.Structural * RAw[i] / TotalRAw;
-                    Z.StorageNDemand[i] = 0; //sorghum isn't using metabolic storage in roots;
+                    Z.StructuralNDemand[i] = NDemand.Structural;
+                    Z.StorageNDemand[i] = NDemand.Storage;
+                    Z.MetabolicNDemand[i] = NDemand.Metabolic;
                 }
             }
         }
