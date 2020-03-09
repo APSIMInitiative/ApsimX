@@ -612,8 +612,14 @@
         {
             //TODO jb check if this is correct usage - possibly copied over by arbitrator
             NDemand.Structural = nDemands.Structural.Value();
+            if (NDemand.Structural < 0)
+                throw new Exception("Structural N demand function in root returning negative, check parameterisation");
             NDemand.Metabolic = nDemands.Metabolic.Value();
+            if (NDemand.Metabolic < 0)
+                throw new Exception("Structural N demand function in root returning negative, check parameterisation");
             NDemand.Storage = nDemands.Storage.Value();
+            if (NDemand.Storage < 0)
+                throw new Exception("Structural N demand function in root returning negative, check parameterisation");
 
             //The DM is allocated using CalculateRootActivityValues to proportion between layers
             double TotalRAw = 0;
@@ -792,11 +798,13 @@
         {
             double totalStructuralNDemand = 0;
             double totalStorageNDemand = 0;
+            double totalMetabolicDemand = 0;
 
             foreach (ZoneState Z in Zones)
             {
                 totalStructuralNDemand += MathUtilities.Sum(Z.StructuralNDemand);
                 totalStorageNDemand += MathUtilities.Sum(Z.StorageNDemand);
+                totalMetabolicDemand += MathUtilities.Sum(Z.MetabolicNDemand);
             }
             NTakenUp = nitrogen.Uptake;
             Allocated.StructuralN = nitrogen.Structural;
@@ -824,6 +832,13 @@
                         double NonStructFrac = Z.StorageNDemand[i] / totalStorageNDemand;
                         Z.LayerLive[i].StorageN += nitrogen.Storage * NonStructFrac;
                         NAllocated += nitrogen.Storage * NonStructFrac;
+                    }
+
+                    if (totalMetabolicDemand > 0)
+                    {
+                        double MetabolFrac = Z.MetabolicNDemand[i] / totalMetabolicDemand;
+                        Z.LayerLive[i].MetabolicN += nitrogen.Metabolic * MetabolFrac;
+                        NAllocated += nitrogen.Metabolic * MetabolFrac;
                     }
                 }
             }
