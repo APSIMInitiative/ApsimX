@@ -2,7 +2,7 @@
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 587,
   "Version": 80,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-06",
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-10",
   "Name": "Simulations",
   "Children": [
     {
@@ -1824,7 +1824,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "Inert",
                         "Location": "656, 254",
-                        "Colour": "0, 158, 115",
+                        "Colour": "0, 114, 178",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -1832,7 +1832,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "SurfaceResidue",
                         "Location": "566, 69",
-                        "Colour": "0, 158, 115",
+                        "Colour": "0, 114, 178",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -1840,7 +1840,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "FOMLignin",
                         "Location": "261, 69",
-                        "Colour": "0, 158, 115",
+                        "Colour": "0, 114, 178",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -1848,7 +1848,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "FOMCellulose",
                         "Location": "397, 70",
-                        "Colour": "0, 158, 115",
+                        "Colour": "0, 114, 178",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -1856,7 +1856,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "FOMCarbohydrate",
                         "Location": "123, 70",
-                        "Colour": "0, 158, 115",
+                        "Colour": "0, 114, 178",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -1864,7 +1864,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "Microbial",
                         "Location": "218, 299",
-                        "Colour": "0, 158, 115",
+                        "Colour": "0, 114, 178",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -1872,7 +1872,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "Humic",
                         "Location": "458, 293",
-                        "Colour": "0, 158, 115",
+                        "Colour": "0, 114, 178",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -1880,7 +1880,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "Urea",
                         "Location": "529, 419",
-                        "Colour": "86, 180, 233",
+                        "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -1888,7 +1888,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "NO3",
                         "Location": "185, 435",
-                        "Colour": "86, 180, 233",
+                        "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -1896,7 +1896,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "NH4",
                         "Location": "357, 422",
-                        "Colour": "86, 180, 233",
+                        "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -2065,11 +2065,9 @@
                 "sum([Soil].DULmm) as TotalDUL",
                 "sum([Soil].LL15mm) as TotalLL15",
                 "[Fertiliser].NitrogenApplied as FertiliserN",
-                "sum([Soil].SoilNitrogen.Denitrification) as DenitrifiedN",
                 "([Soil].SoilWater.LeachNH4 + [Soil].SoilWater.LeachNO3) as LeachedN",
                 "(-1*[RedClover].Root.NUptake) as UptakeN",
                 "[RedClover].Nodule.NFixed as FixedN",
-                "(sum([Soil].SoilNitrogen.Urea.kgha) + sum([Soil].SoilNitrogen.NH4.kgha) + sum([Soil].SoilNitrogen.NO3.kgha)) as SoilNContent",
                 "",
                 "[RedClover].Total.Wt",
                 "[RedClover].AboveGround.Wt",
