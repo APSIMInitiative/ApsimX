@@ -1652,8 +1652,9 @@
             foreach (JObject graph in JsonUtilities.ChildrenRecursively(root, "Graph"))
             {
                 JArray axes = graph["Axis"] as JArray;
-                foreach (JObject axis in axes)
-                    axis["$type"] = axis["$type"].ToString().Replace("Models.Graph", "Models");
+                if (axes != null)
+                    foreach (JObject axis in axes)
+                        axis["$type"] = axis["$type"].ToString().Replace("Models.Graph", "Models");
             }
 
             // Fix nutrient directed graphs - the nodes/arcs are not children, but
@@ -1663,11 +1664,13 @@
                 JObject directedGraph = nutrient["DirectedGraphInfo"] as JObject;
                 directedGraph["$type"] = directedGraph["$type"].ToString().Replace("Models.Graph.", "Models.");
                 JArray nodes = directedGraph["Nodes"] as JArray;
-                foreach (JObject node in nodes)
-                    node["$type"] = node["$type"].ToString().Replace("Models.Graph.", "Models.");
+                if (nodes != null)
+                    foreach (JObject node in nodes)
+                        node["$type"] = node["$type"].ToString().Replace("Models.Graph.", "Models.");
                 JArray arcs = directedGraph["Arcs"] as JArray;
-                foreach (JObject arc in arcs)
-                    arc["$type"] = arc["$type"].ToString().Replace("Models.Graph.", "Models.");
+                if (arcs != null)
+                    foreach (JObject arc in arcs)
+                        arc["$type"] = arc["$type"].ToString().Replace("Models.Graph.", "Models.");
             }
 
             // Replace ExcelMultiInput with an ExcelInput.
