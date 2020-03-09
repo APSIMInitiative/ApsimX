@@ -11,9 +11,9 @@
           "$type": "Models.Surface.ResidueType, Models",
           "fom_type": "base_type",
           "fraction_C": 0.4,
-          "po4ppm": 0.0,
-          "nh4ppm": 0.0,
-          "no3ppm": 0.0,
+          "po4ppm": 0,
+          "nh4ppm": 0,
+          "no3ppm": 0,
           "specific_area": 0.0005,
           "cf_contrib": 1,
           "pot_decomp_rate": 0.1,
@@ -37,7 +37,7 @@
           "$type": "Models.Surface.ResidueType, Models",
           "derived_from": "base_type",
           "fom_type": "inert",
-          "pot_decomp_rate": 0.0
+          "pot_decomp_rate": 0
         }
       ]
     }

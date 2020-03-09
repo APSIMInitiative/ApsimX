@@ -54,21 +54,22 @@ namespace UserInterface.Presenters
             string htmlString = "<!DOCTYPE html>\n" +
                 "<html>\n<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n<style>\n" +
                 "body {color: [FontColor]; max-width:1000px; font-size:10pt;}" + 
-                "th,td {padding:5px; }" +
-                "th,td {border: 1px dotted Black; }" +
-                "table {border: 0px none #009999; border-collapse: collapse; }" +
-                ".disabled {color: #cccccc; }" +
+                "th,td {padding:5px;}" +
+                "th,td {border: 1px dotted [GridColor]; }" +
+                "table {border: 0px none #009999; border-collapse: collapse;}" +
+                "table.main {[TableBackground] }" +
+                "table.main tr td.disabled {color: [DisabledColour]; }" +
                 ".dot { margin:auto; display:block; height:20px; width:20px; line-height:20px; background-color:black; -moz-border-radius: 10px; border-radius: 10px; }" +
                 ".dot1 { background-color:lightgreen; }" +
                 ".dot2 { background-color:lightskyblue; }" +
                 ".dot4 { background-color:coral; }" +
                 ".dot3 { background-color:lightpink; }" +
                 ".warningbanner {background-color:orange; border-radius:5px 5px 0px 0px; color:white; padding:5px; font-weight:bold }" +
-                ".warningcontent {background-color:#FFFFFA; margin-bottom:20px; border-radius:0px 0px 5px 5px; border-color:orange; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
+                ".warningcontent {background-color:[WarningBackground]; margin-bottom:20px; border-radius:0px 0px 5px 5px; border-color:orange; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
                 ".messagebanner {background-color:CornflowerBlue; border-radius:5px 5px 0px 0px; color:white; padding:5px; font-weight:bold }" +
-                ".messagecontent {background-color:#FAFAFF; margin-bottom:20px; border-radius:0px 0px 5px 5px; border-color:CornflowerBlue; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
+                ".messagecontent {background-color:[MessageBackground]; margin-bottom:20px; border-radius:0px 0px 5px 5px; border-color:CornflowerBlue; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
                 "li {margin-bottom:10px;}" +
-                "table.blank td {border: 0px none Black; }" +
+                "table.blank td {border: 0px none [GridColor]; }" +
                 "table.blank {border: 0px none #009999; border-collapse: collapse; }" +
                 "table th:first-child {text-align:left; }" +
                 "table th:nth-child(n+2) { /* Safari */ - webkit - transform: rotate(-90deg); /* Firefox */ -moz - transform: rotate(-90deg); /* IE */ -ms - transform: rotate(-90deg); /* Opera */ -o - transform: rotate(-90deg); /* Internet Explorer */ filter: progid: DXImageTransform.Microsoft.BasicImage(rotation = 3);  }" +
@@ -83,11 +84,21 @@ namespace UserInterface.Presenters
             {
                 // light theme
                 htmlString = htmlString.Replace("[FontColor]", "#000000");
+                htmlString = htmlString.Replace("[GridColor]", "Black");
+                htmlString = htmlString.Replace("[WarningBackground]", "#FFFFFA");
+                htmlString = htmlString.Replace("[MessageBackground]", "#FAFAFF");
+                htmlString = htmlString.Replace("[DisabledColour]", "#cccccc");
+                htmlString = htmlString.Replace("[TableBackground]", "background-color: white;");
             }
             else
             {
                 // dark theme
                 htmlString = htmlString.Replace("[FontColor]", "#E5E5E5");
+                htmlString = htmlString.Replace("[GridColor]", "#888");
+                htmlString = htmlString.Replace("[WarningBackground]", "rgba(255, 102, 0, 0.4)");
+                htmlString = htmlString.Replace("[MessageBackground]", "rgba(100, 149, 237, 0.4)");
+                htmlString = htmlString.Replace("[DisabledColour]", "#666666");
+                htmlString = htmlString.Replace("[TableBackground]", "background-color: rgba(50, 50, 50, 0.5);");
             }
 
             // get CLEM Zone
@@ -117,6 +128,7 @@ namespace UserInterface.Presenters
             {
                 labourList.Add(new LabourType()
                 {
+                    Parent = labour,
                     Name = lt.Name,
                     AgeInMonths = lt.InitialAge*12,
                     Gender = lt.Gender
@@ -144,7 +156,7 @@ namespace UserInterface.Presenters
             }
 
             string tableHtml = "";
-            tableHtml += "<table>";
+            tableHtml += "<table class=\"main\">";
             tableHtml += "<tr><th>Activity</th>";
             foreach (LabourType lt in Apsim.Children(labour, typeof(LabourType)))
             {
@@ -201,7 +213,7 @@ namespace UserInterface.Presenters
             if(validpAtt.Select(a => a.ParentType).Contains(model.GetType()))
             {
                 Model labourRequirement = Apsim.Children(model, typeof(IModel)).Where(a => a.GetType().ToString().Contains("LabourRequirement")).FirstOrDefault() as Model;
-                tblstr += "<tr"+((labourRequirement == null)? " class=\"disabled\"":"") +"><td>" + model.Name + "</td>";
+                tblstr += "<tr"+((labourRequirement == null)? " class=\"disabled\"":"") +"><td" + ((labourRequirement == null) ? " class=\"disabled\"" : "") + ">" + model.Name + "</td>";
 
                 // does activity have a Labour Requirement
                 if (!(labourRequirement == null))
