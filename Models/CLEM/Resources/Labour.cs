@@ -287,17 +287,11 @@ namespace Models.CLEM.Resources
         {
             if (adultEquivalentRelationship != null)
             {
-                return adultEquivalentRelationship.SolveY(ageInMonths, true);
+                return adultEquivalentRelationship.SolveY(ageInMonths);
             }
             else
             {
                 // no AE relationship provided.
-                //string warningString = "No Adult Equivalent (AE) relationship is provided for [r="+this.Name+"]\nEach individual present is assumed to be an AE\nAdd a [Relationship] below [r=Labour] to define AE as a function of age in months";
-                //if (!WarningsNotFound.Contains(warningString))
-                //{
-                //    WarningsNotFound.Add(warningString);
-                //    Summary.WriteWarning(this, warningString);
-                //}
                 return null;
             }
         }
