@@ -38,23 +38,22 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Maximum value possible
         /// </summary>
-        [Description("Maximum value possible")]
-        [Required, GreaterThan("Minimum", ErrorMessage = "Maximum value must be greater than minimum value")]
+        [XmlIgnore]
         public new double Maximum { get; set; }
 
-        /// <summary>
-        /// X values of relationship
-        /// </summary>
-        [Description("X values of relationship")]
-        [Required]
-        public new double[] XValues { get; set; }
+        ///// <summary>
+        ///// X values of relationship
+        ///// </summary>
+        //[Description("X values of relationship")]
+        //[Required]
+        //public new double[] XValues { get; set; }
 
-        /// <summary>
-        /// Y values of relationship
-        /// </summary>
-        [Description("Y values of relationship")]
-        [Required]
-        public new double[] YValues { get; set; }
+        ///// <summary>
+        ///// Y values of relationship
+        ///// </summary>
+        //[Description("Y values of relationship")]
+        //[Required]
+        //public new double[] YValues { get; set; }
 
         /// <summary>
         /// Constructor

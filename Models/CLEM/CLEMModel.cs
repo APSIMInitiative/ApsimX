@@ -190,7 +190,11 @@ namespace Models.CLEM
 
             if(this.ModelSummaryStyle == HTMLSummaryStyle.Default)
             {
-                if (this.GetType().IsSubclassOf(typeof(ResourceBaseWithTransactions)))
+                if (this is Relationship || this.GetType().IsSubclassOf(typeof(Relationship)) )
+                {
+                    this.ModelSummaryStyle = HTMLSummaryStyle.Default;
+                }
+                else if (this.GetType().IsSubclassOf(typeof(ResourceBaseWithTransactions)))
                 {
                     this.ModelSummaryStyle = HTMLSummaryStyle.Resource;
                 }
@@ -202,15 +206,16 @@ namespace Models.CLEM
                 {
                     this.ModelSummaryStyle = HTMLSummaryStyle.Activity;
                 }
-                else if (this.GetType().IsSubclassOf(typeof(CLEMModel)))
-                {
-                    this.ModelSummaryStyle = HTMLSummaryStyle.Activity;
-                }
+                //else if (this.GetType().IsSubclassOf(typeof(CLEMModel)))
+                //{
+                //    this.ModelSummaryStyle = HTMLSummaryStyle.Activity;
+                //}
             }
 
             switch (ModelSummaryStyle)
             {
                 case HTMLSummaryStyle.Default:
+                    overall = "default";
                     break;
                 case HTMLSummaryStyle.Resource:
                     overall = "resource";

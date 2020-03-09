@@ -467,15 +467,15 @@ namespace Models.Core.ApsimFile
                         else
                             toObject[propertyName] = value;
                     }
-                    else if (int.TryParse(value, out intValue))
+                    else if (int.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out intValue))
                         toObject[propertyName] = intValue;
-                    else if (double.TryParse(value, out doubleValue))
+                    else if (double.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out doubleValue))
                         toObject[propertyName] = doubleValue;
                     else if (value == "-INF")
                         toObject[propertyName] = double.NaN;
                     else if (bool.TryParse(value, out boolValue))
                         toObject[propertyName] = boolValue;
-                    else if (DateTime.TryParseExact(value, "MM/dd/yyyy hh:mm:ss", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out dateValue))
+                    else if (DateTime.TryParseExact(value, "MM/dd/yyyy hh:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateValue))
                         toObject[propertyName] = dateValue.ToString("yyyy-MM-dd");
                     else
                         toObject[propertyName] = value;

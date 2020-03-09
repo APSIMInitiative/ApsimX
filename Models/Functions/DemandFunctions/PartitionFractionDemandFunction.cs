@@ -1,5 +1,6 @@
 ﻿using Models.Core;
 using Models.PMF;
+using Models.PMF.Interfaces;
 using System;
 using System.Collections.Generic;
 
@@ -18,14 +19,14 @@ namespace Models.Functions.DemandFunctions
 
         /// <summary>The arbitrator</summary>
         [Link]
-        OrganArbitrator Arbitrator = null;
+        IArbitrator arbitrator = null;
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
         {
-            if (Arbitrator.DM != null)
-                return Arbitrator.DM.TotalFixationSupply * PartitionFraction.Value(arrayIndex);
+            if (arbitrator.DM != null)
+                return arbitrator.DM.TotalFixationSupply * PartitionFraction.Value(arrayIndex);
             else
                 return 0;
         }
