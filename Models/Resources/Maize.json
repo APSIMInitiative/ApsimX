@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 81,
+  "Version": 80,
   "Name": "Simulations",
   "Children": [
     {
@@ -2271,16 +2271,6 @@
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.01,
-              "Units": "g/g",
-              "Name": "CriticalNConc",
-              "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
