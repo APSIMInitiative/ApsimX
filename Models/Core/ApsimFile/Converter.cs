@@ -17,7 +17,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 80; } }
+        public static int LatestVersion { get { return 81; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1607,6 +1607,21 @@
             foreach (JObject excelMultiInput in JsonUtilities.ChildrenRecursively(root, "ExcelMultiInput"))
             {
                 excelMultiInput["$type"] = "Models.PostSimulationTools.ExcelInput, Models";
+            }
+        }
+
+        /// <summary>
+        /// Replace PhaseBasedSwitch with phaseBasedLookup.
+        /// Change ExcelInput.FileName from a string into a string[].
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion81(JObject root, string fileName)
+        {
+            // Rename ExcelInput.FileName to FileNames and make it an array.
+            foreach (JObject PBS in JsonUtilities.ChildrenRecursively(root, "PhaseBasedSwitch"))
+            {
+                PBS["$type"] = "Models.Functions.PhaseLookupValue, Models";
             }
         }
 
