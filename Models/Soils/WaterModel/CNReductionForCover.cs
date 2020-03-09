@@ -92,7 +92,7 @@ namespace Models.WaterModel
             double coverSurfaceCrop = 0.0;  // efective total cover (0-1)
             for (int canopy = 0; canopy < canopies.Count; canopy++)
             {
-                double effectiveCropCover = canopies[canopy].CoverTotal * EffectiveCoverMultiplier.Value(canopy);
+                double effectiveCropCover = canopies[canopy].CoverTotal * EffectiveCoverMultiplier.ValueForX(canopies[canopy].Height);
                 coverSurfaceCrop = addCover(coverSurfaceCrop, effectiveCropCover);
             }
 

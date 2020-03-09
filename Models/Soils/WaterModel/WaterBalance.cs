@@ -283,6 +283,9 @@
             //  pond = Math.Min(Runoff, max_pond);
             MoveDown(Water, Flux);
 
+
+
+
             double[] NO3Values = NO3.kgha;
             double[] NH4Values = NH4.kgha;
 
@@ -301,13 +304,15 @@
 
             CheckForErrors();
 
+
             SoluteFlowEfficiency = 1;
             double waterTableDepth = waterTableModel.Value();
-            FlowNO3 = CalculateSoluteMovementUp(NO3Values, Water, Flow, SoluteFlowEfficiency);
+            double[] NO3Up = CalculateSoluteMovementUpDown(NO3Values, Water, Flow, SoluteFlowEfficiency);
             //double[] NH4Up = CalculateSoluteMovementUpDown(NH4.kgha, Water, Flow, SoluteFlowEfficiency);
-            MoveUp(NO3Values, FlowNO3);
+            MoveUp(NO3Values, NO3Up);
             //MoveUp(NH4Values, NH4Up);
 
+            FlowNO3 = MathUtilities.Subtract(NO3Down, NO3Up);
             // Set deltas
             NO3.SetKgHa(SoluteSetterType.Soil, NO3Values);
             //NH4.SetKgHa(SoluteSetterType.Soil, NH4Values);
@@ -371,8 +376,24 @@
         private static double[] CalculateSoluteMovementUpDown(double[] solute, double[] water, double[] flux, double efficiency)
         {
             double[] soluteUp = CalculateSoluteMovementUp(solute, water, flux, efficiency);
-            //MoveUp(solute, soluteUp);
-            double[] soluteDown = CalculateSoluteMovementDown(solute, water, flux, efficiency);
+
+            double[] remaining = new double[flux.Length];
+            remaining[0] = soluteUp[0];
+            for (int i = 1; i < solute.Length; i++)
+                remaining[i] = soluteUp[i] - soluteUp[i - 1];
+
+            double[] soluteDown = new double[solute.Length];
+            for (int i = 0; i < solute.Length; i++)
+            {
+                if (flux[i] < 0)
+                {
+                    var positiveFlux = flux[i] * -1;
+                    if (i == 0)
+                        soluteDown[i] = positiveFlux * (solute[i] + remaining[i]) / (water[i] + positiveFlux);
+                    else
+                        soluteDown[i] = positiveFlux * (solute[i] + soluteDown[i - 1] + remaining[i]) / (water[i] + positiveFlux + flux[i-1]);
+                }
+            }
             return MathUtilities.Subtract(soluteUp, soluteDown);
         }
 
@@ -393,13 +414,16 @@
             // from the layer below.
             // flow[i] is the water coming into a layer from the layer below
             double[] soluteFlow = new double[solute.Length];
-            for (int i = solute.Length - 1; i >= 0; i--)
+            for (int i = solute.Length - 2; i >= 0; i--)
             {
-                if (i == 0)
-                    // soluteFlow[i] = 0;?
-                    soluteFlow[i] = flow[i] * solute[i] / (water[i] + flow[i]);
+                //if (i == 0)
+                //    // soluteFlow[i] = 0;?
+                //    soluteFlow[i] = flow[i] * solute[i+1] / (water[i+1] + flow[i]);
+                //else if (i < solute.Length-2)
+                if (flow[i] <= 0)
+                    soluteFlow[i] = 0;
                 else
-                    soluteFlow[i] = flow[i] * solute[i] / (water[i] + flow[i] - flow[i - 1]);
+                    soluteFlow[i] = flow[i] * (solute[i+1] + soluteFlow[i+1]) / (water[i+1] + flow[i] - flow[i+1]);
             }
 
             return soluteFlow;

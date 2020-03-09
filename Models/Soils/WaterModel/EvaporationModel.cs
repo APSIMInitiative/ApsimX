@@ -308,7 +308,8 @@
             Es = 0.0;
 
             // Calculate available soil water in top layer for actual soil evaporation (mm)
-            double avail_sw_top = soil.Water[0] - soil.Properties.AirDry[0];
+            var airdryMM = soil.Properties.AirDry[0] * soil.Properties.Thickness[0];
+            double avail_sw_top = soil.Water[0] - airdryMM;
             avail_sw_top = MathUtilities.Bound(avail_sw_top, 0.0, Eo);
 
             // Calculate actual soil water evaporation
