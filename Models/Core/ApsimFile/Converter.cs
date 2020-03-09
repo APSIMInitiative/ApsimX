@@ -1632,12 +1632,6 @@
                     JsonUtilities.AddModel(r, varRef);                    
                 }
             }
-
-            // Replace ExcelMultiInput with an ExcelInput.
-            foreach (JObject excelMultiInput in JsonUtilities.ChildrenRecursively(root, "ExcelMultiInput"))
-            {
-                excelMultiInput["$type"] = "Models.PostSimulationTools.ExcelInput, Models";
-            }
         }
 
         /// <summary>
