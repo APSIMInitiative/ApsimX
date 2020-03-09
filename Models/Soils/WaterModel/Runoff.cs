@@ -66,13 +66,6 @@
 
         // --- Settable properties -----------------------------------------------------------
 
-        /// <summary>
-        /// Runoff Curve Number (CN) for bare soil with average moisture
-        /// </summary>
-        [Bounds(Lower = 1.0, Upper = 100.0)]
-        [Caption("CN bare")]
-        [Description("Runoff Curve Number (CN) for bare soil with average moisture")]
-        public double CN2Bare { get; set; }
 
         // --- Outputs -----------------------------------------------------------------------
 
@@ -83,7 +76,7 @@
 
             if (soil.PotentialRunoff > 0.0)
             {
-                double cn2New = CN2Bare - cnReductionForCover.Value(arrayIndex) - cnReductionForTillage.Value(arrayIndex);
+                double cn2New = soil.CN2Bare - cnReductionForCover.Value(arrayIndex) - cnReductionForTillage.Value(arrayIndex);
 
                 // cut off response to cover at high covers
                 cn2New = MathUtilities.Bound(cn2New, 0.0, 100.0);

@@ -69,59 +69,6 @@
         /// <summary>time after 2nd-stage soil evaporation begins (d)</summary>
         public double t;
 
-        /// <summary>
-        /// Drying coefficient for stage 2 soil water evaporation in summer (a.k.a. ConA) 
-        /// </summary>
-        [Bounds(Lower = 0.0, Upper = 10.0)]
-        [Caption("Summer ConA")]
-        [Description("Drying coefficient for stage 2 soil water evaporation in summer (a.k.a. ConA)")]
-        public double SummerCona { get; set; }
-
-        /// <summary>
-        /// Drying coefficient for stage 2 soil water evaporation in winter (a.k.a. ConA) 
-        /// </summary>
-        [Bounds(Lower = 0.0, Upper = 10.0)]
-        [Caption("Winter ConA")]
-        [Description("Drying coefficient for stage 2 soil water evaporation in winter (a.k.a. ConA)")]
-        public double WinterCona { get; set; }
-
-        /// <summary>
-        /// Cummulative soil water evaporation to reach the end of stage 1 soil water evaporation in summer (a.k.a. U)
-        /// </summary>
-        [Bounds(Lower = 0.0, Upper = 40.0)]
-        [Units("mm")]
-        [Caption("Summer U")]
-        [Description("Cummulative soil water evaporation to reach the end of stage 1 soil water evaporation in summer (a.k.a. U)")]
-        public double SummerU { get; set; }
-
-        /// <summary>
-        /// Cummulative soil water evaporation to reach the end of stage 1 soil water evaporation in winter (a.k.a. U) 
-        /// </summary>
-        /// <value>
-        /// The winter u.
-        /// </value>
-        [Bounds(Lower = 0.0, Upper = 10.0)]
-        [Units("mm")]
-        [Caption("Winter U")]
-        [Description("Cummulative soil water evaporation to reach the end of stage 1 soil water evaporation in winter (a.k.a. U).")]
-        public double WinterU { get; set; }
-
-        /// <summary>
-        /// Start date for switch to summer parameters for soil water evaporation (dd-mmm)
-        /// </summary>
-        [Units("dd-mmm")]
-        [Caption("Summer date")]
-        [Description("Start date for switch to summer parameters for soil water evaporation")]
-        public string SummerDate{ get; set; }
-
-        /// <summary>
-        /// Start date for switch to winter parameters for soil water evaporation (dd-mmm)
-        /// </summary>
-        [Units("dd-mmm")]
-        [Caption("Winter date")]
-        [Description("Start date for switch to winter parameters for soil water evaporation")]
-        public string WinterDate { get; set; }
-
         /// <summary>Atmospheric potential evaporation (mm)</summary>
         [XmlIgnore]
         public double Eo { get; private set; }
@@ -140,9 +87,9 @@
             get
             {
                 if (isSummer)
-                    return SummerCona;
+                    return soil.SummerCona;
                 else
-                    return WinterCona;
+                    return soil.WinterCona;
             }
         }
 
@@ -152,21 +99,10 @@
             get
             {
                 if (isSummer)
-                    return SummerU;
+                    return soil.SummerU;
                 else
-                    return WinterU;
+                    return soil.WinterU;
             }
-        }
-
-        /// <summary>Constructor</summary>
-        public EvaporationModel()
-        {
-            SummerDate = "1-Nov";
-            WinterDate = "1-Apr";
-            SummerCona = 3.5;
-            WinterCona = 2.5;
-            SummerU = 6;
-            WinterU = 4;
         }
 
         /// <summary>Calculate soil evaporation.</summary>
@@ -184,7 +120,7 @@
         {
             get
             {
-                return DateUtilities.WithinDates(SummerDate, clock.Today, WinterDate);
+                return DateUtilities.WithinDates(soil.SummerDate, clock.Today, soil.WinterDate);
             }
         }
 

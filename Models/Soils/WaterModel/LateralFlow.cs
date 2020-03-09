@@ -35,61 +35,9 @@
         [Link]
         private WaterBalance soil = null;
 
-        /// <summary>
-        /// Basal width of the downslope boundary of the catchment for lateral flow calculations (m)
-        /// </summary>
-        [Bounds(Lower = 0.0, Upper = 1.0e8F)]
-        [Units("m")]
-        [Caption("Basal width")]
-        [Description("Basal width of the downslope boundary of the catchment for lateral flow calculations")]
-        public double DischargeWidth { get; set; }
-
-        /// <summary>
-        /// Slope of the catchment area for lateral flow calculations
-        /// </summary>
-        /// <remarks>
-        /// DSG: The units of slope are metres/metre.  Hence a slope = 0 means horizontal soil layers, and no lateral flows will occur.
-        /// A slope = 1 means basically a 45 degree angle slope, which we thought would be the most anyone would be wanting to simulate.  Hence the bounds 0-1.  I still think this is fine.
-        /// </remarks>
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Caption("Slope")]
-        [Description("Slope of the catchment area for lateral flow calculations")]
-        public double Slope { get; set; }
-
-        /// <summary>
-        /// Catchment area for later flow calculations (m2)
-        /// </summary>
-        [Bounds(Lower = 0.0, Upper = 1.0e8F)]
-        [Units("m2")]
-        [Caption("Catchment")]
-        [Description("Catchment area for lateral flow calculations")]
-        public double CatchmentArea { get; set; }
-
-        /// <summary>
-        /// Lateral saturated hydraulic conductivity (KLAT)
-        /// </summary>
-        /// <remarks>
-        /// Lateral flow soil water conductivity constant for each soil layer.
-        /// At thicknesses specified in "SoilWater" node of GUI.
-        /// Use Soil.KLAT for KLAT in standard thickness
-        /// </remarks>
-        [Bounds(Lower = 0, Upper = 1.0e3F)]
-        [Units("mm/d")]
-        [Caption("Klat")]
-        [Description("Lateral saturated hydraulic conductivity (KLAT)")]
-        public double[] KLAT { get; set; }
-
         /// <summary>The amount of incoming water (mm)</summary>
         [XmlIgnore]
         public double[] InFlow { get; set; }
-
-        /// <summary>Constructor</summary>
-        public LateralFlowModel()
-        {
-            DischargeWidth = 5.0;
-            Slope = 0.5;
-            CatchmentArea = 10.0;
-        }
 
         /// <summary>Perform the movement of water.</summary>
         public double[] Values
@@ -115,8 +63,8 @@
 
                         // Calculate out flow (mm)
                         double i, j;
-                        i = KLAT[layer] * depthWaterTable * (DischargeWidth / UnitConversion.mm2m) * Slope;
-                        j = (CatchmentArea * UnitConversion.sm2smm) * (Math.Pow((1.0 + Math.Pow(Slope, 2)), 0.5));
+                        i = soil.KLAT[layer] * depthWaterTable * (soil.DischargeWidth / UnitConversion.mm2m) * soil.Slope;
+                        j = (soil.CatchmentArea * UnitConversion.sm2smm) * (Math.Pow((1.0 + Math.Pow(soil.Slope, 2)), 0.5));
                         Out[layer] = MathUtilities.Divide(i, j, 0.0);
 
                         // Bound out flow to max flow

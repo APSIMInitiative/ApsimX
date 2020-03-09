@@ -25,20 +25,6 @@ namespace Models.WaterModel
         [Link]
         private WaterBalance soil = null;
 
-        /// <summary>
-        /// Fractional amount of water above DUL that can drain under gravity per day
-        /// </summary>
-        /// <remarks>
-        /// Between (SAT and DUL) soil water conductivity constant for each soil layer.
-        /// At thicknesses specified in "SoilWater" node of GUI.
-        /// Use Soil.SWCON for SWCON in standard thickness
-        /// </remarks>
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("/d")]
-        [Caption("SWCON")]
-        [Description("Fractional amount of water above DUL that can drain under gravity per day (SWCON)")]
-        public double[] SWCON { get; set; }
-
         /// <summary>Amount of water (mm) backed up.</summary>
         [XmlIgnore]
         public double backedUpSurface { get; private set; }
@@ -80,7 +66,7 @@ namespace Models.WaterModel
                     // Calculate water draining by gravity (mm) (between SAT and DUL)
                     double w_drain;               
                     if (w_tot > DUL[i])
-                        w_drain = (w_tot - DUL[i]) * SWCON[i];
+                        w_drain = (w_tot - DUL[i]) * soil.SWCON[i];
                     else
                         w_drain = 0.0;
 

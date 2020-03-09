@@ -2,7 +2,7 @@
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
   "Version": 80,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-09",
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-10",
   "Name": "Simulations",
   "Children": [
     {
@@ -1329,144 +1329,42 @@
                     },
                     {
                       "$type": "Models.WaterModel.WaterBalance, Models",
-                      "SoluteFluxEfficiency": 0.0,
-                      "SoluteFlowEfficiency": 0.0,
+                      "SummerDate": "1-Nov",
+                      "SummerU": 5.0,
+                      "SummerCona": 5.0,
+                      "WinterDate": "1-Apr",
+                      "WinterU": 5.0,
+                      "WinterCona": 5.0,
+                      "DiffusConst": 40.0,
+                      "DiffusSlope": 16.0,
                       "Salb": 0.12,
-                      "Name": "SoilWater",
-                      "Children": [
-                        {
-                          "$type": "Models.WaterModel.RunoffModel, Models",
-                          "CN2Bare": 73.0,
-                          "Name": "RunoffModel",
-                          "Children": [
-                            {
-                              "$type": "Models.WaterModel.CNReductionForCover, Models",
-                              "CNCov": 0.8,
-                              "CNRed": 20.0,
-                              "Name": "CNReductionForCover",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                  "Name": "EffectiveCoverMultiplier",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.XYPairs, Models",
-                                      "X": [
-                                        0.0,
-                                        600.0,
-                                        1800.0,
-                                        30000.0
-                                      ],
-                                      "Y": [
-                                        1.0,
-                                        1.0,
-                                        0.0,
-                                        0.0
-                                      ],
-                                      "Name": "XYPairs",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 0.0,
-                                      "Units": null,
-                                      "Name": "XValue",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.WaterModel.CNReductionForTillage, Models",
-                              "tillageCnCumWater": 0.0,
-                              "tillageCnRed": 0.0,
-                              "Name": "CNReductionForTillage",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.WaterModel.EvaporationModel, Models",
-                          "t": 0.0,
-                          "SummerCona": 5.0,
-                          "WinterCona": 5.0,
-                          "SummerU": 5.0,
-                          "WinterU": 5.0,
-                          "SummerDate": "1-Nov",
-                          "WinterDate": "1-Apr",
-                          "Name": "EvaporationModel",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.WaterModel.LateralFlowModel, Models",
-                          "DischargeWidth": 5.0,
-                          "Slope": 0.5,
-                          "CatchmentArea": 10.0,
-                          "KLAT": null,
-                          "Name": "LateralFlowModel",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.WaterModel.SaturatedFlowModel, Models",
-                          "SWCON": [
-                            0.3,
-                            0.3,
-                            0.3,
-                            0.3,
-                            0.3,
-                            0.3,
-                            0.3
-                          ],
-                          "Name": "SaturatedFlowModel",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.WaterModel.UnsaturatedFlowModel, Models",
-                          "DiffusConst": 40.0,
-                          "DiffusSlope": 16.0,
-                          "Name": "UnsaturatedFlowModel",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.WaterModel.WaterTableModel, Models",
-                          "Name": "WaterTableModel",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
+                      "CN2Bare": 73.0,
+                      "CNRed": 20.0,
+                      "CNCov": 0.8,
+                      "Slope": 0.0,
+                      "DischargeWidth": 0.0,
+                      "CatchmentArea": 0.0,
+                      "Thickness": [
+                        150.0,
+                        150.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0
                       ],
+                      "SWCON": [
+                        0.3,
+                        0.3,
+                        0.3,
+                        0.3,
+                        0.3,
+                        0.3,
+                        0.3
+                      ],
+                      "KLAT": null,
+                      "ResourceName": "WaterBalance",
+                      "Name": "SoilWater",
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -2193,144 +2091,26 @@
                     },
                     {
                       "$type": "Models.WaterModel.WaterBalance, Models",
-                      "SoluteFluxEfficiency": 0.0,
-                      "SoluteFlowEfficiency": 0.0,
-                      "Salb": 0.1,
+                      "SummerDate": "1-Nov",
+                      "SummerU": 6.0,
+                      "SummerCona": 3.5,
+                      "WinterDate": "1-Apr",
+                      "WinterU": 6.0,
+                      "WinterCona": 2.5,
+                      "DiffusConst": 0.0,
+                      "DiffusSlope": 0.0,
+                      "Salb": 0.0,
+                      "CN2Bare": 0.0,
+                      "CNRed": 20.0,
+                      "CNCov": 0.8,
+                      "Slope": 0.5,
+                      "DischargeWidth": 5.0,
+                      "CatchmentArea": 10.0,
+                      "Thickness": null,
+                      "SWCON": null,
+                      "KLAT": null,
+                      "ResourceName": "WaterBalance",
                       "Name": "SoilWater",
-                      "Children": [
-                        {
-                          "$type": "Models.WaterModel.RunoffModel, Models",
-                          "CN2Bare": 73.0,
-                          "Name": "RunoffModel",
-                          "Children": [
-                            {
-                              "$type": "Models.WaterModel.CNReductionForCover, Models",
-                              "CNCov": 0.8,
-                              "CNRed": 20.0,
-                              "Name": "CNReductionForCover",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                  "Name": "EffectiveCoverMultiplier",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.XYPairs, Models",
-                                      "X": [
-                                        0.0,
-                                        600.0,
-                                        1800.0,
-                                        30000.0
-                                      ],
-                                      "Y": [
-                                        1.0,
-                                        1.0,
-                                        0.0,
-                                        0.0
-                                      ],
-                                      "Name": "XYPairs",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 0.0,
-                                      "Units": null,
-                                      "Name": "XValue",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.WaterModel.CNReductionForTillage, Models",
-                              "tillageCnCumWater": 0.0,
-                              "tillageCnRed": 0.0,
-                              "Name": "CNReductionForTillage",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.WaterModel.EvaporationModel, Models",
-                          "t": 0.0,
-                          "SummerCona": 3.5,
-                          "WinterCona": 2.5,
-                          "SummerU": 6.0,
-                          "WinterU": 4.0,
-                          "SummerDate": "1-Nov",
-                          "WinterDate": "1-Apr",
-                          "Name": "EvaporationModel",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.WaterModel.LateralFlowModel, Models",
-                          "DischargeWidth": 5.0,
-                          "Slope": 0.5,
-                          "CatchmentArea": 10.0,
-                          "KLAT": null,
-                          "Name": "LateralFlowModel",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.WaterModel.SaturatedFlowModel, Models",
-                          "SWCON": [
-                            0.3,
-                            0.3,
-                            0.3,
-                            0.3,
-                            0.3,
-                            0.3,
-                            0.3
-                          ],
-                          "Name": "SaturatedFlowModel",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.WaterModel.UnsaturatedFlowModel, Models",
-                          "DiffusConst": 40.0,
-                          "DiffusSlope": 16.0,
-                          "Name": "UnsaturatedFlowModel",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.WaterModel.WaterTableModel, Models",
-                          "Name": "WaterTableModel",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false

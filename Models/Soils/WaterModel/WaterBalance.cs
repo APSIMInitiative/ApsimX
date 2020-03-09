@@ -41,7 +41,7 @@
     [ViewName("UserInterface.Views.ProfileView")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [Serializable]
-    public class WaterBalance : Model, ISoilWater
+    public class WaterBalance : ModelCollectionFromResource, ISoilWater
     {
         // --- Links -------------------------------------------------------------------------
 
@@ -94,9 +94,11 @@
         public double Runon { get; set; }
 
         /// <summary>The efficiency (0-1) that solutes move down with water.</summary>
+        [XmlIgnore]
         public double SoluteFluxEfficiency { get; set; } = 1;
 
         /// <summary>The efficiency (0-1) that solutes move up with water.</summary>
+        [XmlIgnore]
         public double SoluteFlowEfficiency { get; set; } = 1;
 
         /// <summary> This is set by Microclimate and is rainfall less that intercepted by the canopy and residue components </summary>
@@ -138,6 +140,7 @@
         public double[] Flow { get; private set; }
 
         /// <summary>Gets todays potential runoff (mm).</summary>
+        [XmlIgnore]
         public double PotentialRunoff
         {
             get
@@ -152,11 +155,8 @@
         }
 
         /// <summary>Provides access to the soil properties.</summary>
-        public Soil Properties { get { return soil; } }
-
-        ///<summary>Gets or sets soil thickness for each layer (mm)(</summary>
         [XmlIgnore]
-        public double[] Thickness => throw new NotImplementedException();
+        public Soil Properties { get { return soil; } }
 
         ///<summary>Gets or sets volumetric soil water content (mm/mm)(</summary>
         [XmlIgnore]
@@ -186,11 +186,146 @@
         [XmlIgnore]
         public double Drainage => throw new NotImplementedException();
 
+        /// <summary>Start date for switch to summer parameters for soil water evaporation (dd-mmm)</summary>
+        [Units("dd-mmm")]
+        [Caption("Summer date")]
+        [Description("Start date for switch to summer parameters for soil water evaporation")]
+        public string SummerDate { get; set; } = "1-Nov";
+
+        /// <summary>Cummulative soil water evaporation to reach the end of stage 1 soil water evaporation in summer (a.k.a. U)</summary>
+        [Bounds(Lower = 0.0, Upper = 40.0)]
+        [Units("mm")]
+        [Caption("Summer U")]
+        [Description("Cummulative soil water evaporation to reach the end of stage 1 soil water evaporation in summer (a.k.a. U)")]
+        public double SummerU { get; set; } = 6;
+
+        /// <summary>Drying coefficient for stage 2 soil water evaporation in summer (a.k.a. ConA)</summary>
+        [Bounds(Lower = 0.0, Upper = 10.0)]
+        [Caption("Summer ConA")]
+        [Description("Drying coefficient for stage 2 soil water evaporation in summer (a.k.a. ConA)")]
+        public double SummerCona { get; set; } = 3.5;
+
+        /// <summary>Start date for switch to winter parameters for soil water evaporation (dd-mmm)</summary>
+        [Units("dd-mmm")]
+        [Caption("Winter date")]
+        [Description("Start date for switch to winter parameters for soil water evaporation")]
+        public string WinterDate { get; set; } = "1-Apr";
+
+        /// <summary>Cummulative soil water evaporation to reach the end of stage 1 soil water evaporation in winter (a.k.a. U).</summary>
+        [Bounds(Lower = 0.0, Upper = 10.0)]
+        [Units("mm")]
+        [Caption("Winter U")]
+        [Description("Cummulative soil water evaporation to reach the end of stage 1 soil water evaporation in winter (a.k.a. U).")]
+        public double WinterU { get; set; } = 6;
+
+        /// <summary>Drying coefficient for stage 2 soil water evaporation in winter (a.k.a. ConA)</summary>
+        [Bounds(Lower = 0.0, Upper = 10.0)]
+        [Caption("Winter ConA")]
+        [Description("Drying coefficient for stage 2 soil water evaporation in winter (a.k.a. ConA)")]
+        public double WinterCona { get; set; } = 2.5;
+
+        /// <summary>Constant in the soil water diffusivity calculation (mm2/day)</summary>
+        [Bounds(Lower = 0.0, Upper = 1000.0)]
+        [Units("mm2/day")]
+        [Caption("Diffusivity constant")]
+        [Description("Constant in the soil water diffusivity calculation")]
+        public double DiffusConst { get; set; }
+
+        /// <summary>Effect of soil water storage above the lower limit on soil water diffusivity (/mm)</summary>
+        [Bounds(Lower = 0.0, Upper = 100.0)]
+        [Units("/mm")]
+        [Caption("Diffusivity slope")]
+        [Description("Effect of soil water storage above the lower limit on soil water diffusivity")]
+        public double DiffusSlope { get; set; }
+
         /// <summary>Fraction of incoming radiation reflected from bare soil</summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Caption("Albedo")]
         [Description("Fraction of incoming radiation reflected from bare soil")]
         public double Salb { get; set; }
+
+        /// <summary>Runoff Curve Number (CN) for bare soil with average moisture</summary>
+        [Bounds(Lower = 1.0, Upper = 100.0)]
+        [Caption("CN bare")]
+        [Description("Runoff Curve Number (CN) for bare soil with average moisture")]
+        public double CN2Bare { get; set; }
+
+        /// <summary>Gets or sets the cn red.</summary>
+        [Description("Max. reduction in curve number due to cover")]
+        public double CNRed { get; set; } = 20;
+
+
+        /// <summary>Gets or sets the cn cov.</summary>
+        [Description("Cover for max curve number reduction")]
+        public double CNCov { get; set; } = 0.8;
+
+        /// <summary>Slope of the catchment area for lateral flow calculations.</summary>
+        /// <remarks>
+        /// DSG: The units of slope are metres/metre.  Hence a slope = 0 means horizontal soil layers, and no lateral flows will occur.
+        /// A slope = 1 means basically a 45 degree angle slope, which we thought would be the most anyone would be wanting to simulate.  Hence the bounds 0-1.  I still think this is fine.
+        /// </remarks>
+        [Bounds(Lower = 0.0, Upper = 1.0)]
+        [Caption("Slope")]
+        [Description("Slope of the catchment area for lateral flow calculations")]
+        public double Slope { get; set; } = 0.5;
+
+        /// <summary>Basal width of the downslope boundary of the catchment for lateral flow calculations (m).</summary>
+        [Bounds(Lower = 0.0, Upper = 1.0e8F)]
+        [Units("m")]
+        [Caption("Basal width")]
+        [Description("Basal width of the downslope boundary of the catchment for lateral flow calculations")]
+        public double DischargeWidth { get; set; } = 5;
+
+        /// <summary>Catchment area for later flow calculations (m2).</summary>
+        [Bounds(Lower = 0.0, Upper = 1.0e8F)]
+        [Units("m2")]
+        [Caption("Catchment")]
+        [Description("Catchment area for lateral flow calculations")]
+        public double CatchmentArea { get; set; } = 10;
+        
+        /// <summary>Soil layer thickness for each layer (mm).</summary>
+        [Units("mm")]
+        public double[] Thickness { get; set; }
+
+        /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [XmlIgnore]
+        [Description("Depth")]
+        [Units("cm")]
+        public string[] Depth
+        {
+            get
+            {
+                return APSIM.Shared.APSoil.SoilUtilities.ToDepthStrings(Thickness);
+            }
+            set
+            {
+                Thickness = APSIM.Shared.APSoil.SoilUtilities.ToThickness(value);
+            }
+        }
+
+        /// <summary>Fractional amount of water above DUL that can drain under gravity per day.</summary>
+        /// <remarks>
+        /// Between (SAT and DUL) soil water conductivity constant for each soil layer.
+        /// At thicknesses specified in "SoilWater" node of GUI.
+        /// Use Soil.SWCON for SWCON in standard thickness
+        /// </remarks>
+        [Bounds(Lower = 0.0, Upper = 1.0)]
+        [Units("/d")]
+        [Caption("SWCON")]
+        [Description("Fractional amount of water above DUL that can drain under gravity per day (SWCON)")]
+        public double[] SWCON { get; set; }
+
+        /// <summary>Lateral saturated hydraulic conductivity (KLAT).</summary>
+        /// <remarks>
+        /// Lateral flow soil water conductivity constant for each soil layer.
+        /// At thicknesses specified in "SoilWater" node of GUI.
+        /// Use Soil.KLAT for KLAT in standard thickness
+        /// </remarks>
+        [Bounds(Lower = 0, Upper = 1.0e3F)]
+        [Units("mm/d")]
+        [Caption("Klat")]
+        [Description("Lateral saturated hydraulic conductivity (KLAT)")]
+        public double[] KLAT { get; set; }
 
         /// <summary>Amount of water moving laterally out of the profile (mm)</summary>
         [XmlIgnore]
@@ -283,18 +418,13 @@
             //  pond = Math.Min(Runoff, max_pond);
             MoveDown(Water, Flux);
 
-
-
-
             double[] NO3Values = NO3.kgha;
             double[] NH4Values = NH4.kgha;
 
             // Calcualte solute movement down with water.
             SoluteFluxEfficiency = 1;
             double[] NO3Down = CalculateSoluteMovementDown(NO3Values, Water, Flux, SoluteFluxEfficiency);
-            //double[] NH4Down = CalculateSoluteMovementDown(NH4Values, Water, Flux, SoluteFluxEfficiency);
             MoveDown(NO3Values, NO3Down);
-            //MoveDown(NH4Values, NH4Down);
 
             double es = evaporationModel.Calculate();
             Water[0] = Water[0] - es;
@@ -304,18 +434,13 @@
 
             CheckForErrors();
 
-
             SoluteFlowEfficiency = 1;
             double waterTableDepth = waterTableModel.Value();
             double[] NO3Up = CalculateSoluteMovementUpDown(NO3Values, Water, Flow, SoluteFlowEfficiency);
-            //double[] NH4Up = CalculateSoluteMovementUpDown(NH4.kgha, Water, Flow, SoluteFlowEfficiency);
             MoveUp(NO3Values, NO3Up);
-            //MoveUp(NH4Values, NH4Up);
 
             FlowNO3 = MathUtilities.Subtract(NO3Down, NO3Up);
-            // Set deltas
             NO3.SetKgHa(SoluteSetterType.Soil, NO3Values);
-            //NH4.SetKgHa(SoluteSetterType.Soil, NH4Values);
         }
 
         /// <summary>Move water down the profile</summary>

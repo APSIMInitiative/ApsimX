@@ -774,6 +774,7 @@
     <EmbeddedResource Include="Resources\AGPRhodes.json" />
     <EmbeddedResource Include="Resources\AGPTallFescue.json" />
     <EmbeddedResource Include="Resources\AGPLucerne.json" />
+    <EmbeddedResource Include="Resources\WaterBalance.json" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">

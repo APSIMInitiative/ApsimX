@@ -32,25 +32,7 @@
         [Link]
         private WaterBalance soil = null;
 
-        /// <summary>
-        /// Constant in the soil water diffusivity calculation (mm2/day)
-        /// </summary>
-        [Bounds(Lower = 0.0, Upper = 1000.0)]
-        [Units("mm2/day")]
-        [Caption("Diffusivity constant")]
-        [Description("Constant in the soil water diffusivity calculation")]
-        public double DiffusConst { get; set; }
-
-        /// <summary>
-        /// Effect of soil water storage above the lower limit on soil water diffusivity (/mm)
-        /// </summary>
-        [Bounds(Lower = 0.0, Upper = 100.0)]
-        [Units("/mm")]
-        [Caption("Diffusivity slope")]
-        [Description("Effect of soil water storage above the lower limit on soil water diffusivity")]
-        public double DiffusSlope { get; set; }
-
-
+ 
         /// <summary>Calculate unsaturated flow below drained upper limit.</summary>
         public double[] Values
         {
@@ -84,7 +66,7 @@
                     double theta2 = MathUtilities.Divide(esw_dep2, Thickness[i+1], 0.0);
 
                     // find diffusivity, a function of mean thet.
-                    double dbar = DiffusConst * Math.Exp(DiffusSlope * (theta1 + theta2) * 0.5);
+                    double dbar = soil.DiffusConst * Math.Exp(soil.DiffusSlope * (theta1 + theta2) * 0.5);
 
                     // testing found that a limit of 10000 (as used in ceres-maize)
                     // for dbar limits instability for flow direction for consecutive
