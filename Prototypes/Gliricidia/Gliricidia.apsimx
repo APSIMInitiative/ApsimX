@@ -1,23 +1,14 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 76,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-02-03",
+  "Version": 80,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-09",
   "Name": "Simulations",
   "Children": [
     {
       "$type": "Models.Memo, Models",
-      "Text": "The APSIM Gliricidia Model\r\n \r\nHuth, N.I. and Smethurst, P.J. ",
+      "Text": "# The APSIM Gliricidia Model\r\n\r\nThe APSIM Gliricidia model has been developed using the Plant Modelling Framework (PMF) of ([brown_plant_2014]). This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.\r\n\r\nThe model consists of:\r\n\r\n* a phenology model to simulate development between growth phases  \r\n* a collection of organs to simulate the various plant parts  \r\n* an arbitrator to allocate resources (N, biomass) to the various plant organs \n* simple models to provide aggregated output from the classes above.",
       "Name": "TitlePage",
-      "Children": [],
-      "IncludeInDocumentation": true,
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
-      "$type": "Models.Memo, Models",
-      "Text": "The APSIM gliricidia model  . . . . . ",
-      "Name": "Introduction",
       "Children": [],
       "IncludeInDocumentation": true,
       "Enabled": true,
@@ -27,15 +18,6 @@
       "$type": "Models.Core.Replacements, Models",
       "Name": "Replacements",
       "Children": [
-        {
-          "$type": "Models.Memo, Models",
-          "Text": "This is a test",
-          "Name": "Memo",
-          "Children": [],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
         {
           "$type": "Models.Manager, Models",
           "Code": "\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Gliricidia;\r\n        [Link] Clock Clock;\r\n\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double LeafRemovalWt {get; set;}\r\n\r\n\r\n        [Description(\"Stem Removal Wt\")]\r\n        public double StemRemovalWt {get; set;}\r\n\r\n        [Description(\"Total Removal Wt\")]\r\n        public double TotalRemovalWt {get; set;}\r\n\r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        LeafRemovalWt = 0;\r\n        StemRemovalWt = 0;\r\n        TotalRemovalWt = 0;\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue)\r\n        {\r\n            double L = (double)Apsim.Get(Gliricidia, \"Leaf.Live.Wt\");\r\n            double LeafRemovalFraction = 0;\r\n\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n                LeafRemovalWt = (L - LeafResidue);\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n               \r\n            double S = (double)Apsim.Get(Gliricidia, \"Stem.Live.Wt\");\r\n            double StemRemovalFraction = 0;\r\n\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S; \r\n                StemRemovalWt = (S - StemResidue);              \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n\r\n            TotalRemovalWt = LeafRemovalWt + StemRemovalWt;\r\n               \r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            Gliricidia.RemoveBiomass(\"Cut\", Remove);\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
@@ -113,6 +95,7 @@
             "[Gliricidia].Leaf.Live.Wt",
             "[Gliricidia].Leaf.Dead.Wt",
             "[Gliricidia].Leaf.Detached.Wt",
+            "sum of [Gliricidia].Leaf.Detached.Wt from [Gliricidia].Cutting to [Clock].Today as CumulativeLitterFall",
             "[Gliricidia].Stem.Live.Wt",
             "[Gliricidia].Stem.Dead.Wt",
             "[Gliricidia].Stem.Detached.Wt",
@@ -277,6 +260,7 @@
         {
           "$type": "Models.PMF.Plant, Models",
           "CropType": "Gliricidia",
+          "IsAlive": false,
           "IsEnding": false,
           "DaysAfterEnding": 0,
           "ResourceName": null,
@@ -294,20 +278,39 @@
               "Name": "Age",
               "Children": [
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0027397260273972603,
-                  "Units": null,
-                  "Name": "day",
+                  "$type": "Models.Memo, Models",
+                  "Text": "Age is the age of the planting in years.",
+                  "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Memo, Models",
-                  "Text": "This is a test",
-                  "Name": "Memo",
-                  "Children": [],
+                  "$type": "Models.Functions.DivideFunction, Models",
+                  "Name": "day",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "One",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 365.0,
+                      "Units": null,
+                      "Name": "DaysPerYear",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -347,7 +350,17 @@
                   "FixedValue": 1.0,
                   "Units": null,
                   "Name": "ThermalTime",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This model uses standard days rather than a thermal time and so a value of 1 is used for each day.",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -667,17 +680,7 @@
                       "FixedValue": 1.0,
                       "Units": "g/plant",
                       "Name": "InitialPlantWt",
-                      "Children": [
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "This is a test",
-                          "Name": "Memo",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -704,7 +707,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "",
+                      "Text": "This model assumes that all senesced leaves detach immediately.",
                       "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -728,7 +731,7 @@
                       "Children": [
                         {
                           "$type": "Models.Memo, Models",
-                          "Text": "Value of 1.06 g/MJ for above ground growth from \r\nRadiation Interception and Growth of Planted and Coppice Stands of Four Fast-GrowingTropical Trees\r\nAuthor(s): Robin A. Harrington and James H. Fownes\r\nSource: Journal of Applied Ecology, Vol. 32, No. 1 (Feb., 1995), pp. 1-8",
+                          "Text": "Value of 1.06 g/MJ for above ground growth from [HarringtonAndFownes1995] is increased to account for biomass partitioning to below-ground organs.\r\n",
                           "Name": "Memo",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -737,6 +740,15 @@
                         }
                       ],
                       "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.SupplyFunctions.RUECO2Function, Models",
+                      "PhotosyntheticPathway": "C3",
+                      "Name": "FCO2",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -750,35 +762,10 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Fw",
                       "Name": "WaterStressFactor",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            1.0
-                          ],
-                          "Y": [
-                            0.0,
-                            1.0
-                          ],
-                          "Name": "XYPairs",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].Fw",
-                          "Name": "XValue",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -831,35 +818,10 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Fn",
                       "Name": "NitrogenStressFactor",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            1.0
-                          ],
-                          "Y": [
-                            0.0,
-                            1.0
-                          ],
-                          "Name": "XYPairs",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].Fn",
-                          "Name": "XValue",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -877,7 +839,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "Value of 0.57 from \r\nRadiation Interception and Growth of Planted and Coppice Stands of Four Fast-GrowingTropical Trees\r\nAuthor(s): Robin A. Harrington and James H. Fownes\r\nSource: Journal of Applied Ecology, Vol. 32, No. 1 (Feb., 1995), pp. 1-8\r\n\r\nBut their data suggests a value of 0.3",
+                      "Text": "Value is taken from [HarringtonAndFownes1995].",
                       "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -890,14 +852,13 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.57,
-                  "Units": null,
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[ExtinctionCoefficient]",
                   "Name": "ExtinctionCoefficientDead",
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "Value of 0.57 from \r\nRadiation Interception and Growth of Planted and Coppice Stands of Four Fast-GrowingTropical Trees\r\nAuthor(s): Robin A. Harrington and James H. Fownes\r\nSource: Journal of Applied Ecology, Vol. 32, No. 1 (Feb., 1995), pp. 1-8\r\n\r\nBut their data suggests a value of 0.3",
+                      "Text": "Use same value as determined for live leaves.",
                       "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -950,17 +911,7 @@
                   "FixedValue": 0.07,
                   "Units": null,
                   "Name": "MaximumNConc",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "0.043 gN/g from R.B. Thomas 1, D.D. Richter 2, H. Ye 2, P.R. Heine z, and B.R. Strain 1 Nitrogen dynamics and growth of seedlings of an N-fixing tree\r\n(GKricidia sepium (Jacq.) Walp.) exposed to elevated atmospheric carbon dioxide Oecologia (1991) 88:415-421",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -1015,7 +966,7 @@
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
                       "FractionLiveToRemove": 0.0,
                       "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 1.0,
+                      "FractionLiveToResidue": 0.98,
                       "FractionDeadToResidue": 1.0,
                       "Name": "Cut",
                       "Children": [],
@@ -1028,7 +979,7 @@
                       "FractionLiveToRemove": 0.0,
                       "FractionDeadToRemove": 0.0,
                       "FractionLiveToResidue": 0.46,
-                      "FractionDeadToResidue": 0.46,
+                      "FractionDeadToResidue": 1.0,
                       "Name": "Prune",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1069,7 +1020,17 @@
                   "FixedValue": 184.0,
                   "Units": null,
                   "Name": "LeafResidenceTime",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Assume leaves have a life span of approximately half a year.",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -1086,10 +1047,20 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 3.0,
+                  "FixedValue": 1.0,
                   "Units": null,
                   "Name": "LeafDetachmentTime",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This model assumes that all leaves detach upon senescence.",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -1139,17 +1110,7 @@
                   "FixedValue": 0.01,
                   "Units": "m^2/g",
                   "Name": "SpecificLeafAreaFunction",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "0.0232 m2/g from R.B. Thomas 1, D.D. Richter 2, H. Ye 2, P.R. Heine z, and B.R. Strain 1 Nitrogen dynamics and growth of seedlings of an N-fixing tree\r\n(GKricidia sepium (Jacq.) Walp.) exposed to elevated atmospheric carbon dioxide Oecologia (1991) 88:415-421\r\n\r\nValue of 0.0195 for whole leaf or 0.024 for leaf lamina from Leaf area index estimates obtained for clumped canopies\r\nusing hemispherical photography\r\nP.R. van Gardingen*, G.E. Jackson, S. Hernandez-Daumas, G. Russell, L. Sharp\r\nAgricultural and Forest Meteorology 94 (1999) 243±257",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -1169,7 +1130,17 @@
                   "FixedValue": 1.0,
                   "Units": null,
                   "Name": "LeafDevelopmentRate",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Leaf cohorts age according to a simple aggregation of time (ie no accounting for differing rates of development with temperature or stress).",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -1378,12 +1349,38 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
-                  "Units": null,
-                  "Name": "StomatalConductanceCO2Modifier",
+                  "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Expression": "(163 - [IWeather].MeanT)/(5 - 0.1*[IWeather].MeanT)",
+                  "Name": "CO2internal",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.DivideFunction, Models",
+                  "Name": "StomatalConductanceCO2Modifier",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Photosynthesis.FCO2",
+                      "Name": "FCO2",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Expression": "([IWeather].CO2 - [Leaf].CO2internal.Value())/(350 - [Leaf].CO2internal.Value())",
+                      "Name": "RelativeCO2Gradient",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -1439,17 +1436,7 @@
                   "FixedValue": 0.03,
                   "Units": null,
                   "Name": "MaximumNConc",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "0.02 gN/g for seedlings from R.B. Thomas 1, D.D. Richter 2, H. Ye 2, P.R. Heine z, and B.R. Strain 1 Nitrogen dynamics and growth of seedlings of an N-fixing tree\r\n(GKricidia sepium (Jacq.) Walp.) exposed to elevated atmospheric carbon dioxide Oecologia (1991) 88:415-421",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -1476,7 +1463,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1000000.0,
+                  "FixedValue": 10000.0,
                   "Units": null,
                   "Name": "MaximumRootDepth",
                   "Children": [],
@@ -1485,29 +1472,15 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "KLModifier",
                   "Children": [
                     {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        0.0,
-                        3.0
-                      ],
-                      "Y": [
-                        1.0,
-                        1.0
-                      ],
-                      "Name": "XYPairs",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].LAI",
-                      "Name": "XValue",
+                      "$type": "Models.Memo, Models",
+                      "Text": "This model does not account for any change in potential water uptake with plant development.",
+                      "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -1519,29 +1492,15 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "KNO3",
                   "Children": [
                     {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        0.0,
-                        0.003
-                      ],
-                      "Y": [
-                        0.03,
-                        0.03
-                      ],
-                      "Name": "XYPairs",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Root].LengthDensity",
-                      "Name": "XValue",
+                      "$type": "Models.Memo, Models",
+                      "Text": "This model does not account for any change in potential NO3 uptake with plant development.",
+                      "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -1553,29 +1512,15 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "KNH4",
                   "Children": [
                     {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        0.0,
-                        0.003
-                      ],
-                      "Y": [
-                        0.0,
-                        0.0
-                      ],
-                      "Name": "XYPairs",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Root].LengthDensity",
-                      "Name": "XValue",
+                      "$type": "Models.Memo, Models",
+                      "Text": "This model does not account for any change in potential NH4 uptake with plant development.",
+                      "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -2025,7 +1970,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "0.03 gN/g for seedlings from R.B. Thomas 1, D.D. Richter 2, H. Ye 2, P.R. Heine z, and B.R. Strain 1 Nitrogen dynamics and growth of seedlings of an N-fixing tree\r\n(GKricidia sepium (Jacq.) Walp.) exposed to elevated atmospheric carbon dioxide Oecologia (1991) 88:415-421",
+                      "Text": "Value taken from [Thomasetal1991].",
                       "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -2431,7 +2376,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "",
+                  "Text": "This model calculated the N supply from biological N fixation by nodules within the plant root system.",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -2651,61 +2596,6 @@
                   "Units": "g/m^2/d",
                   "Name": "FixationRate",
                   "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "FixationRateNEW",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "NitrogenStressFactor",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            0.7,
-                            1.0
-                          ],
-                          "Y": [
-                            1.0,
-                            1.0,
-                            0.5
-                          ],
-                          "Name": "XYPairs",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].Fn",
-                          "Name": "XValue",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 2.0,
-                      "Units": null,
-                      "Name": "Constant",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -3026,8 +2916,9 @@
       "Children": [
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
-          "FileName": "Observed.xlsx",
-          "FileNameMetadata": null,
+          "FileNames": [
+            "Observed.xlsx"
+          ],
           "SheetNames": [
             "Observed",
             "ObservedGliricidia",
@@ -3040,12 +2931,12 @@
               "Text": "Makoka Observed Gliricidia Biomass data were derived from:\nMakumba et al 2006 Fig. 2 annual biomass of leaf(+green branch) 1993-2003\nAkinnifiessi et al 2006 Fig. 1 annual stem wood and leaf(+green branch) 1992/93-2001/02, \n\t\t\tTable 2 (seasonal spread for nutrient weight 1997/98 and 1998/1999)\nMakumba et al 2007 Table 1 annual C (2x = biomass) 1993-2002 \nExcel files of raw data from Sileshi for individual harvests 2003-2005\n",
               "Name": "Memo",
               "Children": [],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
+          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -3058,7 +2949,7 @@
           "FieldName3UsedForMatch": null,
           "Name": "PredictedObserved",
           "Children": [],
-          "IncludeInDocumentation": true,
+          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -3071,7 +2962,7 @@
           "FieldName3UsedForMatch": null,
           "Name": "PredictedObservedSoil",
           "Children": [],
-          "IncludeInDocumentation": true,
+          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -3084,7 +2975,7 @@
           "FieldName3UsedForMatch": null,
           "Name": "PredictedObservedGliricidia",
           "Children": [],
-          "IncludeInDocumentation": true,
+          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -3095,12 +2986,12 @@
           "FieldToSplitOn": "SimulationName",
           "Name": "Probability",
           "Children": [],
-          "IncludeInDocumentation": true,
+          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         }
       ],
-      "IncludeInDocumentation": true,
+      "IncludeInDocumentation": false,
       "Enabled": true,
       "ReadOnly": false
     },
@@ -3109,6 +3000,15 @@
       "ShowPageOfGraphs": true,
       "Name": "Validation",
       "Children": [
+        {
+          "$type": "Models.Memo, Models",
+          "Text": "The Gliricia model has been tested across a range of planting and agronomic conditions.  These include datasets from Africa, Guadeloupe and USA covering a wide range of weather conditions and agronomic systems.",
+          "Name": "Memo",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
         {
           "$type": "Models.Map, Models",
           "Center": {
@@ -3128,6 +3028,15 @@
           "DisabledSimNames": null,
           "Name": "Hamakuapoko",
           "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "This dataset measured above-ground biomass and leaf area, and calculated light interception, in a 2-year experiment on the island of Maui, Hawaii ([HarringtonAndFownes1995]).  The soil was a silty clay classified as an Oxic Haplustoll, with a surface soil (0-15cm) pH of 5-2 (1:1 soil:water), 2-4% organic C, and 0-18% total N.  The dry season from May to October receives one-third of the mean annual rainfall of 1200 mm.",
+              "Name": "Memo",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
             {
               "$type": "Models.Factorial.Factors, Models",
               "Name": "Factors",
@@ -3690,6 +3599,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
@@ -3827,11 +3737,11 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Gliricidia",
+                      "IsAlive": false,
                       "IsEnding": false,
                       "DaysAfterEnding": 0,
                       "ResourceName": "Gliricidia",
                       "Name": "Gliricidia",
-                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -4032,7 +3942,7 @@
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -4130,7 +4040,7 @@
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -4228,7 +4138,7 @@
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -4483,7 +4393,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "This trial was conducted at Gatton in 1995 using the local variety, Hartog.  It consisted of 4 Nitrogen rates (0,40,80,160) with two irrigation rates (minimal amount for establishment, fully irrigated).  Yields ranged from 1.4 t/ha to 5.4 t/ha.",
+              "Text": "The study ([NygrenAndCruz1998])was carried out at the experimental farm of the Antillean research centre of the Institut National de la Recherche Agronomique (INRA) in Prise d’Eau, Guadeloupe. The soils are alluvial Ultisols with low acidity and relatively high cation exchange capacity.  The experiment was established in May 1993. Gliricidia sepium was planted using stakes cut from a near-by living fence. Between May 1993 and March 1995 the whole experiment was managed uniformly by means of partial prunings every 3–6 months according to the growth of trees, in order to avoid excessive shading of the grass layer.",
               "Name": "Memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -4673,6 +4583,23 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.MicroClimate, Models",
+                  "a_interception": 0.0,
+                  "b_interception": 0.0,
+                  "c_interception": 0.0,
+                  "d_interception": 0.0,
+                  "soil_albedo": 0.23,
+                  "SoilHeatFluxFraction": 0.4,
+                  "MinimumHeightDiffForNewLayer": 0.0,
+                  "NightInterceptionFraction": 0.5,
+                  "ReferenceHeight": 2.0,
+                  "Name": "MicroClimate",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Core.Zone, Models",
                   "Area": 1.0,
                   "Slope": 0.0,
@@ -4699,7 +4626,7 @@
                       "LocationAccuracy": null,
                       "DataSource": "Nygren and Cruz 1998 Biomass allocation . . . . Agrof. Sys 41:277-292; Sierra etal 2003 application of STICS Plant Soil 256:333-345",
                       "Comments": null,
-                      "Name": "Guadeloupe Soil",
+                      "Name": "Soil",
                       "Children": [
                         {
                           "$type": "Models.Soils.Physical, Models",
@@ -5107,22 +5034,6 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.MicroClimate, Models",
-                      "a_interception": 0.0,
-                      "b_interception": 0.0,
-                      "c_interception": 0.0,
-                      "d_interception": 0.0,
-                      "soil_albedo": 0.23,
-                      "SoilHeatFluxFraction": 0.4,
-                      "NightInterceptionFraction": 0.5,
-                      "ReferenceHeight": 2.0,
-                      "Name": "MicroClimate",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Report.Report, Models",
                       "VariableNames": [
                         "[Clock].Today",
@@ -5211,11 +5122,11 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Gliricidia",
+                      "IsAlive": false,
                       "IsEnding": false,
                       "DaysAfterEnding": 0,
                       "ResourceName": "Gliricidia",
                       "Name": "Gliricidia",
-                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -5340,6 +5251,24 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF.Organs;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] PerennialLeaf Leaf;\r\n        [Link] Clock Clock;\r\n\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Accumulation Start Date\")]\r\n        public DateTime AccumulationStartDate { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double AccumulatedLitterfallWt {get; set;}\r\n\r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n                AccumulatedLitterfallWt = 0;\r\n        }\r\n\r\n        [EventSubscribe(\"EndOfDay\")]\r\n        private void OnEndOfDay(object sender, EventArgs e)\r\n        {\r\n                AccumulatedLitterfallWt += Leaf.Detached.Wt;\r\n        }\r\n\r\n    }\r\n}\r\n                \r\n",
+                      "Parameters": [
+                        {
+                          "Key": "AccumulationStartDate",
+                          "Value": "01/01/0001 00:00:00"
+                        },
+                        {
+                          "Key": "AccumulatedLitterfallWt",
+                          "Value": "0"
+                        }
+                      ],
+                      "Name": "LitterFallAccumulation",
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -5450,7 +5379,7 @@
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -5616,7 +5545,105 @@
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "LitterFall",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "Harvest",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "GliricidiaDailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "CumulativeLitterFall",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Predicted",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "Harvest",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "ObservedGliricidia",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Gliricidia.Leaf.Detached.Wt",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Observed",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -5714,7 +5741,7 @@
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6405,17 +6432,8 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "These is currenlty (1/3/2017) no grass model inlcuded. Can we include a tropical grass model, with cuttings removed every 4-6 weeks?  ",
-              "Name": "Limitation",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Memo, Models",
-              "Text": "These harvests are currenlty (1/3/2017) full, but could reflect better the amounts of foliage and stem left.  ",
-              "Name": "LimitationFactors",
+              "Text": "The study ([NygrenEtAl2000]) was carried out at the experimental farm of the Antillean Research Centre of the Institut National de la Recherche Agronomique (INRA) in Godet, Guadeloupe (16°20′ N, 61°30′ W, 10 m a.s.l.). The soil is a slightly basic Vertisol with soil depth varying irregularly from 0.25 to 0.75 m. The climate is warm and subhumid. \nThe experiment was established in May 1989 by planting G. sepium cuttings from a nearby living fence in natural D. aristatum grassland. Gliricidia sepium was pruned every 2–2.5 months with successive full (100%) and partial (20–30%) defoliations, and the pruning residues were removed from the site. On April 1, 1996, the G. sepium trees were pruned completely. Three tree cutting regimes were then initiated: total removal of all leaves and branches above 0.5 m once a year, or every 6 months, and partial pruning every 2 months. Dichantium aristatum was cut monthly and the cut grass removed from the site.",
+              "Name": "Memo",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -6618,7 +6636,7 @@
                       "LocationAccuracy": null,
                       "DataSource": "Nygren et al 2000 Influence of biomass harvesting . . . . Tree Physiol 20:41-48; Cruz 1997 Effecct of shade . . . Plant Soil 188:227-237; Tournebize et al 1996 Modelling evapotranspiration . . . Ag For Meteorol 81:255-272",
                       "Comments": "Soil depth ranged from 0.1 to 0.75 m",
-                      "Name": "GuadeloupeGodet Soil",
+                      "Name": "Soil",
                       "Children": [
                         {
                           "$type": "Models.Soils.Physical, Models",
@@ -7013,6 +7031,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
@@ -7098,11 +7117,11 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Gliricidia",
+                      "IsAlive": false,
                       "IsEnding": false,
                       "DaysAfterEnding": 0,
                       "ResourceName": "Gliricidia",
                       "Name": "Gliricidia",
-                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -8528,7 +8547,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "",
+              "Text": "This agroforestry experiment ([MakumbaEtAl2006]) has been continuously cropped with maize since it was established in 1992.   The trial was includes three rates of N fertiliser with/without Gliricidia sepium\nintercropping. The study was conducted at Makoka Agricultural Research Station near Zomba in Southern Malawi. The soil had 42% clay, 46% sand and 1.42 g/cm3 bulk density.  The rainfall is unimodal with a mean rainfall of 937 mm. ",
               "Name": "Memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -9941,6 +9960,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
@@ -10230,6 +10250,7 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Maize",
+                      "IsAlive": false,
                       "IsEnding": false,
                       "DaysAfterEnding": 0,
                       "ResourceName": "Maize",
@@ -10272,11 +10293,11 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Gliricidia",
+                      "IsAlive": false,
                       "IsEnding": false,
                       "DaysAfterEnding": 0,
                       "ResourceName": "Gliricidia",
                       "Name": "Gliricidia",
-                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -10633,7 +10654,7 @@
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -12262,154 +12283,6 @@
             }
           ],
           "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 3,
-              "Title": null,
-              "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
-            },
-            {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 0,
-              "Title": null,
-              "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
-            }
-          ],
-          "LegendPosition": 3,
-          "LegendOrientation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": false,
-          "Name": "OvP AboveGroundWt Gliricidia",
-          "Children": [
-            {
-              "$type": "Models.Graph.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16777216,
-              "FactorToVaryColours": "Experiment",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 0,
-              "MarkerSize": 0,
-              "Line": 4,
-              "LineThickness": 0,
-              "Checkpoint": "Current",
-              "TableName": "PredictedObservedGliricidia",
-              "XFieldName": "Predicted.Gliricidia.AboveGround.Wt",
-              "YFieldName": "Observed.Gliricidia.AboveGround.Wt",
-              "X2FieldName": "",
-              "Y2FieldName": "",
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "OvP",
-              "Children": [
-                {
-                  "$type": "Models.Graph.Regression, Models",
-                  "ForEachSeries": false,
-                  "showOneToOne": true,
-                  "showEquation": true,
-                  "Name": "Regression",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": false,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 3,
-              "Title": null,
-              "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
-            },
-            {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 0,
-              "Title": null,
-              "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
-            }
-          ],
-          "LegendPosition": 0,
-          "LegendOrientation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": false,
-          "Name": "OvP TotalRemovalWt Gliricidia",
-          "Children": [
-            {
-              "$type": "Models.Graph.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16777216,
-              "FactorToVaryColours": "Experiment",
-              "FactorToVaryMarkers": "Experiment",
-              "FactorToVaryLines": null,
-              "Marker": 0,
-              "MarkerSize": 0,
-              "Line": 4,
-              "LineThickness": 0,
-              "Checkpoint": "Current",
-              "TableName": "PredictedObservedGliricidia",
-              "XFieldName": "Predicted.CuttingManagement.Script.TotalRemovalWt",
-              "YFieldName": "Observed.CuttingManagement.Script.TotalRemovalWt",
-              "X2FieldName": "",
-              "Y2FieldName": "",
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": true,
-              "CumulativeX": true,
-              "Filter": "",
-              "Name": "Pred",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -14221,6 +14094,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
@@ -14350,11 +14224,11 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Gliricidia",
+                      "IsAlive": false,
                       "IsEnding": false,
                       "DaysAfterEnding": 0,
                       "ResourceName": "Gliricidia",
                       "Name": "Gliricidia",
-                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": false,
                       "ReadOnly": false
@@ -15006,6 +14880,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -15135,11 +15010,11 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Gliricidia",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Gliricidia",
                           "Name": "Gliricidia",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": false,
                           "ReadOnly": false
@@ -16819,6 +16694,193 @@
           ],
           "IncludeInDocumentation": true,
           "Enabled": false,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Folder, Models",
+          "ShowPageOfGraphs": true,
+          "Name": "Combined Results",
+          "Children": [
+            {
+              "$type": "Models.Graph.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "Models.Graph.Axis, Models",
+                  "Type": 3,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Graph.Axis, Models",
+                  "Type": 0,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                }
+              ],
+              "LegendPosition": 3,
+              "LegendOrientation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "OvP AboveGroundWt Gliricidia",
+              "Children": [
+                {
+                  "$type": "Models.Graph.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "Checkpoint": "Current",
+                  "TableName": "PredictedObservedGliricidia",
+                  "XFieldName": "Predicted.Gliricidia.AboveGround.Wt",
+                  "YFieldName": "Observed.Gliricidia.AboveGround.Wt",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "OvP",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "Models.Graph.Axis, Models",
+                  "Type": 3,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Graph.Axis, Models",
+                  "Type": 0,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "OvP TotalRemovalWt Gliricidia",
+              "Children": [
+                {
+                  "$type": "Models.Graph.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryMarkers": "Experiment",
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "Checkpoint": "Current",
+                  "TableName": "PredictedObservedGliricidia",
+                  "XFieldName": "Predicted.CuttingManagement.Script.TotalRemovalWt",
+                  "YFieldName": "Observed.CuttingManagement.Script.TotalRemovalWt",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": true,
+                  "CumulativeX": true,
+                  "Filter": "",
+                  "Name": "Pred",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Core.Folder, Models",
+      "ShowPageOfGraphs": true,
+      "Name": "Sensibility",
+      "Children": [
+        {
+          "$type": "Models.Core.Folder, Models",
+          "ShowPageOfGraphs": true,
+          "Name": "StripCropping",
+          "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "This sensibility test checks that Gliricidia crops provide N supply to neighbouring maize crops in strip cropping situations.  A simulation experiment has been constructed to simulate yield in Rwanda.  Yield variation should be close to that for fertilised crops.",
+              "Name": "Memo",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
           "ReadOnly": false
         }
       ],
