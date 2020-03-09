@@ -106,7 +106,7 @@ namespace Models.Core
         {
             get
             {
-                return GetApsimVersion();
+                return Assembly.GetExecutingAssembly().GetName().Version.ToString();
             }
             set
             {
