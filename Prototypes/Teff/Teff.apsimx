@@ -5446,6 +5446,57 @@
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
+        },
+        {
+          "$type": "Models.Report.Report, Models",
+          "VariableNames": [
+            "[Clock].Today",
+            "[Teff].Phenology.CurrentStageName",
+            "[Teff].AboveGround.Wt",
+            "[Teff].Grain.Yield",
+            "[Teff].Grain.Size as GrainSize",
+            "[Teff].Grain.Wt ",
+            "[Teff].Structure.MainStemFinalNodeNo",
+            "[Teff].Phenology.FloweringDAS as FloweringDAS",
+            "[Teff].Phenology.MaturityDAS  as MaturityDAS"
+          ],
+          "EventNames": [
+            "[Teff].Harvesting"
+          ],
+          "Name": "HarvestReport",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Report.Report, Models",
+          "VariableNames": [
+            "[Clock].Today",
+            "[Teff].Phenology.CurrentStageName",
+            "[Soil].SoilWater.SW",
+            "[Soil].SoilWater.Eo",
+            "[Soil].SoilWater.Es",
+            "[Soil].SoilWater.Drainage",
+            "[Soil].SoilWater.Runoff",
+            "[Soil].SoilWater.pond",
+            "sum([Soil].SoilWater.SWmm[1:2]) as SW30cm",
+            "[Soil].SoilNitrogen.NO3.kgha",
+            "[Teff].Leaf.LAI",
+            "[Teff].Leaf.Transpiration",
+            "[Teff].Leaf.CoverGreen",
+            "[Teff].AboveGround.Wt",
+            "[Teff].Grain.Wt",
+            "([Teff].Leaf.Transpiration+[Soil].SoilWater.Es) as ET"
+          ],
+          "EventNames": [
+            "[Clock].DoReport"
+          ],
+          "Name": "Report",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
         }
       ],
       "IncludeInDocumentation": true,
@@ -5606,6 +5657,19 @@
           "FieldName2UsedForMatch": null,
           "FieldName3UsedForMatch": null,
           "Name": "PredictedObservedCanopy",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.PredictedObserved, Models",
+          "PredictedTableName": "HarvestReport",
+          "ObservedTableName": "ObservedHarvestData",
+          "FieldNameUsedForMatch": "Teff.Phenology.CurrentStageName",
+          "FieldName2UsedForMatch": null,
+          "FieldName3UsedForMatch": null,
+          "Name": "PredictedObservedHarvest",
           "Children": [],
           "IncludeInDocumentation": true,
           "Enabled": true,
@@ -6487,7 +6551,7 @@
                   ],
                   "LegendPosition": 3,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Biomass",
                   "Children": [
@@ -6609,7 +6673,7 @@
                   ],
                   "LegendPosition": 3,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "BiomassN",
                   "Children": [
@@ -10082,7 +10146,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -10099,7 +10163,7 @@
                   ],
                   "LegendPosition": 1,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "SoilWater",
                   "Children": [
@@ -10150,7 +10214,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -10167,7 +10231,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "CoverGreen",
                   "Children": [
@@ -10248,7 +10312,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -10265,7 +10329,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "LAI",
                   "Children": [
@@ -10346,7 +10410,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -10363,7 +10427,7 @@
                   ],
                   "LegendPosition": 1,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "NStress",
                   "Children": [
@@ -10414,7 +10478,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -10431,7 +10495,7 @@
                   ],
                   "LegendPosition": 1,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "WaterStress",
                   "Children": [
@@ -10482,7 +10546,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -10499,7 +10563,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Biomass",
                   "Children": [
@@ -10580,143 +10644,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    },
-                    {
-                      "$type": "Models.Graph.Axis, Models",
-                      "Type": 0,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "DisabledSeries": null,
-                  "LegendOutsideGraph": false,
-                  "Name": "PETa",
-                  "Children": [
-                    {
-                      "$type": "Models.Graph.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16776961,
-                      "FactorToVaryColours": "Treatment",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "Checkpoint": "Current",
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "MicroClimate.peta",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": false,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Predicted",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "Models.Graph.Axis, Models",
-                      "Type": 3,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    },
-                    {
-                      "$type": "Models.Graph.Axis, Models",
-                      "Type": 0,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "DisabledSeries": null,
-                  "LegendOutsideGraph": false,
-                  "Name": "PETr",
-                  "Children": [
-                    {
-                      "$type": "Models.Graph.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16776961,
-                      "FactorToVaryColours": "Treatment",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "Checkpoint": "Current",
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "MicroClimate.petr",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": false,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Predicted",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "Models.Graph.Axis, Models",
-                      "Type": 3,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -10733,135 +10661,7 @@
                   ],
                   "LegendPosition": 1,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
-                  "LegendOutsideGraph": false,
-                  "Name": "LeafDevelopment",
-                  "Children": [
-                    {
-                      "$type": "Models.Graph.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16736653,
-                      "FactorToVaryColours": null,
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "Checkpoint": "Current",
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "Teff.Leaf.AppearedCohortNo",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Tips",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16747854,
-                      "FactorToVaryColours": null,
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "Checkpoint": "Current",
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "Teff.Leaf.ExpandedCohortNo",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Ligules",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -1663232,
-                      "FactorToVaryColours": null,
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "Checkpoint": "Current",
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "Teff.Leaf.SenescingCohortNo",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Dead",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "Models.Graph.Axis, Models",
-                      "Type": 3,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    },
-                    {
-                      "$type": "Models.Graph.Axis, Models",
-                      "Type": 0,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    }
-                  ],
-                  "LegendPosition": 1,
-                  "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Tillering",
                   "Children": [
@@ -16327,7 +16127,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -16344,7 +16144,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "LAI",
                   "Children": [
@@ -16395,7 +16195,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -16412,7 +16212,7 @@
                   ],
                   "LegendPosition": 1,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "ET",
                   "Children": [
@@ -17351,7 +17151,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -17368,7 +17168,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "SW",
                       "Children": [
@@ -17449,7 +17249,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -17466,7 +17266,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "ET",
                       "Children": [
@@ -19591,7 +19391,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -19608,7 +19408,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "LAI",
                   "Children": [
@@ -19706,7 +19506,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Biomass",
                   "Children": [
@@ -19787,7 +19587,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -19804,7 +19604,7 @@
                   ],
                   "LegendPosition": 1,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "SoilWater",
                   "Children": [
@@ -19885,7 +19685,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -19902,7 +19702,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "CoverGreen",
                   "Children": [
@@ -19983,7 +19783,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -20000,7 +19800,7 @@
                   ],
                   "LegendPosition": 1,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "SoilNO3",
                   "Children": [
@@ -20051,7 +19851,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -20068,7 +19868,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Grain",
                   "Children": [
@@ -20119,7 +19919,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -20136,7 +19936,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "WaterStress",
                   "Children": [
@@ -20187,7 +19987,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -20204,7 +20004,7 @@
                   ],
                   "LegendPosition": 1,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Tillering",
                   "Children": [
@@ -20255,7 +20055,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -20272,7 +20072,7 @@
                   ],
                   "LegendPosition": 1,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "LeafDevelopment",
                   "Children": [
@@ -20400,7 +20200,7 @@
                   ],
                   "LegendPosition": 1,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "LeafSizes",
                   "Children": [
@@ -20661,7 +20461,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -20678,7 +20478,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "NStress",
                   "Children": [
@@ -20729,7 +20529,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -20746,7 +20546,7 @@
                   ],
                   "LegendPosition": 1,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "ET",
                   "Children": [
@@ -21758,7 +21558,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -21775,7 +21575,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "LAI",
                   "Children": [
@@ -21873,7 +21673,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Biomass",
                   "Children": [
@@ -21954,7 +21754,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -21971,7 +21771,7 @@
                   ],
                   "LegendPosition": 1,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "SoilWater",
                   "Children": [
@@ -22052,7 +21852,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -22069,7 +21869,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "CoverGreen",
                   "Children": [
@@ -22150,7 +21950,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -22167,7 +21967,7 @@
                   ],
                   "LegendPosition": 1,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "SoilNO3",
                   "Children": [
@@ -23318,7 +23118,7 @@
                   "XAxis": 3,
                   "YAxis": 0,
                   "ColourArgb": -16776961,
-                  "FactorToVaryColours": null,
+                  "FactorToVaryColours": "Experiment",
                   "FactorToVaryMarkers": null,
                   "FactorToVaryLines": null,
                   "Marker": 0,
@@ -23398,7 +23198,7 @@
                   "XAxis": 3,
                   "YAxis": 0,
                   "ColourArgb": -16776961,
-                  "FactorToVaryColours": null,
+                  "FactorToVaryColours": "Experiment",
                   "FactorToVaryMarkers": null,
                   "FactorToVaryLines": null,
                   "Marker": 0,
@@ -24517,7 +24317,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "FinalLeafNumber",
                   "Children": [
@@ -24615,7 +24415,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "PanicleInitiationDAS",
                   "Children": [
@@ -24713,7 +24513,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Graph1",
                   "Children": [
