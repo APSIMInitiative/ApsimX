@@ -2,7 +2,7 @@
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 278,
   "Version": 80,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-06",
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-10",
   "Name": "Simulations",
   "Children": [
     {
@@ -6555,14 +6555,11 @@
             "[Grapevine].Phenology.FloweringDOY as FloweringDOY",
             "[Grapevine].Phenology.VeraisonDOY as VeraisonDOY",
             "[Grapevine].Phenology.CurrentStageName as CurrentStageName",
-            "[Grapevine].Phenology.AccChillMar1st",
             "[Grapevine].Phenology.AccChillBefPrune",
-            "[Grapevine].Phenology.Budding.FractionOfBudBurst",
             "[Grapevine].Structure.PrimaryBudNo",
             "[Grapevine].Structure.MainStemPopn",
             "[Grapevine].Structure.LeafTipsAppeared",
             "[Grapevine].Leaf.LAI",
-            "[Grapevine].Leaf.Photosynthesis.Value",
             "[Grapevine].Leaf.InitialisedCohortNo",
             "[Grapevine].Leaf.DeadCohortNo",
             "[Grapevine].Leaf.AppearedCohortNo",
