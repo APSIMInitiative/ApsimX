@@ -206,16 +206,32 @@
             }
         }
 
-        private int WinterSolsticeDOY
+        /// <summary>
+        /// days since winter solstice (day)
+        /// </summary>
+        [Units("day")]
+        [XmlIgnore]
+        public int WinterSolsticeDOY
         {
             get {
                 if (Latitude <= 0)
-                    return 173;
+                {
+                    if (DateTime.IsLeapYear(clock.Today.Year))
+                        return 173;
+                    else
+                        return 172;
+                }
                 else
-                    return 356;
+                {
+                    if (DateTime.IsLeapYear(clock.Today.Year))
+                        return 356;
+                    else
+                        return 355;
+                }
                 }
         }
-        
+
+        private bool First = true;
         /// <summary>
         /// Number of days lapsed since the winter solstice
         /// </summary>
@@ -535,7 +551,23 @@
             if (this.PreparingNewWeatherData != null)
                 this.PreparingNewWeatherData.Invoke(this, new EventArgs());
 
-            if (clock.Today.DayOfYear == WinterSolsticeDOY)
+            if (First)
+            {
+                //StartDAWS = met.DaysSinceWinterSolstice;
+                if (clock.Today.DayOfYear < WinterSolsticeDOY)
+                {
+                    if (DateTime.IsLeapYear(clock.Today.Year))
+                        DaysSinceWinterSolstice = 366 - WinterSolsticeDOY + clock.Today.DayOfYear -1;  //minus 1 as we set the first day as zero
+                    else
+                        DaysSinceWinterSolstice = 365 - WinterSolsticeDOY + clock.Today.DayOfYear -1; 
+                }
+                else
+                    DaysSinceWinterSolstice = clock.Today.DayOfYear - WinterSolsticeDOY;
+                    
+                First = false;
+            }
+
+            if (clock.Today.DayOfYear == WinterSolsticeDOY & First == false)
                 DaysSinceWinterSolstice = 0;
             else DaysSinceWinterSolstice += 1;
 
@@ -701,9 +733,12 @@
                 for (int m = 0; m < 12; m++)
                 {
                     monthlyMeans[m, y] = monthlySums[m, y] / monthlyDays[m, y];  // calc monthly mean
-                    sumOfMeans += monthlyMeans[m, y];
-                    maxMean = Math.Max(monthlyMeans[m, y], maxMean);
-                    minMean = Math.Min(monthlyMeans[m, y], minMean);
+                    if (monthlyDays[m, y] != 0)
+                    {
+                        sumOfMeans += monthlyMeans[m, y];
+                        maxMean = Math.Max(monthlyMeans[m, y], maxMean);
+                        minMean = Math.Min(monthlyMeans[m, y], minMean);
+                    }
                 }
 
                 yearlySumMeans += sumOfMeans / 12.0;        // accum the ave of monthly means
