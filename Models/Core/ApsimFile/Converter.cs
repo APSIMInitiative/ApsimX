@@ -1642,6 +1642,30 @@
         }
 
         /// <summary>
+        /// Add Critical N Conc (if not existing) to all Root Objects by copying the maximum N conc
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion81(JObject root, string fileName)
+        {
+
+            foreach (JObject r in JsonUtilities.ChildrenRecursively(root, "Root"))
+            {
+                if (JsonUtilities.ChildWithName(r, "CriticalNConc") == null)
+                {
+                    JObject minNConc = JsonUtilities.ChildWithName(r, "MinimumNConc");
+                    if (minNConc == null)
+                        throw new Exception("Root has no CriticalNConc or MaximumNConc");
+
+                    VariableReference varRef = new VariableReference();
+                    varRef.Name = "CriticalNConc";
+                    varRef.VariableName = "[Root].MinimumNConc";
+                    JsonUtilities.AddModel(r, varRef);                    
+                }
+            }
+        }
+
+        /// <summary>
         /// Changes initial Root Wt to an array.
         /// </summary>
         /// <param name="root">The root JSON token.</param>
