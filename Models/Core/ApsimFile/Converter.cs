@@ -1646,7 +1646,7 @@
 
             // Fix type of all models in the now-removed Models.Graph namespace
             foreach (JObject model in JsonUtilities.ChildrenRecursively(root))
-                model["$type"] = model["$type"].ToString().Replace("Models.Graph", "Models");
+                model["$type"] = model["$type"].ToString().Replace("Models.Graph.", "Models.");
 
             // Fix graph axes - these are a property of graphs, not a model themselves
             foreach (JObject graph in JsonUtilities.ChildrenRecursively(root, "Graph"))
@@ -1654,6 +1654,20 @@
                 JArray axes = graph["Axis"] as JArray;
                 foreach (JObject axis in axes)
                     axis["$type"] = axis["$type"].ToString().Replace("Models.Graph", "Models");
+            }
+
+            // Fix nutrient directed graphs - the nodes/arcs are not children, but
+            // need to have their types fixed.
+            foreach (JObject nutrient in JsonUtilities.ChildrenRecursively(root, "Nutrient"))
+            {
+                JObject directedGraph = nutrient["DirectedGraphInfo"] as JObject;
+                directedGraph["$type"] = directedGraph["$type"].ToString().Replace("Models.Graph.", "Models.");
+                JArray nodes = directedGraph["Nodes"] as JArray;
+                foreach (JObject node in nodes)
+                    node["$type"] = node["$type"].ToString().Replace("Models.Graph.", "Models.");
+                JArray arcs = directedGraph["Arcs"] as JArray;
+                foreach (JObject arc in arcs)
+                    arc["$type"] = arc["$type"].ToString().Replace("Models.Graph.", "Models.");
             }
 
             // Replace ExcelMultiInput with an ExcelInput.
