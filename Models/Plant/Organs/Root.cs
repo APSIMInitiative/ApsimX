@@ -230,16 +230,6 @@
         /// <summary>The N supply for reallocation</summary>
         private double nReallocationSupply = 0.0;
 
-        /// <summary>The structural N demand</summary>
-        private double structuralNDemand = 0.0;
-
-        /// <summary>The non structural N demand</summary>
-        private double storageNDemand = 0.0;
-
-        /// <summary>The metabolic N demand</summary>
-        private double metabolicNDemand = 0.0;
-
-
         /// <summary>Constructor</summary>
         public Root()
         {
@@ -427,6 +417,9 @@
         /// <summary>Gets or sets the minimum nconc.</summary>
         public double MinNconc { get { return minimumNConc.Value(); } }
 
+        /// <summary>Gets the critical nconc.</summary>
+        public double CritNconc { get { return criticalNConc.Value(); } }
+
         /// <summary>Gets the total biomass</summary>
         public Biomass Total { get { return Live + Dead; } }
 
@@ -567,50 +560,6 @@
         [EventSubscribe("SetNDemand")]
         private void SetNDemand(object sender, EventArgs e)
         {
-            if(nDemands != null)
-            {
-                //use interface NDemand functions - used for sorghum model
-                CalculateNDemandsUsingSimpleFunctions();
-                return;
-            }
-            // This is basically the old/original function with added metabolicN.
-            // Calculate N demand based on amount of N needed to bring root N content in each layer up to maximum.
-
-            structuralNDemand = 0.0;
-            metabolicNDemand = 0.0;
-            storageNDemand = 0.0;
-            foreach (ZoneState Z in Zones)
-            {
-                Z.StructuralNDemand = new double[Z.soil.Thickness.Length];
-                Z.StorageNDemand = new double[Z.soil.Thickness.Length];
-                //Note: MetabolicN is assumed to be zero
-
-                double NDeficit = 0.0;
-                double minNConc = minimumNConc.Value();
-                double maxNConc = maximumNConc.Value();
-
-                for (int i = 0; i < Z.LayerLive.Length; i++)
-                {
-                    double criticalN = (criticalNConc == null) ? minimumNConc.Value() : criticalNConc.Value();
-
-                    Z.StructuralNDemand[i] = Z.PotentialDMAllocated[i] * minNConc;
-                    NDeficit = Math.Max(0.0, maxNConc * (Z.LayerLive[i].Wt + Z.PotentialDMAllocated[i]) - (Z.LayerLive[i].N + Z.StructuralNDemand[i]));
-                    Z.StorageNDemand[i] = Math.Max(0, NDeficit - Z.StructuralNDemand[i]);
-
-                    structuralNDemand += Z.StructuralNDemand[i];
-                    storageNDemand += Z.StorageNDemand[i];
-                }
-            }
-            NDemand.Structural = structuralNDemand;
-            NDemand.Storage = storageNDemand;
-            NDemand.Metabolic = metabolicNDemand;
-
-        }
-
-        /// <summary>alternative calculation that uses similar nDemands interface functions to GenericOrgan.</summary>
-        public void CalculateNDemandsUsingSimpleFunctions()
-        {
-            //TODO jb check if this is correct usage - possibly copied over by arbitrator
             NDemand.Structural = nDemands.Structural.Value();
             if (NDemand.Structural < 0)
                 throw new Exception("Structural N demand function in root returning negative, check parameterisation");
@@ -620,11 +569,6 @@
             NDemand.Storage = nDemands.Storage.Value();
             if (NDemand.Storage < 0)
                 throw new Exception("Structural N demand function in root returning negative, check parameterisation");
-
-            //The DM is allocated using CalculateRootActivityValues to proportion between layers
-            double TotalRAw = 0;
-            foreach (ZoneState Z in Zones)
-                TotalRAw += MathUtilities.Sum(Z.CalculateRootActivityValues());
 
             foreach (ZoneState Z in Zones)
             {
