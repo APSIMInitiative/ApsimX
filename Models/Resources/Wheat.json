@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 80,
+  "Version": 81,
   "Name": "Simulations",
   "Children": [
     {
@@ -52,7 +52,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "Wheat exhibits a range of developmental responses to environment and these are strongly influences by genotype characteristics.\nTemperature effects development increasing development rates and decreasing phase durations as temperatures increase.  Theset affects are captured by thermal time, .  However, wheat also exhibits vernalisation and photoperiod sensitivities in its Vegetative phase and further photoperiod sensitivity in the EarlyReproducivePhase.  Photoperiod responses are seen as a reduction in the length of a phase for a photoperiod sensitive genotype in response to a longer photoperiod.  Vernalisation responses are more complicated as they are driven by temperature but interact with photoperiod.  For vernalisation sensitive varieties (Winter types) exposure to cool temperatures or short photoperiods during the Vegetative phase will reduce the thermal time duration of the vegetative phase.  \n\nWe draw on the Kirby Framework to capture these vernalisation and photoperiod responses.  This framework assumes that the timing of anthesis is a result of the timing of flag leaf and an additional thermal time passage from there to anthesis.  It also assumes the timing of flag leaf is a result of the Final Leaf Number which sets a target, and leaf appearance rate, which sets the rate of progress toward this target.  Leaf appearance rate is a function of Thermal time and a genotype specific Phyllochron which changes with Haun stage as described by [Jamieson_LeafAppearance_1995].    \n\nFinal Leaf Number (FLN) is modeled as the sum of three numbers:\n\nFLN = MinLeafNumber + VernalLeaves + PhotoPLeaves\n\nWhere MinLeafNumber is the number of leaves that a wheat crop will produce when vernalisation is satisified early in the crops duration (before 2nd true leaf) and it is grown in a long photoperiod..  VernalLeaves are the number of leaves that are added due to vernalisation effects.  For insensitive varieties this will always be zero but this is potentially a larger number for sensitivie varieties and the number progresively decreases as the crop encounters more vernalisation.  PhotoPLeaves are the number of leaves that are added to the minimum leaf number as a result of short day exposure.  For insensitive varieties this will be zero but is potential larger for more sensitivie varieties and decreases as day length increases.  More detailed explinations of the components of phenology are provided below.",
+              "Text": "Wheat exhibits a range of developmental responses to environment and these are strongly influences by genotype characteristics.\nTemperature effects development increasing development rates and decreasing phase durations as temperatures increase.  Theset affects are captured by thermal time, .  However, wheat also exhibits vernalisation and photoperiod sensitivities in its Vegetative phase and further photoperiod sensitivity in the EarlyReproducivePhase.  Photoperiod responses are seen as a reduction in the length of a phase for a photoperiod sensitive genotype in response to a longer photoperiod.  Vernalisation responses are more complicated as they are driven by temperature but interact with photoperiod.  For vernalisation sensitive varieties (Winter types) exposure to cool temperatures or short photoperiods during the Vegetative phase will reduce the thermal time duration of the vegetative phase.  \n\nWe draw on the Kirby Framework to capture these vernalisation and photoperiod responses.  This framework assumes that the timing of anthesis is a result of the timing of flag leaf and an additional thermal time passage from there to anthesis.  It also assumes the timing of flag leaf is a result of the Final Leaf Number which sets a target, and leaf appearance rate, which sets the rate of progress toward this target.  Leaf appearance rate is a function of Thermal time and a genotype specific Phyllochron which changes with Haun stage as described by [Jamieson_LeafAppearance_1995].    \n\nFinal Leaf Number (FLN) is modeled as the sum of three numbers:\n\nFLN = MinLeafNumber + VernalLeaves + PhotoLeaves\n\nWhere MinLeafNumber is the number of leaves that a wheat crop will produce when vernalisation is satisified early in the crops duration (before 2nd true leaf) and it is grown in a long photoperiod..  VernalLeaves are the number of leaves that are added due to vernalisation effects.  For insensitive varieties this will always be zero but this is potentially a larger number for sensitivie varieties and the number progresively decreases as the crop encounters more vernalisation.  PhotoLeaves are the number of leaves that are added to the minimum leaf number as a result of short day exposure.  For insensitive varieties this will be zero but is potential larger for more sensitivie varieties and decreases as day length increases.  More detailed explinations of the components of phenology are provided below.",
               "Name": "Memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -101,7 +101,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "Vernalisation responses are based on those described by [Brown_Anthesis_2013].   Vernalisation is assumed to be related to the expression of the Vrn1 Gene.  Its experssion is accumulated daily and daily upregulation as a function of development (DeltaHaunStage) and a TempResponseProfile that declines exponentially from a maximum at 1<sup>o</sup>C to zero at 0<sup>o</sup>C and at 20<sup>o</sup>C.",
+                  "Text": "Vernalisation responses are based on those described by [Brown_Anthesis_2013].   Vernalisation is assumed to be related to the expression of the Vrn1 Gene.  Its experssion is accumulated daily and daily upregulation as a function of development (DeltaHaunStage) and a TempResponseProfile that declines exponentially from a maximum at 1<sup>o</sup>C to zero at 0<sup>o</sup>C and at 18<sup>o</sup>C.",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -538,7 +538,7 @@
             {
               "$type": "Models.PMF.Phen.NodeNumberPhase, Models",
               "Start": "Emergence",
-              "End": "TerminalSpikelet",
+              "End": "FloralInitiation",
               "Name": "Vegetative",
               "Children": [
                 {
@@ -554,6 +554,36 @@
                   "$type": "Models.Functions.VariableReference, Models",
                   "VariableName": "[Structure].HaunStageTerminalSpikelet",
                   "Name": "CompletionNodeNumber",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Phen.GenericPhase, Models",
+              "Start": "FloralInitiation",
+              "End": "TerminalSpikelet",
+              "Name": "SpikeletDifferentiation",
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].ThermalTime",
+                  "Name": "Progression",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "Target",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -1061,7 +1091,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "This is the thermal time between the emergence of leaf tips.  The model used here is based on [Jamieson_SIRIUS_1998] where leaf appearace could be described by a base phyllochron determined between leaves 2 and 7 and a phyllochron that was 75% of base phyllochron for leaves <= 2 and 140% of base phyllochron for leaves >= 8",
+                  "Text": "This is the thermal time between the emergence of leaf tips.  The model used here is based on [Jamieson_SIRIUS_1998] where leaf appearace could be described by a base phyllochron determined between leaves 2 and 7 and a phyllochron that was 70% of base phyllochron for leaves < 2 and 130% of base phyllochron for leaves > 7",
                   "Name": "Rational",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1489,10 +1519,12 @@
                         5.0,
                         6.0,
                         7.0,
-                        8.0
+                        8.0,
+                        9.0
                       ],
                       "Y": [
                         10.0,
+                        200.0,
                         200.0,
                         1000.0,
                         1000.0,
@@ -2841,10 +2873,12 @@
                                       "$type": "Models.Functions.XYPairs, Models",
                                       "X": [
                                         3.0,
-                                        4.0
+                                        4.0,
+                                        5.0
                                       ],
                                       "Y": [
                                         0.5,
+                                        0.2,
                                         0.2
                                       ],
                                       "Name": "XYPairs",
@@ -3074,6 +3108,15 @@
                   "ReadOnly": false
                 }
               ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Root].MinimumNConc",
+              "Name": "CriticalNConc",
+              "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -3500,11 +3543,13 @@
                           "X": [
                             3.0,
                             3.45,
-                            4.0
+                            4.0,
+                            5.0
                           ],
                           "Y": [
                             0.1,
                             0.5,
+                            1.0,
                             1.0
                           ],
                           "Name": "XYPairs",
@@ -3572,10 +3617,12 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             3.0,
-                            4.0
+                            4.0,
+                            5.0
                           ],
                           "Y": [
                             0.4,
+                            1.0,
                             1.0
                           ],
                           "Name": "XYPairs",
@@ -3753,9 +3800,11 @@
                         4.0,
                         5.0,
                         6.0,
-                        7.0
+                        7.0,
+                        8.0
                       ],
                       "Y": [
+                        0.05,
                         0.05,
                         0.05,
                         0.035,
@@ -3797,9 +3846,11 @@
                             4.0,
                             5.0,
                             6.0,
-                            7.0
+                            7.0,
+                            8.0
                           ],
                           "Y": [
+                            0.04,
                             0.04,
                             0.04,
                             0.0275,
@@ -3876,9 +3927,11 @@
                         4.0,
                         5.0,
                         6.0,
-                        7.0
+                        7.0,
+                        8.0
                       ],
                       "Y": [
+                        0.01,
                         0.01,
                         0.01,
                         0.01,
@@ -4060,10 +4113,12 @@
                         4.0,
                         5.0,
                         6.0,
-                        7.0
+                        7.0,
+                        8.0
                       ],
                       "Y": [
                         17000.0,
+                        20000.0,
                         20000.0,
                         18500.0,
                         17000.0,
@@ -4643,10 +4698,12 @@
                       "X": [
                         3.0,
                         4.0,
-                        4.7,
-                        5.0
+                        5.0,
+                        5.7,
+                        6.0
                       ],
                       "Y": [
+                        1.0,
                         1.0,
                         1.0,
                         1.0,
@@ -4812,12 +4869,14 @@
                   "X": [
                     3.0,
                     4.0,
-                    4.5,
+                    5.0,
                     5.5,
-                    6.0,
-                    7.0
+                    6.5,
+                    7.0,
+                    8.0
                   ],
                   "Y": [
+                    0.01,
                     0.01,
                     0.01,
                     0.01,
@@ -5119,10 +5178,12 @@
                     4.0,
                     5.0,
                     6.0,
-                    7.0
+                    7.0,
+                    8.0
                   ],
                   "Y": [
                     0.07,
+                    0.04,
                     0.04,
                     0.015,
                     0.012,
@@ -5179,14 +5240,16 @@
                               "X": [
                                 3.0,
                                 4.0,
-                                4.7,
                                 5.0,
+                                5.7,
                                 6.0,
                                 7.0,
                                 8.0,
-                                8.000001
+                                9.0,
+                                9.000001
                               ],
                               "Y": [
+                                0.0,
                                 0.0,
                                 0.0,
                                 0.01,
@@ -5475,9 +5538,11 @@
                     7.0,
                     8.0,
                     9.0,
-                    10.0
+                    10.0,
+                    11.0
                   ],
                   "Y": [
+                    0.0,
                     0.0,
                     0.0,
                     0.0,
@@ -5528,10 +5593,12 @@
                     4.0,
                     5.0,
                     6.0,
-                    7.0
+                    7.0,
+                    8.0
                   ],
                   "Y": [
                     0.07,
+                    0.04,
                     0.04,
                     0.015,
                     0.012,
@@ -6543,8 +6610,8 @@
                     "[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 0,0,0,0,4,7,12,20",
                     "[Grain].MaximumNConc.FixedValue = 0.025",
                     "[Grain].MaxNConcDailyGrowth.FixedValue = 0.025",
-                    "[Leaf].ExtinctionCoeff.DevelopmentFactor.XYPairs.Y = 1,1,1.4",
-                    "[Leaf].CohortParameters.MinimumNConc.XYPairs.Y = 0.01,0.008,0.008, 0.008, 0.008",
+                    "[Leaf].ExtinctionCoeff.DevelopmentFactor.XYPairs.Y = 1,1,1,1,1.4",
+                    "[Leaf].CohortParameters.MinimumNConc.XYPairs.Y = 0.01,0.008, 0.008,0.008, 0.008, 0.008",
                     "[Stem].MinimumNConc.FixedValue = 0.006",
                     "[Spike].DMRetranslocationFactor.ReproductiveGrowth.DMRetranslocationFactor.FixedValue = 0.05"
                   ],
@@ -6929,14 +6996,6 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "Buckly",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
                       "Name": "Burunga",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -7074,14 +7133,6 @@
                     {
                       "$type": "Models.Core.Alias, Models",
                       "Name": "Stiletto",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Ventura",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7526,14 +7577,6 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "Gladius",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
                       "Name": "Goroke",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -7551,14 +7594,6 @@
                     {
                       "$type": "Models.Core.Alias, Models",
                       "Name": "Guardian",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Halbred",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7655,14 +7690,6 @@
                     {
                       "$type": "Models.Core.Alias, Models",
                       "Name": "Yawa",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Yitpi",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7773,14 +7800,6 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "Kirchauff",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
                       "Name": "Kukri",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -7805,14 +7824,6 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "Mace",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
                       "Name": "Ouyen",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -7821,23 +7832,7 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "Ruby",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
                       "Name": "Tamaroi",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Young",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,

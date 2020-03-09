@@ -786,7 +786,7 @@ namespace Models.PMF.Organs
             if (Plant.IsAlive)
             {
                 SenesceLeaves();
-                double LKF = Math.Max(0.0, Math.Min(LeafKillFraction.Value(), (1 - MinimumLAI.Value() / LAI)));
+                double LKF = Math.Max(0.0, Math.Min(LeafKillFraction.Value(), MathUtilities.Divide(1 - MinimumLAI.Value(), LAI, 0.0)));
                 if (LKF>0)
                    KillLeavesUniformly(LKF);
                 Detached = DetachLeaves();
@@ -804,7 +804,7 @@ namespace Models.PMF.Organs
                 }
 
                 if (DryMatterContent != null)
-                    LiveFWt = Live.Wt / DryMatterContent.Value();
+                    LiveFWt = MathUtilities.Divide(Live.Wt, DryMatterContent.Value(), 0.0);
             }
         }
 
