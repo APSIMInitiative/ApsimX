@@ -2,7 +2,7 @@
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 278,
   "Version": 80,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-06",
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-05",
   "Name": "Simulations",
   "Children": [
     {
@@ -6453,7 +6453,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.PriorityArbitrator, Models",
+              "$type": "Models.PMF.OrganArbitrator, Models",
               "Name": "Arbitrator",
               "Children": [
                 {
