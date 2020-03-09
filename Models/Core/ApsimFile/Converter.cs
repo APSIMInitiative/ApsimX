@@ -17,7 +17,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 81; } }
+        public static int LatestVersion { get { return 82; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1646,7 +1646,7 @@
         /// </summary>
         /// <param name="root"></param>
         /// <param name="fileName"></param>
-        private static void UpgradeToVersion81(JObject root, string fileName)
+        private static void UpgradeToVersion82(JObject root, string fileName)
         {
 
             foreach (JObject r in JsonUtilities.ChildrenRecursively(root, "Root"))
