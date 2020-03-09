@@ -295,8 +295,15 @@
 
             foreach (string fullVariableName in this.VariableNames)
             {
-                if (fullVariableName != string.Empty)
-                    this.columns.Add(ReportColumn.Create(fullVariableName, clock, storage.Writer, locator, events));
+                try
+                {
+                    if (fullVariableName != string.Empty)
+                        this.columns.Add(ReportColumn.Create(fullVariableName, clock, storage.Writer, locator, events));
+                }
+                catch (Exception err)
+                {
+                    throw new Exception($"Error while creating report column '{fullVariableName}'", err);
+                }
             }
         }
 
