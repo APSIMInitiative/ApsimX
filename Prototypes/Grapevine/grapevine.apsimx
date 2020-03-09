@@ -6453,7 +6453,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.PriorityArbitrator, Models",
+              "$type": "Models.PMF.OrganArbitrator, Models",
               "Name": "Arbitrator",
               "Children": [
                 {

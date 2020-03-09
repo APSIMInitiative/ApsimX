@@ -2,6 +2,8 @@
 namespace UserInterface.Presenters
 {
     using System.Collections.Generic;
+    using System.IO;
+    using System.Reflection;
     using System.Text;
     using Models.CLEM;
     using Models.Core;
@@ -119,7 +121,7 @@ namespace UserInterface.Presenters
                 ".holdermain {margin: 20px 0px 20px 0px}" +
                 ".holdersub {margin: 5px 0px 5px}" +
                 "@media print { body { -webkit - print - color - adjust: exact; }}"+
-                "\n</style>\n</head>\n<body>";
+                "\n</style>\n<!-- graphscript --></ head>\n<body>";
 
             // apply theme based settings
             if(!Utility.Configuration.Settings.DarkTheme)
@@ -211,6 +213,30 @@ namespace UserInterface.Presenters
             }
             htmlString += "\n</body>\n</html>";
 
+            if(htmlString.Contains("<canvas"))
+            {
+                Assembly _assembly = Assembly.GetExecutingAssembly();
+                StreamReader _textStreamReader = new StreamReader(_assembly.GetManifestResourceStream("ApsimNG.Presenters.CLEM.Chart.min.js"));
+                htmlString = htmlString.Replace("<!-- graphscript -->", $"<script>{_textStreamReader.ReadToEnd()}</script>");
+            }
+
+            if (!Utility.Configuration.Settings.DarkTheme)
+            {
+                htmlString = htmlString.Replace("[GraphGridLineColour]", "#eee");
+                htmlString = htmlString.Replace("[GraphGridZeroLineColour]", "#999");
+                htmlString = htmlString.Replace("[GraphPointColour]", "#00bcd6");
+                htmlString = htmlString.Replace("[GraphLineColour]", "#fda50f");
+                htmlString = htmlString.Replace("[GraphLabelColour]", "#888");
+            }
+            else
+            {
+                // dark theme
+                htmlString = htmlString.Replace("[GraphGridLineColour]", "#555");
+                htmlString = htmlString.Replace("[GraphGridZeroLineColour]", "#888");
+                htmlString = htmlString.Replace("[GraphPointColour]", "#00bcd6");
+                htmlString = htmlString.Replace("[GraphLineColour]", "#ff0");
+                htmlString = htmlString.Replace("[GraphLabelColour]", "#888");
+            }
             return htmlString;
         }
 
