@@ -1626,9 +1626,10 @@
                     if (minNConc == null)
                         throw new Exception("Root has no CriticalNConc or MaximumNConc");
 
-                    JObject critNConc = minNConc.DeepClone() as JObject;
-                    critNConc["Name"] = "CriticalNConc";
-                    (r["Children"] as JArray).Add(critNConc);
+                    VariableReference varRef = new VariableReference();
+                    varRef.Name = "CriticalNConc";
+                    varRef.VariableName = "[Root].MinimumNConc";
+                    JsonUtilities.AddModel(r, varRef);                    
                 }
             }
 
