@@ -1,7 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 73,
+  "Version": 80,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-06",
   "Name": "Simulations",
   "Children": [
     {
@@ -12,8 +13,9 @@
       "Children": [
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
-          "FileName": "Observed.xlsx",
-          "FileNameMetadata": null,
+          "FileNames": [
+            "Observed.xlsx"
+          ],
           "SheetNames": [
             "ObservedWarraBlock1"
           ],
@@ -72,7 +74,29 @@
     {
       "$type": "Models.Core.Replacements, Models",
       "Name": "Replacements",
-      "Children": [],
+      "Children": [
+        {
+          "$type": "Models.Report.Report, Models",
+          "VariableNames": [
+            "[Clock].Today",
+            "[Soil].SoilWater.Eo",
+            "[Soil].SoilWater.Es",
+            "[Soil].SoilWater.Drainage",
+            "[Soil].SoilWater.Runoff",
+            "[Soil].SoilWater.pond",
+            "[Soil].SoilWater.SWmm",
+            "[Soil].SoilNitrogen.NO3.kgha"
+          ],
+          "EventNames": [
+            "[Clock].DoReport"
+          ],
+          "Name": "Report",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
       "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
@@ -249,6 +273,8 @@
                     300.0
                   ],
                   "ParticleSizeClay": null,
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
                   "BD": [
                     1.2,
                     1.2,
@@ -627,6 +653,7 @@
             {
               "$type": "Models.PMF.Plant, Models",
               "CropType": "Slurp",
+              "IsAlive": false,
               "IsEnding": false,
               "DaysAfterEnding": 0,
               "ResourceName": "Slurp",
@@ -643,6 +670,7 @@
               "d_interception": 0.0,
               "soil_albedo": 0.23,
               "SoilHeatFluxFraction": 0.4,
+              "MinimumHeightDiffForNewLayer": 0.0,
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
@@ -707,7 +735,7 @@
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 80.0,
-              "FractionFaecesAdded": 0.5,
+              "FractionFaecesAdded": 1.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "surface organic matter",
               "IncludeInDocumentation": true,
@@ -773,7 +801,6 @@
                 "[Slurp].Root.Live.N",
                 "[Slurp].Leaf.Live.NConc",
                 "[Slurp].Root.Live.NConc",
-                "[Slurp].Root.WaterSupply",
                 "[Slurp].Root.WaterUptake",
                 "[Slurp].Leaf.Transpiration",
                 "[Slurp].Leaf.WaterDemand",
@@ -785,22 +812,17 @@
                 "[Slurp].Leaf.CoverDead",
                 "[Slurp].Leaf.LAI",
                 "[Slurp].Leaf.Height",
-                "[Slurp].Leaf.PotentialBiomass",
                 "[Soil].SoilWater.SWmm",
                 "[Soil].SoilNitrogen.NO3.kgha",
                 "[ExtraVariables].Script.SoilNitrogenContent",
                 "[Slurp].Arbitrator.N.TotalPlantDemand",
-                "[MicroClimate].net_radn",
-                "[MicroClimate].peta",
-                "[MicroClimate].petr",
                 "[ExtraVariables].Script.FomN",
                 "[ExtraVariables].Script.HumN",
                 "[ExtraVariables].Script.BiomN",
                 "[ExtraVariables].Script.DltNMinRes",
                 "[ExtraVariables].Script.DltNMinTot",
                 "[Slurp].Leaf.Fw",
-                "[Slurp].Leaf.Fn",
-                "[Weather].Rain"
+                "[Slurp].Leaf.Fn"
               ],
               "EventNames": [
                 "[Clock].DoReport"
@@ -980,6 +1002,8 @@
                     300.0
                   ],
                   "ParticleSizeClay": null,
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
                   "BD": [
                     1.2,
                     1.2,
@@ -1364,7 +1388,7 @@
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 80.0,
-              "FractionFaecesAdded": 0.5,
+              "FractionFaecesAdded": 1.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "surface organic matter",
               "IncludeInDocumentation": true,
@@ -1408,7 +1432,6 @@
                 "[Slurp].Root.Live.N",
                 "[Slurp].Leaf.Live.NConc",
                 "[Slurp].Root.Live.NConc",
-                "[Slurp].Root.WaterSupply",
                 "[Slurp].Root.WaterUptake",
                 "[Slurp].Leaf.Transpiration",
                 "[Slurp].Leaf.WaterDemand",
@@ -1417,22 +1440,17 @@
                 "[Slurp].Leaf.CoverDead",
                 "[Slurp].Leaf.LAI",
                 "[Slurp].Leaf.Height",
-                "[Slurp].Leaf.PotentialBiomass",
                 "[Soil].SoilWater.SWmm",
                 "[Soil].SoilNitrogen.NO3.kgha",
                 "[ExtraVariables].Script.SoilNitrogenContent",
                 "[Slurp].Arbitrator.N.TotalPlantDemand",
-                "[MicroClimate].net_radn",
-                "[MicroClimate].peta",
-                "[MicroClimate].petr",
                 "[ExtraVariables].Script.FomN",
                 "[ExtraVariables].Script.HumN",
                 "[ExtraVariables].Script.BiomN",
                 "[ExtraVariables].Script.DltNMinRes",
                 "[ExtraVariables].Script.DltNMinTot",
                 "[Slurp].Leaf.Fw",
-                "[Slurp].Leaf.Fn",
-                "[Weather].Rain"
+                "[Slurp].Leaf.Fn"
               ],
               "EventNames": [
                 "[Clock].DoReport"
@@ -1575,6 +1593,8 @@
                     300.0
                   ],
                   "ParticleSizeClay": null,
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
                   "BD": [
                     1.2,
                     1.2,
@@ -1959,7 +1979,7 @@
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 80.0,
-              "FractionFaecesAdded": 0.5,
+              "FractionFaecesAdded": 1.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "surface organic matter",
               "IncludeInDocumentation": true,
@@ -2003,7 +2023,6 @@
                 "[Slurp].Root.Live.N",
                 "[Slurp].Leaf.Live.NConc",
                 "[Slurp].Root.Live.NConc",
-                "[Slurp].Root.WaterSupply",
                 "[Slurp].Root.WaterUptake",
                 "[Slurp].Leaf.Transpiration",
                 "[Slurp].Leaf.WaterDemand",
@@ -2012,22 +2031,17 @@
                 "[Slurp].Leaf.CoverDead",
                 "[Slurp].Leaf.LAI",
                 "[Slurp].Leaf.Height",
-                "[Slurp].Leaf.PotentialBiomass",
                 "[Soil].SoilWater.SWmm",
                 "[Soil].SoilNitrogen.NO3.kgha",
                 "[ExtraVariables].Script.SoilNitrogenContent",
                 "[Slurp].Arbitrator.N.TotalPlantDemand",
-                "[MicroClimate].net_radn",
-                "[MicroClimate].peta",
-                "[MicroClimate].petr",
                 "[ExtraVariables].Script.FomN",
                 "[ExtraVariables].Script.HumN",
                 "[ExtraVariables].Script.BiomN",
                 "[ExtraVariables].Script.DltNMinRes",
                 "[ExtraVariables].Script.DltNMinTot",
                 "[Slurp].Leaf.Fw",
-                "[Slurp].Leaf.Fn",
-                "[Weather].Rain"
+                "[Slurp].Leaf.Fn"
               ],
               "EventNames": [
                 "[Clock].DoReport"
@@ -3273,6 +3287,7 @@
           "d_interception": 0.0,
           "soil_albedo": 0.23,
           "SoilHeatFluxFraction": 0.4,
+          "MinimumHeightDiffForNewLayer": 0.0,
           "NightInterceptionFraction": 0.5,
           "ReferenceHeight": 2.0,
           "Name": "MicroClimate",
@@ -3463,6 +3478,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.2,
                         1.2,
@@ -3841,6 +3858,7 @@
                 {
                   "$type": "Models.PMF.Plant, Models",
                   "CropType": "Slurp",
+                  "IsAlive": false,
                   "IsEnding": false,
                   "DaysAfterEnding": 0,
                   "ResourceName": "Slurp",
@@ -3857,6 +3875,7 @@
                   "d_interception": 0.0,
                   "soil_albedo": 0.23,
                   "SoilHeatFluxFraction": 0.4,
+                  "MinimumHeightDiffForNewLayer": 0.0,
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
@@ -3921,7 +3940,7 @@
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 80.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "surface organic matter",
                   "IncludeInDocumentation": true,
@@ -3987,7 +4006,6 @@
                     "[Slurp].Root.Live.N",
                     "[Slurp].Leaf.Live.NConc",
                     "[Slurp].Root.Live.NConc",
-                    "[Slurp].Root.WaterSupply",
                     "[Slurp].Root.WaterUptake",
                     "[Slurp].Leaf.Transpiration",
                     "[Slurp].Leaf.WaterDemand",
@@ -4001,24 +4019,19 @@
                     "[Slurp].Leaf.CoverDead",
                     "[Slurp].Leaf.LAI",
                     "[Slurp].Leaf.Height",
-                    "[Slurp].Leaf.PotentialBiomass",
                     "[Slurp].Leaf.Transpiration",
                     "[Slurp].Leaf.PotentialEP",
                     "[Soil].SoilWater.SWmm",
                     "[Soil].SoilNitrogen.NO3.kgha",
                     "[ExtraVariables].Script.SoilNitrogenContent",
                     "[Slurp].Arbitrator.N.TotalPlantDemand",
-                    "[MicroClimate].net_radn",
-                    "[MicroClimate].peta",
-                    "[MicroClimate].petr",
                     "[ExtraVariables].Script.FomN",
                     "[ExtraVariables].Script.HumN",
                     "[ExtraVariables].Script.BiomN",
                     "[ExtraVariables].Script.DltNMinRes",
                     "[ExtraVariables].Script.DltNMinTot",
                     "[Slurp].Leaf.Fw",
-                    "[Slurp].Leaf.Fn",
-                    "[Weather].Rain"
+                    "[Slurp].Leaf.Fn"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -5467,6 +5480,7 @@
               "d_interception": 0.0,
               "soil_albedo": 0.23,
               "SoilHeatFluxFraction": 0.4,
+              "MinimumHeightDiffForNewLayer": 0.0,
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
@@ -5652,6 +5666,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.2,
                         1.2,
@@ -6030,6 +6046,7 @@
                 {
                   "$type": "Models.PMF.Plant, Models",
                   "CropType": "Slurp",
+                  "IsAlive": false,
                   "IsEnding": false,
                   "DaysAfterEnding": 0,
                   "ResourceName": "Slurp",
@@ -6046,6 +6063,7 @@
                   "d_interception": 0.0,
                   "soil_albedo": 0.23,
                   "SoilHeatFluxFraction": 0.4,
+                  "MinimumHeightDiffForNewLayer": 0.0,
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
@@ -6110,7 +6128,7 @@
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 80.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "surface organic matter",
                   "IncludeInDocumentation": true,
@@ -6176,7 +6194,6 @@
                     "[Slurp].Root.Live.N",
                     "[Slurp].Leaf.Live.NConc",
                     "[Slurp].Root.Live.NConc",
-                    "[Slurp].Root.WaterSupply",
                     "[Slurp].Root.WaterUptake",
                     "[Slurp].Leaf.Transpiration",
                     "[Slurp].Leaf.WaterDemand",
@@ -6195,22 +6212,17 @@
                     "[Slurp].Leaf.CoverDead",
                     "[Slurp].Leaf.LAI",
                     "[Slurp].Leaf.Height",
-                    "[Slurp].Leaf.PotentialBiomass",
                     "[Soil].SoilWater.SWmm",
                     "[Soil].SoilNitrogen.NO3.kgha",
                     "[ExtraVariables].Script.SoilNitrogenContent",
                     "[Slurp].Arbitrator.N.TotalPlantDemand",
-                    "[MicroClimate].net_radn",
-                    "[MicroClimate].peta",
-                    "[MicroClimate].petr",
                     "[ExtraVariables].Script.FomN",
                     "[ExtraVariables].Script.HumN",
                     "[ExtraVariables].Script.BiomN",
                     "[ExtraVariables].Script.DltNMinRes",
                     "[ExtraVariables].Script.DltNMinTot",
                     "[Slurp].Leaf.Fw",
-                    "[Slurp].Leaf.Fn",
-                    "[Weather].Rain"
+                    "[Slurp].Leaf.Fn"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -6390,6 +6402,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.2,
                         1.2,
@@ -6774,7 +6788,7 @@
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 80.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "surface organic matter",
                   "IncludeInDocumentation": true,
@@ -6818,7 +6832,6 @@
                     "[Slurp].Root.Live.N",
                     "[Slurp].Leaf.Live.NConc",
                     "[Slurp].Root.Live.NConc",
-                    "[Slurp].Root.WaterSupply",
                     "[Slurp].Root.WaterUptake",
                     "[Slurp].Leaf.Transpiration",
                     "[Slurp].Leaf.WaterDemand",
@@ -6827,22 +6840,17 @@
                     "[Slurp].Leaf.CoverDead",
                     "[Slurp].Leaf.LAI",
                     "[Slurp].Leaf.Height",
-                    "[Slurp].Leaf.PotentialBiomass",
                     "[Soil].SoilWater.SWmm",
                     "[Soil].SoilNitrogen.NO3.kgha",
                     "[ExtraVariables].Script.SoilNitrogenContent",
                     "[Slurp].Arbitrator.N.TotalPlantDemand",
-                    "[MicroClimate].net_radn",
-                    "[MicroClimate].peta",
-                    "[MicroClimate].petr",
                     "[ExtraVariables].Script.FomN",
                     "[ExtraVariables].Script.HumN",
                     "[ExtraVariables].Script.BiomN",
                     "[ExtraVariables].Script.DltNMinRes",
                     "[ExtraVariables].Script.DltNMinTot",
                     "[Slurp].Leaf.Fw",
-                    "[Slurp].Leaf.Fn",
-                    "[Weather].Rain"
+                    "[Slurp].Leaf.Fn"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -8110,6 +8118,7 @@
               "d_interception": 0.0,
               "soil_albedo": 0.23,
               "SoilHeatFluxFraction": 0.4,
+              "MinimumHeightDiffForNewLayer": 0.0,
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
@@ -9386,6 +9395,7 @@
                   "d_interception": 0.0,
                   "soil_albedo": 0.23,
                   "SoilHeatFluxFraction": 0.4,
+                  "MinimumHeightDiffForNewLayer": 0.0,
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
@@ -9411,7 +9421,6 @@
                     "[Slurp].Root.Live.N",
                     "[Slurp].Leaf.Live.NConc",
                     "[Slurp].Root.Live.NConc",
-                    "[Slurp].Root.WaterSupply",
                     "[Slurp].Root.WaterUptake",
                     "[Slurp].Leaf.Transpiration",
                     "[Slurp].Leaf.WaterDemand",
@@ -9433,7 +9442,6 @@
                     "[Slurp].Leaf.CoverDead",
                     "[Slurp].Leaf.LAI",
                     "[Slurp].Leaf.Height",
-                    "[Slurp].Leaf.PotentialBiomass",
                     "[Slurp].Leaf.FRGRFunction",
                     "[Soil].SoilWater.SWmm",
                     "sum([Soil].SoilWater.SWmm) as TotalSoilWater",
@@ -9441,7 +9449,6 @@
                     "[Slurp].Arbitrator.N.TotalPlantDemand",
                     "[Slurp].Leaf.Fw",
                     "[Slurp].Leaf.Fn",
-                    "[Weather].Rain",
                     "[Calculations].Script.AverageSoilWater",
                     "[SurfaceOrganicMatter].Cover"
                   ],
@@ -9493,7 +9500,7 @@
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 100.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": true,
@@ -9503,6 +9510,7 @@
                 {
                   "$type": "Models.PMF.Plant, Models",
                   "CropType": "Slurp",
+                  "IsAlive": false,
                   "IsEnding": false,
                   "DaysAfterEnding": 0,
                   "ResourceName": "Slurp",
@@ -9553,6 +9561,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.39,
                         1.39,
@@ -10152,7 +10162,6 @@
                     "[Slurp].Root.Live.N",
                     "[Slurp].Leaf.Live.NConc",
                     "[Slurp].Root.Live.NConc",
-                    "[Slurp].Root.WaterSupply",
                     "[Slurp].Root.WaterUptake",
                     "[Slurp].Leaf.Transpiration",
                     "[Slurp].Leaf.WaterDemand",
@@ -10171,14 +10180,12 @@
                     "[Slurp].Leaf.CoverDead",
                     "[Slurp].Leaf.LAI",
                     "[Slurp].Leaf.Height",
-                    "[Slurp].Leaf.PotentialBiomass",
                     "[Soil].SoilWater.SWmm",
                     "sum([Soil].SoilWater.SWmm) as TotalSoilWater",
                     "[Soil].SoilNitrogen.NO3.kgha",
                     "[Slurp].Arbitrator.N.TotalPlantDemand",
                     "[Slurp].Leaf.Fw",
                     "[Slurp].Leaf.Fn",
-                    "[Weather].Rain",
                     "[Wheat].AboveGround.Wt",
                     "[Wheat].SWStress.Photo",
                     "[Wheat].Root.RootDepth"
@@ -10209,7 +10216,7 @@
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 100.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": true,
@@ -10258,6 +10265,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.39,
                         1.39,
@@ -10780,7 +10789,6 @@
                     "[Slurp].Root.Live.N",
                     "[Slurp].Leaf.Live.NConc",
                     "[Slurp].Root.Live.NConc",
-                    "[Slurp].Root.WaterSupply",
                     "[Slurp].Root.WaterUptake",
                     "[Slurp].Leaf.Transpiration",
                     "[Slurp].Leaf.WaterDemand",
@@ -10799,14 +10807,12 @@
                     "[Slurp].Leaf.CoverDead",
                     "[Slurp].Leaf.LAI",
                     "[Slurp].Leaf.Height",
-                    "[Slurp].Leaf.PotentialBiomass",
                     "[Soil].SoilWater.SWmm",
                     "sum([Soil].SoilWater.SWmm) as TotalSoilWater",
                     "[Soil].SoilNitrogen.NO3.kgha",
                     "[Slurp].Arbitrator.N.TotalPlantDemand",
                     "[Slurp].Leaf.Fw",
                     "[Slurp].Leaf.Fn",
-                    "[Weather].Rain",
                     "[Wheat].AboveGround.Wt",
                     "[Wheat].SWStress.Photo",
                     "[Wheat].Root.RootDepth"
@@ -10837,7 +10843,7 @@
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 100.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": true,
@@ -10886,6 +10892,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.39,
                         1.39,
@@ -11408,7 +11416,6 @@
                     "[Slurp].Root.Live.N",
                     "[Slurp].Leaf.Live.NConc",
                     "[Slurp].Root.Live.NConc",
-                    "[Slurp].Root.WaterSupply",
                     "[Slurp].Root.WaterUptake",
                     "[Slurp].Leaf.Transpiration",
                     "[Slurp].Leaf.WaterDemand",
@@ -11427,14 +11434,12 @@
                     "[Slurp].Leaf.CoverDead",
                     "[Slurp].Leaf.LAI",
                     "[Slurp].Leaf.Height",
-                    "[Slurp].Leaf.PotentialBiomass",
                     "[Soil].SoilWater.SWmm",
                     "sum([Soil].SoilWater.SWmm) as TotalSoilWater",
                     "[Soil].SoilNitrogen.NO3.kgha",
                     "[Slurp].Arbitrator.N.TotalPlantDemand",
                     "[Slurp].Leaf.Fw",
                     "[Slurp].Leaf.Fn",
-                    "[Weather].Rain",
                     "[Wheat].AboveGround.Wt",
                     "[Wheat].SWStress.Photo",
                     "[Wheat].Root.RootDepth"
@@ -11465,7 +11470,7 @@
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 100.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": true,
@@ -11514,6 +11519,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.39,
                         1.39,
@@ -12036,7 +12043,6 @@
                     "[Slurp].Root.Live.N",
                     "[Slurp].Leaf.Live.NConc",
                     "[Slurp].Root.Live.NConc",
-                    "[Slurp].Root.WaterSupply",
                     "[Slurp].Root.WaterUptake",
                     "[Slurp].Leaf.Transpiration",
                     "[Slurp].Leaf.WaterDemand",
@@ -12055,14 +12061,12 @@
                     "[Slurp].Leaf.CoverDead",
                     "[Slurp].Leaf.LAI",
                     "[Slurp].Leaf.Height",
-                    "[Slurp].Leaf.PotentialBiomass",
                     "[Soil].SoilWater.SWmm",
                     "sum([Soil].SoilWater.SWmm) as TotalSoilWater",
                     "[Soil].SoilNitrogen.NO3.kgha",
                     "[Slurp].Arbitrator.N.TotalPlantDemand",
                     "[Slurp].Leaf.Fw",
                     "[Slurp].Leaf.Fn",
-                    "[Weather].Rain",
                     "[Wheat].AboveGround.Wt",
                     "[Wheat].SWStress.Photo",
                     "[Wheat].Root.RootDepth"
@@ -12093,7 +12097,7 @@
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 100.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": true,
@@ -12142,6 +12146,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.39,
                         1.39,
@@ -12664,7 +12670,6 @@
                     "[Slurp].Root.Live.N",
                     "[Slurp].Leaf.Live.NConc",
                     "[Slurp].Root.Live.NConc",
-                    "[Slurp].Root.WaterSupply",
                     "[Slurp].Root.WaterUptake",
                     "[Slurp].Leaf.Transpiration",
                     "[Slurp].Leaf.WaterDemand",
@@ -12683,14 +12688,12 @@
                     "[Slurp].Leaf.CoverDead",
                     "[Slurp].Leaf.LAI",
                     "[Slurp].Leaf.Height",
-                    "[Slurp].Leaf.PotentialBiomass",
                     "[Soil].SoilWater.SWmm",
                     "sum([Soil].SoilWater.SWmm) as TotalSoilWater",
                     "[Soil].SoilNitrogen.NO3.kgha",
                     "[Slurp].Arbitrator.N.TotalPlantDemand",
                     "[Slurp].Leaf.Fw",
                     "[Slurp].Leaf.Fn",
-                    "[Weather].Rain",
                     "[Wheat].AboveGround.Wt",
                     "[Wheat].SWStress.Photo",
                     "[Wheat].Root.RootDepth"
@@ -12721,7 +12724,7 @@
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 100.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": true,
@@ -12770,6 +12773,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.39,
                         1.39,
@@ -13264,6 +13269,7 @@
                 {
                   "$type": "Models.PMF.Plant, Models",
                   "CropType": "Wheat",
+                  "IsAlive": false,
                   "IsEnding": false,
                   "DaysAfterEnding": 0,
                   "ResourceName": "Wheat",
@@ -13303,7 +13309,6 @@
                     "[Slurp].Root.Live.N",
                     "[Slurp].Leaf.Live.NConc",
                     "[Slurp].Root.Live.NConc",
-                    "[Slurp].Root.WaterSupply",
                     "[Slurp].Root.WaterUptake",
                     "[Slurp].Leaf.Transpiration",
                     "[Slurp].Leaf.WaterDemand",
@@ -13322,14 +13327,12 @@
                     "[Slurp].Leaf.CoverDead",
                     "[Slurp].Leaf.LAI",
                     "[Slurp].Leaf.Height",
-                    "[Slurp].Leaf.PotentialBiomass",
                     "[Soil].SoilWater.SWmm",
                     "sum([Soil].SoilWater.SWmm) as TotalSoilWater",
                     "[Soil].SoilNitrogen.NO3.kgha",
                     "[Slurp].Arbitrator.N.TotalPlantDemand",
                     "[Slurp].Leaf.Fw",
                     "[Slurp].Leaf.Fn",
-                    "[Weather].Rain",
                     "[Wheat].AboveGround.Wt",
                     "[Wheat].SWStress.Photo",
                     "[Wheat].Root.RootDepth"
@@ -13360,7 +13363,7 @@
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 100.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": true,
@@ -13409,6 +13412,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.39,
                         1.39,
@@ -13903,6 +13908,7 @@
                 {
                   "$type": "Models.PMF.Plant, Models",
                   "CropType": "Wheat",
+                  "IsAlive": false,
                   "IsEnding": false,
                   "DaysAfterEnding": 0,
                   "ResourceName": "Wheat",
@@ -13942,7 +13948,6 @@
                     "[Slurp].Root.Live.N",
                     "[Slurp].Leaf.Live.NConc",
                     "[Slurp].Root.Live.NConc",
-                    "[Slurp].Root.WaterSupply",
                     "[Slurp].Root.WaterUptake",
                     "[Slurp].Leaf.Transpiration",
                     "[Slurp].Leaf.WaterDemand",
@@ -13961,14 +13966,12 @@
                     "[Slurp].Leaf.CoverDead",
                     "[Slurp].Leaf.LAI",
                     "[Slurp].Leaf.Height",
-                    "[Slurp].Leaf.PotentialBiomass",
                     "[Soil].SoilWater.SWmm",
                     "sum([Soil].SoilWater.SWmm) as TotalSoilWater",
                     "[Soil].SoilNitrogen.NO3.kgha",
                     "[Slurp].Arbitrator.N.TotalPlantDemand",
                     "[Slurp].Leaf.Fw",
                     "[Slurp].Leaf.Fn",
-                    "[Weather].Rain",
                     "[Wheat].AboveGround.Wt",
                     "[Wheat].SWStress.Photo",
                     "[Wheat].Root.RootDepth"
@@ -13999,7 +14002,7 @@
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 100.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": true,
@@ -14048,6 +14051,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.39,
                         1.39,
@@ -14542,6 +14547,7 @@
                 {
                   "$type": "Models.PMF.Plant, Models",
                   "CropType": "Wheat",
+                  "IsAlive": false,
                   "IsEnding": false,
                   "DaysAfterEnding": 0,
                   "ResourceName": "Wheat",
@@ -16380,6 +16386,7 @@
               "d_interception": 0.0,
               "soil_albedo": 0.23,
               "SoilHeatFluxFraction": 0.4,
+              "MinimumHeightDiffForNewLayer": 0.0,
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
