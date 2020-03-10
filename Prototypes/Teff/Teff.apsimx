@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 513,
-  "Version": 80,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-09",
+  "Version": 83,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -2696,6 +2696,15 @@
                       "ReadOnly": false
                     }
                   ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Root].MinimumNConc",
+                  "Name": "CriticalNConc",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -5441,6 +5450,25 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.CompositeBiomass, Models",
+              "Propertys": [
+                "[Leaf].Live",
+                "[Leaf].Dead",
+                "[Stem].Live",
+                "[Stem].Dead",
+                "[Grain].Live",
+                "[Grain].Dead",
+                "[Panicle].Live",
+                "[Panicle].Dead"
+              ],
+              "DMDOfStructural": 0.6,
+              "Name": "AboveGround",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -5453,10 +5481,10 @@
             "[Clock].Today",
             "[Teff].Phenology.CurrentStageName",
             "[Teff].AboveGround.Wt",
-            "[Teff].Grain.Yield",
             "[Teff].Grain.Size as GrainSize",
             "[Teff].Grain.Wt ",
-            "[Teff].Structure.MainStemFinalNodeNo",
+            "[Teff].Structure.FinalLeafNumber",
+            "[Teff].Phenology.PanicleInitiationDAS as PanicleInitiationDAS",
             "[Teff].Phenology.FloweringDAS as FloweringDAS",
             "[Teff].Phenology.MaturityDAS  as MaturityDAS"
           ],
@@ -5474,6 +5502,7 @@
           "VariableNames": [
             "[Clock].Today",
             "[Teff].Phenology.CurrentStageName",
+            "[Teff].Phenology.DaysAfterSowing",
             "[Soil].SoilWater.SW",
             "[Soil].SoilWater.Eo",
             "[Soil].SoilWater.Es",
@@ -5487,12 +5516,38 @@
             "[Teff].Leaf.CoverGreen",
             "[Teff].AboveGround.Wt",
             "[Teff].Grain.Wt",
-            "([Teff].Leaf.Transpiration+[Soil].SoilWater.Es) as ET"
+            "([Teff].Leaf.Transpiration+[Soil].SoilWater.Es) as ET",
+            "[Teff].Structure.BranchNumber",
+            "[Teff].Structure.FinalLeafNumber",
+            "[Teff].Structure.LeafTipsAppeared"
           ],
           "EventNames": [
             "[Clock].DoReport"
           ],
           "Name": "Report",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Report.Report, Models",
+          "VariableNames": [
+            "[Clock].Today",
+            "[ControlledEnvironment].DayLength",
+            "[Teff].Phenology.CurrentStageName",
+            "[Teff].AboveGround.Wt",
+            "[Teff].Grain.Size as GrainSize",
+            "[Teff].Grain.Wt ",
+            "[Teff].Structure.FinalLeafNumber",
+            "[Teff].Phenology.PanicleInitiationDAS as PanicleInitiationDAS",
+            "[Teff].Phenology.FloweringDAS as FloweringDAS",
+            "[Teff].Phenology.MaturityDAS  as MaturityDAS"
+          ],
+          "EventNames": [
+            "[Teff].Harvesting"
+          ],
+          "Name": "ControlledEnvironmentReport",
           "Children": [],
           "IncludeInDocumentation": true,
           "Enabled": true,
@@ -10358,7 +10413,18 @@
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Predicted",
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.EventNamesOnGraph, Models",
+                          "ColumnName": "Teff.Phenology.CurrentStageName",
+                          "SimulationName": "CWP2010PopHighTreatment1",
+                          "Name": "EventNamesOnGraph",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -10681,7 +10747,7 @@
                       "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "Teff.Structure.TotalStemPopn",
+                      "YFieldName": "Teff.Structure.BranchNumber",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
@@ -10690,6 +10756,104 @@
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Series1",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 1,
+                  "LegendOrientation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "NodeNo",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16776961,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "Report",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Teff.Structure.FinalLeafNumber",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "FLN",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16776961,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "Report",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Teff.Structure.LeafTipsAppeared",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "ALN",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -23541,6 +23705,23 @@
                       "ReadOnly": false
                     },
                     {
+                      "$type": "Models.MicroClimate, Models",
+                      "a_interception": 0.0,
+                      "b_interception": 1.0,
+                      "c_interception": 0.0,
+                      "d_interception": 0.0,
+                      "soil_albedo": 0.23,
+                      "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
+                      "NightInterceptionFraction": 0.5,
+                      "ReferenceHeight": 2.0,
+                      "Name": "MicroClimate",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
                       "$type": "Models.Core.Zone, Models",
                       "Area": 1.0,
                       "Slope": 0.0,
@@ -23548,23 +23729,6 @@
                       "Altitude": 50.0,
                       "Name": "Field",
                       "Children": [
-                        {
-                          "$type": "Models.MicroClimate, Models",
-                          "a_interception": 0.0,
-                          "b_interception": 1.0,
-                          "c_interception": 0.0,
-                          "d_interception": 0.0,
-                          "soil_albedo": 0.23,
-                          "SoilHeatFluxFraction": 0.4,
-                          "MinimumHeightDiffForNewLayer": 0.0,
-                          "NightInterceptionFraction": 0.5,
-                          "ReferenceHeight": 2.0,
-                          "Name": "MicroClimate",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
                         {
                           "$type": "Models.Irrigation, Models",
                           "Name": "Irrigation",
@@ -24262,17 +24426,20 @@
                           "$type": "Models.Report.Report, Models",
                           "VariableNames": [
                             "[Clock].Today",
-                            "[Teff].Structure.MainStemFinalNodeNo",
-                            "[Teff].Leaf.AppearedCohortNo",
+                            "[ControlledEnvironment].DayLength",
+                            "[Teff].Phenology.CurrentStageName",
+                            "[Teff].AboveGround.Wt",
+                            "[Teff].Grain.Size as GrainSize",
+                            "[Teff].Grain.Wt ",
+                            "[Teff].Structure.FinalLeafNumber",
                             "[Teff].Phenology.PanicleInitiationDAS as PanicleInitiationDAS",
                             "[Teff].Phenology.FloweringDAS as FloweringDAS",
-                            "[Teff].Phenology.MaturityDAS  as MaturityDASS",
-                            "[ControlledEnvironment].DayLength"
+                            "[Teff].Phenology.MaturityDAS  as MaturityDAS"
                           ],
                           "EventNames": [
                             "[Teff].Harvesting"
                           ],
-                          "Name": "HarvestReport",
+                          "Name": "ControlledEnvironmentReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -24365,9 +24532,9 @@
                       "Line": 0,
                       "LineThickness": 0,
                       "Checkpoint": "Current",
-                      "TableName": "HarvestReport",
+                      "TableName": "ControlledEnvironmentReport",
                       "XFieldName": "ControlledEnvironment.DayLength",
-                      "YFieldName": "Teff.Leaf.AppearedCohortNo",
+                      "YFieldName": "Teff.Structure.FinalLeafNumber",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": false,
@@ -24463,7 +24630,7 @@
                       "Line": 0,
                       "LineThickness": 0,
                       "Checkpoint": "Current",
-                      "TableName": "HarvestReport",
+                      "TableName": "ControlledEnvironmentReport",
                       "XFieldName": "ControlledEnvironment.DayLength",
                       "YFieldName": "PanicleInitiationDAS",
                       "X2FieldName": null,
@@ -24523,7 +24690,7 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -16776961,
-                      "FactorToVaryColours": null,
+                      "FactorToVaryColours": "PP",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 0,
@@ -24533,7 +24700,7 @@
                       "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Teff.Phenology.DaysAfterSowing",
-                      "YFieldName": "Teff.Leaf.AppearedCohortNo",
+                      "YFieldName": "Teff.Structure.LeafTipsAppeared",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": false,
