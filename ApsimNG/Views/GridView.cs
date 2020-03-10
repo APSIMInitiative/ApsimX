@@ -2501,8 +2501,11 @@
 
             Gtk.TreeView view = GetTreeView(column);
             view.GrabFocus();
-            view.SetCursor(new TreePath(new int[1] { row }), view.GetColumn(column), startEdit);
 
+            TreePath path = new TreePath(new int[1] { row });
+            TreeViewColumn col = view.GetColumn(column);
+            view.SetCursor(path, col, startEdit);
+            view.ScrollToCell(path, col, false, 0, 1);
             selectedCellRowIndex = row;
             selectedCellColumnIndex = column;
 
