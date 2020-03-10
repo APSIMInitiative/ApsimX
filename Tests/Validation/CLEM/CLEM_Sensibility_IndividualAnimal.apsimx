@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 76,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-02-24",
+  "Version": 80,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-10",
   "Name": "Simulations",
   "Children": [
     {
@@ -406,18 +406,6 @@
                   ],
                   "EventNames": null,
                   "Name": "FinancesLedger",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
-                  "VariableNames": [
-                    "AnimalFoodStore"
-                  ],
-                  "EventNames": null,
-                  "Name": "AnimalFoodStoreLedger",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
