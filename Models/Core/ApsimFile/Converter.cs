@@ -17,7 +17,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 80; } }
+        public static int LatestVersion { get { return 83; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1608,6 +1608,83 @@
             {
                 excelMultiInput["$type"] = "Models.PostSimulationTools.ExcelInput, Models";
             }
+        }
+
+
+        /// <summary>
+        /// Seperate life cycle process class into Growth, Transfer and Mortality classes.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion81(JObject root, string fileName)
+        {
+            // Rename ExcelInput.FileName to FileNames and make it an array.
+            foreach (JObject LSP in JsonUtilities.ChildrenRecursively(root, "LifeStageProcess"))
+            {
+                if (int.Parse(LSP["ProcessAction"].ToString()) == 0) //Process is Transfer
+                {
+                    LSP["$type"] = "Models.LifeCycle.LifeStageTransfer, Models";
+                }
+                else if (int.Parse(LSP["ProcessAction"].ToString()) == 1) //Process is PhysiologicalGrowth
+                {
+                    LSP["$type"] = "Models.LifeCycle.LifeStageGrowth, Models";
+                }
+                else if (int.Parse(LSP["ProcessAction"].ToString()) == 2) //Process is Mortality
+                {
+                    LSP["$type"] = "Models.LifeCycle.LifeStageMortality, Models";
+                }
+            }
+
+            foreach (JObject LSRP in JsonUtilities.ChildrenRecursively(root, "LifeStageReproductionProcess"))
+            {
+                LSRP["$type"] = "Models.LifeCycle.LifeStageReproduction, Models";
+            }
+        }
+
+        /// <summary>
+        /// Add Critical N Conc (if not existing) to all Root Objects by copying the maximum N conc
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion82(JObject root, string fileName)
+        {
+            foreach (JObject r in JsonUtilities.ChildrenRecursively(root, "Root"))
+            {
+                if (JsonUtilities.ChildWithName(r, "CriticalNConc") == null)
+                {
+                    JObject minNConc = JsonUtilities.ChildWithName(r, "MinimumNConc");
+                    if (minNConc == null)
+                        throw new Exception("Root has no CriticalNConc or MaximumNConc");
+
+                    VariableReference varRef = new VariableReference();
+                    varRef.Name = "CriticalNConc";
+                    varRef.VariableName = "[Root].MinimumNConc";
+                    JsonUtilities.AddModel(r, varRef);                    
+                }
+            }
+        }
+
+        /// <summary>
+        /// Remove .Value() from everywhere possible.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion83(JObject root, string fileName)
+        {
+            // 1. Report
+            foreach (JObject report in JsonUtilities.ChildrenRecursively(root, "Report"))
+            {
+                JArray variables = report["VariableNames"] as JArray;
+                if (variables == null)
+                    continue;
+
+                for (int i = 0; i < variables.Count; i++)
+                    variables[i] = variables[i].ToString().Replace(".Value()", "");
+            }
+
+            // 2. ExpressionFunction
+            foreach (JObject function in JsonUtilities.ChildrenRecursively(root, "ExpressionFunction"))
+                function["Expression"] = function["Expression"].ToString().Replace(".Value()", "");
         }
 
         /// <summary>

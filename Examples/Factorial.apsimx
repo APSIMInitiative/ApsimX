@@ -1,7 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 250,
-  "Version": 57,
+  "Version": 80,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-06",
   "Name": "Simulations",
   "Children": [
     {
@@ -14,19 +15,28 @@
           "Name": "Factors",
           "Children": [
             {
-              "$type": "Models.Factorial.Factor, Models",
-              "Specification": "[SowingRule].Script.SowingDate = 2003-11-01, 2003-12-20 ",
-              "Name": "SowDate",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Factorial.Factor, Models",
-              "Specification": "[FertiliserRule].Script.ApplicationAmount = 0, 20, 60, 80, 100",
-              "Name": "Fertiliser",
-              "Children": [],
+              "$type": "Models.Factorial.Permutation, Models",
+              "Name": "Permutation",
+              "Children": [
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[SowingRule].Script.SowingDate = 2003-11-01, 2003-12-20 ",
+                  "Name": "SowDate",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[FertiliserRule].Script.ApplicationAmount = 0, 20, 60, 80, 100",
+                  "Name": "Fertiliser",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -38,7 +48,6 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
-          "Descriptors": null,
           "Name": "Base",
           "Children": [
             {
@@ -53,8 +62,8 @@
             },
             {
               "$type": "Models.Clock, Models",
-              "StartDate": "2003-10-20T00:00:00",
-              "EndDate": "2004-05-23T00:00:00",
+              "Start": "2003-10-20T00:00:00",
+              "End": "2004-05-23T00:00:00",
               "Name": "Clock",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -76,6 +85,8 @@
               "$type": "Models.Core.Zone, Models",
               "Area": 1.0,
               "Slope": 0.0,
+              "AspectAngle": 0.0,
+              "Altitude": 50.0,
               "Name": "Field",
               "Children": [
                 {
@@ -113,7 +124,6 @@
                 },
                 {
                   "$type": "Models.Soils.Soil, Models",
-                  "Weirdo": null,
                   "RecordNumber": 0,
                   "ASCOrder": null,
                   "ASCSubOrder": null,
@@ -134,7 +144,20 @@
                   "Name": "Soil",
                   "Children": [
                     {
-                      "$type": "Models.Soils.Water, Models",
+                      "$type": "Models.Soils.Physical, Models",
+                      "Depth": [
+                        "0-15",
+                        "15-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150",
+                        "150-180",
+                        "180-210",
+                        "210-240",
+                        "240-270",
+                        "270-300"
+                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -148,6 +171,9 @@
                         300.0,
                         300.0
                       ],
+                      "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.02,
                         1.03,
@@ -220,7 +246,7 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
-                      "Name": "Water",
+                      "Name": "Physical",
                       "Children": [
                         {
                           "$type": "Models.Soils.SoilCrop, Models",
@@ -408,6 +434,19 @@
                         300.0,
                         300.0
                       ],
+                      "Depth": [
+                        "0-15",
+                        "15-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150",
+                        "150-180",
+                        "180-210",
+                        "210-240",
+                        "240-270",
+                        "270-300"
+                      ],
                       "SWCON": [
                         0.3,
                         0.3,
@@ -434,7 +473,7 @@
                         0.0,
                         0.0
                       ],
-                      "ResidueInterception": 0.0,
+                      "PrecipitationInterception": 0.0,
                       "Name": "SoilWater",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -442,23 +481,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.SoilOrganicMatter, Models",
-                      "RootCN": 40.0,
-                      "EnrACoeff": 7.4,
-                      "EnrBCoeff": 0.2,
-                      "Thickness": [
-                        150.0,
-                        150.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0
-                      ],
+                      "$type": "Models.Soils.Organic, Models",
                       "Depth": [
                         "0-15",
                         "15-30",
@@ -472,7 +495,21 @@
                         "240-270",
                         "270-300"
                       ],
-                      "OC": [
+                      "FOMCNRatio": 40.0,
+                      "Thickness": [
+                        150.0,
+                        150.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0
+                      ],
+                      "Carbon": [
                         1.04,
                         0.89,
                         0.89,
@@ -485,8 +522,7 @@
                         0.13,
                         0.12
                       ],
-                      "OCMetadata": null,
-                      "SoilCN": [
+                      "SoilCNRatio": [
                         12.5,
                         12.5,
                         12.5,
@@ -525,7 +561,7 @@
                         0.95,
                         0.95
                       ],
-                      "RootWt": [
+                      "FOM": [
                         48.128639588700892,
                         41.424703988481674,
                         30.688175501013852,
@@ -538,15 +574,27 @@
                         3.75796436145482,
                         2.7839684716382678
                       ],
-                      "OCUnits": 0,
-                      "Name": "SoilOrganicMatter",
+                      "Name": "Organic",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.Analysis, Models",
+                      "$type": "Models.Soils.Chemical, Models",
+                      "Depth": [
+                        "0-15",
+                        "15-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150",
+                        "150-180",
+                        "180-210",
+                        "210-240",
+                        "240-270",
+                        "270-300"
+                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -560,26 +608,32 @@
                         300.0,
                         300.0
                       ],
-                      "Rocks": null,
-                      "RocksMetadata": null,
-                      "Texture": null,
-                      "TextureMetadata": null,
-                      "MunsellColour": null,
-                      "MunsellMetadata": null,
-                      "EC": [
-                        0.2,
-                        0.25,
-                        0.31,
-                        0.4,
-                        0.59,
-                        0.84,
-                        0.93,
-                        1.01,
-                        1.06,
-                        1.05,
-                        1.01
+                      "NO3N": [
+                        6.5030034479878,
+                        2.1010011139815892,
+                        2.10100111398159,
+                        1.7010009018956203,
+                        1.7010009018956196,
+                        1.7010009018956196,
+                        1.7010009018956196,
+                        1.7010009018956209,
+                        1.7010009018956196,
+                        1.7010009018956196,
+                        1.7010009018956196
                       ],
-                      "ECMetadata": null,
+                      "NH4N": [
+                        0.599004378686979,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949608,
+                        0.10000073099949608,
+                        0.10000073099949608
+                      ],
                       "PH": [
                         8.4,
                         8.8,
@@ -593,36 +647,22 @@
                         8.9,
                         8.9
                       ],
-                      "PHMetadata": null,
                       "CL": null,
-                      "CLMetadata": null,
-                      "Boron": null,
-                      "BoronMetadata": null,
-                      "CEC": null,
-                      "CECMetadata": null,
-                      "Ca": null,
-                      "CaMetadata": null,
-                      "Mg": null,
-                      "MgMetadata": null,
-                      "Na": null,
-                      "NaMetadata": null,
-                      "K": null,
-                      "KMetadata": null,
+                      "EC": [
+                        0.2,
+                        0.25,
+                        0.31,
+                        0.4,
+                        0.59,
+                        0.84,
+                        0.93,
+                        1.01,
+                        1.06,
+                        1.05,
+                        1.01
+                      ],
                       "ESP": null,
-                      "ESPMetadata": null,
-                      "Mn": null,
-                      "MnMetadata": null,
-                      "Al": null,
-                      "AlMetadata": null,
-                      "ParticleSizeSand": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSilt": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClay": null,
-                      "ParticleSizeClayMetadata": null,
-                      "PHUnits": 0,
-                      "BoronUnits": 0,
-                      "Name": "Analysis",
+                      "Name": "Chemical",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -642,6 +682,19 @@
                     },
                     {
                       "$type": "Models.Soils.Sample, Models",
+                      "Depth": [
+                        "0-15",
+                        "15-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150",
+                        "150-180",
+                        "180-210",
+                        "210-240",
+                        "240-270",
+                        "270-300"
+                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -655,40 +708,14 @@
                         300.0,
                         300.0
                       ],
-                      "NO3": [
-                        6.5030034479878,
-                        2.10100111398159,
-                        2.10100111398159,
-                        1.70100090189562,
-                        1.70100090189562,
-                        1.70100090189562,
-                        1.70100090189562,
-                        1.70100090189562,
-                        1.70100090189562,
-                        1.70100090189562,
-                        1.70100090189562
-                      ],
-                      "NH4": [
-                        0.599004378686979,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496
-                      ],
+                      "NO3N": null,
+                      "NH4N": null,
                       "SW": null,
                       "OC": null,
                       "EC": null,
                       "CL": null,
                       "ESP": null,
                       "PH": null,
-                      "NO3Units": 0,
-                      "NH4Units": 0,
                       "SWUnits": 0,
                       "OCUnits": 0,
                       "PHUnits": 0,
@@ -714,40 +741,40 @@
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Inert",
-                            "Location": "65, 426",
-                            "Colour": "0, 158, 115",
+                            "Location": "656, 254",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "SurfaceResidue",
-                            "Location": "345, 45",
-                            "Colour": "0, 158, 115",
+                            "Location": "566, 69",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "FOMLignin",
-                            "Location": "265, 151",
-                            "Colour": "0, 158, 115",
+                            "Location": "261, 69",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "FOMCellulose",
-                            "Location": "444, 154",
-                            "Colour": "0, 158, 115",
+                            "Location": "397, 70",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "FOMCarbohydrate",
-                            "Location": "50, 200",
-                            "Colour": "0, 158, 115",
+                            "Location": "123, 70",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -755,7 +782,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Microbial",
                             "Location": "218, 299",
-                            "Colour": "0, 158, 115",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -763,7 +790,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Humic",
                             "Location": "458, 293",
-                            "Colour": "0, 158, 115",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -771,7 +798,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Urea",
                             "Location": "529, 419",
-                            "Colour": "86, 180, 233",
+                            "Colour": "0, 158, 115",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -779,7 +806,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "NO3",
                             "Location": "185, 435",
-                            "Colour": "86, 180, 233",
+                            "Colour": "0, 158, 115",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -787,33 +814,17 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "NH4",
                             "Location": "357, 422",
-                            "Colour": "86, 180, 233",
+                            "Colour": "0, 158, 115",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Atmosphere",
-                            "Location": "63, 290",
+                            "Location": "48, 338",
                             "Colour": "White",
                             "OutlineColour": "White",
                             "Transparent": true
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "PlantAvailableNO3",
-                            "Location": "702, 339",
-                            "Colour": "86, 180, 233",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "PlantAvailableNH4",
-                            "Location": "675, 205",
-                            "Colour": "86, 180, 233",
-                            "OutlineColour": "Black",
-                            "Transparent": false
                           }
                         ],
                         "Arcs": [
@@ -821,7 +832,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "SurfaceResidue",
                             "DestinationName": "Microbial",
-                            "Location": "0, 0",
+                            "Location": "415, 173",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -829,7 +840,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "SurfaceResidue",
                             "DestinationName": "Humic",
-                            "Location": "349, 151",
+                            "Location": "499, 172",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -845,7 +856,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "FOMLignin",
                             "DestinationName": "Humic",
-                            "Location": "0, 0",
+                            "Location": "255, 105",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -869,7 +880,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "FOMCarbohydrate",
                             "DestinationName": "Microbial",
-                            "Location": "0, 0",
+                            "Location": "141, 131",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -885,7 +896,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "Microbial",
                             "DestinationName": "Microbial",
-                            "Location": "0, 0",
+                            "Location": "335, 301",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -893,7 +904,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "Microbial",
                             "DestinationName": "Humic",
-                            "Location": "321, 241",
+                            "Location": "319, 278",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -901,7 +912,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "Humic",
                             "DestinationName": "Microbial",
-                            "Location": "319, 267",
+                            "Location": "334, 340",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -917,7 +928,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "NO3",
                             "DestinationName": "Atmosphere",
-                            "Location": "0, 0",
+                            "Location": "1, 319",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -925,7 +936,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "NH4",
                             "DestinationName": "NO3",
-                            "Location": "0, 0",
+                            "Location": "243, 409",
                             "Colour": "Black",
                             "Text": null
                           }
@@ -944,13 +955,14 @@
                 },
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                  "Canopies": [],
                   "InitialResidueName": "Potato",
                   "InitialResidueType": "Potato",
                   "InitialResidueMass": 1000.0,
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 80.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": true,
@@ -965,6 +977,7 @@
                   "d_interception": 0.0,
                   "soil_albedo": 0.3,
                   "SoilHeatFluxFraction": 0.4,
+                  "MinimumHeightDiffForNewLayer": 0.0,
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
@@ -1049,7 +1062,6 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
-          "Descriptors": null,
           "Name": "Base2",
           "Children": [
             {
@@ -1064,8 +1076,8 @@
             },
             {
               "$type": "Models.Clock, Models",
-              "StartDate": "2003-10-20T00:00:00",
-              "EndDate": "2004-05-23T00:00:00",
+              "Start": "2003-10-20T00:00:00",
+              "End": "2004-05-23T00:00:00",
               "Name": "Clock",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -1087,6 +1099,8 @@
               "$type": "Models.Core.Zone, Models",
               "Area": 1.0,
               "Slope": 0.0,
+              "AspectAngle": 0.0,
+              "Altitude": 50.0,
               "Name": "Field",
               "Children": [
                 {
@@ -1122,7 +1136,6 @@
                 },
                 {
                   "$type": "Models.Soils.Soil, Models",
-                  "Weirdo": null,
                   "RecordNumber": 0,
                   "ASCOrder": null,
                   "ASCSubOrder": null,
@@ -1143,7 +1156,20 @@
                   "Name": "Soil",
                   "Children": [
                     {
-                      "$type": "Models.Soils.Water, Models",
+                      "$type": "Models.Soils.Physical, Models",
+                      "Depth": [
+                        "0-15",
+                        "15-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150",
+                        "150-180",
+                        "180-210",
+                        "210-240",
+                        "240-270",
+                        "270-300"
+                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -1157,6 +1183,9 @@
                         300.0,
                         300.0
                       ],
+                      "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.02,
                         1.03,
@@ -1229,7 +1258,7 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
-                      "Name": "Water",
+                      "Name": "Physical",
                       "Children": [
                         {
                           "$type": "Models.Soils.SoilCrop, Models",
@@ -1417,6 +1446,19 @@
                         300.0,
                         300.0
                       ],
+                      "Depth": [
+                        "0-15",
+                        "15-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150",
+                        "150-180",
+                        "180-210",
+                        "210-240",
+                        "240-270",
+                        "270-300"
+                      ],
                       "SWCON": [
                         0.3,
                         0.3,
@@ -1443,7 +1485,7 @@
                         0.0,
                         0.0
                       ],
-                      "ResidueInterception": 0.0,
+                      "PrecipitationInterception": 0.0,
                       "Name": "SoilWater",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1451,23 +1493,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.SoilOrganicMatter, Models",
-                      "RootCN": 40.0,
-                      "EnrACoeff": 7.4,
-                      "EnrBCoeff": 0.2,
-                      "Thickness": [
-                        150.0,
-                        150.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0
-                      ],
+                      "$type": "Models.Soils.Organic, Models",
                       "Depth": [
                         "0-15",
                         "15-30",
@@ -1481,7 +1507,21 @@
                         "240-270",
                         "270-300"
                       ],
-                      "OC": [
+                      "FOMCNRatio": 40.0,
+                      "Thickness": [
+                        150.0,
+                        150.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0
+                      ],
+                      "Carbon": [
                         1.04,
                         0.89,
                         0.89,
@@ -1494,8 +1534,7 @@
                         0.13,
                         0.12
                       ],
-                      "OCMetadata": null,
-                      "SoilCN": [
+                      "SoilCNRatio": [
                         12.5,
                         12.5,
                         12.5,
@@ -1534,7 +1573,7 @@
                         0.95,
                         0.95
                       ],
-                      "RootWt": [
+                      "FOM": [
                         48.128639588700892,
                         41.424703988481674,
                         30.688175501013852,
@@ -1547,15 +1586,27 @@
                         3.75796436145482,
                         2.7839684716382678
                       ],
-                      "OCUnits": 0,
-                      "Name": "SoilOrganicMatter",
+                      "Name": "Organic",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.Analysis, Models",
+                      "$type": "Models.Soils.Chemical, Models",
+                      "Depth": [
+                        "0-15",
+                        "15-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150",
+                        "150-180",
+                        "180-210",
+                        "210-240",
+                        "240-270",
+                        "270-300"
+                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -1569,26 +1620,32 @@
                         300.0,
                         300.0
                       ],
-                      "Rocks": null,
-                      "RocksMetadata": null,
-                      "Texture": null,
-                      "TextureMetadata": null,
-                      "MunsellColour": null,
-                      "MunsellMetadata": null,
-                      "EC": [
-                        0.2,
-                        0.25,
-                        0.31,
-                        0.4,
-                        0.59,
-                        0.84,
-                        0.93,
-                        1.01,
-                        1.06,
-                        1.05,
-                        1.01
+                      "NO3N": [
+                        6.5030034479878,
+                        2.1010011139815892,
+                        2.10100111398159,
+                        1.7010009018956203,
+                        1.7010009018956196,
+                        1.7010009018956196,
+                        1.7010009018956196,
+                        1.7010009018956209,
+                        1.7010009018956196,
+                        1.7010009018956196,
+                        1.7010009018956196
                       ],
-                      "ECMetadata": null,
+                      "NH4N": [
+                        0.599004378686979,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949608,
+                        0.10000073099949608,
+                        0.10000073099949608
+                      ],
                       "PH": [
                         8.4,
                         8.8,
@@ -1602,36 +1659,22 @@
                         8.9,
                         8.9
                       ],
-                      "PHMetadata": null,
                       "CL": null,
-                      "CLMetadata": null,
-                      "Boron": null,
-                      "BoronMetadata": null,
-                      "CEC": null,
-                      "CECMetadata": null,
-                      "Ca": null,
-                      "CaMetadata": null,
-                      "Mg": null,
-                      "MgMetadata": null,
-                      "Na": null,
-                      "NaMetadata": null,
-                      "K": null,
-                      "KMetadata": null,
+                      "EC": [
+                        0.2,
+                        0.25,
+                        0.31,
+                        0.4,
+                        0.59,
+                        0.84,
+                        0.93,
+                        1.01,
+                        1.06,
+                        1.05,
+                        1.01
+                      ],
                       "ESP": null,
-                      "ESPMetadata": null,
-                      "Mn": null,
-                      "MnMetadata": null,
-                      "Al": null,
-                      "AlMetadata": null,
-                      "ParticleSizeSand": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSilt": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClay": null,
-                      "ParticleSizeClayMetadata": null,
-                      "PHUnits": 0,
-                      "BoronUnits": 0,
-                      "Name": "Analysis",
+                      "Name": "Chemical",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -1651,6 +1694,19 @@
                     },
                     {
                       "$type": "Models.Soils.Sample, Models",
+                      "Depth": [
+                        "0-15",
+                        "15-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150",
+                        "150-180",
+                        "180-210",
+                        "210-240",
+                        "240-270",
+                        "270-300"
+                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -1664,40 +1720,14 @@
                         300.0,
                         300.0
                       ],
-                      "NO3": [
-                        6.5030034479878,
-                        2.10100111398159,
-                        2.10100111398159,
-                        1.70100090189562,
-                        1.70100090189562,
-                        1.70100090189562,
-                        1.70100090189562,
-                        1.70100090189562,
-                        1.70100090189562,
-                        1.70100090189562,
-                        1.70100090189562
-                      ],
-                      "NH4": [
-                        0.599004378686979,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496
-                      ],
+                      "NO3N": null,
+                      "NH4N": null,
                       "SW": null,
                       "OC": null,
                       "EC": null,
                       "CL": null,
                       "ESP": null,
                       "PH": null,
-                      "NO3Units": 0,
-                      "NH4Units": 0,
                       "SWUnits": 0,
                       "OCUnits": 0,
                       "PHUnits": 0,
@@ -1723,40 +1753,40 @@
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Inert",
-                            "Location": "65, 426",
-                            "Colour": "0, 158, 115",
+                            "Location": "656, 254",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "SurfaceResidue",
-                            "Location": "345, 45",
-                            "Colour": "0, 158, 115",
+                            "Location": "566, 69",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "FOMLignin",
-                            "Location": "265, 151",
-                            "Colour": "0, 158, 115",
+                            "Location": "261, 69",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "FOMCellulose",
-                            "Location": "444, 154",
-                            "Colour": "0, 158, 115",
+                            "Location": "397, 70",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "FOMCarbohydrate",
-                            "Location": "50, 200",
-                            "Colour": "0, 158, 115",
+                            "Location": "123, 70",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -1764,7 +1794,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Microbial",
                             "Location": "218, 299",
-                            "Colour": "0, 158, 115",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -1772,7 +1802,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Humic",
                             "Location": "458, 293",
-                            "Colour": "0, 158, 115",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -1780,7 +1810,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Urea",
                             "Location": "529, 419",
-                            "Colour": "86, 180, 233",
+                            "Colour": "0, 158, 115",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -1788,7 +1818,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "NO3",
                             "Location": "185, 435",
-                            "Colour": "86, 180, 233",
+                            "Colour": "0, 158, 115",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -1796,33 +1826,17 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "NH4",
                             "Location": "357, 422",
-                            "Colour": "86, 180, 233",
+                            "Colour": "0, 158, 115",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Atmosphere",
-                            "Location": "63, 290",
+                            "Location": "48, 338",
                             "Colour": "White",
                             "OutlineColour": "White",
                             "Transparent": true
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "PlantAvailableNO3",
-                            "Location": "702, 339",
-                            "Colour": "86, 180, 233",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "PlantAvailableNH4",
-                            "Location": "675, 205",
-                            "Colour": "86, 180, 233",
-                            "OutlineColour": "Black",
-                            "Transparent": false
                           }
                         ],
                         "Arcs": [
@@ -1830,7 +1844,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "SurfaceResidue",
                             "DestinationName": "Microbial",
-                            "Location": "0, 0",
+                            "Location": "415, 173",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -1838,7 +1852,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "SurfaceResidue",
                             "DestinationName": "Humic",
-                            "Location": "349, 151",
+                            "Location": "499, 172",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -1854,7 +1868,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "FOMLignin",
                             "DestinationName": "Humic",
-                            "Location": "0, 0",
+                            "Location": "255, 105",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -1878,7 +1892,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "FOMCarbohydrate",
                             "DestinationName": "Microbial",
-                            "Location": "0, 0",
+                            "Location": "141, 131",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -1894,7 +1908,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "Microbial",
                             "DestinationName": "Microbial",
-                            "Location": "0, 0",
+                            "Location": "335, 301",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -1902,7 +1916,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "Microbial",
                             "DestinationName": "Humic",
-                            "Location": "321, 241",
+                            "Location": "319, 278",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -1910,7 +1924,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "Humic",
                             "DestinationName": "Microbial",
-                            "Location": "319, 267",
+                            "Location": "334, 340",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -1926,7 +1940,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "NO3",
                             "DestinationName": "Atmosphere",
-                            "Location": "0, 0",
+                            "Location": "1, 319",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -1934,7 +1948,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "NH4",
                             "DestinationName": "NO3",
-                            "Location": "0, 0",
+                            "Location": "243, 409",
                             "Colour": "Black",
                             "Text": null
                           }
@@ -1953,13 +1967,14 @@
                 },
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                  "Canopies": [],
                   "InitialResidueName": "Potato",
                   "InitialResidueType": "Potato",
                   "InitialResidueMass": 1000.0,
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 80.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": true,
@@ -2067,7 +2082,6 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
-          "Descriptors": null,
           "Name": "Base3",
           "Children": [
             {
@@ -2082,8 +2096,8 @@
             },
             {
               "$type": "Models.Clock, Models",
-              "StartDate": "2003-11-15T00:00:00",
-              "EndDate": "2003-11-16T00:00:00",
+              "Start": "2003-11-15T00:00:00",
+              "End": "2003-11-16T00:00:00",
               "Name": "Clock",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -2105,6 +2119,8 @@
               "$type": "Models.Core.Zone, Models",
               "Area": 1.0,
               "Slope": 0.0,
+              "AspectAngle": 0.0,
+              "Altitude": 50.0,
               "Name": "Field",
               "Children": [
                 {
@@ -2140,7 +2156,6 @@
                 },
                 {
                   "$type": "Models.Soils.Soil, Models",
-                  "Weirdo": null,
                   "RecordNumber": 0,
                   "ASCOrder": null,
                   "ASCSubOrder": null,
@@ -2161,7 +2176,20 @@
                   "Name": "Soil",
                   "Children": [
                     {
-                      "$type": "Models.Soils.Water, Models",
+                      "$type": "Models.Soils.Physical, Models",
+                      "Depth": [
+                        "0-15",
+                        "15-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150",
+                        "150-180",
+                        "180-210",
+                        "210-240",
+                        "240-270",
+                        "270-300"
+                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -2175,6 +2203,9 @@
                         300.0,
                         300.0
                       ],
+                      "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.02,
                         1.03,
@@ -2247,7 +2278,7 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
-                      "Name": "Water",
+                      "Name": "Physical",
                       "Children": [
                         {
                           "$type": "Models.Soils.SoilCrop, Models",
@@ -2435,6 +2466,19 @@
                         300.0,
                         300.0
                       ],
+                      "Depth": [
+                        "0-15",
+                        "15-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150",
+                        "150-180",
+                        "180-210",
+                        "210-240",
+                        "240-270",
+                        "270-300"
+                      ],
                       "SWCON": [
                         0.3,
                         0.3,
@@ -2461,7 +2505,7 @@
                         0.0,
                         0.0
                       ],
-                      "ResidueInterception": 0.0,
+                      "PrecipitationInterception": 0.0,
                       "Name": "SoilWater",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -2469,23 +2513,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.SoilOrganicMatter, Models",
-                      "RootCN": 40.0,
-                      "EnrACoeff": 7.4,
-                      "EnrBCoeff": 0.2,
-                      "Thickness": [
-                        150.0,
-                        150.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0
-                      ],
+                      "$type": "Models.Soils.Organic, Models",
                       "Depth": [
                         "0-15",
                         "15-30",
@@ -2499,7 +2527,21 @@
                         "240-270",
                         "270-300"
                       ],
-                      "OC": [
+                      "FOMCNRatio": 40.0,
+                      "Thickness": [
+                        150.0,
+                        150.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0
+                      ],
+                      "Carbon": [
                         1.04,
                         0.89,
                         0.89,
@@ -2512,8 +2554,7 @@
                         0.13,
                         0.12
                       ],
-                      "OCMetadata": null,
-                      "SoilCN": [
+                      "SoilCNRatio": [
                         12.5,
                         12.5,
                         12.5,
@@ -2552,7 +2593,7 @@
                         0.95,
                         0.95
                       ],
-                      "RootWt": [
+                      "FOM": [
                         48.128639588700892,
                         41.424703988481674,
                         30.688175501013852,
@@ -2565,15 +2606,27 @@
                         3.75796436145482,
                         2.7839684716382678
                       ],
-                      "OCUnits": 0,
-                      "Name": "SoilOrganicMatter",
+                      "Name": "Organic",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.Analysis, Models",
+                      "$type": "Models.Soils.Chemical, Models",
+                      "Depth": [
+                        "0-15",
+                        "15-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150",
+                        "150-180",
+                        "180-210",
+                        "210-240",
+                        "240-270",
+                        "270-300"
+                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -2587,26 +2640,32 @@
                         300.0,
                         300.0
                       ],
-                      "Rocks": null,
-                      "RocksMetadata": null,
-                      "Texture": null,
-                      "TextureMetadata": null,
-                      "MunsellColour": null,
-                      "MunsellMetadata": null,
-                      "EC": [
-                        0.2,
-                        0.25,
-                        0.31,
-                        0.4,
-                        0.59,
-                        0.84,
-                        0.93,
-                        1.01,
-                        1.06,
-                        1.05,
-                        1.01
+                      "NO3N": [
+                        6.5030034479878,
+                        2.1010011139815892,
+                        2.10100111398159,
+                        1.7010009018956203,
+                        1.7010009018956196,
+                        1.7010009018956196,
+                        1.7010009018956196,
+                        1.7010009018956209,
+                        1.7010009018956196,
+                        1.7010009018956196,
+                        1.7010009018956196
                       ],
-                      "ECMetadata": null,
+                      "NH4N": [
+                        0.599004378686979,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949608,
+                        0.10000073099949608,
+                        0.10000073099949608
+                      ],
                       "PH": [
                         8.4,
                         8.8,
@@ -2620,36 +2679,22 @@
                         8.9,
                         8.9
                       ],
-                      "PHMetadata": null,
                       "CL": null,
-                      "CLMetadata": null,
-                      "Boron": null,
-                      "BoronMetadata": null,
-                      "CEC": null,
-                      "CECMetadata": null,
-                      "Ca": null,
-                      "CaMetadata": null,
-                      "Mg": null,
-                      "MgMetadata": null,
-                      "Na": null,
-                      "NaMetadata": null,
-                      "K": null,
-                      "KMetadata": null,
+                      "EC": [
+                        0.2,
+                        0.25,
+                        0.31,
+                        0.4,
+                        0.59,
+                        0.84,
+                        0.93,
+                        1.01,
+                        1.06,
+                        1.05,
+                        1.01
+                      ],
                       "ESP": null,
-                      "ESPMetadata": null,
-                      "Mn": null,
-                      "MnMetadata": null,
-                      "Al": null,
-                      "AlMetadata": null,
-                      "ParticleSizeSand": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSilt": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClay": null,
-                      "ParticleSizeClayMetadata": null,
-                      "PHUnits": 0,
-                      "BoronUnits": 0,
-                      "Name": "Analysis",
+                      "Name": "Chemical",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -2669,6 +2714,19 @@
                     },
                     {
                       "$type": "Models.Soils.Sample, Models",
+                      "Depth": [
+                        "0-15",
+                        "15-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150",
+                        "150-180",
+                        "180-210",
+                        "210-240",
+                        "240-270",
+                        "270-300"
+                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -2682,40 +2740,14 @@
                         300.0,
                         300.0
                       ],
-                      "NO3": [
-                        6.5030034479878,
-                        2.10100111398159,
-                        2.10100111398159,
-                        1.70100090189562,
-                        1.70100090189562,
-                        1.70100090189562,
-                        1.70100090189562,
-                        1.70100090189562,
-                        1.70100090189562,
-                        1.70100090189562,
-                        1.70100090189562
-                      ],
-                      "NH4": [
-                        0.599004378686979,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496
-                      ],
+                      "NO3N": null,
+                      "NH4N": null,
                       "SW": null,
                       "OC": null,
                       "EC": null,
                       "CL": null,
                       "ESP": null,
                       "PH": null,
-                      "NO3Units": 0,
-                      "NH4Units": 0,
                       "SWUnits": 0,
                       "OCUnits": 0,
                       "PHUnits": 0,
@@ -2741,40 +2773,40 @@
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Inert",
-                            "Location": "65, 426",
-                            "Colour": "0, 158, 115",
+                            "Location": "656, 254",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "SurfaceResidue",
-                            "Location": "345, 45",
-                            "Colour": "0, 158, 115",
+                            "Location": "566, 69",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "FOMLignin",
-                            "Location": "265, 151",
-                            "Colour": "0, 158, 115",
+                            "Location": "261, 69",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "FOMCellulose",
-                            "Location": "444, 154",
-                            "Colour": "0, 158, 115",
+                            "Location": "397, 70",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "FOMCarbohydrate",
-                            "Location": "50, 200",
-                            "Colour": "0, 158, 115",
+                            "Location": "123, 70",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -2782,7 +2814,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Microbial",
                             "Location": "218, 299",
-                            "Colour": "0, 158, 115",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -2790,7 +2822,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Humic",
                             "Location": "458, 293",
-                            "Colour": "0, 158, 115",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -2798,7 +2830,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Urea",
                             "Location": "529, 419",
-                            "Colour": "86, 180, 233",
+                            "Colour": "0, 158, 115",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -2806,7 +2838,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "NO3",
                             "Location": "185, 435",
-                            "Colour": "86, 180, 233",
+                            "Colour": "0, 158, 115",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -2814,33 +2846,17 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "NH4",
                             "Location": "357, 422",
-                            "Colour": "86, 180, 233",
+                            "Colour": "0, 158, 115",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Atmosphere",
-                            "Location": "63, 290",
+                            "Location": "48, 338",
                             "Colour": "White",
                             "OutlineColour": "White",
                             "Transparent": true
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "PlantAvailableNO3",
-                            "Location": "702, 339",
-                            "Colour": "86, 180, 233",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "PlantAvailableNH4",
-                            "Location": "675, 205",
-                            "Colour": "86, 180, 233",
-                            "OutlineColour": "Black",
-                            "Transparent": false
                           }
                         ],
                         "Arcs": [
@@ -2848,7 +2864,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "SurfaceResidue",
                             "DestinationName": "Microbial",
-                            "Location": "0, 0",
+                            "Location": "415, 173",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -2856,7 +2872,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "SurfaceResidue",
                             "DestinationName": "Humic",
-                            "Location": "349, 151",
+                            "Location": "499, 172",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -2872,7 +2888,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "FOMLignin",
                             "DestinationName": "Humic",
-                            "Location": "0, 0",
+                            "Location": "255, 105",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -2896,7 +2912,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "FOMCarbohydrate",
                             "DestinationName": "Microbial",
-                            "Location": "0, 0",
+                            "Location": "141, 131",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -2912,7 +2928,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "Microbial",
                             "DestinationName": "Microbial",
-                            "Location": "0, 0",
+                            "Location": "335, 301",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -2920,7 +2936,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "Microbial",
                             "DestinationName": "Humic",
-                            "Location": "321, 241",
+                            "Location": "319, 278",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -2928,7 +2944,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "Humic",
                             "DestinationName": "Microbial",
-                            "Location": "319, 267",
+                            "Location": "334, 340",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -2944,7 +2960,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "NO3",
                             "DestinationName": "Atmosphere",
-                            "Location": "0, 0",
+                            "Location": "1, 319",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -2952,7 +2968,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "NH4",
                             "DestinationName": "NO3",
-                            "Location": "0, 0",
+                            "Location": "243, 409",
                             "Colour": "Black",
                             "Text": null
                           }
@@ -2971,13 +2987,14 @@
                 },
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                  "Canopies": [],
                   "InitialResidueName": "Potato",
                   "InitialResidueType": "Potato",
                   "InitialResidueMass": 1000.0,
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 80.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": true,
@@ -2992,6 +3009,7 @@
                   "d_interception": 0.0,
                   "soil_albedo": 0.3,
                   "SoilHeatFluxFraction": 0.4,
+                  "MinimumHeightDiffForNewLayer": 0.0,
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
@@ -3042,7 +3060,7 @@
           "Children": [
             {
               "$type": "Models.Factorial.Factor, Models",
-              "Specification": null,
+              "Specification": "",
               "Name": "Site",
               "Children": [
                 {
@@ -3109,7 +3127,6 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
-          "Descriptors": null,
           "Name": "Base4",
           "Children": [
             {
@@ -3124,8 +3141,8 @@
             },
             {
               "$type": "Models.Clock, Models",
-              "StartDate": "2003-10-20T00:00:00",
-              "EndDate": "2004-05-23T00:00:00",
+              "Start": "2003-10-20T00:00:00",
+              "End": "2004-05-23T00:00:00",
               "Name": "Clock",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -3147,6 +3164,8 @@
               "$type": "Models.Core.Zone, Models",
               "Area": 1.0,
               "Slope": 0.0,
+              "AspectAngle": 0.0,
+              "Altitude": 50.0,
               "Name": "Field",
               "Children": [
                 {
@@ -3181,7 +3200,6 @@
                 },
                 {
                   "$type": "Models.Soils.Soil, Models",
-                  "Weirdo": null,
                   "RecordNumber": 0,
                   "ASCOrder": null,
                   "ASCSubOrder": null,
@@ -3202,7 +3220,20 @@
                   "Name": "Soil",
                   "Children": [
                     {
-                      "$type": "Models.Soils.Water, Models",
+                      "$type": "Models.Soils.Physical, Models",
+                      "Depth": [
+                        "0-15",
+                        "15-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150",
+                        "150-180",
+                        "180-210",
+                        "210-240",
+                        "240-270",
+                        "270-300"
+                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -3216,6 +3247,9 @@
                         300.0,
                         300.0
                       ],
+                      "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.02,
                         1.03,
@@ -3288,7 +3322,7 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
-                      "Name": "Water",
+                      "Name": "Physical",
                       "Children": [
                         {
                           "$type": "Models.Soils.SoilCrop, Models",
@@ -3476,6 +3510,19 @@
                         300.0,
                         300.0
                       ],
+                      "Depth": [
+                        "0-15",
+                        "15-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150",
+                        "150-180",
+                        "180-210",
+                        "210-240",
+                        "240-270",
+                        "270-300"
+                      ],
                       "SWCON": [
                         0.3,
                         0.3,
@@ -3502,7 +3549,7 @@
                         0.0,
                         0.0
                       ],
-                      "ResidueInterception": 0.0,
+                      "PrecipitationInterception": 0.0,
                       "Name": "SoilWater",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3510,23 +3557,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.SoilOrganicMatter, Models",
-                      "RootCN": 40.0,
-                      "EnrACoeff": 7.4,
-                      "EnrBCoeff": 0.2,
-                      "Thickness": [
-                        150.0,
-                        150.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0
-                      ],
+                      "$type": "Models.Soils.Organic, Models",
                       "Depth": [
                         "0-15",
                         "15-30",
@@ -3540,7 +3571,21 @@
                         "240-270",
                         "270-300"
                       ],
-                      "OC": [
+                      "FOMCNRatio": 40.0,
+                      "Thickness": [
+                        150.0,
+                        150.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0
+                      ],
+                      "Carbon": [
                         1.04,
                         0.89,
                         0.89,
@@ -3553,8 +3598,7 @@
                         0.13,
                         0.12
                       ],
-                      "OCMetadata": null,
-                      "SoilCN": [
+                      "SoilCNRatio": [
                         12.5,
                         12.5,
                         12.5,
@@ -3593,7 +3637,7 @@
                         0.95,
                         0.95
                       ],
-                      "RootWt": [
+                      "FOM": [
                         48.128639588700892,
                         41.424703988481674,
                         30.688175501013852,
@@ -3606,15 +3650,27 @@
                         3.75796436145482,
                         2.7839684716382678
                       ],
-                      "OCUnits": 0,
-                      "Name": "SoilOrganicMatter",
+                      "Name": "Organic",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.Analysis, Models",
+                      "$type": "Models.Soils.Chemical, Models",
+                      "Depth": [
+                        "0-15",
+                        "15-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150",
+                        "150-180",
+                        "180-210",
+                        "210-240",
+                        "240-270",
+                        "270-300"
+                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -3628,26 +3684,32 @@
                         300.0,
                         300.0
                       ],
-                      "Rocks": null,
-                      "RocksMetadata": null,
-                      "Texture": null,
-                      "TextureMetadata": null,
-                      "MunsellColour": null,
-                      "MunsellMetadata": null,
-                      "EC": [
-                        0.2,
-                        0.25,
-                        0.31,
-                        0.4,
-                        0.59,
-                        0.84,
-                        0.93,
-                        1.01,
-                        1.06,
-                        1.05,
-                        1.01
+                      "NO3N": [
+                        6.5030034479878,
+                        2.1010011139815892,
+                        2.10100111398159,
+                        1.7010009018956203,
+                        1.7010009018956196,
+                        1.7010009018956196,
+                        1.7010009018956196,
+                        1.7010009018956209,
+                        1.7010009018956196,
+                        1.7010009018956196,
+                        1.7010009018956196
                       ],
-                      "ECMetadata": null,
+                      "NH4N": [
+                        0.599004378686979,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949608,
+                        0.10000073099949608,
+                        0.10000073099949608
+                      ],
                       "PH": [
                         8.4,
                         8.8,
@@ -3661,36 +3723,22 @@
                         8.9,
                         8.9
                       ],
-                      "PHMetadata": null,
                       "CL": null,
-                      "CLMetadata": null,
-                      "Boron": null,
-                      "BoronMetadata": null,
-                      "CEC": null,
-                      "CECMetadata": null,
-                      "Ca": null,
-                      "CaMetadata": null,
-                      "Mg": null,
-                      "MgMetadata": null,
-                      "Na": null,
-                      "NaMetadata": null,
-                      "K": null,
-                      "KMetadata": null,
+                      "EC": [
+                        0.2,
+                        0.25,
+                        0.31,
+                        0.4,
+                        0.59,
+                        0.84,
+                        0.93,
+                        1.01,
+                        1.06,
+                        1.05,
+                        1.01
+                      ],
                       "ESP": null,
-                      "ESPMetadata": null,
-                      "Mn": null,
-                      "MnMetadata": null,
-                      "Al": null,
-                      "AlMetadata": null,
-                      "ParticleSizeSand": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSilt": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClay": null,
-                      "ParticleSizeClayMetadata": null,
-                      "PHUnits": 0,
-                      "BoronUnits": 0,
-                      "Name": "Analysis",
+                      "Name": "Chemical",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -3710,6 +3758,19 @@
                     },
                     {
                       "$type": "Models.Soils.Sample, Models",
+                      "Depth": [
+                        "0-15",
+                        "15-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150",
+                        "150-180",
+                        "180-210",
+                        "210-240",
+                        "240-270",
+                        "270-300"
+                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -3723,40 +3784,14 @@
                         300.0,
                         300.0
                       ],
-                      "NO3": [
-                        6.5030034479878,
-                        2.10100111398159,
-                        2.10100111398159,
-                        1.70100090189562,
-                        1.70100090189562,
-                        1.70100090189562,
-                        1.70100090189562,
-                        1.70100090189562,
-                        1.70100090189562,
-                        1.70100090189562,
-                        1.70100090189562
-                      ],
-                      "NH4": [
-                        0.599004378686979,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496
-                      ],
+                      "NO3N": null,
+                      "NH4N": null,
                       "SW": null,
                       "OC": null,
                       "EC": null,
                       "CL": null,
                       "ESP": null,
                       "PH": null,
-                      "NO3Units": 0,
-                      "NH4Units": 0,
                       "SWUnits": 0,
                       "OCUnits": 0,
                       "PHUnits": 0,
@@ -3782,40 +3817,40 @@
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Inert",
-                            "Location": "65, 426",
-                            "Colour": "0, 158, 115",
+                            "Location": "656, 254",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "SurfaceResidue",
-                            "Location": "345, 45",
-                            "Colour": "0, 158, 115",
+                            "Location": "566, 69",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "FOMLignin",
-                            "Location": "265, 151",
-                            "Colour": "0, 158, 115",
+                            "Location": "261, 69",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "FOMCellulose",
-                            "Location": "444, 154",
-                            "Colour": "0, 158, 115",
+                            "Location": "397, 70",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "FOMCarbohydrate",
-                            "Location": "50, 200",
-                            "Colour": "0, 158, 115",
+                            "Location": "123, 70",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -3823,7 +3858,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Microbial",
                             "Location": "218, 299",
-                            "Colour": "0, 158, 115",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -3831,7 +3866,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Humic",
                             "Location": "458, 293",
-                            "Colour": "0, 158, 115",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -3839,7 +3874,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Urea",
                             "Location": "529, 419",
-                            "Colour": "86, 180, 233",
+                            "Colour": "0, 158, 115",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -3847,7 +3882,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "NO3",
                             "Location": "185, 435",
-                            "Colour": "86, 180, 233",
+                            "Colour": "0, 158, 115",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -3855,33 +3890,17 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "NH4",
                             "Location": "357, 422",
-                            "Colour": "86, 180, 233",
+                            "Colour": "0, 158, 115",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Atmosphere",
-                            "Location": "63, 290",
+                            "Location": "48, 338",
                             "Colour": "White",
                             "OutlineColour": "White",
                             "Transparent": true
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "PlantAvailableNO3",
-                            "Location": "702, 339",
-                            "Colour": "86, 180, 233",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "PlantAvailableNH4",
-                            "Location": "675, 205",
-                            "Colour": "86, 180, 233",
-                            "OutlineColour": "Black",
-                            "Transparent": false
                           }
                         ],
                         "Arcs": [
@@ -3889,7 +3908,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "SurfaceResidue",
                             "DestinationName": "Microbial",
-                            "Location": "0, 0",
+                            "Location": "415, 173",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -3897,7 +3916,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "SurfaceResidue",
                             "DestinationName": "Humic",
-                            "Location": "349, 151",
+                            "Location": "499, 172",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -3913,7 +3932,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "FOMLignin",
                             "DestinationName": "Humic",
-                            "Location": "0, 0",
+                            "Location": "255, 105",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -3937,7 +3956,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "FOMCarbohydrate",
                             "DestinationName": "Microbial",
-                            "Location": "0, 0",
+                            "Location": "141, 131",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -3953,7 +3972,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "Microbial",
                             "DestinationName": "Microbial",
-                            "Location": "0, 0",
+                            "Location": "335, 301",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -3961,7 +3980,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "Microbial",
                             "DestinationName": "Humic",
-                            "Location": "321, 241",
+                            "Location": "319, 278",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -3969,7 +3988,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "Humic",
                             "DestinationName": "Microbial",
-                            "Location": "319, 267",
+                            "Location": "334, 340",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -3985,7 +4004,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "NO3",
                             "DestinationName": "Atmosphere",
-                            "Location": "0, 0",
+                            "Location": "1, 319",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -3993,7 +4012,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "NH4",
                             "DestinationName": "NO3",
-                            "Location": "0, 0",
+                            "Location": "243, 409",
                             "Colour": "Black",
                             "Text": null
                           }
@@ -4012,13 +4031,14 @@
                 },
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                  "Canopies": [],
                   "InitialResidueName": "Potato",
                   "InitialResidueType": "Potato",
                   "InitialResidueMass": 1000.0,
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 80.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": true,
@@ -4033,6 +4053,7 @@
                   "d_interception": 0.0,
                   "soil_albedo": 0.3,
                   "SoilHeatFluxFraction": 0.4,
+                  "MinimumHeightDiffForNewLayer": 0.0,
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
@@ -4069,7 +4090,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": null,
+                  "LegendOutsideGraph": false,
                   "Name": "SoilWater",
                   "Children": [
                     {
@@ -4089,8 +4112,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "SoilWater.sw_dep(1)",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": false,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -4200,7 +4223,6 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
-          "Descriptors": null,
           "Name": "Base5",
           "Children": [
             {
@@ -4215,8 +4237,8 @@
             },
             {
               "$type": "Models.Clock, Models",
-              "StartDate": "2003-11-15T00:00:00",
-              "EndDate": "2003-11-15T00:00:00",
+              "Start": "2003-11-15T00:00:00",
+              "End": "2003-11-15T00:00:00",
               "Name": "Clock",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -4238,6 +4260,8 @@
               "$type": "Models.Core.Zone, Models",
               "Area": 1.0,
               "Slope": 0.0,
+              "AspectAngle": 0.0,
+              "Altitude": 50.0,
               "Name": "Field",
               "Children": [
                 {
@@ -4273,7 +4297,6 @@
                 },
                 {
                   "$type": "Models.Soils.Soil, Models",
-                  "Weirdo": null,
                   "RecordNumber": 0,
                   "ASCOrder": null,
                   "ASCSubOrder": null,
@@ -4294,7 +4317,20 @@
                   "Name": "Soil",
                   "Children": [
                     {
-                      "$type": "Models.Soils.Water, Models",
+                      "$type": "Models.Soils.Physical, Models",
+                      "Depth": [
+                        "0-15",
+                        "15-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150",
+                        "150-180",
+                        "180-210",
+                        "210-240",
+                        "240-270",
+                        "270-300"
+                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -4308,6 +4344,9 @@
                         300.0,
                         300.0
                       ],
+                      "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.02,
                         1.03,
@@ -4380,7 +4419,7 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
-                      "Name": "Water",
+                      "Name": "Physical",
                       "Children": [
                         {
                           "$type": "Models.Soils.SoilCrop, Models",
@@ -4568,6 +4607,19 @@
                         300.0,
                         300.0
                       ],
+                      "Depth": [
+                        "0-15",
+                        "15-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150",
+                        "150-180",
+                        "180-210",
+                        "210-240",
+                        "240-270",
+                        "270-300"
+                      ],
                       "SWCON": [
                         0.3,
                         0.3,
@@ -4594,7 +4646,7 @@
                         0.0,
                         0.0
                       ],
-                      "ResidueInterception": 0.0,
+                      "PrecipitationInterception": 0.0,
                       "Name": "SoilWater",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -4602,23 +4654,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.SoilOrganicMatter, Models",
-                      "RootCN": 40.0,
-                      "EnrACoeff": 7.4,
-                      "EnrBCoeff": 0.2,
-                      "Thickness": [
-                        150.0,
-                        150.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0
-                      ],
+                      "$type": "Models.Soils.Organic, Models",
                       "Depth": [
                         "0-15",
                         "15-30",
@@ -4632,7 +4668,21 @@
                         "240-270",
                         "270-300"
                       ],
-                      "OC": [
+                      "FOMCNRatio": 40.0,
+                      "Thickness": [
+                        150.0,
+                        150.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0
+                      ],
+                      "Carbon": [
                         1.04,
                         0.89,
                         0.89,
@@ -4645,8 +4695,7 @@
                         0.13,
                         0.12
                       ],
-                      "OCMetadata": null,
-                      "SoilCN": [
+                      "SoilCNRatio": [
                         12.5,
                         12.5,
                         12.5,
@@ -4685,7 +4734,7 @@
                         0.95,
                         0.95
                       ],
-                      "RootWt": [
+                      "FOM": [
                         48.128639588700892,
                         41.424703988481674,
                         30.688175501013852,
@@ -4698,15 +4747,27 @@
                         3.75796436145482,
                         2.7839684716382678
                       ],
-                      "OCUnits": 0,
-                      "Name": "SoilOrganicMatter",
+                      "Name": "Organic",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.Analysis, Models",
+                      "$type": "Models.Soils.Chemical, Models",
+                      "Depth": [
+                        "0-15",
+                        "15-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150",
+                        "150-180",
+                        "180-210",
+                        "210-240",
+                        "240-270",
+                        "270-300"
+                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -4720,26 +4781,32 @@
                         300.0,
                         300.0
                       ],
-                      "Rocks": null,
-                      "RocksMetadata": null,
-                      "Texture": null,
-                      "TextureMetadata": null,
-                      "MunsellColour": null,
-                      "MunsellMetadata": null,
-                      "EC": [
-                        0.2,
-                        0.25,
-                        0.31,
-                        0.4,
-                        0.59,
-                        0.84,
-                        0.93,
-                        1.01,
-                        1.06,
-                        1.05,
-                        1.01
+                      "NO3N": [
+                        6.5030034479878,
+                        2.1010011139815892,
+                        2.10100111398159,
+                        1.7010009018956203,
+                        1.7010009018956196,
+                        1.7010009018956196,
+                        1.7010009018956196,
+                        1.7010009018956209,
+                        1.7010009018956196,
+                        1.7010009018956196,
+                        1.7010009018956196
                       ],
-                      "ECMetadata": null,
+                      "NH4N": [
+                        0.599004378686979,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949598,
+                        0.10000073099949608,
+                        0.10000073099949608,
+                        0.10000073099949608
+                      ],
                       "PH": [
                         8.4,
                         8.8,
@@ -4753,36 +4820,22 @@
                         8.9,
                         8.9
                       ],
-                      "PHMetadata": null,
                       "CL": null,
-                      "CLMetadata": null,
-                      "Boron": null,
-                      "BoronMetadata": null,
-                      "CEC": null,
-                      "CECMetadata": null,
-                      "Ca": null,
-                      "CaMetadata": null,
-                      "Mg": null,
-                      "MgMetadata": null,
-                      "Na": null,
-                      "NaMetadata": null,
-                      "K": null,
-                      "KMetadata": null,
+                      "EC": [
+                        0.2,
+                        0.25,
+                        0.31,
+                        0.4,
+                        0.59,
+                        0.84,
+                        0.93,
+                        1.01,
+                        1.06,
+                        1.05,
+                        1.01
+                      ],
                       "ESP": null,
-                      "ESPMetadata": null,
-                      "Mn": null,
-                      "MnMetadata": null,
-                      "Al": null,
-                      "AlMetadata": null,
-                      "ParticleSizeSand": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSilt": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClay": null,
-                      "ParticleSizeClayMetadata": null,
-                      "PHUnits": 0,
-                      "BoronUnits": 0,
-                      "Name": "Analysis",
+                      "Name": "Chemical",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -4802,6 +4855,19 @@
                     },
                     {
                       "$type": "Models.Soils.Sample, Models",
+                      "Depth": [
+                        "0-15",
+                        "15-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150",
+                        "150-180",
+                        "180-210",
+                        "210-240",
+                        "240-270",
+                        "270-300"
+                      ],
                       "Thickness": [
                         150.0,
                         150.0,
@@ -4815,40 +4881,14 @@
                         300.0,
                         300.0
                       ],
-                      "NO3": [
-                        6.5030034479878,
-                        2.10100111398159,
-                        2.10100111398159,
-                        1.70100090189562,
-                        1.70100090189562,
-                        1.70100090189562,
-                        1.70100090189562,
-                        1.70100090189562,
-                        1.70100090189562,
-                        1.70100090189562,
-                        1.70100090189562
-                      ],
-                      "NH4": [
-                        0.599004378686979,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496,
-                        0.100000730999496
-                      ],
+                      "NO3N": null,
+                      "NH4N": null,
                       "SW": null,
                       "OC": null,
                       "EC": null,
                       "CL": null,
                       "ESP": null,
                       "PH": null,
-                      "NO3Units": 0,
-                      "NH4Units": 0,
                       "SWUnits": 0,
                       "OCUnits": 0,
                       "PHUnits": 0,
@@ -4874,40 +4914,40 @@
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Inert",
-                            "Location": "65, 426",
-                            "Colour": "0, 158, 115",
+                            "Location": "656, 254",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "SurfaceResidue",
-                            "Location": "345, 45",
-                            "Colour": "0, 158, 115",
+                            "Location": "566, 69",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "FOMLignin",
-                            "Location": "265, 151",
-                            "Colour": "0, 158, 115",
+                            "Location": "261, 69",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "FOMCellulose",
-                            "Location": "444, 154",
-                            "Colour": "0, 158, 115",
+                            "Location": "397, 70",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "FOMCarbohydrate",
-                            "Location": "50, 200",
-                            "Colour": "0, 158, 115",
+                            "Location": "123, 70",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -4915,7 +4955,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Microbial",
                             "Location": "218, 299",
-                            "Colour": "0, 158, 115",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -4923,7 +4963,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Humic",
                             "Location": "458, 293",
-                            "Colour": "0, 158, 115",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -4931,7 +4971,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Urea",
                             "Location": "529, 419",
-                            "Colour": "86, 180, 233",
+                            "Colour": "0, 158, 115",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -4939,7 +4979,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "NO3",
                             "Location": "185, 435",
-                            "Colour": "86, 180, 233",
+                            "Colour": "0, 158, 115",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -4947,33 +4987,17 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "NH4",
                             "Location": "357, 422",
-                            "Colour": "86, 180, 233",
+                            "Colour": "0, 158, 115",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Atmosphere",
-                            "Location": "63, 290",
+                            "Location": "48, 338",
                             "Colour": "White",
                             "OutlineColour": "White",
                             "Transparent": true
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "PlantAvailableNO3",
-                            "Location": "702, 339",
-                            "Colour": "86, 180, 233",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "PlantAvailableNH4",
-                            "Location": "675, 205",
-                            "Colour": "86, 180, 233",
-                            "OutlineColour": "Black",
-                            "Transparent": false
                           }
                         ],
                         "Arcs": [
@@ -4981,7 +5005,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "SurfaceResidue",
                             "DestinationName": "Microbial",
-                            "Location": "0, 0",
+                            "Location": "415, 173",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -4989,7 +5013,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "SurfaceResidue",
                             "DestinationName": "Humic",
-                            "Location": "349, 151",
+                            "Location": "499, 172",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -5005,7 +5029,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "FOMLignin",
                             "DestinationName": "Humic",
-                            "Location": "0, 0",
+                            "Location": "255, 105",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -5029,7 +5053,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "FOMCarbohydrate",
                             "DestinationName": "Microbial",
-                            "Location": "0, 0",
+                            "Location": "141, 131",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -5045,7 +5069,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "Microbial",
                             "DestinationName": "Microbial",
-                            "Location": "0, 0",
+                            "Location": "335, 301",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -5053,7 +5077,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "Microbial",
                             "DestinationName": "Humic",
-                            "Location": "321, 241",
+                            "Location": "319, 278",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -5061,7 +5085,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "Humic",
                             "DestinationName": "Microbial",
-                            "Location": "319, 267",
+                            "Location": "334, 340",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -5077,7 +5101,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "NO3",
                             "DestinationName": "Atmosphere",
-                            "Location": "0, 0",
+                            "Location": "1, 319",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -5085,7 +5109,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "NH4",
                             "DestinationName": "NO3",
-                            "Location": "0, 0",
+                            "Location": "243, 409",
                             "Colour": "Black",
                             "Text": null
                           }
@@ -5104,13 +5128,14 @@
                 },
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                  "Canopies": [],
                   "InitialResidueName": "Potato",
                   "InitialResidueType": "Potato",
                   "InitialResidueMass": 1000.0,
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 80.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": true,
@@ -5125,6 +5150,7 @@
                   "d_interception": 0.0,
                   "soil_albedo": 0.3,
                   "SoilHeatFluxFraction": 0.4,
+                  "MinimumHeightDiffForNewLayer": 0.0,
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
