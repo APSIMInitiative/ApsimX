@@ -180,6 +180,26 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 6.0,
+                  "Units": null,
+                  "Name": "MinimumLeafNumber",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 3.0,
+                  "Units": null,
+                  "Name": "PpSensitivity",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.PMF.Phen.GerminatingPhase, Models",
                   "Start": "Sowing",
                   "End": "Germination",
@@ -1296,166 +1316,71 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "StemSenescenceAge",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Functions.HoldFunction, Models",
                   "WhenToHold": "FloralInitiation",
                   "Name": "FinalLeafNumber",
                   "Children": [
                     {
                       "$type": "Models.Functions.AddFunction, Models",
-                      "Name": "ValueToHold",
+                      "Name": "FLN",
                       "Children": [
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 6.0,
-                          "Units": null,
-                          "Name": "PrimordiaAtEmergence",
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].MinimumLeafNumber",
+                          "Name": "MinLeafNumber",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.DivideFunction, Models",
-                          "Name": "PrimordiaDuringJuvenilePhase",
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "PhotoPLeaves",
                           "Children": [
                             {
-                              "$type": "Models.Functions.AddFunction, Models",
-                              "Name": "AddFunction",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].Juvenile.Target",
-                                  "Name": "JuvenilePhaseDuration",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].Photosensitive.Target",
-                                  "Name": "PhotoSensitivePhaseDuration",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Phenology].PpSensitivity",
+                              "Name": "ShortPpLeaves",
+                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.PhaseLookup, Models",
-                              "Name": "MeanPlastochron",
+                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                              "Name": "PhotoPeriodReductionFactor",
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.PhaseLookupValue, Models",
-                                  "Start": "Germination",
-                                  "End": "Emergence",
-                                  "Name": "PreEmerg",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 15.0,
-                                      "Units": null,
-                                      "Name": "Constant",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "X": [
+                                    10.5,
+                                    14.0
                                   ],
+                                  "Y": [
+                                    0.0,
+                                    1.0
+                                  ],
+                                  "Name": "XYPairs",
+                                  "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.PhaseLookupValue, Models",
-                                  "Start": "Emergence",
-                                  "End": "FlagLeaf",
-                                  "Name": "PostEmerg",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.DivideFunction, Models",
-                                      "Name": "MeanPlastochron",
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.AccumulateFunction, Models",
-                                          "StartStageName": "Emergence",
-                                          "EndStageName": "FloralInitiation",
-                                          "ResetStageName": null,
-                                          "FractionRemovedOnCut": 0.0,
-                                          "FractionRemovedOnHarvest": 0.0,
-                                          "FractionRemovedOnGraze": 0.0,
-                                          "FractionRemovedOnPrune": 0.0,
-                                          "Name": "AccumulatedPlastochron",
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Functions.MultiplyFunction, Models",
-                                              "Name": "Plastochron",
-                                              "Children": [
-                                                {
-                                                  "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[Structure].Phyllochron",
-                                                  "Name": "Phyllochron",
-                                                  "Children": [],
-                                                  "IncludeInDocumentation": true,
-                                                  "Enabled": true,
-                                                  "ReadOnly": false
-                                                },
-                                                {
-                                                  "$type": "Models.Functions.Constant, Models",
-                                                  "FixedValue": 0.5,
-                                                  "Units": null,
-                                                  "Name": "LeafTipsPerPrimordia",
-                                                  "Children": [],
-                                                  "IncludeInDocumentation": true,
-                                                  "Enabled": true,
-                                                  "ReadOnly": false
-                                                }
-                                              ],
-                                              "IncludeInDocumentation": true,
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.AccumulateFunction, Models",
-                                          "StartStageName": "Emergence",
-                                          "EndStageName": "FloralInitiation",
-                                          "ResetStageName": null,
-                                          "FractionRemovedOnCut": 0.0,
-                                          "FractionRemovedOnHarvest": 0.0,
-                                          "FractionRemovedOnGraze": 0.0,
-                                          "FractionRemovedOnPrune": 0.0,
-                                          "Name": "Days",
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Functions.Constant, Models",
-                                              "FixedValue": 1.0,
-                                              "Units": null,
-                                              "Name": "Constant",
-                                              "Children": [],
-                                              "IncludeInDocumentation": true,
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Phenology].Photoperiod",
+                                  "Name": "XValue",
+                                  "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -1476,16 +1401,6 @@
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "StemSenescenceAge",
-                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -5245,35 +5160,9 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].Juvenile.Target.FixedValue = 50",
-                "[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24",
-                "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 50",
-                "[Phenology].FlagLeafToFlowering.Target.FixedValue = 10",
-                "[Phenology].FloweringToGrainFilling.Target.FixedValue = 100",
-                "[Phenology].GrainFilling.Target.FixedValue = 400"
-              ],
-              "Name": "Katumani",
-              "Children": [
-                {
-                  "$type": "Models.Memo, Models",
-                  "Text": "\r\nThe variety Katumani Composite B was formed in 1966 and released in 1968 as part of the maize breeding work undertaken at the Katumani Research Station in Kenya which started in 1956.  Katumani Composite B was an advanced generation of Katumani Synthetic V X Katumani Synthetic VI.  It has slight photoperiod sensitivity and relatively small potential cob size.<br/>\r\n\r\n",
-                  "Name": "memo",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
                 "[Phenology].Juvenile.Target.FixedValue = 65",
-                "[Phenology].Photosensitive.Target.XYPairs.X = 9,11, 13.5",
-                "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 180",
+                "[Phenology].MinimumLeafNumber.FixedValue = 7",
+                "[Phenology].PpSensitivity.FixedValue = 4",
                 "[Phenology].FlagLeafToFlowering.Target.FixedValue = 10",
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 100",
                 "[Phenology].GrainFilling.Target.FixedValue = 400"
@@ -5298,8 +5187,8 @@
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
                 "[Phenology].Juvenile.Target.FixedValue = 120",
-                "[Phenology].Photosensitive.Target.XYPairs.X = 0, 11, 13.5",
-                "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 150",
+                "[Phenology].MinimumLeafNumber.FixedValue = 8",
+                "[Phenology].PpSensitivity.FixedValue = 3",
                 "[Phenology].FlagLeafToFlowering.Target.FixedValue = 10",
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 50",
                 "[Phenology].GrainFilling.Target.FixedValue = 200"
@@ -5324,8 +5213,8 @@
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
                 "[Phenology].Juvenile.Target.FixedValue = 40",
-                "[Phenology].Photosensitive.Target.XYPairs.X = 9, 16.5",
-                "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 110",
+                "[Phenology].MinimumLeafNumber.FixedValue = 7",
+                "[Phenology].PpSensitivity.FixedValue = 1",
                 "[Phenology].FlagLeafToFlowering.Target.FixedValue = 10",
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 50",
                 "[Phenology].GrainFilling.Target.FixedValue = 200"
@@ -5350,8 +5239,8 @@
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
                 "[Phenology].Juvenile.Target.FixedValue = 120",
-                "[Phenology].Photosensitive.Target.XYPairs.X = 9, 16.5",
-                "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 110",
+                "[Phenology].MinimumLeafNumber.FixedValue = 8",
+                "[Phenology].PpSensitivity.FixedValue = 2",
                 "[Phenology].FlagLeafToFlowering.Target.FixedValue = 10",
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 100",
                 "[Phenology].GrainFilling.Target.FixedValue = 400"
@@ -5376,8 +5265,8 @@
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
                 "[Phenology].Juvenile.Target.FixedValue = 40",
-                "[Phenology].Photosensitive.Target.XYPairs.X = 9, 16.5",
-                "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 130",
+                "[Phenology].MinimumLeafNumber.FixedValue = 7",
+                "[Phenology].PpSensitivity.FixedValue = 1",
                 "[Phenology].FlagLeafToFlowering.Target.FixedValue = 10",
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 50",
                 "[Phenology].GrainFilling.Target.FixedValue = 200",
@@ -5403,8 +5292,8 @@
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
                 "[Phenology].Juvenile.Target.FixedValue = 40",
-                "[Phenology].Photosensitive.Target.XYPairs.X = 9, 16.5",
-                "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 70",
+                "[Phenology].MinimumLeafNumber.FixedValue = 7",
+                "[Phenology].PpSensitivity.FixedValue = 1",
                 "[Phenology].FlagLeafToFlowering.Target.FixedValue = 10",
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 50",
                 "[Phenology].GrainFilling.Target.FixedValue = 200"
@@ -5429,8 +5318,8 @@
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
                 "[Phenology].Juvenile.Target.FixedValue = 65",
-                "[Phenology].Photosensitive.Target.XYPairs.X = 9,11, 13.5",
-                "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 180",
+                "[Phenology].MinimumLeafNumber.FixedValue = 7",
+                "[Phenology].PpSensitivity.FixedValue = 1",
                 "[Phenology].FlagLeafToFlowering.Target.FixedValue = 10",
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 100",
                 "[Phenology].GrainFilling.Target.FixedValue = 400"
@@ -5481,6 +5370,7 @@
             "[Clock].Today",
             "[Teff].Phenology.CurrentStageName",
             "[Teff].AboveGround.Wt",
+            "[Teff].AboveGround.N",
             "[Teff].Grain.Size as GrainSize",
             "[Teff].Grain.Wt ",
             "[Teff].Structure.FinalLeafNumber",
@@ -5510,14 +5400,19 @@
             "[Soil].SoilWater.Runoff",
             "[Soil].SoilWater.pond",
             "sum([Soil].SoilWater.SWmm[1:2]) as SW30cm",
+            "sum([Soil].SoilWater.SWmm) as ProfileWater",
+            "sum([Soil].SoilNitrogen.NO3.kgha) as ProfileNO3",
             "[Soil].SoilNitrogen.NO3.kgha",
             "[Teff].Leaf.LAI",
             "[Teff].Leaf.Transpiration",
             "[Teff].Leaf.CoverGreen",
+            "[Teff].Leaf.Fn",
+            "[Teff].Leaf.Fw",
             "[Teff].AboveGround.Wt",
             "[Teff].Grain.Wt",
             "([Teff].Leaf.Transpiration+[Soil].SoilWater.Es) as ET",
             "[Teff].Structure.BranchNumber",
+            "[Teff].Structure.TotalStemPopn",
             "[Teff].Structure.FinalLeafNumber",
             "[Teff].Structure.LeafTipsAppeared"
           ],
@@ -5958,7 +5853,7 @@
                     {
                       "$type": "Models.Clock, Models",
                       "Start": "2011-07-25T00:00:00",
-                      "End": "2012-01-14T00:00:00",
+                      "End": "2012-01-21T00:00:00",
                       "Name": "clock",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -5985,6 +5880,23 @@
                       "ReadOnly": false
                     },
                     {
+                      "$type": "Models.MicroClimate, Models",
+                      "a_interception": 0.0,
+                      "b_interception": 1.0,
+                      "c_interception": 0.0,
+                      "d_interception": 0.0,
+                      "soil_albedo": 0.23,
+                      "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
+                      "NightInterceptionFraction": 0.5,
+                      "ReferenceHeight": 2.0,
+                      "Name": "MicroClimate",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
                       "$type": "Models.Core.Zone, Models",
                       "Area": 1.0,
                       "Slope": 0.0,
@@ -5992,23 +5904,6 @@
                       "Altitude": 50.0,
                       "Name": "Field",
                       "Children": [
-                        {
-                          "$type": "Models.MicroClimate, Models",
-                          "a_interception": 0.0,
-                          "b_interception": 1.0,
-                          "c_interception": 0.0,
-                          "d_interception": 0.0,
-                          "soil_albedo": 0.23,
-                          "SoilHeatFluxFraction": 0.4,
-                          "MinimumHeightDiffForNewLayer": 0.0,
-                          "NightInterceptionFraction": 0.5,
-                          "ReferenceHeight": 2.0,
-                          "Name": "MicroClimate",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
                         {
                           "$type": "Models.Irrigation, Models",
                           "Name": "Irrigation",
@@ -6624,9 +6519,9 @@
                       "Line": 4,
                       "LineThickness": 0,
                       "Checkpoint": "Current",
-                      "TableName": "PredictedObserved",
-                      "XFieldName": "Observed.Biomass",
-                      "YFieldName": "Predicted.Biomass",
+                      "TableName": "PredictedObservedHarvest",
+                      "XFieldName": "Observed.Teff.AboveGround.Wt",
+                      "YFieldName": "Predicted.Teff.AboveGround.Wt",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": false,
@@ -6666,9 +6561,9 @@
                       "Line": 4,
                       "LineThickness": 0,
                       "Checkpoint": "Current",
-                      "TableName": "PredictedObserved",
-                      "XFieldName": "Observed.GrainWt",
-                      "YFieldName": "Predicted.GrainWt",
+                      "TableName": "PredictedObservedHarvest",
+                      "XFieldName": "Observed.Teff.Grain.Wt",
+                      "YFieldName": "Predicted.Teff.Grain.Wt",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": false,
@@ -6746,7 +6641,7 @@
                       "Line": 4,
                       "LineThickness": 0,
                       "Checkpoint": "Current",
-                      "TableName": "PredictedObserved",
+                      "TableName": "PredictedObservedHarvest",
                       "XFieldName": "Observed.BiomassN",
                       "YFieldName": "Predicted.BiomassN",
                       "X2FieldName": null,
@@ -9512,6 +9407,23 @@
                       "ReadOnly": false
                     },
                     {
+                      "$type": "Models.MicroClimate, Models",
+                      "a_interception": 0.0,
+                      "b_interception": 1.0,
+                      "c_interception": 0.0,
+                      "d_interception": 0.0,
+                      "soil_albedo": 0.23,
+                      "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
+                      "NightInterceptionFraction": 0.5,
+                      "ReferenceHeight": 2.0,
+                      "Name": "MicroClimate",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
                       "$type": "Models.Core.Zone, Models",
                       "Area": 1.0,
                       "Slope": 0.0,
@@ -9519,23 +9431,6 @@
                       "Altitude": 50.0,
                       "Name": "Field",
                       "Children": [
-                        {
-                          "$type": "Models.MicroClimate, Models",
-                          "a_interception": 0.0,
-                          "b_interception": 1.0,
-                          "c_interception": 0.0,
-                          "d_interception": 0.0,
-                          "soil_albedo": 0.23,
-                          "SoilHeatFluxFraction": 0.4,
-                          "MinimumHeightDiffForNewLayer": 0.0,
-                          "NightInterceptionFraction": 0.5,
-                          "ReferenceHeight": 2.0,
-                          "Name": "MicroClimate",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
                         {
                           "$type": "Models.Irrigation, Models",
                           "Name": "Irrigation",
@@ -10230,7 +10125,7 @@
                       "ColourArgb": -16776961,
                       "FactorToVaryColours": "Treatment",
                       "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
+                      "FactorToVaryLines": "Pop",
                       "Marker": 11,
                       "MarkerSize": 0,
                       "Line": 0,
@@ -10241,7 +10136,7 @@
                       "YFieldName": "ProfileWater",
                       "X2FieldName": null,
                       "Y2FieldName": null,
-                      "ShowInLegend": true,
+                      "ShowInLegend": false,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
                       "CumulativeX": false,
@@ -10505,7 +10400,7 @@
                       "ColourArgb": -16776961,
                       "FactorToVaryColours": "Treatment",
                       "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
+                      "FactorToVaryLines": "Pop",
                       "Marker": 11,
                       "MarkerSize": 0,
                       "Line": 0,
@@ -10516,7 +10411,7 @@
                       "YFieldName": "Teff.Leaf.Fn",
                       "X2FieldName": null,
                       "Y2FieldName": null,
-                      "ShowInLegend": true,
+                      "ShowInLegend": false,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
                       "CumulativeX": false,
@@ -10573,7 +10468,7 @@
                       "ColourArgb": -16776961,
                       "FactorToVaryColours": "Treatment",
                       "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
+                      "FactorToVaryLines": "Pop",
                       "Marker": 11,
                       "MarkerSize": 0,
                       "Line": 0,
@@ -10584,7 +10479,7 @@
                       "YFieldName": "Teff.Leaf.Fw",
                       "X2FieldName": null,
                       "Y2FieldName": null,
-                      "ShowInLegend": true,
+                      "ShowInLegend": false,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
                       "CumulativeX": false,
@@ -10641,7 +10536,7 @@
                       "ColourArgb": -16776961,
                       "FactorToVaryColours": "Treatment",
                       "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
+                      "FactorToVaryLines": "Pop",
                       "Marker": 11,
                       "MarkerSize": 0,
                       "Line": 0,
@@ -10649,7 +10544,7 @@
                       "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "Teff.Total.Wt",
+                      "YFieldName": "Teff.AboveGround.Wt",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": false,
@@ -10804,13 +10699,13 @@
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
-                      "ColourArgb": -16776961,
-                      "FactorToVaryColours": "SimulationName",
+                      "ColourArgb": -1663232,
+                      "FactorToVaryColours": null,
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 11,
                       "MarkerSize": 0,
-                      "Line": 0,
+                      "Line": 1,
                       "LineThickness": 0,
                       "Checkpoint": "Current",
                       "TableName": "Report",
@@ -10834,8 +10729,8 @@
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
-                      "ColourArgb": -16776961,
-                      "FactorToVaryColours": "SimulationName",
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": null,
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 11,
@@ -12757,7 +12652,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -12774,7 +12669,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "LAI",
                   "Children": [
@@ -12784,7 +12679,7 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -16776961,
-                      "FactorToVaryColours": null,
+                      "FactorToVaryColours": "Treatment",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 11,
@@ -12797,7 +12692,7 @@
                       "YFieldName": "Teff.Leaf.LAI",
                       "X2FieldName": null,
                       "Y2FieldName": null,
-                      "ShowInLegend": true,
+                      "ShowInLegend": false,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
                       "CumulativeX": false,
@@ -12825,7 +12720,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -12842,7 +12737,7 @@
                   ],
                   "LegendPosition": 1,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "SoilWater",
                   "Children": [
@@ -12865,7 +12760,7 @@
                       "YFieldName": "ProfileWater",
                       "X2FieldName": null,
                       "Y2FieldName": null,
-                      "ShowInLegend": true,
+                      "ShowInLegend": false,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
                       "CumulativeX": false,
@@ -12893,7 +12788,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -12910,7 +12805,7 @@
                   ],
                   "LegendPosition": 1,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "WaterStress",
                   "Children": [
@@ -12933,7 +12828,7 @@
                       "YFieldName": "Teff.Leaf.Fw",
                       "X2FieldName": null,
                       "Y2FieldName": null,
-                      "ShowInLegend": true,
+                      "ShowInLegend": false,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
                       "CumulativeX": false,
@@ -12961,7 +12856,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -12978,7 +12873,7 @@
                   ],
                   "LegendPosition": 1,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "NStress",
                   "Children": [
@@ -13001,7 +12896,7 @@
                       "YFieldName": "Teff.Leaf.Fn",
                       "X2FieldName": null,
                       "Y2FieldName": null,
-                      "ShowInLegend": true,
+                      "ShowInLegend": false,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
                       "CumulativeX": false,
@@ -13046,7 +12941,7 @@
                   ],
                   "LegendPosition": 3,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Biomass",
                   "Children": [
@@ -13056,7 +12951,7 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -16736653,
-                      "FactorToVaryColours": null,
+                      "FactorToVaryColours": "Treatment",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 0,
@@ -13064,9 +12959,9 @@
                       "Line": 4,
                       "LineThickness": 0,
                       "Checkpoint": "Current",
-                      "TableName": "PredictedObserved",
-                      "XFieldName": "Observed.Biomass",
-                      "YFieldName": "Predicted.Biomass",
+                      "TableName": "PredictedObservedHarvest",
+                      "XFieldName": "Observed.Teff.AboveGround.Wt",
+                      "YFieldName": "Predicted.Teff.AboveGround.Wt",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": false,
@@ -13078,7 +12973,7 @@
                       "Children": [
                         {
                           "$type": "Models.Graph.Regression, Models",
-                          "ForEachSeries": true,
+                          "ForEachSeries": false,
                           "showOneToOne": true,
                           "showEquation": true,
                           "Name": "Regression",
@@ -13106,9 +13001,9 @@
                       "Line": 4,
                       "LineThickness": 0,
                       "Checkpoint": "Current",
-                      "TableName": "PredictedObserved",
-                      "XFieldName": "Observed.GrainWt",
-                      "YFieldName": "Predicted.GrainWt",
+                      "TableName": "PredictedObservedHarvest",
+                      "XFieldName": "Observed.Teff.Grain.Wt",
+                      "YFieldName": "Predicted.Teff.Grain.Wt",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": false,
@@ -13120,7 +13015,7 @@
                       "Children": [
                         {
                           "$type": "Models.Graph.Regression, Models",
-                          "ForEachSeries": true,
+                          "ForEachSeries": false,
                           "showOneToOne": true,
                           "showEquation": true,
                           "Name": "Regression",
@@ -13363,7 +13258,7 @@
                     {
                       "$type": "Models.Clock, Models",
                       "Start": "2008-08-02T00:00:00",
-                      "End": "2008-11-10T00:00:00",
+                      "End": "2008-11-16T00:00:00",
                       "Name": "clock",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -13390,6 +13285,23 @@
                       "ReadOnly": false
                     },
                     {
+                      "$type": "Models.MicroClimate, Models",
+                      "a_interception": 0.0,
+                      "b_interception": 1.0,
+                      "c_interception": 0.0,
+                      "d_interception": 0.0,
+                      "soil_albedo": 0.23,
+                      "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
+                      "NightInterceptionFraction": 0.5,
+                      "ReferenceHeight": 2.0,
+                      "Name": "MicroClimate",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
                       "$type": "Models.Core.Zone, Models",
                       "Area": 1.0,
                       "Slope": 0.0,
@@ -13397,23 +13309,6 @@
                       "Altitude": 50.0,
                       "Name": "Field",
                       "Children": [
-                        {
-                          "$type": "Models.MicroClimate, Models",
-                          "a_interception": 0.0,
-                          "b_interception": 1.0,
-                          "c_interception": 0.0,
-                          "d_interception": 0.0,
-                          "soil_albedo": 0.23,
-                          "SoilHeatFluxFraction": 0.4,
-                          "MinimumHeightDiffForNewLayer": 0.0,
-                          "NightInterceptionFraction": 0.5,
-                          "ReferenceHeight": 2.0,
-                          "Name": "MicroClimate",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
                         {
                           "$type": "Models.Irrigation, Models",
                           "Name": "Irrigation",
@@ -14137,7 +14032,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -14154,7 +14049,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "LAI",
                   "Children": [
@@ -14183,7 +14078,18 @@
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Predicted",
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.EventNamesOnGraph, Models",
+                          "ColumnName": "Teff.Phenology.CurrentStageName",
+                          "SimulationName": "Mekelle2008Irrigation8",
+                          "Name": "EventNamesOnGraph",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -14235,7 +14141,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -14252,7 +14158,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Biomass",
                   "Children": [
@@ -14272,7 +14178,7 @@
                       "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "AboveGroundBiomass",
+                      "YFieldName": "Teff.AboveGround.Wt",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
@@ -14280,7 +14186,7 @@
                       "Cumulative": false,
                       "CumulativeX": false,
                       "Filter": null,
-                      "Name": "Peredicted",
+                      "Name": "Predicted",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -14333,7 +14239,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -14350,7 +14256,7 @@
                   ],
                   "LegendPosition": 1,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "SoilWater",
                   "Children": [
@@ -14431,7 +14337,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -14448,7 +14354,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "CoverGreen",
                   "Children": [
@@ -14529,7 +14435,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -14546,7 +14452,7 @@
                   ],
                   "LegendPosition": 1,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "SoilNO3",
                   "Children": [
@@ -14556,7 +14462,7 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -16776961,
-                      "FactorToVaryColours": null,
+                      "FactorToVaryColours": "Irrigation",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 11,
@@ -14597,7 +14503,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -14614,7 +14520,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Grain",
                   "Children": [
@@ -14624,7 +14530,7 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -16776961,
-                      "FactorToVaryColours": null,
+                      "FactorToVaryColours": "Irrigation",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 11,
@@ -14634,7 +14540,7 @@
                       "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "GrainWt",
+                      "YFieldName": "Teff.Grain.Wt",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
@@ -14665,7 +14571,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -14682,7 +14588,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "WaterStress",
                   "Children": [
@@ -14750,7 +14656,7 @@
                   ],
                   "LegendPosition": 1,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Tillering",
                   "Children": [
@@ -14818,7 +14724,7 @@
                   ],
                   "LegendPosition": 1,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "LeafDevelopment",
                   "Children": [
@@ -14946,7 +14852,7 @@
                   ],
                   "LegendPosition": 1,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "LeafSizes",
                   "Children": [
@@ -15207,7 +15113,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -15224,7 +15130,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "NStress",
                   "Children": [
@@ -15275,7 +15181,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -15292,7 +15198,7 @@
                   ],
                   "LegendPosition": 1,
                   "LegendOrientation": 0,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "ET",
                   "Children": [
@@ -15550,6 +15456,23 @@
                       "ReadOnly": false
                     },
                     {
+                      "$type": "Models.MicroClimate, Models",
+                      "a_interception": 0.0,
+                      "b_interception": 1.0,
+                      "c_interception": 0.0,
+                      "d_interception": 0.0,
+                      "soil_albedo": 0.23,
+                      "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
+                      "NightInterceptionFraction": 0.5,
+                      "ReferenceHeight": 2.0,
+                      "Name": "MicroClimate",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
                       "$type": "Models.Core.Zone, Models",
                       "Area": 1.0,
                       "Slope": 0.0,
@@ -15557,23 +15480,6 @@
                       "Altitude": 50.0,
                       "Name": "Field",
                       "Children": [
-                        {
-                          "$type": "Models.MicroClimate, Models",
-                          "a_interception": 0.0,
-                          "b_interception": 1.0,
-                          "c_interception": 0.0,
-                          "d_interception": 0.0,
-                          "soil_albedo": 0.23,
-                          "SoilHeatFluxFraction": 0.4,
-                          "MinimumHeightDiffForNewLayer": 0.0,
-                          "NightInterceptionFraction": 0.5,
-                          "ReferenceHeight": 2.0,
-                          "Name": "MicroClimate",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
                         {
                           "$type": "Models.Irrigation, Models",
                           "Name": "Irrigation",
@@ -17639,8 +17545,8 @@
                           "Operation": [
                             {
                               "$type": "Models.Operation, Models",
-                              "Date": "2012-03-11T00:00:00",
-                              "Action": " [Teff].Sow(population:100., cultivar:\"Katumani\", depth:50, rowSpacing:250);",
+                              "Date": "2012-03-11",
+                              "Action": " [Teff].Sow(population:100., cultivar:\"Ayana\", depth:50, rowSpacing:250);",
                               "Enabled": true
                             }
                           ],
@@ -18376,7 +18282,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -18393,7 +18299,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "SW",
                       "Children": [
@@ -18474,7 +18380,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": false,
+                          "DateTimeAxis": true,
                           "CrossesAtZero": false
                         },
                         {
@@ -18491,7 +18397,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "ET",
                       "Children": [
@@ -19653,7 +19559,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -19690,7 +19596,7 @@
                       "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "AboveGroundBiomass",
+                      "YFieldName": "Teff.AboveGround.Wt",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
@@ -19698,7 +19604,7 @@
                       "Cumulative": false,
                       "CumulativeX": false,
                       "Filter": null,
-                      "Name": "Peredicted",
+                      "Name": "Predicted",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -19974,7 +19880,7 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -16776961,
-                      "FactorToVaryColours": null,
+                      "FactorToVaryColours": "N",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 11,
@@ -20042,7 +19948,7 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -16776961,
-                      "FactorToVaryColours": null,
+                      "FactorToVaryColours": "N",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 11,
@@ -20052,7 +19958,7 @@
                       "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "GrainWt",
+                      "YFieldName": "Teff.Grain.Wt",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
@@ -20776,6 +20682,86 @@
                     }
                   ],
                   "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 3,
+                  "LegendOrientation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "Biomass1",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16776961,
+                      "FactorToVaryColours": "Experiment",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "PredictedObservedHarvest",
+                      "XFieldName": "Observed.Teff.AboveGround.Wt",
+                      "YFieldName": "Predicted.Teff.AboveGround.Wt",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series1",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -21820,7 +21806,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -21857,7 +21843,7 @@
                       "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "AboveGroundBiomass",
+                      "YFieldName": "Teff.AboveGround.Wt",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
@@ -21865,7 +21851,7 @@
                       "Cumulative": false,
                       "CumulativeX": false,
                       "Filter": null,
-                      "Name": "Peredicted",
+                      "Name": "Predicted",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -22141,7 +22127,7 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -16776961,
-                      "FactorToVaryColours": null,
+                      "FactorToVaryColours": "N",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 11,
@@ -23000,7 +22986,7 @@
                   "XAxis": 3,
                   "YAxis": 0,
                   "ColourArgb": -16776961,
-                  "FactorToVaryColours": null,
+                  "FactorToVaryColours": "Experiment",
                   "FactorToVaryMarkers": null,
                   "FactorToVaryLines": null,
                   "Marker": 0,
@@ -23008,9 +22994,9 @@
                   "Line": 4,
                   "LineThickness": 0,
                   "Checkpoint": "Current",
-                  "TableName": "PredictedObserved",
-                  "XFieldName": "Observed.GrainWt",
-                  "YFieldName": "Predicted.GrainWt",
+                  "TableName": "PredictedObservedHarvest",
+                  "XFieldName": "Observed.Teff.Grain.Wt",
+                  "YFieldName": "Predicted.Teff.Grain.Wt",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
@@ -23080,7 +23066,7 @@
                   "XAxis": 3,
                   "YAxis": 0,
                   "ColourArgb": -16776961,
-                  "FactorToVaryColours": null,
+                  "FactorToVaryColours": "Experiment",
                   "FactorToVaryMarkers": null,
                   "FactorToVaryLines": null,
                   "Marker": 0,
@@ -23088,9 +23074,9 @@
                   "Line": 4,
                   "LineThickness": 0,
                   "Checkpoint": "Current",
-                  "TableName": "PredictedObserved",
-                  "XFieldName": "Observed.Biomass",
-                  "YFieldName": "Predicted.Biomass",
+                  "TableName": "PredictedObservedHarvest",
+                  "XFieldName": "Observed.Teff.AboveGround.Wt",
+                  "YFieldName": "Predicted.Teff.AboveGround.Wt",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
@@ -23160,7 +23146,7 @@
                   "XAxis": 3,
                   "YAxis": 0,
                   "ColourArgb": -16776961,
-                  "FactorToVaryColours": null,
+                  "FactorToVaryColours": "Experiment",
                   "FactorToVaryMarkers": null,
                   "FactorToVaryLines": null,
                   "Marker": 0,
@@ -23168,7 +23154,7 @@
                   "Line": 4,
                   "LineThickness": 0,
                   "Checkpoint": "Current",
-                  "TableName": "PredictedObserved",
+                  "TableName": "PredictedObservedHarvest",
                   "XFieldName": "Observed.FloweringDAS",
                   "YFieldName": "Predicted.FloweringDAS",
                   "X2FieldName": null,
@@ -23202,7 +23188,7 @@
                   "XAxis": 3,
                   "YAxis": 0,
                   "ColourArgb": -16776961,
-                  "FactorToVaryColours": null,
+                  "FactorToVaryColours": "Experiment",
                   "FactorToVaryMarkers": null,
                   "FactorToVaryLines": null,
                   "Marker": 0,
@@ -23210,7 +23196,7 @@
                   "Line": 4,
                   "LineThickness": 0,
                   "Checkpoint": "Current",
-                  "TableName": "PredictedObserved",
+                  "TableName": "PredictedObservedHarvest",
                   "XFieldName": "Observed.MaturityDAS",
                   "YFieldName": "Predicted.MaturityDAS",
                   "X2FieldName": null,
