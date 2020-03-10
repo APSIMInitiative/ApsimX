@@ -46,7 +46,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
-        /// Returns the type of an apsim model node.
+        /// Returns the type name of an apsim model node.
         /// </summary>
         /// <param name="node">The node.</param>
         /// <param name="withNamespace">
@@ -80,6 +80,16 @@ namespace Models.Core.ApsimFile
             }
 
             return typeName;
+        }
+
+        /// <summary>
+        /// Returns the type of an apsim model node.
+        /// </summary>
+        /// <param name="node"></param>
+        public static Type GetRuntimeType(JObject node)
+        {
+            string typeName = Type(node, true);
+            return typeof(IModel).Assembly.GetType(typeName);
         }
 
         /// <summary>
@@ -218,13 +228,13 @@ namespace Models.Core.ApsimFile
         /// </summary>
         /// <param name="modelToken">The model token to find the parent for.</param>
         /// <returns>The parent or null if not found.</returns>
-        public static JToken Parent(JToken modelToken)
+        public static JObject Parent(JToken modelToken)
         {
             var obj = modelToken.Parent;
             while (obj != null)
             {
                 if (Type(obj) != null)
-                    return obj;
+                    return obj as JObject;
 
                 obj = obj.Parent;
             }
@@ -424,6 +434,25 @@ namespace Models.Core.ApsimFile
             IModel model = (IModel)t.Assembly.CreateInstance(t.FullName);
             model.Name = name;
             AddModel(node, model);
+        }
+
+        /// <summary>
+        /// Finds an ancestor of the specified type.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="node"></param>
+        public static JObject Ancestor<T>(JToken node)
+        {
+            Type type = typeof(T);
+            JObject parent = Parent(node);
+            while (parent != null)
+            {
+                if (type.IsAssignableFrom(GetRuntimeType(parent)))
+                    return parent;
+
+                parent = Parent(parent);
+            }
+            return null;
         }
 
         /// <summary>

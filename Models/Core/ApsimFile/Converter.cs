@@ -7,6 +7,7 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Xml;
@@ -17,7 +18,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 81; } }
+        public static int LatestVersion { get { return 82; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1630,6 +1631,31 @@
                     varRef.Name = "CriticalNConc";
                     varRef.VariableName = "[Root].MinimumNConc";
                     JsonUtilities.AddModel(r, varRef);                    
+                }
+            }
+        }
+
+        /// <summary>
+        /// Throw an error if any resource (aka released) models have children
+        /// and are not under a replacements node.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion82(JObject root, string fileName)
+        {
+            if (Path.GetExtension(fileName) != ".apsimx")
+                return;
+
+            foreach (JObject model in JsonUtilities.ChildrenRecursively(root))
+            {
+                Type modelType = JsonUtilities.GetRuntimeType(model);
+                bool resourceModel = typeof(ModelCollectionFromResource).IsAssignableFrom(modelType);
+                bool underReplacements = JsonUtilities.Ancestor<Replacements>(model) != null;
+                int numChildren = JsonUtilities.Children(model).Count;
+                if (resourceModel && !underReplacements && numChildren > 0)
+                {
+                    string modelName = model["Name"].ToString();
+                    throw new Exception($"Error in file {fileName}: full model structure of resource model {modelName} is included in json.");
                 }
             }
         }
