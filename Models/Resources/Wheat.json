@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 82,
+  "Version": 84,
   "Name": "Simulations",
   "Children": [
     {
@@ -1794,7 +1794,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "([Structure].FinalLeafNumber.Value() - 2.85)/1.1",
+              "Expression": "([Structure].FinalLeafNumber - 2.85)/1.1",
               "Name": "HaunStageTerminalSpikelet",
               "Children": [
                 {
@@ -3179,7 +3179,7 @@
                 },
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
-                  "Expression": "([IWeather].CO2 - [Leaf].CO2internal.Value())/(350 - [Leaf].CO2internal.Value())",
+                  "Expression": "([IWeather].CO2 - [Leaf].CO2internal)/(350 - [Leaf].CO2internal)",
                   "Name": "RelativeCO2Gradient",
                   "Children": [],
                   "IncludeInDocumentation": true,
