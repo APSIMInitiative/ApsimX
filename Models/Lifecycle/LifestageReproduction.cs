@@ -21,7 +21,7 @@
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LifeStage))]
-    public class LifeStageReproductionProcess: Model, ILifeStageProcess
+    public class LifeStageReproduction: Model, ILifeStageProcess
     {
         private IFunction ProgenyFunc = null;
         private IFunction FecundityFunc = null;

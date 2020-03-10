@@ -19,7 +19,7 @@
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LifeStage))]
-    public class LifeStageImmigrationProcess : Model, ILifeStageProcess
+    public class LifeStageImmigration : Model, ILifeStageProcess
     {
         [NonSerialized]
         private List<IFunction> FunctionList;
