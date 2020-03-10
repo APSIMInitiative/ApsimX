@@ -150,6 +150,7 @@
         /// The scrolled window object. This handles scrolling in the gridview.
         /// </summary>
         private ScrolledWindow scrollingWindow = null;
+        private ScrolledWindow scrollingWindow2 = null;
 
         /// <summary>
         /// For reasons I don't fully understand, combo boxes on the grid don't always work
@@ -205,6 +206,8 @@
             }
 
             scrollingWindow = (ScrolledWindow)builder.GetObject("scrolledwindow1");
+            scrollingWindow2 = (ScrolledWindow)builder.GetObject("scrolledwindow2");
+            scrollingWindow2.ScrollEvent += OnFixedColViewScroll;
             Grid = (Gtk.TreeView)builder.GetObject("gridview");
             fixedColView = (Gtk.TreeView)builder.GetObject("fixedcolview");
             splitter = (HPaned)builder.GetObject("hpaned1");
@@ -236,7 +239,31 @@
             splitter.Child1.NoShowAll = true;
             mainWidget.Destroyed += MainWidgetDestroyed;
         }
-        
+
+        /// <summary>
+        /// We hide the scrollbar in the fixed column view to disguise
+        /// the fact that it's a separate treeview. This means that it
+        /// doesn't scroll via the mouse wheel. Here we trap the scroll
+        /// event (which still seems to be fired but is ignored) and
+        /// manually tell the fixed col view to scroll up or down.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        /// <remarks>
+        /// This doesn't seem to scroll very far. Is
+        /// Vadjustment.StepIncrement the wrong value to be using here?
+        /// </remarks>
+        private void OnFixedColViewScroll(object sender, ScrollEventArgs args)
+        {
+            if (args.Event.Direction == Gdk.ScrollDirection.Up || args.Event.Direction == Gdk.ScrollDirection.Down)
+            {
+                double increment = fixedColView.Vadjustment.StepIncrement;
+                if (args.Event.Direction == Gdk.ScrollDirection.Up)
+                    increment *= -1;
+                fixedColView.Vadjustment.Value += increment;
+            }
+        }
+
         /// <summary>
         /// Invoked when the user wants to copy a range of cells to the clipboard.
         /// </summary>
@@ -995,7 +1022,7 @@
             fixedColView.FocusInEvent -= FocusInEvent;
             fixedColView.FocusOutEvent -= FocusOutEvent;
             Grid.ExposeEvent -= GridviewExposed;
-
+            scrollingWindow2.ScrollEvent -= OnFixedColViewScroll;
             // It's good practice to disconnect the event handlers, as it makes memory leaks
             // less likely. However, we may not "own" the event handlers, so how do we 
             // know what to disconnect?
