@@ -7204,14 +7204,7 @@
                       "Enabled": true,
                       "ReadOnly": false
                     },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Justica",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
+
                     {
                       "$type": "Models.Core.Alias, Models",
                       "Name": "Preston",
@@ -7785,10 +7778,12 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 6",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 7",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 3.5",
+                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 80"
+
                   ],
                   "Name": "Mercury",
                   "Children": [
@@ -8190,21 +8185,7 @@
                   "Enabled": true,
                   "ReadOnly": false
                 },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 7",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 3.5",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 80"
-                  ],
-                  "Name": "Mercury",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
+
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
