@@ -1,7 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 296,
-  "Version": 60,
+  "Version": 80,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-06",
   "Name": "Simulations",
   "Children": [
     {
@@ -20,8 +21,8 @@
         },
         {
           "$type": "Models.Clock, Models",
-          "StartDate": "1996-03-01T00:00:00",
-          "EndDate": "2010-09-29T00:00:00",
+          "Start": "1996-03-01T00:00:00",
+          "End": "2010-09-29T00:00:00",
           "Name": "Clock",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -36,6 +37,7 @@
           "d_interception": 0.0,
           "soil_albedo": 0.23,
           "SoilHeatFluxFraction": 0.4,
+          "MinimumHeightDiffForNewLayer": 0.0,
           "NightInterceptionFraction": 0.5,
           "ReferenceHeight": 2.0,
           "Name": "MicroClimate",
@@ -59,6 +61,8 @@
           "$type": "Models.Core.Zone, Models",
           "Area": 1.0,
           "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
           "Name": "Block",
           "Children": [
             {
@@ -71,13 +75,14 @@
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "Canopies": [],
               "InitialResidueName": "oilpalm",
               "InitialResidueType": "oilpalm",
               "InitialResidueMass": 0.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 0.0,
-              "FractionFaecesAdded": 0.5,
+              "FractionFaecesAdded": 1.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOM",
               "IncludeInDocumentation": true,
@@ -106,7 +111,21 @@
               "Name": "Soil",
               "Children": [
                 {
-                  "$type": "Models.Soils.Water, Models",
+                  "$type": "Models.Soils.Physical, Models",
+                  "Depth": [
+                    "0-10",
+                    "10-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-200",
+                    "200-250",
+                    "250-300",
+                    "300-350",
+                    "350-400",
+                    "400-500"
+                  ],
                   "Thickness": [
                     100.0,
                     200.0,
@@ -121,6 +140,9 @@
                     500.0,
                     1000.0
                   ],
+                  "ParticleSizeClay": null,
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
                   "BD": [
                     1.22,
                     1.22,
@@ -198,7 +220,7 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
-                  "Name": "Water",
+                  "Name": "Physical",
                   "Children": [
                     {
                       "$type": "Models.Soils.SoilCrop, Models",
@@ -277,6 +299,20 @@
                     500.0,
                     1000.0
                   ],
+                  "Depth": [
+                    "0-10",
+                    "10-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-200",
+                    "200-250",
+                    "250-300",
+                    "300-350",
+                    "350-400",
+                    "400-500"
+                  ],
                   "SWCON": [
                     0.7,
                     0.7,
@@ -305,7 +341,7 @@
                     0.0,
                     0.0
                   ],
-                  "ResidueInterception": 0.0,
+                  "PrecipitationInterception": 0.0,
                   "Name": "SoilWater",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -313,10 +349,22 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.SoilOrganicMatter, Models",
-                  "RootCN": 30.0,
-                  "EnrACoeff": 7.4,
-                  "EnrBCoeff": 0.2,
+                  "$type": "Models.Soils.Organic, Models",
+                  "Depth": [
+                    "0-10",
+                    "10-20",
+                    "20-30",
+                    "30-60",
+                    "60-90",
+                    "90-150",
+                    "150-200",
+                    "200-250",
+                    "250-300",
+                    "300-350",
+                    "350-400",
+                    "400-500"
+                  ],
+                  "FOMCNRatio": 30.0,
                   "Thickness": [
                     100.0,
                     100.0,
@@ -331,7 +379,7 @@
                     500.0,
                     1000.0
                   ],
-                  "OC": [
+                  "Carbon": [
                     2.1,
                     1.06,
                     0.65,
@@ -345,8 +393,7 @@
                     0.4,
                     0.4
                   ],
-                  "OCMetadata": null,
-                  "SoilCN": [
+                  "SoilCNRatio": [
                     12.0,
                     12.0,
                     12.0,
@@ -388,7 +435,7 @@
                     0.99,
                     0.99
                   ],
-                  "RootWt": [
+                  "FOM": [
                     532.71903818301416,
                     501.69589652587581,
                     472.47940199282294,
@@ -402,15 +449,28 @@
                     51.315566788589557,
                     28.162580166338131
                   ],
-                  "OCUnits": 0,
-                  "Name": "SoilOrganicMatter",
+                  "Name": "Organic",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.Analysis, Models",
+                  "$type": "Models.Soils.Chemical, Models",
+                  "Depth": [
+                    "0-10",
+                    "10-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-200",
+                    "200-250",
+                    "250-300",
+                    "300-350",
+                    "350-400",
+                    "400-500"
+                  ],
                   "Thickness": [
                     100.0,
                     200.0,
@@ -453,14 +513,6 @@
                     0.0,
                     0.0
                   ],
-                  "Rocks": null,
-                  "RocksMetadata": null,
-                  "Texture": null,
-                  "TextureMetadata": null,
-                  "MunsellColour": null,
-                  "MunsellMetadata": null,
-                  "EC": null,
-                  "ECMetadata": null,
                   "PH": [
                     6.3,
                     6.4,
@@ -475,36 +527,10 @@
                     6.8,
                     6.8
                   ],
-                  "PHMetadata": null,
                   "CL": null,
-                  "CLMetadata": null,
-                  "Boron": null,
-                  "BoronMetadata": null,
-                  "CEC": null,
-                  "CECMetadata": null,
-                  "Ca": null,
-                  "CaMetadata": null,
-                  "Mg": null,
-                  "MgMetadata": null,
-                  "Na": null,
-                  "NaMetadata": null,
-                  "K": null,
-                  "KMetadata": null,
+                  "EC": null,
                   "ESP": null,
-                  "ESPMetadata": null,
-                  "Mn": null,
-                  "MnMetadata": null,
-                  "Al": null,
-                  "AlMetadata": null,
-                  "ParticleSizeSand": null,
-                  "ParticleSizeSandMetadata": null,
-                  "ParticleSizeSilt": null,
-                  "ParticleSizeSiltMetadata": null,
-                  "ParticleSizeClay": null,
-                  "ParticleSizeClayMetadata": null,
-                  "PHUnits": 0,
-                  "BoronUnits": 0,
-                  "Name": "Analysis",
+                  "Name": "Chemical",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -524,6 +550,20 @@
                 },
                 {
                   "$type": "Models.Soils.Sample, Models",
+                  "Depth": [
+                    "0-10",
+                    "10-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-200",
+                    "200-250",
+                    "250-300",
+                    "300-350",
+                    "350-400",
+                    "400-500"
+                  ],
                   "Thickness": [
                     100.0,
                     200.0,
@@ -572,7 +612,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "Inert",
                         "Location": "656, 254",
-                        "Colour": "0, 158, 115",
+                        "Colour": "0, 114, 178",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -580,7 +620,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "SurfaceResidue",
                         "Location": "566, 69",
-                        "Colour": "0, 158, 115",
+                        "Colour": "0, 114, 178",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -588,7 +628,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "FOMLignin",
                         "Location": "261, 69",
-                        "Colour": "0, 158, 115",
+                        "Colour": "0, 114, 178",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -596,7 +636,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "FOMCellulose",
                         "Location": "397, 70",
-                        "Colour": "0, 158, 115",
+                        "Colour": "0, 114, 178",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -604,7 +644,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "FOMCarbohydrate",
                         "Location": "123, 70",
-                        "Colour": "0, 158, 115",
+                        "Colour": "0, 114, 178",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -612,7 +652,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "Microbial",
                         "Location": "218, 299",
-                        "Colour": "0, 158, 115",
+                        "Colour": "0, 114, 178",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -620,7 +660,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "Humic",
                         "Location": "458, 293",
-                        "Colour": "0, 158, 115",
+                        "Colour": "0, 114, 178",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -628,7 +668,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "Urea",
                         "Location": "529, 419",
-                        "Colour": "86, 180, 233",
+                        "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -636,7 +676,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "NO3",
                         "Location": "185, 435",
-                        "Colour": "86, 180, 233",
+                        "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -644,7 +684,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "NH4",
                         "Location": "357, 422",
-                        "Colour": "86, 180, 233",
+                        "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -655,22 +695,6 @@
                         "Colour": "White",
                         "OutlineColour": "White",
                         "Transparent": true
-                      },
-                      {
-                        "$type": "Models.Graph.Node, Models",
-                        "Name": "PlantAvailableNO3",
-                        "Location": "688, 415",
-                        "Colour": "86, 180, 233",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Graph.Node, Models",
-                        "Name": "PlantAvailableNH4",
-                        "Location": "691, 421",
-                        "Colour": "86, 180, 233",
-                        "OutlineColour": "Black",
-                        "Transparent": false
                       }
                     ],
                     "Arcs": [
@@ -875,10 +899,9 @@
             },
             {
               "$type": "Models.PMF.OilPalm.OilPalm, Models",
-              "interception": 0.0,
+              "LAI": 0.0,
               "UnderstoryCoverMax": 0.4,
               "UnderstoryLegumeFraction": 1.0,
-              "InterceptionFraction": 0.0,
               "MaximumRootDepth": 5000.0,
               "RootDepth": 3030.0,
               "DltDM": 19.871097229371863,
@@ -1032,7 +1055,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": null,
+          "LegendOutsideGraph": false,
           "Name": "AnnualFFB",
           "Children": [
             {
@@ -1052,8 +1077,8 @@
               "TableName": "AnnualOutput",
               "XFieldName": "Clock.Today.Year",
               "YFieldName": "AnnualRain",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -1082,8 +1107,8 @@
               "TableName": "AnnualOutput",
               "XFieldName": "Clock.Today.Year",
               "YFieldName": "Calculations.Script.AnnualYield",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -1139,7 +1164,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": null,
+          "LegendOutsideGraph": false,
           "Name": "AnnualBunchProduction",
           "Children": [
             {
@@ -1159,8 +1186,8 @@
               "TableName": "AnnualOutput",
               "XFieldName": "Clock.Today.Year",
               "YFieldName": "AnnualRain",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -1189,8 +1216,8 @@
               "TableName": "AnnualOutput",
               "XFieldName": "Clock.Today.Year",
               "YFieldName": "Calculations.Script.AnnualBunches",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -1246,7 +1273,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": null,
+          "LegendOutsideGraph": false,
           "Name": "AnnualBunchSizes",
           "Children": [
             {
@@ -1266,8 +1295,8 @@
               "TableName": "AnnualOutput",
               "XFieldName": "Clock.Today.Year",
               "YFieldName": "AnnualRain",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -1296,8 +1325,8 @@
               "TableName": "AnnualOutput",
               "XFieldName": "Clock.Today.Year",
               "YFieldName": "Calculations.Script.AnnualBunchSize",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -1342,7 +1371,9 @@
             }
           ],
           "LegendPosition": 3,
+          "LegendOrientation": 0,
           "DisabledSeries": null,
+          "LegendOutsideGraph": false,
           "Name": "Vegetative NPP",
           "Children": [
             {
@@ -1362,8 +1393,8 @@
               "TableName": "AnnualOutput",
               "XFieldName": "Clock.Today.Year",
               "YFieldName": "AnnualUnderstoryNPP",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -1392,8 +1423,8 @@
               "TableName": "AnnualOutput",
               "XFieldName": "Clock.Today.Year",
               "YFieldName": "AnnualPalmVegetativeNPP",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -1422,8 +1453,8 @@
               "TableName": "AnnualOutput",
               "XFieldName": "Clock.Today.Year",
               "YFieldName": "AnnualTotalVegetativeNPP",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -1468,7 +1499,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": null,
+          "LegendOutsideGraph": false,
           "Name": "Palm NPP Breakdown",
           "Children": [
             {
@@ -1488,8 +1521,8 @@
               "TableName": "AnnualOutput",
               "XFieldName": "Clock.Today.Year",
               "YFieldName": "AnnualFrondNPP",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -1518,8 +1551,8 @@
               "TableName": "AnnualOutput",
               "XFieldName": "Clock.Today.Year",
               "YFieldName": "AnnualStemNPP",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -1548,8 +1581,8 @@
               "TableName": "AnnualOutput",
               "XFieldName": "Clock.Today.Year",
               "YFieldName": "AnnualRootNPP",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -1578,8 +1611,8 @@
               "TableName": "AnnualOutput",
               "XFieldName": "Clock.Today.Year",
               "YFieldName": "AnnualBunchNPP",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -1624,7 +1657,9 @@
             }
           ],
           "LegendPosition": 3,
+          "LegendOrientation": 0,
           "DisabledSeries": null,
+          "LegendOutsideGraph": false,
           "Name": "LAI",
           "Children": [
             {
@@ -1644,8 +1679,8 @@
               "TableName": "AnnualOutput",
               "XFieldName": "Clock.Today.Year",
               "YFieldName": "OilPalm.LAI",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -1690,7 +1725,9 @@
             }
           ],
           "LegendPosition": 3,
+          "LegendOrientation": 0,
           "DisabledSeries": null,
+          "LegendOutsideGraph": false,
           "Name": "AnnualClimate",
           "Children": [
             {
@@ -1710,8 +1747,8 @@
               "TableName": "AnnualOutput",
               "XFieldName": "Clock.Today.Year",
               "YFieldName": "AnnualRain",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -1740,8 +1777,8 @@
               "TableName": "AnnualOutput",
               "XFieldName": "Clock.Today.Year",
               "YFieldName": "AnnualPotentialEvaporation",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -1797,7 +1834,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": null,
+          "LegendOutsideGraph": false,
           "Name": "AnnualInputs",
           "Children": [
             {
@@ -1817,8 +1856,8 @@
               "TableName": "AnnualOutput",
               "XFieldName": "Clock.Today.Year",
               "YFieldName": "AnnualIrrigation",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -1847,8 +1886,8 @@
               "TableName": "AnnualOutput",
               "XFieldName": "Clock.Today.Year",
               "YFieldName": "AnnualFertiliserNAdded",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -1893,7 +1932,9 @@
             }
           ],
           "LegendPosition": 3,
+          "LegendOrientation": 0,
           "DisabledSeries": null,
+          "LegendOutsideGraph": false,
           "Name": "Annual N Inputs",
           "Children": [
             {
@@ -1913,8 +1954,8 @@
               "TableName": "AnnualOutput",
               "XFieldName": "Clock.Today.Year",
               "YFieldName": "AnnualUnderstoryNFixation",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -1943,8 +1984,8 @@
               "TableName": "AnnualOutput",
               "XFieldName": "Clock.Today.Year",
               "YFieldName": "AnnualFertiliserNAdded",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -1973,8 +2014,8 @@
               "TableName": "AnnualOutput",
               "XFieldName": "Clock.Today.Year",
               "YFieldName": "AnnualTotalNInput",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -2019,7 +2060,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": null,
+          "LegendOutsideGraph": false,
           "Name": "Annual N Losses",
           "Children": [
             {
@@ -2039,8 +2082,8 @@
               "TableName": "AnnualOutput",
               "XFieldName": "Clock.Today.Year",
               "YFieldName": "AnnualNLeaching",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -2069,8 +2112,8 @@
               "TableName": "AnnualOutput",
               "XFieldName": "Clock.Today.Year",
               "YFieldName": "AnnualDenitrification",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -2099,8 +2142,8 @@
               "TableName": "AnnualOutput",
               "XFieldName": "Clock.Today.Year",
               "YFieldName": "Calculations.Script.AnnualNRemoved",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -2145,7 +2188,9 @@
             }
           ],
           "LegendPosition": 3,
+          "LegendOrientation": 0,
           "DisabledSeries": null,
+          "LegendOutsideGraph": false,
           "Name": "Annual N Additions and Removal",
           "Children": [
             {
@@ -2165,8 +2210,8 @@
               "TableName": "AnnualOutput",
               "XFieldName": "Clock.Today.Year",
               "YFieldName": "AnnualTotalNInput",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -2195,8 +2240,8 @@
               "TableName": "AnnualOutput",
               "XFieldName": "Clock.Today.Year",
               "YFieldName": "Calculations.Script.AnnualNRemoved",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -2252,7 +2297,9 @@
             }
           ],
           "LegendPosition": 1,
+          "LegendOrientation": 0,
           "DisabledSeries": null,
+          "LegendOutsideGraph": false,
           "Name": "Soil Organic Matter",
           "Children": [
             {
@@ -2272,8 +2319,8 @@
               "TableName": "MonthlyOutput",
               "XFieldName": "Clock.Today",
               "YFieldName": "SoilCtpha",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -2302,8 +2349,8 @@
               "TableName": "MonthlyOutput",
               "XFieldName": "Clock.Today",
               "YFieldName": "SoilNkgpha",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -2359,7 +2406,9 @@
             }
           ],
           "LegendPosition": 1,
+          "LegendOrientation": 0,
           "DisabledSeries": null,
+          "LegendOutsideGraph": false,
           "Name": "Litter Layer",
           "Children": [
             {
@@ -2379,8 +2428,8 @@
               "TableName": "MonthlyOutput",
               "XFieldName": "Clock.Today",
               "YFieldName": "SurfaceOM.Wt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -2409,8 +2458,8 @@
               "TableName": "MonthlyOutput",
               "XFieldName": "Clock.Today",
               "YFieldName": "SurfaceOM.N",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -2466,7 +2515,9 @@
             }
           ],
           "LegendPosition": 1,
+          "LegendOrientation": 0,
           "DisabledSeries": null,
+          "LegendOutsideGraph": false,
           "Name": "Profile Nitrate N",
           "Children": [
             {
@@ -2486,8 +2537,8 @@
               "TableName": "MonthlyOutput",
               "XFieldName": "Clock.Today",
               "YFieldName": "TotalNO3",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -2543,7 +2594,9 @@
             }
           ],
           "LegendPosition": 1,
+          "LegendOrientation": 0,
           "DisabledSeries": null,
+          "LegendOutsideGraph": false,
           "Name": "Profile Water",
           "Children": [
             {
@@ -2563,8 +2616,8 @@
               "TableName": "MonthlyOutput",
               "XFieldName": "Clock.Today",
               "YFieldName": "TotalSW",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -2593,8 +2646,8 @@
               "TableName": "MonthlyOutput",
               "XFieldName": "Clock.Today",
               "YFieldName": "DUL",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -2623,8 +2676,8 @@
               "TableName": "MonthlyOutput",
               "XFieldName": "Clock.Today",
               "YFieldName": "SAT",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -2680,7 +2733,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": null,
+          "LegendOutsideGraph": false,
           "Name": "N2O Emissions",
           "Children": [
             {
@@ -2700,8 +2755,8 @@
               "TableName": "AnnualOutput",
               "XFieldName": "Clock.Today.Year",
               "YFieldName": "AnnualRain",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -2730,8 +2785,8 @@
               "TableName": "AnnualOutput",
               "XFieldName": "Clock.Today.Year",
               "YFieldName": "AnnualN2O",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,

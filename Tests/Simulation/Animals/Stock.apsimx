@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 76,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-01-31",
+  "Version": 80,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-06",
   "Name": "Simulations",
   "Children": [
     {
@@ -626,6 +626,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.3,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
@@ -689,7 +690,7 @@
                   "$type": "Models.GrazPlan.Stock, Models",
                   "ParamFile": "",
                   "RandSeed": 9999,
-                  "GenoTypes": [],
+                  "Genotypes": [],
                   "Animals": [],
                   "PaddockList": [
                     {
@@ -744,22 +745,10 @@
                   "$type": "Models.Report.Report, Models",
                   "VariableNames": [
                     "[Clock].Today",
-                    "[Stock].Number[1]",
                     "[Stock].NumberAll",
-                    "[Stock].Weight[1]",
                     "[Stock].WeightAll",
                     "[Stock].CondScoreAll",
-                    "[Stock].CondScore[1]",
-                    "[Stock].FleeceWt[1]",
-                    "[Stock].FibreDiam[1]",
                     "[Stock].DSEAll",
-                    "[Stock].Intake[1].weight",
-                    "[Stock].Intake[1].n",
-                    "[Stock].Intake[1].p",
-                    "[Stock].Intake[1].s",
-                    "[Stock].Intake[1].ash_alk",
-                    "[Stock].UrineN[1]",
-                    "[Stock].Methane[1]",
                     "[Supplement].stores[2].Name",
                     "[Supplement].stores[2].Stored"
                   ],

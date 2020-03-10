@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 81,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-10",
+  "Version": 80,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-05",
   "Name": "Simulations",
   "Children": [
     {
@@ -51,9 +51,7 @@
             "[Eucalyptus].Stem.Ht",
             "[Eucalyptus].RootShootRatio",
             "[Eucalyptus].Stem.Vol",
-            "[Eucalyptus].Stem.MAI",
-            "[SCRUM].Stover.LAI",
-            "[SCRUM].Stover.Wt"
+            "[Eucalyptus].Stem.MAI"
           ],
           "EventNames": [
             "[Clock].DoReport"
@@ -102,6 +100,22 @@
           "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
+        },
+        {
+          "$type": "Models.Report.Report, Models",
+          "VariableNames": [
+            "[Clock].Today",
+            "[SCRUM].Stover.LAI",
+            "[SCRUM].Stover.Wt"
+          ],
+          "EventNames": [
+            "[Clock].DoReport"
+          ],
+          "Name": "SCRUMReport",
+          "Children": [],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
         }
       ],
       "IncludeInDocumentation": false,
@@ -114,6 +128,15 @@
       "CustomFileName": null,
       "Name": "DataStore",
       "Children": [
+        {
+          "$type": "Models.PostSimulationTools.Input, Models",
+          "FileName": "EucalyptusValidationData.txt",
+          "Name": "Input",
+          "Children": [],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
@@ -1731,6 +1754,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Eucalyptus",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Eucalyptus",
@@ -7187,6 +7211,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Eucalyptus",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "Eucalyptus",
@@ -10541,6 +10566,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Eucalyptus",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Eucalyptus",
@@ -10552,6 +10578,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "SCRUM",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "SCRUM",
@@ -10727,6 +10754,20 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Report.Report, Models",
+                          "VariableNames": [
+                            "[Clock].Today"
+                          ],
+                          "EventNames": [
+                            "[Clock].DoReport"
+                          ],
+                          "Name": "SCRUMReport",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": false,
@@ -10761,7 +10802,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -10889,7 +10930,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     },
                     {
@@ -10900,7 +10941,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -11028,7 +11069,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -11126,7 +11167,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -11224,7 +11265,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -12088,6 +12129,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Eucalyptus",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "Eucalyptus",
@@ -13861,6 +13903,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Eucalyptus",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "Eucalyptus",
@@ -15678,6 +15721,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Eucalyptus",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "Eucalyptus",
@@ -16992,6 +17036,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Eucalyptus",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "Eucalyptus",
@@ -18302,6 +18347,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Eucalyptus",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Eucalyptus",
@@ -19104,6 +19150,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Eucalyptus",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Eucalyptus",
@@ -20209,6 +20256,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Eucalyptus",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "Eucalyptus",
@@ -21319,6 +21367,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Eucalyptus",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "Eucalyptus",
@@ -21390,9 +21439,7 @@
                         },
                         {
                           "$type": "Models.PostSimulationTools.Input, Models",
-                          "FileNames": [
-                            null
-                          ],
+                          "FileName": null,
                           "Name": "Input",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -22781,6 +22828,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Eucalyptus",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "Eucalyptus",
@@ -24109,6 +24157,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Eucalyptus",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "Eucalyptus",
@@ -24180,9 +24229,7 @@
                         },
                         {
                           "$type": "Models.PostSimulationTools.Input, Models",
-                          "FileNames": [
-                            null
-                          ],
+                          "FileName": null,
                           "Name": "Input",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -25262,6 +25309,7 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Eucalyptus",
+                      "IsAlive": false,
                       "IsEnding": false,
                       "DaysAfterEnding": 0,
                       "ResourceName": "Eucalyptus",
@@ -26067,6 +26115,7 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Eucalyptus",
+                      "IsAlive": false,
                       "IsEnding": false,
                       "DaysAfterEnding": 0,
                       "ResourceName": "Eucalyptus",
@@ -26872,6 +26921,7 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Eucalyptus",
+                      "IsAlive": false,
                       "IsEnding": false,
                       "DaysAfterEnding": 0,
                       "ResourceName": "Eucalyptus",
@@ -27677,6 +27727,7 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Eucalyptus",
+                      "IsAlive": false,
                       "IsEnding": false,
                       "DaysAfterEnding": 0,
                       "ResourceName": "Eucalyptus",
@@ -27940,6 +27991,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Eucalyptus",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Eucalyptus",
@@ -29180,6 +29232,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Eucalyptus",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Eucalyptus",
@@ -30873,6 +30926,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Eucalyptus",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Eucalyptus",
@@ -32429,6 +32483,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Eucalyptus",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Eucalyptus",
@@ -36166,6 +36221,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Eucalyptus",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Eucalyptus",
