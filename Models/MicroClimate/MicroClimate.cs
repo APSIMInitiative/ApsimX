@@ -245,8 +245,7 @@
             dayLengthEvap = MathUtilities.DayLength(clock.Today.DayOfYear, sunAngleNetPositiveRadiation, weather.Latitude);
             // VOS - a temporary kludge to get this running for high latitudes. MicroMet is due for a clean up soon so reconsider then.
             dayLengthEvap = Math.Max(dayLengthEvap, (dayLengthLight * 2.0 / 3.0));
-            if (microClimatesZones.Count == 2 && microClimatesZones[0].Zone is Zones.RectangularZone 
-                && microClimatesZones[1].Zone is Zones.RectangularZone && microClimatesZones[0].Canopies.Count > 0 && microClimatesZones[1].Canopies.Count > 0)
+            if (microClimatesZones.Count == 2 && microClimatesZones[0].Zone is Zones.RectangularZone && microClimatesZones[1].Zone is Zones.RectangularZone)
             {
                 // We are in a strip crop simulation
                 microClimatesZones[0].DoCanopyCompartments();
@@ -376,7 +375,7 @@
                 Ft = (Wt) / (Wt + Wa);  // Remove overlap so scaling back to zone ground area works
                 Fs = (Wa) / (Wt + Wa);  // Remove overlap so scaling back to zone ground area works
 
-                CalculateLayeredShortWaveRadiation(tree, weather.Radn * It / Ft);
+                CalculateLayeredShortWaveRadiation(tree, weather.Radn * It / Ft); 
                 
                 CalculateLayeredShortWaveRadiation(alley, weather.Radn * Ia / Fs);
             }
@@ -404,8 +403,14 @@
                 double Fs = Ws / (Wt + Ws);                                   // Fraction of space in the shortest strip
                 double LAIt = MathUtilities.Sum(tallest.LAItotsum);           // LAI of tallest strip
                 double LAIs = MathUtilities.Sum(shortest.LAItotsum);          // LAI of shortest strip
-                double Kt = tallest.Canopies[0].Ktot;                         // Extinction Coefficient of the tallest strip
-                double Ks = shortest.Canopies[0].Ktot;                        // Extinction Coefficient of the shortest strip
+                if (LAIs > 0)
+                { }
+                double Kt = 0;                                                // Extinction Coefficient of the tallest strip
+                if (tallest.Canopies.Count>0)                                 // If it exists...
+                    Kt = tallest.Canopies[0].Ktot;
+                double Ks = 0;                                                // Extinction Coefficient of the shortest strip
+                if (shortest.Canopies.Count>0)                                // If it exists...
+                    Ks = shortest.Canopies[0].Ktot;
                 double Httop = Ht - Hs;                                       // Height of the top layer in tallest strip (ie distance from top of shortest to top of tallest)
                 double LAIttop = Httop / Ht * LAIt;                           // LAI of the top layer of the tallest strip (ie LAI in tallest strip above height of shortest strip)
                 double LAItbot = LAIt - LAIttop;                              // LAI of the bottom layer of the tallest strip (ie LAI in tallest strip below height of the shortest strip)
@@ -426,15 +431,16 @@
                 if (Math.Abs(1 - EnergyBalanceCheck) > 0.001)
                     throw (new Exception("Energy Balance not maintained in strip crop light interception model"));
 
-                //tallest.Canopies[0].Rs[0] = weather.Radn * (Intttop + Inttbot) / Ft;
-                //tallest.SurfaceRs = weather.Radn * Soilt / Ft;
-                CalculateLayeredShortWaveRadiation(tallest, weather.Radn * (Intttop + Inttbot) / Ft);
+                if (tallest.Canopies.Count>0)
+                    tallest.Canopies[0].Rs[0] = weather.Radn * (Intttop + Inttbot) / Ft;
+                tallest.SurfaceRs = weather.Radn * Soilt / Ft;
+                //CalculateLayeredShortWaveRadiation(tallest, weather.Radn * (Intttop + Inttbot) / Ft);
 
-               // if (shortest.Canopies[0].Rs != null)
-               //     if (shortest.Canopies[0].Rs.Length > 0)
-               //         shortest.Canopies[0].Rs[0] = weather.Radn * Ints / Fs;
-                //shortest.SurfaceRs = weather.Radn * Soils / Fs;
-                CalculateLayeredShortWaveRadiation(shortest, weather.Radn * Ints / Fs);
+                if (shortest.Canopies.Count>0 && shortest.Canopies[0].Rs != null)
+                    if (shortest.Canopies[0].Rs.Length > 0)
+                        shortest.Canopies[0].Rs[0] = weather.Radn * Ints / Fs;
+                shortest.SurfaceRs = weather.Radn * Soils / Fs;
+                //CalculateLayeredShortWaveRadiation(shortest, weather.Radn * Ints / Fs);
             }
             else
             {
@@ -459,6 +465,8 @@
             {
                 if (double.IsNaN(Rint))
                     throw new Exception("Bad Radiation Value in Light partitioning");
+                if (ZoneMC.LAItotsum[i] > 0)
+                { }
                 Rint = Rin * (1.0 - Math.Exp(-ZoneMC.layerKtot[i] * ZoneMC.LAItotsum[i]));
                 for (int j = 0; j <= ZoneMC.Canopies.Count - 1; j++)
                     ZoneMC.Canopies[j].Rs[i] = Rint * MathUtilities.Divide(ZoneMC.Canopies[j].Ftot[i] * ZoneMC.Canopies[j].Ktot, ZoneMC.layerKtot[i], 0.0);
