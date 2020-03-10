@@ -17,7 +17,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 83; } }
+        public static int LatestVersion { get { return 84; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1685,6 +1685,18 @@
             // 2. ExpressionFunction
             foreach (JObject function in JsonUtilities.ChildrenRecursively(root, "ExpressionFunction"))
                 function["Expression"] = function["Expression"].ToString().Replace(".Value()", "");
+        }
+
+        /// <summary>
+        /// Renames the Input.FileName property to FileNames and makes it an array.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion84(JObject root, string fileName)
+        {
+            foreach (JObject input in JsonUtilities.ChildrenRecursively(root, "Input"))
+                if (input["FileName"] != null)
+                    input["FileNames"] = new JArray(input["FileName"]);
         }
 
         /// <summary>
