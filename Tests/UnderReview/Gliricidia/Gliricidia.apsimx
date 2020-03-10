@@ -3571,8 +3571,8 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "Atmosphere",
                                 "Location": "48, 338",
-                                "Colour": "255, 255, 255",
-                                "OutlineColour": "255, 255, 255",
+                                "Colour": "White",
+                                "OutlineColour": "White",
                                 "Transparent": true
                               }
                             ],
@@ -17367,7 +17367,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "This sensibility test checks that Gliricidia crops provide N supply to neighbouring maize crops in strip cropping situations.  A simulation experiment has been constructed to simulate yield in Rwanda.  Yield variation should be close to that for fertilised crops.",
+              "Text": "This sensibility test checks that Gliricidia crops provide N supply to neighbouring maize crops in strip cropping situations.  A simulation experiment has been constructed to simulate yield in Malawi.  Yield variation should be close to that for fertilised crops. However, N supply from residues may not be sufficient in some wet years, and competition for water may reduce crop yield below fertilised sole crops in dry years. Finally, the benefits of the trees may take a few seasons to be realised.",
               "Name": "Memo",
               "Children": [],
               "IncludeInDocumentation": true,
