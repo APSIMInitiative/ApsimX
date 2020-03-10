@@ -7134,15 +7134,7 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "ChiefCLPlus",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "CLF_Janz",
+                      "Name": "Chief",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7158,7 +7150,7 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "DBAAurora",
+                      "Name": "Aurora",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7166,7 +7158,7 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "ElmoreCLPlus",
+                      "Name": "Elmore",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7206,7 +7198,7 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "Hybrid_Meteor",
+                      "Name": "Meteor",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7214,7 +7206,7 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "JusticaCLPlus",
+                      "Name": "Justica",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7352,14 +7344,6 @@
                     {
                       "$type": "Models.Core.Alias, Models",
                       "Name": "Chara",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Clearfield_stl",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7643,14 +7627,6 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "CLF_Stiletto",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
                       "Name": "Cobra",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -7691,7 +7667,7 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "GrenadeCLPlus",
+                      "Name": "Grenade",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7814,7 +7790,7 @@
                     "[Phenology].PpSensitivity.FixedValue = 4",
                     "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
-                  "Name": "Hibred_Mercury",
+                  "Name": "Mercury",
                   "Children": [
                     {
                       "$type": "Models.Core.Alias, Models",
@@ -7834,7 +7810,7 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "Bonnie_rock",
+                      "Name": "BonnieRock",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7874,7 +7850,7 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "Emurock",
+                      "Name": "EmuRock",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7890,7 +7866,7 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "ImposeCLPlus",
+                      "Name": "Impose",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7922,7 +7898,7 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "LRPBArrow",
+                      "Name": "Arrow",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
