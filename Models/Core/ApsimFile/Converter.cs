@@ -17,7 +17,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 82; } }
+        public static int LatestVersion { get { return 83; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1648,7 +1648,6 @@
         /// <param name="fileName"></param>
         private static void UpgradeToVersion82(JObject root, string fileName)
         {
-
             foreach (JObject r in JsonUtilities.ChildrenRecursively(root, "Root"))
             {
                 if (JsonUtilities.ChildWithName(r, "CriticalNConc") == null)
@@ -1663,6 +1662,29 @@
                     JsonUtilities.AddModel(r, varRef);                    
                 }
             }
+        }
+
+        /// <summary>
+        /// Remove .Value() from everywhere possible.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion83(JObject root, string fileName)
+        {
+            // 1. Report
+            foreach (JObject report in JsonUtilities.ChildrenRecursively(root, "Report"))
+            {
+                JArray variables = report["VariableNames"] as JArray;
+                if (variables == null)
+                    continue;
+
+                for (int i = 0; i < variables.Count; i++)
+                    variables[i] = variables[i].ToString().Replace(".Value()", "");
+            }
+
+            // 2. ExpressionFunction
+            foreach (JObject function in JsonUtilities.ChildrenRecursively(root, "ExpressionFunction"))
+                function["Expression"] = function["Expression"].ToString().Replace(".Value()", "");
         }
 
         /// <summary>
