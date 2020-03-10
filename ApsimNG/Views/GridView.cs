@@ -1356,7 +1356,7 @@
 
             // Wait for gtk to process all events. This will ensure
             // we're no longer editing any cells.
-            while (GLib.MainContext.Iteration()) ;
+            //while (GLib.MainContext.Iteration()) ;
 
             // Select multiple cells if shift + arrow key.
             if (shifted && IsArrowKey(key))
