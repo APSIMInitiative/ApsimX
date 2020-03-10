@@ -2,7 +2,7 @@
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
   "Version": 80,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-05",
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-06",
   "Name": "Simulations",
   "Children": [
     {
@@ -998,11 +998,7 @@
                 "Sum of ([AGPRyegrass].GPP +[AGPWhiteClover].GPP) from [ReportExample].DayAfterLastOutput to [Clock].Today as GrossPrimaryProduction       //GPP (kg C /ha) ",
                 "Sum of ([AGPRyegrass].NPP +[AGPWhiteClover].NPP) from [ReportExample].DayAfterLastOutput to [Clock].Today as NettPrimaryProduction        //NPP (kg C /ha)",
                 "",
-                "// examples of more detailed tissue-based information - see the list of outputs for many more options",
-                "[AGPRyegrass].LeafStage1NConc as RyegrassEmergingLeafNConc ",
-                "[AGPRyegrass].LeafStage2NConc as RyegrassDevelopingLeafNConc ",
-                "[AGPRyegrass].LeafStage3NConc as RyegrassMatureLeafNConc ",
-                "[AGPRyegrass].LeafStage4NConc as RyegrassDeadLeafNConc "
+                "// examples of more detailed tissue-based information - see the list of outputs for many more options"
               ],
               "EventNames": [
                 "[Clock].EndOfDay"
