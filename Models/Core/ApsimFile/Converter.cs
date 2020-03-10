@@ -17,7 +17,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 83; } }
+        public static int LatestVersion { get { return 85; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1665,11 +1665,46 @@
         }
 
         /// <summary>
-        /// Rename report namespace to Reporting.
+        /// Remove .Value() from everywhere possible.
         /// </summary>
         /// <param name="root"></param>
         /// <param name="fileName"></param>
         private static void UpgradeToVersion83(JObject root, string fileName)
+        {
+            // 1. Report
+            foreach (JObject report in JsonUtilities.ChildrenRecursively(root, "Report"))
+            {
+                JArray variables = report["VariableNames"] as JArray;
+                if (variables == null)
+                    continue;
+
+                for (int i = 0; i < variables.Count; i++)
+                    variables[i] = variables[i].ToString().Replace(".Value()", "");
+            }
+
+            // 2. ExpressionFunction
+            foreach (JObject function in JsonUtilities.ChildrenRecursively(root, "ExpressionFunction"))
+                function["Expression"] = function["Expression"].ToString().Replace(".Value()", "");
+        }
+
+        /// <summary>
+        /// Renames the Input.FileName property to FileNames and makes it an array.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion84(JObject root, string fileName)
+        {
+            foreach (JObject input in JsonUtilities.ChildrenRecursively(root, "Input"))
+                if (input["FileName"] != null)
+                    input["FileNames"] = new JArray(input["FileName"]);
+        }
+
+        /// <summary>
+        /// Rename report namespace to Reporting.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion85(JObject root, string fileName)
         {
             // Fix type of Report nodes
             foreach (JObject report in JsonUtilities.ChildrenRecursively(root, "Report"))
