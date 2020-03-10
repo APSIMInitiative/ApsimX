@@ -475,6 +475,7 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\SimpleLeafAppearancePhase.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LifeStageGrowth.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LifeStageMortality.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RainfallShuffler.png" />

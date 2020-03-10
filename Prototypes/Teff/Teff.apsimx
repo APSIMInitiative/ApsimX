@@ -339,15 +339,24 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Phen.LeafAppearancePhase, Models",
+                  "$type": "Models.PMF.Phen.SimpleLeafAppearancePhase, Models",
                   "Start": "FloralInitiation",
                   "End": "FlagLeaf",
                   "Name": "LeafAppearance",
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime",
-                      "Name": "ThermalTime",
+                      "VariableName": "[Structure].FinalLeafNumber",
+                      "Name": "TargetLeafNumber",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].ExpandedCohortNo",
+                      "Name": "CurrentLeafNumber",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
