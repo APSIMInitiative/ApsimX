@@ -85,11 +85,7 @@ namespace Models.PMF.Phen
             DeadNodeNoAtStart = 0;
             First = true;
         }
-
-        /// <summary>Writes the summary.</summary>
-        /// <param name="writer">The writer.</param>
-        public void WriteSummary(TextWriter writer) { writer.WriteLine("      " + Name); }
-              
+          
         /// <summary>Called when [simulation commencing].</summary>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
