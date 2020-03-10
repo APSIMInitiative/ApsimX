@@ -5,6 +5,7 @@
     using Models.Core;
     using Soils;
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
     using System.Xml.Serialization;
 
@@ -43,11 +44,12 @@
     [Serializable]
     public class WaterBalance : ModelCollectionFromResource, ISoilWater
     {
-        // --- Links -------------------------------------------------------------------------
-
         /// <summary>Link to the soil properties.</summary>
         [Link]
         private Soil soil = null;
+
+        [Link]
+        private ISummary summary = null;
 
         /// <summary>Link to the lateral flow model.</summary>
         [Link]
@@ -73,17 +75,24 @@
         [Link(Type = LinkType.Child, ByName = true)]
         private WaterTableModel waterTableModel = null;
 
-        /// <summary>A link to a irrigation data.</summary>
-        [Link]
-        private IIrrigation irrigation = null;
+        [Link(ByName = true)]
+        ISolute no3 = null;
 
         [Link(ByName = true)]
-        ISolute NO3 = null;
+        ISolute nh4 = null;
+
+        [Link(ByName = true)]
+        ISolute urea = null;
+
+        [Link(ByName = true, IsOptional = true)]
+        ISolute cl = null;
 
         [Link]
-        ISolute NH4 = null;
+        Clock clock = null;
 
-        // --- Settable properties -------------------------------------------------------
+        /// <summary>Irrigation information.</summary>
+        [NonSerialized]
+        private IrrigationApplicationType irrigation;
 
         /// <summary>Amount of water in the soil (mm).</summary>
         [XmlIgnore]
@@ -121,7 +130,7 @@
 
         /// <summary>Drainage (mm).</summary>
         [XmlIgnore]
-        public double Drain { get { return Flux[Flux.Length - 1]; } }
+        public double Drainage { get { if (Flux == null) return 0; else return Flux[Flux.Length - 1]; } }
 
         /// <summary>Evaporation (mm).</summary>
         [XmlIgnore]
@@ -147,8 +156,8 @@
             {
                 double waterForRunoff = PotentialInfiltration;
 
-                if (irrigation.WillRunoff)
-                    waterForRunoff = waterForRunoff + irrigation.IrrigationApplied;
+                if (irrigation != null && irrigation.WillRunoff)
+                    waterForRunoff = waterForRunoff + irrigation.Amount;
 
                 return waterForRunoff;
             }
@@ -181,10 +190,6 @@
         /// <summary>Gets potential evapotranspiration of the whole soil-plant system (mm)</summary>
         [XmlIgnore]
         public double Eo { get; set; }
-
-        /// <summary>Gets the amount of water drainage from bottom of profile(mm)</summary>
-        [XmlIgnore]
-        public double Drainage => throw new NotImplementedException();
 
         /// <summary>Start date for switch to summer parameters for soil water evaporation (dd-mmm)</summary>
         [Units("dd-mmm")]
@@ -329,7 +334,7 @@
 
         /// <summary>Amount of water moving laterally out of the profile (mm)</summary>
         [XmlIgnore]
-        public double[] LateralOutflow => throw new NotImplementedException();
+        public double[] LateralOutflow { get { return LateralFlow; } }
 
         /// <summary>Amount of N leaching as NO3-N from the deepest soil layer (kg /ha)</summary>
         [XmlIgnore]
@@ -349,11 +354,11 @@
 
         /// <summary>Amount of N leaching as NH4 from each soil layer (kg /ha)</summary>
         [XmlIgnore]
-        public double[] FlowNH4 => throw new NotImplementedException();
+        public double[] FlowNH4 { get; private set; }
 
         /// <summary>Amount of N leaching as urea from each soil layer (kg /ha)</summary>
         [XmlIgnore]
-        public double[] FlowUrea => throw new NotImplementedException();
+        public double[] FlowUrea { get; private set; }
 
         /// <summary> This is set by Microclimate and is rainfall less that intercepted by the canopy and residue components </summary>
         [XmlIgnore]
@@ -367,8 +372,25 @@
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            // Set our water to the initial value.
-            Water = soil.Initial.SWmm;
+            Initialise();
+        }
+
+        /// <summary>Called on start of day.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event data.</param>
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
+        {
+            irrigation = null;
+        }
+
+        /// <summary>Called when an irrigation occurs.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event data.</param>
+        [EventSubscribe("Irrigated")]
+        private void OnIrrigated(object sender, IrrigationApplicationType e)
+        {
+            irrigation = e;
         }
 
         /// <summary>Called by CLOCK to let this model do its water movement.</summary>
@@ -377,6 +399,11 @@
         [EventSubscribe("DoSoilWaterMovement")]
         private void OnDoSoilWaterMovement(object sender, EventArgs e)
         {
+            if (clock.Today == new DateTime(2010, 3, 5))
+            {
+
+            }
+
             // Calculate lateral flow.
             LateralFlow = lateralFlowModel.Values;
             if (LateralFlow != null)
@@ -387,19 +414,24 @@
 
             // Calculate infiltration.
             Infiltration = PotentialInfiltration - Runoff;
+
             Water[0] = Water[0] + Infiltration;
 
             // Allow irrigation to infiltrate.
-            if (!irrigation.WillRunoff && irrigation.IrrigationApplied > 0)
+            if (irrigation != null && !irrigation.WillRunoff && irrigation.Amount > 0)
             {
                 int irrigationLayer = soil.LayerIndexOfDepth(Convert.ToInt32(irrigation.Depth, CultureInfo.InvariantCulture));
-                Water[irrigationLayer] = irrigation.IrrigationApplied;
-                Infiltration += irrigation.IrrigationApplied;
+                Water[irrigationLayer] += irrigation.Amount;
+                Infiltration += irrigation.Amount;
 
-                // DeanH - haven't implemented solutes in irrigation water yet.
-                // NO3[irrigationLayer] = irrigation.NO3;
-                // NH4[irrigationLayer] = irrigation.NH4;
-                // CL[irrigationLayer] = irrigation.Cl;
+                if (no3 != null)
+                    no3.kgha[irrigationLayer] += irrigation.NO3;
+
+                if (nh4 != null)
+                    nh4.kgha[irrigationLayer] += irrigation.NH4;
+
+                if (cl != null)
+                    cl.kgha[irrigationLayer] += irrigation.CL;
             }
 
             // Saturated flow.
@@ -418,29 +450,42 @@
             //  pond = Math.Min(Runoff, max_pond);
             MoveDown(Water, Flux);
 
-            double[] NO3Values = NO3.kgha;
-            double[] NH4Values = NH4.kgha;
+            double[] no3Values = no3.kgha;
+            double[] ureaValues = urea.kgha;
 
             // Calcualte solute movement down with water.
-            SoluteFluxEfficiency = 1;
-            double[] NO3Down = CalculateSoluteMovementDown(NO3Values, Water, Flux, SoluteFluxEfficiency);
-            MoveDown(NO3Values, NO3Down);
+            double[] no3Down = CalculateSoluteMovementDown(no3Values, Water, Flux, SoluteFluxEfficiency=1);
+            MoveDown(no3Values, no3Down);
+            double[] ureaDown = CalculateSoluteMovementDown(ureaValues, Water, Flux, SoluteFluxEfficiency=1);
+            MoveDown(ureaValues, ureaDown);
 
+            // Calculate evaporation and remove from top layer.
             double es = evaporationModel.Calculate();
             Water[0] = Water[0] - es;
 
+            // Calculate unsaturated flow of water and apply.
             Flow = unsaturatedFlow.Values;
             MoveUp(Water, Flow);
 
+            // Check for errors in water variables.
             CheckForErrors();
 
-            SoluteFlowEfficiency = 1;
+            // Calculate water table depth.
             double waterTableDepth = waterTableModel.Value();
-            double[] NO3Up = CalculateSoluteMovementUpDown(NO3Values, Water, Flow, SoluteFlowEfficiency);
-            MoveUp(NO3Values, NO3Up);
 
-            FlowNO3 = MathUtilities.Subtract(NO3Down, NO3Up);
-            NO3.SetKgHa(SoluteSetterType.Soil, NO3Values);
+            // Calculate and apply net solute movement.
+            double[] no3Up = CalculateNetSoluteMovement(no3Values, Water, Flow, SoluteFlowEfficiency=1);
+            MoveUp(no3Values, no3Up);
+            double[] ureaUp = CalculateNetSoluteMovement(ureaValues, Water, Flow, SoluteFlowEfficiency = 1);
+            MoveUp(ureaValues, ureaUp);
+
+            // Update flow output variables.
+            FlowNO3 = MathUtilities.Subtract(no3Down, no3Up);
+            FlowUrea = MathUtilities.Subtract(ureaDown, ureaUp);
+
+            // Set solute state variables.
+            no3.SetKgHa(SoluteSetterType.Soil, no3Values);
+            urea.SetKgHa(SoluteSetterType.Soil, ureaValues);
         }
 
         /// <summary>Move water down the profile</summary>
@@ -498,7 +543,7 @@
         /// <param name="flux"></param>
         /// <param name="efficiency"></param>
         /// <returns></returns>
-        private static double[] CalculateSoluteMovementUpDown(double[] solute, double[] water, double[] flux, double efficiency)
+        private static double[] CalculateNetSoluteMovement(double[] solute, double[] water, double[] flux, double efficiency)
         {
             double[] soluteUp = CalculateSoluteMovementUp(solute, water, flux, efficiency);
 
@@ -660,7 +705,21 @@
         ///<summary>Perform a reset</summary>
         public void Reset()
         {
-            throw new NotImplementedException();
+            summary.WriteMessage(this, "Resetting Soil Water Balance");
+            Initialise();
+        }
+
+        /// <summary>Initialise the model.</summary>
+        private void Initialise()
+        { 
+            Water = soil.Initial.SWmm;
+            Runon = 0;
+            Runoff = 0;
+            PotentialInfiltration = 0;
+            LateralFlow = null;
+            Flux = null;
+            Flow = null;
+            evaporationModel.Initialise();
         }
 
         ///<summary>Perform tillage</summary>

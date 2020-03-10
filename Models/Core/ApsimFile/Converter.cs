@@ -17,7 +17,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 80; } }
+        public static int LatestVersion { get { return 81; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1607,6 +1607,22 @@
             foreach (JObject excelMultiInput in JsonUtilities.ChildrenRecursively(root, "ExcelMultiInput"))
             {
                 excelMultiInput["$type"] = "Models.PostSimulationTools.ExcelInput, Models";
+            }
+        }
+
+        /// <summary>
+        /// Replace SoilWater model with WaterBalance model.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion81(JObject root, string fileName)
+        {
+            foreach (JObject soilWater in JsonUtilities.ChildrenRecursively(root, "SoilWater"))
+            {
+                soilWater["$type"] = "Models.WaterModel.WaterBalance, Models";
+                soilWater["ResourceName"] = "WaterBalance";
+                soilWater["DischargeWidth"] = soilWater["discharge_width"];
+                soilWater["CatchmentArea"] = soilWater["catchment_area"];
             }
         }
 

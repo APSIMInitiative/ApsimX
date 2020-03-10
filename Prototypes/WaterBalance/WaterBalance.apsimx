@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 80,
+  "Version": 81,
   "ApsimVersion": "Version 0.0.0.0, built 2020-03-10",
   "Name": "Simulations",
   "Children": [
@@ -184,7 +184,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.SoilWater, Models",
+                      "$type": "Models.WaterModel.WaterBalance, Models",
                       "SummerDate": "1-Nov",
                       "SummerU": 5.0,
                       "SummerCona": 5.0,
@@ -197,10 +197,9 @@
                       "CN2Bare": 73.0,
                       "CNRed": 20.0,
                       "CNCov": 0.8,
-                      "slope": "NaN",
-                      "discharge_width": "NaN",
-                      "catchment_area": "NaN",
-                      "max_pond": 0.0,
+                      "Slope": "NaN",
+                      "DischargeWidth": "NaN",
+                      "CatchmentArea": "NaN",
                       "Thickness": [
                         150.0,
                         150.0,
@@ -209,15 +208,6 @@
                         300.0,
                         300.0,
                         300.0
-                      ],
-                      "Depth": [
-                        "0-15",
-                        "15-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150",
-                        "150-180"
                       ],
                       "SWCON": [
                         0.3,
@@ -229,9 +219,8 @@
                         0.3
                       ],
                       "KLAT": null,
-                      "PrecipitationInterception": 0.0,
+                      "ResourceName": "WaterBalance",
                       "Name": "SoilWater",
-                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -2139,6 +2128,7 @@
                 {
                   "$type": "Models.PMF.Plant, Models",
                   "CropType": "Wheat",
+                  "IsAlive": false,
                   "IsEnding": false,
                   "DaysAfterEnding": 0,
                   "ResourceName": "Wheat",
