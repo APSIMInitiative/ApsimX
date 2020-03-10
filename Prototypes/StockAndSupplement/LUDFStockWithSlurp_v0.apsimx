@@ -86,12 +86,8 @@
         },
         {
           "$type": "Models.Manager, Models",
-          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.Utilities;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Diagnostics;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Stock stock;\r\n\r\n        [Description(\"Path, with trailing /, for the ruminant parameter file:\")]\r\n        public string FilePath { get; set; }\r\n\r\n        [Description(\"Name of the new ruminant parameter file - leave blank for default values:\")]\r\n        public string FileName { get; set; }\r\n\r\n        [Description(\"A dummy (not used) string to store a file name/path or something else useful\")]\r\n        public string Dummy { get; set; }\r\n\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n        \tif (FileName != null) \r\n        \t\tstock.ParamFile = FilePath + FileName;\r\n        }\r\n    }\r\n}",
+          "Code": "using System;\r\nusing System.IO;\r\nusing Models.Core;\r\nusing Models.Utilities;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Diagnostics;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Stock stock;\r\n        [Link] Simulation simulation;\r\n\r\n        [Description(\"Name of the new ruminant parameter file - leave blank for default values:\")]\r\n        public string FileName { get; set; }\r\n\r\n        [Description(\"A dummy (not used) string to store a file name/path or something else useful\")]\r\n        public string Dummy { get; set; }\r\n\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n        \tif (FileName != null) \r\n        \t\tstock.ParamFile = Path.Combine(Path.GetDirectoryName(simulation.FileName), FileName);\r\n        }\r\n    }\r\n}",
           "Parameters": [
-            {
-              "Key": "FilePath",
-              "Value": "C:/aaUnderVC/apsimNextGen/Prototypes/StockAndSupplement/"
-            },
             {
               "Key": "FileName",
               "Value": "RuminantLUDF.prm"
