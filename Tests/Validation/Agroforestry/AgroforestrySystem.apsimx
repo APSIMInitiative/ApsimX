@@ -1,7 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 73,
+  "Version": 80,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-05",
   "Name": "Simulations",
   "Children": [
     {
@@ -61,6 +62,8 @@
                 200.0
               ],
               "ParticleSizeClay": null,
+              "ParticleSizeSand": null,
+              "ParticleSizeSilt": null,
               "BD": [
                 1.35,
                 1.35,
@@ -499,8 +502,9 @@
       "Children": [
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
-          "FileName": "Observed.xlsx",
-          "FileNameMetadata": null,
+          "FileNames": [
+            "Observed.xlsx"
+          ],
           "SheetNames": [
             "ObservedWarraBlock1"
           ],
@@ -512,8 +516,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
-          "FileName": "Observed.xlsx",
-          "FileNameMetadata": null,
+          "FileNames": [
+            "Observed.xlsx"
+          ],
           "SheetNames": [
             "Moora",
             "MooraET"
@@ -612,8 +617,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
-          "FileName": "OdhiamboObserved.xlsx",
-          "FileNameMetadata": null,
+          "FileNames": [
+            "OdhiamboObserved.xlsx"
+          ],
           "SheetNames": [
             "OBSCrop",
             "OBSSW35cm",
@@ -929,19 +935,12 @@
                         0.1,
                         0.1
                       ],
-                      "CanopyWidths": [
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1
-                      ],
-                      "TreeLeafAreas": [
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1
+                      "ShadeModifiers": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
                       ],
                       "Name": "TreeProxy",
                       "Children": [],
@@ -989,28 +988,10 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
-                          "Children": [],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Report.Report, Models",
-                          "VariableNames": [
-                            "[Clock].Today",
-                            "[Zone].Area",
-                            "Parent.Distance as Distance",
-                            "Radn",
-                            "[LocalMicroClimate].Radn",
-                            "[TreeProxy].Shade"
-                          ],
-                          "EventNames": [
-                            ""
-                          ],
-                          "Name": "Report",
                           "Children": [],
                           "IncludeInDocumentation": false,
                           "Enabled": true,
@@ -1026,17 +1007,12 @@
                             "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4N",
                             "sum([TreeProxy].WaterUptake) as WaterUptake",
                             "sum([Soil].SoilWater.SWmm[1:4]) as SW90cm",
-                            "[TreeProxy].Urel",
                             "[TreeProxy].H",
                             "[TreeProxy].SWDemand",
                             "[TreeProxy].heightToday",
-                            "[MicroClimate].peta",
-                            "[MicroClimate].petr",
                             "[Soil].SoilWater.Eo",
                             "[TreeProxy].WaterStress",
                             "[Soil].SoilWater.SW[1] as SurfaceSW",
-                            "[Wheat].AboveGround.Wt as BiomassWt",
-                            "[Wheat].Grain.Wt as GrainWt",
                             "[Soil].SoilWater.Es as Es",
                             "sum([Soil].SoilWater.ESW) as ESW",
                             "[Soil].SoilWater.Eo as Eo",
@@ -1068,7 +1044,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 100.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -1115,6 +1091,8 @@
                                 300.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.39,
                                 1.35,
@@ -1553,6 +1531,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -1570,7 +1549,7 @@
                             "[Wheat].AboveGround.Wt as BiomassWt",
                             "[Wheat].Grain.Wt as GrainWt",
                             "[Wheat].Grain.Size as GrainSize",
-                            "[Wheat].Grain.GrainNo as GrainNumber"
+                            "[Wheat].Grain.Number as GrainNumber"
                           ],
                           "EventNames": [
                             "[Wheat].Harvesting"
@@ -1591,12 +1570,9 @@
                             "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4N",
                             "sum([TreeProxy].WaterUptake) as WaterUptake",
                             "sum([Soil].SoilWater.SWmm[1:4]) as SW90cm",
-                            "[TreeProxy].Urel",
                             "[TreeProxy].H",
                             "[TreeProxy].SWDemand",
                             "[TreeProxy].heightToday",
-                            "[MicroClimate].peta",
-                            "[MicroClimate].petr",
                             "[Soil].SoilWater.Eo",
                             "[TreeProxy].WaterStress",
                             "[Soil].SoilWater.SW[1] as SurfaceSW",
@@ -1635,7 +1611,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 100.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -1682,6 +1658,8 @@
                                 300.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.39,
                                 1.35,
@@ -2124,6 +2102,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -2141,7 +2120,7 @@
                             "[Wheat].AboveGround.Wt as BiomassWt",
                             "[Wheat].Grain.Wt as GrainWt",
                             "[Wheat].Grain.Size as GrainSize",
-                            "[Wheat].Grain.GrainNo as GrainNumber"
+                            "[Wheat].Grain.Number as GrainNumber"
                           ],
                           "EventNames": [
                             "[Wheat].Harvesting"
@@ -2162,12 +2141,9 @@
                             "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4N",
                             "sum([TreeProxy].WaterUptake) as WaterUptake",
                             "sum([Soil].SoilWater.SWmm[1:4]) as SW90cm",
-                            "[TreeProxy].Urel",
                             "[TreeProxy].H",
                             "[TreeProxy].SWDemand",
                             "[TreeProxy].heightToday",
-                            "[MicroClimate].peta",
-                            "[MicroClimate].petr",
                             "[Soil].SoilWater.Eo",
                             "[TreeProxy].WaterStress",
                             "[Soil].SoilWater.SW[1] as SurfaceSW",
@@ -2204,7 +2180,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 100.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -2251,6 +2227,8 @@
                                 300.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.39,
                                 1.35,
@@ -2693,6 +2671,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -2710,7 +2689,7 @@
                             "[Wheat].AboveGround.Wt as BiomassWt",
                             "[Wheat].Grain.Wt as GrainWt",
                             "[Wheat].Grain.Size as GrainSize",
-                            "[Wheat].Grain.GrainNo as GrainNumber"
+                            "[Wheat].Grain.Number as GrainNumber"
                           ],
                           "EventNames": [
                             "[Wheat].Harvesting"
@@ -2731,12 +2710,9 @@
                             "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4N",
                             "sum([TreeProxy].WaterUptake) as WaterUptake",
                             "sum([Soil].SoilWater.SWmm[1:4]) as SW90cm",
-                            "[TreeProxy].Urel",
                             "[TreeProxy].H",
                             "[TreeProxy].SWDemand",
                             "[TreeProxy].heightToday",
-                            "[MicroClimate].peta",
-                            "[MicroClimate].petr",
                             "[Soil].SoilWater.Eo",
                             "[TreeProxy].WaterStress",
                             "[Soil].SoilWater.SW[1] as SurfaceSW",
@@ -2773,7 +2749,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 100.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -2820,6 +2796,8 @@
                                 300.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.39,
                                 1.35,
@@ -3262,6 +3240,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -3279,7 +3258,7 @@
                             "[Wheat].AboveGround.Wt as BiomassWt",
                             "[Wheat].Grain.Wt as GrainWt",
                             "[Wheat].Grain.Size as GrainSize",
-                            "[Wheat].Grain.GrainNo as GrainNumber"
+                            "[Wheat].Grain.Number as GrainNumber"
                           ],
                           "EventNames": [
                             "[Wheat].Harvesting"
@@ -3300,12 +3279,9 @@
                             "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4N",
                             "sum([TreeProxy].WaterUptake) as WaterUptake",
                             "sum([Soil].SoilWater.SWmm[1:4]) as SW90cm",
-                            "[TreeProxy].Urel",
                             "[TreeProxy].H",
                             "[TreeProxy].SWDemand",
                             "[TreeProxy].heightToday",
-                            "[MicroClimate].peta",
-                            "[MicroClimate].petr",
                             "[Soil].SoilWater.Eo",
                             "[TreeProxy].WaterStress",
                             "[Soil].SoilWater.SW[1] as SurfaceSW",
@@ -3342,7 +3318,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 100.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -3389,6 +3365,8 @@
                                 300.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.39,
                                 1.35,
@@ -3831,6 +3809,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -3848,7 +3827,7 @@
                             "[Wheat].AboveGround.Wt as BiomassWt",
                             "[Wheat].Grain.Wt as GrainWt",
                             "[Wheat].Grain.Size as GrainSize",
-                            "[Wheat].Grain.GrainNo as GrainNumber"
+                            "[Wheat].Grain.Number as GrainNumber"
                           ],
                           "EventNames": [
                             "[Wheat].Harvesting"
@@ -3869,12 +3848,9 @@
                             "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4N",
                             "sum([TreeProxy].WaterUptake) as WaterUptake",
                             "sum([Soil].SoilWater.SWmm[1:4]) as SW90cm",
-                            "[TreeProxy].Urel",
                             "[TreeProxy].H",
                             "[TreeProxy].SWDemand",
                             "[TreeProxy].heightToday",
-                            "[MicroClimate].peta",
-                            "[MicroClimate].petr",
                             "[Soil].SoilWater.Eo",
                             "[TreeProxy].WaterStress",
                             "[Soil].SoilWater.SW[1] as SurfaceSW",
@@ -3911,7 +3887,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 100.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -3958,6 +3934,8 @@
                                 300.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.39,
                                 1.35,
@@ -4393,6 +4371,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -4410,7 +4389,7 @@
                             "[Wheat].AboveGround.Wt as BiomassWt",
                             "[Wheat].Grain.Wt as GrainWt",
                             "[Wheat].Grain.Size as GrainSize",
-                            "[Wheat].Grain.GrainNo as GrainNumber"
+                            "[Wheat].Grain.Number as GrainNumber"
                           ],
                           "EventNames": [
                             "[Wheat].Harvesting"
@@ -4431,12 +4410,9 @@
                             "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4N",
                             "sum([TreeProxy].WaterUptake) as WaterUptake",
                             "sum([Soil].SoilWater.SWmm[1:4]) as SW90cm",
-                            "[TreeProxy].Urel",
                             "[TreeProxy].H",
                             "[TreeProxy].SWDemand",
                             "[TreeProxy].heightToday",
-                            "[MicroClimate].peta",
-                            "[MicroClimate].petr",
                             "[Soil].SoilWater.Eo",
                             "[TreeProxy].WaterStress",
                             "[Soil].SoilWater.SW[1] as SurfaceSW",
@@ -4473,7 +4449,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 100.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -4520,6 +4496,8 @@
                                 300.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.39,
                                 1.35,
@@ -4962,6 +4940,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -4979,7 +4958,7 @@
                             "[Wheat].AboveGround.Wt as BiomassWt",
                             "[Wheat].Grain.Wt as GrainWt",
                             "[Wheat].Grain.Size as GrainSize",
-                            "[Wheat].Grain.GrainNo as GrainNumber"
+                            "[Wheat].Grain.Number as GrainNumber"
                           ],
                           "EventNames": [
                             "[Wheat].Harvesting"
@@ -5000,12 +4979,9 @@
                             "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4N",
                             "sum([TreeProxy].WaterUptake) as WaterUptake",
                             "sum([Soil].SoilWater.SWmm[1:4]) as SW90cm",
-                            "[TreeProxy].Urel",
                             "[TreeProxy].H",
                             "[TreeProxy].SWDemand",
                             "[TreeProxy].heightToday",
-                            "[MicroClimate].peta",
-                            "[MicroClimate].petr",
                             "[Soil].SoilWater.Eo",
                             "[TreeProxy].WaterStress",
                             "[Soil].SoilWater.SW[1] as SurfaceSW",
@@ -5042,7 +5018,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 100.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -5089,6 +5065,8 @@
                                 300.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.39,
                                 1.35,
@@ -7137,15 +7115,10 @@
                         0.1,
                         0.1
                       ],
-                      "CanopyWidths": [
-                        3.0,
-                        3.0,
-                        3.0
-                      ],
-                      "TreeLeafAreas": [
-                        0.5,
-                        0.6,
-                        0.1
+                      "ShadeModifiers": [
+                        1.0,
+                        1.0,
+                        1.0
                       ],
                       "Name": "TreeProxy",
                       "Children": [],
@@ -7195,28 +7168,10 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
-                          "Children": [],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Report.Report, Models",
-                          "VariableNames": [
-                            "[Clock].Today",
-                            "[Zone].Area",
-                            "Parent.Distance as Distance",
-                            "Radn",
-                            "[LocalMicroClimate].Radn",
-                            "[TreeProxy].Shade"
-                          ],
-                          "EventNames": [
-                            ""
-                          ],
-                          "Name": "Report",
                           "Children": [],
                           "IncludeInDocumentation": false,
                           "Enabled": true,
@@ -7232,12 +7187,9 @@
                             "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4N",
                             "sum([TreeProxy].WaterUptake) as WaterUptake",
                             "sum([Soil].SoilWater.SWmm[1:5]) as SW90cm",
-                            "[TreeProxy].Urel",
                             "[TreeProxy].H",
                             "[TreeProxy].SWDemand",
                             "[TreeProxy].heightToday",
-                            "[MicroClimate].peta",
-                            "[MicroClimate].petr",
                             "[Soil].SoilWater.Eo",
                             "[TreeProxy].WaterStress",
                             "[Soil].SoilWater.SW[1] as SurfaceSW",
@@ -7269,7 +7221,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 100.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -7326,6 +7278,8 @@
                                 700.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.8,
                                 1.8,
@@ -7794,6 +7748,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -7811,10 +7766,6 @@
                             "sum([Soil].SoilWater.SWmm[1:4]) as SW90cm",
                             "sum([Soil].SoilNitrogen.NO3.kgha) as TotalNO3N",
                             "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4N",
-                            "[MicroClimate].peta",
-                            "[MicroClimate].petr",
-                            "[Wheat].AboveGround.Wt as BiomassWt",
-                            "[Wheat].Grain.Wt as GrainWt",
                             "[Soil].SoilWater.SW[1] as SurfaceSW",
                             "sum([Soil].SoilWater.ESW) as ESW"
                           ],
@@ -7844,7 +7795,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 100.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -7901,6 +7852,8 @@
                                 700.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.8,
                                 1.8,
@@ -8326,6 +8279,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -8343,10 +8297,6 @@
                             "sum([Soil].SoilWater.SWmm[1:4]) as SW90cm",
                             "sum([Soil].SoilNitrogen.NO3.kgha) as TotalNO3N",
                             "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4N",
-                            "[MicroClimate].peta",
-                            "[MicroClimate].petr",
-                            "[Wheat].AboveGround.Wt as BiomassWt",
-                            "[Wheat].Grain.Wt as GrainWt",
                             "[Soil].SoilWater.SW[1] as SurfaceSW",
                             "sum([Soil].SoilWater.ESW) as ESW"
                           ],
@@ -8376,7 +8326,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 100.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -8433,6 +8383,8 @@
                                 700.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.8,
                                 1.8,
@@ -8858,6 +8810,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -8875,10 +8828,6 @@
                             "sum([Soil].SoilWater.SWmm[1:4]) as SW90cm",
                             "sum([Soil].SoilNitrogen.NO3.kgha) as TotalNO3N",
                             "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4N",
-                            "[MicroClimate].peta",
-                            "[MicroClimate].petr",
-                            "[Wheat].AboveGround.Wt as BiomassWt",
-                            "[Wheat].Grain.Wt as GrainWt",
                             "[Soil].SoilWater.SW[1] as SurfaceSW",
                             "sum([Soil].SoilWater.ESW) as ESW"
                           ],
@@ -8908,7 +8857,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 100.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -8965,6 +8914,8 @@
                                 700.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.8,
                                 1.8,
@@ -9390,6 +9341,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -9407,10 +9359,6 @@
                             "sum([Soil].SoilWater.SWmm[1:4]) as SW90cm",
                             "sum([Soil].SoilNitrogen.NO3.kgha) as TotalNO3N",
                             "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4N",
-                            "[MicroClimate].peta",
-                            "[MicroClimate].petr",
-                            "[Wheat].AboveGround.Wt as BiomassWt",
-                            "[Wheat].Grain.Wt as GrainWt",
                             "[Soil].SoilWater.SW[1] as SurfaceSW",
                             "sum([Soil].SoilWater.ESW) as ESW"
                           ],
@@ -9440,7 +9388,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 100.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -9497,6 +9445,8 @@
                                 700.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.8,
                                 1.8,
@@ -9922,6 +9872,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -9939,10 +9890,6 @@
                             "sum([Soil].SoilWater.SWmm[1:4]) as SW90cm",
                             "sum([Soil].SoilNitrogen.NO3.kgha) as TotalNO3N",
                             "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4N",
-                            "[MicroClimate].peta",
-                            "[MicroClimate].petr",
-                            "[Wheat].AboveGround.Wt as BiomassWt",
-                            "[Wheat].Grain.Wt as GrainWt",
                             "[Soil].SoilWater.SW[1] as SurfaceSW",
                             "sum([Soil].SoilWater.ESW) as ESW"
                           ],
@@ -9972,7 +9919,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 100.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -10029,6 +9976,8 @@
                                 700.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.8,
                                 1.8,
@@ -10454,6 +10403,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -10471,10 +10421,6 @@
                             "sum([Soil].SoilWater.SWmm[1:4]) as SW90cm",
                             "sum([Soil].SoilNitrogen.NO3.kgha) as TotalNO3N",
                             "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4N",
-                            "[MicroClimate].peta",
-                            "[MicroClimate].petr",
-                            "[Wheat].AboveGround.Wt as BiomassWt",
-                            "[Wheat].Grain.Wt as GrainWt",
                             "[Soil].SoilWater.SW[1] as SurfaceSW",
                             "sum([Soil].SoilWater.ESW) as ESW"
                           ],
@@ -10504,7 +10450,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 100.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -10561,6 +10507,8 @@
                                 700.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.8,
                                 1.8,
@@ -10986,6 +10934,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -11003,10 +10952,6 @@
                             "sum([Soil].SoilWater.SWmm[1:4]) as SW90cm",
                             "sum([Soil].SoilNitrogen.NO3.kgha) as TotalNO3N",
                             "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4N",
-                            "[MicroClimate].peta",
-                            "[MicroClimate].petr",
-                            "[Wheat].AboveGround.Wt as BiomassWt",
-                            "[Wheat].Grain.Wt as GrainWt",
                             "[Soil].SoilWater.SW[1] as SurfaceSW",
                             "sum([Soil].SoilWater.ESW) as ESW"
                           ],
@@ -11036,7 +10981,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 100.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -11093,6 +11038,8 @@
                                 700.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.8,
                                 1.8,
@@ -11518,6 +11465,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -11535,10 +11483,6 @@
                             "sum([Soil].SoilWater.SWmm[1:4]) as SW90cm",
                             "sum([Soil].SoilNitrogen.NO3.kgha) as TotalNO3N",
                             "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4N",
-                            "[MicroClimate].peta",
-                            "[MicroClimate].petr",
-                            "[Wheat].AboveGround.Wt as BiomassWt",
-                            "[Wheat].Grain.Wt as GrainWt",
                             "[Soil].SoilWater.SW[1] as SurfaceSW",
                             "sum([Soil].SoilWater.ESW) as ESW"
                           ],
@@ -11568,7 +11512,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 100.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -11625,6 +11569,8 @@
                                 700.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.8,
                                 1.8,
@@ -12431,8 +12377,6 @@
                           "VariableNames": [
                             "[Clock].Today",
                             "[TreeProxy].heightToday",
-                            "[TreeProxy].LeafAreaToday",
-                            "[TreeProxy].CanopyWidthToday",
                             "[TreeProxy].IndividualTreeWaterUptake"
                           ],
                           "EventNames": [
@@ -12476,8 +12420,8 @@
                             ],
                             [
                               "50",
-                              null,
-                              null,
+                              "",
+                              "",
                               "1.6",
                               "1.2",
                               "1.2",
@@ -12489,8 +12433,8 @@
                             ],
                             [
                               "25",
-                              null,
-                              null,
+                              "",
+                              "",
                               ".4",
                               ".5",
                               ".4",
@@ -12502,8 +12446,8 @@
                             ],
                             [
                               "0",
-                              null,
-                              null,
+                              "",
+                              "",
                               ".4",
                               ".2",
                               ".1",
@@ -12515,8 +12459,8 @@
                             ],
                             [
                               "0",
-                              null,
-                              null,
+                              "",
+                              "",
                               ".4",
                               ".2",
                               ".1",
@@ -12528,8 +12472,8 @@
                             ],
                             [
                               "0",
-                              null,
-                              null,
+                              "",
+                              "",
                               "0",
                               "0",
                               "0",
@@ -12541,8 +12485,8 @@
                             ],
                             [
                               "0",
-                              null,
-                              null,
+                              "",
+                              "",
                               "0",
                               "0",
                               "0",
@@ -12554,8 +12498,8 @@
                             ],
                             [
                               "0",
-                              null,
-                              null,
+                              "",
+                              "",
                               "0",
                               "0",
                               "0",
@@ -12567,8 +12511,8 @@
                             ],
                             [
                               "0",
-                              null,
-                              null,
+                              "",
+                              "",
                               "0",
                               "0",
                               "0",
@@ -12580,8 +12524,8 @@
                             ],
                             [
                               "0",
-                              null,
-                              null,
+                              "",
+                              "",
                               "0",
                               "0",
                               "0",
@@ -12593,8 +12537,8 @@
                             ],
                             [
                               "0",
-                              null,
-                              null,
+                              "",
+                              "",
                               "0",
                               "0",
                               "0",
@@ -12659,52 +12603,52 @@
                             "1997-08-15T00:00:00"
                           ],
                           "Heights": [
-                            921.532,
-                            1164.66,
-                            1332.5,
-                            1613.06,
-                            1912.55,
-                            2268.62,
-                            2567.99,
-                            2641.61,
-                            2621.2200000000003,
-                            2713.55,
-                            3067.83,
-                            3310.62,
-                            3629.0499999999997,
-                            3985.11,
-                            4228.25,
-                            4753.61,
-                            4921.2300000000005,
-                            5051.64,
-                            5181.73,
-                            5046.3899999999994,
-                            5477.53,
-                            5453.79,
-                            5508.47,
-                            5619.84,
-                            5712.17,
-                            5955.19,
-                            6104.21,
-                            6196.65,
-                            6195.2,
-                            6588.46,
-                            6586.79,
-                            6641.58,
-                            6696.4800000000005,
-                            6694.81,
-                            6693.2400000000007,
-                            6992.73,
-                            7028.59,
-                            7045.7400000000007,
-                            7081.71,
-                            7080.14,
-                            7097.29,
-                            7028.59,
-                            7045.7400000000007,
-                            7081.71,
-                            7080.14,
-                            7097.29
+                            921532000.0,
+                            116466000.0,
+                            13325000.0,
+                            161306000.0,
+                            191255000.0,
+                            226862000.0,
+                            256799000.0,
+                            264161000.0,
+                            262122000.0,
+                            271355000.0,
+                            306783000.0,
+                            331062000.0,
+                            362905000.0,
+                            398511000.0,
+                            422825000.0,
+                            475361000.0,
+                            492123000.0,
+                            505164000.0,
+                            518173000.0,
+                            504639000.0,
+                            547753000.0,
+                            545379000.0,
+                            550847000.0,
+                            561984000.0,
+                            571217000.0,
+                            595519000.0,
+                            610421000.0,
+                            619665000.0,
+                            61952000.0,
+                            658846000.0,
+                            658679000.0,
+                            664158000.0,
+                            669648000.0,
+                            669481000.0,
+                            669324000.0,
+                            699273000.0,
+                            702859000.0,
+                            704574000.0,
+                            708171000.0,
+                            708014000.0,
+                            709729000.0,
+                            702859000.0,
+                            704574000.0,
+                            708171000.0,
+                            708014000.0,
+                            709729000.0
                           ],
                           "NDemands": [
                             0.0,
@@ -12754,101 +12698,53 @@
                             0.0,
                             0.0
                           ],
-                          "CanopyWidths": [
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0
-                          ],
-                          "TreeLeafAreas": [
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0
+                          "ShadeModifiers": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
                           ],
                           "Name": "TreeProxy",
                           "Children": [],
@@ -12881,28 +12777,10 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Report.Report, Models",
-                              "VariableNames": [
-                                "[Clock].Today",
-                                "[Zone].Area",
-                                "Parent.Distance as Distance",
-                                "Radn",
-                                "[LocalMicroClimate].Radn",
-                                "[TreeProxy].Shade"
-                              ],
-                              "EventNames": [
-                                ""
-                              ],
-                              "Name": "Report",
                               "Children": [],
                               "IncludeInDocumentation": false,
                               "Enabled": true,
@@ -12923,21 +12801,12 @@
                                 "[Soil].SoilWater.SW[2] as SW35cm",
                                 "[Soil].SoilWater.SW[3] as SW55cm",
                                 "[Soil].SoilWater.SW[4] as SW75cm",
-                                "[TreeProxy].Urel",
                                 "[TreeProxy].H",
                                 "[TreeProxy].SWDemand",
                                 "[TreeProxy].heightToday",
-                                "[MicroClimate].peta",
-                                "[MicroClimate].petr",
                                 "[Soil].SoilWater.Eo",
                                 "[TreeProxy].WaterStress",
-                                "[Soil].SoilWater.SW[1] as SurfaceSW",
-                                "[Maize].Leaf.Fw",
-                                "[Maize].Leaf.Photosynthesis.FVPD",
-                                "[Maize].Leaf.Photosynthesis.FT",
-                                "[Maize].Leaf.Fn",
-                                "[Maize].Root.Depth",
-                                "[Maize].Grain.Live.Wt as GrainWt"
+                                "[Soil].SoilWater.SW[1] as SurfaceSW"
                               ],
                               "EventNames": [
                                 "[Clock].DoReport"
@@ -12965,7 +12834,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 100.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": false,
@@ -13016,6 +12885,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -13471,6 +13342,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -13574,12 +13446,9 @@
                                 "[Soil].SoilWater.SW[2] as SW35cm",
                                 "[Soil].SoilWater.SW[3] as SW55cm",
                                 "[Soil].SoilWater.SW[4] as SW75cm",
-                                "[TreeProxy].Urel",
                                 "[TreeProxy].H",
                                 "[TreeProxy].SWDemand",
                                 "[TreeProxy].heightToday",
-                                "[MicroClimate].peta",
-                                "[MicroClimate].petr",
                                 "[Soil].SoilWater.Eo",
                                 "[TreeProxy].WaterStress",
                                 "[Soil].SoilWater.SW[1] as SurfaceSW",
@@ -13616,7 +13485,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 100.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": false,
@@ -13687,6 +13556,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -14142,6 +14013,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -14245,12 +14117,9 @@
                                 "[Soil].SoilWater.SW[2] as SW35cm",
                                 "[Soil].SoilWater.SW[3] as SW55cm",
                                 "[Soil].SoilWater.SW[4] as SW75cm",
-                                "[TreeProxy].Urel",
                                 "[TreeProxy].H",
                                 "[TreeProxy].SWDemand",
                                 "[TreeProxy].heightToday",
-                                "[MicroClimate].peta",
-                                "[MicroClimate].petr",
                                 "[Soil].SoilWater.Eo",
                                 "[TreeProxy].WaterStress",
                                 "[Soil].SoilWater.SW[1] as SurfaceSW",
@@ -14287,7 +14156,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 100.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": false,
@@ -14358,6 +14227,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -14813,6 +14684,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -14916,12 +14788,9 @@
                                 "[Soil].SoilWater.SW[2] as SW35cm",
                                 "[Soil].SoilWater.SW[3] as SW55cm",
                                 "[Soil].SoilWater.SW[4] as SW75cm",
-                                "[TreeProxy].Urel",
                                 "[TreeProxy].H",
                                 "[TreeProxy].SWDemand",
                                 "[TreeProxy].heightToday",
-                                "[MicroClimate].peta",
-                                "[MicroClimate].petr",
                                 "[Soil].SoilWater.Eo",
                                 "[TreeProxy].WaterStress",
                                 "[Soil].SoilWater.SW[1] as SurfaceSW",
@@ -14958,7 +14827,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 100.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": false,
@@ -15029,6 +14898,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -15484,6 +15355,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -15587,12 +15459,9 @@
                                 "[Soil].SoilWater.SW[2] as SW35cm",
                                 "[Soil].SoilWater.SW[3] as SW55cm",
                                 "[Soil].SoilWater.SW[4] as SW75cm",
-                                "[TreeProxy].Urel",
                                 "[TreeProxy].H",
                                 "[TreeProxy].SWDemand",
                                 "[TreeProxy].heightToday",
-                                "[MicroClimate].peta",
-                                "[MicroClimate].petr",
                                 "[Soil].SoilWater.Eo",
                                 "[TreeProxy].WaterStress",
                                 "[Soil].SoilWater.SW[1] as SurfaceSW",
@@ -15629,7 +15498,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 100.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": false,
@@ -15700,6 +15569,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -16155,6 +16026,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -16258,12 +16130,9 @@
                                 "[Soil].SoilWater.SW[2] as SW35cm",
                                 "[Soil].SoilWater.SW[3] as SW55cm",
                                 "[Soil].SoilWater.SW[4] as SW75cm",
-                                "[TreeProxy].Urel",
                                 "[TreeProxy].H",
                                 "[TreeProxy].SWDemand",
                                 "[TreeProxy].heightToday",
-                                "[MicroClimate].peta",
-                                "[MicroClimate].petr",
                                 "[Soil].SoilWater.Eo",
                                 "[TreeProxy].WaterStress",
                                 "[Soil].SoilWater.SW[1] as SurfaceSW",
@@ -16300,7 +16169,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 100.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": false,
@@ -16371,6 +16240,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -16826,6 +16697,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -16929,12 +16801,9 @@
                                 "[Soil].SoilWater.SW[2] as SW35cm",
                                 "[Soil].SoilWater.SW[3] as SW55cm",
                                 "[Soil].SoilWater.SW[4] as SW75cm",
-                                "[TreeProxy].Urel",
                                 "[TreeProxy].H",
                                 "[TreeProxy].SWDemand",
                                 "[TreeProxy].heightToday",
-                                "[MicroClimate].peta",
-                                "[MicroClimate].petr",
                                 "[Soil].SoilWater.Eo",
                                 "[TreeProxy].WaterStress",
                                 "[Soil].SoilWater.SW[1] as SurfaceSW",
@@ -16971,7 +16840,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 100.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": false,
@@ -17042,6 +16911,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -17497,6 +17368,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -17600,12 +17472,9 @@
                                 "[Soil].SoilWater.SW[2] as SW35cm",
                                 "[Soil].SoilWater.SW[3] as SW55cm",
                                 "[Soil].SoilWater.SW[4] as SW75cm",
-                                "[TreeProxy].Urel",
                                 "[TreeProxy].H",
                                 "[TreeProxy].SWDemand",
                                 "[TreeProxy].heightToday",
-                                "[MicroClimate].peta",
-                                "[MicroClimate].petr",
                                 "[Soil].SoilWater.Eo",
                                 "[TreeProxy].WaterStress",
                                 "[Soil].SoilWater.SW[1] as SurfaceSW",
@@ -17642,7 +17511,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 100.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": false,
@@ -17713,6 +17582,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -18168,6 +18039,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -18271,12 +18143,9 @@
                                 "[Soil].SoilWater.SW[2] as SW35cm",
                                 "[Soil].SoilWater.SW[3] as SW55cm",
                                 "[Soil].SoilWater.SW[4] as SW75cm",
-                                "[TreeProxy].Urel",
                                 "[TreeProxy].H",
                                 "[TreeProxy].SWDemand",
                                 "[TreeProxy].heightToday",
-                                "[MicroClimate].peta",
-                                "[MicroClimate].petr",
                                 "[Soil].SoilWater.Eo",
                                 "[TreeProxy].WaterStress",
                                 "[Soil].SoilWater.SW[1] as SurfaceSW",
@@ -18341,7 +18210,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 100.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": false,
@@ -18412,6 +18281,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -19528,9 +19399,7 @@
                           "$type": "Models.Report.Report, Models",
                           "VariableNames": [
                             "[Clock].Today",
-                            "[TreeProxy].heightToday",
-                            "[TreeProxy].LeafAreaToday",
-                            "[TreeProxy].CanopyWidthToday"
+                            "[TreeProxy].heightToday"
                           ],
                           "EventNames": [
                             "[Clock].DoReport"
@@ -19836,91 +19705,48 @@
                             0.1,
                             0.1
                           ],
-                          "CanopyWidths": [
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0
-                          ],
-                          "TreeLeafAreas": [
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0,
-                            2.0
+                          "ShadeModifiers": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
                           ],
                           "Name": "TreeProxy",
                           "Children": [],
@@ -19953,28 +19779,10 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Report.Report, Models",
-                              "VariableNames": [
-                                "[Clock].Today",
-                                "[Zone].Area",
-                                "Parent.Distance as Distance",
-                                "Radn",
-                                "[LocalMicroClimate].Radn",
-                                "[TreeProxy].Shade"
-                              ],
-                              "EventNames": [
-                                ""
-                              ],
-                              "Name": "Report",
                               "Children": [],
                               "IncludeInDocumentation": false,
                               "Enabled": true,
@@ -19994,21 +19802,12 @@
                                 "[Soil].SoilWater.SW[2] as SW35cm",
                                 "[Soil].SoilWater.SW[3] as SW55cm",
                                 "[Soil].SoilWater.SW[4] as SW75cm",
-                                "[TreeProxy].Urel",
                                 "[TreeProxy].H",
                                 "[TreeProxy].SWDemand",
                                 "[TreeProxy].heightToday",
-                                "[MicroClimate].peta",
-                                "[MicroClimate].petr",
                                 "[Soil].SoilWater.Eo",
                                 "[TreeProxy].WaterStress",
-                                "[Soil].SoilWater.SW[1] as SurfaceSW",
-                                "[Maize].Leaf.Fw",
-                                "[Maize].Leaf.Photosynthesis.FVPD",
-                                "[Maize].Leaf.Photosynthesis.FT",
-                                "[Maize].Leaf.Fn",
-                                "[Maize].Root.Depth",
-                                "[Maize].Grain.Live.Wt as GrainWt"
+                                "[Soil].SoilWater.SW[1] as SurfaceSW"
                               ],
                               "EventNames": [
                                 "[Clock].DoReport"
@@ -20036,7 +19835,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 100.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": false,
@@ -20087,6 +19886,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -20542,6 +20343,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -20638,12 +20440,9 @@
                                 "[Soil].SoilWater.SW[2] as SW35cm",
                                 "[Soil].SoilWater.SW[3] as SW55cm",
                                 "[Soil].SoilWater.SW[4] as SW75cm",
-                                "[TreeProxy].Urel",
                                 "[TreeProxy].H",
                                 "[TreeProxy].SWDemand",
                                 "[TreeProxy].heightToday",
-                                "[MicroClimate].peta",
-                                "[MicroClimate].petr",
                                 "[Soil].SoilWater.Eo",
                                 "[TreeProxy].WaterStress",
                                 "[Soil].SoilWater.SW[1] as SurfaceSW",
@@ -20680,7 +20479,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 100.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": false,
@@ -20751,6 +20550,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -21206,6 +21007,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -21302,12 +21104,9 @@
                                 "[Soil].SoilWater.SW[2] as SW35cm",
                                 "[Soil].SoilWater.SW[3] as SW55cm",
                                 "[Soil].SoilWater.SW[4] as SW75cm",
-                                "[TreeProxy].Urel",
                                 "[TreeProxy].H",
                                 "[TreeProxy].SWDemand",
                                 "[TreeProxy].heightToday",
-                                "[MicroClimate].peta",
-                                "[MicroClimate].petr",
                                 "[Soil].SoilWater.Eo",
                                 "[TreeProxy].WaterStress",
                                 "[Soil].SoilWater.SW[1] as SurfaceSW",
@@ -21344,7 +21143,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 100.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": false,
@@ -21415,6 +21214,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -21870,6 +21671,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -21966,12 +21768,9 @@
                                 "[Soil].SoilWater.SW[2] as SW35cm",
                                 "[Soil].SoilWater.SW[3] as SW55cm",
                                 "[Soil].SoilWater.SW[4] as SW75cm",
-                                "[TreeProxy].Urel",
                                 "[TreeProxy].H",
                                 "[TreeProxy].SWDemand",
                                 "[TreeProxy].heightToday",
-                                "[MicroClimate].peta",
-                                "[MicroClimate].petr",
                                 "[Soil].SoilWater.Eo",
                                 "[TreeProxy].WaterStress",
                                 "[Soil].SoilWater.SW[1] as SurfaceSW",
@@ -22008,7 +21807,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 100.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": false,
@@ -22079,6 +21878,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -22534,6 +22335,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -22630,12 +22432,9 @@
                                 "[Soil].SoilWater.SW[2] as SW35cm",
                                 "[Soil].SoilWater.SW[3] as SW55cm",
                                 "[Soil].SoilWater.SW[4] as SW75cm",
-                                "[TreeProxy].Urel",
                                 "[TreeProxy].H",
                                 "[TreeProxy].SWDemand",
                                 "[TreeProxy].heightToday",
-                                "[MicroClimate].peta",
-                                "[MicroClimate].petr",
                                 "[Soil].SoilWater.Eo",
                                 "[TreeProxy].WaterStress",
                                 "[Soil].SoilWater.SW[1] as SurfaceSW",
@@ -22672,7 +22471,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 100.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": false,
@@ -22743,6 +22542,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -23198,6 +22999,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -23294,12 +23096,9 @@
                                 "[Soil].SoilWater.SW[2] as SW35cm",
                                 "[Soil].SoilWater.SW[3] as SW55cm",
                                 "[Soil].SoilWater.SW[4] as SW75cm",
-                                "[TreeProxy].Urel",
                                 "[TreeProxy].H",
                                 "[TreeProxy].SWDemand",
                                 "[TreeProxy].heightToday",
-                                "[MicroClimate].peta",
-                                "[MicroClimate].petr",
                                 "[Soil].SoilWater.Eo",
                                 "[TreeProxy].WaterStress",
                                 "[Soil].SoilWater.SW[1] as SurfaceSW",
@@ -23336,7 +23135,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 100.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": false,
@@ -23407,6 +23206,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -23862,6 +23663,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -23958,12 +23760,9 @@
                                 "[Soil].SoilWater.SW[2] as SW35cm",
                                 "[Soil].SoilWater.SW[3] as SW55cm",
                                 "[Soil].SoilWater.SW[4] as SW75cm",
-                                "[TreeProxy].Urel",
                                 "[TreeProxy].H",
                                 "[TreeProxy].SWDemand",
                                 "[TreeProxy].heightToday",
-                                "[MicroClimate].peta",
-                                "[MicroClimate].petr",
                                 "[Soil].SoilWater.Eo",
                                 "[TreeProxy].WaterStress",
                                 "[Soil].SoilWater.SW[1] as SurfaceSW",
@@ -24000,7 +23799,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 100.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": false,
@@ -24071,6 +23870,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -24526,6 +24327,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -24622,12 +24424,9 @@
                                 "[Soil].SoilWater.SW[2] as SW35cm",
                                 "[Soil].SoilWater.SW[3] as SW55cm",
                                 "[Soil].SoilWater.SW[4] as SW75cm",
-                                "[TreeProxy].Urel",
                                 "[TreeProxy].H",
                                 "[TreeProxy].SWDemand",
                                 "[TreeProxy].heightToday",
-                                "[MicroClimate].peta",
-                                "[MicroClimate].petr",
                                 "[Soil].SoilWater.Eo",
                                 "[TreeProxy].WaterStress",
                                 "[Soil].SoilWater.SW[1] as SurfaceSW",
@@ -24664,7 +24463,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 100.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": false,
@@ -24735,6 +24534,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -25190,6 +24991,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -25286,12 +25088,9 @@
                                 "[Soil].SoilWater.SW[2] as SW35cm",
                                 "[Soil].SoilWater.SW[3] as SW55cm",
                                 "[Soil].SoilWater.SW[4] as SW75cm",
-                                "[TreeProxy].Urel",
                                 "[TreeProxy].H",
                                 "[TreeProxy].SWDemand",
                                 "[TreeProxy].heightToday",
-                                "[MicroClimate].peta",
-                                "[MicroClimate].petr",
                                 "[Soil].SoilWater.Eo",
                                 "[TreeProxy].WaterStress",
                                 "[Soil].SoilWater.SW[1] as SurfaceSW",
@@ -25328,7 +25127,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 100.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": false,
@@ -25399,6 +25198,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.35,
                                     1.35,
@@ -26815,25 +26616,18 @@
                     10000.0
                   ],
                   "NDemands": [
-                    0.1,
-                    0.1,
-                    0.1,
-                    0.1,
-                    0.1
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
                   ],
-                  "CanopyWidths": [
-                    0.1,
-                    0.1,
-                    0.1,
-                    0.1,
-                    0.1
-                  ],
-                  "TreeLeafAreas": [
-                    0.1,
-                    0.1,
-                    0.1,
-                    0.1,
-                    0.1
+                  "ShadeModifiers": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
                   ],
                   "Name": "TreeProxy",
                   "Children": [],
@@ -26866,28 +26660,10 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Report.Report, Models",
-                      "VariableNames": [
-                        "[Clock].Today",
-                        "[Zone].Area",
-                        "Parent.Distance as Distance",
-                        "Radn",
-                        "[LocalMicroClimate].Radn",
-                        "[TreeProxy].Shade"
-                      ],
-                      "EventNames": [
-                        ""
-                      ],
-                      "Name": "Report",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
@@ -26903,12 +26679,9 @@
                         "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4N",
                         "sum([TreeProxy].WaterUptake) as WaterUptake",
                         "sum([Soil].SoilWater.SWmm[1:4]) as SW90cm",
-                        "[TreeProxy].Urel",
                         "[TreeProxy].H",
                         "[TreeProxy].SWDemand",
                         "[TreeProxy].heightToday",
-                        "[MicroClimate].peta",
-                        "[MicroClimate].petr",
                         "[Soil].SoilWater.Eo",
                         "[TreeProxy].WaterStress",
                         "[Soil].SoilWater.SW[1] as SurfaceSW"
@@ -26939,7 +26712,7 @@
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 100.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,
@@ -26986,6 +26759,8 @@
                             400.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.4,
                             1.36,
@@ -27383,6 +27158,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
@@ -27401,7 +27177,7 @@
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
                         "[Wheat].Grain.Size as GrainSize",
-                        "[Wheat].Grain.GrainNo as GrainNumber"
+                        "[Wheat].Grain.Number as GrainNumber"
                       ],
                       "EventNames": [
                         "[Wheat].Harvesting"
@@ -27422,13 +27198,9 @@
                         "sum([Soil].SoilWater.SWmm[1:4]) as SW90cm",
                         "sum([Soil].SoilNitrogen.NO3.kgha) as TotalNO3N",
                         "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4N",
-                        "[MicroClimate].peta",
-                        "[MicroClimate].petr",
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
-                        "[Soil].SoilWater.SW[1] as SurfaceSW",
-                        "[Wheat].EP",
-                        "[Wheat].WaterDemand"
+                        "[Soil].SoilWater.SW[1] as SurfaceSW"
                       ],
                       "EventNames": [
                         "[Clock].DoReport"
@@ -27456,7 +27228,7 @@
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 100.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,
@@ -27514,6 +27286,8 @@
                             400.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.4,
                             1.36,
@@ -27940,6 +27714,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
@@ -27958,7 +27733,7 @@
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
                         "[Wheat].Grain.Size as GrainSize",
-                        "[Wheat].Grain.GrainNo as GrainNumber"
+                        "[Wheat].Grain.Number as GrainNumber"
                       ],
                       "EventNames": [
                         "[Wheat].Harvesting"
@@ -27979,13 +27754,9 @@
                         "sum([Soil].SoilWater.SWmm[1:4]) as SW90cm",
                         "sum([Soil].SoilNitrogen.NO3.kgha) as TotalNO3N",
                         "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4N",
-                        "[MicroClimate].peta",
-                        "[MicroClimate].petr",
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
-                        "[Soil].SoilWater.SW[1] as SurfaceSW",
-                        "[Wheat].EP",
-                        "[Wheat].WaterDemand"
+                        "[Soil].SoilWater.SW[1] as SurfaceSW"
                       ],
                       "EventNames": [
                         "[Clock].DoReport"
@@ -28013,7 +27784,7 @@
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 100.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,
@@ -28071,6 +27842,8 @@
                             400.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.4,
                             1.36,
@@ -28497,6 +28270,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
@@ -28515,7 +28289,7 @@
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
                         "[Wheat].Grain.Size as GrainSize",
-                        "[Wheat].Grain.GrainNo as GrainNumber"
+                        "[Wheat].Grain.Number as GrainNumber"
                       ],
                       "EventNames": [
                         "[Wheat].Harvesting"
@@ -28536,13 +28310,9 @@
                         "sum([Soil].SoilWater.SWmm[1:4]) as SW90cm",
                         "sum([Soil].SoilNitrogen.NO3.kgha) as TotalNO3N",
                         "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4N",
-                        "[MicroClimate].peta",
-                        "[MicroClimate].petr",
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
-                        "[Soil].SoilWater.SW[1] as SurfaceSW",
-                        "[Wheat].EP",
-                        "[Wheat].WaterDemand"
+                        "[Soil].SoilWater.SW[1] as SurfaceSW"
                       ],
                       "EventNames": [
                         "[Clock].DoReport"
@@ -28570,7 +28340,7 @@
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 100.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,
@@ -28628,6 +28398,8 @@
                             400.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.4,
                             1.36,
@@ -29054,6 +28826,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
@@ -29072,7 +28845,7 @@
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
                         "[Wheat].Grain.Size as GrainSize",
-                        "[Wheat].Grain.GrainNo as GrainNumber"
+                        "[Wheat].Grain.Number as GrainNumber"
                       ],
                       "EventNames": [
                         "[Wheat].Harvesting"
@@ -29093,13 +28866,9 @@
                         "sum([Soil].SoilWater.SWmm[1:4]) as SW90cm",
                         "sum([Soil].SoilNitrogen.NO3.kgha) as TotalNO3N",
                         "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4N",
-                        "[MicroClimate].peta",
-                        "[MicroClimate].petr",
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
-                        "[Soil].SoilWater.SW[1] as SurfaceSW",
-                        "[Wheat].EP",
-                        "[Wheat].WaterDemand"
+                        "[Soil].SoilWater.SW[1] as SurfaceSW"
                       ],
                       "EventNames": [
                         "[Clock].DoReport"
@@ -29127,7 +28896,7 @@
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 100.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,
@@ -29185,6 +28954,8 @@
                             400.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.4,
                             1.36,
@@ -29611,6 +29382,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
@@ -29629,7 +29401,7 @@
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
                         "[Wheat].Grain.Size as GrainSize",
-                        "[Wheat].Grain.GrainNo as GrainNumber"
+                        "[Wheat].Grain.Number as GrainNumber"
                       ],
                       "EventNames": [
                         "[Wheat].Harvesting"
@@ -29650,13 +29422,9 @@
                         "sum([Soil].SoilWater.SWmm[1:4]) as SW90cm",
                         "sum([Soil].SoilNitrogen.NO3.kgha) as TotalNO3N",
                         "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4N",
-                        "[MicroClimate].peta",
-                        "[MicroClimate].petr",
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
-                        "[Soil].SoilWater.SW[1] as SurfaceSW",
-                        "[Wheat].EP",
-                        "[Wheat].WaterDemand"
+                        "[Soil].SoilWater.SW[1] as SurfaceSW"
                       ],
                       "EventNames": [
                         "[Clock].DoReport"
@@ -29684,7 +29452,7 @@
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 100.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,
@@ -29742,6 +29510,8 @@
                             400.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.4,
                             1.36,
@@ -30168,6 +29938,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
@@ -30186,7 +29957,7 @@
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
                         "[Wheat].Grain.Size as GrainSize",
-                        "[Wheat].Grain.GrainNo as GrainNumber"
+                        "[Wheat].Grain.Number as GrainNumber"
                       ],
                       "EventNames": [
                         "[Wheat].Harvesting"
@@ -30207,13 +29978,9 @@
                         "sum([Soil].SoilWater.SWmm[1:4]) as SW90cm",
                         "sum([Soil].SoilNitrogen.NO3.kgha) as TotalNO3N",
                         "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4N",
-                        "[MicroClimate].peta",
-                        "[MicroClimate].petr",
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
-                        "[Soil].SoilWater.SW[1] as SurfaceSW",
-                        "[Wheat].EP",
-                        "[Wheat].WaterDemand"
+                        "[Soil].SoilWater.SW[1] as SurfaceSW"
                       ],
                       "EventNames": [
                         "[Clock].DoReport"
@@ -30241,7 +30008,7 @@
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 100.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,
@@ -30299,6 +30066,8 @@
                             400.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.4,
                             1.36,
@@ -30725,6 +30494,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
@@ -30743,7 +30513,7 @@
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
                         "[Wheat].Grain.Size as GrainSize",
-                        "[Wheat].Grain.GrainNo as GrainNumber"
+                        "[Wheat].Grain.Number as GrainNumber"
                       ],
                       "EventNames": [
                         "[Wheat].Harvesting"
@@ -30764,13 +30534,9 @@
                         "sum([Soil].SoilWater.SWmm[1:4]) as SW90cm",
                         "sum([Soil].SoilNitrogen.NO3.kgha) as TotalNO3N",
                         "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4N",
-                        "[MicroClimate].peta",
-                        "[MicroClimate].petr",
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
-                        "[Soil].SoilWater.SW[1] as SurfaceSW",
-                        "[Wheat].EP",
-                        "[Wheat].WaterDemand"
+                        "[Soil].SoilWater.SW[1] as SurfaceSW"
                       ],
                       "EventNames": [
                         "[Clock].DoReport"
@@ -30798,7 +30564,7 @@
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 100.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,
@@ -30856,6 +30622,8 @@
                             400.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.4,
                             1.36,
@@ -31282,6 +31050,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
@@ -31300,7 +31069,7 @@
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
                         "[Wheat].Grain.Size as GrainSize",
-                        "[Wheat].Grain.GrainNo as GrainNumber"
+                        "[Wheat].Grain.Number as GrainNumber"
                       ],
                       "EventNames": [
                         "[Wheat].Harvesting"
@@ -31321,13 +31090,9 @@
                         "sum([Soil].SoilWater.SWmm[1:4]) as SW90cm",
                         "sum([Soil].SoilNitrogen.NO3.kgha) as TotalNO3N",
                         "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4N",
-                        "[MicroClimate].peta",
-                        "[MicroClimate].petr",
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
-                        "[Soil].SoilWater.SW[1] as SurfaceSW",
-                        "[Wheat].EP",
-                        "[Wheat].WaterDemand"
+                        "[Soil].SoilWater.SW[1] as SurfaceSW"
                       ],
                       "EventNames": [
                         "[Clock].DoReport"
@@ -31355,7 +31120,7 @@
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 100.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,
@@ -31413,6 +31178,8 @@
                             400.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.4,
                             1.36,
@@ -31839,6 +31606,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
@@ -31857,7 +31625,7 @@
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
                         "[Wheat].Grain.Size as GrainSize",
-                        "[Wheat].Grain.GrainNo as GrainNumber"
+                        "[Wheat].Grain.Number as GrainNumber"
                       ],
                       "EventNames": [
                         "[Wheat].Harvesting"
@@ -31878,13 +31646,9 @@
                         "sum([Soil].SoilWater.SWmm[1:4]) as SW90cm",
                         "sum([Soil].SoilNitrogen.NO3.kgha) as TotalNO3N",
                         "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4N",
-                        "[MicroClimate].peta",
-                        "[MicroClimate].petr",
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
-                        "[Soil].SoilWater.SW[1] as SurfaceSW",
-                        "[Wheat].EP",
-                        "[Wheat].WaterDemand"
+                        "[Soil].SoilWater.SW[1] as SurfaceSW"
                       ],
                       "EventNames": [
                         "[Clock].DoReport"
@@ -31912,7 +31676,7 @@
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 100.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,
@@ -31970,6 +31734,8 @@
                             400.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.4,
                             1.36,
@@ -32396,6 +32162,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
@@ -32414,7 +32181,7 @@
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
                         "[Wheat].Grain.Size as GrainSize",
-                        "[Wheat].Grain.GrainNo as GrainNumber"
+                        "[Wheat].Grain.Number as GrainNumber"
                       ],
                       "EventNames": [
                         "[Wheat].Harvesting"
@@ -32435,13 +32202,9 @@
                         "sum([Soil].SoilWater.SWmm[1:4]) as SW90cm",
                         "sum([Soil].SoilNitrogen.NO3.kgha) as TotalNO3N",
                         "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4N",
-                        "[MicroClimate].peta",
-                        "[MicroClimate].petr",
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
-                        "[Soil].SoilWater.SW[1] as SurfaceSW",
-                        "[Wheat].EP",
-                        "[Wheat].WaterDemand"
+                        "[Soil].SoilWater.SW[1] as SurfaceSW"
                       ],
                       "EventNames": [
                         "[Clock].DoReport"
@@ -32469,7 +32232,7 @@
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 100.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,
@@ -32527,6 +32290,8 @@
                             400.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.4,
                             1.36,
@@ -32953,6 +32718,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
@@ -32971,7 +32737,7 @@
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
                         "[Wheat].Grain.Size as GrainSize",
-                        "[Wheat].Grain.GrainNo as GrainNumber"
+                        "[Wheat].Grain.Number as GrainNumber"
                       ],
                       "EventNames": [
                         "[Wheat].Harvesting"
@@ -32992,13 +32758,9 @@
                         "sum([Soil].SoilWater.SWmm[1:4]) as SW90cm",
                         "sum([Soil].SoilNitrogen.NO3.kgha) as TotalNO3N",
                         "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4N",
-                        "[MicroClimate].peta",
-                        "[MicroClimate].petr",
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
-                        "[Soil].SoilWater.SW[1] as SurfaceSW",
-                        "[Wheat].EP",
-                        "[Wheat].WaterDemand"
+                        "[Soil].SoilWater.SW[1] as SurfaceSW"
                       ],
                       "EventNames": [
                         "[Clock].DoReport"
@@ -33026,7 +32788,7 @@
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 100.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,
@@ -33084,6 +32846,8 @@
                             400.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.4,
                             1.36,
@@ -33512,7 +33276,7 @@
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
                         "[Wheat].Grain.Size as GrainSize",
-                        "[Wheat].Grain.GrainNo as GrainNumber"
+                        "[Wheat].Grain.Number as GrainNumber"
                       ],
                       "EventNames": [
                         "[Wheat].Harvesting"
@@ -33533,13 +33297,9 @@
                         "sum([Soil].SoilWater.SWmm[1:4]) as SW90cm",
                         "sum([Soil].SoilNitrogen.NO3.kgha) as TotalNO3N",
                         "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4N",
-                        "[MicroClimate].peta",
-                        "[MicroClimate].petr",
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
-                        "[Soil].SoilWater.SW[1] as SurfaceSW",
-                        "[Wheat].EP",
-                        "[Wheat].WaterDemand"
+                        "[Soil].SoilWater.SW[1] as SurfaceSW"
                       ],
                       "EventNames": [
                         "[Clock].DoReport"
@@ -33567,7 +33327,7 @@
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 100.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,
@@ -33593,6 +33353,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
@@ -33641,6 +33402,8 @@
                             400.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.4,
                             1.36,
