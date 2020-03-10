@@ -7,6 +7,7 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Xml;
@@ -17,7 +18,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 83; } }
+        public static int LatestVersion { get { return 84; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1685,6 +1686,28 @@
             // 2. ExpressionFunction
             foreach (JObject function in JsonUtilities.ChildrenRecursively(root, "ExpressionFunction"))
                 function["Expression"] = function["Expression"].ToString().Replace(".Value()", "");
+        }
+
+        /// <summary>
+        /// Add a field to the Checkpoints table.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion84(JObject root, string fileName)
+        {
+            SQLite db = new SQLite();
+            var dbFileName = Path.ChangeExtension(fileName, ".db");
+            if (File.Exists(dbFileName))
+            {
+                db.OpenDatabase(dbFileName, false);
+                if (db.TableExists("_Checkpoints"))
+                {
+                    if (!db.GetTableColumns("_Checkpoints").Contains("OnGraphs"))
+                    {
+                        db.AddColumn("_Checkpoints", "OnGraphs", "integer");
+                    }
+                }
+            }
         }
 
         /// <summary>

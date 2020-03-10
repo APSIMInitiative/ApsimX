@@ -25,7 +25,6 @@
         /// <summary>Constructor for a series</summary>
         public Series()
         {
-            this.Checkpoint = "Current";
             this.XAxis = Axis.AxisType.Bottom;
         }
 
@@ -78,9 +77,6 @@
 
         /// <summary>Gets or sets the line thickness</summary>
         public LineThicknessType LineThickness { get; set; }
-
-        /// <summary>Gets or sets the checkpoint to get data from.</summary>
-        public string Checkpoint { get; set; }
 
         /// <summary>Gets or sets the name of the table to get data from.</summary>
         public string TableName { get; set; }
@@ -140,48 +136,63 @@
             // If this series doesn't have a table name then it must be getting its data from other models.
             if (TableName == null)
             {
-                seriesDefinitions.Add(new SeriesDefinition(this));
+                seriesDefinitions.Add(new SeriesDefinition(this, "Current"));
                 seriesDefinitions[0].ReadData(reader, simulationDescriptions);
             }
             else
             {
-                // TableName exists so get the vary by fields and the simulation descriptions.
-                var varyByFieldNames = GetVaryByFieldNames();
-                simulationDescriptions = FindSimulationDescriptions();
-                if (simulationFilter == null)
-                    simulationFilter = simulationDescriptions.Select(d => d.Name).Distinct().ToList();
-
-                var whereClauseForInScopeData = CreateInScopeWhereClause(reader, simulationFilter);
-
-                if (varyByFieldNames.Count == 0 || varyByFieldNames.Contains("Graph series"))
+                int checkpointNumber = 0;
+                foreach (var checkpointName in reader.CheckpointNames)
                 {
-                    // No vary by fields. Just plot the whole table in a single
-                    // series with data that is in scope.
-                    seriesDefinitions = new List<SeriesDefinition>() { new SeriesDefinition(this, whereClauseForInScopeData, Filter) };
+                    if (checkpointName == "Current" || reader.GetCheckpointShowOnGraphs(checkpointName))
+                    {
+                        // TableName exists so get the vary by fields and the simulation descriptions.
+                        var varyByFieldNames = GetVaryByFieldNames();
+                        simulationDescriptions = FindSimulationDescriptions();
+                        if (simulationFilter == null)
+                            simulationFilter = simulationDescriptions.Select(d => d.Name).Distinct().ToList();
+
+                        var whereClauseForInScopeData = CreateInScopeWhereClause(reader, simulationFilter);
+
+                        if (varyByFieldNames.Count == 0 || varyByFieldNames.Contains("Graph series"))
+                        {
+                            // No vary by fields. Just plot the whole table in a single
+                            // series with data that is in scope.
+                            seriesDefinitions = new List<SeriesDefinition>() { new SeriesDefinition(this, checkpointName, whereClauseForInScopeData, Filter) };
+                        }
+                        else
+                        {
+                            // There are one or more vary by fields. Create series definitions
+                            // for each combination of vary by fields.
+                            seriesDefinitions = CreateDefinitionsUsingVaryBy(varyByFieldNames, simulationDescriptions, whereClauseForInScopeData);
+                        }
+
+                        // If we don't have any definitions then see if the vary by fields
+                        // refer to string fields in the database table.
+                        if (seriesDefinitions.Count == 0)
+                            seriesDefinitions = CreateDefinitionsFromFieldInTable(reader, varyByFieldNames, whereClauseForInScopeData);
+
+                        // Change colour of definitions if checkpoint.
+                        foreach (var seriesDefinition in seriesDefinitions)
+                        {
+                            seriesDefinition.Colour = ColourUtilities.ChangeColorBrightness(seriesDefinition.Colour, checkpointNumber asdf)
+                        }
+
+                        // Paint all definitions. 
+                        var painter = GetSeriesPainter();
+                        foreach (var seriesDefinition in seriesDefinitions)
+                            painter.Paint(seriesDefinition);
+
+                        // Tell each series definition to read its data.
+                        foreach (var seriesDefinition in seriesDefinitions)
+                            seriesDefinition.ReadData(reader, simulationDescriptions);
+
+                        // Remove series that have no data.
+                        seriesDefinitions.RemoveAll(d => !MathUtilities.ValuesInArray(d.X) || !MathUtilities.ValuesInArray(d.Y));
+                        
+                        checkpointNumber++;
+                    }
                 }
-                else
-                {
-                    // There are one or more vary by fields. Create series definitions
-                    // for each combination of vary by fields.
-                    seriesDefinitions = CreateDefinitionsUsingVaryBy(varyByFieldNames, simulationDescriptions, whereClauseForInScopeData);
-                }
-
-                // If we don't have any definitions then see if the vary by fields
-                // refer to string fields in the database table.
-                if (seriesDefinitions.Count == 0)
-                    seriesDefinitions = CreateDefinitionsFromFieldInTable(reader, varyByFieldNames, whereClauseForInScopeData);
-
-                // Paint all definitions. 
-                var painter = GetSeriesPainter();
-                foreach (var seriesDefinition in seriesDefinitions)
-                    painter.Paint(seriesDefinition);
-
-                // Tell each series definition to read its data.
-                foreach (var seriesDefinition in seriesDefinitions)
-                    seriesDefinition.ReadData(reader, simulationDescriptions);
-
-                // Remove series that have no data.
-                seriesDefinitions.RemoveAll(d => !MathUtilities.ValuesInArray(d.X) || !MathUtilities.ValuesInArray(d.Y));
             }
 
             // We might have child models that want to add to our series definitions e.g. regression.
@@ -238,7 +249,7 @@
                 for (int i = 0; i < combination.Count; i++)
                     descriptors.Add(new SimulationDescription.Descriptor(varyByThatExistInTable[i], 
                                                                          combination[i]));
-                definitions.Add(new SeriesDefinition(this, whereClauseForInScopeData, Filter, descriptors));
+                definitions.Add(new SeriesDefinition(this, "Current", whereClauseForInScopeData, Filter, descriptors));
             }
 
             return definitions;
@@ -301,6 +312,7 @@
                 {
                     // Create the definition.
                     definitions.Add(new SeriesDefinition(this,
+                                                         "Current",
                                                          whereClauseForInScopeData,
                                                          Filter,
                                                          descriptorsForDefinition));

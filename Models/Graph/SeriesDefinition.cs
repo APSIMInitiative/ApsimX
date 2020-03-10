@@ -27,19 +27,25 @@
         /// <summary>User specified filter.</summary>
         private string userFilter;
 
+        /// <summary>The name of the checkpoint to show.</summary>
+        private string checkpointName;
+
         /// <summary>Constructor</summary>
         /// <param name="series">The series instance to initialise from.</param>
+        /// <param name="checkpoint">The checkpoint name.</param>
         /// <param name="whereClauseForInScopeData">A SQL where clause to specify data that is in scope.</param>
         /// <param name="filter">User specified filter.</param>
         /// <param name="descriptors">The descriptors for this series definition.</param>
         /// <param name="customTitle">The title to use for the definition.</param>
-        public SeriesDefinition(Series series, 
+        public SeriesDefinition(Series series,
+                                string checkpoint,
                                 string whereClauseForInScopeData = null,
                                 string filter = null,
                                 List<SimulationDescription.Descriptor> descriptors = null,
                                 string customTitle = null)
         {
             this.series = series;
+            checkpointName = checkpoint;
             Colour = series.Colour;
             Line = series.Line;
             Marker = series.Marker;
@@ -71,8 +77,8 @@
                 Title = customTitle;
 
 
-            if (series.Checkpoint != "Current")
-                Title += " (" + series.Checkpoint + ")";
+            if (checkpointName != "Current")
+                Title += " (" + checkpointName + ")";
 
             scopeFilter = whereClauseForInScopeData;
             userFilter = filter;
@@ -312,12 +318,12 @@
 
                 // Checkpoints don't exist in observed files so don't pass a checkpoint name to 
                 // GetData in this situation.
-                string checkpointName = null;
-                if (reader.ColumnNames(series.TableName).Contains("CheckpointID"))
-                    checkpointName = series.Checkpoint;
+                string localCheckpointName = checkpointName;
+                if (!reader.ColumnNames(series.TableName).Contains("CheckpointID"))
+                    localCheckpointName = null;
 
                 // Go get the data.
-                Data = reader.GetData(series.TableName, checkpointName, fieldNames: fieldsToRead.Distinct(), filter: filter);
+                Data = reader.GetData(series.TableName, localCheckpointName, fieldNames: fieldsToRead.Distinct(), filter: filter);
 
                 // Get the units for our x and y variables.
                 XFieldUnits = reader.Units(series.TableName, XFieldName);
