@@ -1116,6 +1116,19 @@ namespace Models.Aqua
 
             }
 
+        [EventSubscribe("Commencing")]
+        private void OnCommencing(object sender, EventArgs e)
+        {
+            consumedFoodPP = new Food();
+            intakeFoodPP = new Food();
+            digestedFoodPP = new Food();
+
+            consumedFood = new Food();
+            intakeFood = new Food();
+            digestedFood = new Food();
+            wastedFood = new Food();
+        }
+
 
         #endregion
 

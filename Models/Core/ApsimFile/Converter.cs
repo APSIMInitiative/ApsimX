@@ -1611,12 +1611,43 @@
             }
         }
 
+
+        /// <summary>
+        /// Seperate life cycle process class into Growth, Transfer and Mortality classes.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion81(JObject root, string fileName)
+        {
+            // Rename ExcelInput.FileName to FileNames and make it an array.
+            foreach (JObject LSP in JsonUtilities.ChildrenRecursively(root, "LifeStageProcess"))
+            {
+                if (int.Parse(LSP["ProcessAction"].ToString()) == 0) //Process is Transfer
+                {
+                    LSP["$type"] = "Models.LifeCycle.LifeStageTransfer, Models";
+                }
+                else if (int.Parse(LSP["ProcessAction"].ToString()) == 1) //Process is PhysiologicalGrowth
+                {
+                    LSP["$type"] = "Models.LifeCycle.LifeStageGrowth, Models";
+                }
+                else if (int.Parse(LSP["ProcessAction"].ToString()) == 2) //Process is Mortality
+                {
+                    LSP["$type"] = "Models.LifeCycle.LifeStageMortality, Models";
+                }
+            }
+
+            foreach (JObject LSRP in JsonUtilities.ChildrenRecursively(root, "LifeStageReproductionProcess"))
+            {
+                LSRP["$type"] = "Models.LifeCycle.LifeStageReproduction, Models";
+            }
+        }
+
         /// <summary>
         /// Add Critical N Conc (if not existing) to all Root Objects by copying the maximum N conc
         /// </summary>
         /// <param name="root"></param>
         /// <param name="fileName"></param>
-        private static void UpgradeToVersion81(JObject root, string fileName)
+        private static void UpgradeToVersion82(JObject root, string fileName)
         {
 
             foreach (JObject r in JsonUtilities.ChildrenRecursively(root, "Root"))

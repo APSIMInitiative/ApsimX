@@ -475,6 +475,8 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\LifeStageGrowth.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\LifeStageMortality.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RainfallShuffler.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourAERelationship.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RandomNumberGenerator.png" />
@@ -548,7 +550,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\HIReproductiveOrgan.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SwimSoluteParameters.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Swim3.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\LifeStageImmigrationProcess.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\LifeStageImmigration.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Morris.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Plantain.png" />
     <EmbeddedResource Include="Resources\TwoStageEvaporation.png" />
@@ -649,8 +651,8 @@
     <EmbeddedResource Include="Resources\TreeViewImages\Flow.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\NutrientPool.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Nutrient.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\LifeStageReproductionProcess.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\LifeStageProcess.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\LifeStageReproduction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\LifeStageTransfer.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LifeCycle.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LifeStage.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\EventNamesOnGraph.png" />
