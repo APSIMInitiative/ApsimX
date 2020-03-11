@@ -1,6 +1,10 @@
 ﻿namespace UserInterface.Presenters
 {
     using System;
+    using Models;
+    using Models.Core;
+    using Utility;
+    using Interfaces;
     using Views;
 
     /// <summary>
@@ -55,11 +59,19 @@
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">The params</param>
-        private void OnBrowseButtonClicked(object sender, OpenDialogArgs e)
+        private void OnBrowseButtonClicked(object sender, EventArgs e)
         {
             try
             {
-                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(input, "FullFileName", e.FileName));
+                IFileDialog dialog = new FileDialog()
+                {
+                    Prompt = "Choose files",
+                    Action = FileDialog.FileActionType.Open,
+                    FileType = "CSV Files (*.csv) | *.csv | All Files (*.*) | *.*",
+                };
+                string[] files = dialog.GetFiles();
+                if (files != null && files.Length > 0)
+                    explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(input, "FullFileNames", files));
             }
             catch (Exception err)
             {
@@ -73,16 +85,11 @@
         /// <param name="changedModel">The model object</param>
         private void OnModelChanged(object changedModel)
         {
-            this.view.FileName = this.input.FullFileName;
-            this.view.GridView.DataSource = this.input.GetTable();
-            if (this.view.GridView.DataSource == null)
-            {
-                this.view.WarningText = this.input.ErrorMessage;
-            }
-            else
-            {
-                this.view.WarningText = string.Empty;
-            }
+            if (input.FullFileNames != null)
+                view.FileName = string.Join(", ", input.FullFileNames);
+
+            if (input.FullFileNames != null && input.FullFileNames.Length > 0)
+            this.view.GridView.DataSource = this.input.GetTable(input.FullFileNames[0]);
         }
     }
 }
