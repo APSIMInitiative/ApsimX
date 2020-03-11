@@ -140,7 +140,7 @@
         /// <param name="e">Event arguments</param>
         private void OnDeleteButtonClicked(object sender, EventArgs e)
         {
-            string checkpointName = checkpointList.SelectedNode;
+            var checkpointName = checkpointList.SelectedNode.Replace(".Checkpoints.", "");
             if (explorerPresenter.MainPresenter.AskQuestion("Are you sure you want to delete checkpoint " + checkpointName + "?") == QuestionResponseEnum.Yes)
             {
                 if (checkpointName != null)

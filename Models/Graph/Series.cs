@@ -136,7 +136,7 @@
             // If this series doesn't have a table name then it must be getting its data from other models.
             if (TableName == null)
             {
-                seriesDefinitions.Add(new SeriesDefinition(this, "Current"));
+                seriesDefinitions.Add(new SeriesDefinition(this, "Current", colModifier:0));
                 seriesDefinitions[0].ReadData(reader, simulationDescriptions);
             }
             else
@@ -146,6 +146,8 @@
                 {
                     if (checkpointName == "Current" || reader.GetCheckpointShowOnGraphs(checkpointName))
                     {
+                        var colourModifier = checkpointNumber * 0.7;
+
                         // TableName exists so get the vary by fields and the simulation descriptions.
                         var varyByFieldNames = GetVaryByFieldNames();
                         simulationDescriptions = FindSimulationDescriptions();
@@ -158,25 +160,19 @@
                         {
                             // No vary by fields. Just plot the whole table in a single
                             // series with data that is in scope.
-                            seriesDefinitions = new List<SeriesDefinition>() { new SeriesDefinition(this, checkpointName, whereClauseForInScopeData, Filter) };
+                            seriesDefinitions = new List<SeriesDefinition>() { new SeriesDefinition(this, checkpointName, colourModifier, whereClauseForInScopeData, Filter) };
                         }
                         else
                         {
                             // There are one or more vary by fields. Create series definitions
                             // for each combination of vary by fields.
-                            seriesDefinitions = CreateDefinitionsUsingVaryBy(varyByFieldNames, simulationDescriptions, whereClauseForInScopeData);
-                        }
+                            seriesDefinitions = CreateDefinitionsUsingVaryBy(varyByFieldNames, checkpointName, colourModifier, simulationDescriptions, whereClauseForInScopeData);
+                        }   
 
                         // If we don't have any definitions then see if the vary by fields
                         // refer to string fields in the database table.
                         if (seriesDefinitions.Count == 0)
-                            seriesDefinitions = CreateDefinitionsFromFieldInTable(reader, varyByFieldNames, whereClauseForInScopeData);
-
-                        // Change colour of definitions if checkpoint.
-                        foreach (var seriesDefinition in seriesDefinitions)
-                        {
-                            seriesDefinition.Colour = ColourUtilities.ChangeColorBrightness(seriesDefinition.Colour, checkpointNumber asdf)
-                        }
+                            seriesDefinitions = CreateDefinitionsFromFieldInTable(reader, checkpointName, colourModifier, varyByFieldNames, whereClauseForInScopeData);
 
                         // Paint all definitions. 
                         var painter = GetSeriesPainter();
@@ -189,7 +185,9 @@
 
                         // Remove series that have no data.
                         seriesDefinitions.RemoveAll(d => !MathUtilities.ValuesInArray(d.X) || !MathUtilities.ValuesInArray(d.Y));
-                        
+
+                        definitions.AddRange(seriesDefinitions);
+
                         checkpointNumber++;
                     }
                 }
@@ -197,9 +195,7 @@
 
             // We might have child models that want to add to our series definitions e.g. regression.
             foreach (IGraphable series in Apsim.Children(this, typeof(IGraphable)))
-                series.GetSeriesToPutOnGraph(reader, seriesDefinitions);
-
-            definitions.AddRange(seriesDefinitions);
+                series.GetSeriesToPutOnGraph(reader, definitions);
         }
 
         /// <summary>Called by the graph presenter to get a list of all annotations to put on the graph.</summary>
@@ -223,9 +219,11 @@
         /// Create series definitions assuming the vary by fields are text fields in the table.
         /// </summary>
         /// <param name="reader">The reader to read from.</param>
+        /// <param name="checkpointName">The checkpoint name.</param>
+        /// <param name="colourModifier">Checkpoint colour modifer.</param>
         /// <param name="varyByFieldNames">The vary by fields.</param>
         /// <param name="whereClauseForInScopeData">An SQL WHERE clause for rows that are in scope.</param>
-        private List<SeriesDefinition> CreateDefinitionsFromFieldInTable(IStorageReader reader, List<string> varyByFieldNames, string whereClauseForInScopeData)
+        private List<SeriesDefinition> CreateDefinitionsFromFieldInTable(IStorageReader reader, string checkpointName, double colourModifier, List<string> varyByFieldNames, string whereClauseForInScopeData)
         {
             List<SeriesDefinition> definitions = new List<SeriesDefinition>();
 
@@ -249,7 +247,7 @@
                 for (int i = 0; i < combination.Count; i++)
                     descriptors.Add(new SimulationDescription.Descriptor(varyByThatExistInTable[i], 
                                                                          combination[i]));
-                definitions.Add(new SeriesDefinition(this, "Current", whereClauseForInScopeData, Filter, descriptors));
+                definitions.Add(new SeriesDefinition(this, checkpointName, colourModifier, whereClauseForInScopeData, Filter, descriptors));
             }
 
             return definitions;
@@ -283,9 +281,13 @@
         /// Create and return a list of series definitions for each group by field.
         /// </summary>
         /// <param name="varyByFieldNames">The vary by fields</param>
+        /// <param name="checkpointName">Checkpoint name.</param>
+        /// <param name="colourModifier">Checkpoint colour modifier.</param>
         /// <param name="simulationDescriptions">The simulation descriptions that are in scope.</param>
         /// <param name="whereClauseForInScopeData">An SQL WHERE clause for rows that are in scope.</param>
         private List<SeriesDefinition> CreateDefinitionsUsingVaryBy(List<string> varyByFieldNames, 
+                                                                    string checkpointName,
+                                                                    double colourModifier,
                                                                     List<SimulationDescription> simulationDescriptions,
                                                                     string whereClauseForInScopeData)
         {
@@ -312,7 +314,8 @@
                 {
                     // Create the definition.
                     definitions.Add(new SeriesDefinition(this,
-                                                         "Current",
+                                                         checkpointName,
+                                                         colourModifier,
                                                          whereClauseForInScopeData,
                                                          Filter,
                                                          descriptorsForDefinition));

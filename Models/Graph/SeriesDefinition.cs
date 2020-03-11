@@ -28,24 +28,30 @@
         private string userFilter;
 
         /// <summary>The name of the checkpoint to show.</summary>
-        private string checkpointName;
+        public string CheckpointName { get; private set; }
+
+        /// <summary>The 0-1 modifier for colour.</summary>
+        private double colourModifier;
 
         /// <summary>Constructor</summary>
         /// <param name="series">The series instance to initialise from.</param>
         /// <param name="checkpoint">The checkpoint name.</param>
+        /// <param name="colModifier">The 0-1 modifier for colour.</param>
         /// <param name="whereClauseForInScopeData">A SQL where clause to specify data that is in scope.</param>
         /// <param name="filter">User specified filter.</param>
         /// <param name="descriptors">The descriptors for this series definition.</param>
         /// <param name="customTitle">The title to use for the definition.</param>
         public SeriesDefinition(Series series,
                                 string checkpoint,
+                                double colModifier,
                                 string whereClauseForInScopeData = null,
                                 string filter = null,
                                 List<SimulationDescription.Descriptor> descriptors = null,
                                 string customTitle = null)
         {
             this.series = series;
-            checkpointName = checkpoint;
+            CheckpointName = checkpoint;
+            colourModifier = colModifier;
             Colour = series.Colour;
             Line = series.Line;
             Marker = series.Marker;
@@ -77,8 +83,8 @@
                 Title = customTitle;
 
 
-            if (checkpointName != "Current")
-                Title += " (" + checkpointName + ")";
+            if (CheckpointName != "Current")
+                Title += " (" + CheckpointName + ")";
 
             scopeFilter = whereClauseForInScopeData;
             userFilter = filter;
@@ -137,10 +143,16 @@
         {
             get
             {
-                if (series == null) // Can be null for regression lines or 1:1 lines
-                    return MarkerSizeType.Normal;
-                else
-                    return series.MarkerSize;
+                var size = MarkerSizeType.Normal;
+
+                if (series != null) // Can be null for regression lines or 1:1 lines
+                {
+                    if (colourModifier == 0.7)
+                        size = MarkerSizeType.Small;
+                    else if (colourModifier > 0.7)
+                        size = MarkerSizeType.VerySmall;
+                }
+                return size;
             }
         }
 
@@ -227,7 +239,7 @@
         /// <param name="index">The colour index into the colour palette.</param>
         public static void SetColour(SeriesDefinition definition, int index)
         {
-            definition.Colour = ColourUtilities.Colours[index];
+            definition.Colour = ColourUtilities.ChangeColorBrightness(ColourUtilities.Colours[index], definition.colourModifier);
         }
 
         /// <summary>A static setter function for line type from an index</summary>
@@ -318,7 +330,7 @@
 
                 // Checkpoints don't exist in observed files so don't pass a checkpoint name to 
                 // GetData in this situation.
-                string localCheckpointName = checkpointName;
+                string localCheckpointName = CheckpointName;
                 if (!reader.ColumnNames(series.TableName).Contains("CheckpointID"))
                     localCheckpointName = null;
 
