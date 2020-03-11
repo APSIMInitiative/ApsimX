@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 282,
+  "ExplorerWidth": 300,
   "Version": 85,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -10673,7 +10673,7 @@
                         },
                         {
                           "Key": "CultivarName",
-                          "Value": "NSCM_41"
+                          "Value": "Katumani"
                         },
                         {
                           "Key": "SowingDepth",
@@ -17385,7 +17385,19 @@
                   "CumulativeX": true,
                   "Filter": "",
                   "Name": "Pred",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Regression, Models",
+                      "ForEachSeries": true,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
