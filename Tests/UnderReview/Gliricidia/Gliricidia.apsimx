@@ -36,7 +36,7 @@
             }
           ],
           "Name": "CuttingManagement",
-          "IncludeInDocumentation": true,
+          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -100,7 +100,7 @@
           ],
           "Name": "GliricidiaDailyReport",
           "Children": [],
-          "IncludeInDocumentation": true,
+          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -119,7 +119,7 @@
           ],
           "Name": "GlircidiaAnnualOutput",
           "Children": [],
-          "IncludeInDocumentation": true,
+          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -167,7 +167,7 @@
           ],
           "Name": "MaizeDailyReport",
           "Children": [],
-          "IncludeInDocumentation": true,
+          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -207,7 +207,7 @@
           ],
           "Name": "MaizeHarvestReport",
           "Children": [],
-          "IncludeInDocumentation": true,
+          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -236,7 +236,7 @@
                   "Text": "Age is the age of the planting in years.",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -250,7 +250,7 @@
                       "Units": null,
                       "Name": "One",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -260,17 +260,17 @@
                       "Units": null,
                       "Name": "DaysPerYear",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -295,7 +295,7 @@
                   "Proportional": true,
                   "Name": "StageCode",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -310,12 +310,12 @@
                       "Text": "This model uses standard days rather than a thermal time and so a value of 1 is used for each day.",
                       "Name": "Memo",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -325,7 +325,7 @@
                   "End": "Germination",
                   "Name": "Germinating",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -343,12 +343,12 @@
                       "VariableName": "[Phenology].ThermalTime",
                       "Name": "ThermalTime",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -364,7 +364,7 @@
                       "Units": null,
                       "Name": "Progression",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -374,12 +374,12 @@
                       "Units": null,
                       "Name": "Target",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -395,7 +395,7 @@
                       "Units": null,
                       "Name": "Progression",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -405,12 +405,12 @@
                       "Units": null,
                       "Name": "Target",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -426,7 +426,7 @@
                       "Units": null,
                       "Name": "Progression",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -436,12 +436,12 @@
                       "Units": null,
                       "Name": "Target",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -457,17 +457,17 @@
                       "Units": null,
                       "Name": "ThermalTime",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -479,7 +479,7 @@
                   "$type": "Models.PMF.RelativeAllocation, Models",
                   "Name": "NArbitrator",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -487,12 +487,12 @@
                   "$type": "Models.PMF.RelativeAllocation, Models",
                   "Name": "DMArbitrator",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -507,7 +507,7 @@
               "DMDOfStructural": 0.6,
               "Name": "AboveGround",
               "Children": [],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -520,7 +520,7 @@
               "DMDOfStructural": 0.6,
               "Name": "BelowGround",
               "Children": [],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -537,7 +537,7 @@
               "DMDOfStructural": 0.6,
               "Name": "Total",
               "Children": [],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -551,7 +551,7 @@
               "DMDOfStructural": 0.6,
               "Name": "TotalLive",
               "Children": [],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -564,7 +564,7 @@
                   "VariableName": "[Gliricidia].TotalLive.Wt",
                   "Name": "LiveWt",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -573,12 +573,12 @@
                   "VariableName": "[Gliricidia].Population",
                   "Name": "Population",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -592,7 +592,7 @@
               "DMDOfStructural": 0.6,
               "Name": "TotalDead",
               "Children": [],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -621,7 +621,7 @@
                   "Text": "",
                   "Name": "Description",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -635,7 +635,7 @@
                       "Units": "g/plant",
                       "Name": "InitialPlantWt",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -644,12 +644,12 @@
                       "VariableName": "[Plant].Population",
                       "Name": "Population",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -664,12 +664,12 @@
                       "Text": "This model assumes that all senesced leaves detach immediately.",
                       "Name": "Memo",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -688,12 +688,12 @@
                           "Text": "Value of 1.06 g/MJ for above ground growth from [HarringtonAndFownes1995] is increased to account for biomass partitioning to below-ground organs.\r\n",
                           "Name": "Memo",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -711,7 +711,7 @@
                       "VariableName": "[Leaf].RadIntTot",
                       "Name": "InterceptedRadiation",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -720,7 +720,7 @@
                       "VariableName": "[Leaf].Fw",
                       "Name": "WaterStressFactor",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -729,12 +729,12 @@
                       "VariableName": "[Leaf].FRGRFunction",
                       "Name": "Frgr",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -762,12 +762,12 @@
                           ],
                           "Name": "XYPairs",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -776,12 +776,12 @@
                       "VariableName": "[Leaf].Fn",
                       "Name": "NitrogenStressFactor",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -796,12 +796,12 @@
                       "Text": "Value is taken from [HarringtonAndFownes1995].",
                       "Name": "Memo",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -815,12 +815,12 @@
                       "Text": "Use same value as determined for live leaves.",
                       "Name": "Memo",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -840,7 +840,7 @@
                       ],
                       "Name": "XYPairs",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -849,12 +849,12 @@
                       "VariableName": "[AboveGround].Wt",
                       "Name": "XValue",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -864,7 +864,7 @@
                   "Units": null,
                   "Name": "MaximumNConc",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -874,7 +874,7 @@
                   "Units": null,
                   "Name": "MinimumNConc",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -884,7 +884,7 @@
                   "Units": null,
                   "Name": "NReallocationFactor",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -894,7 +894,7 @@
                   "Units": null,
                   "Name": "SenescenceRate",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -910,7 +910,7 @@
                       "FractionDeadToResidue": 1.0,
                       "Name": "Harvest",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -922,7 +922,7 @@
                       "FractionDeadToResidue": 1.0,
                       "Name": "Cut",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -934,7 +934,7 @@
                       "FractionDeadToResidue": 1.0,
                       "Name": "Prune",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -946,7 +946,7 @@
                       "FractionDeadToResidue": 0.0,
                       "Name": "Graze",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -958,12 +958,12 @@
                       "FractionDeadToResidue": 0.0,
                       "Name": "Thin",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -978,12 +978,12 @@
                       "Text": "Assume leaves have a life span of approximately half a year.",
                       "Name": "Memo",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -993,7 +993,7 @@
                   "Units": null,
                   "Name": "DMConversionEfficiency",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1008,12 +1008,12 @@
                       "Text": "This model assumes that all leaves detach upon senescence.",
                       "Name": "Memo",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1023,7 +1023,7 @@
                   "Units": null,
                   "Name": "DMRetranslocationFactor",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1033,7 +1033,7 @@
                   "Units": null,
                   "Name": "NRetranslocationFactor",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1043,7 +1043,7 @@
                   "Units": null,
                   "Name": "LeafKillFraction",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1053,7 +1053,7 @@
                   "Units": null,
                   "Name": "MinimumLAI",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1063,7 +1063,7 @@
                   "Units": "m^2/g",
                   "Name": "SpecificLeafAreaFunction",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1073,7 +1073,7 @@
                   "Units": null,
                   "Name": "CarbonConcentration",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1088,12 +1088,12 @@
                       "Text": "Leaf cohorts age according to a simple aggregation of time (ie no accounting for differing rates of development with temperature or stress).",
                       "Name": "Memo",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1115,12 +1115,12 @@
                               "Units": null,
                               "Name": "PartitionFraction",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -1130,12 +1130,12 @@
                           "Units": null,
                           "Name": "StructuralFraction",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1145,7 +1145,7 @@
                       "Units": null,
                       "Name": "Metabolic",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1163,7 +1163,7 @@
                               "Units": null,
                               "Name": "One",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -1172,22 +1172,22 @@
                               "VariableName": "[Leaf].DMDemands.Structural.StructuralFraction",
                               "Name": "StructuralFraction",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1204,7 +1204,7 @@
                           "VariableName": "[Leaf].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -1213,12 +1213,12 @@
                           "VariableName": "[Leaf].potentialDMAllocation.Structural",
                           "Name": "PotentialDMAllocation",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1235,7 +1235,7 @@
                               "VariableName": "[Leaf].criticalNConc",
                               "Name": "CritNconc",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -1244,12 +1244,12 @@
                               "VariableName": "[Leaf].minimumNconc",
                               "Name": "MinNconc",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -1258,12 +1258,12 @@
                           "VariableName": "[Leaf].potentialDMAllocation.Structural",
                           "Name": "PotentialDMAllocation",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1276,7 +1276,7 @@
                           "VariableName": "[Leaf].MaximumNConc",
                           "Name": "MaxNconc",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -1286,17 +1286,17 @@
                           "Units": null,
                           "Name": "NitrogenDemandSwitch",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1337,7 +1337,7 @@
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1359,7 +1359,7 @@
                   "End": "Old",
                   "Name": "NitrogenDemandSwitch",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1369,7 +1369,7 @@
                   "Units": null,
                   "Name": "RootFrontVelocity",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1379,7 +1379,7 @@
                   "Units": null,
                   "Name": "SenescenceRate",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1389,7 +1389,7 @@
                   "Units": null,
                   "Name": "MaximumNConc",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1399,7 +1399,7 @@
                   "Units": null,
                   "Name": "MinimumNConc",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1409,7 +1409,7 @@
                   "Units": null,
                   "Name": "MaxDailyNUptake",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1419,7 +1419,7 @@
                   "Units": null,
                   "Name": "MaximumRootDepth",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1434,12 +1434,12 @@
                       "Text": "This model does not account for any change in potential water uptake with plant development.",
                       "Name": "Memo",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1454,12 +1454,12 @@
                       "Text": "This model does not account for any change in potential NO3 uptake with plant development.",
                       "Name": "Memo",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1474,12 +1474,12 @@
                       "Text": "This model does not account for any change in potential NH4 uptake with plant development.",
                       "Name": "Memo",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1499,7 +1499,7 @@
                       ],
                       "Name": "XYPairs",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1508,12 +1508,12 @@
                       "VariableName": "[Root].RWC",
                       "Name": "XValue",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1523,7 +1523,7 @@
                   "Units": "g/plant",
                   "Name": "InitialDM",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1533,7 +1533,7 @@
                   "Units": "m/g",
                   "Name": "SpecificRootLength",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1549,7 +1549,7 @@
                       "FractionDeadToResidue": 0.0,
                       "Name": "Harvest",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1561,7 +1561,7 @@
                       "FractionDeadToResidue": 0.0,
                       "Name": "Cut",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1573,7 +1573,7 @@
                       "FractionDeadToResidue": 0.0,
                       "Name": "Prune",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1585,7 +1585,7 @@
                       "FractionDeadToResidue": 0.0,
                       "Name": "Graze",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1597,12 +1597,12 @@
                       "FractionDeadToResidue": 0.0,
                       "Name": "Thin",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1612,7 +1612,7 @@
                   "Units": null,
                   "Name": "DMConversionEfficiency",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1622,7 +1622,7 @@
                   "Units": null,
                   "Name": "MaintenanceRespirationFunction",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1632,7 +1632,7 @@
                   "Units": null,
                   "Name": "RemobilisationCost",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1642,7 +1642,7 @@
                   "Units": null,
                   "Name": "CarbonConcentration",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1664,12 +1664,12 @@
                               "Units": null,
                               "Name": "PartitionFraction",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -1679,12 +1679,12 @@
                           "Units": "g/g",
                           "Name": "StructuralFraction",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1694,7 +1694,7 @@
                       "Units": null,
                       "Name": "Metabolic",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1712,7 +1712,7 @@
                               "Units": null,
                               "Name": "One",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -1721,22 +1721,22 @@
                               "VariableName": "[Root].DMDemands.Structural.StructuralFraction",
                               "Name": "StructuralFraction",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1753,7 +1753,7 @@
                           "VariableName": "[Root].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -1762,12 +1762,12 @@
                           "VariableName": "[Root].potentialDMAllocation.Structural",
                           "Name": "PotentialDMAllocation",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1784,7 +1784,7 @@
                               "VariableName": "[Root].criticalNConc",
                               "Name": "CritNconc",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -1793,12 +1793,12 @@
                               "VariableName": "[Root].minimumNconc",
                               "Name": "MinNconc",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -1807,12 +1807,12 @@
                           "VariableName": "[Root].potentialDMAllocation.Structural",
                           "Name": "PotentialDMAllocation",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1825,7 +1825,7 @@
                           "VariableName": "[Root].nitrogenDemandSwitch",
                           "Name": "NitrogenDemandSwitch",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -1834,17 +1834,17 @@
                           "VariableName": "[Root].maximumNconc",
                           "Name": "MaxNconc",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1853,12 +1853,12 @@
                   "VariableName": "[Root].MinimumNConc",
                   "Name": "CriticalNConc",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1879,7 +1879,7 @@
                   "Units": null,
                   "Name": "NReallocationFactor",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1889,7 +1889,7 @@
                   "Units": null,
                   "Name": "NRetranslocationFactor",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1899,7 +1899,7 @@
                   "End": "Old",
                   "Name": "NitrogenDemandSwitch",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1909,7 +1909,7 @@
                   "Units": null,
                   "Name": "DMRetranslocationFactor",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1919,7 +1919,7 @@
                   "Units": "/d",
                   "Name": "SenescenceRate",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1934,12 +1934,12 @@
                       "Text": "Value taken from [Thomasetal1991].",
                       "Name": "Memo",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1949,7 +1949,7 @@
                   "Units": null,
                   "Name": "MinimumNConc",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1959,7 +1959,7 @@
                   "Units": "g/m^2",
                   "Name": "InitialWtFunction",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1969,7 +1969,7 @@
                   "Units": "/d",
                   "Name": "DetachmentRateFunction",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1985,7 +1985,7 @@
                       "FractionDeadToResidue": 0.7,
                       "Name": "Harvest",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1997,7 +1997,7 @@
                       "FractionDeadToResidue": 0.0,
                       "Name": "Cut",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2009,7 +2009,7 @@
                       "FractionDeadToResidue": 0.0,
                       "Name": "Prune",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2021,7 +2021,7 @@
                       "FractionDeadToResidue": 0.0,
                       "Name": "Graze",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2033,12 +2033,12 @@
                       "FractionDeadToResidue": 0.0,
                       "Name": "Thin",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2048,7 +2048,7 @@
                   "Units": "0-1",
                   "Name": "MaintenanceRespirationFunction",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2058,7 +2058,7 @@
                   "Units": "0-1",
                   "Name": "DMConversionEfficiency",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2068,7 +2068,7 @@
                   "Units": null,
                   "Name": "DMReallocationFactor",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2077,7 +2077,7 @@
                   "VariableName": "[Stem].MinimumNConc",
                   "Name": "CriticalNConc",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2087,7 +2087,7 @@
                   "Units": null,
                   "Name": "RemobilisationCost",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2097,7 +2097,7 @@
                   "Units": null,
                   "Name": "CarbonConcentration",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2120,7 +2120,7 @@
                               "VariableName": "[AboveGround].Wt",
                               "Name": "XValue",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -2129,12 +2129,12 @@
                               "VariableName": "[Stem].Live.Wt",
                               "Name": "YValue",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -2144,12 +2144,12 @@
                           "Units": "g/g",
                           "Name": "StructuralFraction",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2159,7 +2159,7 @@
                       "Units": null,
                       "Name": "Metabolic",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2177,7 +2177,7 @@
                               "Units": null,
                               "Name": "One",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -2186,22 +2186,22 @@
                               "VariableName": "[Stem].DMDemands.Structural.StructuralFraction",
                               "Name": "StructuralFraction",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2218,7 +2218,7 @@
                           "VariableName": "[Stem].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -2227,12 +2227,12 @@
                           "VariableName": "[Stem].potentialDMAllocation.Structural",
                           "Name": "PotentialDMAllocation",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2249,7 +2249,7 @@
                               "VariableName": "[Stem].criticalNConc",
                               "Name": "CritNconc",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -2258,12 +2258,12 @@
                               "VariableName": "[Stem].minimumNconc",
                               "Name": "MinNconc",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -2272,12 +2272,12 @@
                           "VariableName": "[Stem].potentialDMAllocation.Structural",
                           "Name": "PotentialDMAllocation",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2290,7 +2290,7 @@
                           "VariableName": "[Stem].nitrogenDemandSwitch",
                           "Name": "NitrogenDemandSwitch",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -2299,17 +2299,17 @@
                           "VariableName": "[Stem].maximumNconc",
                           "Name": "MaxNconc",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2317,12 +2317,12 @@
                   "$type": "Models.PMF.RetranslocateNonStructural, Models",
                   "Name": "RetranslocateNitrogen",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2340,7 +2340,7 @@
                   "Text": "This model calculated the N supply from biological N fixation by nodules within the plant root system.",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2355,12 +2355,12 @@
                       "Text": "",
                       "Name": "Memo",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2375,12 +2375,12 @@
                       "Text": "",
                       "Name": "Memo",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2395,12 +2395,12 @@
                       "Text": "",
                       "Name": "Memo",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2415,12 +2415,12 @@
                       "Text": "\r\n",
                       "Name": "Memo",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2430,7 +2430,7 @@
                   "Units": null,
                   "Name": "NReallocationFactor",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2445,12 +2445,12 @@
                       "Text": "",
                       "Name": "Memo",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2466,7 +2466,7 @@
                       "FractionDeadToResidue": 0.0,
                       "Name": "Harvest",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2478,7 +2478,7 @@
                       "FractionDeadToResidue": 0.0,
                       "Name": "Cut",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2490,7 +2490,7 @@
                       "FractionDeadToResidue": 0.0,
                       "Name": "Prune",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2502,12 +2502,12 @@
                       "FractionDeadToResidue": 0.0,
                       "Name": "Graze",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2517,7 +2517,7 @@
                   "Units": "g/m^2",
                   "Name": "InitialWtFunction",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2527,7 +2527,7 @@
                   "Units": "/d",
                   "Name": "DetachmentRateFunction",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2537,7 +2537,7 @@
                   "Units": "0-1",
                   "Name": "MaintenanceRespirationFunction",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2547,7 +2547,7 @@
                   "Units": "0-1",
                   "Name": "DMConversionEfficiency",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2557,7 +2557,7 @@
                   "Units": "g/m^2/d",
                   "Name": "FixationRate",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2567,7 +2567,7 @@
                   "Units": null,
                   "Name": "NRetranslocationFactor",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2577,7 +2577,7 @@
                   "Units": null,
                   "Name": "DMReallocationFactor",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2587,7 +2587,7 @@
                   "Units": null,
                   "Name": "DMRetranslocationFactor",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2596,7 +2596,7 @@
                   "VariableName": "[Nodule].MinimumNConc",
                   "Name": "CriticalNConc",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2606,7 +2606,7 @@
                   "Units": null,
                   "Name": "RemobilisationCost",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2616,7 +2616,7 @@
                   "Units": null,
                   "Name": "CarbonConcentration",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2643,17 +2643,17 @@
                                   "Text": "",
                                   "Name": "Memo",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -2663,12 +2663,12 @@
                           "Units": "g/g",
                           "Name": "StructuralFraction",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2678,7 +2678,7 @@
                       "Units": null,
                       "Name": "Metabolic",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2696,7 +2696,7 @@
                               "Units": null,
                               "Name": "One",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -2705,22 +2705,22 @@
                               "VariableName": "[Nodule].DMDemands.Structural.StructuralFraction",
                               "Name": "StructuralFraction",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2737,7 +2737,7 @@
                           "VariableName": "[Nodule].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -2746,12 +2746,12 @@
                           "VariableName": "[Nodule].potentialDMAllocation.Structural",
                           "Name": "PotentialDMAllocation",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2768,7 +2768,7 @@
                               "VariableName": "[Nodule].criticalNConc",
                               "Name": "CritNconc",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -2777,12 +2777,12 @@
                               "VariableName": "[Nodule].minimumNconc",
                               "Name": "MinNconc",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -2791,12 +2791,12 @@
                           "VariableName": "[Nodule].potentialDMAllocation.Structural",
                           "Name": "PotentialDMAllocation",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2809,7 +2809,7 @@
                           "VariableName": "[Nodule].nitrogenDemandSwitch",
                           "Name": "NitrogenDemandSwitch",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -2818,22 +2818,22 @@
                           "VariableName": "[Nodule].maximumNconc",
                           "Name": "MaxNconc",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2844,7 +2844,7 @@
               ],
               "Name": "Gliricidia",
               "Children": [],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2855,17 +2855,17 @@
               ],
               "Name": "GliricidiaYoung",
               "Children": [],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
+          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         }
       ],
-      "IncludeInDocumentation": true,
+      "IncludeInDocumentation": false,
       "Enabled": true,
       "ReadOnly": false
     },
@@ -2975,7 +2975,7 @@
           "Center": {
             "$type": "Models.Map+Coordinate, Models",
             "Latitude": 31.653381399664,
-            "Longitude": -69.2578125
+            "Longitude": -69.257812500000014
           },
           "Zoom": 2.0,
           "Name": "Map",
@@ -9834,14 +9834,14 @@
                               "KL": [
                                 0.05,
                                 0.05,
-                                0.05,
-                                0.05,
-                                0.05,
                                 0.04,
                                 0.03,
                                 0.02,
                                 0.02,
-                                0.02,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
                                 0.0,
                                 0.0
                               ],
