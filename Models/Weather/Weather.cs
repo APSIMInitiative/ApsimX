@@ -656,14 +656,14 @@
             this.ProcessMonthlyTAVAMP(out tav, out amp);
 
             if (this.reader.Constant("tav") == null)
-                this.reader.AddConstant("tav", tav.ToString(), string.Empty, string.Empty); // add a new constant
+                this.reader.AddConstant("tav", tav.ToString(CultureInfo.InvariantCulture), string.Empty, string.Empty); // add a new constant
             else
-                this.reader.SetConstant("tav", tav.ToString());
+                this.reader.SetConstant("tav", tav.ToString(CultureInfo.InvariantCulture));
  
             if (this.reader.Constant("amp") == null)
-                this.reader.AddConstant("amp", amp.ToString(), string.Empty, string.Empty); // add a new constant
+                this.reader.AddConstant("amp", amp.ToString(CultureInfo.InvariantCulture), string.Empty, string.Empty); // add a new constant
             else
-                this.reader.SetConstant("amp", amp.ToString());
+                this.reader.SetConstant("amp", amp.ToString(CultureInfo.InvariantCulture));
         }
 
         /// <summary>
