@@ -746,21 +746,20 @@
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.05,
+                  "FixedValue": 0.4,
                   "Units": null,
-                  "Name": "InitialGrainProportion",
+                  "Name": "PotentialHarvestIndex",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0003,
-                  "Units": null,
-                  "Name": "MaximumPotentialGrainSize",
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].GrainFilling.Target",
+                  "Name": "FillingDuration",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -770,103 +769,47 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "Flowering",
-                      "End": "StartGrainFill",
-                      "Name": "InitialPhase",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.DemandFunctions.FillingRateFunction, Models",
-                          "Name": "FillingRateFunction",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Grain].NumberFunction",
-                              "Name": "NumberFunction",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].FloweringToGrainFilling.Target",
-                              "Name": "FillingDuration",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].ThermalTime",
-                              "Name": "ThermalTime",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "PotentialSizeIncrement",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Grain].InitialGrainProportion",
-                                  "Name": "InitialProportion",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Grain].MaximumPotentialGrainSize",
-                                  "Name": "MaximumSize",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
                       "Start": "StartGrainFill",
                       "End": "EndGrainFill",
-                      "Name": "LinearPhase",
+                      "Name": "GrainFilling",
                       "Children": [
                         {
-                          "$type": "Models.Functions.DemandFunctions.FillingRateFunction, Models",
-                          "Name": "FillingRateFunction",
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "HIGrainDemand",
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Grain].NumberFunction",
-                              "Name": "NumberFunction",
+                              "VariableName": "[AboveGround].Wt",
+                              "Name": "AboveGroundWt",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].GrainFilling.Target",
-                              "Name": "FillingDuration",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
+                              "$type": "Models.Functions.DivideFunction, Models",
+                              "Name": "HarvestIndexIncrease",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Grain].PotentialHarvestIndex",
+                                  "Name": "PotentialHarvestIndex",
+                                  "Children": [],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Grain].FillingDuration",
+                                  "Name": "FillingDuration",
+                                  "Children": [],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -875,269 +818,88 @@
                               "VariableName": "[Phenology].ThermalTime",
                               "Name": "ThermalTime",
                               "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "PotentialSizeIncrement",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.SubtractFunction, Models",
-                                  "Name": "ProportionLinearPhase",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 1.0,
-                                      "Units": null,
-                                      "Name": "One",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Grain].InitialGrainProportion",
-                                      "Name": "InitialProportion",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Grain].MaximumPotentialGrainSize",
-                                  "Name": "MaximumSize",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.008,
-                  "Units": "g/g",
+                  "Units": null,
                   "Name": "MinimumNConc",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.PhaseLookup, Models",
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.013,
+                  "Units": null,
                   "Name": "MaximumNConc",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "Flowering",
-                      "End": "StartGrainFill",
-                      "Name": "InitialPhase",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.05,
-                          "Units": "g/g",
-                          "Name": "InitialNconc",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "StartGrainFill",
-                      "End": "EndGrainFill",
-                      "Name": "LinearPhase",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.013,
-                          "Units": "g/g",
-                          "Name": "FinalNconc",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
+                  "Children": [],
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.12,
-                  "Units": "g/g",
+                  "Units": null,
                   "Name": "WaterContent",
                   "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.PhaseLookup, Models",
-                  "Name": "NFillingRate",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "Flowering",
-                      "End": "EndGrainFill",
-                      "Name": "GrainFilling",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.DemandFunctions.FillingRateFunction, Models",
-                          "Name": "FillingRateFunction",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Grain].NumberFunction",
-                              "Name": "NumberFunction",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.AddFunction, Models",
-                              "Name": "FillingDuration",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].FloweringToGrainFilling.Target",
-                                  "Name": "FloweringToGrainFilling",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].GrainFilling.Target",
-                                  "Name": "GrainFilling",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].ThermalTime",
-                              "Name": "ThermalTime",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "PotentialSizeIncrement",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.025,
-                                  "Units": null,
-                                  "Name": "MaximumFinalNConc",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Grain].MaximumPotentialGrainSize",
-                                  "Name": "MaximumSize",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "NumberFunction",
+                  "Name": "NFillingRate",
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Stem].Live.Wt",
-                      "Name": "StemMass",
+                      "VariableName": "[Grain].MaximumNConc",
+                      "Name": "NConc",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 4000.0,
-                      "Units": "/g",
-                      "Name": "GrainsPerGramStem",
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Grain].DMDemandFunction",
+                      "Name": "DMDemand",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Grain].DMConversionEfficiency",
+                      "Name": "DMConversionEfficiency",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1148,24 +910,12 @@
                     {
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
                       "FractionLiveToRemove": 1.0,
-                      "FractionDeadToRemove": 0.0,
+                      "FractionDeadToRemove": 1.0,
                       "FractionLiveToResidue": 0.0,
                       "FractionDeadToResidue": 0.0,
                       "Name": "Harvest",
                       "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 1.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Cut",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1173,28 +923,40 @@
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
                       "FractionLiveToRemove": 0.0,
                       "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.8,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Prune",
+                      "FractionLiveToResidue": 1.0,
+                      "FractionDeadToResidue": 1.0,
+                      "Name": "Cut",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.6,
+                      "FractionLiveToRemove": 0.0,
                       "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.2,
+                      "FractionLiveToResidue": 0.0,
+                      "FractionDeadToResidue": 0.0,
+                      "Name": "Prune",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                      "FractionLiveToRemove": 0.0,
+                      "FractionDeadToRemove": 0.0,
+                      "FractionLiveToResidue": 0.0,
                       "FractionDeadToResidue": 0.0,
                       "Name": "Graze",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1204,7 +966,7 @@
                   "Units": null,
                   "Name": "DMConversionEfficiency",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1214,7 +976,7 @@
                   "Units": null,
                   "Name": "RemobilisationCost",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1224,12 +986,79 @@
                   "Units": null,
                   "Name": "CarbonConcentration",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.DivideFunction, Models",
+                  "Name": "HarvestIndex",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Grain].Wt",
+                      "Name": "GrainWt",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[AboveGround].Wt",
+                      "Name": "AboveGroundWt",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "MaximumPotentialGrainSize",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This parameter is not used.  Grain growth is calculated from harvest index increase.",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "NumberFunction",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Grain number is not estimated by this model.",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2579,82 +2408,110 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.PhaseLookup, Models",
+                  "$type": "Models.Functions.MaximumFunction, Models",
                   "Name": "SenescenceRate",
                   "Children": [
                     {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "Emergence",
-                      "End": "Flowering",
-                      "Name": "Vegetative",
+                      "$type": "Models.Functions.PhaseLookup, Models",
+                      "Name": "AgeSenescenceRate",
                       "Children": [
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": null,
-                          "Name": "Rate",
-                          "Children": [],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "Flowering",
-                      "End": "Maturity",
-                      "Name": "Reproductive",
-                      "Children": [
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "Leaf senescence rate is calculated to ensure that all leaves are senesced by crop maturity.",
-                          "Name": "Memo",
-                          "Children": [],
+                          "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "Start": "Emergence",
+                          "End": "StartGrainFill",
+                          "Name": "Vegetative",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Rate",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.DivideFunction, Models",
-                          "Name": "Rate",
+                          "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "Start": "StartGrainFill",
+                          "End": "Maturity",
+                          "Name": "Reproductive",
                           "Children": [
                             {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].ThermalTime",
-                              "Name": "TT",
+                              "$type": "Models.Memo, Models",
+                              "Text": "Leaf senescence rate is calculated to ensure that all leaves are senesced by crop maturity.",
+                              "Name": "Memo",
                               "Children": [],
                               "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.SubtractFunction, Models",
-                              "Name": "TTRemaining",
+                              "$type": "Models.Functions.MinimumFunction, Models",
+                              "Name": "Rate",
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.ExpressionFunction, Models",
-                                  "Expression": "[Phenology].FloweringToGrainFilling.Target + [Phenology].GrainFilling.Target + [Phenology].Maturing.Target",
-                                  "Name": "TTRequired",
-                                  "Children": [],
+                                  "$type": "Models.Functions.DivideFunction, Models",
+                                  "Name": "PotentialRate",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Phenology].ThermalTime",
+                                      "Name": "TT",
+                                      "Children": [],
+                                      "IncludeInDocumentation": false,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.SubtractFunction, Models",
+                                      "Name": "TTRemaining",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.ExpressionFunction, Models",
+                                          "Expression": "[Phenology].FloweringToGrainFilling.Target + [Phenology].GrainFilling.Target + [Phenology].Maturing.Target",
+                                          "Name": "TTRequired",
+                                          "Children": [],
+                                          "IncludeInDocumentation": false,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.ExpressionFunction, Models",
+                                          "Expression": "[Phenology].FloweringToGrainFilling.ProgressThroughPhase + [Phenology].GrainFilling.ProgressThroughPhase + [Phenology].Maturing.ProgressThroughPhase",
+                                          "Name": "TTComplete",
+                                          "Children": [],
+                                          "IncludeInDocumentation": false,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": false,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
                                   "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.ExpressionFunction, Models",
-                                  "Expression": "[Phenology].FloweringToGrainFilling.ProgressThroughPhase + [Phenology].GrainFilling.ProgressThroughPhase + [Phenology].Maturing.ProgressThroughPhase",
-                                  "Name": "TTComplete",
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 1.0,
+                                  "Units": null,
+                                  "Name": "One",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -2667,9 +2524,52 @@
                       "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "WaterSenescenceRate",
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "",
+                          "Name": "Memo",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.5,
+                            1.0
+                          ],
+                          "Y": [
+                            0.1,
+                            0.0
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Fw",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -4765,8 +4665,7 @@
                 "[Phenology].PpSensitivity.FixedValue = 1",
                 "[Phenology].FlagLeafToFlowering.Target.FixedValue = 10",
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 50",
-                "[Phenology].GrainFilling.Target.FixedValue = 200",
-                "[Grain].NumberFunction.GrainsPerGramStem.FixedValue = 5000"
+                "[Phenology].GrainFilling.Target.FixedValue = 200"
               ],
               "Name": "Wajera",
               "Children": [
@@ -4896,7 +4795,7 @@
             "[Soil].SoilWater.Drainage",
             "[Soil].SoilWater.Runoff",
             "[Soil].SoilWater.pond",
-            "sum([Soil].SoilWater.SWmm[1:2]) as SW30cm",
+            "sum([Soil].SoilWater.SWmm[1:3]) as SW30cm",
             "sum([Soil].SoilWater.SWmm) as ProfileWater",
             "sum([Soil].SoilNitrogen.NO3.kgha) as ProfileNO3",
             "[Soil].SoilNitrogen.NO3.kgha",
@@ -6623,7 +6522,7 @@
                               ],
                               "SAT": [
                                 0.453,
-                                0.453,
+                                0.45,
                                 0.479,
                                 0.498,
                                 0.498,
@@ -10241,74 +10140,6 @@
                   "LegendOrientation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
-                  "Name": "Tillering",
-                  "Children": [
-                    {
-                      "$type": "Models.Graph.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16776961,
-                      "FactorToVaryColours": "Pop",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "Checkpoint": "Current",
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "Teff.Structure.BranchNumber",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Series1",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "Models.Graph.Axis, Models",
-                      "Type": 3,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": true,
-                      "CrossesAtZero": false
-                    },
-                    {
-                      "$type": "Models.Graph.Axis, Models",
-                      "Type": 0,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    }
-                  ],
-                  "LegendPosition": 1,
-                  "LegendOrientation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
                   "Name": "NodeNo",
                   "Children": [
                     {
@@ -13175,8 +13006,8 @@
                                     0.14,
                                     0.14,
                                     0.22,
-                                    0.22,
-                                    0.22
+                                    0.32,
+                                    0.42
                                   ],
                                   "KL": [
                                     0.1,
@@ -13189,7 +13020,7 @@
                                     1.0,
                                     1.0,
                                     1.0,
-                                    1.0,
+                                    0.5,
                                     0.0
                                   ],
                                   "LLMetadata": null,
@@ -14275,74 +14106,6 @@
                   "LegendOrientation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
-                  "Name": "Tillering",
-                  "Children": [
-                    {
-                      "$type": "Models.Graph.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16776961,
-                      "FactorToVaryColours": "Irrigation",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "Checkpoint": "Current",
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "Teff.Structure.TotalStemPopn",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Series1",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "Models.Graph.Axis, Models",
-                      "Type": 3,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    },
-                    {
-                      "$type": "Models.Graph.Axis, Models",
-                      "Type": 0,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    }
-                  ],
-                  "LegendPosition": 1,
-                  "LegendOrientation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
                   "Name": "LeafDevelopment",
                   "Children": [
                     {
@@ -14430,284 +14193,6 @@
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Dead",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "Models.Graph.Axis, Models",
-                      "Type": 3,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    },
-                    {
-                      "$type": "Models.Graph.Axis, Models",
-                      "Type": 0,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    }
-                  ],
-                  "LegendPosition": 1,
-                  "LegendOrientation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "LeafSizes",
-                  "Children": [
-                    {
-                      "$type": "Models.Graph.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16777216,
-                      "FactorToVaryColours": null,
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "Checkpoint": "Current",
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "Teff.Leaf.CohortArea1:10(1)",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Leaf1",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -1663232,
-                      "FactorToVaryColours": null,
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "Checkpoint": "Current",
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "Teff.Leaf.CohortArea1:10(2)",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Leaf2",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -11094807,
-                      "FactorToVaryColours": null,
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "Checkpoint": "Current",
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "Teff.Leaf.CohortArea1:10(3)",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Leaf3",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16736653,
-                      "FactorToVaryColours": null,
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "Checkpoint": "Current",
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "Teff.Leaf.CohortArea1:10(4)",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Leaf4",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16747854,
-                      "FactorToVaryColours": null,
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "Checkpoint": "Current",
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "Teff.Leaf.CohortArea1:10(5)",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Leaf5",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -2793984,
-                      "FactorToVaryColours": null,
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "Checkpoint": "Current",
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "Teff.Leaf.CohortArea1:10(6)",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Leaf6",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -3376729,
-                      "FactorToVaryColours": null,
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "Checkpoint": "Current",
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "Teff.Leaf.CohortArea1:10(7)",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Leaf7",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -990142,
-                      "FactorToVaryColours": null,
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "Checkpoint": "Current",
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "Teff.Leaf.CohortArea1:10(8)",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Leaf8",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
