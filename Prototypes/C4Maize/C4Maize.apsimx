@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 80,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-05",
+  "Version": 84,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -12,6 +12,7 @@
         {
           "$type": "Models.PMF.Plant, Models",
           "CropType": "Maize",
+          "IsAlive": false,
           "IsEnding": false,
           "DaysAfterEnding": 0,
           "ResourceName": null,
@@ -5565,6 +5566,15 @@
                       "ReadOnly": false
                     }
                   ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Root].MinimumNConc",
+                  "Name": "CriticalNConc",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -15045,6 +15055,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Maize",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Maize",
@@ -22387,6 +22398,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Maize",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Maize",
@@ -23255,6 +23267,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Maize",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Maize",
@@ -24120,6 +24133,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Maize",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Maize",
@@ -24420,8 +24434,8 @@
                               "SAT": [
                                 0.45,
                                 0.5,
-                                0.55,
-                                0.55,
+                                0.547,
+                                0.547,
                                 0.5,
                                 0.46,
                                 0.44,
@@ -24965,6 +24979,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Maize",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Maize",
@@ -25940,6 +25955,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Maize",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Maize",
@@ -26951,6 +26967,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Maize",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Maize",
@@ -41696,6 +41713,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Maize",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Maize",
@@ -51812,6 +51830,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Maize",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Maize",
@@ -52641,6 +52660,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Maize",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Maize",
@@ -54629,6 +54649,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Maize",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Maize",
@@ -55599,6 +55620,7 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Maize",
+                      "IsAlive": false,
                       "IsEnding": false,
                       "DaysAfterEnding": 0,
                       "ResourceName": "Maize",
@@ -56576,6 +56598,7 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Maize",
+                      "IsAlive": false,
                       "IsEnding": false,
                       "DaysAfterEnding": 0,
                       "ResourceName": "Maize",
@@ -57583,6 +57606,7 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Maize",
+                      "IsAlive": false,
                       "IsEnding": false,
                       "DaysAfterEnding": 0,
                       "ResourceName": "Maize",
@@ -58584,6 +58608,7 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Maize",
+                      "IsAlive": false,
                       "IsEnding": false,
                       "DaysAfterEnding": 0,
                       "ResourceName": "Maize",
@@ -59322,6 +59347,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Maize",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Maize",
@@ -62230,6 +62256,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Maize",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Maize",
@@ -63198,6 +63225,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Maize",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Maize",
@@ -63932,6 +63960,7 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Maize",
+                      "IsAlive": false,
                       "IsEnding": false,
                       "DaysAfterEnding": 0,
                       "ResourceName": "Maize",
@@ -64875,7 +64904,9 @@
       "Children": [
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "FileName": "old\\combined.csv",
+          "FileNames": [
+            "old\\combined.csv"
+          ],
           "Name": "OldApsimDaily",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -64884,7 +64915,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "FileName": "obs\\ObsMat1.csv",
+          "FileNames": [
+            "obs\\ObsMat1.csv"
+          ],
           "Name": "Observed",
           "Children": [],
           "IncludeInDocumentation": true,
