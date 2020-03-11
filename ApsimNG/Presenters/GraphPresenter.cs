@@ -331,7 +331,7 @@
                     TextAnnotation textAnnotation = annotations[i] as TextAnnotation;
                     if (textAnnotation.x is double && ((double)textAnnotation.x) == double.MinValue)
                     {
-                        double interval = (largestAxisScale - lowestAxisScale) / 10; // fit 10 annotations on graph.
+                        double interval = (largestAxisScale - lowestAxisScale) / 8; // fit 10 annotations on graph.
 
                         double yPosition = largestAxisScale - (i * interval);
                         graphView.DrawText(

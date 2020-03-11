@@ -23,7 +23,7 @@
         /// <param name="seriesDefinition">The definition to paint.</param>
         public void Paint(SeriesDefinition seriesDefinition)
         {
-            seriesDefinition.Colour = colour;
+            seriesDefinition.Colour = seriesDefinition.Colour;
             seriesDefinition.Line = lineType;
             seriesDefinition.Marker = markerType;
         }
