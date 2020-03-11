@@ -74,9 +74,8 @@
         /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
         double PrecipitationInterception { get; set; }
 
-        /// <summary>Sets the water table.</summary>
-        /// <param name="InitialDepth">The initial depth.</param>
-        void SetWaterTable(double InitialDepth);
+        /// <summary>Water table depth (mm)</summary>
+        double WaterTable { get; set; }
 
         ///<summary>Perform a reset</summary>
         void Reset();

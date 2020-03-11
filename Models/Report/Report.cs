@@ -33,6 +33,9 @@
         [NonSerialized]
         private ReportData dataToWriteToDb = null;
 
+        /// <summary>Has this report instance initialised yet?</summary>
+        private bool haveInitialised = false;
+
         /// <summary>List of strings representing dates to report on.</summary>
         private List<string> dateStringsToReportOn = new List<string>();
 
@@ -82,11 +85,8 @@
         [JsonIgnore]
         public DateTime DayAfterLastOutput { get; set; }
 
-        /// <summary>An event handler to allow us to initialize ourselves.</summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">Event arguments</param>
-        [EventSubscribe("StartOfSimulation")]
-        private void OnStartOfSimulation(object sender, EventArgs e)
+        /// <summary>Initialise.</summary>
+        private void Initialise()
         {
             DayAfterLastOutput = clock.Today;
             dataToWriteToDb = null;
@@ -105,6 +105,8 @@
             // Subscribe to events.
             foreach (string eventName in EventNames)
                 events.Subscribe(eventName, DoOutputEvent);
+
+            haveInitialised = true;
         }
 
         /// <summary>An event handler called at the end of each day.</summary>
@@ -113,6 +115,9 @@
         [EventSubscribe("DoReport")]
         private void OnDoReport(object sender, EventArgs e)
         {
+            if (!haveInitialised)
+                Initialise();
+
             foreach (var dateString in dateStringsToReportOn)
             {
                 if (DateUtilities.DatesAreEqual(dateString, clock.Today))

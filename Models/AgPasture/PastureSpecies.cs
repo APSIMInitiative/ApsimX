@@ -56,10 +56,6 @@
         /// <summary>Occurs when plant is detaching dead tissues, litter.</summary>
         public event BiomassRemovedDelegate BiomassRemoved;
 
-        /// <summary>Invoked for changing soil water due to uptake.</summary>
-        /// <param name="Data">The data about changes in the amount of water for each soil layer</param>
-        public delegate void WaterChangedDelegate(WaterChangedType Data);
-
         #endregion  --------------------------------------------------------------------------------------------------------  --------------------------------------------------------------------------------------------------------
 
         #region ICanopy implementation  ------------------------------------------------------------------------------------

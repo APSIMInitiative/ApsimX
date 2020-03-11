@@ -1758,7 +1758,17 @@
                     manager.SetDeclarations(declarations);
                     manager.Save();
                 }
+
+                if (manager.Replace(" as SoilWater", ""))
+                    manager.Save();
             }
+
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(report, "solute_flow_eff", "SoluteFlowEfficiency");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "solute_flux_eff", "SoluteFluxEfficiency");
+            }
+
         }
 
         /// <summary>

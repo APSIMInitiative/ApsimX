@@ -88,109 +88,10 @@
         [Link(ByName = true, IsOptional = true)]
         ISolute cl = null;
 
-        [Link]
-        Clock clock = null;
-
         /// <summary>Irrigation information.</summary>
         [NonSerialized]
         private IrrigationApplicationType irrigation;
 
-        /// <summary>Amount of water in the soil (mm).</summary>
-        [XmlIgnore]
-        public double[] Water { get; set; }
-
-        /// <summary>Runon (mm).</summary>
-        [XmlIgnore]
-        public double Runon { get; set; }
-
-        /// <summary>The efficiency (0-1) that solutes move down with water.</summary>
-        [XmlIgnore]
-        public double SoluteFluxEfficiency { get; set; } = 1;
-
-        /// <summary>The efficiency (0-1) that solutes move up with water.</summary>
-        [XmlIgnore]
-        public double SoluteFlowEfficiency { get; set; } = 1;
-
-        /// <summary> This is set by Microclimate and is rainfall less that intercepted by the canopy and residue components </summary>
-        [XmlIgnore]
-        public double PotentialInfiltration { get; set; }
-
-        // --- Outputs -------------------------------------------------------------------
-
-        /// <summary>Lateral flow (mm).</summary>
-        [XmlIgnore]
-        public double[] LateralFlow { get; private set; }
-
-        /// <summary>Runoff (mm).</summary>
-        [XmlIgnore]
-        public double Runoff { get; private set; }
-
-        /// <summary>Infiltration (mm).</summary>
-        [XmlIgnore]
-        public double Infiltration { get; private set; }
-
-        /// <summary>Drainage (mm).</summary>
-        [XmlIgnore]
-        public double Drainage { get { if (Flux == null) return 0; else return Flux[Flux.Length - 1]; } }
-
-        /// <summary>Evaporation (mm).</summary>
-        [XmlIgnore]
-        public double Evaporation { get { return evaporationModel.Es; } }
-
-        /// <summary>Water table depth (mm).</summary>
-        [XmlIgnore]
-        public double WaterTableDepth { get { return waterTableModel.Depth; } }
-
-        /// <summary>Flux. Water moving down (mm).</summary>
-        [XmlIgnore]
-        public double[] Flux { get; private set; }
-
-        /// <summary>Flow. Water moving up (mm).</summary>
-        [XmlIgnore]
-        public double[] Flow { get; private set; }
-
-        /// <summary>Gets todays potential runoff (mm).</summary>
-        [XmlIgnore]
-        public double PotentialRunoff
-        {
-            get
-            {
-                double waterForRunoff = PotentialInfiltration;
-
-                if (irrigation != null && irrigation.WillRunoff)
-                    waterForRunoff = waterForRunoff + irrigation.Amount;
-
-                return waterForRunoff;
-            }
-        }
-
-        /// <summary>Provides access to the soil properties.</summary>
-        [XmlIgnore]
-        public Soil Properties { get { return soil; } }
-
-        ///<summary>Gets or sets volumetric soil water content (mm/mm)(</summary>
-        [XmlIgnore]
-        public double[] SW { get { return MathUtilities.Divide(Water, soil.Thickness); } set { Water = MathUtilities.Multiply(value, soil.Thickness); ; } }
-
-        ///<summary>Gets soil water content (mm)</summary>
-        [XmlIgnore]
-        public double[] SWmm { get { return Water; } }
-
-        ///<summary>Gets extractable soil water relative to LL15(mm)</summary>
-        [XmlIgnore]
-        public double[] ESW { get { return MathUtilities.Subtract(Water, soil.LL15mm); } }
-
-        ///<summary>Gets potential evaporation from soil surface (mm)</summary>
-        [XmlIgnore]
-        public double Eos { get { return evaporationModel.Eos; } }
-
-        /// <summary>Gets the actual (realised) soil water evaporation (mm)</summary>
-        [XmlIgnore]
-        public double Es { get { return evaporationModel.Es; } }
-
-        /// <summary>Gets potential evapotranspiration of the whole soil-plant system (mm)</summary>
-        [XmlIgnore]
-        public double Eo { get; set; }
 
         /// <summary>Start date for switch to summer parameters for soil water evaporation (dd-mmm)</summary>
         [Units("dd-mmm")]
@@ -288,10 +189,6 @@
         [Caption("Catchment")]
         [Description("Catchment area for lateral flow calculations")]
         public double CatchmentArea { get; set; } = 10;
-        
-        /// <summary>Soil layer thickness for each layer (mm).</summary>
-        [Units("mm")]
-        public double[] Thickness { get; set; }
 
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
         [XmlIgnore]
@@ -308,6 +205,115 @@
                 Thickness = APSIM.Shared.APSoil.SoilUtilities.ToThickness(value);
             }
         }
+
+        /// <summary>Soil layer thickness for each layer (mm).</summary>
+        [Units("mm")]
+        public double[] Thickness { get; set; }
+
+        /// <summary>Amount of water in the soil (mm).</summary>
+        [XmlIgnore]
+        public double[] Water { get; set; }
+
+        /// <summary>Runon (mm).</summary>
+        [XmlIgnore]
+        public double Runon { get; set; }
+
+        /// <summary>The efficiency (0-1) that solutes move down with water.</summary>
+        [XmlIgnore]
+        public double[] SoluteFluxEfficiency { get; set; }
+
+        /// <summary>The efficiency (0-1) that solutes move up with water.</summary>
+        [XmlIgnore]
+        public double[] SoluteFlowEfficiency { get; set; }
+
+        /// <summary> This is set by Microclimate and is rainfall less that intercepted by the canopy and residue components </summary>
+        [XmlIgnore]
+        public double PotentialInfiltration { get; set; }
+
+        // --- Outputs -------------------------------------------------------------------
+
+        /// <summary>Lateral flow (mm).</summary>
+        [XmlIgnore]
+        public double[] LateralFlow { get { return lateralFlowModel.OutFlow; } }
+
+        /// <summary>Amount of water moving laterally out of the profile (mm)</summary>
+        [XmlIgnore]
+        public double[] LateralOutflow { get { return LateralFlow; } }
+
+        /// <summary>Runoff (mm).</summary>
+        [XmlIgnore]
+        public double Runoff { get; private set; }
+
+        /// <summary>Infiltration (mm).</summary>
+        [XmlIgnore]
+        public double Infiltration { get; private set; }
+
+        /// <summary>Drainage (mm).</summary>
+        [XmlIgnore]
+        public double Drainage { get { if (Flux == null) return 0; else return Flux[Flux.Length - 1]; } }
+
+        /// <summary>Evaporation (mm).</summary>
+        [XmlIgnore]
+        public double Evaporation { get { return evaporationModel.Es; } }
+
+        /// <summary>Water table.</summary>
+        [XmlIgnore]
+        public double WaterTable { get { return waterTableModel.Depth; } set { waterTableModel.Set(value); } }
+
+        /// <summary>Flux. Water moving down (mm).</summary>
+        [XmlIgnore]
+        public double[] Flux { get; private set; }
+
+        /// <summary>Flow. Water moving up (mm).</summary>
+        [XmlIgnore]
+        public double[] Flow { get; private set; }
+
+        /// <summary>Gets todays potential runoff (mm).</summary>
+        [XmlIgnore]
+        public double PotentialRunoff
+        {
+            get
+            {
+                double waterForRunoff = PotentialInfiltration;
+
+                if (irrigation != null && irrigation.WillRunoff)
+                    waterForRunoff = waterForRunoff + irrigation.Amount;
+
+                return waterForRunoff;
+            }
+        }
+
+        /// <summary>Provides access to the soil properties.</summary>
+        [XmlIgnore]
+        public Soil Properties { get { return soil; } }
+
+        ///<summary>Gets or sets volumetric soil water content (mm/mm)(</summary>
+        [XmlIgnore]
+        public double[] SW { get { return MathUtilities.Divide(Water, soil.Thickness); } set { Water = MathUtilities.Multiply(value, soil.Thickness); ; } }
+
+        ///<summary>Gets soil water content (mm)</summary>
+        [XmlIgnore]
+        public double[] SWmm { get { return Water; } }
+
+        ///<summary>Gets extractable soil water relative to LL15(mm)</summary>
+        [XmlIgnore]
+        public double[] ESW { get { return MathUtilities.Subtract(Water, soil.LL15mm); } }
+
+        ///<summary>Gets potential evaporation from soil surface (mm)</summary>
+        [XmlIgnore]
+        public double Eos { get { return evaporationModel.Eos; } }
+
+        /// <summary>Gets the actual (realised) soil water evaporation (mm)</summary>
+        [XmlIgnore]
+        public double Es { get { return evaporationModel.Es; } }
+
+        ///<summary>Time since start of second stage evaporation (days).</summary>
+        [XmlIgnore]
+        public double T { get { return evaporationModel.t; } }
+
+        /// <summary>Gets potential evapotranspiration of the whole soil-plant system (mm)</summary>
+        [XmlIgnore]
+        public double Eo { get; set; }
 
         /// <summary>Fractional amount of water above DUL that can drain under gravity per day.</summary>
         /// <remarks>
@@ -332,10 +338,6 @@
         [Caption("Klat")]
         [Description("Lateral saturated hydraulic conductivity (KLAT)")]
         public double[] KLAT { get; set; }
-
-        /// <summary>Amount of water moving laterally out of the profile (mm)</summary>
-        [XmlIgnore]
-        public double[] LateralOutflow { get { return LateralFlow; } }
 
         /// <summary>Amount of N leaching as NO3-N from the deepest soil layer (kg /ha)</summary>
         [XmlIgnore]
@@ -373,8 +375,8 @@
         /// <summary>Called when a simulation commences.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
         {
             Initialise();
         }
@@ -403,14 +405,9 @@
         [EventSubscribe("DoSoilWaterMovement")]
         private void OnDoSoilWaterMovement(object sender, EventArgs e)
         {
-            if (clock.Today == new DateTime(2010, 3, 5))
-            {
-
-            }
-
             // Calculate lateral flow.
-            LateralFlow = lateralFlowModel.Values;
-            if (LateralFlow != null)
+            lateralFlowModel.Calculate();
+            if (LateralFlow.Length > 0)
                 Water = MathUtilities.Subtract(Water, LateralFlow);
 
             // Calculate runoff.
@@ -458,9 +455,9 @@
             double[] ureaValues = urea.kgha;
 
             // Calcualte solute movement down with water.
-            double[] no3Down = CalculateSoluteMovementDown(no3Values, Water, Flux, SoluteFluxEfficiency=1);
+            double[] no3Down = CalculateSoluteMovementDown(no3Values, Water, Flux, SoluteFluxEfficiency);
             MoveDown(no3Values, no3Down);
-            double[] ureaDown = CalculateSoluteMovementDown(ureaValues, Water, Flux, SoluteFluxEfficiency=1);
+            double[] ureaDown = CalculateSoluteMovementDown(ureaValues, Water, Flux, SoluteFluxEfficiency);
             MoveDown(ureaValues, ureaDown);
 
             // Calculate evaporation and remove from top layer.
@@ -475,12 +472,12 @@
             //CheckForErrors();
 
             // Calculate water table depth.
-            double waterTableDepth = waterTableModel.Value();
+            waterTableModel.Calculate();
 
             // Calculate and apply net solute movement.
-            double[] no3Up = CalculateNetSoluteMovement(no3Values, Water, Flow, SoluteFlowEfficiency=1);
+            double[] no3Up = CalculateNetSoluteMovement(no3Values, Water, Flow, SoluteFlowEfficiency);
             MoveUp(no3Values, no3Up);
-            double[] ureaUp = CalculateNetSoluteMovement(ureaValues, Water, Flow, SoluteFlowEfficiency = 1);
+            double[] ureaUp = CalculateNetSoluteMovement(ureaValues, Water, Flow, SoluteFlowEfficiency);
             MoveUp(ureaValues, ureaUp);
 
             // Update flow output variables.
@@ -526,15 +523,15 @@
         /// <param name="flux"></param>
         /// <param name="efficiency"></param>
         /// <returns></returns>
-        private static double[] CalculateSoluteMovementDown(double[] solute, double[] water, double[] flux, double efficiency)
+        private static double[] CalculateSoluteMovementDown(double[] solute, double[] water, double[] flux, double[] efficiency)
         {
             double[] soluteFlux = new double[solute.Length];
             for (int i = 0; i < solute.Length; i++)
             {
                 if (i == 0)
-                    soluteFlux[i] = flux[i] * solute[i] / (water[i] + flux[i]);
+                    soluteFlux[i] = flux[i] * solute[i] / (water[i] + flux[i]) * efficiency[i];
                 else
-                    soluteFlux[i] = flux[i] * (solute[i] + soluteFlux[i-1]) / (water[i] + flux[i]);
+                    soluteFlux[i] = flux[i] * (solute[i] + soluteFlux[i-1]) / (water[i] + flux[i]) * efficiency[i];
                     //soluteFlux[i] = (solute[i] + soluteFlux[i-1]) * proportionMoving * efficiency;
             }
 
@@ -547,7 +544,7 @@
         /// <param name="flux"></param>
         /// <param name="efficiency"></param>
         /// <returns></returns>
-        private static double[] CalculateNetSoluteMovement(double[] solute, double[] water, double[] flux, double efficiency)
+        private static double[] CalculateNetSoluteMovement(double[] solute, double[] water, double[] flux, double[] efficiency)
         {
             double[] soluteUp = CalculateSoluteMovementUp(solute, water, flux, efficiency);
 
@@ -563,9 +560,9 @@
                 {
                     var positiveFlux = flux[i] * -1;
                     if (i == 0)
-                        soluteDown[i] = positiveFlux * (solute[i] + remaining[i]) / (water[i] + positiveFlux);
+                        soluteDown[i] = positiveFlux * (solute[i] + remaining[i]) / (water[i] + positiveFlux) * efficiency[i];
                     else
-                        soluteDown[i] = positiveFlux * (solute[i] + soluteDown[i - 1] + remaining[i]) / (water[i] + positiveFlux + flux[i-1]);
+                        soluteDown[i] = positiveFlux * (solute[i] + soluteDown[i - 1] + remaining[i]) / (water[i] + positiveFlux + flux[i-1]) * efficiency[i];
                 }
             }
             return MathUtilities.Subtract(soluteUp, soluteDown);
@@ -577,7 +574,7 @@
         /// <param name="flow"></param>
         /// <param name="efficiency"></param>
         /// <returns></returns>
-        private static double[] CalculateSoluteMovementUp(double[] solute, double[] water, double[] flow, double efficiency)
+        private static double[] CalculateSoluteMovementUp(double[] solute, double[] water, double[] flow, double[] efficiency)
         {
             // soluteFlow[i] is the solutes flowing into this layer from the layer below.
             // this is the water moving into this layer * solute concentration. That is,
@@ -597,7 +594,7 @@
                 if (flow[i] <= 0)
                     soluteFlow[i] = 0;
                 else
-                    soluteFlow[i] = flow[i] * (solute[i+1] + soluteFlow[i+1]) / (water[i+1] + flow[i] - flow[i+1]);
+                    soluteFlow[i] = flow[i] * (solute[i+1] + soluteFlow[i+1]) / (water[i+1] + flow[i] - flow[i+1]) * efficiency[i];
             }
 
             return soluteFlow;
@@ -715,12 +712,14 @@
 
         /// <summary>Initialise the model.</summary>
         private void Initialise()
-        { 
+        {
+            FlowNH4 = MathUtilities.CreateArrayOfValues(0.0, Thickness.Length);
+            SoluteFlowEfficiency = MathUtilities.CreateArrayOfValues(1.0, Thickness.Length);
+            SoluteFluxEfficiency = MathUtilities.CreateArrayOfValues(1.0, Thickness.Length);
             Water = soil.Initial.SWmm;
             Runon = 0;
             Runoff = 0;
             PotentialInfiltration = 0;
-            LateralFlow = null;
             Flux = null;
             Flow = null;
             evaporationModel.Initialise();

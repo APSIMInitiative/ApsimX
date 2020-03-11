@@ -1247,32 +1247,6 @@ namespace Models.Soils
                 }
             }
 
-
-        /// <summary>
-        /// Called when [water changed].
-        /// </summary>
-        /// <param name="WaterChanged">The water changed.</param>
-        [EventSubscribe("WaterChanged")]
-        private void OnWaterChanged(WaterChangedType WaterChanged)
-            {
-
-            //This event is Only used by Plant2 and AgPasture.
-            //This event was added so that the Plant2 module could extract water via its roots from the SoilWater module.
-            //At the time Plant2 was not advanced enough to be able to do a "Set" on another modules variables.
-            //Plant2 still uses this method to extract water using its roots.
-
-            //*+  Purpose
-            //*     Another module wants to change our water
-
-
-            foreach (Layer lyr in SoilObject.TopToX(WaterChanged.DeltaWater.Length))
-                {
-                lyr.sw_dep = lyr.sw_dep + WaterChanged.DeltaWater[lyr.number-1];
-                SoilObject.CheckLayerForErrors(lyr.number);
-                }
-
-            }
-
         //LOCAL VARIABLES
 
         //Constants
