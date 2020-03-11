@@ -42,6 +42,11 @@
         /// <param name="name">Name of checkpoint to revert to.</param>
         void RevertCheckpoint(string name);
 
+        /// <summary>Set a checkpoint show on graphs flag.</summary>
+        /// <param name="name">Name of checkpoint.</param>
+        /// <param name="showGraphs">Show graphs?</param>
+        void SetCheckpointShowGraphs(string name, bool showGraphs);
+
         /// <summary>Wait for all records to be written.</summary>
         void WaitForIdle();
 
