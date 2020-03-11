@@ -97,14 +97,9 @@ namespace Models.PMF.Phen
             StartDAWS = 0;
         }
 
-        /// <summary>Writes the summary.</summary>
-        /// <param name="writer">The writer.</param>
-        public void WriteSummary(TextWriter writer) { writer.WriteLine("      " + Name); }
-
         /// <summary>Called when [simulation commencing].</summary>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        { ResetPhase(); }
+        private void OnSimulationCommencing(object sender, EventArgs e) { ResetPhase(); }
     }
 }
 
