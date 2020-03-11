@@ -1,19 +1,13 @@
-﻿using Models.PMF;
-using Models.PMF.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Models.PMF.Interfaces;
 
 namespace Models.PMF.Arbitrator
 {
     /// <summary>
-    /// Interface for partition methods
+    /// Interface for the arbitrator partitioning methods
     /// </summary>
     public interface IPartitionMethod
     {
-        /// <summary>Relatives the allocation.</summary>
+        /// <summary>Calculates the parititions\ining between the different Organs.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="BAT">The bat.</param>
         /// <param name="ArbitrationMethod">The bat.</param>
@@ -22,11 +16,11 @@ namespace Models.PMF.Arbitrator
     }
 
     /// <summary>
-    /// Interface for allocatio methods
+    /// Interface for the arbitrator allocation methods
     /// </summary>
     public interface IAllocationMethod
     {
-        /// <summary>Relatives the allocation.</summary>
+        /// <summary>Allocates the BiomassType to the different Organs.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="BAT">The bat.</param>
         void Allocate(IArbitration[] Organs, BiomassArbitrationType BAT);

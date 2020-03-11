@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace Models.PMF.Arbitrator
 {
-    /// <summary>Functions called at OnDoPotentialPlantPartioning.</summary>
+    /// <summary>Function called at OnDoPotentialPlantPartioning.</summary>
     [Serializable]
     [ValidParent(ParentType = typeof(BiomassTypeArbitrator))]
     public class ReallocationMethod : Model, IPartitionMethod
     {
-        /// <summary>Functions called at OnDoPotentialPlantPartioning.</summary>
+        /// <summary>Reallocate the Biomass Type.</summary>
         public void Calculate(IArbitration[] Organs, BiomassArbitrationType BAT, IArbitrationMethod arbitrationMethod)
         {
             double BiomassReallocated = 0;

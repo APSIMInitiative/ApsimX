@@ -293,10 +293,9 @@
     <Compile Include="Plant\Arbitrator\Methods\ReallocationMethod.cs" />
     <Compile Include="Plant\Arbitrator\Methods\RetranslocationMethod.cs" />
     <Compile Include="Plant\Arbitrator\Methods\SendPotentialDMAllocationsMethod.cs" />
-    <Compile Include="Plant\Arbitrator\NitrogenArbitrator.cs" />
     <Compile Include="Plant\Arbitrator\RetranslocateAvailableN.cs" />
     <Compile Include="Factorial\CompositeFactor.cs" />
-    <Compile Include="Plant\Arbitrator\WaterUptakeMethods.cs" />
+    <Compile Include="Plant\Arbitrator\Methods\WaterUptakeMethods.cs" />
     <Compile Include="Plant\Interfaces\IPlantDamage.cs" />
     <Compile Include="Plant\Organs\BasialBuds.cs" />
     <Compile Include="Plant\Phenology\Phases\DAWSPhase.cs" />

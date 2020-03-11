@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Models.PMF.Arbitrator
 {
-    /// <summary>Sends the dm allocations.</summary>
+    /// <summary>Allocates the DM to the different organs.</summary>
     [Serializable]
     [ValidParent(ParentType = typeof(BiomassTypeArbitrator))]
     public class DryMatterAllocationsMethod : Model, IAllocationMethod

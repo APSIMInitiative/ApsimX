@@ -1,15 +1,10 @@
 ﻿using Models.Core;
-using Models.PMF;
 using Models.PMF.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models.PMF.Arbitrator
 {
-    /// <summary>The method used to Retranslocate</summary>
+    /// <summary>The method used to Retranslocate Biomass Type</summary>
     [Serializable]
     [ValidParent(ParentType = typeof(BiomassTypeArbitrator))]
     public class RetranslocationMethod : Model, IPartitionMethod

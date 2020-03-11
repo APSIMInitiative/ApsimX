@@ -1,15 +1,12 @@
 ﻿using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.PMF;
 using Models.PMF.Interfaces;
 using Models.Soils.Arbitrator;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Models.PMF
+namespace Models.PMF.Arbitrator
 {
     /// <summary>The method used to do NitrogenUptake</summary>
     [Serializable]
@@ -76,7 +73,7 @@ namespace Models.PMF
             return zones;
         }
 
-        /// <summary>Calculate Nitrogen Uptakes</summary>
+        /// <summary>Calculate the Actual Nitrogen Uptakes</summary>
         public void SetActualUptakes(List<ZoneWaterAndN> zones, IArbitration[] Organs)
         {
             var N = Arbitrator.N;

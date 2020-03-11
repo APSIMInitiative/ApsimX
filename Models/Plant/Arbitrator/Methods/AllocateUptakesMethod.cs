@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Models.PMF.Arbitrator
 {
-    /// <summary>Allocates the N Supply.</summary>
+    /// <summary>Allocates the N Uptakes.</summary>
     [Serializable]
     [ValidParent(ParentType = typeof(BiomassTypeArbitrator))]
     public class AllocateUptakesMethod : Model, IPartitionMethod

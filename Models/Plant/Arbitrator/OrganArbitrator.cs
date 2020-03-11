@@ -1,6 +1,7 @@
 ﻿using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
+using Models.PMF.Arbitrator;
 using Models.PMF.Interfaces;
 using Models.Soils.Arbitrator;
 using System;
@@ -46,13 +47,13 @@ namespace Models.PMF
         [Link]
         private Plant plant = null;
 
-        /// <summary>The method used to arbitrate N allocations</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        protected IArbitrationMethod nArbitrator = null;
+        ///// <summary>The method used to arbitrate N allocations</summary>
+        //[Link(Type = LinkType.Child, ByName = true)]
+        //protected IArbitrationMethod nArbitrator = null;
 
-        /// <summary>The method used to arbitrate N allocations</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        protected IArbitrationMethod dmArbitrator = null;
+        ///// <summary>The method used to arbitrate N allocations</summary>
+        //[Link(Type = LinkType.Child, ByName = true)]
+        //protected IArbitrationMethod dmArbitrator = null;
 
         /// <summary>The method used to call N arbitrations methods</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -79,10 +80,6 @@ namespace Models.PMF
         /// <summary>The list of organs</summary>
         protected List<IArbitration> Organs = new List<IArbitration>();
 
-        /// <summary>A list of organs or suborgans that have watardemands</summary>
-        protected List<IHasWaterDemand> WaterDemands = new List<IHasWaterDemand>();
-
-        
         ///4. Public Events And Enums
         /// -------------------------------------------------------------------------------------------------
 
@@ -158,18 +155,12 @@ namespace Models.PMF
         virtual protected void OnPlantSowing(object sender, SowPlant2Type data)
         {
             List<IArbitration> organsToArbitrate = new List<IArbitration>();
-            List<IHasWaterDemand> Waterdemands = new List<IHasWaterDemand>();
-
-            foreach (Model Can in Apsim.FindAll(plant, typeof(IHasWaterDemand)))
-                Waterdemands.Add(Can as IHasWaterDemand);
 
             foreach (IOrgan organ in plant.Organs)
                 if (organ is IArbitration)
                     organsToArbitrate.Add(organ as IArbitration);
 
-
             Organs = organsToArbitrate;
-            WaterDemands = Waterdemands;
             DM = new BiomassArbitrationType("DM", Organs);
             N = new BiomassArbitrationType("N", Organs);
         }
@@ -194,22 +185,13 @@ namespace Models.PMF
 
                 dmArbitration.DoPotentialPartitioning(Organs.ToArray(), DM);
 
-                //Reallocation(Organs.ToArray(), DM, dmArbitrator);         // Allocate supply of reallocated DM to organs
-                //AllocateFixation(Organs.ToArray(), DM, dmArbitrator);             // Allocate supply of fixed DM (photosynthesis) to organs
-                //Retranslocation(Organs.ToArray(), DM, dmArbitrator);      // Allocate supply of retranslocated DM to organs
-                //SendPotentialDMAllocations(Organs.ToArray());               // Tell each organ what their potential growth is so organs can calculate their N demands
-
                 NSupplies();
                 NDemands();
 
                 nArbitration.DoPotentialPartitioning(Organs.ToArray(), N);
-                //Reallocation(Organs.ToArray(), N, nArbitrator);           // Allocate N available from reallocation to each organ
             }
         }
         
-        
-        /// The the soil Arbitrator kicks in to work out N uptake.  Here sits the IUptake interface for doing that
-
         /// <summary>
         /// Calculate the potential sw uptake for today
         /// </summary>
@@ -264,8 +246,6 @@ namespace Models.PMF
             }
         }
 
-        //Then do the rest of the N partitioning, revise DM allocations if N is limited and do DM and N allocations
-        
         /// <summary>Does the nutrient allocations.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -274,17 +254,11 @@ namespace Models.PMF
         {
             if (plant.IsEmerged)
             {
+                //ordering within the arbitration items is important - uses the order in the tree
+                //Do the rest of the N partitioning, revise DM allocations if N is limited and do DM and N allocations
                 nArbitration.DoActualPartitioning(Organs.ToArray(), N);
 
-                //AllocateFixation(Organs.ToArray(), N, nArbitrator);               //Allocate supply of fixable Nitrogen to each organ
-                //Retranslocation(Organs.ToArray(), N, nArbitrator);      //Allocate supply of retranslocatable N to each organ
-
-
-                //CalculatedNutrientConstrainedDMAllocation(Organs.ToArray());               //Work out how much DM can be assimilated by each organ based on allocated nutrients
                 dmArbitration.DoAllocations(Organs.ToArray(), DM);
-
-                //SetDryMatterAllocations(Organs.ToArray());                               //Tell each organ how DM they are getting folling allocation
-                //SetNitrogenAllocations(Organs.ToArray());                         //Tell each organ how much nutrient they are getting following allocaition
                 nArbitration.DoAllocations(Organs.ToArray(), N);
             }
         }
