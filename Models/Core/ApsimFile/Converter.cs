@@ -18,7 +18,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 84; } }
+        public static int LatestVersion { get { return 85; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1689,11 +1689,10 @@
         }
 
         /// <summary>
-        /// Add a field to the Checkpoints table.
         /// </summary>
         /// <param name="root"></param>
         /// <param name="fileName"></param>
-        private static void UpgradeToVersion84(JObject root, string fileName)
+        private static void UpgradeToVersion85(JObject root, string fileName)
         {
             SQLite db = new SQLite();
             var dbFileName = Path.ChangeExtension(fileName, ".db");
@@ -1702,9 +1701,6 @@
                 db.OpenDatabase(dbFileName, false);
                 if (db.TableExists("_Checkpoints"))
                 {
-                    if (!db.GetTableColumns("_Checkpoints").Contains("OnGraphs"))
-                    {
-                        db.AddColumn("_Checkpoints", "OnGraphs", "integer");
                     }
                 }
             }
