@@ -298,6 +298,7 @@
     <Compile Include="Soils\Standardiser\SoilDefaults.cs" />
     <Compile Include="Soils\Standardiser\SoilUnits.cs" />
     <Compile Include="Soils\Standardiser\SoilStandardiser.cs" />
+    <Compile Include="Storage\Checkpoint.cs" />
     <Compile Include="Storage\WriteTableCommand.cs" />
     <Compile Include="Storage\DatabaseTableDetails.cs" />
     <Compile Include="Storage\IDataStore.cs" />
