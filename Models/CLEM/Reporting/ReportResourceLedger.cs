@@ -132,15 +132,14 @@ namespace Models.CLEM.Reporting
                                 }
 
                                 // add pricing
-                                if (pricingIncluded)
-                                {
-                                    variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ConvertTo(\"$\",\"gain\") as Price_Gain");
-                                    variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ConvertTo(\"$\",\"loss\") as Price_Loss");
-                                }
+                                //if (pricingIncluded)
+                                //{
+                                //    variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ConvertTo(\"$\",\"gain\") as Price_Gain");
+                                //    variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ConvertTo(\"$\",\"loss\") as Price_Loss");
+                                //}
 
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ResourceType.Name as Resource");
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Activity.Name as Activity");
-                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Reason as Reason");
                             }
 
                         }
