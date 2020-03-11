@@ -1714,6 +1714,27 @@
                 soilWater["DischargeWidth"] = soilWater["discharge_width"];
                 soilWater["CatchmentArea"] = soilWater["catchment_area"];
             }
+
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                bool managerChanged = false;
+
+                var declarations = manager.GetDeclarations();
+                foreach (var declaration in declarations)
+                {
+                    if (declaration.TypeName == "SoilWater")
+                    {
+                        declaration.TypeName = "ISoilWater";
+                        managerChanged = true;
+                    }
+                }
+
+                if (managerChanged)
+                {
+                    manager.SetDeclarations(declarations);
+                    manager.Save();
+                }
+            }
         }
 		
         /// <summary>

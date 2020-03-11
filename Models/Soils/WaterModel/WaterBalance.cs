@@ -5,6 +5,7 @@
     using Models.Core;
     using Soils;
     using System;
+    using System.Linq;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Xml.Serialization;
@@ -338,15 +339,15 @@
 
         /// <summary>Amount of N leaching as NO3-N from the deepest soil layer (kg /ha)</summary>
         [XmlIgnore]
-        public double LeachNO3 => throw new NotImplementedException();
+        public double LeachNO3 { get { if (FlowNO3 == null) return 0; else return FlowNO3.Last(); } }
 
         /// <summary>Amount of N leaching as NH4-N from the deepest soil layer (kg /ha)</summary>
         [XmlIgnore]
-        public double LeachNH4 => throw new NotImplementedException();
+        public double LeachNH4 { get { return 0; } }
 
         /// <summary>Amount of N leaching as urea-N  from the deepest soil layer (kg /ha)</summary>
         [XmlIgnore]
-        public double LeachUrea => throw new NotImplementedException();
+        public double LeachUrea { get { if (FlowUrea == null) return 0; else return FlowUrea.Last(); } }
 
         /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>
         [XmlIgnore]
@@ -363,6 +364,9 @@
         /// <summary> This is set by Microclimate and is rainfall less that intercepted by the canopy and residue components </summary>
         [XmlIgnore]
         public double PrecipitationInterception { get; set; }
+
+        /// <summary>Pond.</summary>
+        public double Pond { get { return 0; } }
 
         // --- Event handlers ------------------------------------------------------------
 
@@ -468,7 +472,7 @@
             MoveUp(Water, Flow);
 
             // Check for errors in water variables.
-            CheckForErrors();
+            //CheckForErrors();
 
             // Calculate water table depth.
             double waterTableDepth = waterTableModel.Value();
