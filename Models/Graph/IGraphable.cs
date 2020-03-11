@@ -105,7 +105,14 @@
         Normal,
 
         /// <summary>Small markers</summary>
-        Small
+        Small,
+
+        /// <summary>Very small markers</summary>
+        VerySmall,
+
+        /// <summary>Large size markers.</summary>
+        Large,
+
     }
 
     /// <summary>An enumeration representing the different types of lines</summary>
