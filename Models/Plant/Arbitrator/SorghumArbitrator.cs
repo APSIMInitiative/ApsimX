@@ -188,20 +188,20 @@ namespace Models.PMF
         ///TotalSupply divided by WaterDemand - used to lookup ExpansionStress table - when calculating Actual LeafArea and calcStressedLeafArea
         public double SDRatio { get; set; }
 
-        ///Same as SDRatio?? used to calculate Photosynthesis stress in calculating yield (Grain)
-        public double PhotoStress { get; set; }
+        /////Same as SDRatio?? used to calculate Photosynthesis stress in calculating yield (Grain)
+        //public double PhotoStress { get; set; }
 
-        /// <summary>Available SW by layer.</summary>
-        public double[] Avail { get; private set; }
+        ///// <summary>Available SW by layer.</summary>
+        //public double[] Avail { get; private set; }
 
-        /// <summary>Pot. Available SW by layer.</summary>
-        public double[] PotAvail { get; private set; }
+        ///// <summary>Pot. Available SW by layer.</summary>
+        //public double[] PotAvail { get; private set; }
 
-        /// <summary>Total available SW.</summary>
-        public double TotalAvail { get; private set; }
+        //  /// <summary>Total available SW.</summary>
+        //public double TotalAvail { get; private set; }
 
-        /// <summary>Total potential available SW.</summary>
-        public double TotalPotAvail { get; private set; }
+        // // <summary>Total potential available SW.</summary>
+        //public double TotalPotAvail { get; private set; }
 
         ///6. Public methods
         /// -----------------------------------------------------------------------------------------------------------
@@ -339,9 +339,7 @@ namespace Models.PMF
             
             SWAvailRatio = 0.0;
             SDRatio = 0.0;
-            PhotoStress = 0.0;
-            TotalAvail  = 0.0;
-            TotalPotAvail  = 0.0;
+            //PhotoStress = 0.0;
         }
 
         /// <summary>
@@ -413,7 +411,7 @@ namespace Models.PMF
                 // Z.Water calculated as Supply * fraction used
                 waterSupply += MathUtilities.Sum(Z.Water) * Z.Zone.Area;
             }
-
+            WSupply = waterSupply;
             // Calculate total plant water demand.
             WDemand = 0.0; //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
             foreach (IArbitration o in Organs)
@@ -440,8 +438,8 @@ namespace Models.PMF
             // i.e. Root will do pass the uptake to the soil water balance.
             foreach (ZoneWaterAndN zone in zones)
             {
-                StoreWaterVariablesForNitrogenUptake(zone);
                 plant.Root.DoWaterUptake(zone.Water, zone.Zone.Name);
+                StoreWaterVariablesForNitrogenUptake(zone);
             }
         }
 
@@ -489,10 +487,8 @@ namespace Models.PMF
                 WatSupply = totalSupply; 
 
                 // Set reporting variables.
-                Avail = myZone.AvailableSW;
-                PotAvail = myZone.PotentialAvailableSW;
-                TotalAvail = myZone.AvailableSW.Sum();
-                TotalPotAvail = myZone.PotentialAvailableSW.Sum();
+                //Avail = myZone.AvailableSW;
+                //PotAvail = myZone.PotentialAvailableSW;
 
                 //used for SWDef PhenologyStress table lookup
                 SWAvailRatio = MathUtilities.Bound(MathUtilities.Divide(totalAvail, totalAvailPot, 1.0),0.0,10.0);
@@ -501,7 +497,7 @@ namespace Models.PMF
                 SDRatio = MathUtilities.Bound(MathUtilities.Divide(totalSupply, WDemand, 1.0), 0.0, 10);
 
                 //used for SwDefPhoto Stress
-                PhotoStress = MathUtilities.Bound(MathUtilities.Divide(totalSupply, WDemand, 1.0), 0.0, 1.0);
+                //PhotoStress = MathUtilities.Bound(MathUtilities.Divide(totalSupply, WDemand, 1.0), 0.0, 1.0);
             }
         }
                
