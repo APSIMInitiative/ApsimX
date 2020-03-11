@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using APSIM.Shared.APSoil;
 using Models.Core;
 
 namespace Models.Soils
@@ -23,8 +24,22 @@ namespace Models.Soils
         [Description("D0")]
         public double D0 { get; set; }
 
-        /// <summary>Gets or sets the thickness.</summary>
-        [Description("Depth (mm)")]
+        /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Description("Depth")]
+        [Units("cm")]
+        public string[] Depth
+        {
+            get
+            {
+                return SoilUtilities.ToDepthStrings(Thickness);
+            }
+            set
+            {
+                Thickness = SoilUtilities.ToThickness(value);
+            }
+        }
+
+        /// <summary>Layerwise thickness.</summary>
         public double[] Thickness { get; set; }
 
         /// <summary>Gets or sets the exco.</summary>

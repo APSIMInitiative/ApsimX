@@ -487,7 +487,16 @@
                 this.reader.SeekToDate(this.clock.Today);
             }
 
-            object[] values = this.reader.GetNextLineOfData();
+            object[] values;
+
+            try
+            {
+                values = this.reader.GetNextLineOfData();
+            }
+            catch (IndexOutOfRangeException err)
+            {
+                throw new Exception($"Unable to retrieve weather data on {clock.Today.ToString("yyy-MM-dd")} in file {FileName}", err);
+            }
 
             if (this.clock.Today != this.reader.GetDateFromValues(values))
                 throw new Exception("Non consecutive dates found in file: " + this.FileName + ".  Another posibility is that you have two clock objects in your simulation, there should only be one");
