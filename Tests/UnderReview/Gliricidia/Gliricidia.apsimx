@@ -20,7 +20,7 @@
       "Children": [
         {
           "$type": "Models.Manager, Models",
-          "Code": "\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Gliricidia;\r\n        [Link] Clock Clock;\r\n\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double LeafRemovalWt {get; set;}\r\n\r\n\r\n        [Description(\"Stem Removal Wt\")]\r\n        public double StemRemovalWt {get; set;}\r\n\r\n        [Description(\"Total Removal Wt\")]\r\n        public double TotalRemovalWt {get; set;}\r\n\r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        LeafRemovalWt = 0;\r\n        StemRemovalWt = 0;\r\n        TotalRemovalWt = 0;\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue)\r\n        {\r\n            double L = (double)Apsim.Get(Gliricidia, \"Leaf.Live.Wt\");\r\n            double LeafRemovalFraction = 0;\r\n\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n                LeafRemovalWt = (L - LeafResidue);\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n               \r\n            double S = (double)Apsim.Get(Gliricidia, \"Stem.Live.Wt\");\r\n            double StemRemovalFraction = 0;\r\n\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S; \r\n                StemRemovalWt = (S - StemResidue);              \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n\r\n            TotalRemovalWt = LeafRemovalWt + StemRemovalWt;\r\n               \r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            Gliricidia.RemoveBiomass(\"Cut\", Remove);\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
+          "Code": "\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\nusing Models.Surface;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Gliricidia;\r\n        [Link] Clock Clock;\r\n        [Link] SurfaceOrganicMatter SOM;\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double LeafRemovalWt {get; set;}\r\n\r\n\r\n        [Description(\"Stem Removal Wt\")]\r\n        public double StemRemovalWt {get; set;}\r\n\r\n        [Description(\"Total Removal Wt\")]\r\n        public double TotalRemovalWt {get; set;}\r\n\r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        LeafRemovalWt = 0;\r\n        StemRemovalWt = 0;\r\n        TotalRemovalWt = 0;\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue, bool Retain = false)\r\n        {\r\n            double L = (double)Apsim.Get(Gliricidia, \"Leaf.Live.Wt\");\r\n            double LeafRemovalFraction = 0;\r\n\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n                LeafRemovalWt = (L - LeafResidue);\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n               \r\n            double S = (double)Apsim.Get(Gliricidia, \"Stem.Live.Wt\");\r\n            double StemRemovalFraction = 0;\r\n\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S; \r\n                StemRemovalWt = (S - StemResidue);              \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n\r\n            TotalRemovalWt = LeafRemovalWt + StemRemovalWt;\r\n\r\n            if (Retain)\r\n            {   \r\n            Remove.SetFractionToRemove(\"Leaf\", 0.0);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            }\r\n            else\r\n            {\r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            }\r\n\r\n            Gliricidia.RemoveBiomass(\"Cut\", Remove);\r\n\r\n            if (Retain)\r\n            {\r\n            SOM.Incorporate(1.0,50.0);\r\n            }\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
           "Parameters": [
             {
               "Key": "LeafRemovalWt",
@@ -64,7 +64,7 @@
             "[SurfaceOrganicMatter].Wt",
             "[Gliricidia].Leaf.LAI",
             "[Gliricidia].Leaf.Fn",
-            "[Gliricidia].Leaf.Live.NConc",
+            "[Gliricidia].Leaf.Height",
             "[Gliricidia].Leaf.MaximumNConc.FixedValue",
             "[Gliricidia].Leaf.MinimumNConc.FixedValue",
             "[Gliricidia].Leaf.Fw",
@@ -159,7 +159,8 @@
             "[Maize].Grain.Live.Wt as GrainWt",
             "[Maize].Phenology.DaysAfterSowing",
             "[Maize].Phenology.LeafAppearance.FractionComplete",
-            "[Maize].Leaf.ExpandedCohortNo"
+            "[Maize].Leaf.ExpandedCohortNo",
+            "[Maize].Leaf.Height"
           ],
           "EventNames": [
             "[Clock].DoReport"
@@ -603,7 +604,7 @@
               "NDemand": null,
               "MaintenanceRespiration": 0.0,
               "GrowthRespiration": 0.0,
-              "Albedo": 0.18,
+              "Albedo": 0.25,
               "Gsmax350": 0.015,
               "R50": 150.0,
               "LAI": 0.0,
@@ -845,7 +846,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].Stage",
+                      "VariableName": "[AboveGround].Wt",
                       "Name": "XValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -9026,295 +9027,295 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "1992-09-15",
-                              "Action": "[CuttingManagement].Script.DoCut(440, 575);",
+                              "Action": "[CuttingManagement].Script.DoCut(440, 575, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "1992-12-15",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "1993-02-15",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "1993-09-15",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "1993-12-15",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "1994-02-15",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "1994-09-15",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "1994-12-15",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "1995-02-15",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "1995-09-15",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "1995-12-15",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "1996-02-15",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "1996-09-15",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "1996-12-15",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "1997-02-15",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "1997-08-15",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "1997-10-31",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "1997-12-31",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "1998-02-28",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "1998-08-31",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "1998-10-31",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "1998-12-31",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "1999-02-28",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "1999-08-31",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "1999-10-31",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "1999-12-31",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "2000-02-28",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "2000-08-31",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "2000-10-31",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "2000-12-31",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "2001-02-28",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "2001-08-31",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "2001-10-31",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "2001-12-31",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "2002-02-28",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "2002-08-31",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "2002-10-31",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "2002-12-31",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "2003-02-28",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "2003-08-18",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "2003-11-07",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "2003-12-16",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "2004-02-02",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "2004-08-18",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "2004-12-21",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "2005-01-31",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "2005-10-04",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "2005-12-05",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Date": "2006-01-24",
-                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25, true);",
                               "Enabled": true
                             },
                             {
@@ -9843,8 +9844,8 @@
                           ],
                           "SAT": [
                             0.46,
-                            0.46,
                             0.45,
+                            0.44,
                             0.44,
                             0.44,
                             0.44,
@@ -9867,18 +9868,18 @@
                             {
                               "$type": "Models.Soils.SoilCrop, Models",
                               "LL": [
-                                0.08,
-                                0.08,
-                                0.08,
-                                0.08,
                                 0.1,
                                 0.1,
                                 0.1,
-                                0.1,
-                                0.1,
-                                0.1,
-                                0.1,
-                                0.1
+                                0.15,
+                                0.2,
+                                0.25,
+                                0.3,
+                                0.3,
+                                0.3,
+                                0.29,
+                                0.29,
+                                0.29
                               ],
                               "KL": [
                                 0.05,
@@ -9920,18 +9921,18 @@
                             {
                               "$type": "Models.Soils.SoilCrop, Models",
                               "LL": [
-                                0.08,
-                                0.08,
-                                0.08,
-                                0.08,
-                                0.08,
-                                0.08,
-                                0.08,
-                                0.08,
-                                0.08,
-                                0.08,
-                                0.08,
-                                0.08
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1
                               ],
                               "KL": [
                                 0.1,
@@ -10618,7 +10619,8 @@
                         "[Maize].Structure.FinalLeafNumber.Value",
                         "[Maize].Leaf.ExpandedCohortNo",
                         "[Soil].SoilWater.LeachNO3",
-                        "[Soil].SoilWater.FlowNO3"
+                        "[Soil].SoilWater.FlowNO3",
+                        "[Maize].Leaf.Height"
                       ],
                       "EventNames": [
                         "[Clock].DoReport"
@@ -10656,8 +10658,6 @@
                         "[Maize].Total.N",
                         "[Maize].Total.Wt",
                         "max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax",
-                        "[Maize].Grain.NumberFunction",
-                        "[Maize].Grain.Size",
                         "[Maize].Population",
                         "[Maize].Phenology.FloweringDAS.Value as FloweringDAS",
                         "sum([Soil].SoilNitrogen.FOMC) as FOMC",
@@ -11024,8 +11024,8 @@
                       "LineThickness": 0,
                       "Checkpoint": "Current",
                       "TableName": "PredictedObserved",
-                      "XFieldName": "Predicted.Maize.Grain.Wt",
-                      "YFieldName": "Observed.Maize.Grain.Wt",
+                      "XFieldName": "Observed.Maize.Grain.Wt",
+                      "YFieldName": "Predicted.Maize.Grain.Wt",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
@@ -12762,6 +12762,172 @@
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Predicted",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "SurfaceOM",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "N",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "Maize",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "GliricidiaDailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "SurfaceOrganicMatter.Wt",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": true,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Predicted",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "CanopyHeights",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -1663232,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "Maize",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "MaizeDailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Maize.Leaf.Height",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": true,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Maize",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16736653,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "Maize",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "GliricidiaDailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Gliricidia.Leaf.Height",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": true,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Gliricidia",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -17496,7 +17662,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Organs;\r\nusing Models.Surface;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Gliricidia;\r\n        [Link(ByName = true)] SurfaceOrganicMatter MaizeZoneSurfaceOrganicMatter;\r\n        [Link(ByName = true)] Zone MaizeZone;\r\n        [Link(ByName = true)] Zone GliricidiaZone;\r\n        [Link] Clock Clock;\r\n\r\n\r\n        [Description(\"First Harvest (d-mmm)\")]\r\n        public string Harvest1Date { get; set; }\r\n        [Description(\"Second Harvest (d-mmm)\")]\r\n        public string Harvest2Date { get; set; }\r\n        [Description(\"Third Harvest (d-mmm)\")]\r\n        public string Harvest3Date { get; set; }\r\n\r\n        [Description(\"Add gliricidia residues to mazie zone\")]\r\n        public bool AddGliricidiaResidues { get; set; }\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double LeafRemovalWt {get; set;}\r\n        [Description(\"Leaf Removal N\")]\r\n        public double LeafRemovalN {get; set;}\r\n\r\n\r\n        [Description(\"Stem Removal Wt\")]\r\n        public double StemRemovalWt {get; set;}\r\n        [Description(\"Stem Removal N\")]\r\n        public double StemRemovalN {get; set;}\r\n\r\n\r\n        [Description(\"Total Removal Wt\")]\r\n        public double TotalRemovalWt {get; set;}\r\n        [Description(\"Total Removal N\")]\r\n        public double TotalRemovalN {get; set;}\r\n\r\n\r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        LeafRemovalWt = 0;\r\n        StemRemovalWt = 0;\r\n        LeafRemovalN = 0;\r\n        StemRemovalN = 0;\r\n\r\n            if (DateUtilities.WithinDates(Harvest1Date, Clock.Today, Harvest1Date) ||\r\n                DateUtilities.WithinDates(Harvest2Date, Clock.Today, Harvest2Date) ||\r\n                DateUtilities.WithinDates(Harvest3Date, Clock.Today, Harvest3Date))\r\n            {\r\n                DoCut(10,25);   \r\n            }\r\n\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue)\r\n        {\r\n            double Lwt = (double)Apsim.Get(Gliricidia, \"Leaf.Live.Wt\");\r\n            double Ln = (double)Apsim.Get(Gliricidia, \"Leaf.Live.N\");\r\n            double LeafRemovalFraction = 0;\r\n\r\n            if (Lwt > 0)\r\n                LeafRemovalFraction = (Lwt - LeafResidue) / Lwt;\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n            LeafRemovalWt = (Lwt - LeafResidue);\r\n            LeafRemovalN = Ln * LeafRemovalFraction;\r\n                               \r\n            double Swt = (double)Apsim.Get(Gliricidia, \"Stem.Live.Wt\");\r\n            double Sn = (double)Apsim.Get(Gliricidia, \"Stem.Live.N\");\r\n            double StemRemovalFraction = 0;\r\n\r\n            if (Swt > 0)\r\n                StemRemovalFraction = (Swt - StemResidue) / Swt;             \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n            StemRemovalWt = (Swt - StemResidue);  \r\n            StemRemovalN = Sn * StemRemovalFraction;\r\n               \r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            Gliricidia.RemoveBiomass(\"Cut\", Remove);\r\n\r\n            if (AddGliricidiaResidues)\r\n            {\r\n            double FOMadded = (LeafRemovalWt)*10.0*GliricidiaZone.Area/MaizeZone.Area;\r\n            double FONadded = (LeafRemovalN)*10.0*GliricidiaZone.Area/MaizeZone.Area;\r\n\r\n            MaizeZoneSurfaceOrganicMatter.Add(FOMadded, FONadded,0.0,\"gliricidia\",\"gliricidia\");\r\n            }\r\n\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
+                  "Code": "\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Organs;\r\nusing Models.Surface;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Gliricidia;\r\n        [Link(ByName = true)] SurfaceOrganicMatter MaizeZoneSurfaceOrganicMatter;\r\n        [Link(ByName = true)] Zone MaizeZone;\r\n        [Link(ByName = true)] Zone GliricidiaZone;\r\n        [Link] Clock Clock;\r\n\r\n\r\n        [Description(\"First Harvest (d-mmm)\")]\r\n        public string Harvest1Date { get; set; }\r\n        [Description(\"Second Harvest (d-mmm)\")]\r\n        public string Harvest2Date { get; set; }\r\n        [Description(\"Third Harvest (d-mmm)\")]\r\n        public string Harvest3Date { get; set; }\r\n\r\n        [Description(\"Add gliricidia residues to mazie zone\")]\r\n        public bool AddGliricidiaResidues { get; set; }\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double LeafRemovalWt {get; set;}\r\n        [Description(\"Leaf Removal N\")]\r\n        public double LeafRemovalN {get; set;}\r\n\r\n\r\n        [Description(\"Stem Removal Wt\")]\r\n        public double StemRemovalWt {get; set;}\r\n        [Description(\"Stem Removal N\")]\r\n        public double StemRemovalN {get; set;}\r\n\r\n\r\n        [Description(\"Total Removal Wt\")]\r\n        public double TotalRemovalWt {get; set;}\r\n        [Description(\"Total Removal N\")]\r\n        public double TotalRemovalN {get; set;}\r\n\r\n\r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        LeafRemovalWt = 0;\r\n        StemRemovalWt = 0;\r\n        LeafRemovalN = 0;\r\n        StemRemovalN = 0;\r\n\r\n            if (DateUtilities.WithinDates(Harvest1Date, Clock.Today, Harvest1Date) ||\r\n                DateUtilities.WithinDates(Harvest2Date, Clock.Today, Harvest2Date) ||\r\n                DateUtilities.WithinDates(Harvest3Date, Clock.Today, Harvest3Date))\r\n            {\r\n                DoCut(10,25,true);   \r\n            }\r\n\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue, bool Retain = false)\r\n        {\r\n            double L = (double)Apsim.Get(Gliricidia, \"Leaf.Live.Wt\");\r\n            double LeafRemovalFraction = 0;\r\n\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n                LeafRemovalWt = (L - LeafResidue);\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n               \r\n            double S = (double)Apsim.Get(Gliricidia, \"Stem.Live.Wt\");\r\n            double StemRemovalFraction = 0;\r\n\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S; \r\n                StemRemovalWt = (S - StemResidue);              \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n\r\n            TotalRemovalWt = LeafRemovalWt + StemRemovalWt;\r\n\r\n            if (Retain)\r\n            {   \r\n            Remove.SetFractionToRemove(\"Leaf\", 0.0);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            }\r\n            else\r\n            {\r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            }\r\n\r\n            Gliricidia.RemoveBiomass(\"Cut\", Remove);\r\n\r\n            if (Retain)\r\n            {\r\n            SOM.Incorporate(1.0,50.0);\r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
                   "Parameters": [
                     {
                       "Key": "Harvest1Date",
