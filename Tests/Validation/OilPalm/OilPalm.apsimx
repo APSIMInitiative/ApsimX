@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 80,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-05",
+  "Version": 84,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -22,7 +22,9 @@
       "Children": [
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "FileName": "observed.prn",
+          "FileNames": [
+            "observed.prn"
+          ],
           "Name": "Input",
           "Children": [],
           "IncludeInDocumentation": false,
@@ -1187,7 +1189,20 @@
                           "Children": [
                             {
                               "$type": "Models.Soils.SoilCrop, Models",
-                              "LL": null,
+                              "LL": [
+                                0.38,
+                                0.38,
+                                0.3,
+                                0.41,
+                                0.406,
+                                0.406,
+                                0.3,
+                                0.3,
+                                0.3,
+                                0.3,
+                                0.3,
+                                0.3
+                              ],
                               "KL": [
                                 0.06,
                                 0.04,
@@ -3484,7 +3499,18 @@
                           "Children": [
                             {
                               "$type": "Models.Soils.SoilCrop, Models",
-                              "LL": null,
+                              "LL": [
+                                0.3,
+                                0.4,
+                                0.23,
+                                0.23,
+                                0.23,
+                                0.23,
+                                0.23,
+                                0.23,
+                                0.23,
+                                0.23
+                              ],
                               "KL": [
                                 0.04,
                                 0.04,
@@ -5831,7 +5857,17 @@
                           "Children": [
                             {
                               "$type": "Models.Soils.SoilCrop, Models",
-                              "LL": null,
+                              "LL": [
+                                0.43,
+                                0.43,
+                                0.42,
+                                0.44,
+                                0.44,
+                                0.44,
+                                0.44,
+                                0.44,
+                                0.44
+                              ],
                               "KL": [
                                 0.03,
                                 0.02,
