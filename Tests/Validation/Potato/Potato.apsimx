@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 283,
-  "Version": 80,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-05",
+  "Version": 84,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -780,11 +780,11 @@
                               ],
                               "AirDry": [
                                 0.08,
-                                0.16,
-                                0.15,
-                                0.13,
-                                0.15,
-                                0.15
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01
                               ],
                               "LL15": [
                                 0.16,
@@ -3049,7 +3049,7 @@
                       "Children": [
                         {
                           "$type": "Models.Factorial.Factor, Models",
-                          "Specification": null,
+                          "Specification": "",
                           "Name": "PlantingDate",
                           "Children": [
                             {
@@ -3107,7 +3107,7 @@
                         },
                         {
                           "$type": "Models.Factorial.Factor, Models",
-                          "Specification": null,
+                          "Specification": "",
                           "Name": "PlantDensity",
                           "Children": [
                             {
@@ -3335,9 +3335,9 @@
                                 0.33,
                                 0.33,
                                 0.31,
-                                0.15,
-                                0.1,
-                                0.06
+                                0.3,
+                                0.3,
+                                0.3
                               ],
                               "SAT": [
                                 0.5,
@@ -5086,11 +5086,11 @@
                               ],
                               "AirDry": [
                                 0.08,
-                                0.16,
-                                0.14,
-                                0.11,
-                                0.16,
-                                0.15
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01
                               ],
                               "LL15": [
                                 0.16,
@@ -14115,17 +14115,17 @@
                                 0.18,
                                 0.18,
                                 0.12,
-                                0.07,
-                                0.07,
-                                0.07
+                                0.2,
+                                0.35,
+                                0.35
                               ],
                               "SAT": [
                                 0.35,
                                 0.35,
                                 0.3,
                                 0.25,
-                                0.25,
-                                0.25
+                                0.4,
+                                0.4
                               ],
                               "KS": null,
                               "BDMetadata": null,
@@ -19431,7 +19431,7 @@
               ],
               "LegendPosition": 3,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Tuber Yield Comparison",
               "Children": [
@@ -19511,7 +19511,7 @@
               ],
               "LegendPosition": 3,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Tuber Biomass Comparison",
               "Children": [
@@ -19591,7 +19591,7 @@
               ],
               "LegendPosition": 3,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Tuber Nitrogen",
               "Children": [
