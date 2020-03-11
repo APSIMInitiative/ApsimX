@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Models.PMF
 {
     /// <summary>
-    /// Interface class for Uptake calculatios.
+    /// Interface class for Uptake Methods.
     /// </summary>
     public interface IUptakeMethod
     {

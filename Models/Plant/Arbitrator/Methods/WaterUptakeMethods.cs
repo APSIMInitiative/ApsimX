@@ -9,14 +9,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace Models.PMF
+namespace Models.PMF.Arbitrator
 {
     /// <summary>The method used to do WaterUptake</summary>
     [Serializable]
     [ValidParent(ParentType = typeof(IArbitrator))]
     public class WaterUptakeMethod : Model, IUptakeMethod
     {
-        /// <summary>The method used to arbitrate N allocations</summary>
+        /// <summary>Reference to Plant to find WaterDemands</summary>
         [Link(Type = LinkType.Ancestor)]
         protected Plant plant = null;
 

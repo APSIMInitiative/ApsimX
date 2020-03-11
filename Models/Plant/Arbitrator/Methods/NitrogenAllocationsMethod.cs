@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Models.PMF.Arbitrator
 {
-    /// <summary>Sends the dm allocations.</summary>
+    /// <summary>Allocates the Nitrogen parittioning to the different organs.</summary>
     [Serializable]
     [ValidParent(ParentType = typeof(BiomassTypeArbitrator))]
     public class NitrogenAllocationsMethod : Model, IAllocationMethod
@@ -19,7 +19,7 @@ namespace Models.PMF.Arbitrator
         protected IArbitrator Arbitrator = null;
 
 
-        /// <summary>Sends the nutrient allocations.</summary>
+        /// <summary>Allocate the nutrient allocations.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="N">The organs.</param>
         public void Allocate(IArbitration[] Organs, BiomassArbitrationType N)
@@ -58,17 +58,6 @@ namespace Models.PMF.Arbitrator
             if (N.BalanceError > 0.001)
                 throw new Exception("N Mass balance violated!!!!  Daily Plant N increment is greater than N demand");
             
-            //var DM = Arbitrator.DM;
-            //DM.End = 0;
-            //for (int i = 0; i < Organs.Length; i++)
-            //    DM.End += Organs[i].Total.Wt;
-            //DM.BalanceError = (DM.End - (DM.Start + DM.TotalPlantSupply));
-            //if (DM.BalanceError > 0.0001)
-            //    throw new Exception("DM Mass Balance violated!!!!  Daily Plant Wt increment is greater than DM supplied by photosynthesis and DM remobilisation");
-            //DM.BalanceError = (DM.End - (DM.Start + DM.TotalStructuralDemand + DM.TotalMetabolicDemand + DM.TotalStorageDemand));
-            //if (DM.BalanceError > 0.0001)
-            //    throw new Exception("DM Mass Balance violated!!!!  Daily Plant Wt increment is greater than the sum of structural DM demand, metabolic DM demand and Storage DM capacity");
-
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Models.PMF.Arbitrator
     [ValidParent(ParentType = typeof(BiomassTypeArbitrator))]
     public class NutrientConstrainedAllocationMethod : Model, IAllocationMethod
     {
-        /// <summary>The method used to arbitrate N allocations</summary>
+        /// <summary>Determines Nutrient limitations to DM allocations</summary>
         [Link(Type = LinkType.Ancestor, ByName = true)]
         protected IArbitrator Arbitrator = null;
 
