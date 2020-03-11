@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 382,
-  "Version": 80,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-10",
+  "Version": 83,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -951,6 +951,18 @@
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
                       "VariableNames": [
+                        "AnimalFoodStore"
+                      ],
+                      "EventNames": null,
+                      "Name": "AnimalFoodLedger",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
+                      "VariableNames": [
                         "Finances"
                       ],
                       "EventNames": null,
@@ -1063,7 +1075,7 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "Reason = \"Bos indicus sales\"",
+                          "Filter": "",
                           "Name": "Income _ Bos Indicus Sales",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1093,7 +1105,7 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "Reason = \"Bos indicus purchases\"",
+                          "Filter": "",
                           "Name": "Expenses _ Bos Indicus Purchases",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1123,7 +1135,7 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "Reason = \"Purchase Hay\"",
+                          "Filter": "",
                           "Name": "Expenses _ Hay Purchases",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1341,7 +1353,7 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "Reason = \"Harvest\"",
+                          "Filter": "",
                           "Name": "Native Pasture Growth",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1371,7 +1383,7 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "Reason = \"Bos indicus grazing\"",
+                          "Filter": "",
                           "Name": "Native Pasture Grazed",
                           "Children": [],
                           "IncludeInDocumentation": true,

@@ -1,52 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
-using System.Xml.Serialization;
 using Models.PMF.Struct;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Xml.Serialization;
 
 namespace Models.PMF.Phen
 {
-    /// <summary>
-    /// Leaf appearance phenological phase
-    /// </summary>
+    /// <summary>The duration of this phase is determined by leaf appearance rate and the number of leaves to complete the phase. As such, the model parameterisation of leaf appearance and final leaf number are important for predicting the duration of the crop correctly.</summary>
     [Serializable]
-    [Description("This phase extends from the end of the previous phase until the Completion Leaf Number is achieved.  The duration of this phase is determined by leaf appearance rate and the completion leaf number target.")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
-    public class NodeNumberPhase : Model, IPhase
+    public class SimpleLeafAppearancePhase : Model, IPhase, ICustomDocumentation
     {
-        // 1. Links
-        //----------------------------------------------------------------------------------------------------------------
-
-        [Link]
-        Structure structure = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction CompletionNodeNumber = null;
+        private IFunction targetLeafNumber = null;
 
-        //2. Private and protected fields
-        //-----------------------------------------------------------------------------------------------------------------
+        [Link(Type = LinkType.Child, ByName = true)]
+        private IFunction currentLeafNumber = null;
 
-        /// <summary>The cohort no at start</summary>
-        private double NodeNoAtStart;
-        /// <summary>The first</summary>
+        private double LeafNoAtStart;
         private bool First = true;
-        /// <summary>The fraction complete yesterday</summary>
         private double FractionCompleteYesterday = 0;
-
-        
-        //5. Public properties
-        //-----------------------------------------------------------------------------------------------------------------
+        private double TargetLeafForCompletion = 0;
 
         /// <summary>The start</summary>
         [Description("Start")]
         public string Start { get; set; }
 
         /// <summary>The end</summary>
-        [Description("End")]
+        [Models.Core.Description("End")]
         public string End { get; set; }
 
         /// <summary>Return a fraction of phase complete.</summary>
@@ -55,53 +42,52 @@ namespace Models.PMF.Phen
         {
             get
             {
-                double F = (structure.LeafTipsAppeared - NodeNoAtStart) / (CompletionNodeNumber.Value() - NodeNoAtStart);
-                if (F < 0) F = 0;
-                if (F > 1) F = 1;
+                double F = 0;
+                F = (currentLeafNumber.Value() - LeafNoAtStart) / TargetLeafForCompletion;
+                F = MathUtilities.Bound(F,0,1);
                 return Math.Max(F, FractionCompleteYesterday); //Set to maximum of FractionCompleteYesterday so on days where final leaf number increases phenological stage is not wound back.
             }
         }
 
-        //6. Public methods
-        //-----------------------------------------------------------------------------------------------------------------
         /// <summary>Do our timestep development</summary>
         public bool DoTimeStep(ref double propOfDayToUse)
         {
             bool proceedToNextPhase = false;
-            
+                        
             if (First)
             {
-                NodeNoAtStart = structure.LeafTipsAppeared;
+                LeafNoAtStart = currentLeafNumber.Value();
+                TargetLeafForCompletion = targetLeafNumber.Value() - LeafNoAtStart;
                 First = false;
             }
 
             FractionCompleteYesterday = FractionComplete;
 
-            if (structure.LeafTipsAppeared >= CompletionNodeNumber.Value())
+            if (FractionComplete>=1)
             {
                 proceedToNextPhase = true;
-                propOfDayToUse = 0.00001; //assumes we use most of the Tt today to get to specified node number.  Should be calculated as a function of the phyllochron
+                propOfDayToUse = 0.00001;  //assumes we use most of the Tt today to get to final leaf.  Should be calculated as a function of the phyllochron
             }
-
+            
             return proceedToNextPhase;
         }
-
+                
         /// <summary>Reset phase</summary>
         public void ResetPhase()
         {
-            NodeNoAtStart = 0;
+            LeafNoAtStart = 0;
             FractionCompleteYesterday = 0;
+            TargetLeafForCompletion = 0;
             First = true;
         }
-
-        //7. Private methods
+        
+        //7. Private methode
         //-----------------------------------------------------------------------------------------------------------------
 
         /// <summary>Called when [simulation commencing].</summary>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)  { ResetPhase(); }
-        
-        
+        private void OnSimulationCommencing(object sender, EventArgs e) { ResetPhase(); }
+
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
@@ -113,16 +99,12 @@ namespace Models.PMF.Phen
                 // Describe the start and end stages
                 tags.Add(new AutoDocumentation.Paragraph("This phase goes from " + Start + " to " + End + ".  ", indent));
 
-                // write memos.
-                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
                 // get description of this class.
                 AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
-                // write children.
-                foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
+                // write memos.
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
             }
         }
     }
