@@ -1689,7 +1689,6 @@
 
         /// <summary>
         /// Renames the Input.FileName property to FileNames and makes it an array.
-        /// Replace PhaseBasedSwitch with phaseBasedLookup.
         /// Change ExcelInput.FileName from a string into a string[].
         /// </summary>
         /// <param name="root"></param>
@@ -1700,12 +1699,22 @@
                 if (input["FileName"] != null)
                     input["FileNames"] = new JArray(input["FileName"]);
             // Rename ExcelInput.FileName to FileNames and make it an array.
+
+        }
+		
+		/// <summary>
+        /// Replace PhaseBasedSwitch with phaseBasedLookup.
+        /// Change ExcelInput.FileName from a string into a string[].
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion95(JObject root, string fileName)
+        {
             foreach (JObject PBS in JsonUtilities.ChildrenRecursively(root, "PhaseBasedSwitch"))
             {
                 PBS["$type"] = "Models.Functions.PhaseLookupValue, Models";
             }
-        }
-
+		}
         /// <summary>
         /// Changes initial Root Wt to an array.
         /// </summary>
