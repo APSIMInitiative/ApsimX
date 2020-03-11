@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 382,
-  "Version": 80,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-10",
+  "Version": 76,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-02-24",
   "Name": "Simulations",
   "Children": [
     {
@@ -943,6 +943,18 @@
                       ],
                       "EventNames": null,
                       "Name": "GrazeFoodStoreLedger",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
+                      "VariableNames": [
+                        "AnimalFoodStore"
+                      ],
+                      "EventNames": null,
+                      "Name": "AnimalFoodLedger",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
