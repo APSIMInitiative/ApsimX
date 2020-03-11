@@ -168,7 +168,7 @@ namespace UnitTests
 
         public bool GetCheckpointShowOnGraphs(string checkpointName)
         {
-            throw new NotImplementedException();
+            return true;
         }
     }
 
