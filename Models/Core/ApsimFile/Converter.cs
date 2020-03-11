@@ -1689,6 +1689,19 @@
         }
 
         /// <summary>
+        /// Renames the Input.FileName property to FileNames and makes it an array.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion84(JObject root, string fileName)
+        {
+            foreach (JObject input in JsonUtilities.ChildrenRecursively(root, "Input"))
+                if (input["FileName"] != null)
+                    input["FileNames"] = new JArray(input["FileName"]);
+        }
+
+        /// <summary>
+        /// Add a field to the Checkpoints table.
         /// </summary>
         /// <param name="root"></param>
         /// <param name="fileName"></param>
@@ -1701,6 +1714,9 @@
                 db.OpenDatabase(dbFileName, false);
                 if (db.TableExists("_Checkpoints"))
                 {
+                    if (!db.GetTableColumns("_Checkpoints").Contains("OnGraphs"))
+                    {
+                        db.AddColumn("_Checkpoints", "OnGraphs", "integer");
                     }
                 }
             }
