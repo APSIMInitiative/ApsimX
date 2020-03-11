@@ -40,22 +40,23 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class SorghumArbitrator: Model, IUptake, IArbitrator, ICustomDocumentation
+    public class SorghumArbitrator : BaseArbitrator
     {
-        ///1. Links
-        ///------------------------------------------------------------------------------------------------
+        #region Links and Input parameters
 
-        /// <summary>The top level plant object in the Plant Modelling Framework</summary>
-        [Link]
-        private Plant plant = null;
+        ///// <summary>The method used to arbitrate N allocations</summary>
+        //[Link(Type = LinkType.Child, ByName = true)]
+        //private IArbitrationMethod NArbitrator = null;
 
-        /// <summary>The method used to arbitrate N allocations</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        private IArbitrationMethod nArbitrator = null;
+        ///// <summary>The method used to arbitrate N allocations</summary>
+        //[Link(Type = LinkType.Child, ByName = true)]
+        //private IArbitrationMethod DMArbitrator = null;
 
-        /// <summary>The method used to arbitrate N allocations</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        private IArbitrationMethod dmArbitrator = null;
+        ///// <summary>The kgha2gsm</summary>
+        //private const double kgha2gsm = 0.1;
+
+        ///// <summary>The list of organs</summary>
+        //private List<IArbitration> Organs = new List<IArbitration>();
 
         [Link]
         private Root root = null;
@@ -66,84 +67,9 @@ namespace Models.PMF
         [Link]
         private Phenology phenology = null;
 
-        /// <summary>The soil</summary>
-        [Link]
-        public Soils.Soil Soil = null;
-        ///2. Private And Protected Fields
-        /// -------------------------------------------------------------------------------------------------
-        //private List<IModel> uptakeModels = null;
-        //private List<IModel> zones = null;
-        //private double stage;
-        //private IPhase previousPhase;
-        private double accumTT;
+        #endregion
 
-        /// <summary>The kgha2gsm</summary>
-        protected const double kgha2gsm = 0.1;
-
-        /// <summary>The list of organs</summary>
-        protected List<IArbitration> Organs = new List<IArbitration>();
-
-        /// <summary>A list of organs or suborgans that have watardemands</summary>
-        protected List<IHasWaterDemand> WaterDemands = new List<IHasWaterDemand>();
-
-        ///4. Public Events And Enums
-        /// -------------------------------------------------------------------------------------------------
-
-        /// <summary>Occurs when a plant is about to be sown.</summary>
-        public event EventHandler SetDMSupply;
-        /// <summary>Occurs when a plant is about to be sown.</summary>
-        public event EventHandler SetNSupply;
-        /// <summary>Occurs when a plant is about to be sown.</summary>
-        public event EventHandler SetDMDemand;
-        /// <summary>Occurs when a plant is about to be sown.</summary>
-        public event EventHandler SetNDemand;
-
-
-        ///5. Public Properties
-        /// --------------------------------------------------------------------------------------------------
-
-        /// <summary>The variables for DM</summary>
-        [XmlIgnore]
-        public BiomassArbitrationType DM { get; private set; }
-
-        /// <summary>The variables for N</summary>
-        [XmlIgnore]
-        public BiomassArbitrationType N { get; private set; }
-
-        //// <summary>Gets the dry mass supply relative to dry mass demand.</summary>
-        /// <value>The dry mass supply.</value>
-        [XmlIgnore]
-        public double FDM { get { return DM == null ? 0 : MathUtilities.Divide(DM.TotalPlantSupply, DM.TotalPlantDemand, 0); } }
-
-        /// <summary>Gets the dry mass supply relative to dry structural demand plus metabolic demand.</summary>
-        /// <value>The dry mass supply.</value>
-        [XmlIgnore]
-        public double StructuralCarbonSupplyDemand { get { return DM == null ? 0 : MathUtilities.Divide(DM.TotalPlantSupply, (DM.TotalStructuralDemand + DM.TotalMetabolicDemand), 0); } }
-
-        /// <summary>Gets the delta wt.</summary>
-        /// <value>The delta wt.</value>
-        public double DeltaWt { get { return DM == null ? 0 : (DM.End - DM.Start); } }
-
-        /// <summary>Gets the n supply relative to N demand.</summary>
-        /// <value>The n supply.</value>
-        [XmlIgnore]
-        public double FN { get { return N == null ? 0 : MathUtilities.Divide(N.TotalPlantSupply, N.TotalPlantDemand, 0); } }
-
-        /// <summary>Gets the water demand.</summary>
-        /// <value>The water demand.</value>
-        [XmlIgnore]
-        public double WDemand { get; protected set; }
-
-        /// <summary>Gets the water Supply.</summary>
-        /// <value>The water supply.</value>
-        [XmlIgnore]
-        public double WSupply { get; protected set; }
-
-        /// <summary>Gets the water allocated in the plant (taken up).</summary>
-        /// <value>The water uptake.</value>
-        [XmlIgnore]
-        public double WAllocated { get; protected set; }
-
+        #region Main outputs
 
         /// <summary>Gets or sets MassFlow during NitrogenUptake Calcs</summary>
         [XmlIgnore]
@@ -169,7 +95,14 @@ namespace Models.PMF
         /// <summary>Gets the water demand.</summary>
         /// <value>The water demand.</value>
         public double NDiffusionSupply { get; private set; }
-        
+
+        #endregion
+        private List<IModel> uptakeModels = null;
+        private List<IModel> zones = null;
+        private double stage;
+        private IPhase previousPhase;
+        private double accumTT;
+
         /// <summary>
         /// Total TTFM accumulated from flowering.
         /// </summary>
@@ -182,77 +115,24 @@ namespace Models.PMF
         [JsonIgnore]
         public double DMPlantMax { get; set; }
 
-        ///TotalAvailable divided by TotalPotential - used to lookup PhenologyStress table
-        public double SWAvailRatio { get; set; }
-
-        ///TotalSupply divided by WaterDemand - used to lookup ExpansionStress table - when calculating Actual LeafArea and calcStressedLeafArea
-        public double SDRatio { get; set; }
-
-        /////Same as SDRatio?? used to calculate Photosynthesis stress in calculating yield (Grain)
-        //public double PhotoStress { get; set; }
-
-        ///// <summary>Available SW by layer.</summary>
-        //public double[] Avail { get; private set; }
-
-        ///// <summary>Pot. Available SW by layer.</summary>
-        //public double[] PotAvail { get; private set; }
-
-        //  /// <summary>Total available SW.</summary>
-        //public double TotalAvail { get; private set; }
-
-        // // <summary>Total potential available SW.</summary>
-        //public double TotalPotAvail { get; private set; }
-
-        ///6. Public methods
-        /// -----------------------------------------------------------------------------------------------------------
-
-        /// <summary>Things the plant model does when the simulation starts</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        virtual protected void OnSimulationCommencing(object sender, EventArgs e) { Clear(); }
-
         /// <summary>Called at the start of the simulation.</summary>
         /// <param name="sender">The sender of the event</param>
         /// <param name="e">Dummy event data.</param>
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            //stage = phenology.Stage;
-            //uptakeModels = Apsim.ChildrenRecursively(Parent, typeof(IUptake));
-            //zones = Apsim.ChildrenRecursively(this.Parent, typeof(Zone));
-            //previousPhase = phenology.CurrentPhase;
+            stage = phenology.Stage;
+            uptakeModels = Apsim.ChildrenRecursively(Parent, typeof(IUptake));
+            zones = Apsim.ChildrenRecursively(this.Parent, typeof(Zone));
+            previousPhase = phenology.CurrentPhase;
             DMPlantMax = 9999;
         }
 
-        /// <summary>Called when crop is sowing</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantSowing")]
-        virtual protected void OnPlantSowing(object sender, SowPlant2Type data)
+        [EventSubscribe("StartOfDay")]
+        private void OnStartOfDay(object sender, EventArgs e)
         {
-            List<IArbitration> organsToArbitrate = new List<IArbitration>();
-            List<IHasWaterDemand> Waterdemands = new List<IHasWaterDemand>();
-
-            foreach (Model Can in Apsim.FindAll(plant, typeof(IHasWaterDemand)))
-                Waterdemands.Add(Can as IHasWaterDemand);
-
-            foreach (IOrgan organ in plant.Organs)
-                if (organ is IArbitration)
-                    organsToArbitrate.Add(organ as IArbitration);
-
-
-            Organs = organsToArbitrate;
-            WaterDemands = Waterdemands;
-            DM = new BiomassArbitrationType("DM", Organs);
-            N = new BiomassArbitrationType("N", Organs);
+            WAllocated = 0;
         }
-
-        //[EventSubscribe("StartOfDay")]
-        //private void OnStartOfDay(object sender, EventArgs e)
-        //{
-        //    WAllocated = 0;
-        //}
 
         [EventSubscribe("DoPhenology")]
         private void OnEndOfDay(object sender, EventArgs e)
@@ -282,126 +162,29 @@ namespace Models.PMF
             UpdateTTElapsed();
         }
 
-        /// Local methods for setting up supplies and demands
-        /// <summary>Accumulate all of the Organ DM Supplies </summary>
-        public virtual void DMSupplies()
-        {
-            // Setup DM supplies from each organ
-            SetDMSupply?.Invoke(this, new EventArgs());
-            BiomassSupplyType[] supplies = Organs.Select(organ => organ.DMSupply).ToArray();
-
-            double totalWt = Organs.Sum(o => o.Total.Wt);
-            DM.GetSupplies(supplies, totalWt);
-
-        }
-
-        /// <summary>Calculate all of the Organ DM Demands </summary>
-        public virtual void DMDemands()
-        {
-            // Setup DM demands for each organ  
-            SetDMDemand?.Invoke(this, new EventArgs());
-            BiomassPoolType[] demands = Organs.Select(organ => organ.DMDemand).ToArray();
-            DM.GetDemands(demands);
-        }
-
-        /// <summary>Calculate all of the Organ N Supplies </summary>
-        public virtual void NSupplies()
-        {
-            // Setup N supplies from each organ
-            SetNSupply?.Invoke(this, new EventArgs());
-            BiomassSupplyType[] supplies = Organs.Select(organ => organ.NSupply).ToArray();
-            double totalN = Organs.Sum(o => o.Total.N);
-            N.GetSupplies(supplies, totalN);
-
-        }
-
-        /// <summary>Calculate all of the Organ N Demands </summary>
-        public virtual void NDemands()
-        {
-            // Setup N demands
-            SetNDemand?.Invoke(this, new EventArgs());
-            BiomassPoolType[] demands = Organs.Select(organ => organ.NDemand).ToArray();
-            N.GetDemands(demands);
-
-        }
-
         /// <summary>Clears this instance.</summary>
-        protected void Clear()
+        protected override void Clear()
         {
-            DM = new BiomassArbitrationType("DM", Organs);
-            N = new BiomassArbitrationType("N", Organs);
-
+            base.Clear();
             DltTT = 0.0;
             WatSupply = 0.0;
             NMassFlowSupply = 0.0;
             NDiffusionSupply = 0.0;
             TTFMFromFlowering = 0.0;
-            
+
             SWAvailRatio = 0.0;
             SDRatio = 0.0;
-            //PhotoStress = 0.0;
+            PhotoStress = 0.0;
+            TotalAvail = 0.0;
+            TotalPotAvail = 0.0;
         }
 
-        /// <summary>
-        /// Calculate the potential sw uptake for today
-        /// </summary>
-        public List<ZoneWaterAndN> GetWaterUptakeEstimates(SoilState soilstate)
-        {
-            if (plant.IsAlive)
-            {
-                // Get all water supplies.
-                double waterSupply = 0;  //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
-
-                List<double[]> supplies = new List<double[]>();
-                List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
-                foreach (ZoneWaterAndN zone in soilstate.Zones)
-                    foreach (IOrgan o in Organs)
-                        if (o is IWaterNitrogenUptake)
-                        {
-                            double[] organSupply = (o as IWaterNitrogenUptake).CalculateWaterSupply(zone);
-                            if (organSupply != null)
-                            {
-                                supplies.Add(organSupply);
-                                zones.Add(zone);
-                                waterSupply += MathUtilities.Sum(organSupply) * zone.Zone.Area;
-                            }
-                        }
-
-                // Calculate total water demand.
-                double waterDemand = 0; //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
-
-                foreach (IHasWaterDemand WD in WaterDemands)
-                    waterDemand += WD.CalculateWaterDemand() * plant.Zone.Area;
-
-                // Calculate demand / supply ratio.
-                double fractionUsed = 0;
-                if (waterSupply > 0)
-                    fractionUsed = Math.Min(1.0, waterDemand / waterSupply);
-
-                // Apply demand supply ratio to each zone and create a ZoneWaterAndN structure
-                // to return to caller.
-                List<ZoneWaterAndN> ZWNs = new List<ZoneWaterAndN>();
-                for (int i = 0; i < supplies.Count; i++)
-                {
-                    // Just send uptake from my zone
-                    ZoneWaterAndN uptake = new ZoneWaterAndN(zones[i]);
-                    uptake.Water = MathUtilities.Multiply_Value(supplies[i], fractionUsed);
-                    uptake.NO3N = new double[uptake.Water.Length];
-                    uptake.NH4N = new double[uptake.Water.Length];
-                    uptake.PlantAvailableNO3N = new double[uptake.Water.Length];
-                    uptake.PlantAvailableNH4N = new double[uptake.Water.Length];
-                    ZWNs.Add(uptake);
-                }
-                return ZWNs;
-            }
-            else
-                return null;
-        }
+        #region IUptake interface
 
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
-        public void SetActualWaterUptake(List<ZoneWaterAndN> zones)
+        public override void SetActualWaterUptake(List<ZoneWaterAndN> zones)
         {
 
             // Calculate the total water supply across all zones.
@@ -411,12 +194,12 @@ namespace Models.PMF
                 // Z.Water calculated as Supply * fraction used
                 waterSupply += MathUtilities.Sum(Z.Water) * Z.Zone.Area;
             }
-            WSupply = waterSupply;
+
             // Calculate total plant water demand.
             WDemand = 0.0; //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
             foreach (IArbitration o in Organs)
                 if (o is IHasWaterDemand)
-                    WDemand += (o as IHasWaterDemand).CalculateWaterDemand() * plant.Zone.Area;
+                    WDemand += (o as IHasWaterDemand).CalculateWaterDemand() * Plant.Zone.Area;
 
             // Calculate the fraction of water demand that has been given to us.
             double fraction = 1;
@@ -438,8 +221,8 @@ namespace Models.PMF
             // i.e. Root will do pass the uptake to the soil water balance.
             foreach (ZoneWaterAndN zone in zones)
             {
-                plant.Root.DoWaterUptake(zone.Water, zone.Zone.Name);
                 StoreWaterVariablesForNitrogenUptake(zone);
+                Plant.Root.DoWaterUptake(zone.Water, zone.Zone.Name);
             }
         }
 
@@ -455,7 +238,7 @@ namespace Models.PMF
                 myZone.PotentialAvailableSW = new double[myZone.soil.Thickness.Length];
                 myZone.Supply = new double[myZone.soil.Thickness.Length];
 
-                var soilCrop = Soil.Crop(plant.Name);
+                var soilCrop = Soil.Crop(Plant.Name);
                 double[] kl = soilCrop.KL;
 
                 double[] llDep = MathUtilities.Multiply(soilCrop.LL, myZone.soil.Thickness);
@@ -484,29 +267,52 @@ namespace Models.PMF
                 var totalAvail = myZone.AvailableSW.Sum();
                 var totalAvailPot = myZone.PotentialAvailableSW.Sum();
                 var totalSupply = myZone.Supply.Sum();
-                WatSupply = totalSupply; 
+                WatSupply = totalSupply;
 
                 // Set reporting variables.
-                //Avail = myZone.AvailableSW;
-                //PotAvail = myZone.PotentialAvailableSW;
+                Avail = myZone.AvailableSW;
+                PotAvail = myZone.PotentialAvailableSW;
+                TotalAvail = myZone.AvailableSW.Sum();
+                TotalPotAvail = myZone.PotentialAvailableSW.Sum();
 
                 //used for SWDef PhenologyStress table lookup
-                SWAvailRatio = MathUtilities.Bound(MathUtilities.Divide(totalAvail, totalAvailPot, 1.0),0.0,10.0);
+                SWAvailRatio = MathUtilities.Bound(MathUtilities.Divide(totalAvail, totalAvailPot, 1.0), 0.0, 10.0);
 
                 //used for SWDef ExpansionStress table lookup
                 SDRatio = MathUtilities.Bound(MathUtilities.Divide(totalSupply, WDemand, 1.0), 0.0, 10);
 
                 //used for SwDefPhoto Stress
-                //PhotoStress = MathUtilities.Bound(MathUtilities.Divide(totalSupply, WDemand, 1.0), 0.0, 1.0);
+                PhotoStress = MathUtilities.Bound(MathUtilities.Divide(totalSupply, WDemand, 1.0), 0.0, 1.0);
             }
         }
-               
+
+        ///TotalAvailable divided by TotalPotential - used to lookup PhenologyStress table
+        public double SWAvailRatio { get; set; }
+
+        ///TotalSupply divided by WaterDemand - used to lookup ExpansionStress table - when calculating Actual LeafArea and calcStressedLeafArea
+        public double SDRatio { get; set; }
+
+        ///Same as SDRatio?? used to calculate Photosynthesis stress in calculating yield (Grain)
+        public double PhotoStress { get; set; }
+
+        /// <summary>Available SW by layer.</summary>
+        public double[] Avail { get; private set; }
+
+        /// <summary>Pot. Available SW by layer.</summary>
+        public double[] PotAvail { get; private set; }
+
+        /// <summary>Total available SW.</summary>
+        public double TotalAvail { get; private set; }
+
+        /// <summary>Total potential available SW.</summary>
+        public double TotalPotAvail { get; private set; }
+
         /// <summary>
         /// Calculate the potential N uptake for today. Should return null if crop is not in the ground (this is not true for old sorghum).
         /// </summary>
-        public virtual List<Soils.Arbitrator.ZoneWaterAndN> GetNitrogenUptakeEstimates(SoilState soilstate)
+        public override List<Soils.Arbitrator.ZoneWaterAndN> GetNitrogenUptakeEstimates(SoilState soilstate)
         {
-            if (plant.IsEmerged)
+            if (Plant.IsEmerged)
             {
                 var nSupply = 0.0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
 
@@ -525,7 +331,7 @@ namespace Models.PMF
                 //have to correct the leaf demand calculation
                 var leaf = Organs[leafIndex] as SorghumLeaf;
                 var leafAdjustment = leaf.calculateClassicDemandDelta();
-                
+
                 //double NDemand = (N.TotalPlantDemand - N.TotalReallocation) / kgha2gsm * Plant.Zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
                 //old sorghum uses g/m^2 - need to convert after it is used to calculate actual diffusion
                 // leaf adjustment is not needed here because it is an adjustment for structural demand - we only look at metabolic here.
@@ -554,7 +360,7 @@ namespace Models.PMF
                     var root = Organs[rootIndex] as Root;
 
                     //Get Nuptake supply from each organ and set the PotentialUptake parameters that are passed to the soil arbitrator
-                    
+
                     //at present these 2arrays arenot being used within the CalculateNitrogenSupply function
                     //sorghum uses Diffusion & Massflow variables currently
                     double[] organNO3Supply = new double[zone.NO3N.Length]; //kg/ha - dltNo3 in old apsim
@@ -583,7 +389,7 @@ namespace Models.PMF
                         if (TTFMFromFlowering > NUptakeCease)
                             totalMassFlow = 0;
                         actualMassFlow = totalMassFlow;
-                        
+
                         if (totalMassFlow < nDemand && TTFMFromFlowering < NUptakeCease) // fixme && ttElapsed < nUptakeCease
                         {
                             actualDiffusion = MathUtilities.Bound(nDemand - totalMassFlow, 0.0, totalDiffusion);
@@ -617,7 +423,7 @@ namespace Models.PMF
                         throw new Exception("-ve no3 uptake demand");
                     UptakeDemands.NH4N = MathUtilities.Add(UptakeDemands.NH4N, organNH4Supply);
 
-                    N.UptakeSupply[rootIndex] += MathUtilities.Sum(organNO3Supply) * kgha2gsm * zone.Zone.Area / plant.Zone.Area;  //g/m2
+                    N.UptakeSupply[rootIndex] += MathUtilities.Sum(organNO3Supply) * kgha2gsm * zone.Zone.Area / Plant.Zone.Area;  //g/m2
                     if (MathUtilities.IsNegative(N.UptakeSupply[rootIndex]))
                         throw new Exception($"-ve uptake supply for organ {(Organs[rootIndex] as IModel).Name}");
                     nSupply += MathUtilities.Sum(organNO3Supply) * zone.Zone.Area;
@@ -639,7 +445,7 @@ namespace Models.PMF
             {
                 var swdep = myZone.StartWater[layer]; //mm
                 var dltSwdep = myZone.WaterUptake[layer];
-                
+
                 //NO3N is in kg/ha - old sorghum used g/m^2
                 var no3conc = MathUtilities.Divide(zone.NO3N[layer] * kgha2gsm, swdep, 0);
                 var no3massFlow = no3conc * (-dltSwdep);
@@ -668,9 +474,9 @@ namespace Models.PMF
         /// <summary>
         /// Set the sw uptake for today
         /// </summary>
-        public virtual void SetActualNitrogenUptakes(List<ZoneWaterAndN> zones)
+        public override void SetActualNitrogenUptakes(List<ZoneWaterAndN> zones)
         {
-            if (plant.IsEmerged)
+            if (Plant.IsEmerged)
             {
                 // Calculate the total no3 and nh4 across all zones.
                 var nSupply = 0.0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
@@ -684,7 +490,7 @@ namespace Models.PMF
                     //NMassFlowSupply += MathUtilities.Sum(Z.NH4N);
                     nSupply += supply * Z.Zone.Area;
 
-                    for(int i = 0; i < Z.NH4N.Length; ++i)
+                    for (int i = 0; i < Z.NH4N.Length; ++i)
                         Z.NH4N[i] = 0;
                 }
 
@@ -693,17 +499,19 @@ namespace Models.PMF
                 //Reset actual uptakes to each organ based on uptake allocated by soil arbitrator and the organs proportion of potential uptake
                 for (int i = 0; i < Organs.Count; i++)
                 {
-                    N.UptakeSupply[i] = nSupply / plant.Zone.Area * N.UptakeSupply[i] / N.TotalUptakeSupply * kgha2gsm;
+                    N.UptakeSupply[i] = nSupply / Plant.Zone.Area * N.UptakeSupply[i] / N.TotalUptakeSupply * kgha2gsm;
                     if (MathUtilities.IsNegative(N.UptakeSupply[i]))
                         throw new Exception($"-ve uptake supply for organ {(Organs[i] as IModel).Name}");
                 }
 
                 //Allocate N that the SoilArbitrator has allocated the plant to each organ
-                AllocateUptake(Organs.ToArray(), N, nArbitrator);
-                plant.Root.DoNitrogenUptake(zones);
+                AllocateUptake(Organs.ToArray(), N, NArbitrator);
+                Plant.Root.DoNitrogenUptake(zones);
             }
         }
-        
+
+        #endregion
+
         private void UpdateTTElapsed()
         {
             // Can't do this at end of day because it will be too late.
@@ -722,73 +530,13 @@ namespace Models.PMF
             }
         }
 
-        /// <summary>Sends the potential dm allocations.</summary>
-        /// <param name="Organs">The organs.</param>
-        /// <exception cref="System.Exception">Mass Balance Error in Photosynthesis DM Allocation</exception>
-        virtual public void SendPotentialDMAllocations(IArbitration[] Organs)
-        {
-            //  Allocate to meet Organs demands
-            DM.Allocated = DM.TotalStructuralAllocation + DM.TotalMetabolicAllocation + DM.TotalStorageAllocation;
-
-            // Then check it all adds up
-            if (MathUtilities.IsGreaterThan(DM.Allocated, DM.TotalPlantSupply))
-                throw new Exception("Potential DM allocation by " + this.Name + " exceeds DM supply.   Thats not really possible so something has gone a miss");
-            if (MathUtilities.IsGreaterThan(DM.Allocated, DM.TotalPlantDemand))
-                throw new Exception("Potential DM allocation by " + this.Name + " exceeds DM Demand.   Thats not really possible so something has gone a miss");
-
-            // Send potential DM allocation to organs to set this variable for calculating N demand
-            for (int i = 0; i < Organs.Length; i++)
-                Organs[i].SetDryMatterPotentialAllocation(new BiomassPoolType
-                {
-                    Structural = DM.StructuralAllocation[i],  //Need to seperate metabolic and structural allocations
-                    Metabolic = DM.MetabolicAllocation[i],  //This wont do anything currently
-                    Storage = DM.StorageAllocation[i], //Nor will this do anything
-                });
-        }
-
-        /// <summary>Does the re allocation.</summary>
-        /// <param name="Organs">The organs.</param>
-        /// <param name="BAT">The bat.</param>
-        /// <param name="arbitrator">The arbitrator.</param>
-        virtual public void Reallocation(IArbitration[] Organs, BiomassArbitrationType BAT, IArbitrationMethod arbitrator)
-        {
-            double BiomassReallocated = 0;
-            if (BAT.TotalReallocationSupply > 0.00000000001)
-            {
-                arbitrator.DoAllocation(Organs, BAT.TotalReallocationSupply, ref BiomassReallocated, BAT);
-
-                //Then calculate how much biomass is realloced from each supplying organ based on relative reallocation supply
-                for (int i = 0; i < Organs.Length; i++)
-                    if (BAT.ReallocationSupply[i] > 0)
-                    {
-                        double RelativeSupply = BAT.ReallocationSupply[i] / BAT.TotalReallocationSupply;
-                        BAT.Reallocation[i] += BiomassReallocated * RelativeSupply;
-                    }
-                BAT.TotalReallocation = MathUtilities.Sum(BAT.Reallocation);
-            }
-        }
-
-        /// <summary>Does the uptake.</summary>
-        /// <param name="Organs">The organs.</param>
-        /// <param name="BAT">The bat.</param>
-        /// <param name="arbitrator">The option.</param>
-        virtual public void AllocateUptake(IArbitration[] Organs, BiomassArbitrationType BAT, IArbitrationMethod arbitrator)
-        {
-            double BiomassTakenUp = 0;
-            if (BAT.TotalUptakeSupply > 0.00000000001)
-            {
-                arbitrator.DoAllocation(Organs, BAT.TotalUptakeSupply, ref BiomassTakenUp, BAT);
-                // Then calculate how much N is taken up by each supplying organ based on relative uptake supply
-                for (int i = 0; i < Organs.Length; i++)
-                    BAT.Uptake[i] += BiomassTakenUp * MathUtilities.Divide(BAT.UptakeSupply[i], BAT.TotalUptakeSupply, 0);
-            }
-        }
+        #region Plant interface methods
 
         /// <summary>Does the retranslocation.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="BAT">The bat.</param>
         /// <param name="arbitrator">The option.</param>
-        public void Retranslocation(IArbitration[] Organs, BiomassArbitrationType BAT, IArbitrationMethod arbitrator)
+        override public void Retranslocation(IArbitration[] Organs, BiomassArbitrationType BAT, IArbitrationMethod arbitrator)
         {
             if (MathUtilities.IsPositive(BAT.TotalRetranslocationSupply))
             {
@@ -830,147 +578,36 @@ namespace Models.PMF
             }
         }
 
+        #endregion
+
+        #region Arbitration step functions
         /// <summary>Does the water limited dm allocations.  Water constaints to growth are accounted for in the calculation of DM supply
         /// and does initial N calculations to work out how much N uptake is required to pass to SoilArbitrator</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoPotentialPlantPartioning")]
-        protected void OnDoPotentialPlantPartioning(object sender, EventArgs e)
+        override protected void OnDoPotentialPlantPartioning(object sender, EventArgs e)
         {
-            if (plant.IsEmerged)
+            if (Plant.IsEmerged)
             {
                 DM.Clear();
                 N.Clear();
 
                 DMSupplies();
                 DMDemands();
-
-                Reallocation(Organs.ToArray(), DM, dmArbitrator);         // Allocate supply of reallocated DM to organs
-                AllocateFixation(Organs.ToArray(), DM, dmArbitrator);             // Allocate supply of fixed DM (photosynthesis) to organs
-                Retranslocation(Organs.ToArray(), DM, dmArbitrator);      // Allocate supply of retranslocated DM to organs
-                SendPotentialDMAllocations(Organs.ToArray());               // Tell each organ what their potential growth is so organs can calculate their N demands
+                PotentialDMAllocation();
 
                 leaf.UpdateArea();
 
                 NSupplies();
                 NDemands();
 
-                Reallocation(Organs.ToArray(), N, nArbitrator);           // Allocate N available from reallocation to each organ
+                Reallocation(Organs.ToArray(), N, NArbitrator);           // Allocate N available from reallocation to each organ
             }
         }
 
-        /// <summary>Does the fixation.</summary>
-        /// <param name="Organs">The organs.</param>
-        /// <param name="BAT">The bat.</param>
-        /// <param name="arbitrator">The option.</param>
-        /// <exception cref="System.Exception">Crop is trying to Fix excessive amounts of BAT.  Check partitioning coefficients are giving realistic nodule size and that FixationRatePotential is realistic</exception>
-        virtual public void AllocateFixation(IArbitration[] Organs, BiomassArbitrationType BAT, IArbitrationMethod arbitrator)
-        {
-            double BiomassFixed = 0;
-            if (BAT.TotalFixationSupply > 0.00000000001)
-            {
-                arbitrator.DoAllocation(Organs, BAT.TotalFixationSupply, ref BiomassFixed, BAT);
 
-                //Set the sink limitation variable.  BAT.NotAllocated changes after each allocation step so it must be caught here and assigned as sink limitation
-                BAT.SinkLimitation = BAT.NotAllocated;
-
-                // Then calculate how much resource is fixed from each supplying organ based on relative fixation supply
-                if (BiomassFixed > 0)
-                    for (int i = 0; i < Organs.Length; i++)
-                    {
-                        if (BAT.FixationSupply[i] > 0.00000000001)
-                        {
-                            double RelativeSupply = BAT.FixationSupply[i] / BAT.TotalFixationSupply;
-                            BAT.Fixation[i] = BiomassFixed * RelativeSupply;
-                        }
-                    }
-            }
-        }
-
-        /// <summary>Sends the dm allocations.</summary>
-        /// <param name="Organs">The organs.</param>
-        virtual public void SetDryMatterAllocations(IArbitration[] Organs)
-        {
-            // Send DM allocations to all Plant Organs
-            for (int i = 0; i < Organs.Length; i++)
-                Organs[i].SetDryMatterAllocation(new BiomassAllocationType
-                {
-                    Respired = DM.Respiration[i],
-                    Reallocation = DM.Reallocation[i],
-                    Retranslocation = DM.Retranslocation[i],
-                    Structural = DM.StructuralAllocation[i],
-                    Storage = DM.StorageAllocation[i],
-                    Metabolic = DM.MetabolicAllocation[i],
-                });
-        }
-
-        /// <summary>Sends the nutrient allocations.</summary>
-        /// <param name="Organs">The organs.</param>
-        virtual public void SetNitrogenAllocations(IArbitration[] Organs)
-        {
-            // Send N allocations to all Plant Organs
-            for (int i = 0; i < Organs.Length; i++)
-            {
-                if ((N.StructuralAllocation[i] < -0.00000001) || (N.MetabolicAllocation[i] < -0.00000001) || (N.StorageAllocation[i] < -0.00000001))
-                    throw new Exception("-ve N Allocation");
-                if (N.StructuralAllocation[i] < 0.0)
-                    N.StructuralAllocation[i] = 0.0;
-                if (N.MetabolicAllocation[i] < 0.0)
-                    N.MetabolicAllocation[i] = 0.0;
-                if (N.StorageAllocation[i] < 0.0)
-                    N.StorageAllocation[i] = 0.0;
-                Organs[i].SetNitrogenAllocation(new BiomassAllocationType
-                {
-                    Structural = N.StructuralAllocation[i], //This needs to be seperated into components
-                    Metabolic = N.MetabolicAllocation[i],
-                    Storage = N.StorageAllocation[i],
-                    Fixation = N.Fixation[i],
-                    Reallocation = N.Reallocation[i],
-                    Retranslocation = N.Retranslocation[i],
-                    Uptake = N.Uptake[i]
-                });
-            }
-
-            //Finally Check Mass balance adds up
-            N.End = 0;
-            for (int i = 0; i < Organs.Length; i++)
-                N.End += Organs[i].Total.N;
-            N.BalanceError = (N.End - (N.Start + N.TotalPlantSupply));
-            if (N.BalanceError > 0.05)
-                throw new Exception("N Mass balance violated!!!!.  Daily Plant N increment is greater than N supply");
-            N.BalanceError = (N.End - (N.Start + N.TotalPlantDemand));
-            if (N.BalanceError > 0.001)
-                throw new Exception("N Mass balance violated!!!!  Daily Plant N increment is greater than N demand");
-            DM.End = 0;
-            for (int i = 0; i < Organs.Length; i++)
-                DM.End += Organs[i].Total.Wt;
-            DM.BalanceError = (DM.End - (DM.Start + DM.TotalPlantSupply));
-            if (DM.BalanceError > 0.0001)
-                throw new Exception("DM Mass Balance violated!!!!  Daily Plant Wt increment is greater than DM supplied by photosynthesis and DM remobilisation");
-            DM.BalanceError = (DM.End - (DM.Start + DM.TotalStructuralDemand + DM.TotalMetabolicDemand + DM.TotalStorageDemand));
-            if (DM.BalanceError > 0.0001)
-                throw new Exception("DM Mass Balance violated!!!!  Daily Plant Wt increment is greater than the sum of structural DM demand, metabolic DM demand and Storage DM capacity");
-        }
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                // write description of this class.
-                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
-
-                // write children.
-                foreach (IModel child in Apsim.Children(this, typeof(Memo)))
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-            }
-        }
+        #endregion
 
     }
 }
