@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 80,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-05",
+  "Version": 84,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -38061,7 +38061,7 @@
                               "SAT": [
                                 0.42,
                                 0.437,
-                                0.384,
+                                0.377,
                                 0.342,
                                 0.305,
                                 0.294
@@ -38182,41 +38182,6 @@
                                   "KLMetadata": null,
                                   "XFMetadata": null,
                                   "Name": "AGPRyegrassSoil",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.072,
-                                    0.056,
-                                    0.054,
-                                    0.049,
-                                    0.054,
-                                    0.062
-                                  ],
-                                  "KL": [
-                                    0.078,
-                                    0.07,
-                                    0.038,
-                                    0.012,
-                                    0.005,
-                                    0.002
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "RedCloverSoil",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -48236,7 +48201,7 @@
                               "SAT": [
                                 0.42,
                                 0.437,
-                                0.384,
+                                0.377,
                                 0.342,
                                 0.305,
                                 0.294
@@ -48357,41 +48322,6 @@
                                   "KLMetadata": null,
                                   "XFMetadata": null,
                                   "Name": "AGPRyegrassSoil",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.072,
-                                    0.056,
-                                    0.054,
-                                    0.049,
-                                    0.054,
-                                    0.062
-                                  ],
-                                  "KL": [
-                                    0.078,
-                                    0.07,
-                                    0.038,
-                                    0.012,
-                                    0.005,
-                                    0.002
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "RedCloverSoil",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -59466,7 +59396,7 @@
                               "SAT": [
                                 0.42,
                                 0.437,
-                                0.384,
+                                0.377,
                                 0.342,
                                 0.305,
                                 0.294
@@ -59587,41 +59517,6 @@
                                   "KLMetadata": null,
                                   "XFMetadata": null,
                                   "Name": "AGPRyegrassSoil",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.072,
-                                    0.056,
-                                    0.054,
-                                    0.049,
-                                    0.054,
-                                    0.062
-                                  ],
-                                  "KL": [
-                                    0.078,
-                                    0.07,
-                                    0.038,
-                                    0.012,
-                                    0.005,
-                                    0.002
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "RedCloverSoil",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
