@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 80,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-10",
+  "Version": 83,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -725,10 +725,34 @@
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
                       "VariableNames": [
+                        "ProductStore"
+                      ],
+                      "EventNames": null,
+                      "Name": "ProductsLedger",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
+                      "VariableNames": [
                         "Finances"
                       ],
                       "EventNames": null,
                       "Name": "FinancesLedger",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
+                      "VariableNames": [
+                        "Labour"
+                      ],
+                      "EventNames": null,
+                      "Name": "LabourLedger",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -799,7 +823,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": true,
+                          "DateTimeAxis": false,
                           "CrossesAtZero": false
                         },
                         {
@@ -1305,7 +1329,7 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "Reason = \"Process Tomatoes\"",
+                          "Filter": "",
                           "Name": "Tomatoes Processed",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2272,6 +2296,37 @@
                       "ReadOnly": false
                     },
                     {
+                      "$type": "Models.CLEM.Reporting.ReportResourceShortfalls, Models",
+                      "VariableNames": [
+                        "[Clock].Today as Date",
+                        "[Activities].LastShortfallResourceRequest.ResourceTypeName as Resource",
+                        "[Activities].LastShortfallResourceRequest.ActivityModel.Name as Activity",
+                        "[Activities].LastShortfallResourceRequest.Reason as Reason",
+                        "[Activities].LastShortfallResourceRequest.Required as Required",
+                        "[Activities].LastShortfallResourceRequest.Available as Available"
+                      ],
+                      "EventNames": [
+                        "[Activities].ResourceShortfallOccurred"
+                      ],
+                      "Name": "ReportResourceShortfalls",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
+                      "VariableNames": [
+                        "Labour"
+                      ],
+                      "EventNames": null,
+                      "Name": "LabourLedger",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
                       "VariableNames": [
                         "Finances"
@@ -2336,7 +2391,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": true,
+                          "DateTimeAxis": false,
                           "CrossesAtZero": false
                         }
                       ],
