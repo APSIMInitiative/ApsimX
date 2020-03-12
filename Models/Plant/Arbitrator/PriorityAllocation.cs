@@ -15,6 +15,8 @@ namespace Models.PMF
     /// Priority allocation rules used to determine partitioning
     /// </summary>
     [Serializable]
+    [ValidParent(ParentType = typeof(BiomassTypeArbitrator))]
+    [ValidParent(ParentType = typeof(IArbitrator))]
     public class PriorityAllocation : Model, IArbitrationMethod, ICustomDocumentation
     {
         /// <summary>Relatives the allocation.</summary>
