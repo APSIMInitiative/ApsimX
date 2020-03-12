@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 83,
+  "Version": 85,
   "Name": "Simulations",
   "Children": [
     {
@@ -1064,6 +1064,46 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+              "Name": "RewindDueToBiomassRemoved",
+              "Children": [
+                {
+                  "$type": "Models.Functions.XYPairs, Models",
+                  "X": [
+                    0.0,
+                    0.1,
+                    0.4,
+                    0.5,
+                    1.0
+                  ],
+                  "Y": [
+                    0.0,
+                    0.08,
+                    0.4,
+                    0.5,
+                    1.0
+                  ],
+                  "Name": "XYPairs",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].FractionBiomassRemoved",
+                  "Name": "XValue",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -1843,6 +1883,71 @@
               "FixedValue": 0.0,
               "Units": null,
               "Name": "StemSenescenceAge",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.DivideFunction, Models",
+              "Name": "PTQ",
+              "Children": [
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "Radn_mol_per_m2",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[IWeather].Radn",
+                      "Name": "SolarRadiation",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 2.285,
+                      "Units": null,
+                      "Name": "Constant",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Multiply Radn (MJ/m2/d) by 4.57 to convert to mol/m2/day and divide by 2 to convert to mol PAR/m2/d",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].ThermalTime",
+                  "Name": "ThermalTime",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.021,
+              "Units": null,
+              "Name": "MaxLAR",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -7020,15 +7125,7 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "ChiefCLPlus",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "CLF_Janz",
+                      "Name": "Chief",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7044,7 +7141,7 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "DBAAurora",
+                      "Name": "Aurora",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7052,7 +7149,7 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "ElmoreCLPlus",
+                      "Name": "Elmore",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7092,20 +7189,13 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "Hybrid_Meteor",
+                      "Name": "Meteor",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "JusticaCLPlus",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
+
                     {
                       "$type": "Models.Core.Alias, Models",
                       "Name": "Preston",
@@ -7173,16 +7263,8 @@
                     "[Phenology].PpSensitivity.FixedValue = 4",
                     "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
-                  "Name": "EGAGregory",
+                  "Name": "Gregory",
                   "Children": [
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Gregory",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
                     {
                       "$type": "Models.Core.Alias, Models",
                       "Name": "Lancer",
@@ -7246,14 +7328,6 @@
                     {
                       "$type": "Models.Core.Alias, Models",
                       "Name": "Chara",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Clearfield_stl",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7537,14 +7611,6 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "CLF_Stiletto",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
                       "Name": "Cobra",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -7585,7 +7651,7 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "GrenadeCLPlus",
+                      "Name": "Grenade",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7703,12 +7769,14 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 6",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 7",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 3.5",
+                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 80"
+
                   ],
-                  "Name": "Hibred_Mercury",
+                  "Name": "Mercury",
                   "Children": [
                     {
                       "$type": "Models.Core.Alias, Models",
@@ -7728,7 +7796,7 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "Bonnie_rock",
+                      "Name": "BonnieRock",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7768,7 +7836,7 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "Emurock",
+                      "Name": "EmuRock",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7784,7 +7852,7 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "ImposeCLPlus",
+                      "Name": "Impose",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7816,7 +7884,7 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "LRPBArrow",
+                      "Name": "Arrow",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -8108,21 +8176,7 @@
                   "Enabled": true,
                   "ReadOnly": false
                 },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 7",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 3.5",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 80"
-                  ],
-                  "Name": "Mercury",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
+
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [

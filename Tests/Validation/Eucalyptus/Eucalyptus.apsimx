@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 80,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-05",
+  "Version": 84,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -21430,7 +21430,9 @@
                         },
                         {
                           "$type": "Models.PostSimulationTools.Input, Models",
-                          "FileName": null,
+                          "FileNames": [
+                            null
+                          ],
                           "Name": "Input",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -24220,7 +24222,9 @@
                         },
                         {
                           "$type": "Models.PostSimulationTools.Input, Models",
-                          "FileName": null,
+                          "FileNames": [
+                            null
+                          ],
                           "Name": "Input",
                           "Children": [],
                           "IncludeInDocumentation": false,
