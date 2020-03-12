@@ -97,14 +97,6 @@ namespace Models.PMF.Phen
             Target = 0;
         }
         
-        /// <summary>Writes the summary.</summary>
-        /// <param name="writer">The text writer.</param>
-        public void WriteSummary(TextWriter writer)
-        {
-            writer.WriteLine("      " + Name);
-        }
-
-
         // 4. Private method
         //-----------------------------------------------------------------------------------------------------------------
 

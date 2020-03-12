@@ -126,6 +126,7 @@
     <EmbeddedResource Include="Resources\Glade\FactorView.glade" />
     <EmbeddedResource Include="Resources\Glade\WeatherDownload.glade" />
     <EmbeddedResource Include="Resources\Glade\AddModelView.glade" />
+    <EmbeddedResource Include="Resources\Glade\CheckpointView.glade" />
     <None Include="Resources\InputNextBackView.glade" />
     <EmbeddedResource Include="Resources\Glade\StringEntryForm.glade" />
     <None Include="Resources\Report.xshd" />
@@ -475,6 +476,9 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\SimpleLeafAppearancePhase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\DocumentCheck.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Document.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LifeStageGrowth.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LifeStageMortality.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RainfallShuffler.png" />

@@ -53,40 +53,51 @@ namespace Models
             stats.Clear();
             equationColours.Clear();
 
-            // Get all x/y data
-            List<double> x = new List<double>();
-            List<double> y = new List<double>();
-            foreach (SeriesDefinition definition in definitions)
+            int checkpointNumber = 0;
+            foreach (var checkpointName in storage.CheckpointNames)
             {
-                if (definition.X is double[] && definition.Y is double[])
+                // Get all x/y data
+                List<double> x = new List<double>();
+                List<double> y = new List<double>();
+                foreach (SeriesDefinition definition in definitions)
                 {
-                    x.AddRange(definition.X as IEnumerable<double>);
-                    y.AddRange(definition.Y as IEnumerable<double>);
+                    if (definition.CheckpointName == checkpointName)
+                        if (definition.X is double[] && definition.Y is double[])
+                        {
+                            x.AddRange(definition.X as IEnumerable<double>);
+                            y.AddRange(definition.Y as IEnumerable<double>);
+                        }
                 }
-            }
 
-            if (ForEachSeries)
-            {
-                // Display a regression line for each series.
-                int numDefinitions = definitions.Count;
-                for (int i = 0; i < numDefinitions; i++)
+                if (ForEachSeries)
                 {
-                    if (definitions[i].X is double[] && definitions[i].Y is double[])
+                    // Display a regression line for each series.
+                    int numDefinitions = definitions.Count;
+                    for (int i = 0; i < numDefinitions; i++)
                     {
-                        PutRegressionLineOnGraph(definitions, definitions[i].X, definitions[i].Y, definitions[i].Colour, null);
-                        equationColours.Add(definitions[i].Colour);
+                        if (definitions[i].X is double[] && definitions[i].Y is double[])
+                        {
+                            PutRegressionLineOnGraph(definitions, definitions[i].X, definitions[i].Y, definitions[i].Colour, null);
+                            equationColours.Add(definitions[i].Colour);
+                        }
                     }
                 }
-            }
-            else
-            {
-                // Display a single regression line for all data.
-                PutRegressionLineOnGraph(definitions, x, y, Color.Empty, "Regression line");
-                equationColours.Add(Color.Empty);
-            }
+                else
+                {
+                    var regresionLineName = "Regression line";
+                    if (checkpointName != "Current")
+                        regresionLineName = "Regression line (" + checkpointName + ")";
 
-            if (showOneToOne)
-                Put1To1LineOnGraph(definitions, x, y);
+                    // Display a single regression line for all data.
+                    PutRegressionLineOnGraph(definitions, x, y, ColourUtilities.ChooseColour(checkpointNumber), regresionLineName);
+                    equationColours.Add(ColourUtilities.ChooseColour(checkpointNumber));
+                }
+
+                if (showOneToOne)
+                    Put1To1LineOnGraph(definitions, x, y);
+
+                checkpointNumber++;
+            }
         }
         
         /// <summary>Return a list of extra fields that the definition should read.</summary>
@@ -142,7 +153,7 @@ namespace Models
                 ("1:1 line", Color.Empty,
                 new double[] { lowestAxisScale, largestAxisScale },
                 new double[] { lowestAxisScale, largestAxisScale },
-                LineType.Dot, MarkerType.None);
+                LineType.Dash, MarkerType.None);
             definitions.Add(oneToOne);
         }
 

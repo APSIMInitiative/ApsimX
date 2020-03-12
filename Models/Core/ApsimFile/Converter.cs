@@ -7,6 +7,7 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Xml;
@@ -17,7 +18,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 85; } }
+        public static int LatestVersion { get { return 86; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1700,11 +1701,33 @@
         }
 
         /// <summary>
-        /// Rename report namespace to Reporting.
+        /// Add a field to the Checkpoints table.
         /// </summary>
         /// <param name="root"></param>
         /// <param name="fileName"></param>
         private static void UpgradeToVersion85(JObject root, string fileName)
+        {
+            SQLite db = new SQLite();
+            var dbFileName = Path.ChangeExtension(fileName, ".db");
+            if (File.Exists(dbFileName))
+            {
+                db.OpenDatabase(dbFileName, false);
+                if (db.TableExists("_Checkpoints"))
+                {
+                    if (!db.GetTableColumns("_Checkpoints").Contains("OnGraphs"))
+                    {
+                        db.AddColumn("_Checkpoints", "OnGraphs", "integer");
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Remove Models.Report namespace.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion86(JObject root, string fileName)
         {
             // Fix type of Report nodes
             foreach (JObject report in JsonUtilities.ChildrenRecursively(root, "Report"))

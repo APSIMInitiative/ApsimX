@@ -286,6 +286,7 @@
     <Compile Include="Plant\Interfaces\IPlantDamage.cs" />
     <Compile Include="Plant\Organs\BasialBuds.cs" />
     <Compile Include="Plant\Phenology\Phases\DAWSPhase.cs" />
+    <Compile Include="Plant\Phenology\Phases\SimpleLeafAppearancePhase.cs" />
     <Compile Include="Plant\Phenology\Scales\Age.cs" />
     <EmbeddedResource Include="Resources\Scripts\GraphPanelScriptTemplate.cs" />
     <EmbeddedResource Include="Resources\Scripts\CSharpExpressionTemplate.cs" />
@@ -297,6 +298,7 @@
     <Compile Include="Soils\Standardiser\SoilDefaults.cs" />
     <Compile Include="Soils\Standardiser\SoilUnits.cs" />
     <Compile Include="Soils\Standardiser\SoilStandardiser.cs" />
+    <Compile Include="Storage\Checkpoint.cs" />
     <Compile Include="Storage\WriteTableCommand.cs" />
     <Compile Include="Storage\DatabaseTableDetails.cs" />
     <Compile Include="Storage\IDataStore.cs" />

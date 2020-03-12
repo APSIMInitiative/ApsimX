@@ -69,13 +69,6 @@ namespace Models.PMF.Phen
         /// <summary>Resets the phase.</summary>
         public virtual void ResetPhase() { }
 
-        /// <summary>Writes the summary.</summary>
-        /// <param name="writer">The text writer.</param>
-        public void WriteSummary(TextWriter writer)
-        {
-            writer.WriteLine("      " + Name);
-        }
-
         // 5. Private methods
         //-----------------------------------------------------------------------------------------------------------------
 
