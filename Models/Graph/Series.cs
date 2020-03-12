@@ -1,4 +1,4 @@
-﻿namespace Models.Graph
+namespace Models
 {
     using APSIM.Shared.Utilities;
     using Models.CLEM;

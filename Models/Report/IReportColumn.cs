@@ -1,4 +1,4 @@
-﻿namespace Models.Report
+namespace Models
 {
     /// <summary>An interface for a column in a report table.</summary>
     public interface IReportColumn
