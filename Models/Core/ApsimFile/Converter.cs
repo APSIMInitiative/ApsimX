@@ -7,6 +7,7 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Xml;
@@ -17,7 +18,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 80; } }
+        public static int LatestVersion { get { return 86; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1607,6 +1608,174 @@
             foreach (JObject excelMultiInput in JsonUtilities.ChildrenRecursively(root, "ExcelMultiInput"))
             {
                 excelMultiInput["$type"] = "Models.PostSimulationTools.ExcelInput, Models";
+            }
+        }
+
+
+        /// <summary>
+        /// Seperate life cycle process class into Growth, Transfer and Mortality classes.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion81(JObject root, string fileName)
+        {
+            // Rename ExcelInput.FileName to FileNames and make it an array.
+            foreach (JObject LSP in JsonUtilities.ChildrenRecursively(root, "LifeStageProcess"))
+            {
+                if (int.Parse(LSP["ProcessAction"].ToString()) == 0) //Process is Transfer
+                {
+                    LSP["$type"] = "Models.LifeCycle.LifeStageTransfer, Models";
+                }
+                else if (int.Parse(LSP["ProcessAction"].ToString()) == 1) //Process is PhysiologicalGrowth
+                {
+                    LSP["$type"] = "Models.LifeCycle.LifeStageGrowth, Models";
+                }
+                else if (int.Parse(LSP["ProcessAction"].ToString()) == 2) //Process is Mortality
+                {
+                    LSP["$type"] = "Models.LifeCycle.LifeStageMortality, Models";
+                }
+            }
+
+            foreach (JObject LSRP in JsonUtilities.ChildrenRecursively(root, "LifeStageReproductionProcess"))
+            {
+                LSRP["$type"] = "Models.LifeCycle.LifeStageReproduction, Models";
+            }
+        }
+
+        /// <summary>
+        /// Add Critical N Conc (if not existing) to all Root Objects by copying the maximum N conc
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion82(JObject root, string fileName)
+        {
+            foreach (JObject r in JsonUtilities.ChildrenRecursively(root, "Root"))
+            {
+                if (JsonUtilities.ChildWithName(r, "CriticalNConc") == null)
+                {
+                    JObject minNConc = JsonUtilities.ChildWithName(r, "MinimumNConc");
+                    if (minNConc == null)
+                        throw new Exception("Root has no CriticalNConc or MaximumNConc");
+
+                    VariableReference varRef = new VariableReference();
+                    varRef.Name = "CriticalNConc";
+                    varRef.VariableName = "[Root].MinimumNConc";
+                    JsonUtilities.AddModel(r, varRef);                    
+                }
+            }
+        }
+
+        /// <summary>
+        /// Remove .Value() from everywhere possible.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion83(JObject root, string fileName)
+        {
+            // 1. Report
+            foreach (JObject report in JsonUtilities.ChildrenRecursively(root, "Report"))
+            {
+                JArray variables = report["VariableNames"] as JArray;
+                if (variables == null)
+                    continue;
+
+                for (int i = 0; i < variables.Count; i++)
+                    variables[i] = variables[i].ToString().Replace(".Value()", "");
+            }
+
+            // 2. ExpressionFunction
+            foreach (JObject function in JsonUtilities.ChildrenRecursively(root, "ExpressionFunction"))
+                function["Expression"] = function["Expression"].ToString().Replace(".Value()", "");
+        }
+
+        /// <summary>
+        /// Renames the Input.FileName property to FileNames and makes it an array.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion84(JObject root, string fileName)
+        {
+            foreach (JObject input in JsonUtilities.ChildrenRecursively(root, "Input"))
+                if (input["FileName"] != null)
+                    input["FileNames"] = new JArray(input["FileName"]);
+        }
+
+        /// <summary>
+        /// Add a field to the Checkpoints table.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion85(JObject root, string fileName)
+        {
+            SQLite db = new SQLite();
+            var dbFileName = Path.ChangeExtension(fileName, ".db");
+            if (File.Exists(dbFileName))
+            {
+                db.OpenDatabase(dbFileName, false);
+                if (db.TableExists("_Checkpoints"))
+                {
+                    if (!db.GetTableColumns("_Checkpoints").Contains("OnGraphs"))
+                    {
+                        db.AddColumn("_Checkpoints", "OnGraphs", "integer");
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Add new methods structure to OrganArbitrator.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion86(JObject root, string fileName)
+        {
+            foreach (var arbitrator in JsonUtilities.ChildrenOfType(root, "OrganArbitrator"))
+            {
+                //remove DMArbitrator, and NArbitrator
+                var children = JsonUtilities.Children(arbitrator);
+                var exdm = children.Find(c => JsonUtilities.Name(c).Equals("dmArbitrator", StringComparison.OrdinalIgnoreCase));
+                JsonUtilities.RemoveChild(arbitrator, JsonUtilities.Name(exdm));
+
+                var exn = children.Find(c => JsonUtilities.Name(c).Equals("nArbitrator", StringComparison.OrdinalIgnoreCase));
+                JsonUtilities.RemoveChild(arbitrator, JsonUtilities.Name(exn));
+
+                JsonUtilities.RenameModel(exdm, "ArbitrationMethod");
+                JsonUtilities.RenameModel(exn, "ArbitrationMethod");
+
+                //Add DMArbitration
+                var dm = JsonUtilities.CreateNewChildModel(arbitrator, "DMArbitration", "Models.PMF.BiomassTypeArbitrator");
+                var folder = JsonUtilities.CreateNewChildModel(dm, "PotentialPartitioningMethods", "Models.Core.Folder");
+                JsonUtilities.CreateNewChildModel(folder, "ReallocationMethod", "Models.PMF.Arbitrator.ReallocationMethod");
+                JsonUtilities.CreateNewChildModel(folder, "AllocateFixationMethod", "Models.PMF.Arbitrator.AllocateFixationMethod");
+                JsonUtilities.CreateNewChildModel(folder, "RetranslocationMethod", "Models.PMF.Arbitrator.RetranslocationMethod");
+                JsonUtilities.CreateNewChildModel(folder, "SendPotentialDMAllocationsMethod", "Models.PMF.Arbitrator.SendPotentialDMAllocationsMethod");
+
+                folder = JsonUtilities.CreateNewChildModel(dm, "AllocationMethods", "Models.Core.Folder");
+                JsonUtilities.CreateNewChildModel(folder, "NutrientConstrainedAllocationMethod", "Models.PMF.Arbitrator.NutrientConstrainedAllocationMethod");
+                JsonUtilities.CreateNewChildModel(folder, "DryMatterAllocationsMethod", "Models.PMF.Arbitrator.DryMatterAllocationsMethod");
+
+                JArray dmChildren = dm["Children"] as JArray;
+                dmChildren.Add(exdm);
+
+                //Add N Arbitration
+                var n = JsonUtilities.CreateNewChildModel(arbitrator, "NArbitration", "Models.PMF.BiomassTypeArbitrator");
+                folder = JsonUtilities.CreateNewChildModel(n, "PotentialPartitioningMethods", "Models.Core.Folder");
+                JsonUtilities.CreateNewChildModel(folder, "ReallocationMethod", "Models.PMF.Arbitrator.ReallocationMethod");
+
+                folder = JsonUtilities.CreateNewChildModel(n, "ActualPartitioningMethods", "Models.Core.Folder");
+                JsonUtilities.CreateNewChildModel(folder, "AllocateFixationMethod", "Models.PMF.Arbitrator.AllocateFixationMethod");
+                JsonUtilities.CreateNewChildModel(folder, "RetranslocationMethod", "Models.PMF.Arbitrator.RetranslocationMethod");
+
+                folder = JsonUtilities.CreateNewChildModel(n, "AllocationMethods", "Models.Core.Folder");
+                JsonUtilities.CreateNewChildModel(folder, "NitrogenAllocationsMethod", "Models.PMF.Arbitrator.NitrogenAllocationsMethod");
+
+                JArray nChildren = n["Children"] as JArray;
+                nChildren.Add(exn);
+                var allocatesMethod = JsonUtilities.CreateNewChildModel(n, "AllocateUptakesMethod", "Models.PMF.Arbitrator.AllocateUptakesMethod");
+
+                var water = JsonUtilities.CreateNewChildModel(arbitrator, "WaterUptakeMethod", "Models.PMF.Arbitrator.WaterUptakeMethod");
+                var nitrogen = JsonUtilities.CreateNewChildModel(arbitrator, "NitrogenUptakeMethod", "Models.PMF.Arbitrator.NitrogenUptakeMethod");
+
             }
         }
 

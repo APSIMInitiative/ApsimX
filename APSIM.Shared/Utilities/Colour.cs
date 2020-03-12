@@ -1,5 +1,6 @@
 ﻿namespace APSIM.Shared.Utilities
 {
+    using System;
     using System.Drawing;
 
     /// <summary>
@@ -67,7 +68,10 @@
                 blue = (float)((255 - blue) * correctionFactor + blue);
             }
 
-            return Color.FromArgb(color.A, (int)red, (int)green, (int)blue);
+            return Color.FromArgb(color.A, 
+                                  (int)Math.Min(255, red), 
+                                  (int)Math.Min(255, green), 
+                                  (int)Math.Min(255, blue));
         }
     }
 }

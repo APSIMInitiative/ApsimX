@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 285,
-  "Version": 79,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-04",
+  "Version": 80,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-06",
   "Name": "Simulations",
   "Children": [
     {
@@ -31,7 +31,9 @@
       "Children": [
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
-          "FileName": "Observed.xlsx",
+          "FileNames": [
+            "Observed.xlsx"
+          ],
           "SheetNames": [
             "ObservedHarvestData"
           ],
@@ -43,7 +45,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
-          "FileName": "Observed.xlsx",
+          "FileNames": [
+            "Observed.xlsx"
+          ],
           "SheetNames": [
             "ObservedTimeseriesData"
           ],
@@ -97,12 +101,11 @@
             "[Chickpea].Phenology.MaturityDAS as MaturityDAS",
             "[Chickpea].Grain.Live.Wt as GrainWt",
             "[Chickpea].AboveGround.Wt",
-            "[Chickpea].Phenology.FinalNodeNo",
             "[Chickpea].Grain.NumberFunction",
             "[Chickpea].Shell.PodNumber",
             "[Chickpea].Grain.Size",
             "[Chickpea].Phenology.EmergenceDAS as EmergenceDAS",
-            "[Chickpea].SowingData.Cultivar "
+            "[Chickpea].SowingData.Cultivar"
           ],
           "EventNames": [
             "[Chickpea].Harvesting"
@@ -125,9 +128,6 @@
             "[Soil].SoilWater.pond",
             "sum([Soil].SoilWater.SWmm) as ProfileWater",
             "[Soil].SoilNitrogen.NO3.kgha",
-            "[MicroClimate].net_radn",
-            "[MicroClimate].peta",
-            "[MicroClimate].petr",
             "[Chickpea].Leaf.LAI",
             "[Chickpea].Leaf.Fn",
             "[Chickpea].Leaf.Fw",
@@ -165,12 +165,9 @@
             "[Chickpea].Phenology.CurrentStageName",
             "[Chickpea].Phenology.Stage",
             "[Chickpea].Leaf.LeafCohortParameters.MaxArea",
-            "[Chickpea].Leaf.LeafCohortParameters.MaxArea.Grainfilling",
-            "[Chickpea].Leaf.LeafCohortParameters.MaxArea.Grainfilling.MaxLeafSizeDuringGrainfilling.ExponentialFunction",
             "[Chickpea].Stem.Live.MetabolicWt",
             "[Chickpea].Root.KLModifier",
             "[Chickpea].Structure.BranchingRate",
-            "[Chickpea].Structure.CoverResponse",
             "[Chickpea].Leaf.PlantsenescedLeafNo",
             "[Chickpea].Leaf.DeadCohortNo",
             "sum([Soil].SoilWater.SWmm)-[Soil].SoilWater.SWmm[1] as ProfWat_less_toplayer",
@@ -183,13 +180,9 @@
             "[Chickpea].Phenology.AccumulatedTT",
             "[Weather].MeanT",
             "[Chickpea].Structure.PhotoSynthPerBranch",
-            "[Chickpea].Root.TTklFactor.klRowSpaceModifier",
             "[Chickpea].Leaf.ExtinctionCoeff",
             "[Chickpea].Structure.BranchingRate.Potential_Branching_Rate.Vegetative.MultiplyFunction.BranchModifier.EarlyVeg.TempResponse",
-            "[Chickpea].Structure.BranchingRate.Potential_Branching_Rate.Vegetative.MultiplyFunction.BranchModifier.EarlyVeg.Cover_response",
-            "[Chickpea].Structure.BranchingRate.Potential_Branching_Rate.Vegetative.MultiplyFunction.BranchModifier.EarlyVeg.SurfaceWaterFactor",
             "[Soil].SoilWater.ESW",
-            "[Chickpea].Structure.BranchingRate.Potential_Branching_Rate.Vegetative.MultiplyFunction.BranchModifier.LateVeg.Cover_response",
             "[Chickpea].Structure.BranchingRate.Potential_Branching_Rate.Vegetative.MultiplyFunction.BranchModifier.LateVeg.WaterStress",
             "[Chickpea].Structure.BranchingRate.Potential_Branching_Rate.Vegetative.MultiplyFunction.BranchModifier.LateVeg.TempResponse",
             "[Chickpea].Structure.BranchingRate.Potential_Branching_Rate.Vegetative.MultiplyFunction.BranchModifier",
@@ -198,7 +191,6 @@
             "([Soil].SoilWater.SWmm[1]+[Soil].SoilWater.SWmm[2]+[Soil].SoilWater.SWmm[3]+[Soil].SoilWater.SWmm[4]+[Soil].SoilWater.SWmm[5]) as ProfWatTop5Layers",
             "[Chickpea].Leaf.CoverGreen",
             "[Chickpea].Leaf.CoverTotal",
-            "[Chickpea].Structure.BranchingRate.Cover_response",
             "[Chickpea].Pod.Wt",
             "[Weather].MinT",
             "[Weather].MaxT",
@@ -234,6 +226,7 @@
         {
           "$type": "Models.PMF.Plant, Models",
           "CropType": "Chickpea",
+          "IsAlive": false,
           "IsEnding": false,
           "DaysAfterEnding": 0,
           "ResourceName": null,
@@ -14033,6 +14026,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,
@@ -16376,6 +16370,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,
@@ -21702,6 +21697,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,
@@ -23811,6 +23807,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,
@@ -26122,6 +26119,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,
@@ -28252,6 +28250,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,
@@ -29355,6 +29354,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,
@@ -30374,6 +30374,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,
@@ -30943,6 +30944,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,
@@ -32075,6 +32077,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,
@@ -36469,6 +36472,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,
@@ -40119,6 +40123,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,
@@ -41316,6 +41321,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,
@@ -43267,6 +43273,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,
@@ -45853,6 +45860,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,
@@ -53014,6 +53022,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,
@@ -53889,6 +53898,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,
@@ -55026,6 +55036,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,
@@ -57179,6 +57190,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,
@@ -59262,6 +59274,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,
@@ -61420,6 +61433,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,
@@ -63448,6 +63462,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,
@@ -64722,6 +64737,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,
@@ -66121,6 +66137,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,
@@ -67201,6 +67218,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,
@@ -68345,6 +68363,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,
@@ -69409,6 +69428,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,
@@ -70797,6 +70817,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,
@@ -72035,6 +72056,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,
@@ -73273,6 +73295,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,
@@ -74597,6 +74620,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,
@@ -75921,6 +75945,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,
@@ -77245,6 +77270,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,
@@ -78652,6 +78678,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Chickpea",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": null,

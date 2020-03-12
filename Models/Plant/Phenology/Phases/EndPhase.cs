@@ -46,12 +46,7 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>Resets the phase.</summary>
-        public void ResetPhase()  { }
-        
-
-        /// <summary>Writes the summary.</summary>
-        public void WriteSummary(TextWriter writer)  { writer.WriteLine("      " + Name); }
-        
+        public void ResetPhase()  { }      
     }
 }
 
