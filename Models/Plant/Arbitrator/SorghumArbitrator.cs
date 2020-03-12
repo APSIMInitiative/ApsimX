@@ -221,8 +221,8 @@ namespace Models.PMF
             // i.e. Root will do pass the uptake to the soil water balance.
             foreach (ZoneWaterAndN zone in zones)
             {
-                StoreWaterVariablesForNitrogenUptake(zone);
                 Plant.Root.DoWaterUptake(zone.Water, zone.Zone.Name);
+                StoreWaterVariablesForNitrogenUptake(zone);
             }
         }
 
@@ -290,7 +290,7 @@ namespace Models.PMF
         public double SWAvailRatio { get; set; }
 
         ///TotalSupply divided by WaterDemand - used to lookup ExpansionStress table - when calculating Actual LeafArea and calcStressedLeafArea
-        public double SDRatio { get; set; }
+        public double SDRatio { get; set; } 
 
         ///Same as SDRatio?? used to calculate Photosynthesis stress in calculating yield (Grain)
         public double PhotoStress { get; set; }
