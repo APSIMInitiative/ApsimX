@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Models.Report;
+using Models;
 using APSIM.Shared.Utilities;
 using System.Data;
 using System.IO;
@@ -27,7 +27,7 @@ namespace Models.CLEM.Reporting
     [Description("This report automatically generates a ledger of all shortfalls in CLEM Resource requests.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/ResourceShortfalls.htm")]
-    public class ReportResourceShortfalls: Models.Report.Report
+    public class ReportResourceShortfalls: Models.Report
     {
         /// <summary>The columns to write to the data store.</summary>
         [NonSerialized]

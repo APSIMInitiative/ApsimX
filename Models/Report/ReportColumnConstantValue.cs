@@ -1,4 +1,4 @@
-﻿namespace Models.Report
+namespace Models
 {
     using System;
 

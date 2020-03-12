@@ -94,7 +94,7 @@ namespace Models.CLEM
 
             // store details needed to create this report in future.
 
-            //hSReport = new Report.Report
+            //hSReport = new Report
             //{
             //    Name = this.Name + "Report",
             //    VariableNames = new string[]

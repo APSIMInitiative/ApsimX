@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using Models.Core;
-    using Models.Graph;
+    using Models;
     using Views;
 
     /// <summary>

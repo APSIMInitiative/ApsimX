@@ -66,7 +66,7 @@
                             EndDate = new DateTime(1980, 1, 2)
                         },
                         new MockSummary(),
-                        new Models.Report.Report()
+                        new Models.Report()
                         {
                             Name = "Report",
                             VariableNames = new string[] {"[Clock].Today"},
@@ -118,7 +118,7 @@
                                     EndDate = new DateTime(1980, 1, 2)
                                 },
                                 new MockSummary(),
-                                new Models.Report.Report()
+                                new Models.Report()
                                 {
                                     Name = "Report",
                                     VariableNames = new string[] {"[Clock].Today"},
@@ -138,7 +138,7 @@
                                     EndDate = new DateTime(1980, 1, 4)
                                 },
                                 new MockSummary(),
-                                new Models.Report.Report()
+                                new Models.Report()
                                 {
                                     Name = "Report",
                                     VariableNames = new string[] {"[Clock].Today"},
@@ -203,7 +203,7 @@
                                     EndDate = new DateTime(1980, 1, 2)
                                 },
                                 new MockSummary(),
-                                new Models.Report.Report()
+                                new Models.Report()
                                 {
                                     Name = "Report",
                                     VariableNames = new string[] {"[Clock].Today"},
@@ -223,7 +223,7 @@
                                     EndDate = new DateTime(1980, 1, 4)
                                 },
                                 new MockSummary(),
-                                new Models.Report.Report()
+                                new Models.Report()
                                 {
                                     Name = "Report",
                                     VariableNames = new string[] {"[Clock].Today"},

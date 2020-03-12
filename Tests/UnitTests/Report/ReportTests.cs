@@ -6,7 +6,6 @@
     using Models.Core.ApsimFile;
     using Models.Core.Run;
     using Models.Interfaces;
-    using Models.Report;
     using Models.Storage;
     using NUnit.Framework;
     using System;
