@@ -700,15 +700,15 @@
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
         [ContextMenu(MenuName = "Checkpoints", IsToggle = true,
-                     AppliesTo = new Type[] { typeof(Simulations) })]
+                     AppliesTo = new Type[] { typeof(DataStore) })]
         public void ShowCheckpoints(object sender, EventArgs e)
         {
             try
             {
                 explorerPresenter.HideRightHandPanel();
                 explorerPresenter.ShowInRightHandPanel(explorerPresenter.ApsimXFile,
-                                                       "UserInterface.Views.ListButtonView",
-                                                       "UserInterface.Presenters.CheckpointsPresenter");
+                                                       "ApsimNG.Resources.Glade.CheckpointView.glade",
+                                                       new CheckpointsPresenter());
             }
             catch (Exception err)
             {

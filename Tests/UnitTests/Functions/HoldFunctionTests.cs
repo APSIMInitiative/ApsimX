@@ -43,10 +43,6 @@
             {
             }
 
-            public void WriteSummary(TextWriter writer)
-            {
-                throw new NotImplementedException();
-            }
         }
 
         /// <summary>Ensure the hold function can deal with exceptions.</summary>

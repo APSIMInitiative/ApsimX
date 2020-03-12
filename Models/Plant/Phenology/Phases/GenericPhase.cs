@@ -86,13 +86,6 @@ namespace Models.PMF.Phen
         /// <summary>Resets the phase.</summary>
         public void ResetPhase() { ProgressThroughPhase = 0.0; }
 
-        /// <summary>Writes the summary.</summary>
-        /// <param name="writer">The text writer.</param>
-        public void WriteSummary(TextWriter writer)
-        {
-            writer.WriteLine("      " + Name);
-            writer.WriteLine(string.Format("         Target                    = {0,8:F0} (dd)", Target));
-        }
 
         // 4. Private method
         //-----------------------------------------------------------------------------------------------------------------

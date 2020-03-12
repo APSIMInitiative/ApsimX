@@ -463,14 +463,6 @@ namespace Models.PMF.Phen
                 phase.ResetPhase();
         }
        
-        /// <summary>Write phenology info to summary file.</summary>
-        internal void WriteSummary(TextWriter writer)
-        {
-            writer.WriteLine("   Phases:");
-            foreach (IPhase P in phases)
-                P.WriteSummary(writer);
-        }
-        
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
