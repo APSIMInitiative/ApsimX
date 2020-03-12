@@ -49,6 +49,15 @@
       "Name": "StockParameters",
       "Children": [
         {
+          "$type": "Models.Memo, Models",
+          "Text": "",
+          "Name": "Memo",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.Factorial.Experiment, Models",
           "DisabledSimNames": null,
           "Name": "Experiment",
