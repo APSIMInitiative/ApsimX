@@ -4,9 +4,9 @@
     using EventArguments;
     using Models.Core;
     using Models.Factorial;
-    using Models.Report;
     using Models.Storage;
     using Views;
+    using Models;
 
     /// <summary>
     /// The Report presenter class
