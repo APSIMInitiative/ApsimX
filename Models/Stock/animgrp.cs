@@ -1,9 +1,3 @@
-// -----------------------------------------------------------------------
-// <copyright file="animgrp.cs" company="CSIRO">
-//      Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
 namespace Models.GrazPlan
 {
     using StdUnits;

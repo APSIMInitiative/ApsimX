@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="LifeStageImmigrationProcess.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace Models.LifeCycle
+﻿namespace Models.LifeCycle
 {
     using System;
     using System.Collections.Generic;
@@ -25,7 +19,7 @@ namespace Models.LifeCycle
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LifeStage))]
-    public class LifeStageImmigrationProcess : Model, ILifeStageProcess
+    public class LifeStageImmigration : Model, ILifeStageProcess
     {
         [NonSerialized]
         private List<IFunction> FunctionList;

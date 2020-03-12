@@ -19,36 +19,17 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(PastureActivityManage))]
     [ValidParent(ParentType = typeof(RuminantActivityTrade))]
     [Description("This model component specifies a relationship to be used by supplying a series of x and y values.")]
+    [Version(1, 0, 3, "Graph of relationship displayed in Summary")]
+    [Version(1, 0, 2, "Added RelationshipCalculationMethod to allow user to define fixed or linear solver")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"content/features/Relationships/Relationship.htm")]
-    public class Relationship: Model, IValidatableObject
+    public class Relationship: CLEMModel, IValidatableObject
     {
         /// <summary>
         /// Current value
         /// </summary>
         [XmlIgnore]
         public double Value { get; set; }
-
-        /// <summary>
-        /// Starting value
-        /// </summary>
-        [Description("Value at start of simulation")]
-        [Required]
-        public double StartingValue { get; set; }
-
-        /// <summary>
-        /// Minimum value possible
-        /// </summary>
-        [Description("Minimum value possible")]
-        [Required]
-        public double Minimum { get; set; }
-
-        /// <summary>
-        /// Maximum value possible
-        /// </summary>
-        [Description("Maximum value possible")]
-        [Required, GreaterThan("Minimum", ErrorMessage = "Maximum value must be greater than minimum value")]
-        public double Maximum { get; set; }
 
         /// <summary>
         /// X values of relationship
@@ -65,12 +46,51 @@ namespace Models.CLEM.Activities
         public double[] YValues { get; set; }
 
         /// <summary>
+        /// Method to solving relationship
+        /// </summary>
+        [Description("Method for solving relationship")]
+        [Required]
+        public RelationshipCalculationMethod CalculationMethod { get; set; }
+
+        /// <summary>
+        /// Name of the x variable
+        /// </summary>
+        [Description("Name of the x variable")]
+        public string NameOfXVariable { get; set; }
+
+        /// <summary>
+        /// Name of the y variable
+        /// </summary>
+        [Description("Name of the y variable")]
+        public string NameOfYVariable { get; set; }
+
+        /// <summary>
+        /// Initial value of Running value that can be modified by this relationship Modify() during the simulation
+        /// </summary>
+        [Description("Initial running value")]
+        [Required]
+        public double StartingValue { get; set; }
+
+        /// <summary>
+        /// Minimum value possible
+        /// </summary>
+        [Description("Minimum running value possible")]
+        [Required]
+        public double Minimum { get; set; }
+
+        /// <summary>
+        /// Maximum value possible
+        /// </summary>
+        [Description("Maximum running value possible")]
+        [Required, GreaterThan("Minimum", ErrorMessage = "Maximum value must be greater than minimum value")]
+        public double Maximum { get; set; }
+
+        /// <summary>
         /// Solve equation for y given x
         /// </summary>
         /// <param name="xValue">x value to solve y</param>
-        /// <param name="linearInterpolation">Use linear interpolation between the nearest point before and after x</param>
         /// <returns>y value for given x</returns>
-        public double SolveY(double xValue, bool linearInterpolation)
+        public double SolveY(double xValue)
         {
             if (xValue <= XValues[0])
             {
@@ -92,9 +112,8 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            if(linearInterpolation)
+            if(CalculationMethod == RelationshipCalculationMethod.Interpolation)
             {
-//                return YValues[k] + (YValues[k + 1] - YValues[k]) / (XValues[k + 1] - XValues[k]) * (xValue - XValues[k]);
                 return YValues[k] + (YValues[k + 1] - YValues[k]) * (xValue - XValues[k])/(XValues[k + 1] - XValues[k]);
             }
             else
@@ -109,7 +128,7 @@ namespace Models.CLEM.Activities
         /// <param name="x">x value</param>
         public void Modify(double x)
         {
-            Value += SolveY(x, true);
+            Value += SolveY(x);
             Value = Math.Min(Value, Maximum);
             Value = Math.Max(Value, Minimum);
         }
@@ -120,7 +139,7 @@ namespace Models.CLEM.Activities
         /// <param name="x">x value</param>
         public void Calculate(double x)
         {
-            Value = SolveY(x, true);
+            Value = SolveY(x);
             Value = Math.Min(Value, Maximum);
             Value = Math.Max(Value, Minimum);
         }
@@ -169,5 +188,118 @@ namespace Models.CLEM.Activities
             }
             return results;
         }
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            html += "\n<div class=\"activityentry\" style=\"width:400px;height:200px;\">";
+            // draw chart
+
+            if (XValues is null || XValues.Length == 0)
+            {
+                html += "<span class=\"errorlink\">No x values provided</span>";
+            }
+            else if (YValues is null || XValues.Length != YValues.Length)
+            {
+                html += "<span class=\"errorlink\">Number of x values does not equal number of y values</span>";
+            }
+            else
+            {
+                html += @"
+                <canvas id=""myChart_" + this.Name + @"""><p>Unable to display graph in browser</p></canvas>
+                <script>
+                var ctx = document.getElementById('myChart_" + this.Name + @"').getContext('2d');
+                var myChart = new Chart(ctx, {
+                    responsive:false,
+                    maintainAspectRatio: true,
+                    type: 'scatter',
+                    data: {
+                        datasets: [{
+                            data: [";
+                string data = "";
+                for (int i = 0; i < XValues.Length; i++)
+                {
+                    if (YValues.Length > i)
+                    {
+                        data += "{ x: " + XValues[i].ToString() + ", y: " + YValues[i] + "},";
+                    }
+                }
+                data = data.TrimEnd(',');
+                html += data;
+                html += @"],
+                     pointBackgroundColor: '[GraphPointColour]',
+                     pointBorderColor: '[GraphPointColour]',
+                     borderColor: '[GraphLineColour]', 
+                     pointRadius: 5,
+                     pointHoverRadius: 5,
+                     fill: false,
+                     tension: 0,
+                     showLine: true,
+                     steppedLine: " + (CalculationMethod == RelationshipCalculationMethod.UseSpecifiedValues).ToString().ToLower() + @",
+                        }]
+                    },
+                    options: {
+                            legend: {
+                                display: false
+                            },
+                            scales: {
+                                xAxes: [{
+                                    color: 'green',
+                                    type: 'linear',
+                                    position: 'bottom',
+                                    ticks: {
+                                      fontColor: '[GraphLabelColour]',
+                                      fontSize: 13,
+                                      padding: 3
+                                    },
+                                    gridLines: {
+                                       color: '[GraphGridLineColour]',
+                                       drawOnChartArea: true
+                                    }";
+                if (this.NameOfXVariable != null && this.NameOfXVariable != "")
+                {
+                    html += @", 
+                                      scaleLabel: {
+                                       display: true,
+                                       labelString: '" + this.NameOfXVariable + @"'
+                                      }";
+                }
+                html += @"}],
+                                yAxes: [{
+                                    type: 'linear',
+                                    gridLines: {
+                                       zeroLineColor: '[GraphGridZeroLineColour]',
+                                       zeroLineWidth: 1,
+                                       zeroLineBorderDash: [3, 3],
+                                       color: '[GraphGridLineColour]',
+                                       drawOnChartArea: true
+                                    },
+                                    ticks: {
+                                      fontColor: '[GraphLabelColour]',
+                                      fontSize: 13,
+                                      padding: 3
+                                    }";
+                if (this.NameOfYVariable != null && this.NameOfYVariable != "")
+                {
+                    html += @", scaleLabel: {
+                                      display: true,
+                                      labelString: '" + this.NameOfYVariable + @"'
+                                    }";
+                }
+                html += @"}],
+                            }
+                           }
+                        });
+                </script>";
+            }
+            html += "\n</div>";
+            return html;
+        }
+
     }
 }

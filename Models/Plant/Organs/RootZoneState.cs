@@ -65,6 +65,10 @@ namespace Models.PMF.Organs
         [Units("g/m2")]
         public double[] StorageNDemand { get; set; }
 
+        /// <summary>Demand for Metabolic N, set when Ndemand is called and used again in N allocation</summary>
+        [Units("g/m2")]
+        public double[] MetabolicNDemand { get; set; }
+
         /// <summary>The Nuptake</summary>
         public double[] NitUptake { get; set; }
 

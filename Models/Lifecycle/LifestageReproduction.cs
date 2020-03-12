@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="LifeStageReproductionProcess.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace Models.LifeCycle
+﻿namespace Models.LifeCycle
 {
     using System;
     using System.Collections.Generic;
@@ -27,7 +21,7 @@ namespace Models.LifeCycle
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LifeStage))]
-    public class LifeStageReproductionProcess: Model, ILifeStageProcess
+    public class LifeStageReproduction: Model, ILifeStageProcess
     {
         private IFunction ProgenyFunc = null;
         private IFunction FecundityFunc = null;

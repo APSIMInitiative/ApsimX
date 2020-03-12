@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="GraphPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System;
     using System.Collections;
@@ -337,7 +331,7 @@ namespace UserInterface.Presenters
                     TextAnnotation textAnnotation = annotations[i] as TextAnnotation;
                     if (textAnnotation.x is double && ((double)textAnnotation.x) == double.MinValue)
                     {
-                        double interval = (largestAxisScale - lowestAxisScale) / 10; // fit 10 annotations on graph.
+                        double interval = (largestAxisScale - lowestAxisScale) / 8; // fit 10 annotations on graph.
 
                         double yPosition = largestAxisScale - (i * interval);
                         graphView.DrawText(

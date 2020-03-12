@@ -15,6 +15,8 @@ namespace Models.PMF
     /// Relative allocation rules used to determine partitioning
     /// </summary>
     [Serializable]
+    [ValidParent(ParentType = typeof(BiomassTypeArbitrator))]
+    [ValidParent(ParentType = typeof(IArbitrator))]
     public class RelativeAllocation : Model, IArbitrationMethod, ICustomDocumentation
     {
         /// <summary>Relatives the allocation.</summary>

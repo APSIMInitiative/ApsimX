@@ -157,7 +157,8 @@ namespace Models.CLEM.Activities
                     double number = purchasetype.Number;
                     if(numberToStock != null && foodStore != null)
                     {
-                        number = Convert.ToInt32(numberToStock.SolveY(foodStore.TonnesPerHectare, false), CultureInfo.InvariantCulture);
+                        //NOTE: ensure calculation method in relationship is fixed values
+                        number = Convert.ToInt32(numberToStock.SolveY(foodStore.TonnesPerHectare), CultureInfo.InvariantCulture);
                     }
 
                     for (int i = 0; i < number; i++)

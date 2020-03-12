@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="stock_intf.cs" company="CSIRO">
-// CSIRO Agriculture & Food
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace Models.GrazPlan
+﻿namespace Models.GrazPlan
 {
     using System;
     using System.Collections.Generic;

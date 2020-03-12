@@ -1,22 +1,16 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Report.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.Report
+﻿namespace Models.Report
 {
     using APSIM.Shared.Utilities;
+    using Models.CLEM;
     using Models.Core;
-    using Newtonsoft.Json;
-    using Models.Core.Run;
     using Models.Storage;
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Data;
     using System.IO;
     using System.Linq;
     using System.Xml.Serialization;
-    using Models.CLEM;
 
     /// <summary>
     /// A report class for writing output to the data store.
@@ -215,8 +209,21 @@ namespace Models.Report
 
             // Create a row ready for writing.
             List<object> valuesToWrite = new List<object>();
+            List<string> invalidVariables = new List<string>();
             for (int i = 0; i < columns.Count; i++)
-                valuesToWrite.Add(columns[i].GetValue());
+            {
+                try
+                {
+                    valuesToWrite.Add(columns[i].GetValue());
+                }
+                catch// (Exception err)
+                {
+                    // Should we include exception message?
+                    invalidVariables.Add(columns[i].Name);
+                }
+            }
+            if (invalidVariables != null && invalidVariables.Count > 0)
+                throw new Exception($"Error in report {Name}: Invalid report variables found:\n{string.Join("\n", invalidVariables)}");
 
             // Add row to our table that will be written to the db file
             dataToWriteToDb.Rows.Add(valuesToWrite);
@@ -288,8 +295,15 @@ namespace Models.Report
 
             foreach (string fullVariableName in this.VariableNames)
             {
-                if (fullVariableName != string.Empty)
-                    this.columns.Add(ReportColumn.Create(fullVariableName, clock, storage.Writer, locator, events));
+                try
+                {
+                    if (fullVariableName != string.Empty)
+                        this.columns.Add(ReportColumn.Create(fullVariableName, clock, storage.Writer, locator, events));
+                }
+                catch (Exception err)
+                {
+                    throw new Exception($"Error while creating report column '{fullVariableName}'", err);
+                }
             }
         }
 

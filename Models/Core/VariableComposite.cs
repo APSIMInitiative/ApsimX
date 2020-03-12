@@ -1,11 +1,5 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="IVariable.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.Core
+﻿namespace Models.Core
 {
-    using Functions;
     using System;
     using System.Collections.Generic;
     using System.Linq;

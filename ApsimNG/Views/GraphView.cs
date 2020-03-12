@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="GraphView.cs" company="CSIRO">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using System;
     using System.Collections;
@@ -403,8 +398,12 @@ namespace UserInterface.Views
                     series.MarkerSize = MarkerSize;
                 else if (markerSize == MarkerSizeType.Normal)
                     series.MarkerSize = 7.0;
-                else
+                else if (markerSize == MarkerSizeType.Large)
+                    series.MarkerSize = 9.0;
+                else if(markerSize == MarkerSizeType.Small)
                     series.MarkerSize = 5.0;
+                else
+                    series.MarkerSize = 3.0;
 
                 series.MarkerStroke = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
                 if (filled)

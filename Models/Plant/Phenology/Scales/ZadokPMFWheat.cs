@@ -52,6 +52,9 @@ namespace Models.PMF.Phen
         [Link]
         Structure Structure = null;
 
+        [Link]
+        private IPlant plant = null;
+
         /// <summary>Gets the stage.</summary>
         /// <value>The stage.</value>
         [Description("Zadok Stage")]
@@ -61,6 +64,8 @@ namespace Models.PMF.Phen
             {
                 double fracInCurrent = Phenology.FractionInCurrentPhase;
                 double zadok_stage = 0.0;
+                if (plant != null && !plant.IsAlive)
+                    return 0;
                 if (Phenology.InPhase("Germinating"))
                     zadok_stage = 5.0f * fracInCurrent;
                 else if (Phenology.InPhase("Emerging"))

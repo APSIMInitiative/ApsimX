@@ -60,33 +60,14 @@ namespace Models.PMF.Phen
 
             if (!phenology.OnStartDayOf("Sowing") && soil.Water[SowLayer] > soil.LL15mm[SowLayer])
             {
-                if(phenology.SorghumFlag != null)
-                {
-                    if (phenology.DaysAfterSowing > 0)
-                    {
-                        proceedToNextPhase = true;
-                        propOfDayToUse = 1;
-                    }
-                }
-                else
-                {
-                    proceedToNextPhase = true;
-                    propOfDayToUse = 1;
-                }
+                proceedToNextPhase = true;
+                propOfDayToUse = 1;
             }
-
             return proceedToNextPhase;
         }
 
         /// <summary>Resets the phase.</summary>
         public virtual void ResetPhase() { }
-
-        /// <summary>Writes the summary.</summary>
-        /// <param name="writer">The text writer.</param>
-        public void WriteSummary(TextWriter writer)
-        {
-            writer.WriteLine("      " + Name);
-        }
 
         // 5. Private methods
         //-----------------------------------------------------------------------------------------------------------------

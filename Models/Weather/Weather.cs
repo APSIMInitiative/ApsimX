@@ -206,16 +206,32 @@
             }
         }
 
-        private int WinterSolsticeDOY
+        /// <summary>
+        /// days since winter solstice (day)
+        /// </summary>
+        [Units("day")]
+        [XmlIgnore]
+        public int WinterSolsticeDOY
         {
             get {
                 if (Latitude <= 0)
-                    return 173;
+                {
+                    if (DateTime.IsLeapYear(clock.Today.Year))
+                        return 173;
+                    else
+                        return 172;
+                }
                 else
-                    return 356;
+                {
+                    if (DateTime.IsLeapYear(clock.Today.Year))
+                        return 356;
+                    else
+                        return 355;
+                }
                 }
         }
-        
+
+        private bool First = true;
         /// <summary>
         /// Number of days lapsed since the winter solstice
         /// </summary>
@@ -471,7 +487,16 @@
                 this.reader.SeekToDate(this.clock.Today);
             }
 
-            object[] values = this.reader.GetNextLineOfData();
+            object[] values;
+
+            try
+            {
+                values = this.reader.GetNextLineOfData();
+            }
+            catch (IndexOutOfRangeException err)
+            {
+                throw new Exception($"Unable to retrieve weather data on {clock.Today.ToString("yyy-MM-dd")} in file {FileName}", err);
+            }
 
             if (this.clock.Today != this.reader.GetDateFromValues(values))
                 throw new Exception("Non consecutive dates found in file: " + this.FileName + ".  Another posibility is that you have two clock objects in your simulation, there should only be one");
@@ -535,7 +560,23 @@
             if (this.PreparingNewWeatherData != null)
                 this.PreparingNewWeatherData.Invoke(this, new EventArgs());
 
-            if (clock.Today.DayOfYear == WinterSolsticeDOY)
+            if (First)
+            {
+                //StartDAWS = met.DaysSinceWinterSolstice;
+                if (clock.Today.DayOfYear < WinterSolsticeDOY)
+                {
+                    if (DateTime.IsLeapYear(clock.Today.Year))
+                        DaysSinceWinterSolstice = 366 - WinterSolsticeDOY + clock.Today.DayOfYear -1;  //minus 1 as we set the first day as zero
+                    else
+                        DaysSinceWinterSolstice = 365 - WinterSolsticeDOY + clock.Today.DayOfYear -1; 
+                }
+                else
+                    DaysSinceWinterSolstice = clock.Today.DayOfYear - WinterSolsticeDOY;
+                    
+                First = false;
+            }
+
+            if (clock.Today.DayOfYear == WinterSolsticeDOY & First == false)
                 DaysSinceWinterSolstice = 0;
             else DaysSinceWinterSolstice += 1;
 
@@ -624,14 +665,14 @@
             this.ProcessMonthlyTAVAMP(out tav, out amp);
 
             if (this.reader.Constant("tav") == null)
-                this.reader.AddConstant("tav", tav.ToString(), string.Empty, string.Empty); // add a new constant
+                this.reader.AddConstant("tav", tav.ToString(CultureInfo.InvariantCulture), string.Empty, string.Empty); // add a new constant
             else
-                this.reader.SetConstant("tav", tav.ToString());
+                this.reader.SetConstant("tav", tav.ToString(CultureInfo.InvariantCulture));
  
             if (this.reader.Constant("amp") == null)
-                this.reader.AddConstant("amp", amp.ToString(), string.Empty, string.Empty); // add a new constant
+                this.reader.AddConstant("amp", amp.ToString(CultureInfo.InvariantCulture), string.Empty, string.Empty); // add a new constant
             else
-                this.reader.SetConstant("amp", amp.ToString());
+                this.reader.SetConstant("amp", amp.ToString(CultureInfo.InvariantCulture));
         }
 
         /// <summary>
@@ -701,9 +742,12 @@
                 for (int m = 0; m < 12; m++)
                 {
                     monthlyMeans[m, y] = monthlySums[m, y] / monthlyDays[m, y];  // calc monthly mean
-                    sumOfMeans += monthlyMeans[m, y];
-                    maxMean = Math.Max(monthlyMeans[m, y], maxMean);
-                    minMean = Math.Min(monthlyMeans[m, y], minMean);
+                    if (monthlyDays[m, y] != 0)
+                    {
+                        sumOfMeans += monthlyMeans[m, y];
+                        maxMean = Math.Max(monthlyMeans[m, y], maxMean);
+                        minMean = Math.Min(monthlyMeans[m, y], minMean);
+                    }
                 }
 
                 yearlySumMeans += sumOfMeans / 12.0;        // accum the ave of monthly means

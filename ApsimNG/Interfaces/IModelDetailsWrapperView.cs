@@ -1,12 +1,5 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="IExplorerView.cs" company="CSIRO">
-//     Copyright (c) CSIRO, CLEM model
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Interfaces
+﻿namespace UserInterface.Interfaces
 {
-    using Gtk;
-
     public interface IModelDetailsWrapperView
     {
         /// <summary>

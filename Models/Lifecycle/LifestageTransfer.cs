@@ -1,43 +1,9 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="LifeStageProcess.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.LifeCycle
+﻿namespace Models.LifeCycle
 {
     using System;
     using System.Collections.Generic;
     using Models.Core;
     using Models.Functions;
-
-    /// <summary>
-    /// # [Name]
-    /// Specifies the type of lifestage process
-    /// </summary>
-    public enum ProcessType
-    {
-        /// <summary>
-        /// Transfer process that will move cohort numbers to another lifestage
-        /// </summary>
-        Transfer,
-        /// <summary>
-        /// 
-        /// </summary>
-        PhysiologicalGrowth,
-        /// <summary>
-        /// Calculates and adjusts the cohort numbers based on a mortality function
-        /// </summary>
-        Mortality
-    }
-
-    /// <summary>
-    /// The general description of a lifestage process. A Lifestage can contain a number of these.
-    /// </summary>
-    interface ILifeStageProcess 
-    {
-        void Process(LifeStage host);
-        void ProcessCohort(Cohort cohortItem);
-    }
 
     /// <summary>
     /// A process within a Lifestage which will be of ProcessType (Transfer, PhysiologicalGrowth, Mortality).
@@ -52,14 +18,8 @@ namespace Models.LifeCycle
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LifeStage))]
-    public class LifeStageProcess : Model, ILifeStageProcess
+    public class LifeStageTransfer : Model, ILifeStageProcess
     {
-        /// <summary>
-        /// The process type of this Process
-        /// </summary>
-        [Description("Lifestage Process type")]
-        public ProcessType ProcessAction { get; set; }
-
         /// <summary>
         /// The name of the LifeStage to transfer cohorts to
         /// </summary>
@@ -85,27 +45,13 @@ namespace Models.LifeCycle
             //apply the functions from the function list to this cohort
             foreach (IFunction func in FunctionList)
             {
-                if (ProcessAction == ProcessType.PhysiologicalGrowth)
-                {
-                    cohortItem.PhysiologicalAge += func.Value();
-                }
-                else if (ProcessAction == ProcessType.Transfer)
-                {
-                    double numberToMove = cohortItem.Count * func.Value();
+                   double numberToMove = cohortItem.Count * func.Value();
                     if (numberToMove > 0)
                     {
                         //transfer magic here
                         LifeStage destStage = cohortItem.OwningStage.OwningCycle.ChildStages.Find(s => s.Name == TransferTo);
                         cohortItem.OwningStage.PromoteGraduates(cohortItem, destStage, numberToMove);
                     }
-                }
-                else if (ProcessAction == ProcessType.Mortality)
-                {
-                    //kill some creatures
-                    double mortality = cohortItem.Count - cohortItem.Count * (1 - func.Value());
-                    cohortItem.Count = cohortItem.Count * (1 - func.Value());
-                    cohortItem.Mortality += mortality;      // can be multiple mortality events in a lifestage step
-                }
             }
         }
         

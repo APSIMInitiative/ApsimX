@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="DGNode.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace ApsimNG.Classes.DirectedGraph
+﻿namespace ApsimNG.Classes.DirectedGraph
 {
     using Cairo;
     using Models.Graph;
