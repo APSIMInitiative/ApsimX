@@ -252,6 +252,9 @@
             foreach (CompositeFactor factor in factors)
             {
                 IVariable variable = Apsim.GetVariableObject(file, factor.Paths[0]);
+                if (variable == null)
+                    throw new Exception($"Invalid path: {factor.Paths[0]}");
+
                 string value = factor.Values[0].ToString();
                 string[] parts = value.Split(';');
                 if (parts != null && parts.Length == 2)
