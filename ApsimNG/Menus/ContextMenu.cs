@@ -411,11 +411,7 @@
         {
             try
             {
-                string nodePath = explorerPresenter.CurrentNodePath;
-                if (Apsim.Get(explorerPresenter.ApsimXFile, nodePath) is IFunction)
-                    nodePath += ".Value()";
-
-                explorerPresenter.SetClipboardText(Path.GetFileNameWithoutExtension(explorerPresenter.ApsimXFile.FileName) + nodePath, "CLIPBOARD");
+                explorerPresenter.SetClipboardText(explorerPresenter.CurrentNodePath, "CLIPBOARD");
             }
             catch (Exception err)
             {
