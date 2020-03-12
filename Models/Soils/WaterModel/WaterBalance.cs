@@ -699,7 +699,7 @@
         /// <param name="InitialDepth">The initial depth.</param> 
         public void SetWaterTable(double InitialDepth)
         {
-            throw new NotImplementedException();
+            WaterTable = InitialDepth;
         }
 
         ///<summary>Perform a reset</summary>
@@ -727,7 +727,22 @@
         ///<summary>Perform tillage</summary>
         public void Tillage(TillageType Data)
         {
-            throw new NotImplementedException();
+            if ((Data.cn_red <= 0) || (Data.cn_rain <= 0))
+            {
+                string message = "tillage:- " + Data.Name + " has incorrect values for " + Environment.NewLine +
+                    "CN reduction = " + Data.cn_red + Environment.NewLine + "Acc rain     = " + Data.cn_red;
+                throw new Exception(message);
+            }
+
+            double reduction = MathUtilities.Constrain(Data.cn_red, 0.0, CN2Bare);
+
+            runoffModel.TillageCnCumWater = Data.cn_rain;
+            runoffModel.TillageCnRed = reduction;
+            runoffModel.CumWaterSinceTillage = 0.0;
+
+            var line = string.Format("Soil tilled. CN reduction = {0}. Cumulative rain = {1}", 
+                                     reduction, Data.cn_rain);
+            summary.WriteMessage(this, line);
         }
 
         ///<summary>Perform tillage</summary>

@@ -77,6 +77,9 @@
         /// <summary>Water table depth (mm)</summary>
         double WaterTable { get; set; }
 
+        /// <summary>Sets the water table.</summary>
+        /// <param name="InitialDepth">The initial depth.</param> 
+        void SetWaterTable(double InitialDepth);
 
         /// <summary>The efficiency (0-1) that solutes move down with water.</summary>
         double[] SoluteFluxEfficiency { get; set; }

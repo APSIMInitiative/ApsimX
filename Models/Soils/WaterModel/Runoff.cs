@@ -45,11 +45,13 @@
     [ValidParent(ParentType = typeof(WaterBalance))]
     public class RunoffModel : Model, IFunction
     {
-        // --- Links -------------------------------------------------------------------------
-
         /// <summary>The water movement model.</summary>
         [Link]
         private WaterBalance soil = null;
+
+        /// <summary>The summary file model.</summary>
+        [Link]
+        private ISummary summary = null;
 
         /// <summary>A function for reducing CN due to cover.</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -59,15 +61,18 @@
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction cnReductionForTillage = null;
 
-        // --- Privates ----------------------------------------------------------------------
-
         /// <summary>Effective hydraulic depth (mm)</summary>
         private double hydrolEffectiveDepth = 450;
 
-        // --- Settable properties -----------------------------------------------------------
+        /// <summary>Cumulative rainfall below which tillage reduces CN (mm).</summary>
+        public double TillageCnCumWater { get; set; }
 
+        /// <summary>Reduction in CN due to tillage()</summary>
+        public double TillageCnRed { get; set; }
 
-        // --- Outputs -----------------------------------------------------------------------
+        /// <summary>Running total of cumulative rainfall since last tillage event. Used for tillage CN reduction (mm).</summary>
+        public double CumWaterSinceTillage { get; set; }
+
 
         /// <summary>Calculate and return the runoff (mm).</summary>
         public double Value(int arrayIndex = -1)
@@ -78,7 +83,18 @@
             {
                 double cn2New = soil.CN2Bare - cnReductionForCover.Value(arrayIndex) - cnReductionForTillage.Value(arrayIndex);
 
-                // cut off response to cover at high covers
+                // Tillage reduction on cn
+                if (TillageCnCumWater > 0.0)
+                {
+                    // We minus 1 because we want the opposite fraction. 
+                    // Tillage Reduction is biggest (CnRed value) straight after Tillage and gets smaller and becomes 0 when reaches CumWater.
+                    // unlike the Cover Reduction, where the reduction starts out smallest (0) and gets bigger and becomes (CnRed value) when you hit CnCover.
+                    var tillageFract = MathUtilities.Divide(CumWaterSinceTillage, TillageCnCumWater, 0.0) - 1.0;
+                    var tillageReduction = TillageCnRed * tillageFract;
+                    cn2New = cn2New + tillageReduction;
+                }
+
+                // Cut off response to cover at high covers
                 cn2New = MathUtilities.Bound(cn2New, 0.0, 100.0);
 
                 // Calculate CN proportional in dry range (dul to ll15)
@@ -111,6 +127,9 @@
 
                 // assign the output variable
                 runoff = MathUtilities.Divide(xpb * xpb, (soil.PotentialRunoff + 0.8 * s), 0.0);
+
+                CumWaterSinceTillage += soil.PotentialRunoff;
+                ShouldIStopTillageCNReduction();  //NB. this needs to be done _after_ cn calculation.
 
                 // bound check the ouput variable
                 return MathUtilities.Bound(runoff, 0.0, soil.PotentialRunoff);
@@ -160,6 +179,24 @@
                 throw new Exception("Internal error. Total runoff weighting factor must be equal to one.");
 
             return runoffWeightingFactor;
+        }
+
+        /// <summary>
+        /// Accumulate rainfall for tillage cn reduction.
+        /// The reduction in the runoff as a result of doing a tillage (tillage_cn_red) ceases after a set amount of rainfall (tillage_cn_rain).
+        /// This function works out the accumulated rainfall since last tillage event, and turns off the reduction if it is over the amount of rain specified.
+        /// </summary>
+        private void ShouldIStopTillageCNReduction()
+        {
+            if (TillageCnCumWater > 0.0 && CumWaterSinceTillage > TillageCnCumWater)
+            {
+                // This tillage has lost all effect on cn. CN reduction
+                // due to tillage is off until the next tillage operation.
+                TillageCnCumWater = 0.0; 
+                TillageCnRed = 0.0;
+
+                summary.WriteMessage(this, "Tillage CN reduction finished");
+            }
         }
     }
 }
