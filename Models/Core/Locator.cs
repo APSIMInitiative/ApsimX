@@ -168,7 +168,7 @@
 
                 // Now walk the series of '.' separated path bits, assuming the path bits
                 // are child models. Stop when we can't find the child model.
-                string[] namePathBits = namePath.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                string[] namePathBits = namePath.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToArray();
                 int i;
                 for (i = 0; i < namePathBits.Length; i++)
                 {
