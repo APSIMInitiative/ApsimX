@@ -11,7 +11,7 @@
     using EventArguments;
     using Interfaces;
     using Models.Core;
-    using Models.Graph;
+    using Models;
     using Models.Storage;
     using Views;
     
@@ -133,7 +133,7 @@
                 DrawOnView(graph.GetAnnotationsToGraph());
 
                 // Format the axes.
-                foreach (Models.Graph.Axis a in graph.Axis)
+                foreach (Models.Axis a in graph.Axis)
                 {
                     FormatAxis(a);
                 }
@@ -377,7 +377,7 @@
 
         /// <summary>Format the specified axis.</summary>
         /// <param name="axis">The axis to format</param>
-        private void FormatAxis(Models.Graph.Axis axis)
+        private void FormatAxis(Models.Axis axis)
         {
             string title = axis.Title;
             if (axis.Title == null || axis.Title == string.Empty)

@@ -283,7 +283,7 @@
             {
                 string fileName = Path.ChangeExtension((sender as SimulationGroup).FileName, ".db");
                 var storage = new Storage.DataStore(fileName);
-                Report.Report.WriteAllTables(storage, fileName);
+                Report.WriteAllTables(storage, fileName);
                 Console.WriteLine("Successfully created csv file " + Path.ChangeExtension(fileName, ".csv"));
             }
         }

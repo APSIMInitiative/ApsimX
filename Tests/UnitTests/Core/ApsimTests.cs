@@ -4,7 +4,6 @@
     using Models;
     using Models.Core;
     using Models.Core.ApsimFile;
-    using Models.Graph;
     using Models.Soils;
     using NUnit.Framework;
     using System;

@@ -1,4 +1,4 @@
-﻿namespace Models.Report
+namespace Models
 {
     using APSIM.Shared.Utilities;
     using Models.CLEM;

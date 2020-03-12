@@ -6,7 +6,6 @@
     using Models.Core.Apsim710File;
     using Models.Interfaces;
     using Models.PMF;
-    using Models.Report;
     using Models.Soils;
     using Models.Storage;
     using Models.Surface;
@@ -278,7 +277,7 @@
             var importer = new Importer();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml);
 
-            var r = sims.Children[0].Children[0] as Models.Report.Report;
+            var r = sims.Children[0].Children[0] as Models.Report;
             Assert.IsNotNull(r);
             Assert.AreEqual(r.VariableNames[0], "[Clock].Today");
             Assert.AreEqual(r.VariableNames[1], "biomass");

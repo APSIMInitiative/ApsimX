@@ -10,7 +10,6 @@
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
-    using Models.Graph;
     using Views;
 
     /// <summary>A presenter for displaying weather data</summary>
