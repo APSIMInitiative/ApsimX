@@ -40,7 +40,7 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class SorghumArbitrator: BaseArbitrator
+    public class SorghumArbitrator : BaseArbitrator
     {
         #region Links and Input parameters
 
@@ -95,7 +95,7 @@ namespace Models.PMF
         /// <summary>Gets the water demand.</summary>
         /// <value>The water demand.</value>
         public double NDiffusionSupply { get; private set; }
-        
+
         #endregion
         private List<IModel> uptakeModels = null;
         private List<IModel> zones = null;
@@ -171,12 +171,12 @@ namespace Models.PMF
             NMassFlowSupply = 0.0;
             NDiffusionSupply = 0.0;
             TTFMFromFlowering = 0.0;
-            
+
             SWAvailRatio = 0.0;
             SDRatio = 0.0;
             PhotoStress = 0.0;
-            TotalAvail  = 0.0;
-            TotalPotAvail  = 0.0;
+            TotalAvail = 0.0;
+            TotalPotAvail = 0.0;
         }
 
         #region IUptake interface
@@ -267,7 +267,7 @@ namespace Models.PMF
                 var totalAvail = myZone.AvailableSW.Sum();
                 var totalAvailPot = myZone.PotentialAvailableSW.Sum();
                 var totalSupply = myZone.Supply.Sum();
-                WatSupply = totalSupply; 
+                WatSupply = totalSupply;
 
                 // Set reporting variables.
                 Avail = myZone.AvailableSW;
@@ -276,7 +276,7 @@ namespace Models.PMF
                 TotalPotAvail = myZone.PotentialAvailableSW.Sum();
 
                 //used for SWDef PhenologyStress table lookup
-                SWAvailRatio = MathUtilities.Bound(MathUtilities.Divide(totalAvail, totalAvailPot, 1.0),0.0,10.0);
+                SWAvailRatio = MathUtilities.Bound(MathUtilities.Divide(totalAvail, totalAvailPot, 1.0), 0.0, 10.0);
 
                 //used for SWDef ExpansionStress table lookup
                 SDRatio = MathUtilities.Bound(MathUtilities.Divide(totalSupply, WDemand, 1.0), 0.0, 10);
@@ -331,7 +331,7 @@ namespace Models.PMF
                 //have to correct the leaf demand calculation
                 var leaf = Organs[leafIndex] as SorghumLeaf;
                 var leafAdjustment = leaf.calculateClassicDemandDelta();
-                
+
                 //double NDemand = (N.TotalPlantDemand - N.TotalReallocation) / kgha2gsm * Plant.Zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
                 //old sorghum uses g/m^2 - need to convert after it is used to calculate actual diffusion
                 // leaf adjustment is not needed here because it is an adjustment for structural demand - we only look at metabolic here.
@@ -360,7 +360,7 @@ namespace Models.PMF
                     var root = Organs[rootIndex] as Root;
 
                     //Get Nuptake supply from each organ and set the PotentialUptake parameters that are passed to the soil arbitrator
-                    
+
                     //at present these 2arrays arenot being used within the CalculateNitrogenSupply function
                     //sorghum uses Diffusion & Massflow variables currently
                     double[] organNO3Supply = new double[zone.NO3N.Length]; //kg/ha - dltNo3 in old apsim
@@ -389,7 +389,7 @@ namespace Models.PMF
                         if (TTFMFromFlowering > NUptakeCease)
                             totalMassFlow = 0;
                         actualMassFlow = totalMassFlow;
-                        
+
                         if (totalMassFlow < nDemand && TTFMFromFlowering < NUptakeCease) // fixme && ttElapsed < nUptakeCease
                         {
                             actualDiffusion = MathUtilities.Bound(nDemand - totalMassFlow, 0.0, totalDiffusion);
@@ -445,7 +445,7 @@ namespace Models.PMF
             {
                 var swdep = myZone.StartWater[layer]; //mm
                 var dltSwdep = myZone.WaterUptake[layer];
-                
+
                 //NO3N is in kg/ha - old sorghum used g/m^2
                 var no3conc = MathUtilities.Divide(zone.NO3N[layer] * kgha2gsm, swdep, 0);
                 var no3massFlow = no3conc * (-dltSwdep);
@@ -490,7 +490,7 @@ namespace Models.PMF
                     //NMassFlowSupply += MathUtilities.Sum(Z.NH4N);
                     nSupply += supply * Z.Zone.Area;
 
-                    for(int i = 0; i < Z.NH4N.Length; ++i)
+                    for (int i = 0; i < Z.NH4N.Length; ++i)
                         Z.NH4N[i] = 0;
                 }
 

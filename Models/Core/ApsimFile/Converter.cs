@@ -18,7 +18,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 86; } }
+        public static int LatestVersion { get { return 87; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1611,6 +1611,7 @@
             }
         }
 
+
         /// <summary>
         /// Seperate life cycle process class into Growth, Transfer and Mortality classes.
         /// </summary>
@@ -1664,8 +1665,6 @@
             }
         }
 
-
-
         /// <summary>
         /// Remove .Value() from everywhere possible.
         /// </summary>
@@ -1701,7 +1700,6 @@
                     input["FileNames"] = new JArray(input["FileName"]);
         }
 
-		
         /// <summary>
         /// Add a field to the Checkpoints table.
         /// </summary>
@@ -1724,12 +1722,70 @@
             }
         }
 
+
+        /// <summary>
+        /// Add new methods structure to OrganArbitrator.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion86(JObject root, string fileName)
+        {
+            foreach (var arbitrator in JsonUtilities.ChildrenOfType(root, "OrganArbitrator"))
+            {
+                //remove DMArbitrator, and NArbitrator
+                var children = JsonUtilities.Children(arbitrator);
+                var exdm = children.Find(c => JsonUtilities.Name(c).Equals("dmArbitrator", StringComparison.OrdinalIgnoreCase));
+                JsonUtilities.RemoveChild(arbitrator, JsonUtilities.Name(exdm));
+
+                var exn = children.Find(c => JsonUtilities.Name(c).Equals("nArbitrator", StringComparison.OrdinalIgnoreCase));
+                JsonUtilities.RemoveChild(arbitrator, JsonUtilities.Name(exn));
+
+                JsonUtilities.RenameModel(exdm, "ArbitrationMethod");
+                JsonUtilities.RenameModel(exn, "ArbitrationMethod");
+
+                //Add DMArbitration
+                var dm = JsonUtilities.CreateNewChildModel(arbitrator, "DMArbitration", "Models.PMF.BiomassTypeArbitrator");
+                var folder = JsonUtilities.CreateNewChildModel(dm, "PotentialPartitioningMethods", "Models.Core.Folder");
+                JsonUtilities.CreateNewChildModel(folder, "ReallocationMethod", "Models.PMF.Arbitrator.ReallocationMethod");
+                JsonUtilities.CreateNewChildModel(folder, "AllocateFixationMethod", "Models.PMF.Arbitrator.AllocateFixationMethod");
+                JsonUtilities.CreateNewChildModel(folder, "RetranslocationMethod", "Models.PMF.Arbitrator.RetranslocationMethod");
+                JsonUtilities.CreateNewChildModel(folder, "SendPotentialDMAllocationsMethod", "Models.PMF.Arbitrator.SendPotentialDMAllocationsMethod");
+
+                folder = JsonUtilities.CreateNewChildModel(dm, "AllocationMethods", "Models.Core.Folder");
+                JsonUtilities.CreateNewChildModel(folder, "NutrientConstrainedAllocationMethod", "Models.PMF.Arbitrator.NutrientConstrainedAllocationMethod");
+                JsonUtilities.CreateNewChildModel(folder, "DryMatterAllocationsMethod", "Models.PMF.Arbitrator.DryMatterAllocationsMethod");
+
+                JArray dmChildren = dm["Children"] as JArray;
+                dmChildren.Add(exdm);
+
+                //Add N Arbitration
+                var n = JsonUtilities.CreateNewChildModel(arbitrator, "NArbitration", "Models.PMF.BiomassTypeArbitrator");
+                folder = JsonUtilities.CreateNewChildModel(n, "PotentialPartitioningMethods", "Models.Core.Folder");
+                JsonUtilities.CreateNewChildModel(folder, "ReallocationMethod", "Models.PMF.Arbitrator.ReallocationMethod");
+
+                folder = JsonUtilities.CreateNewChildModel(n, "ActualPartitioningMethods", "Models.Core.Folder");
+                JsonUtilities.CreateNewChildModel(folder, "AllocateFixationMethod", "Models.PMF.Arbitrator.AllocateFixationMethod");
+                JsonUtilities.CreateNewChildModel(folder, "RetranslocationMethod", "Models.PMF.Arbitrator.RetranslocationMethod");
+
+                folder = JsonUtilities.CreateNewChildModel(n, "AllocationMethods", "Models.Core.Folder");
+                JsonUtilities.CreateNewChildModel(folder, "NitrogenAllocationsMethod", "Models.PMF.Arbitrator.NitrogenAllocationsMethod");
+
+                JArray nChildren = n["Children"] as JArray;
+                nChildren.Add(exn);
+                var allocatesMethod = JsonUtilities.CreateNewChildModel(n, "AllocateUptakesMethod", "Models.PMF.Arbitrator.AllocateUptakesMethod");
+
+                var water = JsonUtilities.CreateNewChildModel(arbitrator, "WaterUptakeMethod", "Models.PMF.Arbitrator.WaterUptakeMethod");
+                var nitrogen = JsonUtilities.CreateNewChildModel(arbitrator, "NitrogenUptakeMethod", "Models.PMF.Arbitrator.NitrogenUptakeMethod");
+
+            }
+        }
+		
         /// <summary>
         /// Replace SoilWater model with WaterBalance model.
         /// </summary>
         /// <param name="root"></param>
         /// <param name="fileName"></param>
-        private static void UpgradeToVersion86(JObject root, string fileName)
+        private static void UpgradeToVersion87(JObject root, string fileName)
         {
             foreach (JObject soilWater in JsonUtilities.ChildrenRecursively(root, "SoilWater"))
             {
