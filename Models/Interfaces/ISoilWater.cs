@@ -77,6 +77,13 @@
         /// <summary>Water table depth (mm)</summary>
         double WaterTable { get; set; }
 
+
+        /// <summary>The efficiency (0-1) that solutes move down with water.</summary>
+        double[] SoluteFluxEfficiency { get; set; }
+
+        /// <summary>The efficiency (0-1) that solutes move up with water.</summary>
+        double[] SoluteFlowEfficiency { get; set; }
+
         ///<summary>Perform a reset</summary>
         void Reset();
 

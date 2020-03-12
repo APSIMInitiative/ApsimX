@@ -1814,10 +1814,25 @@
                 if (managerChanged)
                 {
                     manager.SetDeclarations(declarations);
-                    manager.Save();
+
+                    var usings = manager.GetUsingStatements().ToList();
+                    if (!usings.Contains("Models.Interfaces"))
+                    {
+                        usings.Add("Models.Interfaces");
+                        manager.SetUsingStatements(usings);
+                    }
                 }
 
                 if (manager.Replace(" as SoilWater", ""))
+                    managerChanged = true;
+                if (manager.Replace("solute_flow_eff", "SoluteFlowEfficiency"))
+                    managerChanged = true;
+                if (manager.Replace("solute_flux_eff", "SoluteFluxEfficiency"))
+                    managerChanged = true;
+                if (manager.Replace("[EventSubscribe(\"Commencing\")", "[EventSubscribe(\"StartOfSimulation\")"))
+                    managerChanged = true;
+
+                if (managerChanged)
                     manager.Save();
             }
 

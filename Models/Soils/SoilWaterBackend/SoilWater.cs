@@ -1332,6 +1332,12 @@ namespace Models.Soils
             { canopy.PotentialInfiltration = value;}
         }
 
+        /// <summary>The efficiency (0-1) that solutes move down with water.</summary>
+        public double[] SoluteFluxEfficiency { get { return solute_flux_eff; } set { solute_flux_eff = value; } }
+        
+        /// <summary>The efficiency (0-1) that solutes move up with water.</summary>
+        public double[] SoluteFlowEfficiency { get { return solute_flow_eff; } set { solute_flow_eff = value; } }
+
         // Get Variables from other Modules
 
         /// <summary>

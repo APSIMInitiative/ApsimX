@@ -5,9 +5,8 @@
     using Models.Core;
     using Soils;
     using System;
-    using System.Linq;
-    using System.Collections.Generic;
     using System.Globalization;
+    using System.Linq;
     using System.Xml.Serialization;
 
     /// <summary>
@@ -499,7 +498,7 @@
                 if (i == 0)
                     water[i] = water[i] - flux[i];
                 else
-                    water[i] = water[i] + flux[i-1] - flux[i];
+                    water[i] = water[i] + flux[i - 1] - flux[i];
             }
         }
 
@@ -513,7 +512,7 @@
                 if (i == 0)
                     water[i] = water[i] + flow[i];
                 else
-                    water[i] = water[i] + flow[i] - flow[i-1];
+                    water[i] = water[i] + flow[i] - flow[i - 1];
             }
         }
 
@@ -531,8 +530,8 @@
                 if (i == 0)
                     soluteFlux[i] = flux[i] * solute[i] / (water[i] + flux[i]) * efficiency[i];
                 else
-                    soluteFlux[i] = flux[i] * (solute[i] + soluteFlux[i-1]) / (water[i] + flux[i]) * efficiency[i];
-                    //soluteFlux[i] = (solute[i] + soluteFlux[i-1]) * proportionMoving * efficiency;
+                    soluteFlux[i] = flux[i] * (solute[i] + soluteFlux[i - 1]) / (water[i] + flux[i]) * efficiency[i];
+                //soluteFlux[i] = (solute[i] + soluteFlux[i-1]) * proportionMoving * efficiency;
             }
 
             return soluteFlux;
@@ -562,7 +561,7 @@
                     if (i == 0)
                         soluteDown[i] = positiveFlux * (solute[i] + remaining[i]) / (water[i] + positiveFlux) * efficiency[i];
                     else
-                        soluteDown[i] = positiveFlux * (solute[i] + soluteDown[i - 1] + remaining[i]) / (water[i] + positiveFlux + flux[i-1]) * efficiency[i];
+                        soluteDown[i] = positiveFlux * (solute[i] + soluteDown[i - 1] + remaining[i]) / (water[i] + positiveFlux + flux[i - 1]) * efficiency[i];
                 }
             }
             return MathUtilities.Subtract(soluteUp, soluteDown);
@@ -594,7 +593,7 @@
                 if (flow[i] <= 0)
                     soluteFlow[i] = 0;
                 else
-                    soluteFlow[i] = flow[i] * (solute[i+1] + soluteFlow[i+1]) / (water[i+1] + flow[i] - flow[i+1]) * efficiency[i];
+                    soluteFlow[i] = flow[i] * (solute[i + 1] + soluteFlow[i + 1]) / (water[i + 1] + flow[i] - flow[i + 1]) * efficiency[i];
             }
 
             return soluteFlow;
@@ -609,8 +608,8 @@
 
             for (int i = 0; i < soil.Thickness.Length; i++)
             {
-               double max_sw = 1.0 - MathUtilities.Divide(soil.BD[i], specific_bd, 0.0);  // ie. Total Porosity
-                
+                double max_sw = 1.0 - MathUtilities.Divide(soil.BD[i], specific_bd, 0.0);  // ie. Total Porosity
+
                 if (MathUtilities.IsLessThan(soil.AirDry[i], min_sw))
                     throw new Exception(String.Format("({0} {1:G4}) {2} {3} {4} {5} {6:G4})",
                                                " Air dry lower limit of ",
