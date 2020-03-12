@@ -88,25 +88,28 @@
         /// <summary>Initialise.</summary>
         private void Initialise()
         {
-            DayAfterLastOutput = clock.Today;
-            dataToWriteToDb = null;
+            if (!haveInitialised)
+            {
+                DayAfterLastOutput = clock.Today;
+                dataToWriteToDb = null;
 
-            // Tidy up variable/event names.
-            VariableNames = TidyUpVariableNames();
-            EventNames = TidyUpEventNames();
+                // Tidy up variable/event names.
+                VariableNames = TidyUpVariableNames();
+                EventNames = TidyUpEventNames();
 
-            // Locate reporting variables.
-            FindVariableMembers();
+                // Locate reporting variables.
+                FindVariableMembers();
 
-            // Silently do nothing if no event names present.
-            if (EventNames == null || EventNames.Length < 1)
-                return;
+                // Silently do nothing if no event names present.
+                if (EventNames == null || EventNames.Length < 1)
+                    return;
 
-            // Subscribe to events.
-            foreach (string eventName in EventNames)
-                events.Subscribe(eventName, DoOutputEvent);
+                // Subscribe to events.
+                foreach (string eventName in EventNames)
+                    events.Subscribe(eventName, DoOutputEvent);
 
-            haveInitialised = true;
+                haveInitialised = true;
+            }
         }
 
         /// <summary>An event handler called at the end of each day.</summary>
@@ -115,9 +118,7 @@
         [EventSubscribe("DoReport")]
         private void OnDoReport(object sender, EventArgs e)
         {
-            if (!haveInitialised)
-                Initialise();
-
+            Initialise();
             foreach (var dateString in dateStringsToReportOn)
             {
                 if (DateUtilities.DatesAreEqual(dateString, clock.Today))
@@ -196,6 +197,8 @@
         /// <summary>A method that can be called by other models to perform a line of output.</summary>
         public void DoOutput()
         {
+            Initialise();
+
             if (dataToWriteToDb == null)
             {
                 string folderName = null;
