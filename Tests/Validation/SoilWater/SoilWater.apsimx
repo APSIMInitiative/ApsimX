@@ -11014,7 +11014,7 @@
                       ],
                       "Name": "SetCropCanopy",
                       "IncludeInDocumentation": true,
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
