@@ -4,6 +4,7 @@
     using Models;
     using Models.Core;
     using Models.Core.Apsim710File;
+    using Models.Interfaces;
     using Models.PMF;
     using Models.Report;
     using Models.Soils;
@@ -131,13 +132,8 @@
             Assert.AreEqual(w.BD, new double[] { 1.02, 1.03, 1.02, 1.02 });
             Assert.AreEqual(w.LL15, new double[] { 0.29, 0.29, 0.29, 0.29 });
 
-            SoilWater sw = s.Children[2] as SoilWater;
+            ISoilWater sw = s.Children[2] as ISoilWater;
             Assert.AreEqual(sw.Thickness, new double[] { 150, 150, 300, 300 });
-            Assert.AreEqual(sw.SWCON, new double[] { 0.3, 0.3, 0.3, 0.3 });
-            Assert.AreEqual(sw.SummerCona, 3.5);
-            Assert.AreEqual(sw.SummerU, 6);
-            Assert.AreEqual(sw.WinterCona, 2);
-            Assert.AreEqual(sw.WinterU, 2);
 
             Assert.IsTrue(s.Children[3] is SoilNitrogen);
             Assert.IsTrue(s.Children[4] is CERESSoilTemperature);

@@ -1735,8 +1735,10 @@
             {
                 soilWater["$type"] = "Models.WaterModel.WaterBalance, Models";
                 soilWater["ResourceName"] = "WaterBalance";
-                soilWater["DischargeWidth"] = soilWater["discharge_width"];
-                soilWater["CatchmentArea"] = soilWater["catchment_area"];
+                if (soilWater["discharge_width"] != null)
+                    soilWater["DischargeWidth"] = soilWater["discharge_width"];
+                if (soilWater["catchment_area"] != null)
+                    soilWater["CatchmentArea"] = soilWater["catchment_area"];
             }
 
             foreach (var manager in JsonUtilities.ChildManagers(root))

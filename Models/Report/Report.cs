@@ -33,9 +33,6 @@
         [NonSerialized]
         private ReportData dataToWriteToDb = null;
 
-        /// <summary>Has this report instance initialised yet?</summary>
-        private bool haveInitialised = false;
-
         /// <summary>List of strings representing dates to report on.</summary>
         private List<string> dateStringsToReportOn = new List<string>();
 
@@ -85,31 +82,29 @@
         [JsonIgnore]
         public DateTime DayAfterLastOutput { get; set; }
 
-        /// <summary>Initialise.</summary>
-        private void Initialise()
+        /// <summary>An event handler to allow us to initialize ourselves.</summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        [EventSubscribe("FinalInitialise")]
+        private void OnFinalInitialise(object sender, EventArgs e)
         {
-            if (!haveInitialised)
-            {
-                DayAfterLastOutput = clock.Today;
-                dataToWriteToDb = null;
+            DayAfterLastOutput = clock.Today;
+            dataToWriteToDb = null;
 
-                // Tidy up variable/event names.
-                VariableNames = TidyUpVariableNames();
-                EventNames = TidyUpEventNames();
+            // Tidy up variable/event names.
+            VariableNames = TidyUpVariableNames();
+            EventNames = TidyUpEventNames();
 
-                // Locate reporting variables.
-                FindVariableMembers();
+            // Locate reporting variables.
+            FindVariableMembers();
 
-                // Silently do nothing if no event names present.
-                if (EventNames == null || EventNames.Length < 1)
-                    return;
+            // Silently do nothing if no event names present.
+            if (EventNames == null || EventNames.Length < 1)
+                return;
 
-                // Subscribe to events.
-                foreach (string eventName in EventNames)
-                    events.Subscribe(eventName, DoOutputEvent);
-
-                haveInitialised = true;
-            }
+            // Subscribe to events.
+            foreach (string eventName in EventNames)
+                events.Subscribe(eventName, DoOutputEvent);
         }
 
         /// <summary>An event handler called at the end of each day.</summary>
@@ -118,7 +113,6 @@
         [EventSubscribe("DoReport")]
         private void OnDoReport(object sender, EventArgs e)
         {
-            Initialise();
             foreach (var dateString in dateStringsToReportOn)
             {
                 if (DateUtilities.DatesAreEqual(dateString, clock.Today))
@@ -197,8 +191,6 @@
         /// <summary>A method that can be called by other models to perform a line of output.</summary>
         public void DoOutput()
         {
-            Initialise();
-
             if (dataToWriteToDb == null)
             {
                 string folderName = null;
