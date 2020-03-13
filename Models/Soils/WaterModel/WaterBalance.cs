@@ -527,11 +527,12 @@
             double[] soluteFlux = new double[solute.Length];
             for (int i = 0; i < solute.Length; i++)
             {
-                if (i == 0)
-                    soluteFlux[i] = flux[i] * solute[i] / (water[i] + flux[i]) * efficiency[i];
-                else
-                    soluteFlux[i] = flux[i] * (solute[i] + soluteFlux[i - 1]) / (water[i] + flux[i]) * efficiency[i];
-                //soluteFlux[i] = (solute[i] + soluteFlux[i-1]) * proportionMoving * efficiency;
+                var soluteInLayer = solute[i];
+                if (i > 0)
+                    soluteInLayer += soluteFlux[i - 1];
+
+                soluteFlux[i] = soluteInLayer * MathUtilities.Divide(flux[i], water[i] + flux[i], 0) * efficiency[i];
+                soluteFlux[i] = MathUtilities.Constrain(soluteFlux[i], 0.0, Math.Max(soluteInLayer, 0));
             }
 
             return soluteFlux;

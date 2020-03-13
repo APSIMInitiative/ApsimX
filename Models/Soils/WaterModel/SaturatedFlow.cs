@@ -43,6 +43,7 @@ namespace Models.WaterModel
                 double w_in = 0.0;   // water coming into layer (mm)
                 double w_out;        // water going out of layer (mm)
                 double[] flux = new double[soil.Properties.Thickness.Length];
+                double[] newSWmm = new double[soil.Properties.Thickness.Length];
                 for (int i = 0; i < soil.Properties.Thickness.Length; i++)
                 {
                     double w_tot = SW[i] + w_in;
@@ -86,7 +87,7 @@ namespace Models.WaterModel
                             // Firstly top up this layer (to saturation)
                             double add = Math.Min(w_excess, w_drain);
                             w_excess = w_excess - add;
-                            double new_sw_dep = SAT[i] - w_drain + add;
+                            newSWmm[i] = SAT[i] - w_drain + add;
 
                             // partition between flow back up and flow down
                             // 'excessDown' is the amount above saturation(overflow) that moves down (mm)
@@ -107,8 +108,8 @@ namespace Models.WaterModel
                                 for (int j = i - 1; j >= 0; j--)
                                 {
                                     flux[j] = flux[j] - backup;
-                                    add = Math.Min(SAT[i] - new_sw_dep, backup);
-                                    new_sw_dep = new_sw_dep + add;
+                                    add = Math.Min(SAT[j] - newSWmm[j], backup);
+                                    newSWmm[j] = newSWmm[j] + add;
                                     backup = backup - add;
                                 }
                             }
@@ -121,6 +122,7 @@ namespace Models.WaterModel
                         // there is no EXCESS Amount so only do DRAIN Flow   
                         w_out = w_drain;
                         flux[i] = w_drain;
+                        newSWmm[i] = SW[i] + w_in - w_out;
                     }
 
                     // drainage out of this layer goes into next layer down
