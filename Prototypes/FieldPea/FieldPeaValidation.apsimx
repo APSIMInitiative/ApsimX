@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 80,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-05",
+  "Version": 84,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -1835,6 +1835,15 @@
                       "ReadOnly": false
                     }
                   ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Root].MinimumNConc",
+                  "Name": "CriticalNConc",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -5645,7 +5654,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "FileName": "%root%\\Prototypes\\FieldPea\\Observations\\SowingDateNodes.txt",
+          "FileNames": [
+            "%root%\\Prototypes\\FieldPea\\Observations\\SowingDateNodes.txt"
+          ],
           "Name": "Input",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -5654,7 +5665,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "FileName": "%root%\\Prototypes\\FieldPea\\Observations\\SowingDatePhenology.txt",
+          "FileNames": [
+            "%root%\\Prototypes\\FieldPea\\Observations\\SowingDatePhenology.txt"
+          ],
           "Name": "Pheno",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -6206,8 +6219,8 @@
                             0.13,
                             0.1,
                             0.08,
-                            0.11,
-                            0.11
+                            0.1,
+                            0.06
                           ],
                           "KL": [
                             0.06,
@@ -6240,9 +6253,9 @@
                             0.13,
                             0.13,
                             0.27,
-                            0.27,
-                            0.3,
-                            0.3
+                            0.15,
+                            0.1,
+                            0.06
                           ],
                           "KL": [
                             0.1,
@@ -11492,8 +11505,8 @@
                             0.13,
                             0.1,
                             0.08,
-                            0.11,
-                            0.11
+                            0.1,
+                            0.06
                           ],
                           "KL": [
                             0.06,
@@ -11526,9 +11539,9 @@
                             0.13,
                             0.13,
                             0.27,
-                            0.27,
-                            0.3,
-                            0.3
+                            0.15,
+                            0.1,
+                            0.06
                           ],
                           "KL": [
                             0.1,
@@ -15367,8 +15380,8 @@
                             0.13,
                             0.1,
                             0.08,
-                            0.11,
-                            0.11
+                            0.1,
+                            0.06
                           ],
                           "KL": [
                             0.06,
@@ -15401,9 +15414,9 @@
                             0.13,
                             0.13,
                             0.27,
-                            0.27,
-                            0.3,
-                            0.3
+                            0.15,
+                            0.1,
+                            0.06
                           ],
                           "KL": [
                             0.1,
@@ -20243,8 +20256,8 @@
                             0.13,
                             0.1,
                             0.08,
-                            0.11,
-                            0.11
+                            0.1,
+                            0.06
                           ],
                           "KL": [
                             0.06,
@@ -20277,9 +20290,9 @@
                             0.13,
                             0.13,
                             0.27,
-                            0.27,
-                            0.3,
-                            0.3
+                            0.15,
+                            0.1,
+                            0.06
                           ],
                           "KL": [
                             0.1,

@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 80,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-05",
+  "Version": 84,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -64,7 +64,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "FileName": "%root%\\Tests\\Validation\\Slurp\\ShallowSoilTest\\CoverInterpolated.csv",
+          "FileNames": [
+            "%root%\\Tests\\Validation\\Slurp\\ShallowSoilTest\\CoverInterpolated.csv"
+          ],
           "Name": "Input",
           "Children": [],
           "IncludeInDocumentation": false,
@@ -351,9 +353,9 @@
                     0.33,
                     0.33,
                     0.31,
-                    0.15,
-                    0.1,
-                    0.06
+                    0.3,
+                    0.3,
+                    0.3
                   ],
                   "SAT": [
                     0.5,
@@ -2497,7 +2499,7 @@
                             0.013,
                             0.01,
                             0.008,
-                            0.01
+                            1E-05
                           ],
                           "LL15": [
                             0.033,
