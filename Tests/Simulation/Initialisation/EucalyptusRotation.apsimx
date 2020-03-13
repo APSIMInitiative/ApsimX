@@ -1,11 +1,14 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 278,
-  "Version": 48,
+  "Version": 80,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-06",
   "Name": "Simulations",
   "Children": [
     {
       "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
       "Name": "DataStore",
       "Children": [],
       "IncludeInDocumentation": true,
@@ -46,8 +49,8 @@
         },
         {
           "$type": "Models.Clock, Models",
-          "StartDate": "1995-07-01T00:00:00",
-          "EndDate": "2018-01-01T00:00:00",
+          "Start": "1995-07-01T00:00:00",
+          "End": "2018-01-01T00:00:00",
           "Name": "Clock",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -77,11 +80,12 @@
           "$type": "Models.Core.Zone, Models",
           "Area": 1.0,
           "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
           "Name": "Plantation",
           "Children": [
             {
               "$type": "Models.Soils.Soil, Models",
-              "Weirdo": null,
               "RecordNumber": 0,
               "ASCOrder": null,
               "ASCSubOrder": null,
@@ -114,7 +118,17 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.Water, Models",
+                  "$type": "Models.Soils.Physical, Models",
+                  "Depth": [
+                    "0-10",
+                    "10-40",
+                    "40-100",
+                    "100-200",
+                    "200-300",
+                    "300-400",
+                    "400-500",
+                    "500-600"
+                  ],
                   "Thickness": [
                     100.0,
                     300.0,
@@ -125,6 +139,9 @@
                     1000.0,
                     1000.0
                   ],
+                  "ParticleSizeClay": null,
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
                   "BD": [
                     1.5,
                     1.6,
@@ -182,7 +199,7 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
-                  "Name": "Water",
+                  "Name": "Physical",
                   "Children": [
                     {
                       "$type": "Models.Soils.SoilCrop, Models",
@@ -299,6 +316,16 @@
                     1000.0,
                     1000.0
                   ],
+                  "Depth": [
+                    "0-10",
+                    "10-40",
+                    "40-100",
+                    "100-200",
+                    "200-300",
+                    "300-400",
+                    "400-500",
+                    "500-600"
+                  ],
                   "SWCON": [
                     0.9,
                     0.9,
@@ -319,7 +346,7 @@
                     0.0,
                     0.0
                   ],
-                  "ResidueInterception": 0.0,
+                  "PrecipitationInterception": 0.0,
                   "Name": "SoilWater",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -361,28 +388,54 @@
                     0.9
                   ],
                   "Name": "SoilNitrogen",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                      "Name": "NO3",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                      "Name": "NH4",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                      "Name": "Urea",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                      "Name": "PlantAvailableNO3",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                      "Name": "PlantAvailableNH4",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.SoilOrganicMatter, Models",
-                  "RootCN": 60.0,
-                  "RootWt": 1.0,
-                  "SoilCN": 14.5,
-                  "EnrACoeff": 7.4,
-                  "EnrBCoeff": 0.2,
-                  "Thickness": [
-                    100.0,
-                    300.0,
-                    600.0,
-                    1000.0,
-                    1000.0,
-                    1000.0,
-                    1000.0,
-                    1000.0
-                  ],
+                  "$type": "Models.Soils.Organic, Models",
                   "Depth": [
                     "0-10",
                     "10-40",
@@ -393,7 +446,18 @@
                     "400-500",
                     "500-600"
                   ],
-                  "OC": [
+                  "FOMCNRatio": 60.0,
+                  "Thickness": [
+                    100.0,
+                    300.0,
+                    600.0,
+                    1000.0,
+                    1000.0,
+                    1000.0,
+                    1000.0,
+                    1000.0
+                  ],
+                  "Carbon": [
                     2.0,
                     1.0,
                     0.5,
@@ -403,7 +467,16 @@
                     0.1,
                     0.1
                   ],
-                  "OCMetadata": null,
+                  "SoilCNRatio": [
+                    14.5,
+                    14.5,
+                    14.5,
+                    14.5,
+                    14.5,
+                    14.5,
+                    14.5,
+                    14.5
+                  ],
                   "FBiom": [
                     0.04,
                     0.03,
@@ -424,15 +497,34 @@
                     0.99,
                     0.99
                   ],
-                  "OCUnits": 0,
-                  "Name": "SoilOrganicMatter",
+                  "FOM": [
+                    0.29406966149543889,
+                    0.25310810327374095,
+                    0.18750709470737725,
+                    0.11372880185366477,
+                    0.068980005216630655,
+                    0.041838488071023888,
+                    0.025376325771097264,
+                    0.015391519611026323
+                  ],
+                  "Name": "Organic",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.Analysis, Models",
+                  "$type": "Models.Soils.Chemical, Models",
+                  "Depth": [
+                    "0-10",
+                    "10-40",
+                    "40-100",
+                    "100-200",
+                    "200-300",
+                    "300-400",
+                    "400-500",
+                    "500-600"
+                  ],
                   "Thickness": [
                     100.0,
                     300.0,
@@ -443,14 +535,26 @@
                     1000.0,
                     1000.0
                   ],
-                  "Rocks": null,
-                  "RocksMetadata": null,
-                  "Texture": null,
-                  "TextureMetadata": null,
-                  "MunsellColour": null,
-                  "MunsellMetadata": null,
-                  "EC": null,
-                  "ECMetadata": null,
+                  "NO3N": [
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01
+                  ],
+                  "NH4N": [
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01
+                  ],
                   "PH": [
                     5.8,
                     5.7,
@@ -461,36 +565,10 @@
                     5.7,
                     5.7
                   ],
-                  "PHMetadata": null,
                   "CL": null,
-                  "CLMetadata": null,
-                  "Boron": null,
-                  "BoronMetadata": null,
-                  "CEC": null,
-                  "CECMetadata": null,
-                  "Ca": null,
-                  "CaMetadata": null,
-                  "Mg": null,
-                  "MgMetadata": null,
-                  "Na": null,
-                  "NaMetadata": null,
-                  "K": null,
-                  "KMetadata": null,
+                  "EC": null,
                   "ESP": null,
-                  "ESPMetadata": null,
-                  "Mn": null,
-                  "MnMetadata": null,
-                  "Al": null,
-                  "AlMetadata": null,
-                  "ParticleSizeSand": null,
-                  "ParticleSizeSandMetadata": null,
-                  "ParticleSizeSilt": null,
-                  "ParticleSizeSiltMetadata": null,
-                  "ParticleSizeClay": null,
-                  "ParticleSizeClayMetadata": null,
-                  "PHUnits": 0,
-                  "BoronUnits": 0,
-                  "Name": "Analysis",
+                  "Name": "Chemical",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -498,6 +576,16 @@
                 },
                 {
                   "$type": "Models.Soils.Sample, Models",
+                  "Depth": [
+                    "0-10",
+                    "10-40",
+                    "40-100",
+                    "100-200",
+                    "200-300",
+                    "300-400",
+                    "400-500",
+                    "500-600"
+                  ],
                   "Thickness": [
                     100.0,
                     300.0,
@@ -508,34 +596,14 @@
                     1000.0,
                     1000.0
                   ],
-                  "NO3": [
-                    0.1,
-                    0.1,
-                    0.1,
-                    0.01,
-                    0.01,
-                    0.01,
-                    0.01,
-                    0.01
-                  ],
-                  "NH4": [
-                    0.01,
-                    0.01,
-                    0.01,
-                    0.01,
-                    0.01,
-                    0.01,
-                    0.01,
-                    0.01
-                  ],
+                  "NO3N": null,
+                  "NH4N": null,
                   "SW": null,
                   "OC": null,
                   "EC": null,
                   "CL": null,
                   "ESP": null,
                   "PH": null,
-                  "NO3Units": 0,
-                  "NH4Units": 0,
                   "SWUnits": 0,
                   "OCUnits": 0,
                   "PHUnits": 0,
@@ -559,14 +627,6 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.SoluteManager, Models",
-              "Name": "SoluteManager",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
               "$type": "Models.Irrigation, Models",
               "Name": "Irrigation",
               "Children": [],
@@ -584,13 +644,14 @@
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "Canopies": [],
               "InitialResidueName": "Wheat",
               "InitialResidueType": "Wheat",
               "InitialResidueMass": 2000.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 80.0,
-              "FractionFaecesAdded": 0.5,
+              "FractionFaecesAdded": 1.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
               "IncludeInDocumentation": true,
@@ -605,6 +666,7 @@
               "d_interception": 0.0,
               "soil_albedo": 0.13,
               "SoilHeatFluxFraction": 0.4,
+              "MinimumHeightDiffForNewLayer": 0.0,
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
@@ -616,6 +678,9 @@
             {
               "$type": "Models.PMF.Plant, Models",
               "CropType": "Eucalyptus",
+              "IsAlive": false,
+              "IsEnding": false,
+              "DaysAfterEnding": 0,
               "ResourceName": "Eucalyptus",
               "Name": "Eucalyptus",
               "IncludeInDocumentation": true,
@@ -662,12 +727,10 @@
             },
             {
               "$type": "Models.Report.Report, Models",
-              "ExperimentFactorNames": null,
-              "ExperimentFactorValues": null,
               "VariableNames": [
                 "[Clock].Today",
                 "[TreeManagement].Script.TimeSincePlanting",
-                "[Eucalyptus].Age.Value()",
+                "[Eucalyptus].Age",
                 "[Eucalyptus].AboveGround.Wt",
                 "[Eucalyptus].BelowGround.Wt",
                 "[Eucalyptus].Total.Wt",
@@ -680,10 +743,9 @@
                 "[Eucalyptus].Leaf.Transpiration",
                 "[Eucalyptus].Leaf.CoverGreen",
                 "[Eucalyptus].Leaf.LAI",
-                "[Eucalyptus].Stem.DBH.Value()",
-                "[Eucalyptus].Stem.Ht.Value()",
-                "[Eucalyptus].RootShootRatio.Value()",
-                "[SCRUM].AboveGround.Wt"
+                "[Eucalyptus].Stem.DBH",
+                "[Eucalyptus].Stem.Ht",
+                "[Eucalyptus].RootShootRatio"
               ],
               "EventNames": [
                 "[Clock].DoReport"
@@ -696,7 +758,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        [Link] Plant Chickpea;\r\n        [Link] Zone zone;\r\n        [Link] Irrigation irrigation;\r\n        [Link] Fertiliser fertiliser;\r\n        [Link] Soil soil;\r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n        \r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [Description(\"N Concentration in irrigation water (ppm)\")]\r\n        public double NConc { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (AutoIrrigationOn)\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = WaterDeficit * 10000.0 * NConc/1000000.0;\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                    fertiliser.Apply(Amount: amount, Type: Fertiliser.Types.NO3N);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)\r\n                              - excess_fr * soil.Water[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = Soil.ToCumThickness(soil.Thickness);\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
+              "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        [Link] Plant Chickpea;\r\n        [Link] Zone zone;\r\n        [Link] Irrigation irrigation;\r\n        [Link] Fertiliser fertiliser;\r\n        [Link] Soil soil;\r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n        \r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [Description(\"N Concentration in irrigation water (ppm)\")]\r\n        public double NConc { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (AutoIrrigationOn)\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = WaterDeficit * 10000.0 * NConc/1000000.0;\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                    fertiliser.Apply(Amount: amount, Type: Fertiliser.Types.NO3N);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)\r\n                              - excess_fr * soil.Water[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = soil.ThicknessCumulative;\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
               "Parameters": [
                 {
                   "Key": "FASW",
@@ -767,7 +829,8 @@
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": "NaN",
-              "DateTimeAxis": true
+              "DateTimeAxis": true,
+              "CrossesAtZero": false
             },
             {
               "$type": "Models.Graph.Axis, Models",
@@ -777,11 +840,14 @@
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": "NaN",
-              "DateTimeAxis": true
+              "DateTimeAxis": true,
+              "CrossesAtZero": false
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": [],
+          "LegendOutsideGraph": false,
           "Name": "LAI",
           "Children": [
             {
@@ -801,8 +867,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Eucalyptus.Leaf.LAI",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,

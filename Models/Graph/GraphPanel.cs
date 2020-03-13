@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.Graph
+namespace Models
 {
     /// <summary>
     /// Represents a panel of graphs which has more flexibility than the

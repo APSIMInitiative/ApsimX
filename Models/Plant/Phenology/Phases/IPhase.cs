@@ -24,8 +24,5 @@ namespace Models.PMF.Phen
         /// <summary>Resets the phase.</summary>
         void ResetPhase();
 
-        /// <summary> Write summary to file each time a phase completes  /// </summary>
-        void WriteSummary(TextWriter writer);
-
     }
 }

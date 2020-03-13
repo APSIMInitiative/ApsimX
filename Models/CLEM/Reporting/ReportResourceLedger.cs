@@ -3,7 +3,7 @@ using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using Models.Core.Run;
-using Models.Report;
+using Models;
 using Models.Storage;
 using System;
 using System.Collections.Generic;
@@ -28,7 +28,7 @@ namespace Models.CLEM.Reporting
     [Version(1, 0, 2, "Updated to enable ResourceUnitsConverter to be used.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/Ledgers.htm")]
-    public class ReportResourceLedger : Models.Report.Report
+    public class ReportResourceLedger : Models.Report
     {
         /// <summary>The columns to write to the data store.</summary>
         [NonSerialized]
@@ -132,15 +132,14 @@ namespace Models.CLEM.Reporting
                                 }
 
                                 // add pricing
-                                if (pricingIncluded)
-                                {
-                                    variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ConvertTo(\"$\",\"gain\") as Price_Gain");
-                                    variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ConvertTo(\"$\",\"loss\") as Price_Loss");
-                                }
+                                //if (pricingIncluded)
+                                //{
+                                //    variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ConvertTo(\"$\",\"gain\") as Price_Gain");
+                                //    variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ConvertTo(\"$\",\"loss\") as Price_Loss");
+                                //}
 
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ResourceType.Name as Resource");
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Activity.Name as Activity");
-                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Reason as Reason");
                             }
 
                         }

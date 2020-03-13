@@ -17,6 +17,7 @@ namespace Models.PMF
     /// Relative allocation rules used to determine partitioning
     /// </summary>
     [Serializable]
+    [ValidParent(ParentType = typeof(BiomassTypeArbitrator))]
     public class SorghumArbitratorN : Model, IArbitrationMethod, ICustomDocumentation
     {
         /// <summary>

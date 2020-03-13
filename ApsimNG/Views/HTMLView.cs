@@ -192,10 +192,11 @@ namespace UserInterface.Views
 
         public void LoadHTML(string html)
         {
-            if (Browser.Document.Body != null)
+            if (Browser.Document.Body != null && !html.Contains("<script"))
                 // If we already have a document body, this is the more efficient
                 // way to update its contents. It doesn't affect the scroll position
                 // and doesn't make a little clicky sound.
+                // lie112: we do need a full update if the html code includes java <script> used for Chart.js otherwise it is not run and updated
                 Browser.Document.Body.InnerHtml = html;
             else
                 Browser.DocumentText = html;

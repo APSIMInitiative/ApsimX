@@ -218,8 +218,8 @@
         public static void CreateTable(IDatabaseConnection database)
         {
             // Create a _Checkpoints table.
-            List<string> columnNames = new List<string>() { "ID", "Name", "Version", "Date" };
-            List<string> columnTypes = new List<string>() { "integer", "char(50)", "char(50)", "date" };
+            List<string> columnNames = new List<string>() { "ID", "Name", "Version", "Date", "OnGraphs" };
+            List<string> columnTypes = new List<string>() { "integer", "char(50)", "char(50)", "date", "integer" };
             database.CreateTable("_Checkpoints", columnNames, columnTypes);
             List<object[]> rows = new List<object[]>
             {

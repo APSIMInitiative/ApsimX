@@ -2,7 +2,7 @@ using System;
 using Models.Core;
 using Models.Core.Run;
 using Models.Factorial;
-using Models.Graph;
+using Models;
 using Models.Storage;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +38,7 @@ namespace Models
         /// </summary>
         /// <param name="graph">The graph.</param>
         /// <param name="simulationName">Simulation name for this tab.</param>
-        public void TransformGraph(Models.Graph.Graph graph, string simulationName)
+        public void TransformGraph(Models.Graph graph, string simulationName)
         {
         }
     }

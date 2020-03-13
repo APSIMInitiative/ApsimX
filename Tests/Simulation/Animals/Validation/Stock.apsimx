@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 296,
-  "Version": 76,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-01-31",
+  "Version": 80,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-06",
   "Name": "Simulations",
   "Children": [
     {
@@ -623,6 +623,7 @@
               "d_interception": 0.0,
               "soil_albedo": 0.3,
               "SoilHeatFluxFraction": 0.4,
+              "MinimumHeightDiffForNewLayer": 0.0,
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
@@ -670,6 +671,7 @@
             {
               "$type": "Models.PMF.Plant, Models",
               "CropType": "Slurp",
+              "IsAlive": false,
               "IsEnding": false,
               "DaysAfterEnding": 0,
               "ResourceName": "Slurp",
@@ -733,7 +735,7 @@
           "$type": "Models.GrazPlan.Stock, Models",
           "ParamFile": "",
           "RandSeed": 9999,
-          "GenoTypes": [
+          "Genotypes": [
             {
               "$type": "Models.GrazPlan.SingleGenotypeInits, Models",
               "DeathRate": [
