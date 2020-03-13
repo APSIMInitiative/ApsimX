@@ -312,7 +312,7 @@
 
         /// <summary>Gets potential evapotranspiration of the whole soil-plant system (mm)</summary>
         [XmlIgnore]
-        public double Eo { get; set; }
+        public double Eo { get { return evaporationModel.Eo; } set { evaporationModel.Eo = value; } }
 
         /// <summary>Fractional amount of water above DUL that can drain under gravity per day.</summary>
         /// <remarks>

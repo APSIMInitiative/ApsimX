@@ -76,7 +76,7 @@
 
         /// <summary>Atmospheric potential evaporation (mm)</summary>
         [XmlIgnore]
-        public double Eo { get; private set; }
+        public double Eo { get; set; }
 
         /// <summary>Eo reduced due to shading (mm).</summary>
         [XmlIgnore]
@@ -151,7 +151,7 @@
         /// <returns></returns>
         public double Calculate()
         {
-            CalcEo();
+            //CalcEo();  // Use EO from MicroClimate
             CalcEoReducedDueToShading();
             CalcEs();
             return Es;
@@ -219,7 +219,9 @@
 
             double eos_residue_fract;     //! fraction of potential soil evaporation limited by crop residue (mm)
 
-            double coverTotalSum = canopies.Sum(c => c.CoverTotal);
+            double coverTotalSum = 0.0;
+            for (int i = 0; i < canopies.Count; i++)
+                coverTotalSum = 1.0 - (1.0 - coverTotalSum) * (1.0 - canopies[i].CoverTotal);
 
             // Based on Adams, Arkin & Ritchie (1976) Soil Sci. Soc. Am. J. 40:436-
             // Reduction in potential soil evaporation under a canopy is determined
