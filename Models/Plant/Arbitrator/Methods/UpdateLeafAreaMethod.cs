@@ -8,7 +8,7 @@ namespace Models.PMF.Arbitrator
     /// <summary>Updates the Leaf Area after Potential DM ha sbeen allocated.</summary>
     [Serializable]
     [ValidParent(ParentType = typeof(BiomassTypeArbitrator))]
-    public class UpdateLeafAreaMethod : Model, IAllocationMethod
+    public class UpdateLeafAreaMethod : Model, IPartitionMethod
     {
         /// <summary>The method used to arbitrate N allocations</summary>
         [Link(Type = LinkType.Scoped, ByName = true)]
@@ -17,8 +17,9 @@ namespace Models.PMF.Arbitrator
 
         /// <summary>Allocate the nutrient allocations.</summary>
         /// <param name="Organs">The organs.</param>
-        /// <param name="N">The organs.</param>
-        public void Allocate(IArbitration[] Organs, BiomassArbitrationType N)
+        /// <param name="N">The biomass arbitration type.</param>
+        /// <param name="method">The arbitration method.</param>
+        public void Calculate(IArbitration[] Organs, BiomassArbitrationType N, IArbitrationMethod method)
         {
             Leaf.UpdateArea();
         }
