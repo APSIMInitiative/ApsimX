@@ -15,14 +15,14 @@
     /// </summary>
     public class Graph
     {
-        public static Models.Graph.Graph CreateGraphFromResource(string resourceName)
+        public static Models.Graph CreateGraphFromResource(string resourceName)
         {
             string graphXmL = ApsimNG.Properties.Resources.ResourceManager.GetString(resourceName);
 
             if (graphXmL != null)
             {
                 List<Exception> errors = null;
-                Models.Graph.Graph graph = Models.Core.ApsimFile.FileFormat.ReadFromString<Models.Graph.Graph>(graphXmL, out errors);
+                Models.Graph graph = Models.Core.ApsimFile.FileFormat.ReadFromString<Models.Graph>(graphXmL, out errors);
                 if (errors != null && errors.Any())
                     throw errors.First();
                 Apsim.ParentAllChildren(graph);

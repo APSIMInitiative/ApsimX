@@ -46,7 +46,7 @@
           "Name": "Field",
           "Children": [
             {
-              "$type": "Models.Report.Report, Models",
+              "$type": "Models.Report, Models",
               "VariableNames": [
                 "[Clock].Today"
               ],
@@ -670,10 +670,10 @@
                 {
                   "$type": "Models.Soils.Nutrients.Nutrient, Models",
                   "DirectedGraphInfo": {
-                    "$type": "Models.Graph.DirectedGraph, Models",
+                    "$type": "Models.DirectedGraph, Models",
                     "Nodes": [
                       {
-                        "$type": "Models.Graph.Node, Models",
+                        "$type": "Models.Node, Models",
                         "Name": "Inert",
                         "Location": "656, 254",
                         "Colour": "0, 114, 178",
@@ -681,7 +681,7 @@
                         "Transparent": false
                       },
                       {
-                        "$type": "Models.Graph.Node, Models",
+                        "$type": "Models.Node, Models",
                         "Name": "SurfaceResidue",
                         "Location": "566, 69",
                         "Colour": "0, 114, 178",
@@ -689,7 +689,7 @@
                         "Transparent": false
                       },
                       {
-                        "$type": "Models.Graph.Node, Models",
+                        "$type": "Models.Node, Models",
                         "Name": "FOMLignin",
                         "Location": "261, 69",
                         "Colour": "0, 114, 178",
@@ -697,7 +697,7 @@
                         "Transparent": false
                       },
                       {
-                        "$type": "Models.Graph.Node, Models",
+                        "$type": "Models.Node, Models",
                         "Name": "FOMCellulose",
                         "Location": "397, 70",
                         "Colour": "0, 114, 178",
@@ -705,7 +705,7 @@
                         "Transparent": false
                       },
                       {
-                        "$type": "Models.Graph.Node, Models",
+                        "$type": "Models.Node, Models",
                         "Name": "FOMCarbohydrate",
                         "Location": "123, 70",
                         "Colour": "0, 114, 178",
@@ -713,7 +713,7 @@
                         "Transparent": false
                       },
                       {
-                        "$type": "Models.Graph.Node, Models",
+                        "$type": "Models.Node, Models",
                         "Name": "Microbial",
                         "Location": "218, 299",
                         "Colour": "0, 114, 178",
@@ -721,7 +721,7 @@
                         "Transparent": false
                       },
                       {
-                        "$type": "Models.Graph.Node, Models",
+                        "$type": "Models.Node, Models",
                         "Name": "Humic",
                         "Location": "458, 293",
                         "Colour": "0, 114, 178",
@@ -729,7 +729,7 @@
                         "Transparent": false
                       },
                       {
-                        "$type": "Models.Graph.Node, Models",
+                        "$type": "Models.Node, Models",
                         "Name": "Urea",
                         "Location": "529, 419",
                         "Colour": "0, 158, 115",
@@ -737,7 +737,7 @@
                         "Transparent": false
                       },
                       {
-                        "$type": "Models.Graph.Node, Models",
+                        "$type": "Models.Node, Models",
                         "Name": "NO3",
                         "Location": "185, 435",
                         "Colour": "0, 158, 115",
@@ -745,7 +745,7 @@
                         "Transparent": false
                       },
                       {
-                        "$type": "Models.Graph.Node, Models",
+                        "$type": "Models.Node, Models",
                         "Name": "NH4",
                         "Location": "357, 422",
                         "Colour": "0, 158, 115",
@@ -753,7 +753,7 @@
                         "Transparent": false
                       },
                       {
-                        "$type": "Models.Graph.Node, Models",
+                        "$type": "Models.Node, Models",
                         "Name": "Atmosphere",
                         "Location": "48, 338",
                         "Colour": "White",
@@ -761,7 +761,7 @@
                         "Transparent": true
                       },
                       {
-                        "$type": "Models.Graph.Node, Models",
+                        "$type": "Models.Node, Models",
                         "Name": "PlantAvailableNO3",
                         "Location": "688, 415",
                         "Colour": "0, 158, 115",
@@ -769,7 +769,7 @@
                         "Transparent": false
                       },
                       {
-                        "$type": "Models.Graph.Node, Models",
+                        "$type": "Models.Node, Models",
                         "Name": "PlantAvailableNH4",
                         "Location": "691, 421",
                         "Colour": "0, 158, 115",
@@ -779,7 +779,7 @@
                     ],
                     "Arcs": [
                       {
-                        "$type": "Models.Graph.Arc, Models",
+                        "$type": "Models.Arc, Models",
                         "SourceName": "SurfaceResidue",
                         "DestinationName": "Microbial",
                         "Location": "415, 173",
@@ -787,7 +787,7 @@
                         "Text": null
                       },
                       {
-                        "$type": "Models.Graph.Arc, Models",
+                        "$type": "Models.Arc, Models",
                         "SourceName": "SurfaceResidue",
                         "DestinationName": "Humic",
                         "Location": "499, 172",
@@ -795,7 +795,7 @@
                         "Text": null
                       },
                       {
-                        "$type": "Models.Graph.Arc, Models",
+                        "$type": "Models.Arc, Models",
                         "SourceName": "FOMLignin",
                         "DestinationName": "Microbial",
                         "Location": "259, 221",
@@ -803,7 +803,7 @@
                         "Text": null
                       },
                       {
-                        "$type": "Models.Graph.Arc, Models",
+                        "$type": "Models.Arc, Models",
                         "SourceName": "FOMLignin",
                         "DestinationName": "Humic",
                         "Location": "255, 105",
@@ -811,7 +811,7 @@
                         "Text": null
                       },
                       {
-                        "$type": "Models.Graph.Arc, Models",
+                        "$type": "Models.Arc, Models",
                         "SourceName": "FOMCellulose",
                         "DestinationName": "Microbial",
                         "Location": "370, 184",
@@ -819,7 +819,7 @@
                         "Text": null
                       },
                       {
-                        "$type": "Models.Graph.Arc, Models",
+                        "$type": "Models.Arc, Models",
                         "SourceName": "FOMCellulose",
                         "DestinationName": "Humic",
                         "Location": "463, 224",
@@ -827,7 +827,7 @@
                         "Text": null
                       },
                       {
-                        "$type": "Models.Graph.Arc, Models",
+                        "$type": "Models.Arc, Models",
                         "SourceName": "FOMCarbohydrate",
                         "DestinationName": "Microbial",
                         "Location": "141, 131",
@@ -835,7 +835,7 @@
                         "Text": null
                       },
                       {
-                        "$type": "Models.Graph.Arc, Models",
+                        "$type": "Models.Arc, Models",
                         "SourceName": "FOMCarbohydrate",
                         "DestinationName": "Humic",
                         "Location": "204, 215",
@@ -843,7 +843,7 @@
                         "Text": null
                       },
                       {
-                        "$type": "Models.Graph.Arc, Models",
+                        "$type": "Models.Arc, Models",
                         "SourceName": "Microbial",
                         "DestinationName": "Microbial",
                         "Location": "335, 301",
@@ -851,7 +851,7 @@
                         "Text": null
                       },
                       {
-                        "$type": "Models.Graph.Arc, Models",
+                        "$type": "Models.Arc, Models",
                         "SourceName": "Microbial",
                         "DestinationName": "Humic",
                         "Location": "319, 278",
@@ -859,7 +859,7 @@
                         "Text": null
                       },
                       {
-                        "$type": "Models.Graph.Arc, Models",
+                        "$type": "Models.Arc, Models",
                         "SourceName": "Humic",
                         "DestinationName": "Microbial",
                         "Location": "334, 340",
@@ -867,7 +867,7 @@
                         "Text": null
                       },
                       {
-                        "$type": "Models.Graph.Arc, Models",
+                        "$type": "Models.Arc, Models",
                         "SourceName": "Urea",
                         "DestinationName": "NH4",
                         "Location": "433, 416",
@@ -875,7 +875,7 @@
                         "Text": null
                       },
                       {
-                        "$type": "Models.Graph.Arc, Models",
+                        "$type": "Models.Arc, Models",
                         "SourceName": "NO3",
                         "DestinationName": "Atmosphere",
                         "Location": "1, 319",
@@ -883,7 +883,7 @@
                         "Text": null
                       },
                       {
-                        "$type": "Models.Graph.Arc, Models",
+                        "$type": "Models.Arc, Models",
                         "SourceName": "NH4",
                         "DestinationName": "NO3",
                         "Location": "243, 409",
@@ -945,7 +945,7 @@
           "Name": "Field",
           "Children": [
             {
-              "$type": "Models.Report.Report, Models",
+              "$type": "Models.Report, Models",
               "VariableNames": [
                 "[Clock].Today"
               ],

@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 80,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-10",
+  "Version": 84,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -1093,7 +1093,7 @@
                     },
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Expression": "([IWeather].CO2 - [Leaf].CO2internal.Value())/(350 - [Leaf].CO2internal.Value())",
+                      "Expression": "([IWeather].CO2 - [Leaf].CO2internal)/(350 - [Leaf].CO2internal)",
                       "Name": "RelativeCO2Gradient",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3281,6 +3281,15 @@
                       "ReadOnly": false
                     }
                   ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Root].MinimumNConc",
+                  "Name": "CriticalNConc",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -6994,7 +7003,7 @@
                                   "SAT": [
                                     0.434,
                                     0.429,
-                                    0.403,
+                                    0.4,
                                     0.415,
                                     0.437,
                                     0.451,
@@ -9045,7 +9054,7 @@
                                   "SAT": [
                                     0.434,
                                     0.429,
-                                    0.403,
+                                    0.4,
                                     0.415,
                                     0.437,
                                     0.451,
@@ -11077,7 +11086,7 @@
                                   "SAT": [
                                     0.434,
                                     0.429,
-                                    0.403,
+                                    0.4,
                                     0.415,
                                     0.437,
                                     0.451,
@@ -13109,7 +13118,7 @@
                                   "SAT": [
                                     0.434,
                                     0.429,
-                                    0.403,
+                                    0.4,
                                     0.415,
                                     0.437,
                                     0.451,

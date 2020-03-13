@@ -252,7 +252,58 @@
             foreach (CompositeFactor factor in factors)
             {
                 IVariable variable = Apsim.GetVariableObject(file, factor.Paths[0]);
-                variable.Value = ReflectionUtilities.StringToObject(variable.DataType, factor.Values[0].ToString());
+                if (variable == null)
+                    throw new Exception($"Invalid path: {factor.Paths[0]}");
+
+                string value = factor.Values[0].ToString();
+                string[] parts = value.Split(';');
+                if (parts != null && parts.Length == 2)
+                {
+                    string fileName = parts[0];
+                    if (File.Exists(fileName))
+                    {
+                        string modelPath = parts[1];
+                        IModel inFile = FileFormat.ReadFromFile<IModel>(fileName, out errors);
+                        if (errors != null && errors.Count > 0)
+                            throw errors[0];
+
+                        Model replacement = Apsim.Get(inFile, modelPath) as Model;
+                        if (replacement == null)
+                            throw new Exception($"Unable to find target model {modelPath} in file {fileName} while parsing factor specification '{factor.Paths[0]} = {factor.Values[0]}'.");
+
+                        Model target = Apsim.Get(file, factor.Paths[0]) as Model;
+                        if (target == null)
+                            throw new Exception($"Unable to find target model {factor.Paths[0]} in file {apsimxFileName}");
+
+                        int index = target.Parent.Children.IndexOf(target);
+                        IModel parent = target.Parent;
+                        parent.Children.RemoveAt(index);
+                        parent.Children.Insert(index, replacement);
+
+                        Apsim.ParentAllChildren(parent);
+                    }
+                    else
+                        variable.Value = ReflectionUtilities.StringToObject(variable.DataType, value);
+                }
+                else if (File.Exists(value))
+                {
+                    Model inFile = FileFormat.ReadFromFile<Model>(fileName, out errors);
+                    if (errors != null && errors.Count > 0)
+                        throw errors[0];
+
+                    Model target = Apsim.Get(file, factor.Paths[0]) as Model;
+                    if (target == null)
+                        throw new Exception($"Unable to find target model {factor.Paths[0]} in file {apsimxFileName}");
+
+                    int index = target.Parent.Children.IndexOf(target);
+                    IModel parent = target.Parent;
+                    parent.Children.RemoveAt(index);
+                    parent.Children.Insert(index, inFile);
+
+                    Apsim.ParentAllChildren(parent);
+                }
+                else
+                    variable.Value = ReflectionUtilities.StringToObject(variable.DataType, value);
             }
             file.Write(apsimxFileName);
         }
@@ -283,7 +334,7 @@
             {
                 string fileName = Path.ChangeExtension((sender as SimulationGroup).FileName, ".db");
                 var storage = new Storage.DataStore(fileName);
-                Report.Report.WriteAllTables(storage, fileName);
+                Report.WriteAllTables(storage, fileName);
                 Console.WriteLine("Successfully created csv file " + Path.ChangeExtension(fileName, ".csv"));
             }
         }

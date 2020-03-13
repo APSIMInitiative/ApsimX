@@ -1,7 +1,7 @@
 ﻿namespace UserInterface.Presenters
 {
     using Models.Functions;
-    using Models.Graph;
+    using Models;
     using System;
     using System.Collections.Generic;
     using Views;

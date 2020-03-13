@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 80,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-06",
+  "Version": 84,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -2109,6 +2109,15 @@
                       "ReadOnly": false
                     }
                   ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Root].MinimumNConc",
+                  "Name": "CriticalNConc",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -10042,14 +10051,14 @@
                               "NO3N": null,
                               "NH4N": null,
                               "SW": [
-                                0.47,
-                                0.47,
-                                0.53,
-                                0.5,
-                                0.47,
-                                0.46,
-                                0.45,
-                                0.45,
+                                0.4,
+                                0.4,
+                                0.4,
+                                0.4,
+                                0.4,
+                                0.4,
+                                0.4,
+                                0.4,
                                 0.45,
                                 0.43,
                                 0.42,

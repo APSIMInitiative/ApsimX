@@ -63,8 +63,8 @@ namespace Models.Functions
             //    using Models.Clock;
             //    using Models;
             var models = Apsim.FindAll(Parent).Where(model => !model.IsHidden && 
-                                                              model.GetType() != typeof(Graph.Graph) &&
-                                                              model.GetType() != typeof(Graph.Series) &&
+                                                              model.GetType() != typeof(Graph) &&
+                                                              model.GetType() != typeof(Series) &&
                                                               model.GetType().Name != "StorageViaSockets");
             var links = new StringBuilder();
             var namespaceList = new SortedSet<string>();

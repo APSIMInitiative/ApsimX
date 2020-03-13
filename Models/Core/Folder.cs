@@ -2,7 +2,7 @@
 {
     using Models.Core.Run;
     using Models.Factorial;
-    using Models.Graph;
+    using Models;
     using Models.PMF;
     using Models.PMF.Interfaces;
     using System;
