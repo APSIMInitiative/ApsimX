@@ -235,7 +235,7 @@
                 }
 
                 values.Add(defaultValueForBelowProfile);
-                thickness.Add(3000);
+                thickness.Add(30000);
                 double[] massValues = MathUtilities.Multiply(values.ToArray(), thickness.ToArray());
 
                 double[] newValues = MapMass(massValues, thickness.ToArray(), toThickness, allowMissingValues);

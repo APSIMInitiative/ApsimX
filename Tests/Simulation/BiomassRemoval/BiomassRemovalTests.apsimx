@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 326,
-  "Version": 80,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-06",
+  "Version": 84,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -199,9 +199,9 @@
                     0.33,
                     0.33,
                     0.31,
-                    0.15,
-                    0.1,
-                    0.06
+                    0.31,
+                    0.31,
+                    0.31
                   ],
                   "SAT": [
                     0.5,
@@ -2969,9 +2969,9 @@
                     0.33,
                     0.33,
                     0.31,
-                    0.15,
-                    0.1,
-                    0.06
+                    0.31,
+                    0.31,
+                    0.31
                   ],
                   "SAT": [
                     0.5,
@@ -5739,9 +5739,9 @@
                     0.33,
                     0.33,
                     0.31,
-                    0.15,
-                    0.1,
-                    0.06
+                    0.31,
+                    0.31,
+                    0.31
                   ],
                   "SAT": [
                     0.5,
@@ -8215,13 +8215,13 @@
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": "NaN",
-              "DateTimeAxis": false,
+              "DateTimeAxis": true,
               "CrossesAtZero": false
             }
           ],
           "LegendPosition": 0,
           "LegendOrientation": 0,
-          "DisabledSeries": null,
+          "DisabledSeries": [],
           "LegendOutsideGraph": false,
           "Name": "Stress Factors",
           "Children": [
@@ -8509,9 +8509,9 @@
                     0.33,
                     0.33,
                     0.31,
-                    0.15,
-                    0.1,
-                    0.06
+                    0.31,
+                    0.31,
+                    0.31
                   ],
                   "SAT": [
                     0.5,

@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 319,
-  "Version": 80,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-05",
+  "Version": 84,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -34538,10 +34538,10 @@
                                   "AirDry": [
                                     0.05,
                                     0.05,
-                                    0.16,
-                                    0.17,
-                                    0.17,
-                                    0.12
+                                    0.05,
+                                    0.05,
+                                    0.05,
+                                    0.05
                                   ],
                                   "LL15": [
                                     0.1,
@@ -34572,6 +34572,7 @@
                                     389.0,
                                     16.0,
                                     16.0,
+                                    98.0,
                                     98.0
                                   ],
                                   "BDMetadata": null,

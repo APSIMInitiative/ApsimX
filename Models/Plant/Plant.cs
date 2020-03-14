@@ -496,7 +496,7 @@
         public Biomass RemoveBiomass(double amountToRemove)
         {
             var defoliatedBiomass = new Biomass();
-            var preRemovalBiomass = AboveGround.Wt;
+            var preRemovalBiomass = AboveGround.Wt*10;
             foreach (var organ in Organs.Cast<IOrganDamage>())
             {
                 // These calculations convert organ live weight from g/m2 to kg/ha
