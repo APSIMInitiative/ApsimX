@@ -18,7 +18,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 88; } }
+        public static int LatestVersion { get { return 87; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1840,12 +1840,20 @@
             }
         }
 		
+
+
+
+
+
+
+
+
         /// <summary>
         /// Replace SoilWater model with WaterBalance model.
         /// </summary>
         /// <param name="root"></param>
         /// <param name="fileName"></param>
-        private static void UpgradeToVersion88(JObject root, string fileName)
+        private static void UpgradeToVersion999(JObject root, string fileName)
         {
             foreach (JObject soilWater in JsonUtilities.ChildrenRecursively(root, "SoilWater"))
             {
