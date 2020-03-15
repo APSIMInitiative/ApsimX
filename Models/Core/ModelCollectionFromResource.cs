@@ -9,7 +9,6 @@
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
-    using System.Xml.Serialization;
 
     /// <summary>This class loads a model from a resource</summary>
     [Serializable]
@@ -179,22 +178,18 @@
                     property.Name != "IncludeInDocumentation" &&
                     property.Name != "ResourceName")
                 {
-                    var xmlIgnore = property.GetCustomAttribute(typeof(XmlIgnoreAttribute));
-                    if (xmlIgnore == null)
+                    var description = property.GetCustomAttribute(typeof(DescriptionAttribute));
+                    if (description == null)
                     {
-                        var description = property.GetCustomAttribute(typeof(DescriptionAttribute));
-                        if (description == null)
-                        {
-                            object fromValue = property.GetValue(from);
-                            bool doSetPropertyValue;
-                            if (fromValue is double)
-                                doSetPropertyValue = Convert.ToDouble(fromValue, CultureInfo.InvariantCulture) != 0;
-                            else
-                                doSetPropertyValue = fromValue != null;
+                        object fromValue = property.GetValue(from);
+                        bool doSetPropertyValue;
+                        if (fromValue is double)
+                            doSetPropertyValue = Convert.ToDouble(fromValue, CultureInfo.InvariantCulture) != 0;
+                        else
+                            doSetPropertyValue = fromValue != null;
 
-                            if (doSetPropertyValue)
-                                property.SetValue(this, fromValue);
-                        }
+                        if (doSetPropertyValue)
+                            property.SetValue(this, fromValue);
                     }
                 }
             }
