@@ -85,8 +85,8 @@ namespace Models
         /// <summary>An event handler to allow us to initialize ourselves.</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
-        [EventSubscribe("StartOfSimulation")]
-        private void OnStartOfSimulation(object sender, EventArgs e)
+        [EventSubscribe("FinalInitialise")]
+        private void OnFinalInitialise(object sender, EventArgs e)
         {
             DayAfterLastOutput = clock.Today;
             dataToWriteToDb = null;

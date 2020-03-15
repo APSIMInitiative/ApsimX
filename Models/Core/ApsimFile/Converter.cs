@@ -1722,6 +1722,7 @@
             }
         }
 
+
         /// <summary>
         /// Add new methods structure to OrganArbitrator.
         /// </summary>
@@ -1837,6 +1838,78 @@
 
                 manager.Save();
             }
+        }
+		
+
+
+
+
+
+
+
+
+        /// <summary>
+        /// Replace SoilWater model with WaterBalance model.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion999(JObject root, string fileName)
+        {
+            foreach (JObject soilWater in JsonUtilities.ChildrenRecursively(root, "SoilWater"))
+            {
+                soilWater["$type"] = "Models.WaterModel.WaterBalance, Models";
+                soilWater["ResourceName"] = "WaterBalance";
+                if (soilWater["discharge_width"] != null)
+                    soilWater["DischargeWidth"] = soilWater["discharge_width"];
+                if (soilWater["catchment_area"] != null)
+                    soilWater["CatchmentArea"] = soilWater["catchment_area"];
+            }
+
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                bool managerChanged = false;
+
+                var declarations = manager.GetDeclarations();
+                foreach (var declaration in declarations)
+                {
+                    if (declaration.TypeName == "SoilWater")
+                    {
+                        declaration.TypeName = "ISoilWater";
+                        managerChanged = true;
+                    }
+                }
+
+                if (managerChanged)
+                {
+                    manager.SetDeclarations(declarations);
+
+                    var usings = manager.GetUsingStatements().ToList();
+                    if (!usings.Contains("Models.Interfaces"))
+                    {
+                        usings.Add("Models.Interfaces");
+                        manager.SetUsingStatements(usings);
+                    }
+                }
+
+                if (manager.Replace(" as SoilWater", ""))
+                    managerChanged = true;
+                if (manager.Replace("solute_flow_eff", "SoluteFlowEfficiency"))
+                    managerChanged = true;
+                if (manager.Replace("solute_flux_eff", "SoluteFluxEfficiency"))
+                    managerChanged = true;
+                if (manager.Replace("[EventSubscribe(\"Commencing\")", "[EventSubscribe(\"StartOfSimulation\")"))
+                    managerChanged = true;
+
+                if (managerChanged)
+                    manager.Save();
+            }
+
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(report, "solute_flow_eff", "SoluteFlowEfficiency");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "solute_flux_eff", "SoluteFluxEfficiency");
+            }
+
         }
 
         /// <summary>

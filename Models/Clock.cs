@@ -120,6 +120,8 @@
         public event EventHandler EndOfWeek;
         /// <summary>Occurs when [end of simulation].</summary>
         public event EventHandler EndOfSimulation;
+        /// <summary>Last initialisation event.</summary>
+        public event EventHandler FinalInitialise;
 
         /// <summary>Occurs when [do weather].</summary>
         public event EventHandler DoWeather;
@@ -285,6 +287,9 @@
 
             if (CLEMValidate != null)
                 CLEMValidate.Invoke(this, args);
+
+            if (FinalInitialise != null)
+                FinalInitialise.Invoke(this, args);
 
             while (Today <= EndDate && (e.CancelToken == null || !e.CancelToken.IsCancellationRequested))
             {

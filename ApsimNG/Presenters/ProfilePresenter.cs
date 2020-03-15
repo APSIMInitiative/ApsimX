@@ -158,6 +158,7 @@
                         }
                     }
 
+                    this.graph.LegendPosition = Graph.LegendPositionType.RightTop;
                     explorerPresenter.ApsimXFile.Links.Resolve(graphPresenter);
                     this.graphPresenter.Attach(this.graph, this.view.Graph, this.explorerPresenter);
                     graphPresenter.LegendInsideGraph = false;

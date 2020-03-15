@@ -1115,6 +1115,10 @@ namespace Models.Soils
         private double ProfileSaturation { get; set; }
         private double SODPondDepth { get; set; }
         private double EODPondDepth { get; set; }
+        /// <summary>The efficiency (0-1) that solutes move down with water.</summary>
+        public double[] SoluteFluxEfficiency { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        /// <summary>The efficiency (0-1) that solutes move up with water.</summary>
+        public double[] SoluteFlowEfficiency { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         #endregion
 
         #region Internal Properties and Methods

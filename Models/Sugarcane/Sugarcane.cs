@@ -12516,7 +12516,7 @@ namespace Models
                 //SW DEMAND (Atomospheric Potential)
 
                 //sugar_water_demand(1);
-                g_sw_demand = sugar_water_demand(g_dlt_dm_pot_rue, g_transp_eff, g_lai, (Soil.SoilWater as SoilWater).Eo);
+                g_sw_demand = sugar_water_demand(g_dlt_dm_pot_rue, g_transp_eff, g_lai, (Soil.SoilWater as ISoilWater).Eo);
  
 
 
@@ -14153,11 +14153,6 @@ namespace Models
 
         //these Delegates are declared in Models.PMF Namespace.
 
-        /// <summary>
-        /// Occurs when [water changed].
-        /// </summary>
-        public event WaterChangedDelegate WaterChanged;
-
         //public event CropChoppedDelegate CropChopped;
         /// <summary>
         /// Occurs when [biomass removed].
@@ -14240,13 +14235,7 @@ namespace Models
                 NO3.AddKgHaDelta(SoluteSetterType.Plant, l_dlt_NO3);
                 NH4.AddKgHaDelta(SoluteSetterType.Plant, l_dlt_NH4);
 
-
-
-                WaterChangedType WaterChanges = new WaterChangedType();
-                WaterChanges.DeltaWater = i_dlt_sw_dep;
-
-                WaterChanged.Invoke(WaterChanges);      //trigger/invoke the Water Changed Event
-
+                Soil.SoilWater.RemoveWater(MathUtilities.Multiply_Value(i_dlt_sw_dep, -1));
                 }
             else if (uptake_source == "swim3")
                 {

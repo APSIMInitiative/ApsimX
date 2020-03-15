@@ -394,8 +394,8 @@
         /// <summary>
         ///     ''' Initialise soiltemp module
         ///     ''' </summary>
-        [EventSubscribe("Commencing")]
-        private void OnInit2(object sender, EventArgs e)            // JNGH - changed this from Init1.
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)            // JNGH - changed this from Init1.
         {
             doInit1Stuff = true;
             Console.WriteLine();
