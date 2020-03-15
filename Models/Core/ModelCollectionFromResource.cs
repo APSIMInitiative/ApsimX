@@ -181,15 +181,22 @@
                     var description = property.GetCustomAttribute(typeof(DescriptionAttribute));
                     if (description == null)
                     {
-                        object fromValue = property.GetValue(from);
-                        bool doSetPropertyValue;
-                        if (fromValue is double)
-                            doSetPropertyValue = Convert.ToDouble(fromValue, CultureInfo.InvariantCulture) != 0;
-                        else
-                            doSetPropertyValue = fromValue != null;
+                        try
+                        {
+                            object fromValue = property.GetValue(from);
+                            bool doSetPropertyValue;
+                            if (fromValue is double)
+                                doSetPropertyValue = Convert.ToDouble(fromValue, CultureInfo.InvariantCulture) != 0;
+                            else
+                                doSetPropertyValue = fromValue != null;
 
-                        if (doSetPropertyValue)
-                            property.SetValue(this, fromValue);
+                            if (doSetPropertyValue)
+                                property.SetValue(this, fromValue);
+                        }
+                        catch (Exception)
+                        {
+
+                        }
                     }
                 }
             }
