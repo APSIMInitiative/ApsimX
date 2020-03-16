@@ -462,12 +462,8 @@
                 Soil currentSoil = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Soil;
                 if (currentSoil != null)
                 {
-
-                    string errorMessages = SoilChecker.CheckWithStandardisation(currentSoil);
-                    if (!string.IsNullOrEmpty(errorMessages))
-                        explorerPresenter.MainPresenter.ShowError(errorMessages);
-                    else
-                        explorerPresenter.MainPresenter.ShowMessage("Soil water parameters are valid.", Simulation.MessageType.Information);
+                    SoilChecker.CheckWithStandardisation(currentSoil);
+                    explorerPresenter.MainPresenter.ShowMessage("Soil water parameters are valid.", Simulation.MessageType.Information);
                 }
             }
             catch (Exception err)

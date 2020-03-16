@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 80,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-05",
+  "Version": 84,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -2459,7 +2459,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": true,
+                          "DateTimeAxis": false,
                           "CrossesAtZero": false
                         }
                       ],
@@ -2884,7 +2884,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": true,
+                          "DateTimeAxis": false,
                           "CrossesAtZero": false
                         }
                       ],
@@ -16698,7 +16698,7 @@
                       "Children": [
                         {
                           "$type": "Models.Factorial.Factor, Models",
-                          "Specification": null,
+                          "Specification": "",
                           "Name": "Water",
                           "Children": [
                             {
@@ -20560,7 +20560,7 @@
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factor, Models",
-                      "Specification": null,
+                      "Specification": "",
                       "Name": "NProp",
                       "Children": [
                         {
@@ -21002,10 +21002,10 @@
                                   "LL": [
                                     0.1,
                                     0.1,
-                                    0.157,
+                                    0.16,
+                                    0.17,
                                     0.173,
-                                    0.173,
-                                    0.165
+                                    0.17
                                   ],
                                   "KL": [
                                     0.1,
@@ -22373,7 +22373,7 @@
                       "Children": [
                         {
                           "$type": "Models.Factorial.Factor, Models",
-                          "Specification": null,
+                          "Specification": "",
                           "Name": "Sow",
                           "Children": [
                             {
@@ -27090,7 +27090,7 @@
                       ],
                       "LegendPosition": 3,
                       "LegendOrientation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "LeafNumberTimeSeries",
                       "Children": [
@@ -30475,7 +30475,7 @@
                       ],
                       "LegendPosition": 3,
                       "LegendOrientation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "LeafNumberTimeSeries",
                       "Children": [

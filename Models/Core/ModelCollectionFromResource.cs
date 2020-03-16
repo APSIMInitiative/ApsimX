@@ -83,7 +83,10 @@
                     Children.InsertRange(0, modelFromResource.Children);
 
                     CopyPropertiesFrom(modelFromResource);
-                    SetNotVisible(modelFromResource);
+
+                    // Make the model readonly if it's not under replacements.
+                    if (Apsim.Ancestor<Replacements>(this) == null)
+                        SetNotVisible(modelFromResource);
                     Apsim.ParentAllChildren(this);
                 }
             }

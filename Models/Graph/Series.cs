@@ -186,12 +186,12 @@ namespace Models
                         // Remove series that have no data.
                         seriesDefinitions.RemoveAll(d => !MathUtilities.ValuesInArray(d.X) || !MathUtilities.ValuesInArray(d.Y));
 
-                        definitions.AddRange(seriesDefinitions);
-
                         checkpointNumber++;
                     }
                 }
             }
+
+            definitions.AddRange(seriesDefinitions);
 
             // We might have child models that want to add to our series definitions e.g. regression.
             foreach (IGraphable series in Apsim.Children(this, typeof(IGraphable)))
