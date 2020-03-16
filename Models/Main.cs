@@ -287,7 +287,7 @@
                 }
                 else if (File.Exists(value))
                 {
-                    Model inFile = FileFormat.ReadFromFile<Model>(fileName, out errors);
+                    Model inFile = FileFormat.ReadFromFile<Model>(value, out errors);
                     if (errors != null && errors.Count > 0)
                         throw errors[0];
 
