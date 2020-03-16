@@ -1,5 +1,5 @@
 
-; Inno Setup Compiler 5.5.3
+; Inno Setup Compiler 6.0.4
 
 ;APSIM setup script
 
@@ -77,14 +77,16 @@ Source: ..\Tests\UnderReview\*; DestDir: {app}\UnderReview; Flags: recursesubdir
 Source: ..\Tests\UnderReview\*; DestDir: {autodocs}\Apsim\UnderReview; Flags: recursesubdirs
 
 [Tasks]
-Name: desktopicon; Description: Create a &desktop icon; Flags: exclusive; GroupDescription: Additional icons:
-Name: commondesktopicon; Description: Create a &desktop icon for all users; Flags: exclusive; GroupDescription: Additional icons:
+Name: desktopicon; Description: Create a &desktop icon; GroupDescription: Additional icons:
+;Name: desktopicon; Description: Create a &desktop icon; Flags: exclusive; GroupDescription: Additional icons:
+;Name: commondesktopicon; Description: Create a &desktop icon for all users; Flags: exclusive; GroupDescription: Additional icons:; Check: IsAdminInstallMode
 Name: associate; Description: &Associate .apsimx with Apsim; GroupDescription: Other tasks:
 
 [Icons]
-Name: {autoprograms}\APSIM{#AppVerNo}; Filename: {app}\Bin\ApsimNG.exe
-Name: {userdesktop}\APSIM{#AppVerNo}; Filename: {app}\Bin\ApsimNG.exe; Tasks: desktopicon
-Name: {autodesktop}\APSIM{#AppVerNo}; Filename: {app}\Bin\ApsimNG.exe; Tasks: commondesktopicon
+;Name: {autoprograms}\APSIM{#AppVerNo}; Filename: {app}\Bin\ApsimNG.exe
+;Name: {userdesktop}\APSIM{#AppVerNo}; Filename: {app}\Bin\ApsimNG.exe; Tasks: userdesktopicon
+Name: {autodesktop}\APSIM{#AppVerNo}; Filename: {app}\Bin\ApsimNG.exe; Tasks: desktopicon
+;Name: {commondesktop}\APSIM{#AppVerNo}; Filename: {app}\Bin\ApsimNG.exe; Tasks: commondesktopicon
 
 ; The following registry changes should no longer be needed, as we're now doing the mapping through Leaflet rather than Goold Maps
 ;[Registry]
