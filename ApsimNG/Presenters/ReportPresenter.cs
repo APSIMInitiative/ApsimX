@@ -5,6 +5,7 @@
     using Models.Core;
     using Models.Factorial;
     using Models.Storage;
+    using Utility;
     using Views;
     using Models;
 
@@ -71,6 +72,8 @@
             this.view.EventList.ContextItemsNeeded += OnNeedEventNames;
             this.view.VariableList.TextHasChangedByUser += OnVariableNamesChanged;
             this.view.EventList.TextHasChangedByUser += OnEventNamesChanged;
+            this.view.SplitterChanged += OnSplitterChanged;
+            this.view.SplitterPosition = Configuration.Settings.ReportSplitterPosition;
             this.explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
 
             Simulations simulations = Apsim.Parent(report, typeof(Simulations)) as Simulations;
@@ -100,12 +103,18 @@
             this.view.TabIndex = this.report.ActiveTabIndex;
         }
 
+        private void OnSplitterChanged(object sender, EventArgs e)
+        {
+            Configuration.Settings.ReportSplitterPosition = this.view.SplitterPosition;
+        }
+
         /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
             this.report.ActiveTabIndex = this.view.TabIndex;
             this.view.VariableList.ContextItemsNeeded -= OnNeedVariableNames;
             this.view.EventList.ContextItemsNeeded -= OnNeedEventNames;
+            this.view.SplitterChanged -= OnSplitterChanged;
             this.view.VariableList.TextHasChangedByUser -= OnVariableNamesChanged;
             this.view.EventList.TextHasChangedByUser -= OnEventNamesChanged;
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
