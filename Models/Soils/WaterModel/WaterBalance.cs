@@ -5,6 +5,7 @@
     using Models.Core;
     using Soils;
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
     using System.Xml.Serialization;
@@ -89,7 +90,7 @@
 
         /// <summary>Irrigation information.</summary>
         [NonSerialized]
-        private IrrigationApplicationType irrigation;
+        private List<IrrigationApplicationType> irrigations;
 
 
         /// <summary>Start date for switch to summer parameters for soil water evaporation (dd-mmm)</summary>
@@ -275,9 +276,11 @@
             {
                 double waterForRunoff = PotentialInfiltration;
 
-                if (irrigation != null && irrigation.WillRunoff)
-                    waterForRunoff = waterForRunoff + irrigation.Amount;
-
+                foreach (var irrigation in irrigations)
+                {
+                    if (irrigation.WillRunoff)
+                        waterForRunoff = waterForRunoff + irrigation.Amount;
+                }
                 return waterForRunoff;
             }
         }
@@ -386,7 +389,7 @@
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            irrigation = null;
+            irrigations.Clear();
         }
 
         /// <summary>Called when an irrigation occurs.</summary>
@@ -395,7 +398,7 @@
         [EventSubscribe("Irrigated")]
         private void OnIrrigated(object sender, IrrigationApplicationType e)
         {
-            irrigation = e;
+            irrigations.Add(e);
         }
 
         /// <summary>Called by CLOCK to let this model do its water movement.</summary>
@@ -418,20 +421,24 @@
             Water[0] = Water[0] + Infiltration;
 
             // Allow irrigation to infiltrate.
-            if (irrigation != null && !irrigation.WillRunoff && irrigation.Amount > 0)
+            foreach (var irrigation in irrigations)
             {
-                int irrigationLayer = soil.LayerIndexOfDepth(Convert.ToInt32(irrigation.Depth, CultureInfo.InvariantCulture));
-                Water[irrigationLayer] += irrigation.Amount;
-                Infiltration += irrigation.Amount;
+                if (irrigation.Amount > 0)
+                {
+                    int irrigationLayer = soil.LayerIndexOfDepth(Convert.ToInt32(irrigation.Depth, CultureInfo.InvariantCulture));
+                    Water[irrigationLayer] += irrigation.Amount;
+                    if (irrigationLayer == 0)
+                        Infiltration += irrigation.Amount;
 
-                if (no3 != null)
-                    no3.kgha[irrigationLayer] += irrigation.NO3;
+                    if (no3 != null)
+                        no3.kgha[irrigationLayer] += irrigation.NO3;
 
-                if (nh4 != null)
-                    nh4.kgha[irrigationLayer] += irrigation.NH4;
+                    if (nh4 != null)
+                        nh4.kgha[irrigationLayer] += irrigation.NH4;
 
-                if (cl != null)
-                    cl.kgha[irrigationLayer] += irrigation.CL;
+                    if (cl != null)
+                        cl.kgha[irrigationLayer] += irrigation.CL;
+                }
             }
 
             // Saturated flow.
@@ -559,10 +566,16 @@
                 if (flux[i] < 0)
                 {
                     var positiveFlux = flux[i] * -1;
-                    if (i == 0)
-                        soluteDown[i] = positiveFlux * (solute[i] + remaining[i]) / (water[i] + positiveFlux) * efficiency[i];
-                    else
-                        soluteDown[i] = positiveFlux * (solute[i] + soluteDown[i - 1] + remaining[i]) / (water[i] + positiveFlux + flux[i - 1]) * efficiency[i];
+                    var waterInLayer = water[i] + positiveFlux;
+                    var soluteInLayer = solute[i] + remaining[i];
+                    if (i > 0)
+                    {
+                        soluteInLayer += soluteDown[i - 1];
+                        waterInLayer += flux[i - 1];
+                    }
+
+                    soluteDown[i] = positiveFlux * soluteInLayer / waterInLayer * efficiency[i];
+                    soluteDown[i] = MathUtilities.Constrain(soluteDown[i], 0, soluteInLayer);
                 }
             }
             return MathUtilities.Subtract(soluteUp, soluteDown);
@@ -594,7 +607,11 @@
                 if (flow[i] <= 0)
                     soluteFlow[i] = 0;
                 else
-                    soluteFlow[i] = flow[i] * (solute[i + 1] + soluteFlow[i + 1]) / (water[i + 1] + flow[i] - flow[i + 1]) * efficiency[i];
+                {
+                    var soluteInLayer = solute[i + 1] + soluteFlow[i + 1];
+                    soluteFlow[i] = flow[i] * soluteInLayer / (water[i + 1] + flow[i] - flow[i + 1]) * efficiency[i];
+                    soluteFlow[i] = MathUtilities.Constrain(soluteFlow[i], 0, soluteInLayer);
+                }
             }
 
             return soluteFlow;
@@ -723,6 +740,7 @@
             Flux = null;
             Flow = null;
             evaporationModel.Initialise();
+            irrigations = new List<IrrigationApplicationType>();
         }
 
         ///<summary>Perform tillage</summary>

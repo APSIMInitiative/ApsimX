@@ -124,9 +124,8 @@
 
                     soilWater.Thickness = thickness;
                 }
-
                 if (soilWater.SWCON == null)
-                    soilWater.SWCON = new double[soilWater.Thickness.Length];
+                    soilWater.SWCON = MathUtilities.CreateArrayOfValues(0.3, soilWater.Thickness.Length);
                 MathUtilities.ReplaceMissingValues(soilWater.SWCON, 0.0);
             }
         }
