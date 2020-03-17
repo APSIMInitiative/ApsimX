@@ -33,7 +33,7 @@ annual_average_pet = 532.6           !Average annual PET (mm/yr)
 average_windspeed = 2.4              !Average windspeed (m/s)
 
   Location        xDate         year          day         rain         mint         maxt         avgt         radn         wind         evap           vp           rh        rhmin        rhmax
-        ()           ()           ()           ()         (mm)         (oC)         (oC)         (oC)     (MJ/m^2)        (m/s)         (mm)        (hPa)          (%)          (%)          (%)
+        () (dd/MM/yyyy)           ()           ()         (mm)         (oC)         (oC)         (oC)     (MJ/m^2)        (m/s)         (mm)        (hPa)          (%)          (%)          (%)
  VCS_Ranui   01/01/1980         1980            1          0.0          5.8         20.7         13.2         26.5          2.9          3.8         14.3         82.4         58.6        100.0
  VCS_Ranui   02/01/1980         1980            2         31.5          5.6          8.8          7.2          9.8          2.9          0.0         11.3         86.3         86.3        100.0
  VCS_Ranui   03/01/1980         1980            3          0.0          0.0          6.6          3.3         18.6          2.9          0.5          7.9         75.0         75.0        100.0
