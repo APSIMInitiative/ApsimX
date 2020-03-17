@@ -114,7 +114,7 @@
             this.report.ActiveTabIndex = this.view.TabIndex;
             this.view.VariableList.ContextItemsNeeded -= OnNeedVariableNames;
             this.view.EventList.ContextItemsNeeded -= OnNeedEventNames;
-            this.view.SplitterChanged += OnSplitterChanged;
+            this.view.SplitterChanged -= OnSplitterChanged;
             this.view.VariableList.TextHasChangedByUser -= OnVariableNamesChanged;
             this.view.EventList.TextHasChangedByUser -= OnEventNamesChanged;
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
