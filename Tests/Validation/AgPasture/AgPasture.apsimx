@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 282,
   "Version": 87,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -40,6 +40,20 @@
           "ReadOnly": false
         },
         {
+          "$type": "Models.PostSimulationTools.ExcelInput, Models",
+          "FileNames": [
+            "C:\\Work\\ApsimX\\Tests\\Validation\\AgPasture\\ObservedAll.xlsx"
+          ],
+          "SheetNames": [
+            "ObservedAverageSeason"
+          ],
+          "Name": "ObservedAverageSeason",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.PostSimulationTools.PredictedObserved, Models",
           "PredictedTableName": "SummaryReport",
           "ObservedTableName": "ObservedAveragedAnnual",
@@ -62,6 +76,19 @@
           "Name": "Annual",
           "Children": [],
           "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.PredictedObserved, Models",
+          "PredictedTableName": "SeasonalReport",
+          "ObservedTableName": null,
+          "FieldNameUsedForMatch": null,
+          "FieldName2UsedForMatch": null,
+          "FieldName3UsedForMatch": null,
+          "Name": "AveSeason",
+          "Children": [],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         }
@@ -321,14 +348,14 @@
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
-                                    0.15,
-                                    0.15,
-                                    0.15,
-                                    0.15,
-                                    0.04,
-                                    0.04,
-                                    0.04,
-                                    0.04
+                                    0.092,
+                                    0.074,
+                                    0.066,
+                                    0.062,
+                                    0.045,
+                                    0.045,
+                                    0.045,
+                                    0.045
                                   ],
                                   "KL": [
                                     0.1,
@@ -362,14 +389,14 @@
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
-                                    0.15,
-                                    0.15,
-                                    0.15,
-                                    0.15,
-                                    0.04,
-                                    0.04,
-                                    0.04,
-                                    0.04
+                                    0.092,
+                                    0.074,
+                                    0.066,
+                                    0.062,
+                                    0.045,
+                                    0.045,
+                                    0.045,
+                                    0.045
                                   ],
                                   "KL": [
                                     0.1,
@@ -455,6 +482,12 @@
                               ],
                               "KLAT": null,
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -1893,14 +1926,14 @@
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
-                                    0.08,
-                                    0.08,
-                                    0.08,
-                                    0.08,
-                                    0.08,
-                                    0.08,
-                                    0.08,
-                                    0.08
+                                    0.051,
+                                    0.049,
+                                    0.048,
+                                    0.048,
+                                    0.048,
+                                    0.048,
+                                    0.048,
+                                    0.048
                                   ],
                                   "KL": [
                                     0.1,
@@ -1934,14 +1967,14 @@
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
-                                    0.08,
-                                    0.08,
-                                    0.08,
-                                    0.08,
-                                    0.08,
-                                    0.08,
-                                    0.08,
-                                    0.08
+                                    0.051,
+                                    0.049,
+                                    0.048,
+                                    0.048,
+                                    0.048,
+                                    0.048,
+                                    0.048,
+                                    0.048
                                   ],
                                   "KL": [
                                     0.1,
@@ -2027,6 +2060,12 @@
                               ],
                               "KLAT": null,
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -4041,6 +4080,177 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Physical, Models",
+                          "Depth": [
+                            "0-15",
+                            "15-30",
+                            "30-60",
+                            "60-90",
+                            "90-120",
+                            "120-150",
+                            "150-180",
+                            "180-200"
+                          ],
+                          "Thickness": [
+                            150.0,
+                            150.0,
+                            300.0,
+                            300.0,
+                            300.0,
+                            300.0,
+                            300.0,
+                            200.0
+                          ],
+                          "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
+                          "BD": [
+                            1.47,
+                            1.49,
+                            1.55,
+                            1.55,
+                            1.55,
+                            1.55,
+                            1.55,
+                            1.55
+                          ],
+                          "AirDry": [
+                            0.0255,
+                            0.0392,
+                            0.048,
+                            0.048,
+                            0.048,
+                            0.048,
+                            0.048,
+                            0.048
+                          ],
+                          "LL15": [
+                            0.051,
+                            0.049,
+                            0.048,
+                            0.048,
+                            0.048,
+                            0.048,
+                            0.048,
+                            0.048
+                          ],
+                          "DUL": [
+                            0.202,
+                            0.153,
+                            0.142,
+                            0.142,
+                            0.142,
+                            0.142,
+                            0.142,
+                            0.142
+                          ],
+                          "SAT": [
+                            0.394,
+                            0.388,
+                            0.37,
+                            0.37,
+                            0.37,
+                            0.37,
+                            0.37,
+                            0.37
+                          ],
+                          "KS": null,
+                          "BDMetadata": null,
+                          "AirDryMetadata": null,
+                          "LL15Metadata": null,
+                          "DULMetadata": null,
+                          "SATMetadata": null,
+                          "KSMetadata": null,
+                          "Name": "Physical",
+                          "Children": [
+                            {
+                              "$type": "Models.Soils.SoilCrop, Models",
+                              "LL": [
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08
+                              ],
+                              "KL": [
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.02,
+                                0.02,
+                                0.02,
+                                0.02,
+                                0.02
+                              ],
+                              "XF": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                              ],
+                              "LLMetadata": null,
+                              "KLMetadata": null,
+                              "XFMetadata": null,
+                              "Name": "AGPRyegrassSoil",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilCrop, Models",
+                              "LL": [
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08
+                              ],
+                              "KL": [
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.02,
+                                0.02,
+                                0.02,
+                                0.02,
+                                0.02
+                              ],
+                              "XF": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                              ],
+                              "LLMetadata": null,
+                              "KLMetadata": null,
+                              "XFMetadata": null,
+                              "Name": "AGPWhiteCloverSoil",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -4225,14 +4435,14 @@
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
-                                    0.12,
-                                    0.12,
-                                    0.12,
-                                    0.12,
-                                    0.1,
-                                    0.1,
-                                    0.1,
-                                    0.1
+                                    0.066,
+                                    0.06,
+                                    0.04,
+                                    0.077,
+                                    0.077,
+                                    0.077,
+                                    0.077,
+                                    0.077
                                   ],
                                   "KL": [
                                     0.1,
@@ -4266,14 +4476,14 @@
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
-                                    0.12,
-                                    0.12,
-                                    0.12,
-                                    0.12,
-                                    0.1,
-                                    0.1,
-                                    0.1,
-                                    0.1
+                                    0.066,
+                                    0.06,
+                                    0.04,
+                                    0.077,
+                                    0.077,
+                                    0.077,
+                                    0.077,
+                                    0.077
                                   ],
                                   "KL": [
                                     0.1,
@@ -4359,6 +4569,12 @@
                               ],
                               "KLAT": null,
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -7232,11 +7448,11 @@
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
-                                    0.14,
-                                    0.14,
-                                    0.14,
-                                    0.14,
-                                    0.14
+                                    0.148,
+                                    0.147,
+                                    0.088,
+                                    0.1,
+                                    0.1
                                   ],
                                   "KL": [
                                     0.1,
@@ -7264,11 +7480,11 @@
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
-                                    0.14,
-                                    0.14,
-                                    0.14,
-                                    0.14,
-                                    0.14
+                                    0.148,
+                                    0.147,
+                                    0.088,
+                                    0.1,
+                                    0.1
                                   ],
                                   "KL": [
                                     0.1,
@@ -7336,6 +7552,12 @@
                               ],
                               "KLAT": null,
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -8945,12 +9167,12 @@
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
-                                    0.14,
-                                    0.14,
-                                    0.14,
-                                    0.14,
-                                    0.14,
-                                    0.14
+                                    0.193,
+                                    0.119,
+                                    0.122,
+                                    0.114,
+                                    0.058,
+                                    0.058
                                   ],
                                   "KL": [
                                     0.1,
@@ -8980,12 +9202,12 @@
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
-                                    0.14,
-                                    0.14,
-                                    0.14,
-                                    0.14,
-                                    0.14,
-                                    0.14
+                                    0.193,
+                                    0.119,
+                                    0.122,
+                                    0.114,
+                                    0.058,
+                                    0.058
                                   ],
                                   "KL": [
                                     0.1,
@@ -9058,6 +9280,12 @@
                               ],
                               "KLAT": null,
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -12523,13 +12751,13 @@
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
-                                    0.14,
-                                    0.14,
-                                    0.03,
-                                    0.03,
-                                    0.03,
-                                    0.03,
-                                    0.03
+                                    0.124,
+                                    0.129,
+                                    0.077,
+                                    0.032,
+                                    0.016,
+                                    0.013,
+                                    0.013
                                   ],
                                   "KL": [
                                     0.1,
@@ -12561,13 +12789,13 @@
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
-                                    0.14,
-                                    0.14,
-                                    0.03,
-                                    0.03,
-                                    0.03,
-                                    0.03,
-                                    0.03
+                                    0.124,
+                                    0.129,
+                                    0.077,
+                                    0.032,
+                                    0.016,
+                                    0.013,
+                                    0.013
                                   ],
                                   "KL": [
                                     0.1,
@@ -12656,6 +12884,12 @@
                                 0.0
                               ],
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -13038,9 +13272,9 @@
                                     1.0,
                                     1.0,
                                     1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
+                                    0.0,
+                                    0.0,
+                                    0.0
                                   ],
                                   "LLMetadata": null,
                                   "KLMetadata": null,
@@ -13079,9 +13313,9 @@
                                     1.0,
                                     1.0,
                                     1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
+                                    0.0,
+                                    0.0,
+                                    0.0
                                   ],
                                   "LLMetadata": null,
                                   "KLMetadata": null,
@@ -13147,6 +13381,12 @@
                               ],
                               "KLAT": null,
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -15588,6 +15828,12 @@
                               ],
                               "KLAT": null,
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -17095,6 +17341,12 @@
                               ],
                               "KLAT": null,
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -19266,14 +19518,14 @@
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
-                                    0.12,
-                                    0.12,
-                                    0.12,
-                                    0.12,
-                                    0.1,
-                                    0.1,
-                                    0.1,
-                                    0.1
+                                    0.054,
+                                    0.083,
+                                    0.088,
+                                    0.091,
+                                    0.091,
+                                    0.091,
+                                    0.091,
+                                    0.091
                                   ],
                                   "KL": [
                                     0.1,
@@ -19307,14 +19559,14 @@
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
-                                    0.12,
-                                    0.12,
-                                    0.12,
-                                    0.12,
-                                    0.1,
-                                    0.1,
-                                    0.1,
-                                    0.1
+                                    0.054,
+                                    0.083,
+                                    0.088,
+                                    0.091,
+                                    0.091,
+                                    0.091,
+                                    0.091,
+                                    0.091
                                   ],
                                   "KL": [
                                     0.1,
@@ -19400,6 +19652,12 @@
                               ],
                               "KLAT": null,
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -21529,6 +21787,12 @@
                               ],
                               "KLAT": null,
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -22878,6 +23142,12 @@
                               ],
                               "KLAT": null,
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -24093,14 +24363,14 @@
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
+                                    0.15,
+                                    0.15,
+                                    0.15,
                                     0.12,
                                     0.12,
                                     0.12,
                                     0.12,
-                                    0.1,
-                                    0.1,
-                                    0.1,
-                                    0.1
+                                    0.12
                                   ],
                                   "KL": [
                                     0.1,
@@ -24134,14 +24404,14 @@
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
+                                    0.15,
+                                    0.15,
+                                    0.15,
                                     0.12,
                                     0.12,
                                     0.12,
                                     0.12,
-                                    0.1,
-                                    0.1,
-                                    0.1,
-                                    0.1
+                                    0.12
                                   ],
                                   "KL": [
                                     0.1,
@@ -24227,6 +24497,12 @@
                               ],
                               "KLAT": null,
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -29008,6 +29284,12 @@
                               ],
                               "KLAT": null,
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -30627,6 +30909,12 @@
                               ],
                               "KLAT": null,
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -32112,14 +32400,14 @@
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
+                                    0.15,
+                                    0.15,
+                                    0.15,
                                     0.12,
                                     0.12,
                                     0.12,
                                     0.12,
-                                    0.1,
-                                    0.1,
-                                    0.1,
-                                    0.1
+                                    0.12
                                   ],
                                   "KL": [
                                     0.1,
@@ -32153,14 +32441,14 @@
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
+                                    0.15,
+                                    0.15,
+                                    0.15,
                                     0.12,
                                     0.12,
                                     0.12,
                                     0.12,
-                                    0.1,
-                                    0.1,
-                                    0.1,
-                                    0.1
+                                    0.12
                                   ],
                                   "KL": [
                                     0.1,
@@ -32246,6 +32534,12 @@
                               ],
                               "KLAT": null,
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -33461,14 +33755,14 @@
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
-                                    0.14,
-                                    0.14,
-                                    0.14,
-                                    0.14,
-                                    0.14,
-                                    0.14,
-                                    0.14,
-                                    0.14
+                                    0.15,
+                                    0.15,
+                                    0.15,
+                                    0.06,
+                                    0.06,
+                                    0.06,
+                                    0.06,
+                                    0.06
                                   ],
                                   "KL": [
                                     0.1,
@@ -33502,14 +33796,14 @@
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
-                                    0.14,
-                                    0.14,
-                                    0.14,
-                                    0.14,
-                                    0.14,
-                                    0.14,
-                                    0.14,
-                                    0.14
+                                    0.15,
+                                    0.15,
+                                    0.15,
+                                    0.06,
+                                    0.06,
+                                    0.06,
+                                    0.06,
+                                    0.06
                                   ],
                                   "KL": [
                                     0.1,
@@ -33595,6 +33889,12 @@
                               ],
                               "KLAT": null,
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -35412,6 +35712,12 @@
                               ],
                               "KLAT": null,
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -36939,14 +37245,14 @@
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
+                                    0.15,
+                                    0.15,
+                                    0.15,
                                     0.12,
                                     0.12,
                                     0.12,
                                     0.12,
-                                    0.1,
-                                    0.1,
-                                    0.1,
-                                    0.1
+                                    0.12
                                   ],
                                   "KL": [
                                     0.1,
@@ -36980,14 +37286,14 @@
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
+                                    0.15,
+                                    0.15,
+                                    0.15,
                                     0.12,
                                     0.12,
                                     0.12,
                                     0.12,
-                                    0.1,
-                                    0.1,
-                                    0.1,
-                                    0.1
+                                    0.12
                                   ],
                                   "KL": [
                                     0.1,
@@ -37073,6 +37379,12 @@
                               ],
                               "KLAT": null,
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -39382,14 +39694,14 @@
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
+                                    0.15,
+                                    0.15,
+                                    0.15,
                                     0.12,
                                     0.12,
                                     0.12,
                                     0.12,
-                                    0.1,
-                                    0.1,
-                                    0.1,
-                                    0.1
+                                    0.12
                                   ],
                                   "KL": [
                                     0.1,
@@ -39423,14 +39735,14 @@
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
+                                    0.15,
+                                    0.15,
+                                    0.15,
                                     0.12,
                                     0.12,
                                     0.12,
                                     0.12,
-                                    0.1,
-                                    0.1,
-                                    0.1,
-                                    0.1
+                                    0.12
                                   ],
                                   "KL": [
                                     0.1,
@@ -39516,6 +39828,12 @@
                               ],
                               "KLAT": null,
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -41669,14 +41987,14 @@
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
+                                    0.13,
+                                    0.13,
+                                    0.13,
                                     0.12,
                                     0.12,
                                     0.12,
                                     0.12,
-                                    0.1,
-                                    0.1,
-                                    0.1,
-                                    0.1
+                                    0.12
                                   ],
                                   "KL": [
                                     0.1,
@@ -41710,14 +42028,14 @@
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
+                                    0.13,
+                                    0.13,
+                                    0.13,
                                     0.12,
                                     0.12,
                                     0.12,
                                     0.12,
-                                    0.1,
-                                    0.1,
-                                    0.1,
-                                    0.1
+                                    0.12
                                   ],
                                   "KL": [
                                     0.1,
@@ -41803,6 +42121,12 @@
                               ],
                               "KLAT": null,
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -43954,14 +44278,14 @@
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
+                                    0.15,
+                                    0.15,
+                                    0.15,
                                     0.12,
                                     0.12,
                                     0.12,
                                     0.12,
-                                    0.1,
-                                    0.1,
-                                    0.1,
-                                    0.1
+                                    0.12
                                   ],
                                   "KL": [
                                     0.1,
@@ -43995,14 +44319,14 @@
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
+                                    0.15,
+                                    0.15,
+                                    0.15,
                                     0.12,
                                     0.12,
                                     0.12,
                                     0.12,
-                                    0.1,
-                                    0.1,
-                                    0.1,
-                                    0.1
+                                    0.12
                                   ],
                                   "KL": [
                                     0.1,
@@ -44088,6 +44412,12 @@
                               ],
                               "KLAT": null,
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -47621,6 +47951,12 @@
                               ],
                               "KLAT": null,
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -49596,6 +49932,12 @@
                               ],
                               "KLAT": null,
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -51881,6 +52223,12 @@
                               ],
                               "KLAT": null,
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -53412,10 +53760,10 @@
                                     0.12,
                                     0.12,
                                     0.12,
-                                    0.1,
-                                    0.1,
-                                    0.1,
-                                    0.1
+                                    0.12,
+                                    0.12,
+                                    0.12,
+                                    0.12
                                   ],
                                   "KL": [
                                     0.1,
@@ -53453,10 +53801,10 @@
                                     0.12,
                                     0.12,
                                     0.12,
-                                    0.1,
-                                    0.1,
-                                    0.1,
-                                    0.1
+                                    0.12,
+                                    0.12,
+                                    0.12,
+                                    0.12
                                   ],
                                   "KL": [
                                     0.1,
@@ -53542,6 +53890,12 @@
                               ],
                               "KLAT": null,
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -54579,6 +54933,12 @@
                               ],
                               "KLAT": null,
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -55484,8 +55844,8 @@
                                   "LL": [
                                     0.12,
                                     0.12,
-                                    0.12,
-                                    0.12,
+                                    0.1,
+                                    0.1,
                                     0.1,
                                     0.1,
                                     0.1,
@@ -55525,8 +55885,8 @@
                                   "LL": [
                                     0.12,
                                     0.12,
-                                    0.12,
-                                    0.12,
+                                    0.1,
+                                    0.1,
                                     0.1,
                                     0.1,
                                     0.1,
@@ -55616,6 +55976,12 @@
                               ],
                               "KLAT": null,
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -57433,6 +57799,12 @@
                               ],
                               "KLAT": null,
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -59252,6 +59624,12 @@
                               ],
                               "KLAT": null,
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -61069,6 +61447,12 @@
                               ],
                               "KLAT": null,
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -63354,6 +63738,12 @@
                               ],
                               "KLAT": null,
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -64726,8 +65116,8 @@
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
                                     0.2,
-                                    0.15,
                                     0.2,
+                                    0.25,
                                     0.25,
                                     0.35,
                                     0.35,
@@ -64767,8 +65157,8 @@
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
                                     0.2,
-                                    0.15,
                                     0.2,
+                                    0.25,
                                     0.25,
                                     0.35,
                                     0.35,
@@ -64868,6 +65258,12 @@
                                 0.0
                               ],
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -67942,6 +68338,12 @@
                                 0.0
                               ],
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -68053,14 +68455,14 @@
                                 200.0
                               ],
                               "Carbon": [
-                                4.0,
-                                1.52,
-                                0.577,
-                                0.159,
-                                0.083,
-                                0.032,
-                                0.012,
-                                0.006
+                                3.523,
+                                1.39,
+                                0.579,
+                                0.604,
+                                0.404,
+                                0.391,
+                                0.391,
+                                0.391
                               ],
                               "SoilCNRatio": [
                                 11.3,
@@ -70589,6 +70991,12 @@
                                 0.0
                               ],
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -70702,9 +71110,9 @@
                                 5.5,
                                 1.7,
                                 1.7,
-                                0.0,
-                                0.0,
-                                0.0
+                                1.23,
+                                0.82,
+                                0.82
                               ],
                               "SoilCNRatio": [
                                 12.5,
@@ -71624,517 +72032,6 @@
                           "ExcelWorkSheetName": "",
                           "Name": "Weather",
                           "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.Soil, Models",
-                          "RecordNumber": 0,
-                          "ASCOrder": null,
-                          "ASCSubOrder": null,
-                          "SoilType": "Black Vertosol",
-                          "LocalName": null,
-                          "Site": "Dalby",
-                          "NearestTown": "Dalby, Q 4405",
-                          "Region": "Darling Downs",
-                          "State": "Queensland",
-                          "Country": null,
-                          "NaturalVegetation": null,
-                          "ApsoilNumber": "27",
-                          "Latitude": -27.12,
-                          "Longitude": 151.305,
-                          "LocationAccuracy": "+/-20m",
-                          "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba",
-                          "Comments": "This was just copied from the original simulation done in the older APSIM",
-                          "Name": "SoilWinchmore",
-                          "Children": [
-                            {
-                              "$type": "Models.Soils.Chemical, Models",
-                              "Depth": [
-                                "0-10",
-                                "10-30",
-                                "30-60",
-                                "60-90",
-                                "90-120",
-                                "120-150",
-                                "150-180"
-                              ],
-                              "Thickness": [
-                                100.0,
-                                200.0,
-                                300.0,
-                                300.0,
-                                300.0,
-                                300.0,
-                                300.0
-                              ],
-                              "NO3N": [
-                                7.619,
-                                7.3572499999999987,
-                                3.8709999999999991,
-                                3.84,
-                                3.81,
-                                3.7789999999999995,
-                                3.6910000000000007
-                              ],
-                              "NH4N": [
-                                0.132,
-                                0.132,
-                                0.132,
-                                0.13200000000000003,
-                                0.13199999999999998,
-                                0.13199999999999998,
-                                0.13199999999999998
-                              ],
-                              "PH": [
-                                5.9,
-                                5.9,
-                                5.9,
-                                5.9,
-                                5.9,
-                                5.9,
-                                5.9
-                              ],
-                              "CL": null,
-                              "EC": null,
-                              "ESP": null,
-                              "Name": "Chemical",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.Physical, Models",
-                              "Depth": [
-                                "0-10",
-                                "10-30",
-                                "30-60",
-                                "60-90",
-                                "90-120",
-                                "120-150",
-                                "150-180"
-                              ],
-                              "Thickness": [
-                                100.0,
-                                200.0,
-                                300.0,
-                                300.0,
-                                300.0,
-                                300.0,
-                                300.0
-                              ],
-                              "ParticleSizeClay": null,
-                              "ParticleSizeSand": null,
-                              "ParticleSizeSilt": null,
-                              "BD": [
-                                1.25,
-                                1.31,
-                                1.23,
-                                1.24,
-                                1.25,
-                                1.26,
-                                1.29
-                              ],
-                              "AirDry": [
-                                0.06,
-                                0.06,
-                                0.03,
-                                0.03,
-                                0.03,
-                                0.03,
-                                0.03
-                              ],
-                              "LL15": [
-                                0.124,
-                                0.129,
-                                0.077,
-                                0.032,
-                                0.035,
-                                0.035,
-                                0.035
-                              ],
-                              "DUL": [
-                                0.3,
-                                0.3,
-                                0.13,
-                                0.052,
-                                0.036,
-                                0.036,
-                                0.05
-                              ],
-                              "SAT": [
-                                0.45,
-                                0.45,
-                                0.15,
-                                0.08,
-                                0.08,
-                                0.08,
-                                0.08
-                              ],
-                              "KS": null,
-                              "BDMetadata": null,
-                              "AirDryMetadata": null,
-                              "LL15Metadata": null,
-                              "DULMetadata": null,
-                              "SATMetadata": null,
-                              "KSMetadata": null,
-                              "Name": "Physical",
-                              "Children": [
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.14,
-                                    0.14,
-                                    0.03,
-                                    0.03,
-                                    0.03,
-                                    0.03,
-                                    0.03
-                                  ],
-                                  "KL": [
-                                    0.1,
-                                    0.1,
-                                    0.1,
-                                    0.02,
-                                    0.0,
-                                    0.0,
-                                    0.0
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    0.0,
-                                    0.0,
-                                    0.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "AGPRyegrassSoil",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.14,
-                                    0.14,
-                                    0.03,
-                                    0.03,
-                                    0.03,
-                                    0.03,
-                                    0.03
-                                  ],
-                                  "KL": [
-                                    0.1,
-                                    0.1,
-                                    0.1,
-                                    0.02,
-                                    0.0,
-                                    0.0,
-                                    0.0
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    0.0,
-                                    0.0,
-                                    0.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "AGPWhiteCloverSoil",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.SoilWater, Models",
-                              "SummerDate": "1-Nov",
-                              "SummerU": 6.0,
-                              "SummerCona": 3.5,
-                              "WinterDate": "1-apr",
-                              "WinterU": 2.0,
-                              "WinterCona": 2.0,
-                              "DiffusConst": 88.0,
-                              "DiffusSlope": 35.0,
-                              "Salb": 0.13,
-                              "CN2Bare": 73.0,
-                              "CNRed": 20.0,
-                              "CNCov": 0.8,
-                              "slope": 0.0,
-                              "discharge_width": 0.0,
-                              "catchment_area": 0.0,
-                              "max_pond": 0.0,
-                              "Thickness": [
-                                100.0,
-                                200.0,
-                                300.0,
-                                300.0,
-                                300.0,
-                                300.0,
-                                300.0
-                              ],
-                              "Depth": [
-                                "0-10",
-                                "10-30",
-                                "30-60",
-                                "60-90",
-                                "90-120",
-                                "120-150",
-                                "150-180"
-                              ],
-                              "SWCON": [
-                                0.4,
-                                0.5,
-                                0.6,
-                                0.6,
-                                0.8,
-                                0.8,
-                                0.8
-                              ],
-                              "KLAT": [
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0
-                              ],
-                              "PrecipitationInterception": 0.0,
-                              "Name": "SoilWater",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.SoilNitrogen, Models",
-                              "fom_types": [
-                                "default",
-                                "manure",
-                                "mucuna",
-                                "lablab",
-                                "shemp",
-                                "stable"
-                              ],
-                              "fract_carb": [
-                                0.2,
-                                0.3,
-                                0.54,
-                                0.57,
-                                0.45,
-                                0.0
-                              ],
-                              "fract_cell": [
-                                0.7,
-                                0.3,
-                                0.37,
-                                0.37,
-                                0.47,
-                                0.1
-                              ],
-                              "fract_lign": [
-                                0.1,
-                                0.4,
-                                0.09,
-                                0.06,
-                                0.08,
-                                0.9
-                              ],
-                              "Name": "SoilNitrogen",
-                              "Children": [
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
-                                  "Name": "NO3",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
-                                  "Name": "NH4",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
-                                  "Name": "Urea",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
-                                  "Name": "PlantAvailableNO3",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
-                                  "Name": "PlantAvailableNH4",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.Organic, Models",
-                              "Depth": [
-                                "0-10",
-                                "10-30",
-                                "30-60",
-                                "60-90",
-                                "90-120",
-                                "120-150",
-                                "150-180"
-                              ],
-                              "FOMCNRatio": 40.0,
-                              "Thickness": [
-                                100.0,
-                                200.0,
-                                300.0,
-                                300.0,
-                                300.0,
-                                300.0,
-                                300.0
-                              ],
-                              "Carbon": [
-                                4.9,
-                                2.897,
-                                0.577,
-                                0.219,
-                                0.083,
-                                0.032,
-                                0.012
-                              ],
-                              "SoilCNRatio": [
-                                13.8,
-                                13.8,
-                                13.8,
-                                13.8,
-                                13.8,
-                                13.8,
-                                13.8
-                              ],
-                              "FBiom": [
-                                0.263,
-                                0.161,
-                                0.152,
-                                0.102,
-                                0.0,
-                                0.0,
-                                0.0
-                              ],
-                              "FInert": [
-                                0.531,
-                                0.664,
-                                0.923,
-                                0.988,
-                                1.0,
-                                1.0,
-                                1.0
-                              ],
-                              "FOM": [
-                                292.99791644220608,
-                                209.94218106372352,
-                                127.33636958208936,
-                                77.233412248036359,
-                                46.844432482659279,
-                                28.412584537571245,
-                                17.233103643714056
-                              ],
-                              "Name": "Organic",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.InitialWater, Models",
-                              "PercentMethod": 0,
-                              "FractionFull": 0.99,
-                              "DepthWetSoil": "NaN",
-                              "RelativeTo": null,
-                              "Name": "Initial water",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.Sample, Models",
-                              "Depth": [
-                                "0-15",
-                                "15-30",
-                                "30-60",
-                                "60-90",
-                                "90-120",
-                                "120-150",
-                                "150-180"
-                              ],
-                              "Thickness": [
-                                150.0,
-                                150.0,
-                                300.0,
-                                300.0,
-                                300.0,
-                                300.0,
-                                300.0
-                              ],
-                              "NO3N": null,
-                              "NH4N": null,
-                              "SW": null,
-                              "OC": null,
-                              "EC": null,
-                              "CL": null,
-                              "ESP": null,
-                              "PH": null,
-                              "SWUnits": 0,
-                              "OCUnits": 0,
-                              "PHUnits": 0,
-                              "Name": "Initial nitrogen",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "CERESSoilTemperature",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -73834,6 +73731,523 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Soil, Models",
+                          "RecordNumber": 0,
+                          "ASCOrder": null,
+                          "ASCSubOrder": null,
+                          "SoilType": "Black Vertosol",
+                          "LocalName": null,
+                          "Site": "Dalby",
+                          "NearestTown": "Dalby, Q 4405",
+                          "Region": "Darling Downs",
+                          "State": "Queensland",
+                          "Country": null,
+                          "NaturalVegetation": null,
+                          "ApsoilNumber": "27",
+                          "Latitude": -27.12,
+                          "Longitude": 151.305,
+                          "LocationAccuracy": "+/-20m",
+                          "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba",
+                          "Comments": "This was just copied from the original simulation done in the older APSIM",
+                          "Name": "SoilWinchmore",
+                          "Children": [
+                            {
+                              "$type": "Models.Soils.Chemical, Models",
+                              "Depth": [
+                                "0-10",
+                                "10-30",
+                                "30-60",
+                                "60-90",
+                                "90-120",
+                                "120-150",
+                                "150-180"
+                              ],
+                              "Thickness": [
+                                100.0,
+                                200.0,
+                                300.0,
+                                300.0,
+                                300.0,
+                                300.0,
+                                300.0
+                              ],
+                              "NO3N": [
+                                7.619,
+                                7.3572499999999987,
+                                3.8709999999999991,
+                                3.84,
+                                3.81,
+                                3.7789999999999995,
+                                3.6910000000000007
+                              ],
+                              "NH4N": [
+                                0.132,
+                                0.132,
+                                0.132,
+                                0.13200000000000003,
+                                0.13199999999999998,
+                                0.13199999999999998,
+                                0.13199999999999998
+                              ],
+                              "PH": [
+                                5.9,
+                                5.9,
+                                5.9,
+                                5.9,
+                                5.9,
+                                5.9,
+                                5.9
+                              ],
+                              "CL": null,
+                              "EC": null,
+                              "ESP": null,
+                              "Name": "Chemical",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Physical, Models",
+                              "Depth": [
+                                "0-10",
+                                "10-30",
+                                "30-60",
+                                "60-90",
+                                "90-120",
+                                "120-150",
+                                "150-180"
+                              ],
+                              "Thickness": [
+                                100.0,
+                                200.0,
+                                300.0,
+                                300.0,
+                                300.0,
+                                300.0,
+                                300.0
+                              ],
+                              "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
+                              "BD": [
+                                1.25,
+                                1.31,
+                                1.23,
+                                1.24,
+                                1.25,
+                                1.26,
+                                1.29
+                              ],
+                              "AirDry": [
+                                0.06,
+                                0.06,
+                                0.03,
+                                0.03,
+                                0.03,
+                                0.03,
+                                0.03
+                              ],
+                              "LL15": [
+                                0.124,
+                                0.129,
+                                0.077,
+                                0.032,
+                                0.035,
+                                0.035,
+                                0.035
+                              ],
+                              "DUL": [
+                                0.3,
+                                0.3,
+                                0.13,
+                                0.052,
+                                0.036,
+                                0.036,
+                                0.05
+                              ],
+                              "SAT": [
+                                0.45,
+                                0.45,
+                                0.15,
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08
+                              ],
+                              "KS": null,
+                              "BDMetadata": null,
+                              "AirDryMetadata": null,
+                              "LL15Metadata": null,
+                              "DULMetadata": null,
+                              "SATMetadata": null,
+                              "KSMetadata": null,
+                              "Name": "Physical",
+                              "Children": [
+                                {
+                                  "$type": "Models.Soils.SoilCrop, Models",
+                                  "LL": [
+                                    0.124,
+                                    0.129,
+                                    0.077,
+                                    0.032,
+                                    0.035,
+                                    0.035,
+                                    0.035
+                                  ],
+                                  "KL": [
+                                    0.1,
+                                    0.1,
+                                    0.1,
+                                    0.02,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "XF": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "LLMetadata": null,
+                                  "KLMetadata": null,
+                                  "XFMetadata": null,
+                                  "Name": "AGPRyegrassSoil",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilCrop, Models",
+                                  "LL": [
+                                    0.124,
+                                    0.129,
+                                    0.077,
+                                    0.032,
+                                    0.035,
+                                    0.035,
+                                    0.035
+                                  ],
+                                  "KL": [
+                                    0.1,
+                                    0.1,
+                                    0.1,
+                                    0.02,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "XF": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                  ],
+                                  "LLMetadata": null,
+                                  "KLMetadata": null,
+                                  "XFMetadata": null,
+                                  "Name": "AGPWhiteCloverSoil",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilWater, Models",
+                              "SummerDate": "1-Nov",
+                              "SummerU": 6.0,
+                              "SummerCona": 3.5,
+                              "WinterDate": "1-apr",
+                              "WinterU": 2.0,
+                              "WinterCona": 2.0,
+                              "DiffusConst": 88.0,
+                              "DiffusSlope": 35.0,
+                              "Salb": 0.13,
+                              "CN2Bare": 73.0,
+                              "CNRed": 20.0,
+                              "CNCov": 0.8,
+                              "slope": 0.0,
+                              "discharge_width": 0.0,
+                              "catchment_area": 0.0,
+                              "max_pond": 0.0,
+                              "Thickness": [
+                                100.0,
+                                200.0,
+                                300.0,
+                                300.0,
+                                300.0,
+                                300.0,
+                                300.0
+                              ],
+                              "Depth": [
+                                "0-10",
+                                "10-30",
+                                "30-60",
+                                "60-90",
+                                "90-120",
+                                "120-150",
+                                "150-180"
+                              ],
+                              "SWCON": [
+                                0.4,
+                                0.5,
+                                0.6,
+                                0.6,
+                                0.8,
+                                0.8,
+                                0.8
+                              ],
+                              "KLAT": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0
+                              ],
+                              "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
+                              "Name": "SoilWater",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilNitrogen, Models",
+                              "fom_types": [
+                                "default",
+                                "manure",
+                                "mucuna",
+                                "lablab",
+                                "shemp",
+                                "stable"
+                              ],
+                              "fract_carb": [
+                                0.2,
+                                0.3,
+                                0.54,
+                                0.57,
+                                0.45,
+                                0.0
+                              ],
+                              "fract_cell": [
+                                0.7,
+                                0.3,
+                                0.37,
+                                0.37,
+                                0.47,
+                                0.1
+                              ],
+                              "fract_lign": [
+                                0.1,
+                                0.4,
+                                0.09,
+                                0.06,
+                                0.08,
+                                0.9
+                              ],
+                              "Name": "SoilNitrogen",
+                              "Children": [
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "Name": "NO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "Name": "NH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "Name": "Urea",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                                  "Name": "PlantAvailableNO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                                  "Name": "PlantAvailableNH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Organic, Models",
+                              "Depth": [
+                                "0-10",
+                                "10-30",
+                                "30-60",
+                                "60-90",
+                                "90-120",
+                                "120-150",
+                                "150-180"
+                              ],
+                              "FOMCNRatio": 40.0,
+                              "Thickness": [
+                                100.0,
+                                200.0,
+                                300.0,
+                                300.0,
+                                300.0,
+                                300.0,
+                                300.0
+                              ],
+                              "Carbon": [
+                                3.523,
+                                1.39,
+                                0.579,
+                                0.604,
+                                0.404,
+                                0.391,
+                                0.391
+                              ],
+                              "SoilCNRatio": [
+                                13.8,
+                                13.8,
+                                13.8,
+                                13.8,
+                                13.8,
+                                13.8,
+                                13.8
+                              ],
+                              "FBiom": [
+                                0.263,
+                                0.161,
+                                0.152,
+                                0.102,
+                                0.0,
+                                0.0,
+                                0.0
+                              ],
+                              "FInert": [
+                                0.531,
+                                0.664,
+                                0.923,
+                                0.988,
+                                1.0,
+                                1.0,
+                                1.0
+                              ],
+                              "FOM": [
+                                292.99791644220608,
+                                209.94218106372352,
+                                127.33636958208936,
+                                77.233412248036359,
+                                46.844432482659279,
+                                28.412584537571245,
+                                17.233103643714056
+                              ],
+                              "Name": "Organic",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.InitialWater, Models",
+                              "PercentMethod": 0,
+                              "FractionFull": 0.99,
+                              "DepthWetSoil": "NaN",
+                              "RelativeTo": null,
+                              "Name": "Initial water",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Sample, Models",
+                              "Depth": [
+                                "0-15",
+                                "15-30",
+                                "30-60",
+                                "60-90",
+                                "90-120",
+                                "120-150",
+                                "150-180"
+                              ],
+                              "Thickness": [
+                                150.0,
+                                150.0,
+                                300.0,
+                                300.0,
+                                300.0,
+                                300.0,
+                                300.0
+                              ],
+                              "NO3N": null,
+                              "NH4N": null,
+                              "SW": null,
+                              "OC": null,
+                              "EC": null,
+                              "CL": null,
+                              "ESP": null,
+                              "PH": null,
+                              "SWUnits": 0,
+                              "OCUnits": 0,
+                              "PHUnits": 0,
+                              "Name": "Initial nitrogen",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.CERESSoilTemperature, Models",
+                              "Name": "CERESSoilTemperature",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -74021,13 +74435,13 @@
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
-                                    0.14,
-                                    0.14,
-                                    0.03,
-                                    0.03,
-                                    0.03,
-                                    0.03,
-                                    0.03
+                                    0.124,
+                                    0.129,
+                                    0.077,
+                                    0.032,
+                                    0.016,
+                                    0.013,
+                                    0.013
                                   ],
                                   "KL": [
                                     0.1,
@@ -74059,13 +74473,13 @@
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
-                                    0.14,
-                                    0.14,
-                                    0.03,
-                                    0.03,
-                                    0.03,
-                                    0.03,
-                                    0.03
+                                    0.124,
+                                    0.129,
+                                    0.077,
+                                    0.032,
+                                    0.016,
+                                    0.013,
+                                    0.013
                                   ],
                                   "KL": [
                                     0.1,
@@ -74154,6 +74568,12 @@
                                 0.0
                               ],
                               "PrecipitationInterception": 0.0,
+                              "SoluteFluxEfficiency": [
+                                1.0
+                              ],
+                              "SoluteFlowEfficiency": [
+                                1.0
+                              ],
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -74263,7 +74683,7 @@
                                 300.0
                               ],
                               "Carbon": [
-                                4.7,
+                                3.523,
                                 1.39,
                                 0.579,
                                 0.604,
@@ -77920,14 +78340,6 @@
                       "Code": "using Models.AgPasture;\r\nusing System;\r\nusing System.Xml.Serialization;\r\nusing System.Collections.Generic;\r\nusing System.Linq;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Interfaces;\r\n\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Zone zone;\r\n        [Link] private Simulation Simulation;\r\n        [Link] private Clock Clock;\r\n        [Link] private Fertiliser fertiliser;\r\n        [Link] private Soil mySoil;\r\n        [Link] private Irrigation Irrigation;\r\n        [Link] private ISummary summary;\r\n        // - Links to APSIM models\r\n        //[Link] AgPasture.PastureSpecies Pasture;\r\n\r\n        List<AgPasture.PastureSpecies> Pasture = new List<AgPasture.PastureSpecies>();\r\n\r\n        //[Link(ByName = true)] Report HarvestReport;\r\n\r\n\r\n        [Separator(\"NOTE WELL!! MUST start the sim the data after annual reporting and do a harvest on annual reporting day\")]\r\n        [Description(\"Do reporting on each harvest?    :\")] public bool EnableOnHarvest { get; set; }\r\n        [Description(\"Name of the component for harvest-based reporting    :\")] public string ReportNameHarvest { get; set; }\r\n\r\n        [Description(\"Do reporting at the end of each production year?    :\")] public bool EnableOnAnnual { get; set; }\r\n        [Description(\"Name of the component for annual reporting    :\")] public string ReportNameAnnual { get; set; }\r\n        [Description(\"Date for annual reporting - NOTE - must coincide with the end of one of the seasons below (dd-mmm)    :\")] public string ReportDateAnnual { get; set; }\r\n\r\n        [Description(\"Do the seasonal reporting)?    :\")] public bool EnableOnSeason { get; set; }\r\n        [Description(\"Name of the component for seasonal reporting    :\")] public string ReportNameSeasonal { get; set; }\r\n        [Description(\"Last day of summer for seasonal reporting (dd-mmm)\")] public string SummerEndDate { get; set; }\r\n        [Description(\"Last day of autumn for seasonal reporting (dd-mmm)\")] public string AutumnEndDate { get; set; }\r\n        [Description(\"Last day of winter for seasonal reporting (dd-mmm)\")] public string WinterEndDate { get; set; }\r\n        [Description(\"Last day of spring for seasonal reporting (dd-mmm)\")] public string SpringEndDate { get; set; }\r\n\r\n        [Description(\"Do the summary reporting (at the end of the simulation)?    :\")] public bool EnableOnSummary { get; set; }\r\n        [Description(\"Name of the component for summary (comparison to observed) reporting    :\")] public string ReportNameSummary { get; set; }\r\n\r\n\r\n\r\n        public double AnnualHarvestedWt { get; set; }\r\n        public double AnnualIrrigated { get; set; }\r\n        public double IntervalNHA { get; set; }\r\n\r\n        private bool doAnnualReport = false;\r\n        private bool doAnnualReportCalculations = false;\r\n        private bool doSeasonalReport = false;\r\n        private bool doSummerReport = false;\r\n        private bool doAutumnReport = false;\r\n        private bool doWinterReport = false;\r\n        private bool doSpringReport = false;\r\n        private bool doSummerReportCalculations = false;\r\n        private bool doAutumnReportCalculations = false;\r\n        private bool doWinterReportCalculations = false;\r\n        private bool doSpringReportCalculations = false;\r\n\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double AveAnnHarvested { get; set; }\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double StdAnnHarvested { get; set; }\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double RngAnnHarvested { get; set; }\r\n\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double AveSummerHarvested { get; set; }\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double StdSummerHarvested { get; set; }\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double RngSummerHarvested { get; set; }\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double AveAutumnHarvested { get; set; }\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double StdAutumnHarvested { get; set; }\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double RngAutumnHarvested { get; set; }\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double AveWinterHarvested { get; set; }\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double StdWinterHarvested { get; set; }\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double RngWinterHarvested { get; set; }\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double AveSpringHarvested { get; set; }\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double StdSpringHarvested { get; set; }\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double RngSpringHarvested { get; set; }\r\n\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double[] AveSeasonalHarvested { get; set; }\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double[] StdSeasonalHarvested { get; set; }\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double[] RngSeasonalHarvested { get; set; }\r\n\r\n        [XmlIgnore][Units(\"-\")] public string Season { get; set; }\r\n        [XmlIgnore][Units(\"-\")] public double SeasonNHA  { get; set; }\r\n        [XmlIgnore][Units(\"-\")] public double SummerNHA  { get; set; }\r\n        [XmlIgnore][Units(\"-\")] public double AutumnNHA  { get; set; }\r\n        [XmlIgnore][Units(\"-\")] public double WinterNHA  { get; set; }\r\n        [XmlIgnore][Units(\"-\")] public double SpringNHA  { get; set; }\r\n\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public List<double> AnnHarvested = new List<double>();\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public List<double> SummerHarvested = new List<double>();\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public List<double> AutumnHarvested = new List<double>();\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public List<double> WinterHarvested = new List<double>();\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public List<double> SpringHarvested = new List<double>();\r\n        //List<double> harvestedWtSums = new List<double>();\r\n        private int CountYears = 0;\r\n        private bool GrazedToday;\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            foreach (PastureSpecies species in Apsim.Children(zone, typeof(PastureSpecies)))\r\n                Pasture.Add(species);\r\n\r\n            CountYears = 0;\r\n\r\n            Season = \"Unknown\";\r\n            SeasonNHA = 0.0;\r\n            SummerNHA = 0.0;\r\n            AutumnNHA = 0.0;\r\n            WinterNHA = 0.0;\r\n            SpringNHA = 0.0;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfYear\")]\r\n        private void OnStartOfYear(object sender, EventArgs e)\r\n        {\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            GrazedToday = false;\r\n\r\n            // Is this the day for annual reporting?\r\n            doAnnualReportCalculations = false;  // this is to capture annual harvests etc for the final Summary report\r\n            if (DateUtilities.DatesEqual(ReportDateAnnual, Clock.Today))\r\n                doAnnualReportCalculations = true;\r\n\r\n            doAnnualReport = false;\r\n            if (DateUtilities.DatesEqual(ReportDateAnnual, Clock.Today) && (EnableOnAnnual))\r\n                doAnnualReport = true;\r\n            else if (DateUtilities.DatesEqual(ReportDateAnnual, Clock.Today.AddDays(-1)))\r\n            {\r\n                AnnualHarvestedWt = 0.0;\r\n                AnnualIrrigated = 0.0;            \r\n            }\r\n\r\n            doSummerReport = false;\r\n            doAutumnReport = false;\r\n            doWinterReport = false;\r\n            doSpringReport = false;\r\n            doSummerReportCalculations = false;\r\n            doAutumnReportCalculations = false;\r\n            doWinterReportCalculations = false;\r\n            doSpringReportCalculations = false;\r\n            if (DateUtilities.DatesEqual(SummerEndDate, Clock.Today))\r\n            {\r\n                Season = \"Summer\";\r\n                doSummerReport = true;\r\n                doSummerReportCalculations = true;\r\n            }\r\n            else if (DateUtilities.DatesEqual(SummerEndDate, Clock.Today.AddDays(-1)))\r\n                SeasonNHA = 0.0;  // could move this zeroing\r\n            else if (DateUtilities.DatesEqual(AutumnEndDate, Clock.Today))\r\n            {\r\n                Season = \"Autumn\";\r\n                doAutumnReport = true;\r\n                doAutumnReportCalculations = true;\r\n            }\r\n            else if (DateUtilities.DatesEqual(AutumnEndDate, Clock.Today.AddDays(-1)))\r\n                SeasonNHA = 0.0;\r\n            else if (DateUtilities.DatesEqual(WinterEndDate, Clock.Today))\r\n            {\r\n                Season = \"Winter\";\r\n                doWinterReport = true;\r\n                doWinterReportCalculations = true;\r\n            }\r\n            else if (DateUtilities.DatesEqual(WinterEndDate, Clock.Today.AddDays(-1)))\r\n                SeasonNHA = 0.0;\r\n            else if (DateUtilities.DatesEqual(SpringEndDate, Clock.Today))\r\n            {\r\n                Season = \"Spring\";\r\n                doSpringReport = true;\r\n                doSpringReportCalculations = true;\r\n            }\r\n            else if (DateUtilities.DatesEqual(SpringEndDate, Clock.Today.AddDays(-1)))\r\n                SeasonNHA = 0.0;\r\n        }\r\n\r\n        [EventSubscribe(\"Grazed\")]\r\n        private void OnGrazed(object sender, EventArgs e)\r\n        {\r\n            // Grazing happened today.\r\n            GrazedToday = true;\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            foreach (PastureSpecies species in Pasture)\r\n            {\r\n                AnnualHarvestedWt += species.NetGrowthWt;\r\n                IntervalNHA += species.NetGrowthWt;\r\n                SeasonNHA += species.NetGrowthWt;\r\n            }\r\n\r\n            AnnualIrrigated += Irrigation.IrrigationApplied;\r\n\r\n            if ((GrazedToday) && (EnableOnHarvest))\r\n            {\r\n                Models.Report harvestReport = Apsim.Find(this, ReportNameHarvest) as Models.Report;\r\n                if (harvestReport == null)\r\n                    throw new Exception(string.Format(\"Unable to locate report {0}.\", ReportNameHarvest));\r\n                harvestReport.DoOutput();\r\n                IntervalNHA = 0.0;\r\n            }\r\n\r\n            if (doSummerReport || doAutumnReport || doWinterReport || doSpringReport)\r\n            {\r\n                Models.Report seasonalReport = Apsim.Find(this, ReportNameSeasonal) as Models.Report;\r\n                if (seasonalReport == null)\r\n                    throw new Exception(string.Format(\"Unable to locate report {0}.\", ReportNameSeasonal));\r\n                seasonalReport.DoOutput();\r\n            }\r\n\r\n            if (doAnnualReportCalculations)\r\n                AnnHarvested.Add(AnnualHarvestedWt);\r\n            if (doSummerReportCalculations)\r\n                SummerHarvested.Add(SeasonNHA);\r\n            if (doAutumnReportCalculations)\r\n                AutumnHarvested.Add(SeasonNHA);\r\n            if (doWinterReportCalculations)\r\n                WinterHarvested.Add(SeasonNHA);\r\n            if (doSpringReportCalculations)\r\n                SpringHarvested.Add(SeasonNHA);\r\n\r\n            if (doAnnualReport)\r\n            {\r\n                Models.Report annualReport = Apsim.Find(this, ReportNameAnnual) as Models.Report;\r\n                if (annualReport == null)\r\n                    throw new Exception(string.Format(\"Unable to locate annual report {0}.\", ReportNameAnnual));\r\n                annualReport.DoOutput();\r\n            }\r\n\r\n        }\r\n\r\n        [EventSubscribe(\"EndOfSimulation\")]\r\n        private void OnEndOfSimulation(object sender, EventArgs e)\r\n        {\r\n            if (EnableOnSummary)\r\n            {\r\n\r\n                AveAnnHarvested = MathUtilities.Average(AnnHarvested);\r\n                StdAnnHarvested = MathUtilities.SampleStandardDeviation(AnnHarvested);\r\n                RngAnnHarvested = MathUtilities.Max(AnnHarvested) - MathUtilities.Min(AnnHarvested);\r\n\r\n                AveSummerHarvested = MathUtilities.Average(SummerHarvested);\r\n                StdSummerHarvested = MathUtilities.SampleStandardDeviation(SummerHarvested);\r\n                RngSummerHarvested = MathUtilities.Max(SummerHarvested) - MathUtilities.Min(SummerHarvested);\r\n\r\n                AveAutumnHarvested = MathUtilities.Average(AutumnHarvested);\r\n                StdAutumnHarvested = MathUtilities.SampleStandardDeviation(AutumnHarvested);\r\n                RngAutumnHarvested = MathUtilities.Max(AutumnHarvested) - MathUtilities.Min(AutumnHarvested);\r\n\r\n                AveWinterHarvested = MathUtilities.Average(WinterHarvested);\r\n                StdWinterHarvested = MathUtilities.SampleStandardDeviation(WinterHarvested);\r\n                RngWinterHarvested = MathUtilities.Max(WinterHarvested) - MathUtilities.Min(WinterHarvested);\r\n\r\n                AveSpringHarvested = MathUtilities.Average(SpringHarvested);\r\n                StdSpringHarvested = MathUtilities.SampleStandardDeviation(SpringHarvested);\r\n                RngSpringHarvested = MathUtilities.Max(SpringHarvested) - MathUtilities.Min(SpringHarvested);\r\n\r\n\r\n\r\n                Models.Report summaryReport = Apsim.Find(this, ReportNameSummary) as Models.Report;\r\n                if (summaryReport == null)\r\n                    throw new Exception(string.Format(\"Unable to locate annual report {0}.\", ReportNameSummary));\r\n                summaryReport.DoOutput();\r\n            }\r\n        }\r\n\r\n\r\n    }\r\n}\r\n",
                       "Parameters": [
                         {
-                          "Key": "CutterName",
-                          "Value": "SimpleGrazing"
-                        },
-                        {
-                          "Key": "HarvestName",
-                          "Value": "HarvestedToday"
-                        },
-                        {
                           "Key": "EnableOnHarvest",
                           "Value": "False"
                         },
@@ -78207,6 +78619,12 @@
                           ],
                           "KLAT": null,
                           "PrecipitationInterception": 0.0,
+                          "SoluteFluxEfficiency": [
+                            1.0
+                          ],
+                          "SoluteFlowEfficiency": [
+                            1.0
+                          ],
                           "Name": "SoilWater",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -78512,7 +78930,8 @@
                         "[Clock].Today as Date",
                         "[Clock].Today.Year as Year",
                         "[DoReporting].Script.Season as Season",
-                        "[DoReporting].Script.SeasonNHA as SeasonNHA"
+                        "[DoReporting].Script.SeasonNHA as SeasonNHA",
+                        "([AGPWhiteClover].HarvestedWt / ([AGPWhiteClover].HarvestedWt + [AGPRyegrass].HarvestedWt + 1.0)) as PropCloverHarvested"
                       ],
                       "EventNames": [
                         ""
@@ -79065,6 +79484,12 @@
                                   ],
                                   "KLAT": null,
                                   "PrecipitationInterception": 0.0,
+                                  "SoluteFluxEfficiency": [
+                                    1.0
+                                  ],
+                                  "SoluteFlowEfficiency": [
+                                    1.0
+                                  ],
                                   "Name": "SoilWater",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -79589,6 +80014,12 @@
                                     0.0
                                   ],
                                   "PrecipitationInterception": 0.0,
+                                  "SoluteFluxEfficiency": [
+                                    1.0
+                                  ],
+                                  "SoluteFlowEfficiency": [
+                                    1.0
+                                  ],
                                   "Name": "SoilWater",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -80125,6 +80556,12 @@
                                     0.0
                                   ],
                                   "PrecipitationInterception": 0.0,
+                                  "SoluteFluxEfficiency": [
+                                    1.0
+                                  ],
+                                  "SoluteFlowEfficiency": [
+                                    1.0
+                                  ],
                                   "Name": "SoilWater",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -80943,6 +81380,12 @@
                           ],
                           "KLAT": null,
                           "PrecipitationInterception": 0.0,
+                          "SoluteFluxEfficiency": [
+                            1.0
+                          ],
+                          "SoluteFlowEfficiency": [
+                            1.0
+                          ],
                           "Name": "SoilWater",
                           "Children": [],
                           "IncludeInDocumentation": true,
