@@ -9,6 +9,7 @@
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
+    using System.Xml.Serialization;
 
     /// <summary>This class loads a model from a resource</summary>
     [Serializable]
@@ -182,7 +183,9 @@
                     property.Name != "ResourceName")
                 {
                     var description = property.GetCustomAttribute(typeof(DescriptionAttribute));
-                    if (description == null)
+                    var xmlIgnore = property.GetCustomAttribute(typeof(XmlIgnoreAttribute));
+                    var jsonIgnore = property.GetCustomAttribute(typeof(JsonIgnoreAttribute));
+                    if (description == null && xmlIgnore == null && jsonIgnore == null)
                     {
                         try
                         {
