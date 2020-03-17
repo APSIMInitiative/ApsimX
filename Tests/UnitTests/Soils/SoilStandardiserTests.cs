@@ -36,7 +36,7 @@
                             }
                         }
                     },
-                    new SoilWater(),
+                    new Models.WaterModel.WaterBalance(),
                     new CERESSoilTemperature(),
                     new Organic
                     {
@@ -109,7 +109,7 @@
                             }
                         }
                     },
-                    new SoilWater(),
+                    new Models.WaterModel.WaterBalance(),
                     new CERESSoilTemperature(),
                     new Organic
                     {
@@ -176,7 +176,7 @@
                         DUL = new double[] { 0.365, 0.461 },
                         SAT = new double[] { 0.400, 0.481 },
                     },
-                    new SoilWater(),
+                    new Models.WaterModel.WaterBalance(),
                     new CERESSoilTemperature(),
                     new Organic
                     {

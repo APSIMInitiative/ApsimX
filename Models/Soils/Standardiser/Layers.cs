@@ -27,8 +27,6 @@
             foreach (Sample sample in Apsim.Children(soil, typeof(Sample)))
                 SetSampleThickness(sample, targetThickness, soil);
 
-            if (soil.SoilWater is SoilWater)
-                SetSoilWaterThickness(soil.SoilWater as SoilWater, targetThickness);
             if (soil.SoilWater is WaterModel.WaterBalance)
                 SetSoilWaterThickness(soil.SoilWater as WaterModel.WaterBalance, targetThickness);
             if (soil.Weirdo != null)
@@ -88,25 +86,6 @@
                         }
                     }
                 }
-            }
-        }
-
-        /// <summary>Sets the soil water thickness.</summary>
-        /// <param name="soilWater">The soil water.</param>
-        /// <param name="thickness">Thickness to change soil water to.</param>
-        private static void SetSoilWaterThickness(SoilWater soilWater, double[] thickness)
-        {
-            if (soilWater != null)
-            {
-                if (!MathUtilities.AreEqual(thickness, soilWater.Thickness))
-                {
-                    soilWater.KLAT = MapConcentration(soilWater.KLAT, soilWater.Thickness, thickness, MathUtilities.LastValue(soilWater.KLAT));
-                    soilWater.SWCON = MapConcentration(soilWater.SWCON, soilWater.Thickness, thickness, 0.0);
-
-                    soilWater.Thickness = thickness;
-                }
-
-                MathUtilities.ReplaceMissingValues(soilWater.SWCON, 0.0);
             }
         }
 

@@ -23,7 +23,7 @@
             events.Publish("Commencing", args);
             events.Publish("DoDailyInitialisation", args);
 
-            var soilWater = zone.Children[1].Children[4] as SoilWater;
+            var soilWater = zone.Children[1].Children[4] as Models.WaterModel.WaterBalance;
             var swBeforeIrrigation = MathUtilities.Sum(soilWater.SWmm);
             var irrigation = zone.Children[0] as Irrigation;
 
@@ -44,7 +44,7 @@
             events.Publish("Commencing", args);
             events.Publish("DoDailyInitialisation", args);
 
-            var soilWater = zone.Children[1].Children[4] as SoilWater;
+            var soilWater = zone.Children[1].Children[4] as Models.WaterModel.WaterBalance;
             var swBeforeIrrigation = MathUtilities.Sum(soilWater.SWmm);
             var irrigation = zone.Children[0] as Irrigation;
 
@@ -104,7 +104,7 @@
                                 OC = new double[] { 1.35, double.NaN, double.NaN, double.NaN, double.NaN, double.NaN },
                                 SWUnits = Sample.SWUnitsEnum.Gravimetric
                             },
-                            new SoilWater()
+                            new Models.WaterModel.WaterBalance()
                             {
                                 SummerCona = 6,
                                 WinterCona = 3,
