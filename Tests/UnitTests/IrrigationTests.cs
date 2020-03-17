@@ -106,6 +106,7 @@
                             },
                             new Models.WaterModel.WaterBalance()
                             {
+                                Thickness = new double[] { 100, 300, 300, 300, 300, 300  },
                                 SummerCona = 6,
                                 WinterCona = 3,
                                 SummerU = 6,
@@ -115,7 +116,8 @@
                                 CNRed = 10,
                                 DiffusConst = 10,
                                 DiffusSlope = 10,
-                                Salb = 10
+                                Salb = 10,
+                                ResourceName = "WaterBalance"
                             },
                             new Nutrient()
                             {
