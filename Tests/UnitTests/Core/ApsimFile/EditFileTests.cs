@@ -38,6 +38,7 @@ namespace UnitTests.Core.ApsimFile
 
             // Add a weather component.
             Models.Weather weather = new Models.Weather();
+            weather.Name = "Weather";
             weather.FileName = "asdf.met";
             Structure.Add(weather, simulation);
 
@@ -115,6 +116,9 @@ namespace UnitTests.Core.ApsimFile
             proc.Start(models, args, Path.GetTempPath(), true, true);
             proc.WaitForExit();
 
+            // Children of simulation are, in order:
+            // Clock, summary, zone, Weather, Weather2, w1, w2
+
             Assert.AreEqual(null, proc.StdOut);
             Assert.AreEqual(null, proc.StdErr);
 
@@ -126,22 +130,35 @@ namespace UnitTests.Core.ApsimFile
             string[] variableNames = new[] { "x", "y", "z" };
             Assert.AreEqual(variableNames, report.VariableNames);
 
-            Clock clock = Apsim.Find(file, typeof(Clock)) as Clock;
+            IModel sim = Apsim.Child(file, typeof(Simulation));
+
+            // Use an index-based lookup to locate child models.
+            // When we replace an entire model, we want to ensure
+            // that the replacement is inserted at the correct index.
+
+            Clock clock = sim.Children[0] as Clock;
             Assert.AreEqual(new DateTime(2000, 1, 1), clock.StartDate);
             Assert.AreEqual(new DateTime(2000, 1, 10), clock.EndDate);
 
-            var weather = Apsim.Find(file, "Weather") as Models.Weather;
+            var weather = sim.Children[3] as Models.Weather;
+            Assert.NotNull(weather);
+            Assert.AreEqual("Weather", weather.Name);
             Assert.AreEqual("fdsa.met", weather.FileName);
 
-            var weather2 = Apsim.Find(file, "Weather2") as Models.Weather;
+            var weather2 = sim.Children[4] as Models.Weather;
+            Assert.NotNull(weather2);
+            Assert.AreEqual("Weather2", weather2.Name);
             Assert.AreEqual(@".\jkl.met", weather2.FileName);
 
-            // Weather3 and Weather4 should have been renamed to w1 and w2, respectively.
-            var weather3 = Apsim.Find(file, "w1") as Models.Weather;
+            // Weather3 and Weather4 should have been
+            // renamed to w1 and w2, respectively.
+            var weather3 = sim.Children[5] as Models.Weather;
+            Assert.NotNull(weather3);
             Assert.AreEqual("w1", weather3.Name);
             Assert.AreEqual("w1.met", weather3.FileName);
 
-            var weather4 = Apsim.Find(file, "w2") as Models.Weather;
+            var weather4 = sim.Children[6] as Models.Weather;
+            Assert.NotNull(weather4);
             Assert.AreEqual("w2", weather4.Name);
             Assert.AreEqual("w2.met", weather4.FileName);
         }
