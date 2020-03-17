@@ -54,7 +54,7 @@
                                     SaturatedFraction(sat_layer - 1, soil.Water, DUL, SAT) > 0.0)
             {
                 // layer above is over dul
-                double bottom_depth = MathUtilities.Sum(Thickness, 0, sat_layer - 1, 0.0);
+                double bottom_depth = MathUtilities.Sum(Thickness, 0, sat_layer, 0.0);
                 double saturated = SaturatedFraction(sat_layer - 1, soil.Water, DUL, SAT) * Thickness[sat_layer - 1];
                 Depth = (bottom_depth - saturated);
             }

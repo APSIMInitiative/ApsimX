@@ -423,11 +423,12 @@
             // Allow irrigation to infiltrate.
             foreach (var irrigation in irrigations)
             {
-                if (!irrigation.WillRunoff && irrigation.Amount > 0)
+                if (irrigation.Amount > 0)
                 {
                     int irrigationLayer = soil.LayerIndexOfDepth(Convert.ToInt32(irrigation.Depth, CultureInfo.InvariantCulture));
                     Water[irrigationLayer] += irrigation.Amount;
-                    Infiltration += irrigation.Amount;
+                    if (irrigationLayer == 0)
+                        Infiltration += irrigation.Amount;
 
                     if (no3 != null)
                         no3.kgha[irrigationLayer] += irrigation.NO3;
