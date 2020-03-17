@@ -42,7 +42,7 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
-            "C:\\Work\\ApsimX\\Tests\\Validation\\AgPasture\\ObservedAll.xlsx"
+            "ObservedAll.xlsx"
           ],
           "SheetNames": [
             "ObservedAverageSeason"
