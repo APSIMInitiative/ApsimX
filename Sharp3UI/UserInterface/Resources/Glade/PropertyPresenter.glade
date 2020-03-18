@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="2.24"/>
+  <!-- interface-naming-policy project-wide -->
+  <object class="GtkScrolledWindow" id="scrolledwindow1">
+    <property name="visible">True</property>
+    <property name="can_focus">True</property>
+    <property name="hscrollbar_policy">automatic</property>
+    <property name="vscrollbar_policy">automatic</property>
+    <child>
+      <object class="GtkTreeView" id="gridview">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="headers_clickable">False</property>
+        <property name="enable_grid_lines">both</property>
+      </object>
+    </child>
+  </object>
+</interface>

@@ -10,6 +10,10 @@
   <PropertyGroup>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\ApsimX\Bin\Models.xml</DocumentationFile>
+  </PropertyGroup>
   
   <ItemGroup>
     <Compile Remove="Importer\**" />

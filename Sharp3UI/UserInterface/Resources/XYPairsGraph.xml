@@ -1,0 +1,23 @@
+<Graph>
+  <Name>Graph</Name>
+  <LegendPosition>BottomRight</LegendPosition>
+  <Axis>
+    <Type>Left</Type>
+    <Title>Y</Title>
+  </Axis>
+  <Axis>
+    <Type>Bottom</Type>
+    <Title>X</Title>
+  </Axis>
+  <Series>
+    <Type>Scatter</Type>
+    <Title>StressFactor</Title>
+    <ShowInLegend>false</ShowInLegend>
+    <XAxis>Bottom</XAxis>
+    <YAxis>Left</YAxis>
+    <ColourArgb>-65536</ColourArgb>
+    <Marker>None</Marker>
+    <XFieldName>[XYPairs].X</XFieldName>
+    <YFieldName>[XYPairs].Y</YFieldName>
+  </Series>
+</Graph>

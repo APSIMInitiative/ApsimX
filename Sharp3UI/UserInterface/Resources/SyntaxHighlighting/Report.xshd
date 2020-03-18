@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<SyntaxDefinition name = "Report" extensions = ".apsimx">
+    <Digits name = "Digits" bold = "false" italic = "false" color = "DarkBlue"/>
+    <RuleSets>
+        <RuleSet ignorecase="false">
+            <Delimiters>&amp;&lt;&gt;~!%^*()-+=|\#/{}[]:;"' ,   .?</Delimiters>
+
+            <KeyWords name = "Punctuation" bold = "false" italic = "false" color = "DarkGreen">
+                <Key word = "." />
+            </KeyWords>
+
+            <KeyWords name = "AccessKeywords" bold="true" italic="false" color="Blue">
+              <Key word = "sum" />
+              <Key word = "avg" />
+              <Key word = "min" />
+              <Key word = "max" />
+              <Key word = "first" />
+              <Key word = "last" />
+              <Key word = "diff" />
+              <Key word = "of" />
+              <Key word = "from" />
+              <Key word = "to" />
+              <Key word = "as" />
+            </KeyWords>
+
+            </RuleSet>
+
+    </RuleSets>
+</SyntaxDefinition>
