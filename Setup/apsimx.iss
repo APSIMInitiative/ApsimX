@@ -83,7 +83,7 @@ Name: desktopicon; Description: Create a &desktop icon; GroupDescription: Additi
 Name: associate; Description: &Associate .apsimx with Apsim; GroupDescription: Other tasks:
 
 [Icons]
-;Name: {autoprograms}\APSIM{#AppVerNo}; Filename: {app}\Bin\ApsimNG.exe
+Name: {autoprograms}\APSIM{#AppVerNo}; Filename: {app}\Bin\ApsimNG.exe
 ;Name: {userdesktop}\APSIM{#AppVerNo}; Filename: {app}\Bin\ApsimNG.exe; Tasks: userdesktopicon
 Name: {autodesktop}\APSIM{#AppVerNo}; Filename: {app}\Bin\ApsimNG.exe; Tasks: desktopicon
 ;Name: {commondesktop}\APSIM{#AppVerNo}; Filename: {app}\Bin\ApsimNG.exe; Tasks: commondesktopicon
