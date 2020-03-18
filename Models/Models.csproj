@@ -285,6 +285,9 @@
     <Compile Include="Plant\Arbitrator\IUptakeMethod.cs" />
     <Compile Include="Plant\Arbitrator\Methods\AllocateFixationMethod.cs" />
     <Compile Include="Plant\Arbitrator\Methods\AllocateUptakesMethod.cs" />
+    <Compile Include="Plant\Arbitrator\Methods\C4NitrogenUptakeMethod.cs" />
+    <Compile Include="Plant\Arbitrator\Methods\C4RetranslocationMethod.cs" />
+    <Compile Include="Plant\Arbitrator\Methods\C4WaterUptakeMethod.cs" />
     <Compile Include="Plant\Arbitrator\Methods\DryMatterAllocationsMethod.cs" />
     <Compile Include="Plant\Arbitrator\Methods\IPartitionMethod.cs" />
     <Compile Include="Plant\Arbitrator\Methods\NitrogenAllocationsMethod.cs" />
@@ -293,6 +296,7 @@
     <Compile Include="Plant\Arbitrator\Methods\ReallocationMethod.cs" />
     <Compile Include="Plant\Arbitrator\Methods\RetranslocationMethod.cs" />
     <Compile Include="Plant\Arbitrator\Methods\SendPotentialDMAllocationsMethod.cs" />
+    <Compile Include="Plant\Arbitrator\Methods\UpdateLeafAreaMethod.cs" />
     <Compile Include="Plant\Arbitrator\RetranslocateAvailableN.cs" />
     <Compile Include="Factorial\CompositeFactor.cs" />
     <Compile Include="Plant\Arbitrator\Methods\WaterUptakeMethods.cs" />

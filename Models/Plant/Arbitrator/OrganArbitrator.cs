@@ -65,11 +65,11 @@ namespace Models.PMF
 
         /// <summary>The method used to call water uptakes</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        protected WaterUptakeMethod waterUptakeMethod = null;
+        protected IUptakeMethod waterUptakeMethod = null;
 
         /// <summary>The method used to call water uptakes</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        protected NitrogenUptakeMethod nitrogenUptakeMethod = null;
+        protected IUptakeMethod nitrogenUptakeMethod = null;
 
         ///2. Private And Protected Fields
         /// -------------------------------------------------------------------------------------------------
@@ -210,8 +210,8 @@ namespace Models.PMF
         public virtual void SetActualWaterUptake(List<ZoneWaterAndN> zones)
         {
             waterUptakeMethod.SetActualUptakes(zones, Organs.ToArray());
-            WDemand = waterUptakeMethod.WDemand;
-            WAllocated = waterUptakeMethod.WAllocated;
+            //WDemand = waterUptakeMethod.WDemand;
+            //WAllocated = waterUptakeMethod.WAllocated;
 
             // Give the water uptake for each zone to Root so that it can perform the uptake
             // i.e. Root will do pass the uptake to the soil water balance.
