@@ -146,12 +146,6 @@ namespace Models.PMF.Organs
 
         [Link(Type = LinkType.Path, Path = "[Phenology].DltTT")]
         private IFunction DltTT { get; set; }
-        
-        [Link(Type = LinkType.Path, Path = "[Arbitrator].SDRatio")]
-        private IFunction sdRatio { get; set; }
-    
-        //DltTT = Apsim.Find(Plant, "[Phenology].DltTT") as IFunction;
-        //sdRatio = Apsim.Find(Plant, "[Arbitrator].SDRatio") as IFunction;
 
         #region Canopy interface
 
@@ -890,7 +884,7 @@ namespace Models.PMF.Organs
 
             avLaiEquilibWater = updateAvLaiEquilibWater(laiEquilibWaterToday, 10);
 
-            avSDRatio = updateAvSDRatio(sdRatio.Value(), 5);
+            avSDRatio = updateAvSDRatio(SDRatio.Value(), 5);
             //// average of the last 10 days of laiEquilibWater`
             //laiEquilibWater.push_back(laiEquilibWaterToday);
             //double avLaiEquilibWater = movingAvgVector(laiEquilibWater, 10);
