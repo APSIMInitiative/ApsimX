@@ -78,22 +78,19 @@ Source: ..\Tests\UnderReview\*; DestDir: {autodocs}\Apsim\UnderReview; Flags: re
 
 [Tasks]
 Name: desktopicon; Description: Create a &desktop icon; GroupDescription: Additional icons:
-;Name: desktopicon; Description: Create a &desktop icon; Flags: exclusive; GroupDescription: Additional icons:
-;Name: commondesktopicon; Description: Create a &desktop icon for all users; Flags: exclusive; GroupDescription: Additional icons:; Check: IsAdminInstallMode
 Name: associate; Description: &Associate .apsimx with Apsim; GroupDescription: Other tasks:
 
-[Icons]
-Name: {autoprograms}\APSIM{#AppVerNo}; Filename: {app}\Bin\ApsimNG.exe
-;Name: {userdesktop}\APSIM{#AppVerNo}; Filename: {app}\Bin\ApsimNG.exe; Tasks: userdesktopicon
-Name: {autodesktop}\APSIM{#AppVerNo}; Filename: {app}\Bin\ApsimNG.exe; Tasks: desktopicon
-;Name: {commondesktop}\APSIM{#AppVerNo}; Filename: {app}\Bin\ApsimNG.exe; Tasks: commondesktopicon
+[UninstallDelete]
+Type: files; Name: "{app}\apsim.url"
 
-; The following registry changes should no longer be needed, as we're now doing the mapping through Leaflet rather than Goold Maps
-;[Registry]
-; With this key, the embedded WebBrowser emulates IE7, which breaks Google Maps.
-; I'm setting a value of 11000 here to emulate IE11; this may need to change in the future.
-; Root: HKLM; Subkey: "Software\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION"; ValueType: dword; ValueName: "ApsimNG.exe"; ValueData: "11000"
-; Root: HKLM; Subkey: "Software\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION"; ValueType: dword; ValueName: "ApsimNG.vshost.exe"; ValueData: "11000"
+[INI]
+Filename: "{app}\apsim.url"; Section: "InternetShortcut"; Key: "URL"; String: "https://apsimnextgeneration.netlify.com/" 
+
+[Icons]
+;Name: {autoprograms}\APSIM{#AppVerNo}; Filename: {app}\Bin\ApsimNG.exe
+Name: "{group}\APSIM User Interface"; Filename: {app}\Bin\ApsimNG.exe
+Name: "{group}\APSIM Next Generation home page"; Filename: "{app}\apsim.url";
+Name: {autodesktop}\APSIM{#AppVerNo}; Filename: {app}\Bin\ApsimNG.exe; Tasks: desktopicon
 
 [Run]
 Filename: {app}\Bin\ApsimNG.exe; Description: Launch APSIM; Flags: postinstall nowait skipifsilent
