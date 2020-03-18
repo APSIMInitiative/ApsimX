@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 281,
-  "Version": 87,
-  "ApsimVersion": "0.0.0.0",
+  "Version": 88,
+  "ApsimVersion": "2020.3.18.4924",
   "Name": "Simulations",
   "Children": [
     {
@@ -6684,7 +6684,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n       \r\n        [Description(\"Pruning_DAWS\")]         \r\n        public int Pruning_DAWS { get; set; }  //day\r\n\r\n        [Description(\"CordonDiameter_mm\")]         \r\n        public double CordonDiameter { get; set; }  //mm\r\n\r\n        [XmlIgnore] private DateTime PruneDate { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            //PruneDate = DateTime.Parse(PruneDateString);\r\n                        \r\n            if (weather.DaysSinceWinterSolstice == Pruning_DAWS)\r\n            {\r\n                Remove.SetPhenologyStage = 1;\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove);\r\n            }\r\n\r\n            {\r\n            zone.Set(\"Grapevine.Cordon.CordonDiameter.FixedValue\", CordonDiameter);   \r\n            //calculate the biomass by length 1 meter time 2 cordons time density (0.0005 g/mm3)\r\n            zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", 3.14*(CordonDiameter/2)*(CordonDiameter/2)*2000*0.0005); \r\n\r\n                }\r\n\r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
+              "Code": "using System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n       \r\n        [Description(\"Pruning_DAWS\")]         \r\n        public int Pruning_DAWS { get; set; }  //day\r\n\r\n        [Description(\"CordonDiameter_mm\")]         \r\n        public double CordonDiameter { get; set; }  //mm\r\n\r\n        [XmlIgnore] private DateTime PruneDate { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            //PruneDate = DateTime.Parse(PruneDateString);\r\n                        \r\n            if (weather.DaysSinceWinterSolstice == Pruning_DAWS)\r\n            {\r\n                Remove.SetPhenologyStage = 1;\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove);\r\n            }\r\n\r\n            {\r\n            zone.Set(\"Grapevine.Cordon.CordonDiameter.FixedValue\", CordonDiameter);   \r\n            //calculate the biomass by length 1 meter time 2 cordons time density (0.0005 g/mm3)\r\n            zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", 3.14*(CordonDiameter/2)*(CordonDiameter/2)*2000*0.0005); \r\n\r\n                }\r\n\r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
               "Parameters": [
                 {
                   "Key": "Pruning_DAWS",
@@ -7026,7 +7026,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.SoilWater, Models",
+                      "$type": "Models.WaterModel.WaterBalance, Models",
                       "SummerDate": "1-Nov",
                       "SummerU": 9.0,
                       "SummerCona": 4.4,
@@ -7039,10 +7039,9 @@
                       "CN2Bare": 0.0,
                       "CNRed": -9E-05,
                       "CNCov": 0.0,
-                      "slope": 0.0,
-                      "discharge_width": 0.0,
-                      "catchment_area": 0.0,
-                      "max_pond": 0.0,
+                      "Slope": 0.0,
+                      "DischargeWidth": 0.0,
+                      "CatchmentArea": 0.0,
                       "Thickness": [
                         100.0,
                         200.0,
@@ -7050,14 +7049,6 @@
                         300.0,
                         300.0,
                         300.0
-                      ],
-                      "Depth": [
-                        "0-10",
-                        "10-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150"
                       ],
                       "SWCON": [
                         0.55,
@@ -7075,15 +7066,8 @@
                         0.0,
                         0.0
                       ],
-                      "PrecipitationInterception": 0.0,
-                      "SoluteFluxEfficiency": [
-                        1.0
-                      ],
-                      "SoluteFlowEfficiency": [
-                        1.0
-                      ],
+                      "ResourceName": "WaterBalance",
                       "Name": "SoilWater",
-                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -7457,7 +7441,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Prune Date\")]\r\n        public string PruneDateString { get; set; }\r\n        [XmlIgnore] private DateTime PruneDate { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            PruneDate = DateTime.Parse(PruneDateString);\r\n                        \r\n            if (PruneDate.Month == Clock.Today.Month && PruneDate.Day == Clock.Today.Day)\r\n            {\r\n                Remove.SetPhenologyStage = 1;\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove);\r\n            }\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
+                      "Code": "\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Prune Date\")]\r\n        public string PruneDateString { get; set; }\r\n        [XmlIgnore] private DateTime PruneDate { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            PruneDate = DateTime.Parse(PruneDateString);\r\n                        \r\n            if (PruneDate.Month == Clock.Today.Month && PruneDate.Day == Clock.Today.Day)\r\n            {\r\n                Remove.SetPhenologyStage = 1;\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove);\r\n            }\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
                       "Parameters": [
                         {
                           "Key": "PruneDateString",
@@ -9742,7 +9726,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilWater, Models",
+                              "$type": "Models.WaterModel.WaterBalance, Models",
                               "SummerDate": "1-Nov",
                               "SummerU": 9.0,
                               "SummerCona": 4.4,
@@ -9755,10 +9739,9 @@
                               "CN2Bare": 0.0,
                               "CNRed": -9E-05,
                               "CNCov": 0.0,
-                              "slope": 0.0,
-                              "discharge_width": 0.0,
-                              "catchment_area": 0.0,
-                              "max_pond": 0.0,
+                              "Slope": 0.0,
+                              "DischargeWidth": 0.0,
+                              "CatchmentArea": 0.0,
                               "Thickness": [
                                 100.0,
                                 200.0,
@@ -9766,14 +9749,6 @@
                                 300.0,
                                 300.0,
                                 300.0
-                              ],
-                              "Depth": [
-                                "0-10",
-                                "10-30",
-                                "30-60",
-                                "60-90",
-                                "90-120",
-                                "120-150"
                               ],
                               "SWCON": [
                                 0.55,
@@ -9791,15 +9766,8 @@
                                 0.0,
                                 0.0
                               ],
-                              "PrecipitationInterception": 0.0,
-                              "SoluteFluxEfficiency": [
-                                1.0
-                              ],
-                              "SoluteFlowEfficiency": [
-                                1.0
-                              ],
+                              "ResourceName": "WaterBalance",
                               "Name": "SoilWater",
-                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -10173,7 +10141,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Prune Date\")]\r\n        public string PruneDateString { get; set; }\r\n        [XmlIgnore] private DateTime PruneDate { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            PruneDate = DateTime.Parse(PruneDateString);\r\n                        \r\n            if (PruneDate.Month == Clock.Today.Month && PruneDate.Day == Clock.Today.Day)\r\n            {\r\n                Remove.SetPhenologyStage = 1;\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove);\r\n            }\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
+                              "Code": "\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Prune Date\")]\r\n        public string PruneDateString { get; set; }\r\n        [XmlIgnore] private DateTime PruneDate { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            PruneDate = DateTime.Parse(PruneDateString);\r\n                        \r\n            if (PruneDate.Month == Clock.Today.Month && PruneDate.Day == Clock.Today.Day)\r\n            {\r\n                Remove.SetPhenologyStage = 1;\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove);\r\n            }\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
                               "Parameters": [
                                 {
                                   "Key": "PruneDateString",
@@ -11087,7 +11055,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.SoilWater, Models",
+                          "$type": "Models.WaterModel.WaterBalance, Models",
                           "SummerDate": "1-Nov",
                           "SummerU": 9.0,
                           "SummerCona": 4.4,
@@ -11100,10 +11068,9 @@
                           "CN2Bare": 0.0,
                           "CNRed": -9E-05,
                           "CNCov": 0.0,
-                          "slope": 0.0,
-                          "discharge_width": 0.0,
-                          "catchment_area": 0.0,
-                          "max_pond": 0.0,
+                          "Slope": 0.0,
+                          "DischargeWidth": 0.0,
+                          "CatchmentArea": 0.0,
                           "Thickness": [
                             100.0,
                             200.0,
@@ -11111,14 +11078,6 @@
                             300.0,
                             300.0,
                             300.0
-                          ],
-                          "Depth": [
-                            "0-10",
-                            "10-30",
-                            "30-60",
-                            "60-90",
-                            "90-120",
-                            "120-150"
                           ],
                           "SWCON": [
                             0.55,
@@ -11136,15 +11095,8 @@
                             0.0,
                             0.0
                           ],
-                          "PrecipitationInterception": 0.0,
-                          "SoluteFluxEfficiency": [
-                            1.0
-                          ],
-                          "SoluteFlowEfficiency": [
-                            1.0
-                          ],
+                          "ResourceName": "WaterBalance",
                           "Name": "SoilWater",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -11527,7 +11479,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Prune Date\")]\r\n        public string PruneDateString { get; set; }\r\n        [XmlIgnore] private DateTime PruneDate { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            PruneDate = DateTime.Parse(PruneDateString);\r\n                        \r\n            if (PruneDate.Month == Clock.Today.Month && PruneDate.Day == Clock.Today.Day)\r\n            {\r\n                Remove.SetPhenologyStage = 1;\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove);\r\n            }\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
+                          "Code": "\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Prune Date\")]\r\n        public string PruneDateString { get; set; }\r\n        [XmlIgnore] private DateTime PruneDate { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            PruneDate = DateTime.Parse(PruneDateString);\r\n                        \r\n            if (PruneDate.Month == Clock.Today.Month && PruneDate.Day == Clock.Today.Day)\r\n            {\r\n                Remove.SetPhenologyStage = 1;\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove);\r\n            }\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
                           "Parameters": [
                             {
                               "Key": "PruneDateString",
