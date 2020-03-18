@@ -33,7 +33,7 @@ annual_average_pet = 780.5           !Average annual PET (mm/yr)
 average_windspeed = 4.1              !Average windspeed (m/s)
 
      Location           xDate            year             day            rain            mint            maxt            avgt            radn            wind            evap              vp              rh           rhmin           rhmax
-           ()              ()              ()              ()            (mm)            (oC)            (oC)            (oC)        (MJ/m^2)           (m/s)            (mm)           (hPa)             (%)             (%)             (%)
+           ()    (dd/MM/yyyy)              ()              ()            (mm)            (oC)            (oC)            (oC)        (MJ/m^2)           (m/s)            (mm)           (hPa)             (%)             (%)             (%)
 VCS_Stratford      01/01/1973            1973               1             0.0            10.1            21.7            15.9            24.6             4.1             3.6            16.5            84.0            63.6           100.0
 VCS_Stratford      02/01/1973            1973               2             0.0             6.4            21.4            13.9            27.1             4.1             4.7            10.3            51.6            40.4           100.0
 VCS_Stratford      03/01/1973            1973               3             0.0             6.0            23.8            14.9            31.6             4.1             5.9            11.9            53.8            40.4           100.0

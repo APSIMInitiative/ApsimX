@@ -515,11 +515,6 @@
     <Compile Include="Soils\SoilNitrogen\SoilNitrogen.CNPatchHandlers.cs" />
     <Compile Include="Soils\SoilNitrogen\SoilNitrogen.cs" />
     <Compile Include="Soils\SoilNitrogen\SoilNitrogen.Variables.cs" />
-    <Compile Include="Soils\SoilWaterBackend\SoilWaterDataTypes.cs" />
-    <Compile Include="Soils\SoilWaterBackend\SoilWaterEvap.cs" />
-    <Compile Include="Soils\SoilWaterBackend\SoilWaterRunoff.cs" />
-    <Compile Include="Soils\SoilWaterBackend\SoilWaterSoil.cs" />
-    <Compile Include="Soils\SoilWaterBackend\SoilWaterSurface.cs" />
     <Compile Include="Stock\animgrp.cs" />
     <Compile Include="Stock\animprm.cs" />
     <Compile Include="Stock\grazenv.cs" />
@@ -633,7 +628,6 @@
     <Compile Include="Soils\SWIM\SwimWaterTable.cs" />
     <Compile Include="Soils\TillageType.cs" />
     <Compile Include="Soils\Physical.cs" />
-    <Compile Include="Soils\SoilWaterBackend\SoilWater.cs" />
     <Compile Include="Summary.cs" />
     <Compile Include="Surface\AddFaecesType.cs" />
     <Compile Include="Surface\OMFractionType.cs" />
@@ -658,7 +652,6 @@
     <Compile Include="Soils\WaterModel\CNReductionForTillage.cs" />
     <Compile Include="Soils\WaterModel\Conversions.cs" />
     <Compile Include="Soils\WaterModel\EvaporationModel.cs" />
-    <Compile Include="Soils\WaterModel\ISoil.cs" />
     <Compile Include="Soils\WaterModel\LateralFlow.cs" />
     <Compile Include="Soils\WaterModel\Runoff.cs" />
     <Compile Include="Soils\WaterModel\SaturatedFlow.cs" />
@@ -798,6 +791,7 @@
     <EmbeddedResource Include="Resources\AGPRhodes.json" />
     <EmbeddedResource Include="Resources\AGPTallFescue.json" />
     <EmbeddedResource Include="Resources\AGPLucerne.json" />
+    <EmbeddedResource Include="Resources\WaterBalance.json" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">

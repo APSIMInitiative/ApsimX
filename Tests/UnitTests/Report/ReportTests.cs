@@ -273,7 +273,7 @@
             Utilities.InjectLink(report, "clock", new MockClock());
 
             var events = new Events(report);
-            events.Publish("StartOfSimulation", new object[] { report, new EventArgs() });
+            events.Publish("FinalInitialise", new object[] { report, new EventArgs() });
 
             Assert.AreEqual(storage.tables[0].TableName, "_Factors");
             Assert.AreEqual(Utilities.TableToString(storage.tables[0]),
