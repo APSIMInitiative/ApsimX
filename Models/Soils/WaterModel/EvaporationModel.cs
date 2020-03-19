@@ -162,7 +162,7 @@
         {
             get
             {
-                return DateUtilities.WithinDates(waterBalance.SummerDate, clock.Today, waterBalance.WinterDate);
+                return !DateUtilities.WithinDates(waterBalance.WinterDate, clock.Today, waterBalance.SummerDate);
             }
         }
 

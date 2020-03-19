@@ -18,7 +18,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 87; } }
+        public static int LatestVersion { get { return 88; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1808,15 +1808,18 @@
             foreach (JObject nutrient in JsonUtilities.ChildrenRecursively(root, "Nutrient"))
             {
                 JObject directedGraph = nutrient["DirectedGraphInfo"] as JObject;
-                directedGraph["$type"] = directedGraph["$type"].ToString().Replace("Models.Graph.", "Models.");
-                JArray nodes = directedGraph["Nodes"] as JArray;
-                if (nodes != null)
-                    foreach (JObject node in nodes)
-                        node["$type"] = node["$type"].ToString().Replace("Models.Graph.", "Models.");
-                JArray arcs = directedGraph["Arcs"] as JArray;
-                if (arcs != null)
-                    foreach (JObject arc in arcs)
-                        arc["$type"] = arc["$type"].ToString().Replace("Models.Graph.", "Models.");
+                if (directedGraph != null)
+                {
+                    directedGraph["$type"] = directedGraph["$type"].ToString().Replace("Models.Graph.", "Models.");
+                    JArray nodes = directedGraph["Nodes"] as JArray;
+                    if (nodes != null)
+                        foreach (JObject node in nodes)
+                            node["$type"] = node["$type"].ToString().Replace("Models.Graph.", "Models.");
+                    JArray arcs = directedGraph["Arcs"] as JArray;
+                    if (arcs != null)
+                        foreach (JObject arc in arcs)
+                            arc["$type"] = arc["$type"].ToString().Replace("Models.Graph.", "Models.");
+                }
             }
 
             // Replace ExcelMultiInput with an ExcelInput.
@@ -1853,7 +1856,7 @@
         /// </summary>
         /// <param name="root"></param>
         /// <param name="fileName"></param>
-        private static void UpgradeToVersion999(JObject root, string fileName)
+        private static void UpgradeToVersion88(JObject root, string fileName)
         {
             foreach (JObject soilWater in JsonUtilities.ChildrenRecursively(root, "SoilWater"))
             {

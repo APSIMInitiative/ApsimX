@@ -17,6 +17,7 @@
     using UserInterface.Views;
     using System.Globalization;
     using Models.Core.Apsim710File;
+    using Models.WaterModel;
 
     /// <summary>
     /// Class for displaying a dialog to select a soil description to be downloaded from ASRIS or ISRIC
@@ -806,7 +807,7 @@
                     Chemical analysis = new Chemical();
                     Physical waterNode = new Physical(); 
                     Organic organicMatter = new Organic();
-                    SoilWater soilWater = new SoilWater();
+                    WaterBalance soilWater = new WaterBalance();
                     InitialWater initialWater = new InitialWater();
                     Sample initialNitrogen = new Sample();
                     SoilNitrogen soilN = new SoilNitrogen();

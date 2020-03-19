@@ -214,7 +214,7 @@
                                     }
                                 }
                             },
-                            new SoilWater(),
+                            new Models.WaterModel.WaterBalance(),
                             new Organic
                             {
                                 Thickness = new double[] { 100, 300 },
