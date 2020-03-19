@@ -190,7 +190,7 @@ namespace Models.Agroforestry
         private Dictionary<double, double[]> rld = new Dictionary<double, double[]>();
         private List<IModel> forestryZones;
         private Zone treeZone;
-        private Soils.SoilWater treeZoneWater;
+        private ISoilWater treeZoneWater;
 
         /// <summary>
         /// Return the distance from the tree for a given zone. The tree is assumed to be in the first Zone.
@@ -395,7 +395,7 @@ namespace Models.Agroforestry
             //pre-fetch static information
             forestryZones = Apsim.ChildrenRecursively(Parent, typeof(Zone));
             treeZone = ZoneList[0] as Zone;
-            treeZoneWater = Apsim.Find(treeZone, typeof(Soils.SoilWater)) as Soils.SoilWater;
+            treeZoneWater = Apsim.Find(treeZone, typeof(ISoilWater)) as ISoilWater;
 
             TreeWaterUptake = new double[ZoneList.Count];
 

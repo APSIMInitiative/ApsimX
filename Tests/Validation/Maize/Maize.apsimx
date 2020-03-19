@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 80,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-05",
+  "Version": 84,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -39126,9 +39126,9 @@
                                 0.1,
                                 0.13,
                                 0.12,
-                                0.15,
-                                0.15,
-                                0.15
+                                0.04,
+                                0.04,
+                                0.04
                               ],
                               "LL15": [
                                 0.06,
@@ -47504,7 +47504,7 @@
                       "Children": [
                         {
                           "$type": "Models.Factorial.Factor, Models",
-                          "Specification": null,
+                          "Specification": "",
                           "Name": "Sow",
                           "Children": [
                             {
@@ -47553,7 +47553,7 @@
                         },
                         {
                           "$type": "Models.Factorial.Factor, Models",
-                          "Specification": null,
+                          "Specification": "",
                           "Name": "Cv",
                           "Children": [
                             {
@@ -47751,9 +47751,9 @@
                                 0.456,
                                 0.413,
                                 0.376,
-                                0.37,
-                                0.37,
-                                0.37
+                                0.366,
+                                0.366,
+                                0.366
                               ],
                               "KS": null,
                               "BDMetadata": null,

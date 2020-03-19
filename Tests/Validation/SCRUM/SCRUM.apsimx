@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 80,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-05",
+  "Version": 84,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -27,7 +27,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "FileName": "%root%\\Tests\\Validation\\SCRUM\\AblockObserved.txt",
+          "FileNames": [
+            "%root%\\Tests\\Validation\\SCRUM\\AblockObserved.txt"
+          ],
           "Name": "ABlockObserved",
           "Children": [],
           "IncludeInDocumentation": false,
@@ -36,7 +38,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "FileName": "%root%\\Tests\\Validation\\SCRUM\\AblockSWC.txt",
+          "FileNames": [
+            "%root%\\Tests\\Validation\\SCRUM\\AblockSWC.txt"
+          ],
           "Name": "ABlockSWC",
           "Children": [],
           "IncludeInDocumentation": false,
@@ -3398,9 +3402,9 @@
                     0.33,
                     0.33,
                     0.31,
-                    0.15,
-                    0.1,
-                    0.06
+                    0.3,
+                    0.3,
+                    0.3
                   ],
                   "SAT": [
                     0.5,
@@ -5761,7 +5765,7 @@
           "Children": [
             {
               "$type": "Models.Factorial.Factor, Models",
-              "Specification": null,
+              "Specification": "",
               "Name": "Crop",
               "Children": [
                 {
@@ -6070,9 +6074,9 @@
                         0.33,
                         0.33,
                         0.31,
-                        0.15,
-                        0.1,
-                        0.06
+                        0.3,
+                        0.3,
+                        0.3
                       ],
                       "SAT": [
                         0.5,
@@ -9741,13 +9745,13 @@
                       ],
                       "AirDry": [
                         0.06,
-                        0.12,
-                        0.1,
-                        0.13,
-                        0.12,
-                        0.15,
-                        0.15,
-                        0.15
+                        0.05,
+                        0.06,
+                        0.05,
+                        0.06,
+                        0.05,
+                        0.06,
+                        0.05
                       ],
                       "LL15": [
                         0.06,
@@ -15102,7 +15106,7 @@
               "Children": [
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": null,
+                  "Specification": "",
                   "Name": "Rot",
                   "Children": [
                     {
@@ -15156,7 +15160,7 @@
                 },
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": null,
+                  "Specification": "",
                   "Name": "W",
                   "Children": [
                     {
@@ -15434,7 +15438,7 @@
                 },
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": null,
+                  "Specification": "",
                   "Name": "N",
                   "Children": [
                     {
@@ -16851,13 +16855,13 @@
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": "NaN",
-              "DateTimeAxis": false,
+              "DateTimeAxis": true,
               "CrossesAtZero": false
             }
           ],
           "LegendPosition": 0,
           "LegendOrientation": 0,
-          "DisabledSeries": null,
+          "DisabledSeries": [],
           "LegendOutsideGraph": false,
           "Name": "Yield",
           "Children": [
@@ -21530,13 +21534,13 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "SoilN_PP",
               "Children": [
@@ -21628,13 +21632,13 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "SoilN_PW",
               "Children": [

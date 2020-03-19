@@ -16,15 +16,14 @@ namespace Models.WaterModel
     /// cascades to the next layer.
     /// </summary>
     [Serializable]
+    [ViewName("UserInterface.Views.ProfileView")]
+    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
+    [ValidParent(ParentType = typeof(WaterBalance))]
     public class SaturatedFlowModel : Model
     {
         /// <summary>The water movement model.</summary>
         [Link]
         private WaterBalance soil = null;
-
-        /// <summary>Gets or sets the swcon.</summary>
-        [UnitsAttribute("0-1")]
-        public double[] SWCON { get; set; }
 
         /// <summary>Amount of water (mm) backed up.</summary>
         [XmlIgnore]
@@ -38,13 +37,14 @@ namespace Models.WaterModel
                 backedUpSurface = 0.0;
 
                 double[] SW = soil.Water;
-                double[] DUL = MathUtilities.Multiply(soil.Properties.Water.DUL, soil.Properties.Water.Thickness);
-                double[] SAT = MathUtilities.Multiply(soil.Properties.Water.SAT, soil.Properties.Water.Thickness);
+                double[] DUL = MathUtilities.Multiply(soil.Properties.DUL, soil.Properties.Thickness);
+                double[] SAT = MathUtilities.Multiply(soil.Properties.SAT, soil.Properties.Thickness);
 
                 double w_in = 0.0;   // water coming into layer (mm)
                 double w_out;        // water going out of layer (mm)
-                double[] flux = new double[soil.Properties.Water.Thickness.Length];
-                for (int i = 0; i < soil.Properties.Water.Thickness.Length; i++)
+                double[] flux = new double[soil.Properties.Thickness.Length];
+                double[] newSWmm = new double[soil.Properties.Thickness.Length];
+                for (int i = 0; i < soil.Properties.Thickness.Length; i++)
                 {
                     double w_tot = SW[i] + w_in;
 
@@ -67,7 +67,7 @@ namespace Models.WaterModel
                     // Calculate water draining by gravity (mm) (between SAT and DUL)
                     double w_drain;               
                     if (w_tot > DUL[i])
-                        w_drain = (w_tot - DUL[i]) * SWCON[i];
+                        w_drain = (w_tot - DUL[i]) * soil.SWCON[i];
                     else
                         w_drain = 0.0;
 
@@ -75,7 +75,7 @@ namespace Models.WaterModel
                     // if there is EXCESS Amount, 
                     if (w_excess > 0.0)
                     {
-                        if (soil.Properties.Water.KS == null)
+                        if (soil.Properties.KS == null)
                         {
                             //! all this excess goes on down 
                             w_out = w_excess + w_drain;
@@ -87,11 +87,11 @@ namespace Models.WaterModel
                             // Firstly top up this layer (to saturation)
                             double add = Math.Min(w_excess, w_drain);
                             w_excess = w_excess - add;
-                            double new_sw_dep = SAT[i] - w_drain + add;
+                            newSWmm[i] = SAT[i] - w_drain + add;
 
                             // partition between flow back up and flow down
                             // 'excessDown' is the amount above saturation(overflow) that moves down (mm)
-                            double excess_down = Math.Min(soil.Properties.Water.KS[i] - w_drain, w_excess);
+                            double excess_down = Math.Min(soil.Properties.KS[i] - w_drain, w_excess);
                             double backup = w_excess - excess_down;
 
                             w_out = excess_down + w_drain;
@@ -108,8 +108,8 @@ namespace Models.WaterModel
                                 for (int j = i - 1; j >= 0; j--)
                                 {
                                     flux[j] = flux[j] - backup;
-                                    add = Math.Min(SAT[i] - new_sw_dep, backup);
-                                    new_sw_dep = new_sw_dep + add;
+                                    add = Math.Min(SAT[j] - newSWmm[j], backup);
+                                    newSWmm[j] = newSWmm[j] + add;
                                     backup = backup - add;
                                 }
                             }
@@ -122,6 +122,7 @@ namespace Models.WaterModel
                         // there is no EXCESS Amount so only do DRAIN Flow   
                         w_out = w_drain;
                         flux[i] = w_drain;
+                        newSWmm[i] = SW[i] + w_in - w_out;
                     }
 
                     // drainage out of this layer goes into next layer down

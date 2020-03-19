@@ -33,7 +33,7 @@ annual_average_pet = 1067.3          !Average annual PET (mm/yr)
 average_windspeed = 3.5              !Average windspeed (m/s)
 
    Location         xDate          year           day          rain          mint          maxt          avgt          radn          wind          evap            vp            rh         rhmin         rhmax
-         ()            ()            ()            ()          (mm)          (oC)          (oC)          (oC)      (MJ/m^2)         (m/s)          (mm)         (hPa)           (%)           (%)           (%)
+         ()  (dd/MM/yyyy)            ()            ()          (mm)          (oC)          (oC)          (oC)      (MJ/m^2)         (m/s)          (mm)         (hPa)           (%)           (%)           (%)
 VCS_Kaipara    01/01/1974          1974             1           0.0           7.7          24.5          16.1          31.2           3.6           6.3          16.1          66.6          52.4         100.0
 VCS_Kaipara    02/01/1974          1974             2           0.0          14.2          26.2          20.2          29.3           3.6           5.9          18.8          69.6          55.3         100.0
 VCS_Kaipara    03/01/1974          1974             3           0.0          15.3          26.7          21.0          29.7           3.6           6.9          19.7          70.9          56.2         100.0
