@@ -1152,32 +1152,51 @@
                       "Name": "LeafAppearingPhase1",
                       "Children": [
                         {
-                          "$type": "Models.Functions.SubtractFunction, Models",
-                          "Name": "NoLeavesRate1",
+                          "$type": "Models.Functions.MaximumFunction, Models",
+                          "Name": "MaximumFunction",
                           "Children": [
                             {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].FinalLeafNo",
-                              "Name": "FinalLeafNo",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Zero",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Structure].RemainingLeavesForFinalAppearanceRate",
-                              "Name": "noRateChange1",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Structure].LeafNumAtEmergence",
-                              "Name": "noEmergence",
-                              "Children": [],
+                              "$type": "Models.Functions.SubtractFunction, Models",
+                              "Name": "NoLeavesRate1",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Leaf].FinalLeafNo",
+                                  "Name": "FinalLeafNo",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[LeafCulms].noRateChange1",
+                                  "Name": "noRateChange1",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[LeafCulms].leafNoAtEmergence",
+                                  "Name": "noEmergence",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -1189,7 +1208,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Structure].InitialAppearanceRate",
+                          "VariableName": "[LeafCulms].appearanceRate1",
                           "Name": "AppearanceRate1",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1206,22 +1225,14 @@
                       "Name": "LeafAppearingPhase2",
                       "Children": [
                         {
-                          "$type": "Models.Functions.SubtractFunction, Models",
-                          "Name": "NoLeavesRate2",
+                          "$type": "Models.Functions.MaximumFunction, Models",
+                          "Name": "MaximumFunction",
                           "Children": [
                             {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].FinalLeafNo",
-                              "Name": "FinalLeafNo",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Structure].RemainingLeavesForFinalAppearanceRate2",
-                              "Name": "noRateChange2",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Zero",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -1229,7 +1240,7 @@
                             },
                             {
                               "$type": "Models.Functions.SubtractFunction, Models",
-                              "Name": "nLeavesAtChange1",
+                              "Name": "NoLeavesRate2",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
@@ -1242,9 +1253,36 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Structure].RemainingLeavesForFinalAppearanceRate",
-                                  "Name": "noRateChange1",
+                                  "VariableName": "[LeafCulms].noRateChange2",
+                                  "Name": "noRateChange2",
                                   "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.SubtractFunction, Models",
+                                  "Name": "nLeavesAtChange1",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Leaf].FinalLeafNo",
+                                      "Name": "FinalLeafNo",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[LeafCulms].noRateChange1",
+                                      "Name": "noRateChange1",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -1261,8 +1299,8 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Structure].MidAppearanceRate",
-                          "Name": "AppearanceRate1",
+                          "VariableName": "[LeafCulms].appearanceRate2",
+                          "Name": "AppearanceRate2",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -1278,13 +1316,14 @@
                       "Name": "LeafAppearingPhase3",
                       "Children": [
                         {
-                          "$type": "Models.Functions.SubtractFunction, Models",
-                          "Name": "NoLeavesRate2",
+                          "$type": "Models.Functions.MaximumFunction, Models",
+                          "Name": "MaximumFunction",
                           "Children": [
                             {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].FinalLeafNo",
-                              "Name": "FinalLeafNo",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Zero",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -1292,7 +1331,7 @@
                             },
                             {
                               "$type": "Models.Functions.SubtractFunction, Models",
-                              "Name": "nLeavesAtChange2",
+                              "Name": "NoLeavesRate2",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
@@ -1304,10 +1343,28 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Structure].RemainingLeavesForFinalAppearanceRate2",
-                                  "Name": "noRateChange2",
-                                  "Children": [],
+                                  "$type": "Models.Functions.SubtractFunction, Models",
+                                  "Name": "nLeavesAtChange2",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Leaf].FinalLeafNo",
+                                      "Name": "FinalLeafNo",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[LeafCulms].noRateChange2",
+                                      "Name": "noRateChange2",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -1324,7 +1381,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Structure].FinalAppearanceRate",
+                          "VariableName": "[LeafCulms].appearanceRate3",
                           "Name": "AppearanceRate3",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1833,7 +1890,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Arbitrator].DltTT",
+                  "VariableName": "[Phenology].DltTT",
                   "Name": "dltTT",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -13001,7 +13058,6 @@
             "",
             "[C4Maize].Leaf.NitrogenPhenoStress as nPhenoStress",
             "[C4Maize].Phenology.PhenoWaterStress as wPhenoStress",
-            "[C4Maize].Structure.CurrentLeafNo as LeafNo",
             "[C4Maize].Leaf.CoverGreen as CoverGreen",
             "[C4Maize].Leaf.CoverTotal as CoverTotal",
             "[C4Maize].Arbitrator.WatSupply as WSupply",
