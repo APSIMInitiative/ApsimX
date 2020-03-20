@@ -268,9 +268,9 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction HeightFunction = null;
 
-        /// <summary>The lai dead function</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        IFunction dltLAIFunction = null;
+        ///// <summary>The lai dead function</summary>
+        //[Link(Type = LinkType.Child, ByName = true)]
+        //IFunction dltLAIFunction = null;
 
         ///// <summary>The lai dead function</summary>
         //[Link]

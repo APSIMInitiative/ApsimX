@@ -59,12 +59,6 @@ namespace Models.PMF.Struct
 		private IWeather weather = null;
 
 		/// <summary>
-		/// Link to arbitrator for dltTT.
-		/// </summary>
-		[Link]
-		private SorghumArbitrator arbitrator = null;
-
-		/// <summary>
 		/// Vertical Offset for Largest Leaf Calc.
 		/// </summary>
 		[Link(Type = LinkType.Child, ByName = true)]
@@ -825,7 +819,7 @@ namespace Models.PMF.Struct
 				//	bool newTiller = newLeaf && newLeafNo >= 6 && laiToday < maxLAIForTillering; 
 				//bool newTiller = newLeaf && newLeafNo >= 6 && linearLAI < maxLAIForTillering; 
 				bool newTiller = newLeafNo >= 6 && linearLAI < maxLAIForTillering;
-				double fractionToAdd = arbitrator.DltTT / appearanceRate1.Value();
+				double fractionToAdd = dltTT.Value() / appearanceRate1.Value();
 				fractionToAdd = 0.2;
 				if (newTiller)
 				{
@@ -914,7 +908,7 @@ namespace Models.PMF.Struct
 			//need to calculate the average R/oCd per day during leaf 5 expansion
 			if (newLeafNo == startThermalQuotientLeafNo)
 			{
-				double avgradn = weather.Radn / arbitrator.DltTT;
+				double avgradn = weather.Radn / dltTT.Value();
 				radiationValues.Add(avgradn);
 			}
 

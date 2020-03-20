@@ -51,6 +51,7 @@ namespace Models.PMF.Struct
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class CulmStructure : Model
     {
+        /*
         // 1. Links
         //-------------------------------------------------------------------------------------------
         [Link]
@@ -118,7 +119,7 @@ namespace Models.PMF.Struct
         private double tillersAdded;
         private bool dayofEmergence;
         private double dltTTDayBefore;
-
+        
         /// <summary>
         /// Target TT from Emergence to Floral Init.
         /// This is variable and is updated daily.
@@ -148,7 +149,7 @@ namespace Models.PMF.Struct
         /// <summary>The Stage that leaves are initialised on</summary>
         [Description("The Stage that leaves are initialised on")]
         public string LeafInitialisationStage { get; set; } = "Emergence";
-
+        /*
         [EventSubscribe("EndOfDay")]
         private void UpdateVars(object sender, EventArgs args)
         {
@@ -375,6 +376,7 @@ namespace Models.PMF.Struct
             tillersAdded += fractionToAdd;
 
         }
+        
         /// <summary>Clears this instance.</summary>
         public void Clear()
         {
@@ -404,5 +406,6 @@ namespace Models.PMF.Struct
             //NextLeafProportion = 0;
             //DeltaPlantPopulation = 0;
         }
+        */
     }
 }

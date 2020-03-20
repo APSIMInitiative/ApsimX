@@ -195,7 +195,7 @@ namespace Models.PMF.Organs
             //double leafNoEffective = Math.Min(CurrentLeafNumber - dltLeafNo + culmParameters.LeafNoCorrection, FinalLeafNumber);
             // else throw
 
-            structure.LeafNoApp = culmParameters.LeafNoAtAppearance;
+            //structure.LeafNoApp = culmParameters.LeafNoAtAppearance;
             double leafNoEffective = this.leafNoEffective.Value();
             var leafsize = CalcIndividualLeafSize(leafNoEffective);
 
