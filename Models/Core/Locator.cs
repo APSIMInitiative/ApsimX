@@ -293,6 +293,8 @@
                         VariableProperty property = new VariableProperty(relativeToObject, propertyInfo, arraySpecifier);
                         properties.Add(property);
                         relativeToObject = property.Value;
+                        if (relativeToObject == null)
+                            return null;
                     }
                     else if (methodInfo != null)
                     {
@@ -308,6 +310,8 @@
                         //                        VariableProperty property = new VariableProperty(relativeToObject, propertyInfo, arraySpecifier);
                         properties.Add(method);
                         relativeToObject = method.Value;
+                        if (relativeToObject == null)
+                            return null;
                     }
                     else if (relativeToObject is IList)
                     {
@@ -316,6 +320,8 @@
                         VariableProperty property = new VariableProperty(relativeToObject, namePathBits[j]);
                         properties.Add(property);
                         relativeToObject = property.Value;
+                        if (relativeToObject == null)
+                            return null;
                     }
                     else
                     {
