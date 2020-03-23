@@ -430,8 +430,11 @@ namespace UserInterface.Presenters
             int row = properties.IndexOf(property);
             if (property is VariableObject)
                 table.Rows.Add(new object[] { property.Value, null, null });
-            else if (property.Value is IModel)
-                table.Rows.Add(new object[] { property.Description, Apsim.FullPath(property.Value as IModel), property.Name });
+            else if (property.Value is IModel m)
+            {
+                string cellValue = IsSiblingOfModel(m) ? m.Name : Apsim.FullPath(m);
+                table.Rows.Add(new object[] { property.Description, cellValue, property.Name });
+            }
             else if (property is VariableProperty p)
                 table.Rows.Add(new object[] { property.Description, GetCellValue(property, row, 1), p.Tooltip });
             else
@@ -788,7 +791,12 @@ namespace UserInterface.Presenters
 
             List<string> modelNames = new List<string>();
             foreach (IModel model in models)
-                modelNames.Add(Apsim.FullPath(model));
+            {
+                if (IsSiblingOfModel(model))
+                    modelNames.Add(model.Name);
+                else
+                    modelNames.Add(Apsim.FullPath(model));
+            }
             return modelNames.ToArray();
         }
 
@@ -843,6 +851,14 @@ namespace UserInterface.Presenters
             object result = property.ValueWithArrayHandling;
             if (property.DataType == typeof(double) && double.IsNaN((double)result))
                 result = "";
+            if (result is IModel m)
+            {
+                if (IsSiblingOfModel(m))
+                    return m.Name;
+
+                return Apsim.FullPath(m);
+            }
+
             return result;
         }
 
@@ -868,7 +884,13 @@ namespace UserInterface.Presenters
                 return Apsim.Find(property.Object as IModel, cell.NewValue);
 
             if (property.Display != null && property.Display.Type == DisplayType.Model)
-                return Apsim.Get(property.Object as IModel, cell.NewValue);
+            {
+                object result = Apsim.Get(property.Object as IModel, cell.NewValue);
+                if (result == null)
+                    result = Apsim.Find(property.Object as IModel, cell.NewValue);
+
+                return result;
+            }
 
             try
             {
@@ -939,6 +961,23 @@ namespace UserInterface.Presenters
                 return false;
             }
             return true;
+        }
+
+        /// <summary>
+        /// Checks if a given model is a sibling of this.model.
+        /// </summary>
+        /// <param name="m">The model to be tested.</param>
+        private bool IsSiblingOfModel(IModel m)
+        {
+            IModel parent = this.model.Parent;
+            if (parent is Manager)
+                parent = parent.Parent;
+
+            IModel targetParent = m.Parent;
+            if (targetParent is Manager)
+                targetParent = targetParent.Parent;
+
+            return parent == targetParent;
         }
 
         /// <summary>
