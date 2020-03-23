@@ -62,7 +62,9 @@
         #endregion
 
         #region Class properties and fields
+
         /// <summary>Used by several organs to determine the type of crop.</summary>
+        [Description("Used by several organs to determine the type of crop.")]
         public string CropType { get; set; }
 
         /// <summary>Gets a value indicating how leguminous a plant is</summary>
