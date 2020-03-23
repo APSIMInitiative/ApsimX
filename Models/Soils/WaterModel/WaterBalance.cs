@@ -208,6 +208,7 @@
 
         /// <summary>Soil layer thickness for each layer (mm).</summary>
         [Units("mm")]
+        [Description("Soil layer thickness for each layer")]
         public double[] Thickness { get; set; }
 
         /// <summary>Amount of water in the soil (mm).</summary>
