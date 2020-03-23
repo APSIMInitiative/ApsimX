@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 79,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-04",
+  "Version": 84,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -51,9 +51,7 @@
             "[Eucalyptus].Stem.Ht",
             "[Eucalyptus].RootShootRatio",
             "[Eucalyptus].Stem.Vol",
-            "[Eucalyptus].Stem.MAI",
-            "[SCRUM].Stover.LAI",
-            "[SCRUM].Stover.Wt"
+            "[Eucalyptus].Stem.MAI"
           ],
           "EventNames": [
             "[Clock].DoReport"
@@ -102,6 +100,22 @@
           "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
+        },
+        {
+          "$type": "Models.Report.Report, Models",
+          "VariableNames": [
+            "[Clock].Today",
+            "[SCRUM].Stover.LAI",
+            "[SCRUM].Stover.Wt"
+          ],
+          "EventNames": [
+            "[Clock].DoReport"
+          ],
+          "Name": "SCRUMReport",
+          "Children": [],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
         }
       ],
       "IncludeInDocumentation": false,
@@ -115,17 +129,10 @@
       "Name": "DataStore",
       "Children": [
         {
-          "$type": "Models.PostSimulationTools.Input, Models",
-          "FileName": "EucalyptusValidationData.txt",
-          "Name": "Input",
-          "Children": [],
-          "IncludeInDocumentation": false,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
-          "FileName": "Observed.xlsx",
+          "FileNames": [
+            "Observed.xlsx"
+          ],
           "SheetNames": [
             "Observed"
           ],
@@ -1475,7 +1482,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Inert",
                                     "Location": "656, 254",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -1483,7 +1490,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "SurfaceResidue",
                                     "Location": "566, 69",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -1491,7 +1498,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "FOMLignin",
                                     "Location": "261, 69",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -1499,7 +1506,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "FOMCellulose",
                                     "Location": "397, 70",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -1507,7 +1514,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "FOMCarbohydrate",
                                     "Location": "123, 70",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -1515,7 +1522,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Microbial",
                                     "Location": "218, 299",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -1523,7 +1530,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Humic",
                                     "Location": "458, 293",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -1531,7 +1538,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Urea",
                                     "Location": "529, 419",
-                                    "Colour": "86, 180, 233",
+                                    "Colour": "0, 158, 115",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -1539,7 +1546,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "NO3",
                                     "Location": "185, 435",
-                                    "Colour": "86, 180, 233",
+                                    "Colour": "0, 158, 115",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -1547,7 +1554,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "NH4",
                                     "Location": "357, 422",
-                                    "Colour": "86, 180, 233",
+                                    "Colour": "0, 158, 115",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -1738,6 +1745,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Eucalyptus",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Eucalyptus",
@@ -6931,7 +6939,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Inert",
                                         "Location": "656, 254",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -6939,7 +6947,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "SurfaceResidue",
                                         "Location": "566, 69",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -6947,7 +6955,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMLignin",
                                         "Location": "261, 69",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -6955,7 +6963,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMCellulose",
                                         "Location": "397, 70",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -6963,7 +6971,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMCarbohydrate",
                                         "Location": "123, 70",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -6971,7 +6979,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Microbial",
                                         "Location": "218, 299",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -6979,7 +6987,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Humic",
                                         "Location": "458, 293",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -6987,7 +6995,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Urea",
                                         "Location": "529, 419",
-                                        "Colour": "86, 180, 233",
+                                        "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -6995,7 +7003,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "NO3",
                                         "Location": "185, 435",
-                                        "Colour": "86, 180, 233",
+                                        "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -7003,7 +7011,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "NH4",
                                         "Location": "357, 422",
-                                        "Colour": "86, 180, 233",
+                                        "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -7194,6 +7202,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Eucalyptus",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "Eucalyptus",
@@ -10285,7 +10294,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Inert",
                                     "Location": "656, 254",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -10293,7 +10302,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "SurfaceResidue",
                                     "Location": "566, 69",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -10301,7 +10310,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "FOMLignin",
                                     "Location": "261, 69",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -10309,7 +10318,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "FOMCellulose",
                                     "Location": "397, 70",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -10317,7 +10326,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "FOMCarbohydrate",
                                     "Location": "123, 70",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -10325,7 +10334,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Microbial",
                                     "Location": "218, 299",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -10333,7 +10342,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Humic",
                                     "Location": "458, 293",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -10341,7 +10350,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Urea",
                                     "Location": "529, 419",
-                                    "Colour": "86, 180, 233",
+                                    "Colour": "0, 158, 115",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -10349,7 +10358,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "NO3",
                                     "Location": "185, 435",
-                                    "Colour": "86, 180, 233",
+                                    "Colour": "0, 158, 115",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -10357,7 +10366,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "NH4",
                                     "Location": "357, 422",
-                                    "Colour": "86, 180, 233",
+                                    "Colour": "0, 158, 115",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -10548,6 +10557,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Eucalyptus",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Eucalyptus",
@@ -10559,6 +10569,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "SCRUM",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "SCRUM",
@@ -10734,6 +10745,20 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Report.Report, Models",
+                          "VariableNames": [
+                            "[Clock].Today"
+                          ],
+                          "EventNames": [
+                            "[Clock].DoReport"
+                          ],
+                          "Name": "SCRUMReport",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": false,
@@ -10768,7 +10793,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -10896,7 +10921,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     },
                     {
@@ -10907,7 +10932,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -11035,7 +11060,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -11133,7 +11158,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -11231,7 +11256,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -11520,11 +11545,11 @@
                                     0.39,
                                     0.39,
                                     0.39,
+                                    0.389,
+                                    0.389,
                                     0.39,
-                                    0.39,
-                                    0.39,
-                                    0.39,
-                                    0.39
+                                    0.389,
+                                    0.389
                                   ],
                                   "KS": null,
                                   "BDMetadata": null,
@@ -11676,8 +11701,8 @@
                                     0.18,
                                     0.12,
                                     0.1,
-                                    0.0,
-                                    0.0
+                                    0.01,
+                                    0.01
                                   ],
                                   "SoilCNRatio": [
                                     12.0,
@@ -11696,8 +11721,8 @@
                                     0.01,
                                     0.01,
                                     0.01,
-                                    0.01,
-                                    0.01
+                                    0.0,
+                                    0.0
                                   ],
                                   "FInert": [
                                     0.05,
@@ -11706,8 +11731,8 @@
                                     0.1,
                                     0.7,
                                     0.99,
-                                    0.99,
-                                    0.99
+                                    1.0,
+                                    1.0
                                   ],
                                   "FOM": [
                                     0.15220636515984395,
@@ -11832,7 +11857,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Inert",
                                         "Location": "656, 254",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -11840,7 +11865,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "SurfaceResidue",
                                         "Location": "566, 69",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -11848,7 +11873,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMLignin",
                                         "Location": "261, 69",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -11856,7 +11881,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMCellulose",
                                         "Location": "397, 70",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -11864,7 +11889,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMCarbohydrate",
                                         "Location": "123, 70",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -11872,7 +11897,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Microbial",
                                         "Location": "218, 299",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -11880,7 +11905,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Humic",
                                         "Location": "458, 293",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -11888,7 +11913,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Urea",
                                         "Location": "529, 419",
-                                        "Colour": "86, 180, 233",
+                                        "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -11896,7 +11921,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "NO3",
                                         "Location": "185, 435",
-                                        "Colour": "86, 180, 233",
+                                        "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -11904,7 +11929,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "NH4",
                                         "Location": "357, 422",
-                                        "Colour": "86, 180, 233",
+                                        "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -12095,6 +12120,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Eucalyptus",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "Eucalyptus",
@@ -13439,8 +13465,8 @@
                                     0.18,
                                     0.12,
                                     0.1,
-                                    0.0,
-                                    0.0
+                                    0.01,
+                                    0.01
                                   ],
                                   "SoilCNRatio": [
                                     12.0,
@@ -13459,8 +13485,8 @@
                                     0.01,
                                     0.01,
                                     0.01,
-                                    0.01,
-                                    0.01
+                                    0.0,
+                                    0.0
                                   ],
                                   "FInert": [
                                     0.1,
@@ -13469,8 +13495,8 @@
                                     0.3,
                                     0.9,
                                     0.99,
-                                    0.99,
-                                    0.99
+                                    1.0,
+                                    1.0
                                   ],
                                   "FOM": [
                                     0.15888143874865332,
@@ -13605,7 +13631,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Inert",
                                         "Location": "656, 254",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -13613,7 +13639,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "SurfaceResidue",
                                         "Location": "566, 69",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -13621,7 +13647,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMLignin",
                                         "Location": "261, 69",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -13629,7 +13655,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMCellulose",
                                         "Location": "397, 70",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -13637,7 +13663,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMCarbohydrate",
                                         "Location": "123, 70",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -13645,7 +13671,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Microbial",
                                         "Location": "218, 299",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -13653,7 +13679,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Humic",
                                         "Location": "458, 293",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -13661,7 +13687,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Urea",
                                         "Location": "529, 419",
-                                        "Colour": "86, 180, 233",
+                                        "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -13669,7 +13695,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "NO3",
                                         "Location": "185, 435",
-                                        "Colour": "86, 180, 233",
+                                        "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -13677,7 +13703,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "NH4",
                                         "Location": "357, 422",
-                                        "Colour": "86, 180, 233",
+                                        "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -13868,6 +13894,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Eucalyptus",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "Eucalyptus",
@@ -15261,8 +15288,8 @@
                                     0.3,
                                     0.15,
                                     0.07,
-                                    0.0,
-                                    0.0
+                                    0.01,
+                                    0.01
                                   ],
                                   "SoilCNRatio": [
                                     12.0,
@@ -15281,8 +15308,8 @@
                                     0.02,
                                     0.02,
                                     0.01,
-                                    0.01,
-                                    0.01
+                                    0.0,
+                                    0.0
                                   ],
                                   "FInert": [
                                     0.1,
@@ -15291,8 +15318,8 @@
                                     0.2,
                                     0.5,
                                     0.8,
-                                    0.99,
-                                    0.99
+                                    1.0,
+                                    1.0
                                   ],
                                   "FOM": [
                                     0.15898974340948446,
@@ -15422,7 +15449,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Inert",
                                         "Location": "656, 254",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -15430,7 +15457,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "SurfaceResidue",
                                         "Location": "566, 69",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -15438,7 +15465,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMLignin",
                                         "Location": "261, 69",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -15446,7 +15473,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMCellulose",
                                         "Location": "397, 70",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -15454,7 +15481,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMCarbohydrate",
                                         "Location": "123, 70",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -15462,7 +15489,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Microbial",
                                         "Location": "218, 299",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -15470,7 +15497,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Humic",
                                         "Location": "458, 293",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -15478,7 +15505,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Urea",
                                         "Location": "529, 419",
-                                        "Colour": "86, 180, 233",
+                                        "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -15486,7 +15513,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "NO3",
                                         "Location": "185, 435",
-                                        "Colour": "86, 180, 233",
+                                        "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -15494,7 +15521,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "NH4",
                                         "Location": "357, 422",
-                                        "Colour": "86, 180, 233",
+                                        "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -15685,6 +15712,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Eucalyptus",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "Eucalyptus",
@@ -16575,8 +16603,8 @@
                                     0.18,
                                     0.12,
                                     0.1,
-                                    0.0,
-                                    0.0
+                                    0.01,
+                                    0.01
                                   ],
                                   "SoilCNRatio": [
                                     12.0,
@@ -16595,8 +16623,8 @@
                                     0.01,
                                     0.01,
                                     0.01,
-                                    0.01,
-                                    0.01
+                                    0.0,
+                                    0.0
                                   ],
                                   "FInert": [
                                     0.1,
@@ -16605,8 +16633,8 @@
                                     0.3,
                                     0.9,
                                     0.99,
-                                    0.99,
-                                    0.99
+                                    1.0,
+                                    1.0
                                   ],
                                   "FOM": [
                                     0.15898974340948446,
@@ -16736,7 +16764,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Inert",
                                         "Location": "656, 254",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -16744,7 +16772,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "SurfaceResidue",
                                         "Location": "566, 69",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -16752,7 +16780,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMLignin",
                                         "Location": "261, 69",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -16760,7 +16788,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMCellulose",
                                         "Location": "397, 70",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -16768,7 +16796,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMCarbohydrate",
                                         "Location": "123, 70",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -16776,7 +16804,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Microbial",
                                         "Location": "218, 299",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -16784,7 +16812,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Humic",
                                         "Location": "458, 293",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -16792,7 +16820,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Urea",
                                         "Location": "529, 419",
-                                        "Colour": "86, 180, 233",
+                                        "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -16800,7 +16828,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "NO3",
                                         "Location": "185, 435",
-                                        "Colour": "86, 180, 233",
+                                        "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -16808,7 +16836,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "NH4",
                                         "Location": "357, 422",
-                                        "Colour": "86, 180, 233",
+                                        "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -16999,6 +17027,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Eucalyptus",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "Eucalyptus",
@@ -17716,8 +17745,8 @@
                                 0.16
                               ],
                               "DUL": [
-                                0.4,
-                                0.4,
+                                0.396,
+                                0.396,
                                 0.4,
                                 0.4,
                                 0.4,
@@ -17725,8 +17754,8 @@
                                 0.24
                               ],
                               "SAT": [
-                                0.4,
-                                0.4,
+                                0.396,
+                                0.396,
                                 0.4,
                                 0.4,
                                 0.4,
@@ -17880,8 +17909,8 @@
                                 0.18,
                                 0.12,
                                 0.1,
-                                0.0,
-                                0.0
+                                0.01,
+                                0.01
                               ],
                               "SoilCNRatio": [
                                 12.0,
@@ -17900,8 +17929,8 @@
                                 0.01,
                                 0.01,
                                 0.01,
-                                0.01,
-                                0.01
+                                0.0,
+                                0.0
                               ],
                               "FInert": [
                                 0.1,
@@ -17910,8 +17939,8 @@
                                 0.3,
                                 0.9,
                                 0.99,
-                                0.99,
-                                0.99
+                                1.0,
+                                1.0
                               ],
                               "FOM": [
                                 0.15898974340948446,
@@ -18046,7 +18075,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Inert",
                                     "Location": "656, 254",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -18054,7 +18083,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "SurfaceResidue",
                                     "Location": "566, 69",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -18062,7 +18091,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "FOMLignin",
                                     "Location": "261, 69",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -18070,7 +18099,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "FOMCellulose",
                                     "Location": "397, 70",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -18078,7 +18107,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "FOMCarbohydrate",
                                     "Location": "123, 70",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -18086,7 +18115,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Microbial",
                                     "Location": "218, 299",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -18094,7 +18123,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Humic",
                                     "Location": "458, 293",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -18102,7 +18131,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Urea",
                                     "Location": "529, 419",
-                                    "Colour": "86, 180, 233",
+                                    "Colour": "0, 158, 115",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -18110,7 +18139,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "NO3",
                                     "Location": "185, 435",
-                                    "Colour": "86, 180, 233",
+                                    "Colour": "0, 158, 115",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -18118,7 +18147,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "NH4",
                                     "Location": "357, 422",
-                                    "Colour": "86, 180, 233",
+                                    "Colour": "0, 158, 115",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -18309,6 +18338,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Eucalyptus",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Eucalyptus",
@@ -18682,8 +18712,8 @@
                                 0.125,
                                 0.07,
                                 0.07,
-                                0.0,
-                                0.0
+                                0.01,
+                                0.01
                               ],
                               "SoilCNRatio": [
                                 12.0,
@@ -18702,8 +18732,8 @@
                                 0.01,
                                 0.01,
                                 0.01,
-                                0.01,
-                                0.01
+                                0.0,
+                                0.0
                               ],
                               "FInert": [
                                 0.1,
@@ -18712,8 +18742,8 @@
                                 0.3,
                                 0.9,
                                 0.99,
-                                0.99,
-                                0.99
+                                1.0,
+                                1.0
                               ],
                               "FOM": [
                                 0.15898974340948446,
@@ -18848,7 +18878,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Inert",
                                     "Location": "656, 254",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -18856,7 +18886,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "SurfaceResidue",
                                     "Location": "566, 69",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -18864,7 +18894,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "FOMLignin",
                                     "Location": "261, 69",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -18872,7 +18902,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "FOMCellulose",
                                     "Location": "397, 70",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -18880,7 +18910,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "FOMCarbohydrate",
                                     "Location": "123, 70",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -18888,7 +18918,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Microbial",
                                     "Location": "218, 299",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -18896,7 +18926,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Humic",
                                     "Location": "458, 293",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -18904,7 +18934,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Urea",
                                     "Location": "529, 419",
-                                    "Colour": "86, 180, 233",
+                                    "Colour": "0, 158, 115",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -18912,7 +18942,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "NO3",
                                     "Location": "185, 435",
-                                    "Colour": "86, 180, 233",
+                                    "Colour": "0, 158, 115",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -18920,7 +18950,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "NH4",
                                     "Location": "357, 422",
-                                    "Colour": "86, 180, 233",
+                                    "Colour": "0, 158, 115",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -19111,6 +19141,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Eucalyptus",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Eucalyptus",
@@ -19953,7 +19984,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Inert",
                                         "Location": "656, 254",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -19961,7 +19992,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "SurfaceResidue",
                                         "Location": "566, 69",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -19969,7 +20000,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMLignin",
                                         "Location": "261, 69",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -19977,7 +20008,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMCellulose",
                                         "Location": "397, 70",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -19985,7 +20016,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMCarbohydrate",
                                         "Location": "123, 70",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -19993,7 +20024,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Microbial",
                                         "Location": "218, 299",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -20001,7 +20032,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Humic",
                                         "Location": "458, 293",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -20009,7 +20040,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Urea",
                                         "Location": "529, 419",
-                                        "Colour": "86, 180, 233",
+                                        "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -20017,7 +20048,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "NO3",
                                         "Location": "185, 435",
-                                        "Colour": "86, 180, 233",
+                                        "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -20025,7 +20056,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "NH4",
                                         "Location": "357, 422",
-                                        "Colour": "86, 180, 233",
+                                        "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -20216,6 +20247,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Eucalyptus",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "Eucalyptus",
@@ -20897,8 +20929,8 @@
                                     0.1,
                                     0.05,
                                     0.03,
-                                    0.0,
-                                    0.0
+                                    0.01,
+                                    0.01
                                   ],
                                   "SoilCNRatio": [
                                     12.0,
@@ -20917,8 +20949,8 @@
                                     0.01,
                                     0.01,
                                     0.01,
-                                    0.01,
-                                    0.01
+                                    0.0,
+                                    0.0
                                   ],
                                   "FInert": [
                                     0.25,
@@ -20927,8 +20959,8 @@
                                     0.3,
                                     0.9,
                                     0.99,
-                                    0.99,
-                                    0.99
+                                    1.0,
+                                    1.0
                                   ],
                                   "FOM": [
                                     0.15898974340948446,
@@ -21063,7 +21095,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Inert",
                                         "Location": "656, 254",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -21071,7 +21103,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "SurfaceResidue",
                                         "Location": "566, 69",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -21079,7 +21111,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMLignin",
                                         "Location": "261, 69",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -21087,7 +21119,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMCellulose",
                                         "Location": "397, 70",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -21095,7 +21127,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMCarbohydrate",
                                         "Location": "123, 70",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -21103,7 +21135,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Microbial",
                                         "Location": "218, 299",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -21111,7 +21143,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Humic",
                                         "Location": "458, 293",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -21119,7 +21151,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Urea",
                                         "Location": "529, 419",
-                                        "Colour": "86, 180, 233",
+                                        "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -21127,7 +21159,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "NO3",
                                         "Location": "185, 435",
-                                        "Colour": "86, 180, 233",
+                                        "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -21135,7 +21167,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "NH4",
                                         "Location": "357, 422",
-                                        "Colour": "86, 180, 233",
+                                        "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -21326,6 +21358,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Eucalyptus",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "Eucalyptus",
@@ -21391,15 +21424,6 @@
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PostSimulationTools.Input, Models",
-                          "FileName": null,
-                          "Name": "Input",
-                          "Children": [],
                           "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
@@ -22523,7 +22547,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Inert",
                                         "Location": "656, 254",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -22531,7 +22555,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "SurfaceResidue",
                                         "Location": "566, 69",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -22539,7 +22563,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMLignin",
                                         "Location": "261, 69",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -22547,7 +22571,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMCellulose",
                                         "Location": "397, 70",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -22555,7 +22579,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMCarbohydrate",
                                         "Location": "123, 70",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -22563,7 +22587,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Microbial",
                                         "Location": "218, 299",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -22571,7 +22595,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Humic",
                                         "Location": "458, 293",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -22579,7 +22603,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Urea",
                                         "Location": "529, 419",
-                                        "Colour": "86, 180, 233",
+                                        "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -22587,7 +22611,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "NO3",
                                         "Location": "185, 435",
-                                        "Colour": "86, 180, 233",
+                                        "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -22595,7 +22619,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "NH4",
                                         "Location": "357, 422",
-                                        "Colour": "86, 180, 233",
+                                        "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -22786,6 +22810,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Eucalyptus",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "Eucalyptus",
@@ -23467,8 +23492,8 @@
                                     0.14,
                                     0.07,
                                     0.04,
-                                    0.0,
-                                    0.0
+                                    0.01,
+                                    0.01
                                   ],
                                   "SoilCNRatio": [
                                     11.0,
@@ -23487,8 +23512,8 @@
                                     0.04,
                                     0.01,
                                     0.01,
-                                    0.01,
-                                    0.01
+                                    0.0,
+                                    0.0
                                   ],
                                   "FInert": [
                                     0.01,
@@ -23497,8 +23522,8 @@
                                     0.3,
                                     0.9,
                                     0.99,
-                                    0.99,
-                                    0.99
+                                    1.0,
+                                    1.0
                                   ],
                                   "FOM": [
                                     0.15898974340948446,
@@ -23851,7 +23876,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Inert",
                                         "Location": "656, 254",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -23859,7 +23884,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "SurfaceResidue",
                                         "Location": "566, 69",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -23867,7 +23892,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMLignin",
                                         "Location": "261, 69",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -23875,7 +23900,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMCellulose",
                                         "Location": "397, 70",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -23883,7 +23908,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMCarbohydrate",
                                         "Location": "123, 70",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -23891,7 +23916,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Microbial",
                                         "Location": "218, 299",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -23899,7 +23924,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Humic",
                                         "Location": "458, 293",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -23907,7 +23932,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Urea",
                                         "Location": "529, 419",
-                                        "Colour": "86, 180, 233",
+                                        "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -23915,7 +23940,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "NO3",
                                         "Location": "185, 435",
-                                        "Colour": "86, 180, 233",
+                                        "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -23923,7 +23948,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "NH4",
                                         "Location": "357, 422",
-                                        "Colour": "86, 180, 233",
+                                        "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -24114,6 +24139,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Eucalyptus",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "Eucalyptus",
@@ -24179,15 +24205,6 @@
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PostSimulationTools.Input, Models",
-                          "FileName": null,
-                          "Name": "Input",
-                          "Children": [],
                           "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
@@ -24650,11 +24667,11 @@
                             0.01,
                             0.01,
                             0.01,
-                            0.02,
-                            0.05,
-                            0.05,
-                            0.05,
-                            0.05
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01
                           ],
                           "LL15": [
                             0.05,
@@ -25002,7 +25019,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "Inert",
                                 "Location": "656, 254",
-                                "Colour": "0, 158, 115",
+                                "Colour": "0, 114, 178",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -25010,7 +25027,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "SurfaceResidue",
                                 "Location": "566, 69",
-                                "Colour": "0, 158, 115",
+                                "Colour": "0, 114, 178",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -25018,7 +25035,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "FOMLignin",
                                 "Location": "261, 69",
-                                "Colour": "0, 158, 115",
+                                "Colour": "0, 114, 178",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -25026,7 +25043,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "FOMCellulose",
                                 "Location": "397, 70",
-                                "Colour": "0, 158, 115",
+                                "Colour": "0, 114, 178",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -25034,7 +25051,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "FOMCarbohydrate",
                                 "Location": "123, 70",
-                                "Colour": "0, 158, 115",
+                                "Colour": "0, 114, 178",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -25042,7 +25059,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "Microbial",
                                 "Location": "218, 299",
-                                "Colour": "0, 158, 115",
+                                "Colour": "0, 114, 178",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -25050,7 +25067,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "Humic",
                                 "Location": "458, 293",
-                                "Colour": "0, 158, 115",
+                                "Colour": "0, 114, 178",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -25058,7 +25075,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "Urea",
                                 "Location": "529, 419",
-                                "Colour": "86, 180, 233",
+                                "Colour": "0, 158, 115",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -25066,7 +25083,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "NO3",
                                 "Location": "185, 435",
-                                "Colour": "86, 180, 233",
+                                "Colour": "0, 158, 115",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -25074,7 +25091,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "NH4",
                                 "Location": "357, 422",
-                                "Colour": "86, 180, 233",
+                                "Colour": "0, 158, 115",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -25265,6 +25282,7 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Eucalyptus",
+                      "IsAlive": false,
                       "IsEnding": false,
                       "DaysAfterEnding": 0,
                       "ResourceName": "Eucalyptus",
@@ -25807,7 +25825,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "Inert",
                                 "Location": "656, 254",
-                                "Colour": "0, 158, 115",
+                                "Colour": "0, 114, 178",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -25815,7 +25833,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "SurfaceResidue",
                                 "Location": "566, 69",
-                                "Colour": "0, 158, 115",
+                                "Colour": "0, 114, 178",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -25823,7 +25841,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "FOMLignin",
                                 "Location": "261, 69",
-                                "Colour": "0, 158, 115",
+                                "Colour": "0, 114, 178",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -25831,7 +25849,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "FOMCellulose",
                                 "Location": "397, 70",
-                                "Colour": "0, 158, 115",
+                                "Colour": "0, 114, 178",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -25839,7 +25857,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "FOMCarbohydrate",
                                 "Location": "123, 70",
-                                "Colour": "0, 158, 115",
+                                "Colour": "0, 114, 178",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -25847,7 +25865,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "Microbial",
                                 "Location": "218, 299",
-                                "Colour": "0, 158, 115",
+                                "Colour": "0, 114, 178",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -25855,7 +25873,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "Humic",
                                 "Location": "458, 293",
-                                "Colour": "0, 158, 115",
+                                "Colour": "0, 114, 178",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -25863,7 +25881,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "Urea",
                                 "Location": "529, 419",
-                                "Colour": "86, 180, 233",
+                                "Colour": "0, 158, 115",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -25871,7 +25889,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "NO3",
                                 "Location": "185, 435",
-                                "Colour": "86, 180, 233",
+                                "Colour": "0, 158, 115",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -25879,7 +25897,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "NH4",
                                 "Location": "357, 422",
-                                "Colour": "86, 180, 233",
+                                "Colour": "0, 158, 115",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -26070,6 +26088,7 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Eucalyptus",
+                      "IsAlive": false,
                       "IsEnding": false,
                       "DaysAfterEnding": 0,
                       "ResourceName": "Eucalyptus",
@@ -26612,7 +26631,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "Inert",
                                 "Location": "656, 254",
-                                "Colour": "0, 158, 115",
+                                "Colour": "0, 114, 178",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -26620,7 +26639,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "SurfaceResidue",
                                 "Location": "566, 69",
-                                "Colour": "0, 158, 115",
+                                "Colour": "0, 114, 178",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -26628,7 +26647,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "FOMLignin",
                                 "Location": "261, 69",
-                                "Colour": "0, 158, 115",
+                                "Colour": "0, 114, 178",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -26636,7 +26655,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "FOMCellulose",
                                 "Location": "397, 70",
-                                "Colour": "0, 158, 115",
+                                "Colour": "0, 114, 178",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -26644,7 +26663,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "FOMCarbohydrate",
                                 "Location": "123, 70",
-                                "Colour": "0, 158, 115",
+                                "Colour": "0, 114, 178",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -26652,7 +26671,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "Microbial",
                                 "Location": "218, 299",
-                                "Colour": "0, 158, 115",
+                                "Colour": "0, 114, 178",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -26660,7 +26679,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "Humic",
                                 "Location": "458, 293",
-                                "Colour": "0, 158, 115",
+                                "Colour": "0, 114, 178",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -26668,7 +26687,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "Urea",
                                 "Location": "529, 419",
-                                "Colour": "86, 180, 233",
+                                "Colour": "0, 158, 115",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -26676,7 +26695,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "NO3",
                                 "Location": "185, 435",
-                                "Colour": "86, 180, 233",
+                                "Colour": "0, 158, 115",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -26684,7 +26703,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "NH4",
                                 "Location": "357, 422",
-                                "Colour": "86, 180, 233",
+                                "Colour": "0, 158, 115",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -26875,6 +26894,7 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Eucalyptus",
+                      "IsAlive": false,
                       "IsEnding": false,
                       "DaysAfterEnding": 0,
                       "ResourceName": "Eucalyptus",
@@ -27417,7 +27437,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "Inert",
                                 "Location": "656, 254",
-                                "Colour": "0, 158, 115",
+                                "Colour": "0, 114, 178",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -27425,7 +27445,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "SurfaceResidue",
                                 "Location": "566, 69",
-                                "Colour": "0, 158, 115",
+                                "Colour": "0, 114, 178",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -27433,7 +27453,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "FOMLignin",
                                 "Location": "261, 69",
-                                "Colour": "0, 158, 115",
+                                "Colour": "0, 114, 178",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -27441,7 +27461,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "FOMCellulose",
                                 "Location": "397, 70",
-                                "Colour": "0, 158, 115",
+                                "Colour": "0, 114, 178",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -27449,7 +27469,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "FOMCarbohydrate",
                                 "Location": "123, 70",
-                                "Colour": "0, 158, 115",
+                                "Colour": "0, 114, 178",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -27457,7 +27477,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "Microbial",
                                 "Location": "218, 299",
-                                "Colour": "0, 158, 115",
+                                "Colour": "0, 114, 178",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -27465,7 +27485,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "Humic",
                                 "Location": "458, 293",
-                                "Colour": "0, 158, 115",
+                                "Colour": "0, 114, 178",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -27473,7 +27493,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "Urea",
                                 "Location": "529, 419",
-                                "Colour": "86, 180, 233",
+                                "Colour": "0, 158, 115",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -27481,7 +27501,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "NO3",
                                 "Location": "185, 435",
-                                "Colour": "86, 180, 233",
+                                "Colour": "0, 158, 115",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -27489,7 +27509,7 @@
                                 "$type": "Models.Graph.Node, Models",
                                 "Name": "NH4",
                                 "Location": "357, 422",
-                                "Colour": "86, 180, 233",
+                                "Colour": "0, 158, 115",
                                 "OutlineColour": "Black",
                                 "Transparent": false
                               },
@@ -27680,6 +27700,7 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Eucalyptus",
+                      "IsAlive": false,
                       "IsEnding": false,
                       "DaysAfterEnding": 0,
                       "ResourceName": "Eucalyptus",
@@ -27943,6 +27964,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Eucalyptus",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Eucalyptus",
@@ -28424,7 +28446,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Inert",
                                     "Location": "656, 254",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -28432,7 +28454,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "SurfaceResidue",
                                     "Location": "566, 69",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -28440,7 +28462,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "FOMLignin",
                                     "Location": "261, 69",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -28448,7 +28470,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "FOMCellulose",
                                     "Location": "397, 70",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -28456,7 +28478,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "FOMCarbohydrate",
                                     "Location": "123, 70",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -28464,7 +28486,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Microbial",
                                     "Location": "218, 299",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -28472,7 +28494,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Humic",
                                     "Location": "458, 293",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -28480,7 +28502,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Urea",
                                     "Location": "529, 419",
-                                    "Colour": "86, 180, 233",
+                                    "Colour": "0, 158, 115",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -28488,7 +28510,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "NO3",
                                     "Location": "185, 435",
-                                    "Colour": "86, 180, 233",
+                                    "Colour": "0, 158, 115",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -28496,7 +28518,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "NH4",
                                     "Location": "357, 422",
-                                    "Colour": "86, 180, 233",
+                                    "Colour": "0, 158, 115",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -29183,6 +29205,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Eucalyptus",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Eucalyptus",
@@ -29664,7 +29687,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Inert",
                                     "Location": "656, 254",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -29672,7 +29695,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "SurfaceResidue",
                                     "Location": "566, 69",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -29680,7 +29703,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "FOMLignin",
                                     "Location": "261, 69",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -29688,7 +29711,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "FOMCellulose",
                                     "Location": "397, 70",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -29696,7 +29719,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "FOMCarbohydrate",
                                     "Location": "123, 70",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -29704,7 +29727,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Microbial",
                                     "Location": "218, 299",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -29712,7 +29735,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Humic",
                                     "Location": "458, 293",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -29720,7 +29743,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Urea",
                                     "Location": "529, 419",
-                                    "Colour": "86, 180, 233",
+                                    "Colour": "0, 158, 115",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -29728,7 +29751,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "NO3",
                                     "Location": "185, 435",
-                                    "Colour": "86, 180, 233",
+                                    "Colour": "0, 158, 115",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -29736,7 +29759,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "NH4",
                                     "Location": "357, 422",
-                                    "Colour": "86, 180, 233",
+                                    "Colour": "0, 158, 115",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -30613,7 +30636,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Inert",
                                     "Location": "656, 254",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -30621,7 +30644,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "SurfaceResidue",
                                     "Location": "566, 69",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -30629,7 +30652,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "FOMLignin",
                                     "Location": "261, 69",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -30637,7 +30660,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "FOMCellulose",
                                     "Location": "397, 70",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -30645,7 +30668,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "FOMCarbohydrate",
                                     "Location": "123, 70",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -30653,7 +30676,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Microbial",
                                     "Location": "218, 299",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -30661,7 +30684,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Humic",
                                     "Location": "458, 293",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -30669,7 +30692,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Urea",
                                     "Location": "529, 419",
-                                    "Colour": "86, 180, 233",
+                                    "Colour": "0, 158, 115",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -30677,7 +30700,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "NO3",
                                     "Location": "185, 435",
-                                    "Colour": "86, 180, 233",
+                                    "Colour": "0, 158, 115",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -30685,7 +30708,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "NH4",
                                     "Location": "357, 422",
-                                    "Colour": "86, 180, 233",
+                                    "Colour": "0, 158, 115",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -30876,6 +30899,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Eucalyptus",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Eucalyptus",
@@ -32169,7 +32193,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Inert",
                                     "Location": "656, 254",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -32177,7 +32201,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "SurfaceResidue",
                                     "Location": "566, 69",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -32185,7 +32209,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "FOMLignin",
                                     "Location": "261, 69",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -32193,7 +32217,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "FOMCellulose",
                                     "Location": "397, 70",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -32201,7 +32225,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "FOMCarbohydrate",
                                     "Location": "123, 70",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -32209,7 +32233,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Microbial",
                                     "Location": "218, 299",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -32217,7 +32241,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Humic",
                                     "Location": "458, 293",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -32225,7 +32249,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Urea",
                                     "Location": "529, 419",
-                                    "Colour": "86, 180, 233",
+                                    "Colour": "0, 158, 115",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -32233,7 +32257,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "NO3",
                                     "Location": "185, 435",
-                                    "Colour": "86, 180, 233",
+                                    "Colour": "0, 158, 115",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -32241,7 +32265,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "NH4",
                                     "Location": "357, 422",
-                                    "Colour": "86, 180, 233",
+                                    "Colour": "0, 158, 115",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -32432,6 +32456,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Eucalyptus",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Eucalyptus",
@@ -33586,7 +33611,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "Inert",
                                             "Location": "656, 254",
-                                            "Colour": "0, 158, 115",
+                                            "Colour": "0, 114, 178",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -33594,7 +33619,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "SurfaceResidue",
                                             "Location": "566, 69",
-                                            "Colour": "0, 158, 115",
+                                            "Colour": "0, 114, 178",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -33602,7 +33627,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "FOMLignin",
                                             "Location": "261, 69",
-                                            "Colour": "0, 158, 115",
+                                            "Colour": "0, 114, 178",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -33610,7 +33635,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "FOMCellulose",
                                             "Location": "397, 70",
-                                            "Colour": "0, 158, 115",
+                                            "Colour": "0, 114, 178",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -33618,7 +33643,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "FOMCarbohydrate",
                                             "Location": "123, 70",
-                                            "Colour": "0, 158, 115",
+                                            "Colour": "0, 114, 178",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -33626,7 +33651,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "Microbial",
                                             "Location": "218, 299",
-                                            "Colour": "0, 158, 115",
+                                            "Colour": "0, 114, 178",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -33634,7 +33659,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "Humic",
                                             "Location": "458, 293",
-                                            "Colour": "0, 158, 115",
+                                            "Colour": "0, 114, 178",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -33642,7 +33667,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "Urea",
                                             "Location": "529, 419",
-                                            "Colour": "86, 180, 233",
+                                            "Colour": "0, 158, 115",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -33650,7 +33675,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "NO3",
                                             "Location": "185, 435",
-                                            "Colour": "86, 180, 233",
+                                            "Colour": "0, 158, 115",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -33658,7 +33683,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "NH4",
                                             "Location": "357, 422",
-                                            "Colour": "86, 180, 233",
+                                            "Colour": "0, 158, 115",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -33666,8 +33691,8 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "Atmosphere",
                                             "Location": "48, 338",
-                                            "Colour": "255, 255, 255",
-                                            "OutlineColour": "255, 255, 255",
+                                            "Colour": "White",
+                                            "OutlineColour": "White",
                                             "Transparent": true
                                           }
                                         ],
@@ -34330,7 +34355,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "Inert",
                                             "Location": "656, 254",
-                                            "Colour": "0, 158, 115",
+                                            "Colour": "0, 114, 178",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -34338,7 +34363,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "SurfaceResidue",
                                             "Location": "566, 69",
-                                            "Colour": "0, 158, 115",
+                                            "Colour": "0, 114, 178",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -34346,7 +34371,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "FOMLignin",
                                             "Location": "261, 69",
-                                            "Colour": "0, 158, 115",
+                                            "Colour": "0, 114, 178",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -34354,7 +34379,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "FOMCellulose",
                                             "Location": "397, 70",
-                                            "Colour": "0, 158, 115",
+                                            "Colour": "0, 114, 178",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -34362,7 +34387,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "FOMCarbohydrate",
                                             "Location": "123, 70",
-                                            "Colour": "0, 158, 115",
+                                            "Colour": "0, 114, 178",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -34370,7 +34395,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "Microbial",
                                             "Location": "218, 299",
-                                            "Colour": "0, 158, 115",
+                                            "Colour": "0, 114, 178",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -34378,7 +34403,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "Humic",
                                             "Location": "458, 293",
-                                            "Colour": "0, 158, 115",
+                                            "Colour": "0, 114, 178",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -34386,7 +34411,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "Urea",
                                             "Location": "529, 419",
-                                            "Colour": "86, 180, 233",
+                                            "Colour": "0, 158, 115",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -34394,7 +34419,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "NO3",
                                             "Location": "185, 435",
-                                            "Colour": "86, 180, 233",
+                                            "Colour": "0, 158, 115",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -34402,7 +34427,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "NH4",
                                             "Location": "357, 422",
-                                            "Colour": "86, 180, 233",
+                                            "Colour": "0, 158, 115",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -34410,8 +34435,8 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "Atmosphere",
                                             "Location": "48, 338",
-                                            "Colour": "255, 255, 255",
-                                            "OutlineColour": "255, 255, 255",
+                                            "Colour": "White",
+                                            "OutlineColour": "White",
                                             "Transparent": true
                                           }
                                         ],
@@ -35074,7 +35099,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "Inert",
                                             "Location": "656, 254",
-                                            "Colour": "0, 158, 115",
+                                            "Colour": "0, 114, 178",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -35082,7 +35107,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "SurfaceResidue",
                                             "Location": "566, 69",
-                                            "Colour": "0, 158, 115",
+                                            "Colour": "0, 114, 178",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -35090,7 +35115,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "FOMLignin",
                                             "Location": "261, 69",
-                                            "Colour": "0, 158, 115",
+                                            "Colour": "0, 114, 178",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -35098,7 +35123,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "FOMCellulose",
                                             "Location": "397, 70",
-                                            "Colour": "0, 158, 115",
+                                            "Colour": "0, 114, 178",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -35106,7 +35131,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "FOMCarbohydrate",
                                             "Location": "123, 70",
-                                            "Colour": "0, 158, 115",
+                                            "Colour": "0, 114, 178",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -35114,7 +35139,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "Microbial",
                                             "Location": "218, 299",
-                                            "Colour": "0, 158, 115",
+                                            "Colour": "0, 114, 178",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -35122,7 +35147,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "Humic",
                                             "Location": "458, 293",
-                                            "Colour": "0, 158, 115",
+                                            "Colour": "0, 114, 178",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -35130,7 +35155,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "Urea",
                                             "Location": "529, 419",
-                                            "Colour": "86, 180, 233",
+                                            "Colour": "0, 158, 115",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -35138,7 +35163,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "NO3",
                                             "Location": "185, 435",
-                                            "Colour": "86, 180, 233",
+                                            "Colour": "0, 158, 115",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -35146,7 +35171,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "NH4",
                                             "Location": "357, 422",
-                                            "Colour": "86, 180, 233",
+                                            "Colour": "0, 158, 115",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -35154,8 +35179,8 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "Atmosphere",
                                             "Location": "48, 338",
-                                            "Colour": "255, 255, 255",
-                                            "OutlineColour": "255, 255, 255",
+                                            "Colour": "White",
+                                            "OutlineColour": "White",
                                             "Transparent": true
                                           }
                                         ],
@@ -35818,7 +35843,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "Inert",
                                             "Location": "656, 254",
-                                            "Colour": "0, 158, 115",
+                                            "Colour": "0, 114, 178",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -35826,7 +35851,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "SurfaceResidue",
                                             "Location": "566, 69",
-                                            "Colour": "0, 158, 115",
+                                            "Colour": "0, 114, 178",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -35834,7 +35859,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "FOMLignin",
                                             "Location": "261, 69",
-                                            "Colour": "0, 158, 115",
+                                            "Colour": "0, 114, 178",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -35842,7 +35867,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "FOMCellulose",
                                             "Location": "397, 70",
-                                            "Colour": "0, 158, 115",
+                                            "Colour": "0, 114, 178",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -35850,7 +35875,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "FOMCarbohydrate",
                                             "Location": "123, 70",
-                                            "Colour": "0, 158, 115",
+                                            "Colour": "0, 114, 178",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -35858,7 +35883,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "Microbial",
                                             "Location": "218, 299",
-                                            "Colour": "0, 158, 115",
+                                            "Colour": "0, 114, 178",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -35866,7 +35891,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "Humic",
                                             "Location": "458, 293",
-                                            "Colour": "0, 158, 115",
+                                            "Colour": "0, 114, 178",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -35874,7 +35899,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "Urea",
                                             "Location": "529, 419",
-                                            "Colour": "86, 180, 233",
+                                            "Colour": "0, 158, 115",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -35882,7 +35907,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "NO3",
                                             "Location": "185, 435",
-                                            "Colour": "86, 180, 233",
+                                            "Colour": "0, 158, 115",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -35890,7 +35915,7 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "NH4",
                                             "Location": "357, 422",
-                                            "Colour": "86, 180, 233",
+                                            "Colour": "0, 158, 115",
                                             "OutlineColour": "Black",
                                             "Transparent": false
                                           },
@@ -35898,8 +35923,8 @@
                                             "$type": "Models.Graph.Node, Models",
                                             "Name": "Atmosphere",
                                             "Location": "48, 338",
-                                            "Colour": "255, 255, 255",
-                                            "OutlineColour": "255, 255, 255",
+                                            "Colour": "White",
+                                            "OutlineColour": "White",
                                             "Transparent": true
                                           }
                                         ],
@@ -36169,6 +36194,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Eucalyptus",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Eucalyptus",
@@ -36624,7 +36650,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Inert",
                                     "Location": "656, 254",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -36632,7 +36658,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "SurfaceResidue",
                                     "Location": "566, 69",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -36640,7 +36666,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "FOMLignin",
                                     "Location": "261, 69",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -36648,7 +36674,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "FOMCellulose",
                                     "Location": "397, 70",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -36656,7 +36682,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "FOMCarbohydrate",
                                     "Location": "123, 70",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -36664,7 +36690,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Microbial",
                                     "Location": "218, 299",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -36672,7 +36698,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Humic",
                                     "Location": "458, 293",
-                                    "Colour": "0, 158, 115",
+                                    "Colour": "0, 114, 178",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -36680,7 +36706,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "Urea",
                                     "Location": "529, 419",
-                                    "Colour": "86, 180, 233",
+                                    "Colour": "0, 158, 115",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -36688,7 +36714,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "NO3",
                                     "Location": "185, 435",
-                                    "Colour": "86, 180, 233",
+                                    "Colour": "0, 158, 115",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },
@@ -36696,7 +36722,7 @@
                                     "$type": "Models.Graph.Node, Models",
                                     "Name": "NH4",
                                     "Location": "357, 422",
-                                    "Colour": "86, 180, 233",
+                                    "Colour": "0, 158, 115",
                                     "OutlineColour": "Black",
                                     "Transparent": false
                                   },

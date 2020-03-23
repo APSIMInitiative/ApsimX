@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 78,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-02-12",
+  "Version": 84,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -661,6 +661,7 @@
                   "d_interception": 0.0,
                   "soil_albedo": 0.3,
                   "SoilHeatFluxFraction": 0.4,
+                  "MinimumHeightDiffForNewLayer": 0.0,
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
@@ -1311,6 +1312,7 @@
                   "d_interception": 0.0,
                   "soil_albedo": 0.3,
                   "SoilHeatFluxFraction": 0.4,
+                  "MinimumHeightDiffForNewLayer": 0.0,
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
@@ -2016,6 +2018,7 @@
                   "d_interception": 0.0,
                   "soil_albedo": 0.3,
                   "SoilHeatFluxFraction": 0.4,
+                  "MinimumHeightDiffForNewLayer": 0.0,
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
@@ -3504,6 +3507,7 @@
               "d_interception": 0.0,
               "soil_albedo": 0.3,
               "SoilHeatFluxFraction": 0.4,
+              "MinimumHeightDiffForNewLayer": 0.0,
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
@@ -3515,6 +3519,7 @@
             {
               "$type": "Models.PMF.Plant, Models",
               "CropType": "Slurp",
+              "IsAlive": false,
               "IsEnding": false,
               "DaysAfterEnding": 0,
               "ResourceName": "Slurp",
@@ -3526,6 +3531,7 @@
             {
               "$type": "Models.PMF.Plant, Models",
               "CropType": "Slurp",
+              "IsAlive": false,
               "IsEnding": false,
               "DaysAfterEnding": 0,
               "ResourceName": "Slurp",
@@ -4540,6 +4546,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -4583,6 +4590,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Slurp",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Slurp",
@@ -4594,6 +4602,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Slurp",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Slurp",
@@ -6102,6 +6111,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -7690,6 +7700,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -9241,6 +9252,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -10787,6 +10799,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -12915,6 +12928,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -13292,10 +13306,10 @@
                                 150.0
                               ],
                               "Carbon": [
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01
                               ],
                               "SoilCNRatio": [
                                 12.0,
@@ -13537,6 +13551,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -13914,10 +13929,10 @@
                                 150.0
                               ],
                               "Carbon": [
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01
                               ],
                               "SoilCNRatio": [
                                 12.0,
@@ -15294,6 +15309,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -15671,10 +15687,10 @@
                                 150.0
                               ],
                               "Carbon": [
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01
                               ],
                               "SoilCNRatio": [
                                 12.0,
@@ -15916,6 +15932,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -16293,10 +16310,10 @@
                                 150.0
                               ],
                               "Carbon": [
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01
                               ],
                               "SoilCNRatio": [
                                 12.0,
@@ -17673,6 +17690,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -18050,10 +18068,10 @@
                                 150.0
                               ],
                               "Carbon": [
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01
                               ],
                               "SoilCNRatio": [
                                 12.0,
@@ -18295,6 +18313,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -18672,10 +18691,10 @@
                                 150.0
                               ],
                               "Carbon": [
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01
                               ],
                               "SoilCNRatio": [
                                 12.0,
@@ -19745,6 +19764,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
@@ -20122,10 +20142,10 @@
                             150.0
                           ],
                           "Carbon": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01
                           ],
                           "SoilCNRatio": [
                             12.0,
@@ -20451,6 +20471,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
@@ -20828,10 +20849,10 @@
                             150.0
                           ],
                           "Carbon": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01
                           ],
                           "SoilCNRatio": [
                             12.0,
@@ -21157,6 +21178,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
@@ -21534,10 +21556,10 @@
                             150.0
                           ],
                           "Carbon": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01
                           ],
                           "SoilCNRatio": [
                             12.0,
@@ -22619,6 +22641,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
@@ -22996,10 +23019,10 @@
                             150.0
                           ],
                           "Carbon": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01
                           ],
                           "SoilCNRatio": [
                             12.0,
@@ -23325,6 +23348,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
@@ -23702,10 +23726,10 @@
                             150.0
                           ],
                           "Carbon": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01
                           ],
                           "SoilCNRatio": [
                             12.0,
@@ -24031,6 +24055,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
@@ -24408,10 +24433,10 @@
                             150.0
                           ],
                           "Carbon": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01
                           ],
                           "SoilCNRatio": [
                             12.0,

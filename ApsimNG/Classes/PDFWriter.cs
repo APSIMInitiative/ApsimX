@@ -5,7 +5,6 @@
     using MigraDoc.Rendering;
     using Models;
     using Models.Core;
-    using Models.Graph;
     using PdfSharp.Drawing;
     using PdfSharp.Fonts;
     using System;
@@ -470,15 +469,15 @@
 
             // Create a line series.
             graph.DrawLineAndMarkers("", graphAndTable.xyPairs.X, graphAndTable.xyPairs.Y, null, null, null,
-                                     Models.Graph.Axis.AxisType.Bottom, Models.Graph.Axis.AxisType.Left,
-                                     System.Drawing.Color.Blue, Models.Graph.LineType.Solid, Models.Graph.MarkerType.None,
-                                     Models.Graph.LineThicknessType.Normal, Models.Graph.MarkerSizeType.Normal, true);
+                                     Models.Axis.AxisType.Bottom, Models.Axis.AxisType.Left,
+                                     System.Drawing.Color.Blue, Models.LineType.Solid, Models.MarkerType.None,
+                                     Models.LineThicknessType.Normal, Models.MarkerSizeType.Normal, true);
 
             graph.ForegroundColour = OxyPlot.OxyColors.Black;
             graph.BackColor = OxyPlot.OxyColors.White;
             // Format the axes.
-            graph.FormatAxis(Models.Graph.Axis.AxisType.Bottom, graphAndTable.xName, false, double.NaN, double.NaN, double.NaN, false);
-            graph.FormatAxis(Models.Graph.Axis.AxisType.Left, graphAndTable.yName, false, double.NaN, double.NaN, double.NaN, false);
+            graph.FormatAxis(Models.Axis.AxisType.Bottom, graphAndTable.xName, false, double.NaN, double.NaN, double.NaN, false);
+            graph.FormatAxis(Models.Axis.AxisType.Left, graphAndTable.yName, false, double.NaN, double.NaN, double.NaN, false);
             graph.FontSize = 10;
             graph.Refresh();
 

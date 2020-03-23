@@ -37,7 +37,7 @@
         public Phenology Phenology = null;
         /// <summary>The arbitrator</summary>
         [Link(IsOptional = true)]
-        public OrganArbitrator Arbitrator = null;
+        public IArbitrator Arbitrator = null;
         /// <summary>The structure</summary>
         [Link(IsOptional = true)]
         public Structure Structure = null;
@@ -107,7 +107,29 @@
                 return new List<string>(cultivarNames).ToArray();
             }
         }
-        
+
+        /// <summary>Gets a list of cultivar names</summary>
+        public string[] CultivarList
+        {
+            get
+            {
+                List<string> cultivarNames = new List<string>();
+                foreach (Cultivar cultivar in this.Cultivars)
+                {
+                    string name = cultivar.Name;
+                    cultivarNames.Add(name);
+                    if (cultivar.Alias != null)
+                    {
+                        foreach (string alias in cultivar.Alias)
+                            cultivarNames.Add(alias);
+                    }
+                }
+                cultivarNames.Sort();
+                return cultivarNames.ToArray();
+            }
+        }
+
+
         /// <summary>A property to return all cultivar definitions.</summary>
         private List<Cultivar> Cultivars
         {
@@ -128,6 +150,9 @@
         /// </summary>
         public Plant()
         {
+            SowingData = new SowPlant2Type();
+            IsAlive = false;
+
             string photosyntheticPathway = (string) Apsim.Get(this, "Leaf.Photosynthesis.FCO2.PhotosyntheticPathway");
             IsC4 = photosyntheticPathway != null && photosyntheticPathway == "C4";
             Legumosity = 0;
@@ -166,7 +191,7 @@
         }
 
         /// <summary>Return true if plant is alive and in the ground.</summary>
-        public bool IsAlive { get { return SowingData != null; } }
+        public bool IsAlive { get; private set; }
 
         /// <summary>Return true if plant has emerged</summary>
         public bool IsEmerged
@@ -267,6 +292,9 @@
             IsEnding = false;
             DaysAfterEnding = 0;
             Clear();
+            IEnumerable<string> duplicates = CultivarList.GroupBy(x => x).Where(g => g.Count() > 1).Select(x => x.Key);
+            if (duplicates.Count() > 0)
+                throw new Exception("Duplicate Names in " + this.Name + " has duplicate cultivar names " + string.Join(",",duplicates));
         }
 
         /// <summary>Called when [phase changed].</summary>
@@ -335,6 +363,8 @@
             SowingData.BudNumber = budNumber;
             SowingData.RowSpacing = rowSpacing;
             SowingData.SkipRow = rowConfig;
+            IsAlive = true;
+
             this.Population = population;
 
             // Find cultivar and apply cultivar overrides.
@@ -415,6 +445,7 @@
             IsEnding = true;
             if (cultivarDefinition != null)
                 cultivarDefinition.Unapply();
+            IsAlive = false;
         }
         #endregion
 
@@ -422,11 +453,12 @@
         /// <summary>Clears this instance.</summary>
         private void Clear()
         {
-            SowingData = null;
+            SowingData = new SowPlant2Type();
             plantPopulation = 0.0;
+            IsAlive = false;
         }
         #endregion
-        
+
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
@@ -464,7 +496,7 @@
         public Biomass RemoveBiomass(double amountToRemove)
         {
             var defoliatedBiomass = new Biomass();
-            var preRemovalBiomass = AboveGround.Wt;
+            var preRemovalBiomass = AboveGround.Wt*10;
             foreach (var organ in Organs.Cast<IOrganDamage>())
             {
                 // These calculations convert organ live weight from g/m2 to kg/ha

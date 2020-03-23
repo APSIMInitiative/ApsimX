@@ -108,7 +108,10 @@ namespace UserInterface.Presenters
 
                     IGridCell cell = args.Grid.GetCell(col, row);
 
-                    string oldValue = args.Grid.DataSource.Rows[row][col]?.ToString();
+                    string oldValue = null;
+                    if (args.Grid.DataSource.Rows.Count > row)
+                        oldValue = args.Grid.DataSource.Rows[row][col]?.ToString();
+
                     string newValue = words[j];
 
                     changedArgs.Add(new GridCellChangedArgs(row, col, oldValue, newValue));

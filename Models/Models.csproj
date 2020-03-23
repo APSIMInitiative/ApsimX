@@ -40,53 +40,11 @@
     <None Remove="DataStore.cs.saved" />
     <None Remove="Manager.cs.rej" />
     <None Remove="Models.csproj.saved" />
-    <None Remove="Resources\Barley.json" />
-    <None Remove="Resources\Chicory.json" />
-    <None Remove="Resources\Eucalyptus.json" />
-    <None Remove="Resources\FodderBeet.json" />
-    <None Remove="Resources\GetPackage.R" />
-    <None Remove="Resources\Maize.json" />
-    <None Remove="Resources\Nutrient.json" />
-    <None Remove="Resources\Oats.json" />
-    <None Remove="Resources\OilPalm.json" />
-    <None Remove="Resources\Plantain.json" />
-    <None Remove="Resources\Potato.json" />
-    <None Remove="Resources\ruminant.prm" />
-    <None Remove="Resources\SCRUM.json" />
-    <None Remove="Resources\Slurp.json" />
-    <None Remove="Resources\Supplement.txt" />
-    <None Remove="Resources\SurfaceOrganicMatter.json" />
-    <None Remove="Resources\Wheat.json" />
-    <None Remove="Resources\WhiteClover.json" />
-    <None Remove="Settings.StyleCop" />
-    <None Remove="sgen.exe" />
-    <None Remove="Storage\DataStoreWriter.cs.saved" />
-    <None Remove="Storage\DeleteRowsCommand.cs.saved" />
-    <None Remove="StyleCop.Cache" />
+    <None Remove="Resources\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Barley.json" />
-    <EmbeddedResource Include="Resources\Chicory.json" />
-    <EmbeddedResource Include="Resources\Eucalyptus.json" />
-    <EmbeddedResource Include="Resources\FodderBeet.json" />
-    <EmbeddedResource Include="Resources\GetPackage.R" />
-    <EmbeddedResource Include="Resources\Maize.json" />
-    <EmbeddedResource Include="Resources\Nutrient.json" />
-    <EmbeddedResource Include="Resources\Oats.json" />
-    <EmbeddedResource Include="Resources\OilPalm.json" />
-    <EmbeddedResource Include="Resources\Plantain.json" />
-    <EmbeddedResource Include="Resources\Potato.json" />
-    <EmbeddedResource Include="Resources\ruminant.prm" />
-    <EmbeddedResource Include="Resources\Scripts\CSharpExpressionTemplate.cs" />
-    <EmbeddedResource Include="Resources\SCRUM.json" />
-    <EmbeddedResource Include="Resources\Slurp.json" />
-    <EmbeddedResource Include="Resources\Supplement.txt" />
-    <EmbeddedResource Include="Resources\SurfaceOrganicMatter.json" />
-    <EmbeddedResource Include="Resources\Wheat.json" />
-    <EmbeddedResource Include="Resources\WhiteClover.json" />
-    <EmbeddedResource Include="Resources\Scripts\GraphPanelScriptTemplate.cs" />
-    <EmbeddedResource Include="Resources\GRangeLandUnits.txt" />
+    <EmbeddedResource Include="Resources\**" />
   </ItemGroup>
 
   <ItemGroup>

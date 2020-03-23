@@ -1,7 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 67,
+  "Version": 84,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -52,6 +53,8 @@
           "$type": "Models.Core.Zone, Models",
           "Area": 1.0,
           "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
           "Name": "paddock",
           "Children": [
             {
@@ -62,6 +65,7 @@
               "d_interception": 0.0,
               "soil_albedo": 0.23,
               "SoilHeatFluxFraction": 0.4,
+              "MinimumHeightDiffForNewLayer": 0.0,
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
@@ -72,13 +76,14 @@
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "Canopies": [],
               "InitialResidueName": "wheat_stubble",
               "InitialResidueType": "wheat",
               "InitialResidueMass": 0.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 80.0,
-              "FractionFaecesAdded": 0.5,
+              "FractionFaecesAdded": 1.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
               "IncludeInDocumentation": true,
@@ -192,6 +197,8 @@
                     300.0
                   ],
                   "ParticleSizeClay": null,
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
                   "BD": [
                     1.02,
                     1.03,
@@ -340,6 +347,7 @@
                     0.0,
                     0.0
                   ],
+                  "PrecipitationInterception": 0.0,
                   "Name": "SoilWater",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -457,17 +465,17 @@
                     300.0
                   ],
                   "Carbon": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01
                   ],
                   "SoilCNRatio": [
                     12.5,
@@ -623,7 +631,6 @@
                 "[Soil].SATmm as sat_dep",
                 "[Soil].DULmm as dul_dep",
                 "[Soil].LL15mm as ll15_dep",
-                "[Soil].SoilWater.AIRDRYmm as air_dry_dep",
                 "[Clock].Today",
                 "[Weather].Rain as rain",
                 "[Soil].SoilWater.SWmm as sw_dep",
@@ -690,6 +697,8 @@
           "$type": "Models.Core.Zone, Models",
           "Area": 1.0,
           "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
           "Name": "paddock",
           "Children": [
             {
@@ -700,6 +709,7 @@
               "d_interception": 0.0,
               "soil_albedo": 0.23,
               "SoilHeatFluxFraction": 0.4,
+              "MinimumHeightDiffForNewLayer": 0.0,
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
@@ -710,13 +720,14 @@
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "Canopies": [],
               "InitialResidueName": "wheat_stubble",
               "InitialResidueType": "wheat",
               "InitialResidueMass": 0.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 80.0,
-              "FractionFaecesAdded": 0.5,
+              "FractionFaecesAdded": 1.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
               "IncludeInDocumentation": true,
@@ -775,17 +786,17 @@
                   "NO3N": null,
                   "NH4N": null,
                   "SW": [
-                    0.54,
+                    0.59,
+                    0.58,
+                    0.59,
+                    0.58,
+                    0.57,
+                    0.55,
+                    0.55,
                     0.53,
-                    0.29,
-                    0.54,
-                    0.3,
-                    0.5,
-                    0.32,
-                    0.48,
-                    0.34,
-                    0.46,
-                    0.36
+                    0.52,
+                    0.51,
+                    0.49
                   ],
                   "OC": null,
                   "EC": null,
@@ -830,6 +841,8 @@
                     300.0
                   ],
                   "ParticleSizeClay": null,
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
                   "BD": [
                     1.02,
                     1.03,
@@ -978,6 +991,7 @@
                     0.0,
                     0.0
                   ],
+                  "PrecipitationInterception": 0.0,
                   "Name": "SoilWater",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1095,17 +1109,17 @@
                     300.0
                   ],
                   "Carbon": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01
                   ],
                   "SoilCNRatio": [
                     12.5,
@@ -1261,7 +1275,6 @@
                 "[Soil].SATmm as sat_dep",
                 "[Soil].DULmm as dul_dep",
                 "[Soil].LL15mm as ll15_dep",
-                "[Soil].SoilWater.AIRDRYmm as air_dry_dep",
                 "[Clock].Today",
                 "[Weather].Rain as rain",
                 "[Soil].SoilWater.SWmm as sw_dep",
@@ -1328,6 +1341,8 @@
           "$type": "Models.Core.Zone, Models",
           "Area": 1.0,
           "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
           "Name": "paddock",
           "Children": [
             {
@@ -1338,6 +1353,7 @@
               "d_interception": 0.0,
               "soil_albedo": 0.23,
               "SoilHeatFluxFraction": 0.4,
+              "MinimumHeightDiffForNewLayer": 0.0,
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
@@ -1348,13 +1364,14 @@
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "Canopies": [],
               "InitialResidueName": "wheat_stubble",
               "InitialResidueType": "wheat",
               "InitialResidueMass": 0.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 80.0,
-              "FractionFaecesAdded": 0.5,
+              "FractionFaecesAdded": 1.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
               "IncludeInDocumentation": true,
@@ -1468,6 +1485,8 @@
                     300.0
                   ],
                   "ParticleSizeClay": null,
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
                   "BD": [
                     1.02,
                     1.03,
@@ -1616,6 +1635,7 @@
                     0.0,
                     0.0
                   ],
+                  "PrecipitationInterception": 0.0,
                   "Name": "SoilWater",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1733,17 +1753,17 @@
                     300.0
                   ],
                   "Carbon": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01
                   ],
                   "SoilCNRatio": [
                     12.5,
@@ -1902,7 +1922,6 @@
                 "[Soil].SATmm as sat_dep",
                 "[Soil].DULmm as dul_dep",
                 "[Soil].LL15mm as ll15_dep",
-                "[Soil].SoilWater.AIRDRYmm as air_dry_dep",
                 "[Soil].SoilWater.SWmm as sw_dep",
                 "[Soil].SoilWater.Flux as flux",
                 "[Soil].SoilWater.Flow as flow",
@@ -1968,6 +1987,8 @@
           "$type": "Models.Core.Zone, Models",
           "Area": 1.0,
           "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
           "Name": "paddock",
           "Children": [
             {
@@ -1978,6 +1999,7 @@
               "d_interception": 0.0,
               "soil_albedo": 0.23,
               "SoilHeatFluxFraction": 0.4,
+              "MinimumHeightDiffForNewLayer": 0.0,
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
@@ -2002,13 +2024,14 @@
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "Canopies": [],
               "InitialResidueName": "wheat_stubble",
               "InitialResidueType": "wheat",
               "InitialResidueMass": 0.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 80.0,
-              "FractionFaecesAdded": 0.5,
+              "FractionFaecesAdded": 1.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
               "IncludeInDocumentation": true,
@@ -2122,6 +2145,8 @@
                     300.0
                   ],
                   "ParticleSizeClay": null,
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
                   "BD": [
                     1.02,
                     1.03,
@@ -2270,6 +2295,7 @@
                     0.0,
                     0.0
                   ],
+                  "PrecipitationInterception": 0.0,
                   "Name": "SoilWater",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -2387,17 +2413,17 @@
                     300.0
                   ],
                   "Carbon": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01
                   ],
                   "SoilCNRatio": [
                     12.5,
@@ -2554,15 +2580,12 @@
                 "[Soil].DULmm as dul_dep",
                 "[Soil].SoilWater.SWmm as sw_dep",
                 "[Soil].LL15mm as ll15_dep",
-                "[Soil].SoilWater.AIRDRYmm as air_dry_dep",
                 "[Soil].SoilWater.Flux as flux",
                 "[Soil].SoilWater.Drainage as drain",
                 "[Soil].SoilWater.Runoff as runoff",
                 "[Weather].Rain as rain",
                 "[Clock].Today.DayOfYear as day",
                 "[Clock].Today",
-                "[Soil].SoilWater.u as u",
-                "[Soil].SoilWater.cona as cona",
                 "[Soil].SoilWater.t as t",
                 "[Soil].SoilWater.Es as es",
                 "[Soil].SoilWater.Eo as eo",
@@ -2629,6 +2652,8 @@
           "$type": "Models.Core.Zone, Models",
           "Area": 1.0,
           "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
           "Name": "paddock",
           "Children": [
             {
@@ -2639,6 +2664,7 @@
               "d_interception": 0.0,
               "soil_albedo": 0.23,
               "SoilHeatFluxFraction": 0.4,
+              "MinimumHeightDiffForNewLayer": 0.0,
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
@@ -2649,13 +2675,14 @@
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "Canopies": [],
               "InitialResidueName": "wheat_stubble",
               "InitialResidueType": "wheat",
               "InitialResidueMass": 0.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 80.0,
-              "FractionFaecesAdded": 0.5,
+              "FractionFaecesAdded": 1.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
               "IncludeInDocumentation": true,
@@ -2714,17 +2741,17 @@
                   "NO3N": null,
                   "NH4N": null,
                   "SW": [
-                    0.0,
-                    0.0,
-                    0.79,
-                    0.79,
-                    0.79,
-                    0.79,
-                    0.6,
-                    0.6,
-                    0.6,
-                    0.6,
-                    0.6
+                    0.5,
+                    0.5,
+                    0.5,
+                    0.5,
+                    0.5,
+                    0.5,
+                    0.5,
+                    0.5,
+                    0.5,
+                    0.5,
+                    0.5
                   ],
                   "OC": null,
                   "EC": null,
@@ -2769,6 +2796,8 @@
                     300.0
                   ],
                   "ParticleSizeClay": null,
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
                   "BD": [
                     1.02,
                     1.03,
@@ -2929,6 +2958,7 @@
                     0.0,
                     0.0
                   ],
+                  "PrecipitationInterception": 0.0,
                   "Name": "SoilWater",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -3046,17 +3076,17 @@
                     300.0
                   ],
                   "Carbon": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01
                   ],
                   "SoilCNRatio": [
                     12.5,
@@ -3212,7 +3242,6 @@
                 "[Soil].SATmm as sat_dep",
                 "[Soil].DULmm as dul_dep",
                 "[Soil].LL15mm as ll15_dep",
-                "[Soil].SoilWater.AIRDRYmm as air_dry_dep",
                 "[Clock].Today",
                 "[Weather].Rain as rain",
                 "[Soil].SoilWater.Runoff as runoff",
@@ -3281,6 +3310,8 @@
           "$type": "Models.Core.Zone, Models",
           "Area": 1.0,
           "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
           "Name": "paddock",
           "Children": [
             {
@@ -3291,6 +3322,7 @@
               "d_interception": 0.0,
               "soil_albedo": 0.23,
               "SoilHeatFluxFraction": 0.4,
+              "MinimumHeightDiffForNewLayer": 0.0,
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
@@ -3301,13 +3333,14 @@
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "Canopies": [],
               "InitialResidueName": "wheat_stubble",
               "InitialResidueType": "wheat",
               "InitialResidueMass": 0.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 80.0,
-              "FractionFaecesAdded": 0.5,
+              "FractionFaecesAdded": 1.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
               "IncludeInDocumentation": true,
@@ -3421,6 +3454,8 @@
                     300.0
                   ],
                   "ParticleSizeClay": null,
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
                   "BD": [
                     1.02,
                     1.03,
@@ -3569,6 +3604,7 @@
                     8.0,
                     8.0
                   ],
+                  "PrecipitationInterception": 0.0,
                   "Name": "SoilWater",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -3686,17 +3722,17 @@
                     300.0
                   ],
                   "Carbon": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01
                   ],
                   "SoilCNRatio": [
                     12.5,
@@ -3852,7 +3888,6 @@
                 "[Soil].SATmm as sat_dep",
                 "[Soil].DULmm as dul_dep",
                 "[Soil].LL15mm as ll15_dep",
-                "[Soil].SoilWater.AIRDRYmm as air_dry_dep",
                 "[Clock].Today",
                 "[Weather].Rain as rain",
                 "[Soil].SoilWater.LateralOutflow as outflow_lat",
@@ -3920,6 +3955,8 @@
           "$type": "Models.Core.Zone, Models",
           "Area": 1.0,
           "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
           "Name": "paddock",
           "Children": [
             {
@@ -3930,6 +3967,7 @@
               "d_interception": 0.0,
               "soil_albedo": 0.23,
               "SoilHeatFluxFraction": 0.4,
+              "MinimumHeightDiffForNewLayer": 0.0,
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
@@ -3940,13 +3978,14 @@
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "Canopies": [],
               "InitialResidueName": "wheat_stubble",
               "InitialResidueType": "wheat",
               "InitialResidueMass": 1000.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 80.0,
-              "FractionFaecesAdded": 0.5,
+              "FractionFaecesAdded": 1.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOM",
               "IncludeInDocumentation": true,
@@ -4074,6 +4113,8 @@
                     300.0
                   ],
                   "ParticleSizeClay": null,
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
                   "BD": [
                     1.02,
                     1.03,
@@ -4222,6 +4263,7 @@
                     0.0,
                     0.0
                   ],
+                  "PrecipitationInterception": 0.0,
                   "Name": "SoilWater",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -4339,17 +4381,17 @@
                     300.0
                   ],
                   "Carbon": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01
                   ],
                   "SoilCNRatio": [
                     12.5,
@@ -4506,15 +4548,12 @@
                 "[Soil].DULmm as dul_dep",
                 "[Soil].SoilWater.SWmm as sw_dep",
                 "[Soil].LL15mm as ll15_dep",
-                "[Soil].SoilWater.AIRDRYmm as air_dry_dep",
                 "[Soil].SoilWater.Flux as flux",
                 "[Soil].SoilWater.Drainage as drain",
                 "[Soil].SoilWater.Runoff as runoff",
                 "[Weather].Rain as rain",
                 "[Clock].Today.DayOfYear as day",
                 "[Clock].Today",
-                "[Soil].SoilWater.u as u",
-                "[Soil].SoilWater.cona as cona",
                 "[Soil].SoilWater.t as t",
                 "[SurfaceOrganicMatter].Cover as Cover",
                 "[Soil].SoilWater.Es as es",
@@ -4582,6 +4621,8 @@
           "$type": "Models.Core.Zone, Models",
           "Area": 1.0,
           "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
           "Name": "paddock",
           "Children": [
             {
@@ -4592,6 +4633,7 @@
               "d_interception": 0.0,
               "soil_albedo": 0.23,
               "SoilHeatFluxFraction": 0.4,
+              "MinimumHeightDiffForNewLayer": 0.0,
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
@@ -4602,13 +4644,14 @@
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "Canopies": [],
               "InitialResidueName": "wheat_stubble",
               "InitialResidueType": "wheat",
               "InitialResidueMass": 5000.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 80.0,
-              "FractionFaecesAdded": 0.5,
+              "FractionFaecesAdded": 1.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOM",
               "IncludeInDocumentation": true,
@@ -4722,6 +4765,8 @@
                     300.0
                   ],
                   "ParticleSizeClay": null,
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
                   "BD": [
                     1.02,
                     1.03,
@@ -4870,6 +4915,7 @@
                     0.0,
                     0.0
                   ],
+                  "PrecipitationInterception": 0.0,
                   "Name": "SoilWater",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -4987,17 +5033,17 @@
                     300.0
                   ],
                   "Carbon": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01
                   ],
                   "SoilCNRatio": [
                     12.5,
@@ -5157,7 +5203,6 @@
                 "[Soil].SATmm as sat_dep",
                 "[Soil].DULmm as dul_dep",
                 "[Soil].LL15mm as ll15_dep",
-                "[Soil].SoilWater.AIRDRYmm as air_dry_dep",
                 "[Soil].SoilWater.SWmm as sw_dep",
                 "[Soil].SoilWater.Flux as flux",
                 "[Soil].SoilWater.Flow as flow",
@@ -5223,6 +5268,8 @@
           "$type": "Models.Core.Zone, Models",
           "Area": 1.0,
           "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
           "Name": "paddock",
           "Children": [
             {
@@ -5233,6 +5280,7 @@
               "d_interception": 0.0,
               "soil_albedo": 0.23,
               "SoilHeatFluxFraction": 0.4,
+              "MinimumHeightDiffForNewLayer": 0.0,
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
@@ -5243,13 +5291,14 @@
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "Canopies": [],
               "InitialResidueName": "wheat_stubble",
               "InitialResidueType": "wheat",
               "InitialResidueMass": 0.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 80.0,
-              "FractionFaecesAdded": 0.5,
+              "FractionFaecesAdded": 1.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
               "IncludeInDocumentation": true,
@@ -5363,6 +5412,8 @@
                     300.0
                   ],
                   "ParticleSizeClay": null,
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
                   "BD": [
                     1.02,
                     1.03,
@@ -5511,6 +5562,7 @@
                     0.0,
                     0.0
                   ],
+                  "PrecipitationInterception": 0.0,
                   "Name": "SoilWater",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -5628,17 +5680,17 @@
                     300.0
                   ],
                   "Carbon": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01
                   ],
                   "SoilCNRatio": [
                     12.5,
@@ -5819,7 +5871,6 @@
                 "[Soil].SATmm as sat_dep",
                 "[Soil].DULmm as dul_dep",
                 "[Soil].LL15mm as ll15_dep",
-                "[Soil].SoilWater.AIRDRYmm as air_dry_dep",
                 "[Soil].SoilWater.SWmm as sw_dep",
                 "[Soil].SoilWater.Flux as flux",
                 "[Soil].SoilWater.Flow as flow",
@@ -5884,6 +5935,8 @@
           "$type": "Models.Core.Zone, Models",
           "Area": 1.0,
           "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
           "Name": "paddock",
           "Children": [
             {
@@ -5894,6 +5947,7 @@
               "d_interception": 0.0,
               "soil_albedo": 0.23,
               "SoilHeatFluxFraction": 0.4,
+              "MinimumHeightDiffForNewLayer": 0.0,
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
@@ -5904,13 +5958,14 @@
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "Canopies": [],
               "InitialResidueName": "wheat_stubble",
               "InitialResidueType": "wheat",
               "InitialResidueMass": 0.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 80.0,
-              "FractionFaecesAdded": 0.5,
+              "FractionFaecesAdded": 1.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
               "IncludeInDocumentation": true,
@@ -6024,6 +6079,8 @@
                     300.0
                   ],
                   "ParticleSizeClay": null,
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
                   "BD": [
                     1.02,
                     1.03,
@@ -6172,6 +6229,7 @@
                     0.0,
                     0.0
                   ],
+                  "PrecipitationInterception": 0.0,
                   "Name": "SoilWater",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -6289,17 +6347,17 @@
                     300.0
                   ],
                   "Carbon": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01
                   ],
                   "SoilCNRatio": [
                     12.5,
@@ -6524,7 +6582,6 @@
                 "[Soil].SATmm as sat_dep",
                 "[Soil].DULmm as dul_dep",
                 "[Soil].LL15mm as ll15_dep",
-                "[Soil].SoilWater.AIRDRYmm as air_dry_dep",
                 "[Soil].SoilWater.SWmm as sw_dep",
                 "[Soil].SoilWater.Flux as flux",
                 "[Soil].SoilWater.Flow as flow",
@@ -6589,6 +6646,8 @@
           "$type": "Models.Core.Zone, Models",
           "Area": 1.0,
           "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
           "Name": "paddock",
           "Children": [
             {
@@ -6599,6 +6658,7 @@
               "d_interception": 0.0,
               "soil_albedo": 0.23,
               "SoilHeatFluxFraction": 0.4,
+              "MinimumHeightDiffForNewLayer": 0.0,
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
@@ -6609,13 +6669,14 @@
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "Canopies": [],
               "InitialResidueName": "wheat_stubble",
               "InitialResidueType": "wheat",
               "InitialResidueMass": 0.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 80.0,
-              "FractionFaecesAdded": 0.5,
+              "FractionFaecesAdded": 1.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
               "IncludeInDocumentation": true,
@@ -6729,6 +6790,8 @@
                     300.0
                   ],
                   "ParticleSizeClay": null,
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
                   "BD": [
                     1.02,
                     1.03,
@@ -6877,6 +6940,7 @@
                     0.0,
                     0.0
                   ],
+                  "PrecipitationInterception": 0.0,
                   "Name": "SoilWater",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -6994,17 +7058,17 @@
                     300.0
                   ],
                   "Carbon": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01
                   ],
                   "SoilCNRatio": [
                     12.5,
@@ -7287,13 +7351,11 @@
               "$type": "Models.Report.Report, Models",
               "VariableNames": [
                 "[Clock].Today",
-                "[Soil].SoilWater.irrigation_layer",
                 "[Irrigation].IrrigationApplied as irrigation",
                 "[Soil].Thickness as dlayer",
                 "[Soil].SATmm as sat_dep",
                 "[Soil].DULmm as dul_dep",
                 "[Soil].LL15mm as ll15_dep",
-                "[Soil].SoilWater.AIRDRYmm as air_dry_dep",
                 "[Weather].Rain as rain",
                 "[Soil].SoilWater.SWmm as sw_dep",
                 "[Soil].SoilWater.Flow as flow",
@@ -7364,6 +7426,8 @@
               "$type": "Models.Core.Zone, Models",
               "Area": 1.0,
               "Slope": 0.0,
+              "AspectAngle": 0.0,
+              "Altitude": 50.0,
               "Name": "paddock",
               "Children": [
                 {
@@ -7374,6 +7438,7 @@
                   "d_interception": 0.0,
                   "soil_albedo": 0.23,
                   "SoilHeatFluxFraction": 0.4,
+                  "MinimumHeightDiffForNewLayer": 0.0,
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
@@ -7384,13 +7449,14 @@
                 },
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                  "Canopies": [],
                   "InitialResidueName": "wheat_stubble",
                   "InitialResidueType": "wheat",
                   "InitialResidueMass": 0.0,
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 80.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": true,
@@ -7564,6 +7630,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.02,
                         1.03,
@@ -7712,6 +7780,7 @@
                         0.0,
                         0.0
                       ],
+                      "PrecipitationInterception": 0.0,
                       "Name": "SoilWater",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -7829,17 +7898,17 @@
                         300.0
                       ],
                       "Carbon": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01
                       ],
                       "SoilCNRatio": [
                         12.5,
@@ -7954,17 +8023,17 @@
                         93.333333333333329
                       ],
                       "PH": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
+                        3.5,
+                        3.5,
+                        3.5,
+                        3.5,
+                        3.5,
+                        3.5,
+                        3.5,
+                        3.5,
+                        3.5,
+                        3.5,
+                        3.5
                       ],
                       "CL": null,
                       "EC": null,
@@ -7995,7 +8064,6 @@
                     "[Soil].SATmm as sat_dep",
                     "[Soil].DULmm as dul_dep",
                     "[Soil].LL15mm as ll15_dep",
-                    "[Soil].SoilWater.AIRDRYmm as air_dry_dep",
                     "[Weather].Rain as rain",
                     "[Soil].SoilWater.SWmm as sw_dep",
                     "[Soil].SoilWater.Flux as flux",
@@ -8068,6 +8136,8 @@
               "$type": "Models.Core.Zone, Models",
               "Area": 1.0,
               "Slope": 0.0,
+              "AspectAngle": 0.0,
+              "Altitude": 50.0,
               "Name": "paddock",
               "Children": [
                 {
@@ -8078,6 +8148,7 @@
                   "d_interception": 0.0,
                   "soil_albedo": 0.23,
                   "SoilHeatFluxFraction": 0.4,
+                  "MinimumHeightDiffForNewLayer": 0.0,
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
@@ -8088,13 +8159,14 @@
                 },
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                  "Canopies": [],
                   "InitialResidueName": "wheat_stubble",
                   "InitialResidueType": "wheat",
                   "InitialResidueMass": 0.0,
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 80.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": true,
@@ -8268,6 +8340,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.02,
                         1.03,
@@ -8416,6 +8490,7 @@
                         0.0,
                         0.0
                       ],
+                      "PrecipitationInterception": 0.0,
                       "Name": "SoilWater",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -8533,17 +8608,17 @@
                         300.0
                       ],
                       "Carbon": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01
                       ],
                       "SoilCNRatio": [
                         12.5,
@@ -8658,17 +8733,17 @@
                         93.333333333333329
                       ],
                       "PH": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
+                        3.5,
+                        3.5,
+                        3.5,
+                        3.5,
+                        3.5,
+                        3.5,
+                        3.5,
+                        3.5,
+                        3.5,
+                        3.5,
+                        3.5
                       ],
                       "CL": null,
                       "EC": null,
@@ -8699,7 +8774,6 @@
                     "[Soil].SATmm as sat_dep",
                     "[Soil].DULmm as dul_dep",
                     "[Soil].LL15mm as ll15_dep",
-                    "[Soil].SoilWater.AIRDRYmm as air_dry_dep",
                     "[Weather].Rain as rain",
                     "[Soil].SoilWater.SWmm as sw_dep",
                     "[Soil].SoilWater.Flux as flux",
@@ -8709,7 +8783,6 @@
                     "[Clock].Today",
                     "[Soil].SoilWater.FlowNO3 as flow_no3",
                     "[Soil].SoilWater.FlowNH4 as flow_nh4",
-                    "[Soil].SoilWater.Flow_urea as flow_urea",
                     "[Soil].SoilNitrogen.NO3.kgha as no3",
                     "[Soil].SoilNitrogen.NH4.kgha as nh4",
                     "[Soil].SoilNitrogen.Urea.kgha as urea"
@@ -8772,6 +8845,8 @@
               "$type": "Models.Core.Zone, Models",
               "Area": 1.0,
               "Slope": 0.0,
+              "AspectAngle": 0.0,
+              "Altitude": 50.0,
               "Name": "paddock",
               "Children": [
                 {
@@ -8782,6 +8857,7 @@
                   "d_interception": 0.0,
                   "soil_albedo": 0.23,
                   "SoilHeatFluxFraction": 0.4,
+                  "MinimumHeightDiffForNewLayer": 0.0,
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
@@ -8792,13 +8868,14 @@
                 },
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                  "Canopies": [],
                   "InitialResidueName": "wheat_stubble",
                   "InitialResidueType": "wheat",
                   "InitialResidueMass": 0.0,
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 80.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": true,
@@ -8912,6 +8989,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.02,
                         1.03,
@@ -9060,6 +9139,7 @@
                         0.0,
                         0.0
                       ],
+                      "PrecipitationInterception": 0.0,
                       "Name": "SoilWater",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -9177,17 +9257,17 @@
                         300.0
                       ],
                       "Carbon": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01,
+                        0.01
                       ],
                       "SoilCNRatio": [
                         12.5,
@@ -9302,17 +9382,17 @@
                         0.0
                       ],
                       "PH": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
+                        3.5,
+                        3.5,
+                        3.5,
+                        3.5,
+                        3.5,
+                        3.5,
+                        3.5,
+                        3.5,
+                        3.5,
+                        3.5,
+                        3.5
                       ],
                       "CL": null,
                       "EC": null,
@@ -9380,7 +9460,6 @@
                     "[Soil].Thickness as dlayer",
                     "[Soil].DULmm as dul_dep",
                     "[Soil].LL15mm as ll15_dep",
-                    "[Soil].SoilWater.AIRDRYmm as air_dry_dep",
                     "[Soil].SoilWater.Flux as flux",
                     "[Soil].SoilWater.Flow as flow",
                     "[Soil].SoilWater.Drainage as drain",
@@ -9464,6 +9543,8 @@
                   "$type": "Models.Core.Zone, Models",
                   "Area": 1.0,
                   "Slope": 0.0,
+                  "AspectAngle": 0.0,
+                  "Altitude": 50.0,
                   "Name": "paddock",
                   "Children": [
                     {
@@ -9474,6 +9555,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
@@ -9484,13 +9566,14 @@
                     },
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                      "Canopies": [],
                       "InitialResidueName": "wheat_stubble",
                       "InitialResidueType": "wheat",
                       "InitialResidueMass": 0.0,
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 80.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": true,
@@ -9604,6 +9687,8 @@
                             300.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.02,
                             1.03,
@@ -9752,6 +9837,7 @@
                             0.0,
                             0.0
                           ],
+                          "PrecipitationInterception": 0.0,
                           "Name": "SoilWater",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -9869,17 +9955,17 @@
                             300.0
                           ],
                           "Carbon": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01
                           ],
                           "SoilCNRatio": [
                             12.5,
@@ -10044,7 +10130,6 @@
                         "[Soil].SATmm as sat_dep",
                         "[Soil].DULmm as dul_dep",
                         "[Soil].LL15mm as ll15_dep",
-                        "[Soil].SoilWater.AIRDRYmm as air_dry_dep",
                         "[Clock].Today",
                         "[Weather].Rain as rain",
                         "[Soil].SoilWater.Runoff as runoff",
@@ -10151,6 +10236,8 @@
                   "$type": "Models.Core.Zone, Models",
                   "Area": 1.0,
                   "Slope": 0.0,
+                  "AspectAngle": 0.0,
+                  "Altitude": 50.0,
                   "Name": "paddock",
                   "Children": [
                     {
@@ -10161,6 +10248,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "Micromet",
@@ -10171,13 +10259,14 @@
                     },
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                      "Canopies": [],
                       "InitialResidueName": "wheat_stubble",
                       "InitialResidueType": "wheat",
                       "InitialResidueMass": 0.0,
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 80.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": true,
@@ -10291,6 +10380,8 @@
                             300.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.02,
                             1.03,
@@ -10478,6 +10569,7 @@
                             0.0
                           ],
                           "KLAT": null,
+                          "PrecipitationInterception": 0.0,
                           "Name": "SoilWater",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -10595,17 +10687,17 @@
                             300.0
                           ],
                           "Carbon": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01
                           ],
                           "SoilCNRatio": [
                             12.5,
@@ -10757,6 +10849,7 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Slurp",
+                      "IsAlive": false,
                       "IsEnding": false,
                       "DaysAfterEnding": 0,
                       "ResourceName": "Slurp",
@@ -10773,13 +10866,11 @@
                         "[Soil].SoilWater.Runoff as runoff",
                         "[Slurp].Leaf.CoverGreen as Cover_green",
                         "[Slurp].Leaf.CoverTotal as Cover_tot",
-                        "[Slurp].Leaf.HeightFunction as Height",
                         "[Slurp].Leaf.LAI as LAI",
                         "[Soil].Thickness as dlayer",
                         "[Soil].SATmm as sat_dep",
                         "[Soil].DULmm as dul_dep",
                         "[Soil].LL15mm as ll15_dep",
-                        "[Soil].SoilWater.AIRDRYmm as air_dry_dep",
                         "[Soil].SoilWater.SWmm as sw_dep",
                         "[Soil].SoilWater.Flux as flux",
                         "[Soil].SoilWater.Flow as flow",
@@ -10874,6 +10965,8 @@
                   "$type": "Models.Core.Zone, Models",
                   "Area": 1.0,
                   "Slope": 0.0,
+                  "AspectAngle": 0.0,
+                  "Altitude": 50.0,
                   "Name": "paddock",
                   "Children": [
                     {
@@ -10884,6 +10977,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "Micromet",
@@ -10894,13 +10988,14 @@
                     },
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                      "Canopies": [],
                       "InitialResidueName": "wheat_stubble",
                       "InitialResidueType": "wheat",
                       "InitialResidueMass": 0.0,
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 80.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": true,
@@ -11014,6 +11109,8 @@
                             300.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.02,
                             1.03,
@@ -11201,6 +11298,7 @@
                             0.0
                           ],
                           "KLAT": null,
+                          "PrecipitationInterception": 0.0,
                           "Name": "SoilWater",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -11318,17 +11416,17 @@
                             300.0
                           ],
                           "Carbon": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01
                           ],
                           "SoilCNRatio": [
                             12.5,
@@ -11480,6 +11578,7 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Slurp",
+                      "IsAlive": false,
                       "IsEnding": false,
                       "DaysAfterEnding": 0,
                       "ResourceName": "Slurp",
@@ -11496,12 +11595,10 @@
                         "[Soil].SoilWater.Runoff as runoff",
                         "[Slurp].Leaf.CoverGreen as Cover_green",
                         "[Slurp].Leaf.CoverTotal as Cover_tot",
-                        "[Slurp].Leaf.HeightFunction as Height",
                         "[Soil].Thickness as dlayer",
                         "[Soil].SATmm as sat_dep",
                         "[Soil].DULmm as dul_dep",
                         "[Soil].LL15mm as ll15_dep",
-                        "[Soil].SoilWater.AIRDRYmm as air_dry_dep",
                         "[Soil].SoilWater.SWmm as sw_dep",
                         "[Soil].SoilWater.Flux as flux",
                         "[Soil].SoilWater.Flow as flow",
@@ -11596,6 +11693,8 @@
                   "$type": "Models.Core.Zone, Models",
                   "Area": 1.0,
                   "Slope": 0.0,
+                  "AspectAngle": 0.0,
+                  "Altitude": 50.0,
                   "Name": "paddock",
                   "Children": [
                     {
@@ -11606,6 +11705,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "Micromet",
@@ -11616,13 +11716,14 @@
                     },
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                      "Canopies": [],
                       "InitialResidueName": "wheat_stubble",
                       "InitialResidueType": "wheat",
                       "InitialResidueMass": 0.0,
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 80.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": true,
@@ -11736,6 +11837,8 @@
                             300.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.02,
                             1.03,
@@ -11923,6 +12026,7 @@
                             0.0
                           ],
                           "KLAT": null,
+                          "PrecipitationInterception": 0.0,
                           "Name": "SoilWater",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -12040,17 +12144,17 @@
                             300.0
                           ],
                           "Carbon": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01
                           ],
                           "SoilCNRatio": [
                             12.5,
@@ -12202,6 +12306,7 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Slurp",
+                      "IsAlive": false,
                       "IsEnding": false,
                       "DaysAfterEnding": 0,
                       "ResourceName": "Slurp",
@@ -12218,12 +12323,10 @@
                         "[Soil].SoilWater.Runoff as runoff",
                         "[Slurp].Leaf.CoverGreen as Cover_green",
                         "[Slurp].Leaf.CoverTotal as Cover_tot",
-                        "[Slurp].Leaf.HeightFunction as Height",
                         "[Soil].Thickness as dlayer",
                         "[Soil].SATmm as sat_dep",
                         "[Soil].DULmm as dul_dep",
                         "[Soil].LL15mm as ll15_dep",
-                        "[Soil].SoilWater.AIRDRYmm as air_dry_dep",
                         "[Soil].SoilWater.SWmm as sw_dep",
                         "[Soil].SoilWater.Flux as flux",
                         "[Soil].SoilWater.Flow as flow",
@@ -12318,6 +12421,8 @@
                   "$type": "Models.Core.Zone, Models",
                   "Area": 1.0,
                   "Slope": 0.0,
+                  "AspectAngle": 0.0,
+                  "Altitude": 50.0,
                   "Name": "paddock",
                   "Children": [
                     {
@@ -12328,6 +12433,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "Micromet",
@@ -12338,13 +12444,14 @@
                     },
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                      "Canopies": [],
                       "InitialResidueName": "wheat_stubble",
                       "InitialResidueType": "wheat",
                       "InitialResidueMass": 0.0,
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 80.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": true,
@@ -12458,6 +12565,8 @@
                             300.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.02,
                             1.03,
@@ -12695,6 +12804,7 @@
                             0.0
                           ],
                           "KLAT": null,
+                          "PrecipitationInterception": 0.0,
                           "Name": "SoilWater",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -12812,17 +12922,17 @@
                             300.0
                           ],
                           "Carbon": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01
                           ],
                           "SoilCNRatio": [
                             12.5,
@@ -12974,6 +13084,7 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Slurp",
+                      "IsAlive": false,
                       "IsEnding": false,
                       "DaysAfterEnding": 0,
                       "ResourceName": "Slurp",
@@ -13007,6 +13118,7 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Slurp",
+                      "IsAlive": false,
                       "IsEnding": false,
                       "DaysAfterEnding": 0,
                       "ResourceName": "Slurp",
@@ -13053,7 +13165,6 @@
                         "[Soil].SATmm as sat_dep",
                         "[Soil].DULmm as dul_dep",
                         "[Soil].LL15mm as ll15_dep",
-                        "[Soil].SoilWater.AIRDRYmm as air_dry_dep",
                         "[Soil].SoilWater.SWmm as sw_dep",
                         "[Soil].SoilWater.Flux as flux",
                         "[Soil].SoilWater.Flow as flow",
@@ -13102,7 +13213,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": null,
+                  "LegendOutsideGraph": false,
                   "Name": "Graph",
                   "Children": [
                     {
@@ -13122,8 +13235,8 @@
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Cover_tot",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": false,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -13157,7 +13270,7 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 },
                 {
@@ -13173,7 +13286,9 @@
                 }
               ],
               "LegendPosition": 0,
-              "DisabledSeries": null,
+              "LegendOrientation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "Graph",
               "Children": [
                 {
@@ -13193,8 +13308,8 @@
                   "TableName": "Report",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "runoff",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
@@ -13229,8 +13344,9 @@
       "Children": [
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "ErrorMessage": null,
-          "FileName": "OLD_Outputs\\Saturated Flow Only (OLD).out",
+          "FileNames": [
+            "OLD_Outputs\\Saturated Flow Only (OLD).out"
+          ],
           "Name": "Input",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -13239,8 +13355,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "ErrorMessage": null,
-          "FileName": "OLD_Outputs\\Unsaturated Flow Only (OLD).out",
+          "FileNames": [
+            "OLD_Outputs\\Unsaturated Flow Only (OLD).out"
+          ],
           "Name": "old_unsaturated",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -13249,8 +13366,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "ErrorMessage": null,
-          "FileName": "OLD_Outputs\\Runoff Only (OLD).out",
+          "FileNames": [
+            "OLD_Outputs\\Runoff Only (OLD).out"
+          ],
           "Name": "old_runoff",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -13259,8 +13377,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "ErrorMessage": "Specified cast is not valid.",
-          "FileName": "OLD_Outputs\\Soil Evaporation Only (OLD).out",
+          "FileNames": [
+            "OLD_Outputs\\Soil Evaporation Only (OLD).out"
+          ],
           "Name": "old_soil_evap",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -13269,8 +13388,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "ErrorMessage": null,
-          "FileName": "OLD_Outputs\\Ponding Only using KS (OLD).out",
+          "FileNames": [
+            "OLD_Outputs\\Ponding Only using KS (OLD).out"
+          ],
           "Name": "old_ponding",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -13279,8 +13399,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "ErrorMessage": null,
-          "FileName": "OLD_Outputs\\Ponding with Soil Evap (OLD).out",
+          "FileNames": [
+            "OLD_Outputs\\Ponding with Soil Evap (OLD).out"
+          ],
           "Name": "old_ponding_soil_evap",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -13289,8 +13410,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "ErrorMessage": null,
-          "FileName": "OLD_Outputs\\WaterTable Calculation (OLD).out",
+          "FileNames": [
+            "OLD_Outputs\\WaterTable Calculation (OLD).out"
+          ],
           "Name": "old_watertable_calc",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -13299,8 +13421,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "ErrorMessage": null,
-          "FileName": "OLD_Outputs\\Lateral Outflow Only (OLD).out",
+          "FileNames": [
+            "OLD_Outputs\\Lateral Outflow Only (OLD).out"
+          ],
           "Name": "old_lateral_outflow",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -13309,8 +13432,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "ErrorMessage": null,
-          "FileName": "OLD_Outputs\\Soil Evaporation with SurfaceOM (OLD).out",
+          "FileNames": [
+            "OLD_Outputs\\Soil Evaporation with SurfaceOM (OLD).out"
+          ],
           "Name": "old_soil_evap_surfaceom",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -13319,8 +13443,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "ErrorMessage": null,
-          "FileName": "OLD_Outputs\\Runoff with SurfaceOM (OLD).out",
+          "FileNames": [
+            "OLD_Outputs\\Runoff with SurfaceOM (OLD).out"
+          ],
           "Name": "old_runoff_surfaceom",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -13329,8 +13454,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "ErrorMessage": null,
-          "FileName": "OLD_Outputs\\Runoff after Tillage Event (OLD).out",
+          "FileNames": [
+            "OLD_Outputs\\Runoff after Tillage Event (OLD).out"
+          ],
           "Name": "old_runoff_tillage_event",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -13339,8 +13465,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "ErrorMessage": null,
-          "FileName": "OLD_Outputs\\Runoff with Irrigation (NEW).out",
+          "FileNames": [
+            "OLD_Outputs\\Runoff with Irrigation (NEW).out"
+          ],
           "Name": "new_runoff_irrigation",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -13349,8 +13476,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "ErrorMessage": null,
-          "FileName": "OLD_Outputs\\Subsurface Irrigation (NEW).out",
+          "FileNames": [
+            "OLD_Outputs\\Subsurface Irrigation (NEW).out"
+          ],
           "Name": "new_subsurface_irrigation",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -13359,8 +13487,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "ErrorMessage": null,
-          "FileName": "OLD_Outputs\\Solute - Saturated Flow Only (OLD).out",
+          "FileNames": [
+            "OLD_Outputs\\Solute - Saturated Flow Only (OLD).out"
+          ],
           "Name": "old_solute_saturated",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -13369,8 +13498,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "ErrorMessage": null,
-          "FileName": "OLD_Outputs\\Solute - Unsaturated Flow Only (OLD).out",
+          "FileNames": [
+            "OLD_Outputs\\Solute - Unsaturated Flow Only (OLD).out"
+          ],
           "Name": "old_solute_unsaturated",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -13379,8 +13509,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "ErrorMessage": null,
-          "FileName": "OLD_Outputs\\Solute - Irrigation (OLD).out",
+          "FileNames": [
+            "OLD_Outputs\\Solute - Irrigation (OLD).out"
+          ],
           "Name": "old_solute_irrigation",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -13389,8 +13520,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "ErrorMessage": null,
-          "FileName": "OLD_Outputs\\Setable Variables - Erosion (OLD).out",
+          "FileNames": [
+            "OLD_Outputs\\Setable Variables - Erosion (OLD).out"
+          ],
           "Name": "old_setable_vars_erosion",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -13399,8 +13531,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "ErrorMessage": null,
-          "FileName": "OLD_Outputs\\Setable Variables - Runoff (OLD).out",
+          "FileNames": [
+            "OLD_Outputs\\Setable Variables - Runoff (OLD).out"
+          ],
           "Name": "old_setable_vars_runoff",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -13409,8 +13542,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "ErrorMessage": null,
-          "FileName": "OLD_Outputs\\WaterTable - Set to a fixed depth (OLD).out",
+          "FileNames": [
+            "OLD_Outputs\\WaterTable - Set to a fixed depth (OLD).out"
+          ],
           "Name": "old_watertable_fixed_depth",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -13419,8 +13553,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "ErrorMessage": null,
-          "FileName": "OLD_Outputs\\Setable Variables - Water (OLD).out",
+          "FileNames": [
+            "OLD_Outputs\\Setable Variables - Water (OLD).out"
+          ],
           "Name": "old_setable_vars_water",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -13429,8 +13564,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "ErrorMessage": null,
-          "FileName": "%root%\\Tests\\Validation\\SoilWater\\Sensibility\\OLD_Outputs\\Runoff with Crop - Short (OLD).out",
+          "FileNames": [
+            "%root%\\Tests\\Validation\\SoilWater\\Sensibility\\OLD_Outputs\\Runoff with Crop - Short (OLD).out"
+          ],
           "Name": "old_runoff_crop_short",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -13439,8 +13575,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "ErrorMessage": null,
-          "FileName": "%root%\\Tests\\Validation\\SoilWater\\Sensibility\\OLD_Outputs\\Runoff with Crop - Tall (OLD).out",
+          "FileNames": [
+            "%root%\\Tests\\Validation\\SoilWater\\Sensibility\\OLD_Outputs\\Runoff with Crop - Tall (OLD).out"
+          ],
           "Name": "old_runoff_crop_tall",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -13449,8 +13586,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "ErrorMessage": null,
-          "FileName": "%root%\\Tests\\Validation\\SoilWater\\Sensibility\\OLD_Outputs\\Runoff with Intercropping (OLD).out",
+          "FileNames": [
+            "%root%\\Tests\\Validation\\SoilWater\\Sensibility\\OLD_Outputs\\Runoff with Intercropping (OLD).out"
+          ],
           "Name": "old_runoff_crop_intercrop",
           "Children": [],
           "IncludeInDocumentation": true,

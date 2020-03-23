@@ -1,4 +1,4 @@
-﻿namespace Models.Report
+namespace Models
 {
     using APSIM.Shared.Utilities;
     using Models.CLEM;
@@ -85,8 +85,8 @@
         /// <summary>An event handler to allow us to initialize ourselves.</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
-        [EventSubscribe("StartOfSimulation")]
-        private void OnStartOfSimulation(object sender, EventArgs e)
+        [EventSubscribe("FinalInitialise")]
+        private void OnFinalInitialise(object sender, EventArgs e)
         {
             DayAfterLastOutput = clock.Today;
             dataToWriteToDb = null;
@@ -209,8 +209,21 @@
 
             // Create a row ready for writing.
             List<object> valuesToWrite = new List<object>();
+            List<string> invalidVariables = new List<string>();
             for (int i = 0; i < columns.Count; i++)
-                valuesToWrite.Add(columns[i].GetValue());
+            {
+                try
+                {
+                    valuesToWrite.Add(columns[i].GetValue());
+                }
+                catch// (Exception err)
+                {
+                    // Should we include exception message?
+                    invalidVariables.Add(columns[i].Name);
+                }
+            }
+            if (invalidVariables != null && invalidVariables.Count > 0)
+                throw new Exception($"Error in report {Name}: Invalid report variables found:\n{string.Join("\n", invalidVariables)}");
 
             // Add row to our table that will be written to the db file
             dataToWriteToDb.Rows.Add(valuesToWrite);
@@ -282,8 +295,15 @@
 
             foreach (string fullVariableName in this.VariableNames)
             {
-                if (fullVariableName != string.Empty)
-                    this.columns.Add(ReportColumn.Create(fullVariableName, clock, storage.Writer, locator, events));
+                try
+                {
+                    if (fullVariableName != string.Empty)
+                        this.columns.Add(ReportColumn.Create(fullVariableName, clock, storage.Writer, locator, events));
+                }
+                catch (Exception err)
+                {
+                    throw new Exception($"Error while creating report column '{fullVariableName}'", err);
+                }
             }
         }
 

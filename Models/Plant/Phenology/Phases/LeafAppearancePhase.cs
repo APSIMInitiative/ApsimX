@@ -94,18 +94,12 @@ namespace Models.PMF.Phen
             First = true;
         }
         
-        /// <summary>Writes the summary.</summary>
-        /// <param name="writer">The writer.</param>
-        public void WriteSummary(TextWriter writer)
-        { writer.WriteLine("      " + Name); }
-
         //7. Private methode
         //-----------------------------------------------------------------------------------------------------------------
 
         /// <summary>Called when [simulation commencing].</summary>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        { ResetPhase(); }
+        private void OnSimulationCommencing(object sender, EventArgs e) { ResetPhase(); }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)

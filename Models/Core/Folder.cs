@@ -2,7 +2,8 @@
 {
     using Models.Core.Run;
     using Models.Factorial;
-    using Models.Graph;
+    using Models;
+    using Models.PMF;
     using Models.PMF.Interfaces;
     using System;
     using System.Collections.Generic;
@@ -24,6 +25,7 @@
     [ValidParent(ParentType = typeof(IOrgan))]
     [ValidParent(ParentType = typeof(Morris))]
     [ValidParent(ParentType = typeof(Sobol))]
+    [ValidParent(ParentType = typeof(BiomassTypeArbitrator))]
     public class Folder : Model, ICustomDocumentation
     {
         /// <summary>Show page of graphs?</summary>

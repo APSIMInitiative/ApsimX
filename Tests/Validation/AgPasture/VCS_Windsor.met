@@ -33,7 +33,7 @@ annual_average_pet = 754.8           !Average annual PET (mm/yr)
 average_windspeed = 2.9              !Average windspeed (m/s)
 
    Location         xDate          year           day          rain          mint          maxt          avgt          radn          wind          evap            vp            rh         rhmin         rhmax
-         ()            ()            ()            ()          (mm)          (oC)          (oC)          (oC)      (MJ/m^2)         (m/s)          (mm)         (hPa)           (%)           (%)           (%)
+         ()  (dd/MM/yyyy)            ()            ()          (mm)          (oC)          (oC)          (oC)      (MJ/m^2)         (m/s)          (mm)         (hPa)           (%)           (%)           (%)
 VCS_Windsor    01/01/1978          1978             1           0.0           7.7          16.8          12.2          16.8           3.2           3.5           8.3          59.1          43.4          79.0
 VCS_Windsor    02/01/1978          1978             2           0.0           6.6          21.5          14.1          31.7           3.2           7.3          11.7          73.3          45.6         100.0
 VCS_Windsor    03/01/1978          1978             3           0.0           7.8          24.7          16.2          26.7           3.2           6.1          13.1          57.4          42.1         100.0

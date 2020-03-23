@@ -2,7 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
-    using Models.Graph;
+    using Models;
     using Models.Storage;
     using NUnit.Framework;
     using System.Collections.Generic;
@@ -808,12 +808,12 @@
             Apsim.ParentAllChildren(folder);
 
             string data =
-                "SimulationName Col1  Col2\r\n" +
-                "            ()   ()   (g)\r\n" +
-                "          Sim1    1    10\r\n" +
-                "          Sim1    2    20\r\n" +
-                "          Sim2    1    30\r\n" +
-                "          Sim2    2    40\r\n";
+                "CheckpointName SimulationName Col1  Col2\r\n" +
+                "            ()             ()   ()   (g)\r\n" +
+                "       Current           Sim1    1    10\r\n" +
+                "       Current           Sim1    2    20\r\n" +
+                "       Current           Sim2    1    30\r\n" +
+                "       Current           Sim2    2    40\r\n";
 
             var reader = new TextStorageReader(data);
 
@@ -869,16 +869,16 @@
             Apsim.ParentAllChildren(folder);
 
             string data =
-                "  ABC  DEF Col1  Col2\r\n" +
-                "   ()   ()   ()   (g)\r\n" +
-                "    A    d    1    10\r\n" +
-                "    A    d    2    20\r\n" +
-                "    A    e    1    30\r\n" +
-                "    A    e    2    40\r\n" +
-                "    B    d    1    50\r\n" +
-                "    B    d    2    60\r\n" +
-                "    B    e    1    70\r\n" +
-                "    B    e    2    80\r\n";
+                " CheckpointName ABC  DEF Col1  Col2\r\n" +
+                "             ()  ()   ()   ()   (g)\r\n" +
+                "        Current   A    d    1    10\r\n" +
+                "        Current   A    d    2    20\r\n" +
+                "        Current   A    e    1    30\r\n" +
+                "        Current   A    e    2    40\r\n" +
+                "        Current   B    d    1    50\r\n" +
+                "        Current   B    d    2    60\r\n" +
+                "        Current   B    e    1    70\r\n" +
+                "        Current   B    e    2    80\r\n";
 
             var reader = new TextStorageReader(data);
 

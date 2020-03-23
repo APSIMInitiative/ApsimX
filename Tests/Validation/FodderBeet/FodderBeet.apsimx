@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 319,
-  "Version": 76,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-01-31",
+  "Version": 84,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -24,12 +24,7 @@
             "[Clock].Today",
             "[FodderBeet].AboveGround.N",
             "[FodderBeet].AboveGround.Wt",
-            "[FodderBeet].AboveGroundDead.N",
-            "[FodderBeet].AboveGroundDead.Wt",
-            "[FodderBeet].AboveGroundLive.N",
-            "[FodderBeet].AboveGroundLive.Wt",
             "[FodderBeet].Arbitrator.DM.TotalFixationSupply",
-            "[FodderBeet].Arbitrator.DMDemand",
             "[FodderBeet].Leaf.AppearedCohortNo",
             "[FodderBeet].Leaf.CohortParameters.MaxArea",
             "[FodderBeet].Leaf.CoverDead",
@@ -59,23 +54,12 @@
             "[FodderBeet].Petiole.Live.Wt",
             "[FodderBeet].Petiole.Live.N",
             "[FodderBeet].Petiole.NConc",
-            "[FodderBeet].Petiole.PercentWSC",
             "[FodderBeet].Phenology.AccumulatedThermalTime",
             "[FodderBeet].Phenology.CurrentPhaseName",
             "[FodderBeet].Phenology.CurrentStageName",
-            "[FodderBeet].Phenology.DailyVernalisation",
-            "[FodderBeet].Phenology.FlagLeafDAS",
-            "[FodderBeet].Phenology.FloweringDAS",
-            "[FodderBeet].Phenology.MaturityDAS",
             "[FodderBeet].Phenology.Photoperiod",
-            "[FodderBeet].Phenology.PhotoPeriodDeltaFunction",
-            "[FodderBeet].Phenology.SoilTemperatureFunction",
             "[FodderBeet].Phenology.Stage",
             "[FodderBeet].Phenology.ThermalTime",
-            "[FodderBeet].Phenology.Vrn1",
-            "[FodderBeet].Phenology.Vrn2",
-            "[FodderBeet].Phenology.Vrn4",
-            "[FodderBeet].Phenology.Zadok.Stage",
             "[FodderBeet].Root.Depth",
             "[FodderBeet].Root.Live.N",
             "[FodderBeet].Root.Live.NConc",
@@ -134,8 +118,9 @@
       "Children": [
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
-          "FileName": "0bserved.xlsx",
-          "FileNameMetadata": null,
+          "FileNames": [
+            "0bserved.xlsx"
+          ],
           "SheetNames": [
             "ObservedData"
           ],
@@ -2253,6 +2238,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -2607,6 +2593,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "FodderBeet",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "FodderBeet",
@@ -5474,6 +5461,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "FodderBeet",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "FodderBeet",
@@ -5490,6 +5478,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -8714,6 +8703,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "FodderBeet",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "FodderBeet",
@@ -8730,6 +8720,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -12363,6 +12354,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "FodderBeet",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "FodderBeet",
@@ -12521,6 +12513,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.3,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -17863,6 +17856,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "FodderBeet",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "FodderBeet",
@@ -17879,6 +17873,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -21969,6 +21964,7 @@
                                 {
                                   "$type": "Models.PMF.Plant, Models",
                                   "CropType": "FodderBeet",
+                                  "IsAlive": false,
                                   "IsEnding": false,
                                   "DaysAfterEnding": 0,
                                   "ResourceName": "FodderBeet",
@@ -22502,6 +22498,7 @@
                                   "d_interception": 0.0,
                                   "soil_albedo": 0.23,
                                   "SoilHeatFluxFraction": 0.4,
+                                  "MinimumHeightDiffForNewLayer": 0.0,
                                   "NightInterceptionFraction": 0.5,
                                   "ReferenceHeight": 2.0,
                                   "Name": "MicroClimate",
@@ -24320,6 +24317,7 @@
                                 {
                                   "$type": "Models.PMF.Plant, Models",
                                   "CropType": "FodderBeet",
+                                  "IsAlive": false,
                                   "IsEnding": false,
                                   "DaysAfterEnding": 0,
                                   "ResourceName": "FodderBeet",
@@ -24336,6 +24334,7 @@
                                   "d_interception": 0.0,
                                   "soil_albedo": 0.23,
                                   "SoilHeatFluxFraction": 0.4,
+                                  "MinimumHeightDiffForNewLayer": 0.0,
                                   "NightInterceptionFraction": 0.5,
                                   "ReferenceHeight": 2.0,
                                   "Name": "MicroClimate",
@@ -26317,6 +26316,7 @@
                                 {
                                   "$type": "Models.PMF.Plant, Models",
                                   "CropType": "FodderBeet",
+                                  "IsAlive": false,
                                   "IsEnding": false,
                                   "DaysAfterEnding": 0,
                                   "ResourceName": "FodderBeet",
@@ -26850,6 +26850,7 @@
                                   "d_interception": 0.0,
                                   "soil_albedo": 0.23,
                                   "SoilHeatFluxFraction": 0.4,
+                                  "MinimumHeightDiffForNewLayer": 0.0,
                                   "NightInterceptionFraction": 0.5,
                                   "ReferenceHeight": 2.0,
                                   "Name": "MicroClimate",
@@ -27228,6 +27229,7 @@
                                 {
                                   "$type": "Models.PMF.Plant, Models",
                                   "CropType": "FodderBeet",
+                                  "IsAlive": false,
                                   "IsEnding": false,
                                   "DaysAfterEnding": 0,
                                   "ResourceName": "FodderBeet",
@@ -27761,6 +27763,7 @@
                                   "d_interception": 0.0,
                                   "soil_albedo": 0.23,
                                   "SoilHeatFluxFraction": 0.4,
+                                  "MinimumHeightDiffForNewLayer": 0.0,
                                   "NightInterceptionFraction": 0.5,
                                   "ReferenceHeight": 2.0,
                                   "Name": "MicroClimate",
@@ -28820,6 +28823,7 @@
                                 {
                                   "$type": "Models.PMF.Plant, Models",
                                   "CropType": "FodderBeet",
+                                  "IsAlive": false,
                                   "IsEnding": false,
                                   "DaysAfterEnding": 0,
                                   "ResourceName": "FodderBeet",
@@ -29353,6 +29357,7 @@
                                   "d_interception": 0.0,
                                   "soil_albedo": 0.23,
                                   "SoilHeatFluxFraction": 0.4,
+                                  "MinimumHeightDiffForNewLayer": 0.0,
                                   "NightInterceptionFraction": 0.5,
                                   "ReferenceHeight": 2.0,
                                   "Name": "MicroClimate",
@@ -29731,6 +29736,7 @@
                                 {
                                   "$type": "Models.PMF.Plant, Models",
                                   "CropType": "FodderBeet",
+                                  "IsAlive": false,
                                   "IsEnding": false,
                                   "DaysAfterEnding": 0,
                                   "ResourceName": "FodderBeet",
@@ -30264,6 +30270,7 @@
                                   "d_interception": 0.0,
                                   "soil_albedo": 0.23,
                                   "SoilHeatFluxFraction": 0.4,
+                                  "MinimumHeightDiffForNewLayer": 0.0,
                                   "NightInterceptionFraction": 0.5,
                                   "ReferenceHeight": 2.0,
                                   "Name": "MicroClimate",
@@ -30642,6 +30649,7 @@
                                 {
                                   "$type": "Models.PMF.Plant, Models",
                                   "CropType": "FodderBeet",
+                                  "IsAlive": false,
                                   "IsEnding": false,
                                   "DaysAfterEnding": 0,
                                   "ResourceName": "FodderBeet",
@@ -31175,6 +31183,7 @@
                                   "d_interception": 0.0,
                                   "soil_albedo": 0.23,
                                   "SoilHeatFluxFraction": 0.4,
+                                  "MinimumHeightDiffForNewLayer": 0.0,
                                   "NightInterceptionFraction": 0.5,
                                   "ReferenceHeight": 2.0,
                                   "Name": "MicroClimate",
@@ -33330,6 +33339,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "FodderBeet",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "FodderBeet",
@@ -33346,6 +33356,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -33607,6 +33618,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "FodderBeet",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "FodderBeet",
@@ -33623,6 +33635,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -34525,10 +34538,10 @@
                                   "AirDry": [
                                     0.05,
                                     0.05,
-                                    0.16,
-                                    0.17,
-                                    0.17,
-                                    0.12
+                                    0.05,
+                                    0.05,
+                                    0.05,
+                                    0.05
                                   ],
                                   "LL15": [
                                     0.1,
@@ -34559,6 +34572,7 @@
                                     389.0,
                                     16.0,
                                     16.0,
+                                    98.0,
                                     98.0
                                   ],
                                   "BDMetadata": null,
@@ -34856,6 +34870,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "FodderBeet",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "FodderBeet",
@@ -34872,6 +34887,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -35677,6 +35693,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "FodderBeet",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "FodderBeet",
@@ -35693,6 +35710,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -37047,6 +37065,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "FodderBeet",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "FodderBeet",
@@ -37063,6 +37082,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -37868,6 +37888,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "FodderBeet",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "FodderBeet",
@@ -37884,6 +37905,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -39185,6 +39207,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "FodderBeet",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "FodderBeet",
@@ -39201,6 +39224,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -40512,6 +40536,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "FodderBeet",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "FodderBeet",
@@ -40528,6 +40553,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -42160,8 +42186,8 @@
                                 {
                                   "$type": "Models.Soils.Chemical, Models",
                                   "Depth": [
-                                    "0-7.5",
-                                    "7.5-15",
+                                    "0-7,5",
+                                    "7,5-15",
                                     "15-32",
                                     "32-52",
                                     "52-68",
@@ -42464,6 +42490,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "FodderBeet",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "FodderBeet",
@@ -42480,6 +42507,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -43682,6 +43710,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "FodderBeet",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "FodderBeet",
@@ -43698,6 +43727,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -46038,6 +46068,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "FodderBeet",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "FodderBeet",
@@ -46054,6 +46085,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -47128,6 +47160,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "FodderBeet",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "FodderBeet",
@@ -47144,6 +47177,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -48192,6 +48226,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "FodderBeet",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "FodderBeet",
@@ -48208,6 +48243,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -49134,6 +49170,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.3,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -49819,6 +49856,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "FodderBeet",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "FodderBeet",
@@ -50580,6 +50618,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.3,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -51265,6 +51304,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "FodderBeet",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "FodderBeet",
@@ -51981,6 +52021,7 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "FodderBeet",
+                      "IsAlive": false,
                       "IsEnding": false,
                       "DaysAfterEnding": 0,
                       "ResourceName": "FodderBeet",
@@ -51997,6 +52038,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
@@ -52318,7 +52360,7 @@
                   "$type": "Models.GrazPlan.Stock, Models",
                   "ParamFile": "",
                   "RandSeed": 9999,
-                  "GenoTypes": [],
+                  "Genotypes": [],
                   "Animals": [],
                   "PaddockList": [
                     {
@@ -53413,6 +53455,7 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "FodderBeet",
+                      "IsAlive": false,
                       "IsEnding": false,
                       "DaysAfterEnding": 0,
                       "ResourceName": "FodderBeet",
@@ -53429,6 +53472,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
@@ -53744,7 +53788,7 @@
                   "$type": "Models.GrazPlan.Stock, Models",
                   "ParamFile": "",
                   "RandSeed": 9999,
-                  "GenoTypes": [],
+                  "Genotypes": [],
                   "Animals": [],
                   "PaddockList": [
                     {

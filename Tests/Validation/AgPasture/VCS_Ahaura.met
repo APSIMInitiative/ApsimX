@@ -33,7 +33,7 @@ annual_average_pet = 779.5           !Average annual PET (mm/yr)
 average_windspeed = 2.2              !Average windspeed (m/s)
 
   Location        xDate         year          day         rain         mint         maxt         avgt         radn         wind         evap           vp           rh        rhmin        rhmax
-        ()           ()           ()           ()         (mm)         (oC)         (oC)         (oC)     (MJ/m^2)        (m/s)         (mm)        (hPa)          (%)          (%)          (%)
+        () (dd/MM/yyyy)           ()           ()         (mm)         (oC)         (oC)         (oC)     (MJ/m^2)        (m/s)         (mm)        (hPa)          (%)          (%)          (%)
 VCS_Ahaura   01/01/1974         1974            1         10.4         12.9         19.7         16.3          7.9          2.3          2.1         16.4         87.0         71.5        100.0
 VCS_Ahaura   02/01/1974         1974            2          0.0         13.2         21.6         17.4         19.0          2.3          4.6         14.1         78.5         54.6         92.9
 VCS_Ahaura   03/01/1974         1974            3          0.0         10.1         20.3         15.2         29.2          2.3          5.1         13.8         86.4         57.9        100.0

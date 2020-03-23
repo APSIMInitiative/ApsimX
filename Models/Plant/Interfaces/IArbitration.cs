@@ -2,6 +2,16 @@
 {
     using System;
 
+    /// <summary> Inerface for arbitrators </summary>
+    public interface IArbitrator
+    {
+        /// <summary>The DM data class  </summary>
+        BiomassArbitrationType DM { get; }
+
+        /// <summary>The N data class  </summary>
+        BiomassArbitrationType N { get; }
+    }
+
     /// <summary>
     /// An interface that defines what needs to be implemented by an organ
     /// that communicates to the OrganArbitrator.
