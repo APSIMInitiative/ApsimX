@@ -8,7 +8,7 @@
     using Models;
     using Models.Core;
     using Views;
-    using ICSharpCode.NRefactory.CSharp;
+    //using ICSharpCode.NRefactory.CSharp;
 
     /// <summary>
     /// Presenter for the Manager component
@@ -223,10 +223,11 @@
         {
             try
             {
-                CSharpFormatter formatter = new CSharpFormatter(FormattingOptionsFactory.CreateAllman());
-                string newText = formatter.Format(managerView.Editor.Text);
-                managerView.Editor.Text = newText;
-                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(manager, "Code", newText));
+                throw new NotImplementedException();
+                //CSharpFormatter formatter = new CSharpFormatter(FormattingOptionsFactory.CreateAllman());
+                //string newText = formatter.Format(managerView.Editor.Text);
+                //managerView.Editor.Text = newText;
+                //explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(manager, "Code", newText));
             }
             catch (Exception err)
             {

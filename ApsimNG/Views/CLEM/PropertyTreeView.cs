@@ -169,16 +169,17 @@ namespace UserInterface.Views
         /// <summary>Get screenshot of right hand panel.</summary>
         public System.Drawing.Image GetScreenshotOfRightHandPanel()
         {
-            // Create a Bitmap and draw the panel
-            int width;
-            int height;
-            Gdk.Window panelWindow = rightHandView.Child.GdkWindow;
-            panelWindow.GetSize(out width, out height);
-            Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(panelWindow, panelWindow.Colormap, 0, 0, 0, 0, width, height);
-            byte[] buffer = screenshot.SaveToBuffer("png");
-            System.IO.MemoryStream stream = new System.IO.MemoryStream(buffer);
-            System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(stream);
-            return bitmap;
+            throw new NotImplementedException();
+            //// Create a Bitmap and draw the panel
+            //int width;
+            //int height;
+            //Gdk.Window panelWindow = rightHandView.Child.GdkWindow;
+            //panelWindow.GetSize(out width, out height);
+            //Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(panelWindow, panelWindow.Colormap, 0, 0, 0, 0, width, height);
+            //byte[] buffer = screenshot.SaveToBuffer("png");
+            //System.IO.MemoryStream stream = new System.IO.MemoryStream(buffer);
+            //System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(stream);
+            //return bitmap;
         }
 
         /// <summary>Show the wait cursor</summary>
@@ -377,7 +378,7 @@ namespace UserInterface.Views
                         Gdk.Rectangle rect = treeview1.GetCellArea(path, col);
                         if (e.Event.X > rect.X + 18)
                         {
-                            timer.Interval = treeview1.Settings.DoubleClickTime + 10;  // We want this to be a bit longer than the double-click interval, which is normally 250 milliseconds
+                            timer.Interval = Settings.Default.DoubleClickTime + 10;  // We want this to be a bit longer than the double-click interval, which is normally 250 milliseconds
                             timer.AutoReset = false;
                             timer.Start();
                         }

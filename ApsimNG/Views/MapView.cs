@@ -1,4 +1,5 @@
-﻿namespace UserInterface.Views
+﻿//TBI
+namespace UserInterface.Views
 {
     using System;
     using System.IO;
@@ -37,7 +38,7 @@
         /// </summary>
         void StoreSettings();
     }
-
+    /*
     /// It would be good if we could retrieve the current center and zoom values for a map,
     /// and store them as part of the Map object, so that maps can be recreated and exported
     /// using those settings. 
@@ -279,4 +280,5 @@
             }
         }
     }
+    */
 }

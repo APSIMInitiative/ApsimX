@@ -170,7 +170,7 @@
                 else
                 {
                     previousLocation = Location;
-                    mainWindow.HideAll();
+                    mainWindow.Hide();
                 }
             }
         }

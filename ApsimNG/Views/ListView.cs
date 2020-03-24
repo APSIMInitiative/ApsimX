@@ -158,7 +158,7 @@
         /// <param name="cell">The cell.</param>
         /// <param name="model">The tree model.</param>
         /// <param name="iter">The tree iterator.</param>
-        public void OnFormatColumn(TreeViewColumn col, CellRenderer baseCell, TreeModel model, TreeIter iter)
+        public void OnFormatColumn(TreeViewColumn col, CellRenderer baseCell, ITreeModel model, TreeIter iter)
         {
             try
             {

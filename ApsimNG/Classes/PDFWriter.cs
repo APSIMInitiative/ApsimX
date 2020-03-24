@@ -347,14 +347,15 @@
                 }
                 else if (tag is Map && (tag as Map).GetCoordinates().Count > 0)
                 {
-                    MapPresenter mapPresenter = new MapPresenter();
-                    MapView mapView = new MapView(null);
-                    mapPresenter.Attach(tag, mapView, explorerPresenter);
-                    string pngFileName = mapPresenter.ExportToPNG(WorkingDirectory);
-                    if (!String.IsNullOrEmpty(pngFileName))
-                        section.AddImage(pngFileName);
-                    mapPresenter.Detach();
-                    mapView.MainWidget.Destroy();
+                    throw new NotImplementedException("Need htmlview");
+                    //MapPresenter mapPresenter = new MapPresenter();
+                    //MapView mapView = new MapView(null);
+                    //mapPresenter.Attach(tag, mapView, explorerPresenter);
+                    //string pngFileName = mapPresenter.ExportToPNG(WorkingDirectory);
+                    //if (!String.IsNullOrEmpty(pngFileName))
+                    //    section.AddImage(pngFileName);
+                    //mapPresenter.Detach();
+                    //mapView.MainWidget.Destroy();
                 }
                 else if (tag is AutoDocumentation.Image)
                 {
@@ -382,11 +383,11 @@
                             presenter.Attach(modelView.model, view, explorerPresenter);
 
                             Gtk.Window popupWin = null;
-                            if (view is MapView)
-                            {
-                                popupWin = (view as MapView)?.GetPopupWin();
-                                popupWin?.SetSizeRequest(515, 500);
-                            }
+                            //if (view is MapView)
+                            //{
+                            //    popupWin = (view as MapView)?.GetPopupWin();
+                            //    popupWin?.SetSizeRequest(515, 500);
+                            //}
                             if (popupWin == null)
                             {
                                 popupWin = new Gtk.Window(Gtk.WindowType.Popup);

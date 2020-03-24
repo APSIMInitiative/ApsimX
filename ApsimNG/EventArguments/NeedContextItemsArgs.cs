@@ -33,10 +33,10 @@
         /// </summary>
         public List<string> Items;
 
-        /// <summary>
-        /// Completion data.
-        /// </summary>
-        public List<CompletionData> CompletionData { get; set; }
+        ///// <summary>
+        ///// Completion data.
+        ///// </summary>
+        //public List<CompletionData> CompletionData { get; set; }
 
         /// <summary>
         /// Co-ordinates at which the intellisense window should be displayed.

@@ -4,11 +4,11 @@
     using System.Reflection;
     using EventArguments;
     using Gtk;
-    using Mono.TextEditor;
+    //using Mono.TextEditor;
     using Utility;
     using Cairo;
     using System.Globalization;
-    using Mono.TextEditor.Highlighting;
+    //using Mono.TextEditor.Highlighting;
 
     /// <summary>
     /// What sort of text is this editor displaying?
@@ -140,7 +140,7 @@
         /// </summary>
         void Refresh();
     }
-
+    /*
     /// <summary>
     /// This class provides an intellisense editor and has the option of syntax highlighting keywords.
     /// </summary>
@@ -1043,30 +1043,31 @@
             }
         }
 
-        // The following block comes from the example code provided at 
-        // http://www.codeproject.com/Articles/30936/Using-ICSharpCode-TextEditor
-        // I leave it here because it provides the handlers needed for a popup menu
-        // Currently find and replace functions are accessed via keystrokes (e.g, ctrl-F, F3)
-        /*
-        private void menuToggleBookmark_Click(object sender, EventArgs e)
-        {
-            DoEditAction(new ICSharpCode.TextEditor.Actions.ToggleBookmark());
-            TextBox.IsIconBarVisible = TextBox.Document.BookmarkManager.Marks.Count > 0;
-        }
-
-        private void menuGoToNextBookmark_Click(object sender, EventArgs e)
-        {
-            DoEditAction(new ICSharpCode.TextEditor.Actions.GotoNextBookmark
-                (bookmark => true));
-        }
-
-        private void menuGoToPrevBookmark_Click(object sender, EventArgs e)
-        {
-            DoEditAction(new ICSharpCode.TextEditor.Actions.GotoPrevBookmark
-                (bookmark => true));
-        }
-        */
+        //// The following block comes from the example code provided at 
+        //// http://www.codeproject.com/Articles/30936/Using-ICSharpCode-TextEditor
+        //// I leave it here because it provides the handlers needed for a popup menu
+        //// Currently find and replace functions are accessed via keystrokes (e.g, ctrl-F, F3)
+        //
+        //private void menuToggleBookmark_Click(object sender, EventArgs e)
+        //{
+        //    DoEditAction(new ICSharpCode.TextEditor.Actions.ToggleBookmark());
+        //    TextBox.IsIconBarVisible = TextBox.Document.BookmarkManager.Marks.Count > 0;
+        //}
+        //
+        //private void menuGoToNextBookmark_Click(object sender, EventArgs e)
+        //{
+        //    DoEditAction(new ICSharpCode.TextEditor.Actions.GotoNextBookmark
+        //        (bookmark => true));
+        //}
+        //
+        //private void menuGoToPrevBookmark_Click(object sender, EventArgs e)
+        //{
+        //    DoEditAction(new ICSharpCode.TextEditor.Actions.GotoPrevBookmark
+        //        (bookmark => true));
+        //}
+        
 
         #endregion
     }
+*/
 }

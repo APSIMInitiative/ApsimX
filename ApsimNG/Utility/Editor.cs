@@ -5,8 +5,8 @@ using System.Drawing;
 using System.Data;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms;
-using ICSharpCode.TextEditor.Document;
+//using System.Windows.Forms;
+//using ICSharpCode.TextEditor.Document;
 
 namespace Utility
 {
@@ -45,7 +45,7 @@ namespace Utility
         string[] Lines { get; set; }
 
     }
-
+    /*
     /// <summary>
     /// This class provides an intellisense editor and has the option of syntax highlighting keywords.
     /// </summary>
@@ -264,4 +264,5 @@ namespace Utility
 
        
     }
+    */
 }

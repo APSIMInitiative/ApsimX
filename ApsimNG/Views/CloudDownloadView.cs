@@ -124,22 +124,24 @@ namespace UserInterface.Views
             outputPathContainer.PackStart(btnChangeOutputDir, false, false, 0);
 
             // Put all form controls into the primary vbox
-            vboxPrimary.PackStart(includeDebugFiles);
-            vboxPrimary.PackStart(chkDownloadResults);
-            vboxPrimary.PackStart(extractResults);
-            vboxPrimary.PackStart(generateCsv);
-            vboxPrimary.PackStart(keepRawOutputs);
-            vboxPrimary.PackStart(outputPathContainer);
+            //fixme - need to check packing defaults.
+            // We previously didn't supply the last 3 args.
+            vboxPrimary.PackStart(includeDebugFiles, false, false, 0);
+            vboxPrimary.PackStart(chkDownloadResults, false, false, 0);
+            vboxPrimary.PackStart(extractResults, false, false, 0);
+            vboxPrimary.PackStart(generateCsv, false, false, 0);
+            vboxPrimary.PackStart(keepRawOutputs, false, false, 0);
+            vboxPrimary.PackStart(outputPathContainer, false, false, 0);
 
             // This empty label will put a gap between the controls above it and below it.
-            vboxPrimary.PackStart(new Label(""));
+            vboxPrimary.PackStart(new Label(""), false, false, 0);
 
             vboxPrimary.PackEnd(btnDownload, false, false, 0);
 
             Frame primaryContainer = new Frame("Download Settings");
             primaryContainer.Add(vboxPrimary);
             window.Add(primaryContainer);
-            window.HideAll();
+            window.Hide();
 
             window.Destroyed += OnDestroyed;
             window.DeleteEvent += OnDelete;
@@ -212,7 +214,7 @@ namespace UserInterface.Views
                 if (value)
                     window.ShowAll();
                 else
-                    window.HideAll();
+                    window.Hide();
             }
         }
 

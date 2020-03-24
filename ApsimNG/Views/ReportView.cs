@@ -41,8 +41,8 @@
         private VBox vbox2 = null;
         private Alignment alignment1 = null;
 
-        private EditorView variableEditor;
-        private EditorView frequencyEditor;
+        private IEditorView variableEditor;
+        private IEditorView frequencyEditor;
         private ViewBase dataStoreView1;
         private VPaned panel;
 
@@ -55,6 +55,7 @@
         /// <summary>Constructor</summary>
         public ReportView(ViewBase owner) : base(owner)
         {
+            throw new NotImplementedException("Requires EditorView");
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ReportView.glade");
             notebook1 = (Notebook)builder.GetObject("notebook1");
             vbox1 = (VBox)builder.GetObject("vbox1");
@@ -67,13 +68,13 @@
 
             mainWidget = notebook1;
 
-            variableEditor = new EditorView(this);
-            variableEditor.StyleChanged += OnStyleChanged;
-            vbox1.PackStart(variableEditor.MainWidget, true, true, 0);
-
-            frequencyEditor = new EditorView(this);
-            frequencyEditor.StyleChanged += OnStyleChanged;
-            vbox2.PackStart(frequencyEditor.MainWidget, true, true, 0);
+            //variableEditor = new EditorView(this);
+            //variableEditor.StyleChanged += OnStyleChanged;
+            //vbox1.PackStart(variableEditor.MainWidget, true, true, 0);
+            //
+            //frequencyEditor = new EditorView(this);
+            //frequencyEditor.StyleChanged += OnStyleChanged;
+            //vbox2.PackStart(frequencyEditor.MainWidget, true, true, 0);
 
             dataStoreView1 = new ViewBase(this, "ApsimNG.Resources.Glade.DataStoreView.glade");
             alignment1.Add(dataStoreView1.MainWidget);
@@ -131,9 +132,9 @@
                 panel.RemoveNotification(OnPropertyNotified);
                 variableEditor.StyleChanged -= OnStyleChanged;
                 frequencyEditor.StyleChanged -= OnStyleChanged;
-                variableEditor.MainWidget.Destroy();
+                (variableEditor as ViewBase).MainWidget.Destroy();
                 variableEditor = null;
-                frequencyEditor.MainWidget.Destroy();
+                (frequencyEditor as ViewBase).MainWidget.Destroy();
                 frequencyEditor = null;
                 dataStoreView1.MainWidget.Destroy();
                 dataStoreView1 = null;

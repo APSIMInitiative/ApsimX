@@ -8,8 +8,8 @@
     using Interfaces;
     using Intellisense;
     using EventArguments;
-    using ICSharpCode.NRefactory.Editor;
-    using ICSharpCode.NRefactory.CSharp;
+    //using ICSharpCode.NRefactory.Editor;
+    //using ICSharpCode.NRefactory.CSharp;
     using Models.Core;
     using System.Globalization;
     using System.Drawing;
@@ -17,7 +17,7 @@
     using System.Text;
     using Classes.Intellisense;
     using System.Xml;
-    using ICSharpCode.NRefactory.TypeSystem;
+    //using ICSharpCode.NRefactory.TypeSystem;
     using APSIM.Shared.Utilities;
     using Models.Storage;
     using System.Threading;
@@ -49,16 +49,16 @@
         /// </summary>
         private event EventHandler<IntellisenseItemSelectedArgs> OnItemSelected;
 
-        /// <summary>
-        /// Responsible for generating the completion options.
-        /// </summary>
-        private CSharpCompletion completion = new CSharpCompletion();
-        
-        /// <summary>
-        /// List of intellisense options.
-        /// Probably doesn't need to be a class field, but I have plans to use it in the future. - DH May 2018
-        /// </summary>
-        private CodeCompletionResult completionResult;
+        ///// <summary>
+        ///// Responsible for generating the completion options.
+        ///// </summary>
+        //private CSharpCompletion completion = new CSharpCompletion();
+        //
+        ///// <summary>
+        ///// List of intellisense options.
+        ///// Probably doesn't need to be a class field, but I have plans to use it in the future. - DH May 2018
+        ///// </summary>
+        //private CodeCompletionResult completionResult;
 
         /// <summary>
         /// The partially-finished word for which the user wants completion options. May be empty string.
@@ -76,8 +76,8 @@
         /// </summary>
         public static void Init()
         {
-            Thread initThread = new Thread(CSharpCompletion.Init);
-            initThread.Start();
+            //Thread initThread = new Thread(CSharpCompletion.Init);
+            //initThread.Start();
         }
 
         /// <summary>
@@ -245,38 +245,39 @@
         /// <returns>True if any completion options are found. False otherwise.</returns>
         public bool GenerateScriptCompletions(string code, int offset, bool controlSpace = false)
         {
-            CSharpParser parser = new CSharpParser();
-            SyntaxTree syntaxTree = parser.Parse(code);
-            string fileName = Path.GetTempFileName();
-            File.WriteAllText(fileName, code);
-            syntaxTree.FileName = fileName;
-            syntaxTree.Freeze();
-
-            // Should probably take into account which namespaces the user is using and load the needed assemblies into the CSharpCompletion object
-            // string usings = syntaxTree.Descendants.OfType<UsingDeclaration>().Select(x => x.ToString()).Aggregate((x, y) => x + /* Environment.NewLine + */ y);
-
-            IDocument document = new ReadOnlyDocument(new StringTextSource(code), syntaxTree.FileName);
-            completionResult = completion.GetCompletions(document, offset, controlSpace);
-
-            // Set the trigger word for later use.
-            triggerWord = controlSpace ? completionResult.TriggerWord : string.Empty;
-
-            // If the user pressed control space, we assume they are trying to generate completions for a partially typed word.
-            // In this situation we need to filter the results based on what they have already typed.
-            // The exception is if the most recent character is a period. 
-            // No idea why NRefactory can't do this for us.
-            if (controlSpace && !string.IsNullOrEmpty(completionResult.TriggerWord) && code[offset - 1] != '.')
-            {
-                // Filter items.
-                completionResult.CompletionData = completionResult.CompletionData.Where(item => GetMatchQuality(item.CompletionText, completionResult.TriggerWord) > 0).ToList();
-            }
-            List<CompletionData> completionList = completionResult.CompletionData.Select(x => x as CompletionData).Where(x => x != null).OrderBy(x => x.CompletionText).ToList();
-            view.Populate(completionList);
-            if (controlSpace && !string.IsNullOrEmpty(completionResult.TriggerWord))
-                view.SelectItem(completionList.IndexOf(completionList.OrderByDescending(x => GetMatchQuality(x.CompletionText, completionResult.TriggerWord)).FirstOrDefault()));
-
-            File.Delete(fileName);
-            return completionList.Any();
+            return false;
+            //CSharpParser parser = new CSharpParser();
+            //SyntaxTree syntaxTree = parser.Parse(code);
+            //string fileName = Path.GetTempFileName();
+            //File.WriteAllText(fileName, code);
+            //syntaxTree.FileName = fileName;
+            //syntaxTree.Freeze();
+            //
+            //// Should probably take into account which namespaces the user is using and load the needed assemblies into the CSharpCompletion object
+            //// string usings = syntaxTree.Descendants.OfType<UsingDeclaration>().Select(x => x.ToString()).Aggregate((x, y) => x + /* Environment.NewLine + */ y);
+            //
+            //IDocument document = new ReadOnlyDocument(new StringTextSource(code), syntaxTree.FileName);
+            //completionResult = completion.GetCompletions(document, offset, controlSpace);
+            //
+            //// Set the trigger word for later use.
+            //triggerWord = controlSpace ? completionResult.TriggerWord : string.Empty;
+            //
+            //// If the user pressed control space, we assume they are trying to generate completions for a partially typed word.
+            //// In this situation we need to filter the results based on what they have already typed.
+            //// The exception is if the most recent character is a period. 
+            //// No idea why NRefactory can't do this for us.
+            //if (controlSpace && !string.IsNullOrEmpty(completionResult.TriggerWord) && code[offset - 1] != '.')
+            //{
+            //    // Filter items.
+            //    completionResult.CompletionData = completionResult.CompletionData.Where(item => GetMatchQuality(item.CompletionText, completionResult.TriggerWord) > 0).ToList();
+            //}
+            //List<CompletionData> completionList = completionResult.CompletionData.Select(x => x as CompletionData).Where(x => x != null).OrderBy(x => x.CompletionText).ToList();
+            //view.Populate(completionList);
+            //if (controlSpace && !string.IsNullOrEmpty(completionResult.TriggerWord))
+            //    view.SelectItem(completionList.IndexOf(completionList.OrderByDescending(x => GetMatchQuality(x.CompletionText, completionResult.TriggerWord)).FirstOrDefault()));
+            //
+            //File.Delete(fileName);
+            //return completionList.Any();
         }
 
         /// <summary>
@@ -318,6 +319,7 @@
         /// <param name="offset">Offset of the cursor/caret in the code.</param>
         public void ShowScriptMethodCompletion(IModel relativeTo, string code, int offset, Point location)
         {
+            /*
             CSharpParser parser = new CSharpParser();
             SyntaxTree syntaxTree = parser.Parse(code);
             string fileName = Path.GetTempFileName();
@@ -383,6 +385,7 @@
                 methodCompletionView.Location = location;
                 methodCompletionView.Visible = true;
             }
+            */
         }
 
         /// <summary>
@@ -393,56 +396,56 @@
         /// <param name="offset">Offset of the cursor/caret in the code.</param>
         public void ShowMethodCompletion(IModel relativeTo, string code, int offset, Point location)
         {
-            string contentsToCursor = code.Substring(0, offset).TrimEnd('.');
-
-            // Ignore everything before the most recent comma.
-            contentsToCursor = contentsToCursor.Substring(contentsToCursor.LastIndexOf(',') + 1);
-
-            string currentLine = contentsToCursor.Split(Environment.NewLine.ToCharArray()).Last().Trim();
-            // Set the trigger word for later use.
-            triggerWord = GetTriggerWord(currentLine);
-            
-            // Ignore everything before most recent model name in square brackets.
-            // I'm assuming that model/node names cannot start with a number.
-            string modelNamePattern = @"\[([A-Za-z]+[A-Za-z0-9]*)\]";
-            string objectName = currentLine;
-            var matches = System.Text.RegularExpressions.Regex.Matches(code, modelNamePattern);
-            if (matches.Count > 0)
-            {
-                int modelNameIndex = currentLine.LastIndexOf(matches[matches.Count - 1].Value);
-                if (modelNameIndex >= 0)
-                {
-                    currentLine = currentLine.Substring(modelNameIndex);
-                    int lastPeriod = currentLine.LastIndexOf('.');
-                    objectName = lastPeriod >= 0 ? currentLine.Substring(0, lastPeriod) : currentLine;
-                }
-            }
-            string methodName = triggerWord.TrimEnd('(');
-            MethodInfo method = NeedContextItemsArgs.GetMethodInfo(relativeTo as Model, methodName, objectName);
-
-            if (method == null)
-                return;
-            MethodCompletion completion = new MethodCompletion();
-
-            List<string> parameterStrings = new List<string>();
-            StringBuilder parameterDocumentation = new StringBuilder();
-            foreach (ParameterInfo parameter in method.GetParameters())
-            {
-                string parameterString = string.Format("{0} {1}", parameter.ParameterType.Name, parameter.Name);
-                if (parameter.DefaultValue != DBNull.Value)
-                    parameterString += string.Format(" = {0}", parameter.DefaultValue.ToString());
-                parameterStrings.Add(parameterString);
-                parameterDocumentation.AppendLine(string.Format("{0}: {1}", parameter.Name, NeedContextItemsArgs.GetDescription(method, parameter.Name)));
-            }
-            string parameters = parameterStrings.Aggregate((a, b) => string.Format("{0}, {1}", a, b));
-
-            completion.Signature = string.Format("{0} {1}({2})", method.ReturnType.Name, method.Name, parameters);
-            completion.Summary = NeedContextItemsArgs.GetDescription(method);
-            completion.ParameterDocumentation = parameterDocumentation.ToString().Trim(Environment.NewLine.ToCharArray());
-
-            methodCompletionView.Completions = new List<MethodCompletion>() { completion };
-            methodCompletionView.Location = location;
-            methodCompletionView.Visible = true;
+            //string contentsToCursor = code.Substring(0, offset).TrimEnd('.');
+            //
+            //// Ignore everything before the most recent comma.
+            //contentsToCursor = contentsToCursor.Substring(contentsToCursor.LastIndexOf(',') + 1);
+            //
+            //string currentLine = contentsToCursor.Split(Environment.NewLine.ToCharArray()).Last().Trim();
+            //// Set the trigger word for later use.
+            //triggerWord = GetTriggerWord(currentLine);
+            //
+            //// Ignore everything before most recent model name in square brackets.
+            //// I'm assuming that model/node names cannot start with a number.
+            //string modelNamePattern = @"\[([A-Za-z]+[A-Za-z0-9]*)\]";
+            //string objectName = currentLine;
+            //var matches = System.Text.RegularExpressions.Regex.Matches(code, modelNamePattern);
+            //if (matches.Count > 0)
+            //{
+            //    int modelNameIndex = currentLine.LastIndexOf(matches[matches.Count - 1].Value);
+            //    if (modelNameIndex >= 0)
+            //    {
+            //        currentLine = currentLine.Substring(modelNameIndex);
+            //        int lastPeriod = currentLine.LastIndexOf('.');
+            //        objectName = lastPeriod >= 0 ? currentLine.Substring(0, lastPeriod) : currentLine;
+            //    }
+            //}
+            //string methodName = triggerWord.TrimEnd('(');
+            //MethodInfo method = NeedContextItemsArgs.GetMethodInfo(relativeTo as Model, methodName, objectName);
+            //
+            //if (method == null)
+            //    return;
+            //MethodCompletion completion = new MethodCompletion();
+            //
+            //List<string> parameterStrings = new List<string>();
+            //StringBuilder parameterDocumentation = new StringBuilder();
+            //foreach (ParameterInfo parameter in method.GetParameters())
+            //{
+            //    string parameterString = string.Format("{0} {1}", parameter.ParameterType.Name, parameter.Name);
+            //    if (parameter.DefaultValue != DBNull.Value)
+            //        parameterString += string.Format(" = {0}", parameter.DefaultValue.ToString());
+            //    parameterStrings.Add(parameterString);
+            //    parameterDocumentation.AppendLine(string.Format("{0}: {1}", parameter.Name, NeedContextItemsArgs.GetDescription(method, parameter.Name)));
+            //}
+            //string parameters = parameterStrings.Aggregate((a, b) => string.Format("{0}, {1}", a, b));
+            //
+            //completion.Signature = string.Format("{0} {1}({2})", method.ReturnType.Name, method.Name, parameters);
+            //completion.Summary = NeedContextItemsArgs.GetDescription(method);
+            //completion.ParameterDocumentation = parameterDocumentation.ToString().Trim(Environment.NewLine.ToCharArray());
+            //
+            //methodCompletionView.Completions = new List<MethodCompletion>() { completion };
+            //methodCompletionView.Location = location;
+            //methodCompletionView.Visible = true;
         }
 
         /// <summary>
@@ -453,16 +456,16 @@
         /// <param name="lineHeight">Line height (in px?).</param>
         public void Show(int x, int y, int lineHeight = 17)
         {
-            if (methodCompletionView.Visible)
-                methodCompletionView.Visible = false;
-            view.SmartShowAtCoordinates(x, y, lineHeight);
-            if (completionResult != null && completionResult.SuggestedCompletionDataItem != null)
-            {
-                int index = completionResult.CompletionData.IndexOf(completionResult.SuggestedCompletionDataItem);
-                if (index >= 0)
-                    view.SelectItem(index);
-            }
-            recentLocation = new Point(x, y);
+            //if (methodCompletionView.Visible)
+            //    methodCompletionView.Visible = false;
+            //view.SmartShowAtCoordinates(x, y, lineHeight);
+            //if (completionResult != null && completionResult.SuggestedCompletionDataItem != null)
+            //{
+            //    int index = completionResult.CompletionData.IndexOf(completionResult.SuggestedCompletionDataItem);
+            //    if (index >= 0)
+            //        view.SelectItem(index);
+            //}
+            //recentLocation = new Point(x, y);
         }
 
         /// <summary>

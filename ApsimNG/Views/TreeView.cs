@@ -445,7 +445,7 @@ namespace UserInterface.Views
         /// TreeIter object associated with this cell in the tree. This object
         /// can be used for many things, such as retrieving this cell's data.
         /// </param>
-        private void OnSetCellData(TreeViewColumn col, CellRenderer cell, TreeModel model, TreeIter iter)
+        private void OnSetCellData(TreeViewColumn col, CellRenderer cell, ITreeModel model, TreeIter iter)
         {
             try
             {
@@ -453,8 +453,9 @@ namespace UserInterface.Views
                 if (cell is CellRendererText)
                 {
                     Color colour = (Color)model.GetValue(iter, 4);
-                    if (colour == Color.Empty)
-                        colour = Utility.Colour.FromGtk(treeview1.Style.Foreground(StateType.Normal));
+                    //tbi
+                    //if (colour == Color.Empty)
+                    //    colour = Utility.Colour.FromGtk(treeview1.Style.Foreground(StateType.Normal));
                     (cell as CellRendererText).Strikethrough = (bool)model.GetValue(iter, 5);
 
                     // This is a bit of a hack which we use to convert a System.Drawing.Color
@@ -540,7 +541,7 @@ namespace UserInterface.Views
                             Gdk.Rectangle rect = treeview1.GetCellArea(path, col);
                             if (e.Event.X > rect.X + 18)
                             {
-                                timer.Interval = treeview1.Settings.DoubleClickTime + 10;  // We want this to be a bit longer than the double-click interval, which is normally 250 milliseconds
+                                timer.Interval = Settings.Default.DoubleClickTime + 10;  // We want this to be a bit longer than the double-click interval, which is normally 250 milliseconds
                                 timer.AutoReset = false;
                                 timer.Start();
                             }
@@ -786,9 +787,9 @@ namespace UserInterface.Views
                         dropArgs.NodePath = GetFullPath(path);
 
                         dropArgs.DragObject = dragDropData;
-                        if (e.Context.Action == Gdk.DragAction.Copy)
+                        if (e.Context.Actions == Gdk.DragAction.Copy)
                             dropArgs.Copied = true;
-                        else if (e.Context.Action == Gdk.DragAction.Move)
+                        else if (e.Context.Actions == Gdk.DragAction.Move)
                             dropArgs.Moved = true;
                         else
                             dropArgs.Linked = true;
@@ -796,7 +797,7 @@ namespace UserInterface.Views
                         success = true;
                     }
                 }
-                Gtk.Drag.Finish(e.Context, success, e.Context.Action == Gdk.DragAction.Move, e.Time);
+                Gtk.Drag.Finish(e.Context, success, e.Context.Actions == Gdk.DragAction.Move, e.Time);
                 e.RetVal = success;
             }
             catch (Exception err)

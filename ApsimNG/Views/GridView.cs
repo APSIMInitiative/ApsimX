@@ -129,7 +129,7 @@
         /// The edit control currently in use (if any).
         /// We keep track of this to facilitate handling "partial" edits (e.g., when the user moves to a different component.
         /// </summary>
-        private CellEditable editControl = null;
+        private ICellEditable editControl = null;
 
         /// <summary>
         /// The tree path for the row currently being edited.
@@ -202,7 +202,8 @@
                 // Use the gtkControl argument as the parent widget and make the builders hbox a child of it.
                 var child = hboxContainer;
                 hboxContainer = gtkControl as HBox;
-                hboxContainer.PackStart(child);
+                // fixme: this was previously `hboxContainer.PackStart(child);`
+                hboxContainer.PackStart(child, false, false, 0);
             }
 
             scrollingWindow = (ScrolledWindow)builder.GetObject("scrolledwindow1");
@@ -231,7 +232,7 @@
             Grid.KeyPressEvent += GridviewKeyPressEvent;
             fixedColView.KeyPressEvent += GridviewKeyPressEvent;
             Grid.EnableSearch = false;
-            Grid.ExposeEvent += GridviewExposed;
+            //Grid.ExposeEvent += GridviewExposed;
             fixedColView.FocusInEvent += FocusInEvent;
             fixedColView.FocusOutEvent += FocusOutEvent;
             fixedColView.EnableSearch = false;
@@ -384,7 +385,7 @@
                 if (value != isReadOnly)
                 {
                     foreach (TreeViewColumn col in Grid.Columns)
-                        foreach (CellRenderer render in col.CellRenderers)
+                        foreach (CellRenderer render in col.Cells)
                             if (render is CellRendererText)
                                 (render as CellRendererText).Editable = !value;
                 }
@@ -476,7 +477,7 @@
         /// <param name="cell">The cell.</param>
         /// <param name="model">The tree model.</param>
         /// <param name="iter">The tree iterator.</param>
-        public void OnSetCellData(TreeViewColumn col, CellRenderer cell, TreeModel model, TreeIter iter)
+        public void OnSetCellData(TreeViewColumn col, CellRenderer cell, ITreeModel model, TreeIter iter)
         {
             try
             {
@@ -494,9 +495,9 @@
                     textRenderer.Editable = true;
                     if (IsSeparator(rowNo))
                     {
-                        textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Normal);
-                        Color separatorColour = Utility.Configuration.Settings.DarkTheme ? Utility.Colour.FromGtk(MainWidget.Style.Background(StateType.Active)) : Color.LightSteelBlue;
-                        cell.CellBackgroundGdk = new Gdk.Color(separatorColour.R, separatorColour.G, separatorColour.B);
+                        //textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Normal);
+                        //Color separatorColour = Utility.Configuration.Settings.DarkTheme ? Utility.Colour.FromGtk(MainWidget.Style.Background(StateType.Active)) : Color.LightSteelBlue;
+                        //cell.CellBackgroundGdk = new Gdk.Color(separatorColour.R, separatorColour.G, separatorColour.B);
                         textRenderer.Editable = false;
                     }
                     else if (colAttributes.TryGetValue(colNo, out ColRenderAttributes attributes) && cellState != StateType.Selected)
@@ -506,21 +507,21 @@
                     }
                     else
                     {
-                        cell.CellBackgroundGdk = Grid.Style.Base(cellState);
-                        textRenderer.ForegroundGdk = Grid.Style.Foreground(cellState);
+                        //cell.CellBackgroundGdk = Grid.Style.Base(cellState);
+                        //textRenderer.ForegroundGdk = Grid.Style.Foreground(cellState);
                     }
 
                     if (IsRowReadonly(rowNo))
                     {
-                        textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Insensitive);
+                        //textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Insensitive);
                         textRenderer.Editable = false;
                     }
 
                     if (view == Grid)
                     {
-                        col.CellRenderers[1].Visible = false;
-                        col.CellRenderers[2].Visible = false;
-                        col.CellRenderers[3].Visible = false;
+                        col.Cells[1].Visible = false;
+                        col.Cells[2].Visible = false;
+                        col.Cells[3].Visible = false;
                     }
                     object dataVal = DataSource.Rows[rowNo][colNo];
                     Type dataType = dataVal.GetType();
@@ -536,14 +537,14 @@
                         // Currently not handling booleans and lists in the "fixed" column grid
                         if (dataType == typeof(bool))
                         {
-                            CellRendererToggle toggleRend = col.CellRenderers[1] as CellRendererToggle;
+                            CellRendererToggle toggleRend = col.Cells[1] as CellRendererToggle;
                             if (toggleRend != null)
                             {
                                 toggleRend.CellBackgroundGdk = cell.CellBackgroundGdk; // cell.CellBackgroundGdk does not affect this
                                 toggleRend.Active = (bool)dataVal;
                                 toggleRend.Activatable = true;
                                 cell.Visible = false;
-                                col.CellRenderers[2].Visible = false;
+                                col.Cells[2].Visible = false;
                                 toggleRend.Visible = true;
                                 return;
                             }
@@ -554,7 +555,7 @@
                             ListStore store;
                             if (ComboLookup.TryGetValue(location, out store))
                             {
-                                CellRendererCombo comboRend = col.CellRenderers[2] as CellRendererCombo;
+                                CellRendererCombo comboRend = col.Cells[2] as CellRendererCombo;
                                 if (comboRend != null)
                                 {
                                     comboRend.Model = store;
@@ -562,7 +563,7 @@
                                     comboRend.Editable = true;
                                     comboRend.HasEntry = false;
                                     cell.Visible = false;
-                                    col.CellRenderers[1].Visible = false;
+                                    col.Cells[1].Visible = false;
                                     comboRend.Visible = true;
                                     comboRend.Text = AsString(dataVal);
                                     comboRend.CellBackgroundGdk = cell.CellBackgroundGdk; // cell.CellBackgroundGdk does not affect this
@@ -571,7 +572,7 @@
                             }
                             if (ButtonList.Contains(location))
                             {
-                                CellRendererActiveButton buttonRend = col.CellRenderers[3] as CellRendererActiveButton;
+                                CellRendererActiveButton buttonRend = col.Cells[3] as CellRendererActiveButton;
                                 if (buttonRend != null)
                                 {
                                     buttonRend.Visible = true;
@@ -728,8 +729,9 @@
             ColRenderAttributes colAttr;
             if (colAttributes.TryGetValue(col, out colAttr))
                 return colAttr.ForegroundColor;
-            else
-                return Grid.Style.Foreground(StateType.Normal);
+            //else
+            //    return Grid.Style.Foreground(StateType.Normal);
+            return new Gdk.Color(0, 0, 0);// Grid.StyleContext.GetColor(StateFlags.Normal);
         }
 
         /// <summary>
@@ -763,8 +765,9 @@
             ColRenderAttributes colAttr;
             if (colAttributes.TryGetValue(col, out colAttr))
                 return colAttr.BackgroundColor;
-            else
-                return Grid.Style.Base(StateType.Normal);
+            //else
+            //    return Grid.Style.Base(StateType.Normal);
+            return new Gdk.Color(255, 255, 255);
         }
 
         /// <summary>
@@ -849,7 +852,10 @@
                 else if (editControl is ComboBox)
                 {
                     comboTooltipsSet = false;
-                    text = (editControl as ComboBox).ActiveText;
+                    //todo: figure out how to get selected value of combobox in gtk3.
+                    // ActiveText property doesn't seem to exist any more...
+                    throw new NotImplementedException();
+                    //text = (editControl as ComboBox).ActiveText;
                     // text can be null if the user hasn't completed making a selection. 
                     // If this is the case, we don't want to change the existing value.
                     if (text == null) 
@@ -927,7 +933,7 @@
                 fixedColView.Selection.Changed -= FixedcolviewCursorChanged;
                 fixedColView.Visible = false;
                 splitter.Position = 0;
-                splitter.Child1.HideAll();
+                splitter.Child1.Hide();
             }
             numberLockedCols = number;
         }
@@ -1021,7 +1027,7 @@
             fixedColView.KeyPressEvent -= GridviewKeyPressEvent;
             fixedColView.FocusInEvent -= FocusInEvent;
             fixedColView.FocusOutEvent -= FocusOutEvent;
-            Grid.ExposeEvent -= GridviewExposed;
+            //Grid.ExposeEvent -= GridviewExposed;
             scrollingWindow2.ScrollEvent -= OnFixedColViewScroll;
             // It's good practice to disconnect the event handlers, as it makes memory leaks
             // less likely. However, we may not "own" the event handlers, so how do we 
@@ -1173,7 +1179,7 @@
             while (Grid.Columns.Length > 0)
             {
                 TreeViewColumn col = Grid.GetColumn(0);
-                foreach (CellRenderer render in col.CellRenderers)
+                foreach (CellRenderer render in col.Cells)
                 {
                     if (render is CellRendererText)
                     {
@@ -1196,7 +1202,7 @@
                     {
                         (render as CellRendererCombo).Edited -= ComboRenderEdited;
                     }
-                    render.Destroy();
+                    render.Dispose();
                 }
                 Widget w = col.Widget;
                 while (!(w is Button || w == null))
@@ -1210,7 +1216,7 @@
             while (fixedColView.Columns.Length > 0)
             {
                 TreeViewColumn col = fixedColView.GetColumn(0);
-                foreach (CellRenderer render in col.CellRenderers)
+                foreach (CellRenderer render in col.Cells)
                     if (render is CellRendererText)
                     {
                         CellRendererText textRender = render as CellRendererText;
@@ -1449,7 +1455,7 @@
             column.CellGetSize(rectangle, out offsetX, out offsetY, out cellWidth, out cellHeight);
 
             // And now get padding from CellRenderer
-            CellRenderer renderer = column.CellRenderers[row];
+            CellRenderer renderer = column.Cells[row];
             cellHeight += (int)renderer.Ypad;
             return new Point(column.Width, cellHeight);
         }
@@ -1602,10 +1608,11 @@
             // Therefore we need to trap the Realized event and fix the colours when it fires.
             Grid.Realized += GridRealized;
 
-            Grid.ModifyBase(StateType.Active, fixedColView.Style.Base(StateType.Selected));
-            Grid.ModifyText(StateType.Active, fixedColView.Style.Text(StateType.Selected));
-            fixedColView.ModifyBase(StateType.Active, Grid.Style.Base(StateType.Selected));
-            fixedColView.ModifyText(StateType.Active, Grid.Style.Text(StateType.Selected));
+            //tbi
+            //Grid.ModifyBase(StateType.Active, fixedColView.Style.Base(StateType.Selected));
+            //Grid.ModifyText(StateType.Active, fixedColView.Style.Text(StateType.Selected));
+            //fixedColView.ModifyBase(StateType.Active, Grid.Style.Base(StateType.Selected));
+            //fixedColView.ModifyText(StateType.Active, Grid.Style.Text(StateType.Selected));
             Grid.QueryTooltip += OnQueryTooltip;
 
             if (Grid.IsRealized)
@@ -1717,10 +1724,11 @@
                 // Only fallback to defaults if no custom colour specified.
                 if (!colAttributes.TryGetValue(i, out _))
                 {
-                    ColRenderAttributes attrib = new ColRenderAttributes();
-                    attrib.ForegroundColor = Grid.Style.Foreground(StateType.Normal);
-                    attrib.BackgroundColor = Grid.Style.Base(StateType.Normal);
-                    colAttributes.Add(i, attrib);
+                    //tbi
+                    //ColRenderAttributes attrib = new ColRenderAttributes();
+                    //attrib.ForegroundColor = Grid.Style.Foreground(StateType.Normal);
+                    //attrib.BackgroundColor = Grid.Style.Base(StateType.Normal);
+                    //colAttributes.Add(i, attrib);
                 }
             }
         }
@@ -1740,8 +1748,9 @@
                 if (Grid != null)
                     Grid.Realized -= GridRealized;
 
-                fixedColView.ModifyBase(StateType.Active, Grid.Style.Base(StateType.Selected));
-                fixedColView.ModifyText(StateType.Active, Grid.Style.Text(StateType.Selected));
+                //tbi
+                //fixedColView.ModifyBase(StateType.Active, Grid.Style.Base(StateType.Selected));
+                //fixedColView.ModifyText(StateType.Active, Grid.Style.Text(StateType.Selected));
 
                 if (DataSource == null)
                     return;
@@ -2206,9 +2215,10 @@
                 (e.Editable as ComboBox).SetCellDataFunc((e.Editable as ComboBox).Cells[0], OnSetComboData);
                 (e.Editable as ComboBox).Changed += (o, _) =>
                 {
-                    IGridCell currentCell = GetCurrentCell;
-                    if (currentCell != null && (o as ComboBox).ActiveText != null)
-                        UpdateCellText(currentCell, (o as ComboBox).ActiveText);
+                    //tbi
+                    //IGridCell currentCell = GetCurrentCell;
+                    //if (currentCell != null && (o as ComboBox).ActiveText != null)
+                    //    UpdateCellText(currentCell, (o as ComboBox).ActiveText);
                     EndEdit();
                 };
             }
@@ -2218,7 +2228,7 @@
             }
         }
 
-        private void OnSetComboData(CellLayout cell_layout, CellRenderer cell, TreeModel tree_model, TreeIter iter)
+        private void OnSetComboData(ICellLayout cell_layout, CellRenderer cell, ITreeModel tree_model, TreeIter iter)
         {
             try
             {
@@ -2680,7 +2690,7 @@
                                     Tuple<int, int> location = new Tuple<int, int>(newlySelectedRowIndex, newlySelectedColumnIndex);
                                     if (ButtonList.Contains(location) && e.Event.Type == Gdk.EventType.ButtonPress)
                                     {
-                                        CellRendererActiveButton button = column.CellRenderers[3] as CellRendererActiveButton;
+                                        CellRendererActiveButton button = column.Cells[3] as CellRendererActiveButton;
                                         if (e.Event.X >= button.lastRect.X &&
                                             e.Event.X <= button.lastRect.X + button.lastRect.Width)
                                         {
@@ -2743,6 +2753,9 @@
             }
         }
 
+        /*
+         * fixme - expose event doesn't seem to exist in gtk 3
+         * Need to lock down these columns in a different event.
         /// <summary>
         /// Called when the sender is first exposed on screen
         /// We may not have been able to set the fixed columns earlier,
@@ -2764,7 +2777,7 @@
                 ShowError(err);
             }
         }
-
+        */
         /// <summary>
         /// Returns the string representation of an object. For most objects,
         /// this will be the same as "ToString()", but for Crops, it will give

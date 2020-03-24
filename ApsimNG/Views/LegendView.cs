@@ -80,10 +80,10 @@ namespace UserInterface.Views
                 combobox1.Focused -= OnTitleTextBoxEnter;
                 listToggle.Toggled -= OnItemChecked;
                 comboModel.Dispose();
-                comboRender.Destroy();
+                comboRender.Dispose();
                 listModel.Dispose();
-                listRender.Destroy();
-                listToggle.Destroy();
+                listRender.Dispose();
+                listToggle.Dispose();
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 owner = null;
             }

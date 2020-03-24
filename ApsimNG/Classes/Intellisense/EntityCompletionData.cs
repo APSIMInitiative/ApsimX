@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*
+using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,7 +78,8 @@ namespace UserInterface.Intellisense
                     {
                         description += " (+" + OverloadedData.Count() + " overloads)";
                     }
-                    description = /*.NewLine + */XmlDocumentationToText(Entity.Documentation);
+                    //used to be `description = newline + XmlDocumentationToText(Entity.Documentation);`
+                    description = XmlDocumentationToText(Entity.Documentation);
                 }
                 return description;
             }
@@ -216,3 +218,4 @@ namespace UserInterface.Intellisense
         }
     }
 }
+*/

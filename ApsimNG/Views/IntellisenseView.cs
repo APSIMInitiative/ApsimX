@@ -327,7 +327,7 @@
             Populate(allItems);
             return true;
         }
-
+        /*
         /// <summary>
         /// Populates the completion window with data.
         /// </summary>
@@ -345,7 +345,7 @@
                 completionModel.AppendValues(item.Image, item.DisplayText, item.Units, item.ReturnType, description, item.CompletionText, item.IsMethod);
             }
         }
-
+        */
         /// <summary>
         /// Populates the completion window with data.
         /// </summary>

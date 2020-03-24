@@ -106,7 +106,7 @@
             {
                 combobox1.Changed -= OnSelectionChanged;
                 comboModel.Dispose();
-                comboRender.Destroy();
+                comboRender.Dispose();
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 owner = null;
             }

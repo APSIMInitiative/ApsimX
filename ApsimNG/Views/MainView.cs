@@ -3,7 +3,7 @@
     using APSIM.Shared.Utilities;
     using Gtk;
     using Models.Core;
-    using MonoMac.AppKit;
+    //using MonoMac.AppKit;
     using System;
     using System.Drawing;
     using System.IO;
@@ -312,8 +312,11 @@
             closeBtn.Relief = ReliefStyle.None;
             closeBtn.Clicked += OnCloseBtnClick;
 
-            headerBox.PackStart(tabLabel);
-            headerBox.PackEnd(closeBtn);
+            //fixme - check default packing settings; we used to do
+            //headerBox.PackStart(tabLabel);
+            //headerBox.PackEnd(closeBtn);
+            headerBox.PackStart(tabLabel, false, false, 0);
+            headerBox.PackEnd(closeBtn, false, false, 0);
 
             // Wrap the whole thing inside an event box, so we can respond to a right-button or center-button click
             EventBox eventbox = new EventBox();
@@ -341,7 +344,8 @@
         /// </summary>
         private void InitMac()
         {
-            NSApplication.Init();
+            throw new NotImplementedException();
+            //NSApplication.Init();
         }
 
         /// <summary>
@@ -872,7 +876,7 @@
             // Event handlers.
             fontDialog.OkButton.Clicked += OnChangeFont;
             fontDialog.OkButton.Clicked += OnDestroyFontDialog;
-            fontDialog.ApplyButton.Clicked += OnChangeFont;
+            //fontDialog.ApplyButton.Clicked += OnChangeFont;
             fontDialog.CancelButton.Clicked += OnDestroyFontDialog;
 
             // Show the dialog.
@@ -915,7 +919,7 @@
                 
                 fontDialog.OkButton.Clicked -= OnChangeFont;
                 fontDialog.OkButton.Clicked -= OnDestroyFontDialog;
-                fontDialog.ApplyButton.Clicked -= OnChangeFont;
+                //fontDialog.ApplyButton.Clicked -= OnChangeFont;
                 fontDialog.CancelButton.Clicked -= OnDestroyFontDialog;
                 fontDialog.Destroy();
             }

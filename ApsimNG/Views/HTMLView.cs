@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
+//using System.Windows.Forms;
 using Gtk;
-using WebKit;
-using MonoMac.AppKit;
+//using WebKit;
+//using MonoMac.AppKit;
 using APSIM.Shared.Utilities;
 using UserInterface.EventArguments;
-using HtmlAgilityPack;
+//using HtmlAgilityPack;
 using UserInterface.Classes;
 using System.IO;
 using System.Drawing;
@@ -80,8 +80,7 @@ namespace UserInterface.Views
 
         bool Search(string forString, bool forward, bool caseSensitive, bool wrap);
     }
-
-
+    /*
     public class TWWebBrowserIE : IBrowserWidget
     {
         internal class NativeMethods
@@ -730,7 +729,7 @@ namespace UserInterface.Views
             }
         }
     }
-
+    
     /// <summary>
     /// The Presenter for a HTML component.
     /// </summary>
@@ -1274,4 +1273,5 @@ namespace UserInterface.Views
             }
         }
     }
+    */
 }

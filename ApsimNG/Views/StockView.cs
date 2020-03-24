@@ -337,7 +337,7 @@
                         break;
                     case 1:
                         if (animalInits.Length < 1)
-                            this.gbxAnimals.Child.HideAll();     // hide data entry on the animals tab
+                            this.gbxAnimals.Child.Hide();     // hide data entry on the animals tab
                         else
                         {
                             this.currentGroup = Math.Min(0, animalInits.Length - 1);    // could be -1
@@ -1176,7 +1176,7 @@
             GrazType.AnimalType animalType;
 
             if (this.currentGroup < 0)
-                this.gbxAnimals.Child.HideAll();
+                this.gbxAnimals.Child.Hide();
             else
                 this.gbxAnimals.Child.ShowAll();
 
@@ -1499,7 +1499,7 @@
                     }
                     this.ClickAnimalList(null);          // will also set currentGroup
                     if (animalInits.Length < 1)
-                        gbxAnimals.Child.HideAll();
+                        gbxAnimals.Child.Hide();
                 }
 
                 this.EnableButtons();

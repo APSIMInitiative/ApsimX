@@ -38,7 +38,7 @@
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.map = model as Map;
-            this.view = view as MapView;
+            this.view = view as IMapView;
             this.explorerPresenter = explorerPresenter;
 
             // Tell the view to populate the axis.

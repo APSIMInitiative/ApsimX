@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿/*
+using System.ComponentModel;
 
 namespace UserInterface.Intellisense
 {
@@ -35,3 +36,4 @@ namespace UserInterface.Intellisense
         CSharpInsightItem[] Items { get; }
     }
 }
+*/
