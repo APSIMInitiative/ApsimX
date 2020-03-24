@@ -40,17 +40,9 @@ namespace Models.CLEM.Reporting
         [Link]
         private Simulation simulation = null;
 
-        /// <summary>Link to a clock model.</summary>
-        [Link]
-        private IClock clock = null;
-
         /// <summary>Link to a storage service.</summary>
         [Link]
         private IDataStore storage = null;
-
-        /// <summary>Link to a locator service.</summary>
-        [Link]
-        private ILocator locator = null;
 
         /// <summary>Link to an event service.</summary>
         [Link]
@@ -155,24 +147,6 @@ namespace Models.CLEM.Reporting
             this.FindVariableMembers();
         }
 
-        /// <summary>
-        /// Fill the Members list with VariableMember objects for each variable.
-        /// </summary>
-        private void FindVariableMembers()
-        {
-            this.columns = new List<IReportColumn>();
-
-            AddExperimentFactorLevels();
-
-            foreach (string fullVariableName in this.VariableNames)
-            {
-                if (fullVariableName != string.Empty)
-                {
-                    this.columns.Add(ReportColumn.Create(fullVariableName, clock, storage.Writer, locator, events));
-                }
-            }
-        }
-
         /// <summary>Add the experiment factor levels as columns.</summary>
         private void AddExperimentFactorLevels()
         {
@@ -220,7 +194,7 @@ namespace Models.CLEM.Reporting
             List<object> valuesToWrite = new List<object>();
             for (int i = 0; i < columns.Count; i++)
             {
-                valuesToWrite.Add(columns[i].GetValue());
+                valuesToWrite.Add(columns[i].GetValue(0));
             }
 
             // Add row to our table that will be written to the db file

@@ -10,6 +10,7 @@ namespace Models
     using System.Data;
     using System.IO;
     using System.Linq;
+    using System.Text.RegularExpressions;
     using System.Xml.Serialization;
 
     /// <summary>
@@ -81,6 +82,9 @@ namespace Models
         /// </summary>
         [JsonIgnore]
         public DateTime DayAfterLastOutput { get; set; }
+
+        /// <summary>Group by variable name.</summary>
+        public string GroupByVariableName{ get; set; }
 
         /// <summary>An event handler to allow us to initialize ourselves.</summary>
         /// <param name="sender">Event sender</param>
@@ -207,29 +211,35 @@ namespace Models
                 };
             }
 
-            // Create a row ready for writing.
-            List<object> valuesToWrite = new List<object>();
-            List<string> invalidVariables = new List<string>();
-            for (int i = 0; i < columns.Count; i++)
-            {
-                try
-                {
-                    valuesToWrite.Add(columns[i].GetValue());
-                }
-                catch// (Exception err)
-                {
-                    // Should we include exception message?
-                    invalidVariables.Add(columns[i].Name);
-                }
-            }
-            if (invalidVariables != null && invalidVariables.Count > 0)
-                throw new Exception($"Error in report {Name}: Invalid report variables found:\n{string.Join("\n", invalidVariables)}");
+            // Get number of groups.
+            var numGroups = columns.Max(c => c.NumberOfGroups);
 
-            // Add row to our table that will be written to the db file
-            dataToWriteToDb.Rows.Add(valuesToWrite);
+            for (int groupIndex = 0; groupIndex < numGroups; groupIndex++)
+            {
+                // Create a row ready for writing.
+                List<object> valuesToWrite = new List<object>();
+                List<string> invalidVariables = new List<string>();
+                for (int i = 0; i < columns.Count; i++)
+                {
+                    try
+                    {
+                        valuesToWrite.Add(columns[i].GetValue(groupIndex));
+                    }
+                    catch// (Exception err)
+                    {
+                        // Should we include exception message?
+                        invalidVariables.Add(columns[i].Name);
+                    }
+                }
+                if (invalidVariables != null && invalidVariables.Count > 0)
+                    throw new Exception($"Error in report {Name}: Invalid report variables found:\n{string.Join("\n", invalidVariables)}");
+
+                // Add row to our table that will be written to the db file
+                dataToWriteToDb.Rows.Add(valuesToWrite);
+            }
 
             // Write the table if we reach our threshold number of rows.
-            if (dataToWriteToDb.Rows.Count == 100)
+            if (dataToWriteToDb.Rows.Count >= 100)
             {
                 storage.Writer.WriteTable(dataToWriteToDb);
                 dataToWriteToDb = null;
@@ -287,24 +297,60 @@ namespace Models
         /// <summary>
         /// Fill the Members list with VariableMember objects for each variable.
         /// </summary>
-        private void FindVariableMembers()
+        protected void FindVariableMembers()
         {
             this.columns = new List<IReportColumn>();
 
             AddExperimentFactorLevels();
 
+            // If a group by variable was specified then all columns need to be aggregated
+            // columns. Find the first aggregated column so that we can, later, use its from and to
+            // variables to create an agregated column that doesn't have them.
+            string from = null;
+            string to =  null;
+            if (!string.IsNullOrEmpty(GroupByVariableName))
+                FindFromTo(out from, out to);
+
             foreach (string fullVariableName in this.VariableNames)
             {
                 try
                 {
-                    if (fullVariableName != string.Empty)
-                        this.columns.Add(ReportColumn.Create(fullVariableName, clock, storage.Writer, locator, events));
+                    if (!string.IsNullOrEmpty(fullVariableName))
+                    {
+                        if (fullVariableName.Contains(" of "))
+                            columns.Add(new AggregatedReportColumn(fullVariableName, clock, locator, events, GroupByVariableName));
+                        else if (!string.IsNullOrEmpty(GroupByVariableName))
+                            columns.Add(new AggregatedReportColumn(fullVariableName, clock, locator, events, GroupByVariableName, from, to));
+                        else
+                            columns.Add(new SimpleReportColumn(fullVariableName, locator, events));
+                    }
                 }
                 catch (Exception err)
                 {
                     throw new Exception($"Error while creating report column '{fullVariableName}'", err);
                 }
             }
+        }
+
+        /// <summary>
+        /// Find and return a from and to clause in a variable.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        private void FindFromTo(out string from, out string to)
+        {
+            // Find the first aggregation column.
+            var firstAggregatedVariableName = VariableNames.ToList().Find(var => var.Contains(" from "));
+            if (firstAggregatedVariableName == null)
+                throw new Exception("A report 'group by' can only be specified if there is at least one temporal aggregated column.");
+
+            var pattern = @".+from\W(?<from>.+)\Wto\W(?<to>.+)\Was\W.+";
+            var regEx = new Regex(pattern);
+            var match = regEx.Match(firstAggregatedVariableName);
+            if (!match.Success)
+                throw new Exception($"Invalid format for report agregation variable {firstAggregatedVariableName}");
+            from = match.Groups["from"].Value;
+            to = match.Groups["to"].Value;
         }
 
         /// <summary>Add the experiment factor levels as columns.</summary>
