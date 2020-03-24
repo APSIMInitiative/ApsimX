@@ -32,8 +32,9 @@
         /// <param name="events">An instance of an events service</param>
         public SimpleReportColumn(string reportLine, ILocator locator, IEvent events)
         {
-            variableName = reportLine.Trim();
+            variableName = reportLine;
             Name = StringUtilities.SplitOffAfterDelimiter(ref variableName, " as ");
+            variableName = variableName.Trim();
 
             // specify a column heading if alias was not specified.
             if (string.IsNullOrEmpty(Name))

@@ -337,7 +337,7 @@ namespace Models
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
-        private void FindFromTo(out string from, out string to)
+        protected void FindFromTo(out string from, out string to)
         {
             // Find the first aggregation column.
             var firstAggregatedVariableName = VariableNames.ToList().Find(var => var.Contains(" from "));

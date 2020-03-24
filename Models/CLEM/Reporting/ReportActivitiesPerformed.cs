@@ -41,9 +41,17 @@ namespace Models.CLEM.Reporting
         [Link]
         private Simulation simulation = null;
 
+        /// <summary>Link to a clock model.</summary>
+        [Link]
+        private IClock clock = null;
+
         /// <summary>Link to a storage service.</summary>
         [Link]
         private IDataStore storage = null;
+
+        /// <summary>Link to a locator service.</summary>
+        [Link]
+        private ILocator locator = null;
 
         /// <summary>Link to an event service.</summary>
         [Link]
@@ -96,27 +104,55 @@ namespace Models.CLEM.Reporting
         {
             if (dataToWriteToDb == null)
             {
+                string folderName = null;
+                var folderDescriptor = simulation.Descriptors.Find(d => d.Name == "FolderName");
+                if (folderDescriptor != null)
+                    folderName = folderDescriptor.Value;
                 dataToWriteToDb = new ReportData()
                 {
+                    FolderName = folderName,
                     SimulationName = simulation.Name,
                     TableName = Name,
                     ColumnNames = columns.Select(c => c.Name).ToList(),
                     ColumnUnits = columns.Select(c => c.Units).ToList()
                 };
             }
-            List<object> valuesToWrite = new List<object>();
-            for (int i = 0; i < columns.Count; i++)
+
+            // Get number of groups.
+            var numGroups = columns.Max(c => c.NumberOfGroups);
+
+            for (int groupIndex = 0; groupIndex < numGroups; groupIndex++)
             {
-                valuesToWrite.Add(columns[i].GetValue(0));
+                // Create a row ready for writing.
+                List<object> valuesToWrite = new List<object>();
+                List<string> invalidVariables = new List<string>();
+                for (int i = 0; i < columns.Count; i++)
+                {
+                    try
+                    {
+                        valuesToWrite.Add(columns[i].GetValue(groupIndex));
+                    }
+                    catch// (Exception err)
+                    {
+                        // Should we include exception message?
+                        invalidVariables.Add(columns[i].Name);
+                    }
+                }
+                if (invalidVariables != null && invalidVariables.Count > 0)
+                    throw new Exception($"Error in report {Name}: Invalid report variables found:\n{string.Join("\n", invalidVariables)}");
+
+                // Add row to our table that will be written to the db file
+                dataToWriteToDb.Rows.Add(valuesToWrite);
             }
 
-            dataToWriteToDb.Rows.Add(valuesToWrite);
-
-            if (dataToWriteToDb.Rows.Count == 100)
+            // Write the table if we reach our threshold number of rows.
+            if (dataToWriteToDb.Rows.Count >= 100)
             {
                 storage.Writer.WriteTable(dataToWriteToDb);
                 dataToWriteToDb = null;
             }
+
+            DayAfterLastOutput = clock.Today.AddDays(1);
         }
 
         /// <summary>Create a text report from tables in this data store.</summary>
@@ -169,6 +205,44 @@ namespace Models.CLEM.Reporting
         public new void DoOutputEvent(object sender, EventArgs e)
         {
             DoOutput();
+        }
+
+        /// <summary>
+        /// Fill the Members list with VariableMember objects for each variable.
+        /// </summary>
+        private new void FindVariableMembers()
+        {
+            this.columns = new List<IReportColumn>();
+
+            AddExperimentFactorLevels();
+
+            // If a group by variable was specified then all columns need to be aggregated
+            // columns. Find the first aggregated column so that we can, later, use its from and to
+            // variables to create an agregated column that doesn't have them.
+            string from = null;
+            string to = null;
+            if (!string.IsNullOrEmpty(GroupByVariableName))
+                FindFromTo(out from, out to);
+
+            foreach (string fullVariableName in this.VariableNames)
+            {
+                try
+                {
+                    if (!string.IsNullOrEmpty(fullVariableName))
+                    {
+                        if (fullVariableName.Contains(" of "))
+                            columns.Add(new AggregatedReportColumn(fullVariableName, clock, locator, events, GroupByVariableName));
+                        else if (!string.IsNullOrEmpty(GroupByVariableName))
+                            columns.Add(new AggregatedReportColumn(fullVariableName, clock, locator, events, GroupByVariableName, from, to));
+                        else
+                            columns.Add(new SimpleReportColumn(fullVariableName, locator, events));
+                    }
+                }
+                catch (Exception err)
+                {
+                    throw new Exception($"Error while creating report column '{fullVariableName}'", err);
+                }
+            }
         }
 
         /// <summary>Add the experiment factor levels as columns.</summary>
