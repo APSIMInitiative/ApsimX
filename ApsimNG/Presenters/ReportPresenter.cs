@@ -19,7 +19,7 @@
         /// Without this, it's difficult to know which editor (variables or events) to
         /// insert an intellisense item into.
         /// </summary>
-        private IEditorView currentEditor;
+        private object currentEditor;
 
         /// <summary>
         /// The report object
@@ -68,10 +68,13 @@
             this.view.EventList.Mode = EditorType.Report;
             this.view.VariableList.Lines = report.VariableNames;
             this.view.EventList.Lines = report.EventNames;
+            this.view.GroupByEdit.Value = report.GroupByVariableName;
             this.view.VariableList.ContextItemsNeeded += OnNeedVariableNames;
             this.view.EventList.ContextItemsNeeded += OnNeedEventNames;
+            this.view.GroupByEdit.IntellisenseItemsNeeded += OnNeedVariableNames;
             this.view.VariableList.TextHasChangedByUser += OnVariableNamesChanged;
             this.view.EventList.TextHasChangedByUser += OnEventNamesChanged;
+            this.view.GroupByEdit.Changed += OnGroupByChanged;
             this.view.SplitterChanged += OnSplitterChanged;
             this.view.SplitterPosition = Configuration.Settings.ReportSplitterPosition;
             this.explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
@@ -114,9 +117,11 @@
             this.report.ActiveTabIndex = this.view.TabIndex;
             this.view.VariableList.ContextItemsNeeded -= OnNeedVariableNames;
             this.view.EventList.ContextItemsNeeded -= OnNeedEventNames;
+            this.view.GroupByEdit.IntellisenseItemsNeeded -= OnNeedVariableNames; 
             this.view.SplitterChanged -= OnSplitterChanged;
             this.view.VariableList.TextHasChangedByUser -= OnVariableNamesChanged;
             this.view.EventList.TextHasChangedByUser -= OnEventNamesChanged;
+            this.view.GroupByEdit.Changed -= OnGroupByChanged;
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
             dataStorePresenter.Detach();
             intellisense.ItemSelected -= OnIntellisenseItemSelected;
@@ -154,7 +159,7 @@
             try
             {
                 string currentLine = GetLine(e.Code, e.LineNo - 1);
-                currentEditor = sender as IEditorView;
+                currentEditor = sender;
                 if (!e.ControlShiftSpace && intellisense.GenerateGridCompletions(currentLine, e.ColNo, report, properties, methods, events, e.ControlSpace))
                     intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
             }
@@ -223,6 +228,23 @@
             }
         }
 
+        /// <summary>The event names have changed in the view.</summary>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The argument values</param>
+        private void OnGroupByChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                explorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(OnModelChanged);
+                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(report, "GroupByVariableName", view.GroupByEdit.Value));
+                explorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(OnModelChanged);
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
+        }
+
         /// <summary>The model has changed so update our view.</summary>
         /// <param name="changedModel">The model</param>
         private void OnModelChanged(object changedModel)
@@ -245,9 +267,19 @@
             if (string.IsNullOrEmpty(args.ItemSelected))
                 return;
             else if (string.IsNullOrEmpty(args.TriggerWord))
-                currentEditor.InsertAtCaret(args.ItemSelected);
+            {
+                if (currentEditor is IEditorView)
+                    (currentEditor as IEditorView).InsertAtCaret(args.ItemSelected);
+                else
+                    (currentEditor as IEditView).InsertAtCursor(args.ItemSelected);
+            }
             else
-                currentEditor.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
+            {
+                if (currentEditor is IEditorView)
+                    (currentEditor as IEditorView).InsertCompletionOption(args.ItemSelected, args.TriggerWord);
+                else
+                    (currentEditor as IEditView).InsertCompletionOption(args.ItemSelected, args.TriggerWord);
+            }
         }
     }
 }

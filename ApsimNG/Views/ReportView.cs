@@ -15,6 +15,9 @@
         /// <summary>Provides access to the DataGrid.</summary>
         ViewBase DataStoreView { get; }
 
+        /// <summary>Provides access to the group by edit.</summary>
+        IEditView GroupByEdit { get; }
+
         /// <summary>
         /// Invoked when the user moves the vertical splitter
         /// between the two text editors.
@@ -45,6 +48,7 @@
         private IEditorView frequencyEditor;
         private ViewBase dataStoreView1;
         private VPaned panel;
+        private EditView groupByEdit;
 
         /// <summary>
         /// Invoked when the user moves the vertical splitter
@@ -65,6 +69,9 @@
             panel = (VPaned)builder.GetObject("vpaned1");
             panel.Events |= Gdk.EventMask.PropertyChangeMask;
             panel.AddNotification(OnPropertyNotified);
+
+            groupByEdit = new EditView(owner,
+                                      (Entry)builder.GetObject("groupByEdit")); 
 
             mainWidget = notebook1;
 
@@ -152,6 +159,9 @@
 
         /// <summary>Provides access to the variable list.</summary>
         public IEditorView EventList { get { return frequencyEditor; } }
+
+        /// <summary>Provides access to the group by edit.</summary>
+        public IEditView GroupByEdit {  get { return groupByEdit; } }
 
         /// <summary>Provides access to the DataGrid.</summary>
         public ViewBase DataStoreView { get { return dataStoreView1; } }
