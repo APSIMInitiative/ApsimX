@@ -620,33 +620,14 @@
               "Name": "Structure",
               "Children": [
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "$type": "Models.Functions.WangEngelTempFunction, Models",
+                  "MinTemp": 4.0,
+                  "OptTemp": 28.0,
+                  "MaxTemp": 40.0,
+                  "RefTemp": 25.0,
+                  "MaximumTemperatureWeighting": 0.5,
                   "Name": "ThermalTime",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 25.0,
-                      "Units": null,
-                      "Name": "RefTem",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.WangEngelTempFunction, Models",
-                      "MinTemp": 10.0,
-                      "OptTemp": 25.0,
-                      "MaxTemp": 37.0,
-                      "RefTemp": 25.0,
-                      "MaximumTemperatureWeighting": 0.5,
-                      "Name": "TempRes",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -659,8 +640,8 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 20.0,
-                      "Units": "degree day",
+                      "FixedValue": 0.6,
+                      "Units": "thermal day",
                       "Name": "Constant",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -684,7 +665,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 30.0,
+                          "FixedValue": 0.6,
                           "Units": null,
                           "Name": "Constant",
                           "Children": [],
@@ -705,9 +686,9 @@
                                 24.0
                               ],
                               "Y": [
-                                0.5,
-                                0.5,
-                                0.7,
+                                0.9,
+                                0.9,
+                                1.0,
                                 1.0
                               ],
                               "Name": "XYPairs",
@@ -742,7 +723,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 30.0,
+                  "FixedValue": 25.0,
                   "Units": "number",
                   "Name": "FinalLeafNumber",
                   "Children": [],
@@ -769,12 +750,12 @@
                             34.0
                           ],
                           "Y": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0
+                            0.3,
+                            0.3,
+                            0.3,
+                            0.3,
+                            0.3,
+                            0.3
                           ],
                           "Name": "XYPairs",
                           "Children": [],
@@ -873,7 +854,7 @@
                 },
                 {
                   "$type": "Models.Functions.HoldFunction, Models",
-                  "WhenToHold": "Flowering",
+                  "WhenToHold": "Veraison",
                   "Name": "HeightModel",
                   "Children": [
                     {
@@ -884,11 +865,11 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
-                            1000.0
+                            58.0
                           ],
                           "Y": [
-                            1000.0,
-                            2000.0
+                            1200.0,
+                            2200.0
                           ],
                           "Name": "XYPairs",
                           "Children": [
@@ -1311,7 +1292,7 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
-                            0.5,
+                            0.64,
                             1.0
                           ],
                           "Y": [
@@ -1348,14 +1329,14 @@
                           "X": [
                             0.0,
                             0.3,
-                            0.4,
+                            0.5,
                             1.0
                           ],
                           "Y": [
-                            150.0,
-                            150.0,
-                            150.0,
-                            150.0
+                            16.0,
+                            14.5,
+                            14.0,
+                            14.0
                           ],
                           "Name": "XYPairs",
                           "Children": [
@@ -1388,76 +1369,9 @@
                               ],
                               "LegendPosition": 3,
                               "LegendOrientation": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "LegendOutsideGraph": false,
                               "Name": "Graph",
-                              "Children": [
-                                {
-                                  "$type": "Models.Series, Models",
-                                  "Type": 1,
-                                  "XAxis": 3,
-                                  "YAxis": 0,
-                                  "ColourArgb": -65536,
-                                  "FactorToVaryColours": null,
-                                  "FactorToVaryMarkers": null,
-                                  "FactorToVaryLines": null,
-                                  "Marker": 11,
-                                  "MarkerSize": 0,
-                                  "Line": 0,
-                                  "LineThickness": 0,
-                                  "TableName": null,
-                                  "XFieldName": ".Simulations.Replacements.Grapevine.Leaf.CohortParameters.GrowthDuration.XYPairs.X",
-                                  "YFieldName": ".Simulations.Replacements.Grapevine.Leaf.CohortParameters.GrowthDuration.XYPairs.Y",
-                                  "X2FieldName": "",
-                                  "Y2FieldName": "",
-                                  "ShowInLegend": false,
-                                  "IncludeSeriesNameInLegend": false,
-                                  "Cumulative": false,
-                                  "CumulativeX": false,
-                                  "Filter": null,
-                                  "Name": "Series",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Graph, Models",
-                              "Caption": null,
-                              "Axis": [
-                                {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 0,
-                                  "Title": "Y",
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": false,
-                                  "CrossesAtZero": false
-                                },
-                                {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 3,
-                                  "Title": "X",
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": false,
-                                  "CrossesAtZero": false
-                                }
-                              ],
-                              "LegendPosition": 3,
-                              "LegendOrientation": 0,
-                              "DisabledSeries": null,
-                              "LegendOutsideGraph": false,
-                              "Name": "Graph1",
                               "Children": [
                                 {
                                   "$type": "Models.Series, Models",
@@ -1527,12 +1441,12 @@
                             1.0
                           ],
                           "Y": [
-                            1000.0,
-                            1500.0,
-                            1800.0,
-                            1900.0,
-                            2000.0,
-                            2000.0
+                            50.0,
+                            75.0,
+                            90.0,
+                            95.0,
+                            100.0,
+                            100.0
                           ],
                           "Name": "XYPairs",
                           "Children": [],
@@ -1566,9 +1480,9 @@
                             1.0
                           ],
                           "Y": [
-                            1000.0,
-                            1000.0,
-                            1200.0
+                            40.0,
+                            40.0,
+                            50.0
                           ],
                           "Name": "XYPairs",
                           "Children": [],
@@ -1592,8 +1506,8 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1000000.0,
-                      "Units": "degreeDay",
+                      "FixedValue": 1.0,
+                      "Units": "thermalDay",
                       "Name": "DetachmentLagDuration",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1602,7 +1516,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1000000.0,
+                      "FixedValue": 200.0,
                       "Units": "degreeDay",
                       "Name": "DetachmentDuration",
                       "Children": [],
@@ -6636,6 +6550,18 @@
                 }
               ],
               "Name": "Pruning",
+              "Children": [
+                {
+                  "$type": "Models.Script, ApsimXManager68a3a564-c03f-4384-b4d6-af3ad39f2813",
+                  "Pruning_DAWS": 314,
+                  "CordonDiameter": 10.0,
+                  "Name": "Script",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -6683,6 +6609,24 @@
             }
           ],
           "Name": "PlantVariables",
+          "Children": [
+            {
+              "$type": "Models.Script, ApsimXManagere5d20b71-37d2-44ef-9d13-ad697dc9755f",
+              "FRadInt": 0.0,
+              "ET": 0.0,
+              "ES": 0.0,
+              "PET": 0.0,
+              "LAI": 0.0,
+              "Height": 0.0,
+              "RootDepth": 0.0,
+              "PlantWidth": 0.0,
+              "Name": "Script",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
@@ -7341,14 +7285,12 @@
                 },
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                  "Canopies": [],
                   "InitialResidueName": "Grapevine",
                   "InitialResidueType": "Grapevine",
                   "InitialResidueMass": 2000.0,
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 80.0,
-                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": true,
@@ -7391,9 +7333,6 @@
                 {
                   "$type": "Models.PMF.Plant, Models",
                   "CropType": "Grapevine",
-                  "IsAlive": false,
-                  "IsEnding": false,
-                  "DaysAfterEnding": 0,
                   "ResourceName": "Grapevine",
                   "Name": "Grapevine",
                   "IncludeInDocumentation": true,
@@ -7490,6 +7429,7 @@
                   "EventNames": [
                     "[Clock].DoReport"
                   ],
+                  "GroupByVariableName": null,
                   "Name": "Report",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -9653,9 +9593,6 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Slurp",
-                          "IsAlive": false,
-                          "IsEnding": false,
-                          "DaysAfterEnding": 0,
                           "ResourceName": null,
                           "Name": "Grapevine",
                           "Children": [],
@@ -9699,14 +9636,12 @@
                         },
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                          "Canopies": [],
                           "InitialResidueName": "wheat_stubble",
                           "InitialResidueType": "wheat",
                           "InitialResidueMass": 500.0,
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 100.0,
-                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -10397,6 +10332,7 @@
                           "EventNames": [
                             "[Clock].DoReport"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "Report",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -10428,6 +10364,7 @@
                           "EventNames": [
                             "[Clock].DoReport"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "Report",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -10436,14 +10373,12 @@
                         },
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                          "Canopies": [],
                           "InitialResidueName": "wheat_stubble",
                           "InitialResidueType": "wheat",
                           "InitialResidueMass": 500.0,
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 100.0,
-                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -10453,9 +10388,6 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Slurp",
-                          "IsAlive": false,
-                          "IsEnding": false,
-                          "DaysAfterEnding": 0,
                           "ResourceName": "Slurp",
                           "Name": "Slurp",
                           "IncludeInDocumentation": true,
@@ -14159,6 +14091,7 @@
                           "EventNames": [
                             "[Clock].DoReport"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "Report",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -14177,9 +14110,6 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Slurp",
-                          "IsAlive": false,
-                          "IsEnding": false,
-                          "DaysAfterEnding": 0,
                           "ResourceName": null,
                           "Name": "Grapevine",
                           "Children": [],
@@ -14277,14 +14207,12 @@
                         },
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                          "Canopies": [],
                           "InitialResidueName": "wheat_stubble",
                           "InitialResidueType": "wheat",
                           "InitialResidueMass": 500.0,
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 100.0,
-                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -14938,6 +14866,7 @@
                           "EventNames": [
                             "[Clock].DoReport"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "Report",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -14946,14 +14875,12 @@
                         },
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                          "Canopies": [],
                           "InitialResidueName": "wheat_stubble",
                           "InitialResidueType": "wheat",
                           "InitialResidueMass": 500.0,
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 100.0,
-                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -14963,9 +14890,6 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Slurp",
-                          "IsAlive": false,
-                          "IsEnding": false,
-                          "DaysAfterEnding": 0,
                           "ResourceName": "Slurp",
                           "Name": "Slurp",
                           "IncludeInDocumentation": true,
@@ -15646,6 +15570,102 @@
                     }
                   ],
                   "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "LeafNum",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16736653,
+                      "FactorToVaryColours": "Zone",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "Irri",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "Report",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Grapevine.Leaf.AppearedCohortNo",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16736653,
+                      "FactorToVaryColours": "Zone",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "Observed",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "leaf.no.shoot",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Observed",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -20838,6 +20858,7 @@
                           "EventNames": [
                             "[Clock].DoReport"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "Report",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -20856,9 +20877,6 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Slurp",
-                          "IsAlive": false,
-                          "IsEnding": false,
-                          "DaysAfterEnding": 0,
                           "ResourceName": null,
                           "Name": "Grapevine",
                           "Children": [],
@@ -20902,14 +20920,12 @@
                         },
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                          "Canopies": [],
                           "InitialResidueName": "wheat_stubble",
                           "InitialResidueType": "wheat",
                           "InitialResidueMass": 500.0,
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 100.0,
-                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -21604,6 +21620,7 @@
                           "EventNames": [
                             "[Clock].DoReport"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "Report",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -21612,14 +21629,12 @@
                         },
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                          "Canopies": [],
                           "InitialResidueName": "wheat_stubble",
                           "InitialResidueType": "wheat",
                           "InitialResidueMass": 500.0,
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 100.0,
-                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -21629,9 +21644,6 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Slurp",
-                          "IsAlive": false,
-                          "IsEnding": false,
-                          "DaysAfterEnding": 0,
                           "ResourceName": "Slurp",
                           "Name": "Slurp",
                           "IncludeInDocumentation": true,
@@ -22299,6 +22311,102 @@
                     }
                   ],
                   "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "LeafNum",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16736653,
+                      "FactorToVaryColours": "Zone",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "Irri",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "Report",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Grapevine.Leaf.AppearedCohortNo",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16736653,
+                      "FactorToVaryColours": "Zone",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "Observed",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "leaf.no.shoot.main",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Observed",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -24324,14 +24432,12 @@
                     },
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                      "Canopies": [],
                       "InitialResidueName": "Grapevine",
                       "InitialResidueType": "Grapevine",
                       "InitialResidueMass": 2000.0,
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 80.0,
-                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": true,
@@ -24374,9 +24480,6 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Grapevine",
-                      "IsAlive": false,
-                      "IsEnding": false,
-                      "DaysAfterEnding": 0,
                       "ResourceName": "Grapevine",
                       "Name": "Grapevine",
                       "IncludeInDocumentation": true,
@@ -24391,6 +24494,7 @@
                       "EventNames": [
                         "[Clock].DoReport"
                       ],
+                      "GroupByVariableName": null,
                       "Name": "Report",
                       "Children": [],
                       "IncludeInDocumentation": true,
