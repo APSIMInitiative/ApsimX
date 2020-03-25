@@ -6530,106 +6530,6 @@
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
-        },
-        {
-          "$type": "Models.Core.Folder, Models",
-          "ShowPageOfGraphs": true,
-          "Name": "Management",
-          "Children": [
-            {
-              "$type": "Models.Manager, Models",
-              "Code": "using System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n       \r\n        [Description(\"Pruning_DAWS\")]         \r\n        public int Pruning_DAWS { get; set; }  //day\r\n\r\n        [Description(\"CordonDiameter_mm\")]         \r\n        public double CordonDiameter { get; set; }  //mm\r\n\r\n        [XmlIgnore] private DateTime PruneDate { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            //PruneDate = DateTime.Parse(PruneDateString);\r\n                        \r\n            if (weather.DaysSinceWinterSolstice == Pruning_DAWS)\r\n            {\r\n                Remove.SetPhenologyStage = 1;\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove);\r\n            }\r\n\r\n            {\r\n            zone.Set(\"Grapevine.Cordon.CordonDiameter.FixedValue\", CordonDiameter);   \r\n            //calculate the biomass by length 1 meter time 2 cordons time density (0.0005 g/mm3)\r\n            zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", 3.14*(CordonDiameter/2)*(CordonDiameter/2)*2000*0.0005); \r\n\r\n                }\r\n\r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
-              "Parameters": [
-                {
-                  "Key": "Pruning_DAWS",
-                  "Value": "314"
-                },
-                {
-                  "Key": "CordonDiameter",
-                  "Value": "10"
-                }
-              ],
-              "Name": "Pruning",
-              "Children": [
-                {
-                  "$type": "Models.Script, ApsimXManager68a3a564-c03f-4384-b4d6-af3ad39f2813",
-                  "Pruning_DAWS": 314,
-                  "CordonDiameter": 10.0,
-                  "Name": "Script",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Manager, Models",
-          "Code": "using Models.Zones;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\nusing System.Collections.Generic;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Weather weather = null;\r\n        private RectangularZone AlleyZone {get; set; }\r\n        private RectangularZone RowZone {get; set;}\r\n        private RectangularZone ThisZone {get; set;}\r\n        private double AreaWidth {get; set;}\r\n\r\n        public double FRadInt {get; set;}\r\n        public double ET {get; set;}\r\n        public double ES {get; set;}\r\n        public double PET {get; set;}\r\n        public double LAI {get; set;}\r\n        public double Height {get; set;}\r\n        public double RootDepth {get; set;}\r\n        public double PlantWidth {get; set;}\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void DoStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n               \r\n               ThisZone = this.Parent.Parent as RectangularZone;\r\n               RowZone = Apsim.Find(this.Parent.Parent.Parent,\"Row\") as RectangularZone;\r\n               AlleyZone = (RectangularZone)Apsim.Find(this.Parent.Parent.Parent,\"Alley\") as RectangularZone;\r\n               AreaWidth = AlleyZone.Width + RowZone.Width;\r\n               PlantWidth = 0;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void OnDoReportCalculations(object sender, EventArgs e)\r\n        {\r\n            if (ThisZone.Name == \"Row\")\r\n                {\r\n                FRadInt = ((double)RowZone.Get(\"Grapevine.Leaf.RadIntTot\") * RowZone.Width)/(weather.Radn * AreaWidth);\r\n                ET = (double)RowZone.Get(\"Grapevine.Leaf.Transpiration\") * RowZone.Width/AreaWidth;\r\n                LAI = (double)RowZone.Get(\"Grapevine.Leaf.LAI\");\r\n                Height = (double)RowZone.Get(\"Grapevine.Leaf.Height\");\r\n                RootDepth = (double)RowZone.Get(\"Grapevine.Root.Depth\");\r\n                PlantWidth = (double)RowZone.Get(\"Grapevine.Leaf.Width\");\r\n                }\r\n            else\r\n                {\r\n                FRadInt = ((double)AlleyZone.Get(\"Slurp.Leaf.RadIntTot\") * ThisZone.Width)/ (weather.Radn * AreaWidth);\r\n                ET = (double)AlleyZone.Get(\"Slurp.Leaf.Transpiration\") * ThisZone.Width/AreaWidth;\r\n                LAI = (double)AlleyZone.Get(\"Slurp.Leaf.LAI\");\r\n                Height = (double)AlleyZone.Get(\"Slurp.Leaf.Height\");\r\n                RootDepth = (double)AlleyZone.Get(\"Slurp.Root.Depth\");\r\n                }\r\n\r\n            ES = (double)ThisZone.Get(\"Soil.SoilWater.Es\") * ThisZone.Width/AreaWidth;\r\n            double PETWidth = Math.Min(Math.Max(PlantWidth,ThisZone.Width),AreaWidth);\r\n            PET = (double)ThisZone.Get(\"Soil.SoilWater.Eo\") * PETWidth/AreaWidth;\r\n        }\r\n    }\r\n}\r\n",
-          "Parameters": [
-            {
-              "Key": "FRadInt",
-              "Value": "0"
-            },
-            {
-              "Key": "ET",
-              "Value": "0"
-            },
-            {
-              "Key": "ES",
-              "Value": "0"
-            },
-            {
-              "Key": "PET",
-              "Value": "0"
-            },
-            {
-              "Key": "LAI",
-              "Value": "0"
-            },
-            {
-              "Key": "Height",
-              "Value": "0"
-            },
-            {
-              "Key": "RootDepth",
-              "Value": "0"
-            },
-            {
-              "Key": "PlantWidth",
-              "Value": "0"
-            }
-          ],
-          "Name": "PlantVariables",
-          "Children": [
-            {
-              "$type": "Models.Script, ApsimXManagere5d20b71-37d2-44ef-9d13-ad697dc9755f",
-              "FRadInt": 0.0,
-              "ET": 0.0,
-              "ES": 0.0,
-              "PET": 0.0,
-              "LAI": 0.0,
-              "Height": 0.0,
-              "RootDepth": 0.0,
-              "PlantWidth": 0.0,
-              "Name": "Script",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
         }
       ],
       "IncludeInDocumentation": true,
@@ -14820,8 +14720,41 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        \r\n    }\r\n}\r\n",
-                          "Parameters": [],
+                          "Code": "using Models.Zones;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\nusing System.Collections.Generic;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Weather weather = null;\r\n        private RectangularZone AlleyZone {get; set; }\r\n        private RectangularZone RowZone {get; set;}\r\n        private RectangularZone ThisZone {get; set;}\r\n        private double AreaWidth {get; set;}\r\n\r\n        public double FRadInt {get; set;}\r\n        public double ET {get; set;}\r\n        public double ES {get; set;}\r\n        public double PET {get; set;}\r\n        public double LAI {get; set;}\r\n        public double Height {get; set;}\r\n        public double RootDepth {get; set;}\r\n        public double PlantWidth {get; set;}\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void DoStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n               \r\n               ThisZone = this.Parent.Parent as RectangularZone;\r\n               RowZone = Apsim.Find(this.Parent.Parent.Parent,\"Row\") as RectangularZone;\r\n               AlleyZone = (RectangularZone)Apsim.Find(this.Parent.Parent.Parent,\"Alley\") as RectangularZone;\r\n               AreaWidth = AlleyZone.Width + RowZone.Width;\r\n               PlantWidth = 0;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void OnDoReportCalculations(object sender, EventArgs e)\r\n        {\r\n            if (ThisZone.Name == \"Row\")\r\n                {\r\n                FRadInt = ((double)RowZone.Get(\"Grapevine.Leaf.RadIntTot\") * RowZone.Width)/(weather.Radn * AreaWidth);\r\n                ET = (double)RowZone.Get(\"Grapevine.Leaf.Transpiration\") * RowZone.Width/AreaWidth;\r\n                LAI = (double)RowZone.Get(\"Grapevine.Leaf.LAI\");\r\n                Height = (double)RowZone.Get(\"Grapevine.Leaf.Height\");\r\n                RootDepth = (double)RowZone.Get(\"Grapevine.Root.Depth\");\r\n                PlantWidth = (double)RowZone.Get(\"Grapevine.Leaf.Width\");\r\n                }\r\n            else\r\n                {\r\n                FRadInt = ((double)AlleyZone.Get(\"Slurp.Leaf.RadIntTot\") * ThisZone.Width)/ (weather.Radn * AreaWidth);\r\n                ET = (double)AlleyZone.Get(\"Slurp.Leaf.Transpiration\") * ThisZone.Width/AreaWidth;\r\n                LAI = (double)AlleyZone.Get(\"Slurp.Leaf.LAI\");\r\n                Height = (double)AlleyZone.Get(\"Slurp.Leaf.Height\");\r\n                RootDepth = (double)AlleyZone.Get(\"Slurp.Root.Depth\");\r\n                }\r\n\r\n            ES = (double)ThisZone.Get(\"Soil.SoilWater.Es\") * ThisZone.Width/AreaWidth;\r\n            double PETWidth = Math.Min(Math.Max(PlantWidth,ThisZone.Width),AreaWidth);\r\n            PET = (double)ThisZone.Get(\"Soil.SoilWater.Eo\") * PETWidth/AreaWidth;\r\n        }\r\n    }\r\n}\r\n",
+                          "Parameters": [
+                            {
+                              "Key": "FRadInt",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "ET",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "ES",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "PET",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "LAI",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "Height",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "RootDepth",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "PlantWidth",
+                              "Value": "0"
+                            }
+                          ],
                           "Name": "PlantVariables",
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -15556,8 +15489,41 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        \r\n    }\r\n}\r\n",
-                          "Parameters": [],
+                          "Code": "using Models.Zones;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\nusing System.Collections.Generic;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Weather weather = null;\r\n        private RectangularZone AlleyZone {get; set; }\r\n        private RectangularZone RowZone {get; set;}\r\n        private RectangularZone ThisZone {get; set;}\r\n        private double AreaWidth {get; set;}\r\n\r\n        public double FRadInt {get; set;}\r\n        public double ET {get; set;}\r\n        public double ES {get; set;}\r\n        public double PET {get; set;}\r\n        public double LAI {get; set;}\r\n        public double Height {get; set;}\r\n        public double RootDepth {get; set;}\r\n        public double PlantWidth {get; set;}\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void DoStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n               \r\n               ThisZone = this.Parent.Parent as RectangularZone;\r\n               RowZone = Apsim.Find(this.Parent.Parent.Parent,\"Row\") as RectangularZone;\r\n               AlleyZone = (RectangularZone)Apsim.Find(this.Parent.Parent.Parent,\"Alley\") as RectangularZone;\r\n               AreaWidth = AlleyZone.Width + RowZone.Width;\r\n               PlantWidth = 0;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void OnDoReportCalculations(object sender, EventArgs e)\r\n        {\r\n            if (ThisZone.Name == \"Row\")\r\n                {\r\n                FRadInt = ((double)RowZone.Get(\"Grapevine.Leaf.RadIntTot\") * RowZone.Width)/(weather.Radn * AreaWidth);\r\n                ET = (double)RowZone.Get(\"Grapevine.Leaf.Transpiration\") * RowZone.Width/AreaWidth;\r\n                LAI = (double)RowZone.Get(\"Grapevine.Leaf.LAI\");\r\n                Height = (double)RowZone.Get(\"Grapevine.Leaf.Height\");\r\n                RootDepth = (double)RowZone.Get(\"Grapevine.Root.Depth\");\r\n                PlantWidth = (double)RowZone.Get(\"Grapevine.Leaf.Width\");\r\n                }\r\n            else\r\n                {\r\n                FRadInt = ((double)AlleyZone.Get(\"Slurp.Leaf.RadIntTot\") * ThisZone.Width)/ (weather.Radn * AreaWidth);\r\n                ET = (double)AlleyZone.Get(\"Slurp.Leaf.Transpiration\") * ThisZone.Width/AreaWidth;\r\n                LAI = (double)AlleyZone.Get(\"Slurp.Leaf.LAI\");\r\n                Height = (double)AlleyZone.Get(\"Slurp.Leaf.Height\");\r\n                RootDepth = (double)AlleyZone.Get(\"Slurp.Root.Depth\");\r\n                }\r\n\r\n            ES = (double)ThisZone.Get(\"Soil.SoilWater.Es\") * ThisZone.Width/AreaWidth;\r\n            double PETWidth = Math.Min(Math.Max(PlantWidth,ThisZone.Width),AreaWidth);\r\n            PET = (double)ThisZone.Get(\"Soil.SoilWater.Eo\") * PETWidth/AreaWidth;\r\n        }\r\n    }\r\n}\r\n",
+                          "Parameters": [
+                            {
+                              "Key": "FRadInt",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "ET",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "ES",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "PET",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "LAI",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "Height",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "RootDepth",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "PlantWidth",
+                              "Value": "0"
+                            }
+                          ],
                           "Name": "PlantVariables",
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -21058,15 +21024,6 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Manager, Models",
-                          "Code": "using Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        \r\n    }\r\n}\r\n",
-                          "Parameters": [],
-                          "Name": "PlantVariables",
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Soils.Soil, Models",
                           "RecordNumber": 0,
                           "ASCOrder": null,
@@ -21580,6 +21537,48 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Manager, Models",
+                          "Code": "using Models.Zones;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\nusing System.Collections.Generic;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Weather weather = null;\r\n        private RectangularZone AlleyZone {get; set; }\r\n        private RectangularZone RowZone {get; set;}\r\n        private RectangularZone ThisZone {get; set;}\r\n        private double AreaWidth {get; set;}\r\n\r\n        public double FRadInt {get; set;}\r\n        public double ET {get; set;}\r\n        public double ES {get; set;}\r\n        public double PET {get; set;}\r\n        public double LAI {get; set;}\r\n        public double Height {get; set;}\r\n        public double RootDepth {get; set;}\r\n        public double PlantWidth {get; set;}\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void DoStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n               \r\n               ThisZone = this.Parent.Parent as RectangularZone;\r\n               RowZone = Apsim.Find(this.Parent.Parent.Parent,\"Row\") as RectangularZone;\r\n               AlleyZone = (RectangularZone)Apsim.Find(this.Parent.Parent.Parent,\"Alley\") as RectangularZone;\r\n               AreaWidth = AlleyZone.Width + RowZone.Width;\r\n               PlantWidth = 0;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void OnDoReportCalculations(object sender, EventArgs e)\r\n        {\r\n            if (ThisZone.Name == \"Row\")\r\n                {\r\n                FRadInt = ((double)RowZone.Get(\"Grapevine.Leaf.RadIntTot\") * RowZone.Width)/(weather.Radn * AreaWidth);\r\n                ET = (double)RowZone.Get(\"Grapevine.Leaf.Transpiration\") * RowZone.Width/AreaWidth;\r\n                LAI = (double)RowZone.Get(\"Grapevine.Leaf.LAI\");\r\n                Height = (double)RowZone.Get(\"Grapevine.Leaf.Height\");\r\n                RootDepth = (double)RowZone.Get(\"Grapevine.Root.Depth\");\r\n                PlantWidth = (double)RowZone.Get(\"Grapevine.Leaf.Width\");\r\n                }\r\n            else\r\n                {\r\n                FRadInt = ((double)AlleyZone.Get(\"Slurp.Leaf.RadIntTot\") * ThisZone.Width)/ (weather.Radn * AreaWidth);\r\n                ET = (double)AlleyZone.Get(\"Slurp.Leaf.Transpiration\") * ThisZone.Width/AreaWidth;\r\n                LAI = (double)AlleyZone.Get(\"Slurp.Leaf.LAI\");\r\n                Height = (double)AlleyZone.Get(\"Slurp.Leaf.Height\");\r\n                RootDepth = (double)AlleyZone.Get(\"Slurp.Root.Depth\");\r\n                }\r\n\r\n            ES = (double)ThisZone.Get(\"Soil.SoilWater.Es\") * ThisZone.Width/AreaWidth;\r\n            double PETWidth = Math.Min(Math.Max(PlantWidth,ThisZone.Width),AreaWidth);\r\n            PET = (double)ThisZone.Get(\"Soil.SoilWater.Eo\") * PETWidth/AreaWidth;\r\n        }\r\n    }\r\n}\r\n",
+                          "Parameters": [
+                            {
+                              "Key": "FRadInt",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "ET",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "ES",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "PET",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "LAI",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "Height",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "RootDepth",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "PlantWidth",
+                              "Value": "0"
+                            }
+                          ],
+                          "Name": "PlantVariables",
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -21776,15 +21775,6 @@
                           ],
                           "Name": "WinterRainfall",
                           "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Manager, Models",
-                          "Code": "using Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        \r\n    }\r\n}\r\n",
-                          "Parameters": [],
-                          "Name": "PlantVariables",
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -22300,6 +22290,48 @@
                               "ReadOnly": false
                             }
                           ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Manager, Models",
+                          "Code": "using Models.Zones;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\nusing System.Collections.Generic;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Weather weather = null;\r\n        private RectangularZone AlleyZone {get; set; }\r\n        private RectangularZone RowZone {get; set;}\r\n        private RectangularZone ThisZone {get; set;}\r\n        private double AreaWidth {get; set;}\r\n\r\n        public double FRadInt {get; set;}\r\n        public double ET {get; set;}\r\n        public double ES {get; set;}\r\n        public double PET {get; set;}\r\n        public double LAI {get; set;}\r\n        public double Height {get; set;}\r\n        public double RootDepth {get; set;}\r\n        public double PlantWidth {get; set;}\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void DoStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n               \r\n               ThisZone = this.Parent.Parent as RectangularZone;\r\n               RowZone = Apsim.Find(this.Parent.Parent.Parent,\"Row\") as RectangularZone;\r\n               AlleyZone = (RectangularZone)Apsim.Find(this.Parent.Parent.Parent,\"Alley\") as RectangularZone;\r\n               AreaWidth = AlleyZone.Width + RowZone.Width;\r\n               PlantWidth = 0;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void OnDoReportCalculations(object sender, EventArgs e)\r\n        {\r\n            if (ThisZone.Name == \"Row\")\r\n                {\r\n                FRadInt = ((double)RowZone.Get(\"Grapevine.Leaf.RadIntTot\") * RowZone.Width)/(weather.Radn * AreaWidth);\r\n                ET = (double)RowZone.Get(\"Grapevine.Leaf.Transpiration\") * RowZone.Width/AreaWidth;\r\n                LAI = (double)RowZone.Get(\"Grapevine.Leaf.LAI\");\r\n                Height = (double)RowZone.Get(\"Grapevine.Leaf.Height\");\r\n                RootDepth = (double)RowZone.Get(\"Grapevine.Root.Depth\");\r\n                PlantWidth = (double)RowZone.Get(\"Grapevine.Leaf.Width\");\r\n                }\r\n            else\r\n                {\r\n                FRadInt = ((double)AlleyZone.Get(\"Slurp.Leaf.RadIntTot\") * ThisZone.Width)/ (weather.Radn * AreaWidth);\r\n                ET = (double)AlleyZone.Get(\"Slurp.Leaf.Transpiration\") * ThisZone.Width/AreaWidth;\r\n                LAI = (double)AlleyZone.Get(\"Slurp.Leaf.LAI\");\r\n                Height = (double)AlleyZone.Get(\"Slurp.Leaf.Height\");\r\n                RootDepth = (double)AlleyZone.Get(\"Slurp.Root.Depth\");\r\n                }\r\n\r\n            ES = (double)ThisZone.Get(\"Soil.SoilWater.Es\") * ThisZone.Width/AreaWidth;\r\n            double PETWidth = Math.Min(Math.Max(PlantWidth,ThisZone.Width),AreaWidth);\r\n            PET = (double)ThisZone.Get(\"Soil.SoilWater.Eo\") * PETWidth/AreaWidth;\r\n        }\r\n    }\r\n}\r\n",
+                          "Parameters": [
+                            {
+                              "Key": "FRadInt",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "ET",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "ES",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "PET",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "LAI",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "Height",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "RootDepth",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "PlantWidth",
+                              "Value": "0"
+                            }
+                          ],
+                          "Name": "PlantVariables",
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
