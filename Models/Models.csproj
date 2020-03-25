@@ -308,6 +308,8 @@
     <EmbeddedResource Include="Resources\Scripts\GraphPanelScriptTemplate.cs" />
     <EmbeddedResource Include="Resources\Scripts\CSharpExpressionTemplate.cs" />
     <Compile Include="Plant\Phenology\Scales\ZadokPMFWheat.cs" />
+    <Compile Include="Report\SimpleReportColumn.cs" />
+    <Compile Include="Report\VariableGroup.cs" />
     <Compile Include="Soils\Nutrients\INutrientPool.cs" />
     <Compile Include="Soils\SoilTemp\SoilTemperature.cs" />
     <Compile Include="Soils\Standardiser\Layers.cs" />
@@ -489,9 +491,8 @@
     <Compile Include="Core\ILocator.cs" />
     <Compile Include="Report\IReportColumn.cs" />
     <Compile Include="Storage\IStorageReader.cs" />
-    <Compile Include="Report\ReportColumnWithValues.cs" />
     <Compile Include="Report\ReportColumnConstantValue.cs" />
-    <Compile Include="Report\ReportColumn.cs" />
+    <Compile Include="Report\AggregatedReportColumn.cs" />
     <Compile Include="Soils\Nutrients\NFlow.cs" />
     <Compile Include="Soils\Nutrients\CarbonFlow.cs" />
     <Compile Include="Soils\Nutrients\NutrientPool.cs" />
