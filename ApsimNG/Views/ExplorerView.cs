@@ -79,7 +79,7 @@ namespace UserInterface.Views
         /// <param name="description">The description to show.</param>
         public void AddDescriptionToRightHandView(string description)
         {
-            throw new NotImplementedException("Need HTMLView");
+            //throw new NotImplementedException("Need HTMLView");
             //if (description == null)
             //{
             //    if (descriptionView != null)

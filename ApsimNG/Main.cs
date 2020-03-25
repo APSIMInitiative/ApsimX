@@ -16,11 +16,7 @@
         {
             try
             {
-                string x = null;
-                //Console.WriteLine(x.ToString());
-
                 Application.Init();
-                Console.WriteLine(x.ToString());
                 Settings.Default.SetLongProperty("gtk-menu-images", 1, "");
                 //IntellisensePresenter.Init();
 

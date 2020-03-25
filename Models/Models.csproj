@@ -5,16 +5,16 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <ApplicationIcon />
     <StartupObject />
-  </PropertyGroup>
-
-  <PropertyGroup>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>..\Bin\Models.xml</DocumentationFile>
     <OutputPath>..\Bin\</OutputPath>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Configuration Condition="'$(Configuration)'==''">Debug</Configuration>
+    <Platform Condition="'$(Platform)'==''">Any CPU</Platform>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <DocumentationFile>..\Bin\Models.xml</DocumentationFile>
     <WarningsAsErrors />
     <NoWarn />
     <DefineConstants>DEBUG;TRACE</DefineConstants>
