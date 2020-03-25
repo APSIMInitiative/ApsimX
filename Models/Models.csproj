@@ -764,6 +764,7 @@
     <Compile Include="CLEM\Validation.cs" />
     <Compile Include="CLEM\CLEMModel.cs" />
     <Compile Include="CLEM\ZoneCLEM.cs" />
+    <Compile Include="Weather\WeatherSampler.cs" />
     <Compile Include="Zones\CircularZone.cs" />
     <Compile Include="Zones\RectangularZone.cs" />
     <Compile Include="G_Range\G_Range.cs" />
