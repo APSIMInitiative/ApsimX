@@ -19,7 +19,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 89; } }
+        public static int LatestVersion { get { return 88; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1919,7 +1919,7 @@
         /// </summary>
         /// <param name="root">The root JSON token.</param>
         /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion89(JObject root, string fileName)
+        private static void UpgradeToVersion890(JObject root, string fileName)
         {
             //Method to convert LifeCycleProcesses to functions
             void ChangeToFunction(JObject LifePhase, string OldType, string NewName, string FunctType, string SubFunctType = "")
