@@ -33,24 +33,30 @@
         [SetUp]
         public void Setup()
         {
-            storage = new MockStorage();
-            clock = new Clock()
-            {
-                StartDate = new DateTime(2017, 1, 1),
-                EndDate = new DateTime(2017, 1, 10)
-            };
-            report = new Report()
-            {
-                VariableNames = new string[] { },
-                EventNames = new string[] { "[Clock].EndOfDay" },
-            };
-
             simulation = new Simulation()
             {
-                Children = new List<Model>() { storage, clock, report, new MockSummary() }
+                Children = new List<Model>()
+                {
+                    new MockStorage(),
+                    new MockSummary(),
+                    new Clock()
+                    {
+                        StartDate = new DateTime(2017, 1, 1),
+                        EndDate = new DateTime(2017, 1, 10)
+                    },
+                    new Report()
+                    {
+                        VariableNames = new string[] { },
+                        EventNames = new string[] { "[Clock].EndOfDay" },
+                    }
+                }
             };
+
             Apsim.InitialiseModel(simulation);
             runner = new Runner(simulation);
+            storage = simulation.Children[0] as MockStorage;
+            clock = simulation.Children[2] as Clock;
+            report = simulation.Children[3] as Report;
         }
 
         /// <summary>
@@ -73,7 +79,6 @@
             };
 
             runner.Run();
-
             Assert.AreEqual(storage.Get<double>("sum"),
                             new double[] { 1, 3, 6, 10, 15, 21, 28, 36, 45, 55 });
             Assert.AreEqual(storage.Get<double>("mean"),
@@ -533,6 +538,40 @@ namespace Models
             // The enum values should have been cast to strings before being reported.
             string[] expected = Enumerable.Repeat("Red", actual.Length).ToArray();
             Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
+        /// Ensure a group by works.
+        /// </summary>
+        [Test]
+        public void TestGroupBySpecification()
+        {
+            report.EventNames = new string[] { "[Clock].EndOfSimulation" };
+            report.GroupByVariableName = "[Mock].A";
+
+            var model = new MockModelValuesChangeDaily
+                (aDailyValues: new double[] { 1, 1, 1, 2, 2, 2, 3, 3, 3,  3 },
+                 bDailyValues: new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })
+            { 
+                 Name = "Mock"
+            };
+
+            simulation.Children.Add(model);
+            Apsim.InitialiseModel(simulation);
+
+            report.VariableNames = new string[] 
+            { 
+                "[Clock].Today",
+                "sum of [Mock].B from [Clock].StartOfSimulation to [Clock].EndOfSimulation as SumA" 
+            };
+
+            Assert.IsNull(runner.Run());
+
+            Assert.AreEqual(storage.Get<double>("SumA"),
+                            new double[] { 6, 15, 34 });
+
+            Assert.AreEqual(storage.Get<DateTime>("Clock.Today"),
+                            new DateTime[] { new DateTime(2017, 1, 3), new DateTime(2017, 1, 6), new DateTime(2017, 1, 10) });
         }
     }
 }
