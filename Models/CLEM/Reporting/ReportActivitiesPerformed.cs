@@ -119,7 +119,7 @@ namespace Models.CLEM.Reporting
             }
 
             // Get number of groups.
-            var numGroups = columns.Max(c => c.NumberOfGroups);
+            var numGroups = Math.Max(1, columns.Max(c => c.NumberOfGroups));
 
             for (int groupIndex = 0; groupIndex < numGroups; groupIndex++)
             {
@@ -229,14 +229,7 @@ namespace Models.CLEM.Reporting
                 try
                 {
                     if (!string.IsNullOrEmpty(fullVariableName))
-                    {
-                        if (fullVariableName.Contains(" of "))
-                            columns.Add(new AggregatedReportColumn(fullVariableName, clock, locator, events, GroupByVariableName));
-                        else if (!string.IsNullOrEmpty(GroupByVariableName))
-                            columns.Add(new AggregatedReportColumn(fullVariableName, clock, locator, events, GroupByVariableName, from, to));
-                        else
-                            columns.Add(new SimpleReportColumn(fullVariableName, locator, events));
-                    }
+                        columns.Add(new AggregatedReportColumn(fullVariableName, clock, locator, events, GroupByVariableName, from, to));
                 }
                 catch (Exception err)
                 {

@@ -112,6 +112,46 @@
                             new double[] { 1, 3, 6, 10, 15, 21, 28, 8, 17, 27, 38, 50, 63, 77, 15 });
         }
 
+        /// <summary>This test ensures the 'on' keyword works.</summary>
+        [Test]
+        public void EnsureOnKeywordWorks()
+        {
+            clock.EndDate = new DateTime(2017, 1, 31);
+            report.EventNames = new string[]
+            {
+                "[Clock].EndOfMonth"
+            };
+            report.VariableNames = new string[]
+            {
+                "sum of [Clock].Today.DayOfYear from [Clock].StartOfSimulation to [Clock].EndOfSimulation as totalDoy1",
+                "sum of [Clock].Today.DayOfYear on [Clock].EndOfWeek from [Clock].EndOfSimulation to [Clock].StartOfSimulation as totalDoy2",
+            };
+
+            // Run the simulation.
+            runner.Run();
+
+            Assert.AreEqual(storage.Get<double>("totalDoy1"), new double[] { 496 });
+            Assert.AreEqual(storage.Get<double>("totalDoy2"), new double[] { 70 });
+        }
+
+        /// <summary>This test ensures an expression with spaces works.</summary>
+        [Test]
+        public void EnsureExpressionWorks()
+        {
+            report.VariableNames = new string[]
+            {
+                "sum of ([Clock].Today.DayOfYear + 1) from [Clock].StartOfSimulation to [Clock].EndOfSimulation as totalDoy",
+            };
+            report.EventNames = new string[]
+            {
+                "[Clock].EndOfSimulation"
+            };
+            // Run the simulation.
+            runner.Run();
+
+            Assert.AreEqual(storage.Get<double>("totalDoy"), new double[] { 65 });
+        }
+
         /// <summary>This test ensures weekly aggregation works with weekly reporting frequency.</summary>
         [Test]
         public void EnsureWeeklyAggregationWithWeeklyOutputWorks()

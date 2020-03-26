@@ -244,9 +244,6 @@
             {
               "$type": "Models.PMF.Plant, Models",
               "CropType": "Wheat",
-              "IsAlive": false,
-              "IsEnding": false,
-              "DaysAfterEnding": 0,
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": false,
@@ -255,14 +252,12 @@
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-              "Canopies": [],
               "InitialResidueName": "wheat_stubble",
               "InitialResidueType": "wheat",
               "InitialResidueMass": 500.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 100.0,
-              "FractionFaecesAdded": 1.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
               "IncludeInDocumentation": false,
@@ -695,213 +690,6 @@
                 },
                 {
                   "$type": "Models.Soils.Nutrients.Nutrient, Models",
-                  "DirectedGraphInfo": {
-                    "$type": "Models.DirectedGraph, Models",
-                    "Nodes": [
-                      {
-                        "$type": "Models.Node, Models",
-                        "Name": "Inert",
-                        "Location": "656, 254",
-                        "Colour": "0, 158, 115",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Node, Models",
-                        "Name": "SurfaceResidue",
-                        "Location": "566, 69",
-                        "Colour": "0, 158, 115",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Node, Models",
-                        "Name": "FOMLignin",
-                        "Location": "261, 69",
-                        "Colour": "0, 158, 115",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Node, Models",
-                        "Name": "FOMCellulose",
-                        "Location": "397, 70",
-                        "Colour": "0, 158, 115",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Node, Models",
-                        "Name": "FOMCarbohydrate",
-                        "Location": "123, 70",
-                        "Colour": "0, 158, 115",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Node, Models",
-                        "Name": "Microbial",
-                        "Location": "218, 299",
-                        "Colour": "0, 158, 115",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Node, Models",
-                        "Name": "Humic",
-                        "Location": "458, 293",
-                        "Colour": "0, 158, 115",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Node, Models",
-                        "Name": "Urea",
-                        "Location": "529, 419",
-                        "Colour": "86, 180, 233",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Node, Models",
-                        "Name": "NO3",
-                        "Location": "185, 435",
-                        "Colour": "86, 180, 233",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Node, Models",
-                        "Name": "NH4",
-                        "Location": "357, 422",
-                        "Colour": "86, 180, 233",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Node, Models",
-                        "Name": "Atmosphere",
-                        "Location": "48, 338",
-                        "Colour": "White",
-                        "OutlineColour": "White",
-                        "Transparent": true
-                      }
-                    ],
-                    "Arcs": [
-                      {
-                        "$type": "Models.Arc, Models",
-                        "SourceName": "SurfaceResidue",
-                        "DestinationName": "Microbial",
-                        "Location": "415, 173",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Arc, Models",
-                        "SourceName": "SurfaceResidue",
-                        "DestinationName": "Humic",
-                        "Location": "499, 172",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Arc, Models",
-                        "SourceName": "FOMLignin",
-                        "DestinationName": "Microbial",
-                        "Location": "259, 221",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Arc, Models",
-                        "SourceName": "FOMLignin",
-                        "DestinationName": "Humic",
-                        "Location": "255, 105",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Arc, Models",
-                        "SourceName": "FOMCellulose",
-                        "DestinationName": "Microbial",
-                        "Location": "370, 184",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Arc, Models",
-                        "SourceName": "FOMCellulose",
-                        "DestinationName": "Humic",
-                        "Location": "463, 224",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Arc, Models",
-                        "SourceName": "FOMCarbohydrate",
-                        "DestinationName": "Microbial",
-                        "Location": "141, 131",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Arc, Models",
-                        "SourceName": "FOMCarbohydrate",
-                        "DestinationName": "Humic",
-                        "Location": "204, 215",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Arc, Models",
-                        "SourceName": "Microbial",
-                        "DestinationName": "Microbial",
-                        "Location": "335, 301",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Arc, Models",
-                        "SourceName": "Microbial",
-                        "DestinationName": "Humic",
-                        "Location": "319, 278",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Arc, Models",
-                        "SourceName": "Humic",
-                        "DestinationName": "Microbial",
-                        "Location": "334, 340",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Arc, Models",
-                        "SourceName": "Urea",
-                        "DestinationName": "NH4",
-                        "Location": "433, 416",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Arc, Models",
-                        "SourceName": "NO3",
-                        "DestinationName": "Atmosphere",
-                        "Location": "1, 319",
-                        "Colour": "Black",
-                        "Text": null
-                      },
-                      {
-                        "$type": "Models.Arc, Models",
-                        "SourceName": "NH4",
-                        "DestinationName": "NO3",
-                        "Location": "243, 409",
-                        "Colour": "Black",
-                        "Text": null
-                      }
-                    ]
-                  },
                   "ResourceName": "Nutrient",
                   "Name": "Nutrient",
                   "IncludeInDocumentation": false,
@@ -1828,14 +1616,12 @@
                     },
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                      "Canopies": [],
                       "InitialResidueName": "Sward",
                       "InitialResidueType": "grass",
                       "InitialResidueMass": 1000.0,
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 15.0,
-                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,
@@ -3071,9 +2857,6 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Wheat",
-                      "IsAlive": false,
-                      "IsEnding": false,
-                      "DaysAfterEnding": 0,
                       "ResourceName": "Wheat",
                       "Name": "Wheat",
                       "IncludeInDocumentation": false,
@@ -3082,14 +2865,12 @@
                     },
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                      "Canopies": [],
                       "InitialResidueName": "wheat_stubble",
                       "InitialResidueType": "wheat",
                       "InitialResidueMass": 500.0,
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 100.0,
-                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,
@@ -3522,213 +3303,6 @@
                         },
                         {
                           "$type": "Models.Soils.Nutrients.Nutrient, Models",
-                          "DirectedGraphInfo": {
-                            "$type": "Models.DirectedGraph, Models",
-                            "Nodes": [
-                              {
-                                "$type": "Models.Node, Models",
-                                "Name": "Inert",
-                                "Location": "656, 254",
-                                "Colour": "0, 158, 115",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Node, Models",
-                                "Name": "SurfaceResidue",
-                                "Location": "566, 69",
-                                "Colour": "0, 158, 115",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Node, Models",
-                                "Name": "FOMLignin",
-                                "Location": "261, 69",
-                                "Colour": "0, 158, 115",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Node, Models",
-                                "Name": "FOMCellulose",
-                                "Location": "397, 70",
-                                "Colour": "0, 158, 115",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Node, Models",
-                                "Name": "FOMCarbohydrate",
-                                "Location": "123, 70",
-                                "Colour": "0, 158, 115",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Node, Models",
-                                "Name": "Microbial",
-                                "Location": "218, 299",
-                                "Colour": "0, 158, 115",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Node, Models",
-                                "Name": "Humic",
-                                "Location": "458, 293",
-                                "Colour": "0, 158, 115",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Node, Models",
-                                "Name": "Urea",
-                                "Location": "529, 419",
-                                "Colour": "86, 180, 233",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Node, Models",
-                                "Name": "NO3",
-                                "Location": "185, 435",
-                                "Colour": "86, 180, 233",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Node, Models",
-                                "Name": "NH4",
-                                "Location": "357, 422",
-                                "Colour": "86, 180, 233",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Node, Models",
-                                "Name": "Atmosphere",
-                                "Location": "48, 338",
-                                "Colour": "White",
-                                "OutlineColour": "White",
-                                "Transparent": true
-                              }
-                            ],
-                            "Arcs": [
-                              {
-                                "$type": "Models.Arc, Models",
-                                "SourceName": "SurfaceResidue",
-                                "DestinationName": "Microbial",
-                                "Location": "415, 173",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Arc, Models",
-                                "SourceName": "SurfaceResidue",
-                                "DestinationName": "Humic",
-                                "Location": "499, 172",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Arc, Models",
-                                "SourceName": "FOMLignin",
-                                "DestinationName": "Microbial",
-                                "Location": "259, 221",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Arc, Models",
-                                "SourceName": "FOMLignin",
-                                "DestinationName": "Humic",
-                                "Location": "255, 105",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Arc, Models",
-                                "SourceName": "FOMCellulose",
-                                "DestinationName": "Microbial",
-                                "Location": "370, 184",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Arc, Models",
-                                "SourceName": "FOMCellulose",
-                                "DestinationName": "Humic",
-                                "Location": "463, 224",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Arc, Models",
-                                "SourceName": "FOMCarbohydrate",
-                                "DestinationName": "Microbial",
-                                "Location": "141, 131",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Arc, Models",
-                                "SourceName": "FOMCarbohydrate",
-                                "DestinationName": "Humic",
-                                "Location": "204, 215",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Arc, Models",
-                                "SourceName": "Microbial",
-                                "DestinationName": "Microbial",
-                                "Location": "335, 301",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Arc, Models",
-                                "SourceName": "Microbial",
-                                "DestinationName": "Humic",
-                                "Location": "319, 278",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Arc, Models",
-                                "SourceName": "Humic",
-                                "DestinationName": "Microbial",
-                                "Location": "334, 340",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Arc, Models",
-                                "SourceName": "Urea",
-                                "DestinationName": "NH4",
-                                "Location": "433, 416",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Arc, Models",
-                                "SourceName": "NO3",
-                                "DestinationName": "Atmosphere",
-                                "Location": "1, 319",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Arc, Models",
-                                "SourceName": "NH4",
-                                "DestinationName": "NO3",
-                                "Location": "243, 409",
-                                "Colour": "Black",
-                                "Text": null
-                              }
-                            ]
-                          },
                           "ResourceName": "Nutrient",
                           "Name": "Nutrient",
                           "IncludeInDocumentation": false,
@@ -4306,7 +3880,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "Report has the ability to produce temporally aggregated variables grouped by another variable. The example in this section has two contrasting reports that summerise variables seaasonally in 2 different ways.\n\n1. The first report (SeasonalByYear) has multiple reporting frequencies, one for each end of season. This produces a year x season output table.\n\n2. The second report (SeasonalOverall) temporally aggregates from start to end of simulation and has a reporting frequency of end of simulation. It also has a 'Group By' of [Weather].Season which, at the end of the simulation, will split each variable into values for each season resulting in multpile rows of output, one for each season (4 rows of output).\n\nTo use the 'Group By' capability, variables need to be aggregated like this:\n\n\t\tfrom [Clock].StartOfSimulation to [Clock].EndOfSimulation\n\nThe reporting frequency must be:\n\n\t\t[Clock].EndOfSimulation\n\nThe 'Group By' variable can be any APSIM variable e.g.\n\n\t\t[Clock].Today.Month\n\t\t[Weather].Season ",
+          "Text": "Report has the ability to produce temporally aggregated variables grouped by another variable. The example in this section has two contrasting reports that summerise variables seaasonally in 2 different ways.\n\n1. The first report (SeasonalOverall) temporally aggregates from start to end of simulation and has a reporting frequency of end of simulation. It also has a 'Group By' of [Weather].Season which, at the end of the simulation, will split each variable into values for each season resulting in multpile rows of output, one for each season (4 rows of output).\n\n2. The second report (SeasonalByYear) has multiple reporting frequencies, one for each end of season. This produces a year x season output table.\n\n**The group by keyword**\n\nTo use the 'Group By' capability, variables need to be aggregated like this:\n\n\t\tfrom [Clock].StartOfSimulation to [Clock].EndOfSimulation\n\nThe reporting frequency must be:\n\n\t\t[Clock].EndOfSimulation\n\nThe 'Group By' variable can be any APSIM variable e.g.\n\n\t\t[Clock].Today.Month\n\t\t[Weather].Season \n\n**The on keyword**\n\nThis simulation also introduces the *on* keyword. This keyword changes the timing of variable collection. By default (as in SeasonalByYear report), the values of variables are collected at the end of each day. When the variable is *[AGPWhiteClover].HarvestedWt* this results in a lot of zeros being collected because HarvestedWt is zero every day except when there is a harvest. This makes the mean calculation very low as it has a lot of zero values for HarvestedWt.\n\nIn the *SeasonalByYearWithOnKeyword* report the *on* keyword is used to specify that the values for HarvestedWt should be collected whenever there is a *[SimpleGrazing].Grazed* event. In other words, a value for HarvestedWt is only collected whenever there is a harvest. Note how the mean values are much higher than the previous report. \n\n",
           "Name": "Memo",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -4597,14 +4171,12 @@
                 },
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                  "Canopies": [],
                   "InitialResidueName": "Sward",
                   "InitialResidueType": "grass",
                   "InitialResidueMass": 1000.0,
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 15.0,
-                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": true,
@@ -5041,11 +4613,29 @@
                 {
                   "$type": "Models.Report, Models",
                   "VariableNames": [
+                    "[Weather].Season as Season",
+                    "sum of [AGPWhiteClover].HarvestedWt from [Clock].StartOfSimulation to [Clock].EndOfSimulation as WhiteClover",
+                    "sum of [AGPRyegrass].HarvestedWt from [Clock].StartOfSimulation to [Clock].EndOfSimulation as Ryegrass",
+                    "mean of ([AGPWhiteClover].AboveGroundWt / ([AGPWhiteClover].AboveGroundWt + [AGPRyegrass].AboveGroundWt + 1.0)) from [Clock].StartOfSimulation to [Clock].EndOfSimulation as PropCloverHarvested"
+                  ],
+                  "EventNames": [
+                    "[Clock].EndOfSimulation"
+                  ],
+                  "GroupByVariableName": "[Weather].Season",
+                  "Name": "SeasonalOverall",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report, Models",
+                  "VariableNames": [
                     "[Clock].Today.Year",
                     "[Weather].Season as Season",
                     "sum of [AGPWhiteClover].HarvestedWt from [SeasonalByYear].DayAfterLastOutput to [Clock].Today as WhiteClover",
                     "sum of [AGPRyegrass].HarvestedWt from [SeasonalByYear].DayAfterLastOutput to [Clock].Today as Ryegrass",
-                    "mean of ([AGPWhiteClover].AboveGroundWt / ([AGPWhiteClover].AboveGroundWt + [AGPRyegrass].AboveGroundWt + 1.0)) from [SeasonalByYear].DayAfterLastOutput to [Clock].Today as PropCloverHarvested"
+                    "mean of ([AGPWhiteClover].HarvestedWt / ([AGPWhiteClover].HarvestedWt + [AGPRyegrass].HarvestedWt + 1.0)) from [SeasonalByYear].DayAfterLastOutput to [Clock].Today as PropCloverHarvested"
                   ],
                   "EventNames": [
                     "[Weather].EndOfAutumn",
@@ -5063,16 +4653,20 @@
                 {
                   "$type": "Models.Report, Models",
                   "VariableNames": [
+                    "[Clock].Today.Year",
                     "[Weather].Season as Season",
-                    "sum of [AGPWhiteClover].HarvestedWt from [Clock].StartOfSimulation to [Clock].EndOfSimulation as WhiteClover",
-                    "sum of [AGPRyegrass].HarvestedWt from [Clock].StartOfSimulation to [Clock].EndOfSimulation as Ryegrass",
-                    "mean of ([AGPWhiteClover].AboveGroundWt / ([AGPWhiteClover].AboveGroundWt + [AGPRyegrass].AboveGroundWt + 1.0)) from [Clock].StartOfSimulation to [Clock].EndOfSimulation as PropCloverHarvested"
+                    "sum of [AGPWhiteClover].HarvestedWt from [SeasonalByYear].DayAfterLastOutput to [Clock].Today as WhiteClover",
+                    "sum of [AGPRyegrass].HarvestedWt from [SeasonalByYear].DayAfterLastOutput to [Clock].Today as Ryegrass",
+                    "mean of ([AGPWhiteClover].HarvestedWt / ([AGPWhiteClover].HarvestedWt + [AGPRyegrass].HarvestedWt + 1.0)) on [SimpleGrazing].Grazed from [SeasonalByYear].DayAfterLastOutput to [Clock].Today as PropCloverHarvested"
                   ],
                   "EventNames": [
-                    "[Clock].EndOfSimulation"
+                    "[Weather].EndOfAutumn",
+                    "[Weather].EndOfWinter",
+                    "[Weather].EndOfSpring",
+                    "[Weather].EndOfSummer"
                   ],
-                  "GroupByVariableName": "[Weather].Season",
-                  "Name": "SeasonalOverall",
+                  "GroupByVariableName": "",
+                  "Name": "SeasonalByYearWithOnKeyword",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
