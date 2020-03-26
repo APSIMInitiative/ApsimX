@@ -640,7 +640,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.6,
+                      "FixedValue": 1.8,
                       "Units": "thermal day",
                       "Name": "Constant",
                       "Children": [],
@@ -665,7 +665,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.6,
+                          "FixedValue": 1.8,
                           "Units": null,
                           "Name": "Constant",
                           "Children": [],
@@ -1330,11 +1330,13 @@
                             0.0,
                             0.3,
                             0.5,
-                            1.0
+                            1.0,
+                            1.1
                           ],
                           "Y": [
                             16.0,
                             14.5,
+                            14.0,
                             14.0,
                             14.0
                           ],
@@ -1438,13 +1440,15 @@
                             0.3,
                             0.4,
                             0.73,
-                            1.0
+                            1.0,
+                            1.1
                           ],
                           "Y": [
                             50.0,
                             75.0,
                             90.0,
                             95.0,
+                            100.0,
                             100.0,
                             100.0
                           ],
@@ -1506,7 +1510,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
+                      "FixedValue": 10.0,
                       "Units": "thermalDay",
                       "Name": "DetachmentLagDuration",
                       "Children": [],
@@ -9419,7 +9423,7 @@
                     {
                       "$type": "Models.Weather, Models",
                       "FileName": "Site1004_RPC.met",
-                      "ExcelWorkSheetName": null,
+                      "ExcelWorkSheetName": "",
                       "Name": "Weather",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -10199,7 +10203,6 @@
                             "[Grapevine].Leaf.InitialisedCohortNo",
                             "[Grapevine].Leaf.DeadCohortNo",
                             "[Grapevine].Leaf.AppearedCohortNo",
-                            "[Grapevine].Leaf.CohortSize",
                             "[Grapevine].Leaf.Fn",
                             "[Grapevine].Leaf.Fw",
                             "[Grapevine].Leaf.Live.Wt",
@@ -10324,7 +10327,7 @@
                             },
                             {
                               "Key": "SowingDate",
-                              "Value": "07/01/2001 00:00:00"
+                              "Value": "01/01/2004 00:00:00"
                             },
                             {
                               "Key": "RootDepth",
