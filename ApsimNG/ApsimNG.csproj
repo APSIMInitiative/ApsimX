@@ -478,6 +478,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\TreeViewImages\Infestation.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LifeCyclePhase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\WeatherSampler.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\WaterBalance.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SimpleLeafAppearancePhase.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\DocumentCheck.png" />
