@@ -185,9 +185,20 @@ namespace Models
         }
 
         /// <summary>
+        /// The cache can be huge so it cannot be de/serialized. Need to have
+        /// field + property combo because we need the [NonSerialized]
+        /// attribute, which is only legal on a field. If we just had a
+        /// property, the backing field would be serialized because it wouldn't
+        /// have a [NonSerialized] attribute.
+        /// </summary>
+        [JsonIgnore]
+        [NonSerialized]
+        private Dictionary<string, Dictionary<int, List<SeriesDefinition>>> cache = new Dictionary<string, Dictionary<int, List<SeriesDefinition>>>();
+
+        /// <summary>
         /// Cached graph data.
         /// </summary>
         [JsonIgnore]
-        public Dictionary<string, Dictionary<int, List<SeriesDefinition>>> Cache { get; set; } = new Dictionary<string, Dictionary<int, List<SeriesDefinition>>>();
+        public Dictionary<string, Dictionary<int, List<SeriesDefinition>>> Cache { get { return cache; } set { cache = value; } }
     }
 }
