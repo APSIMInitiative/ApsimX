@@ -684,8 +684,6 @@
                 },
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": null,
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -788,8 +786,6 @@
                 },
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": null,
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -892,8 +888,6 @@
                 },
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": null,
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -996,8 +990,6 @@
                 },
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": null,
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -1100,8 +1092,6 @@
                 },
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": null,
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -1204,8 +1194,6 @@
                 },
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": null,
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -1308,8 +1296,6 @@
                 },
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": "Eggs",
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -1455,6 +1441,28 @@
                           "FixedValue": 0.5,
                           "Units": "individuals / population",
                           "Name": "DailyLayingRate",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ReproductionDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "TomatoPotatoPsyllid",
+                      "NameOfPhaseForProgeny": "Eggs",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ReproductionDestinationPhase",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1.0,
+                          "Units": null,
+                          "Name": "ProportionOfProgeny",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
