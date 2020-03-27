@@ -257,7 +257,7 @@ namespace Models.PMF.Organs
             {
                 if (Structure != null)
                 {
-                    double fractionBranch = Math.Min(1 - Structure.MainStemPopn / Structure.TotalStemPopn, 0);
+                    double fractionBranch = Math.Max(1 - Structure.MainStemPopn / Structure.TotalStemPopn, 0);
                     return LAI * fractionBranch;
                 }
                 else 
