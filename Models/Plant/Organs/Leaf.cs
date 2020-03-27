@@ -229,6 +229,44 @@ namespace Models.PMF.Organs
         public Structure Structure = null;
         #endregion
 
+        /// <summary>Gets the LAI of the main stem </summary>
+        [Units("m^2/m^2")]
+        public double LAIMainStem
+        {
+            //CohortPopulation - Structure.MainStemPopn
+            get
+            {
+                if(Structure != null)
+               {
+                    double fractionMainStem = Math.Max(1, Structure.MainStemPopn / Structure.TotalStemPopn);
+                    return LAI * fractionMainStem;
+                }
+                else
+                {
+                    return 0; 
+                }
+            }
+        }
+
+        /// <summary>Gets the LAI of the branches </summary>
+        [Units("m^2/m^2")]
+        public double LAIBranch
+        {
+            //CohortPopulation - Structure.MainStemPopn
+            get
+            {
+                if (Structure != null)
+                {
+                    double fractionBranch = Math.Min(1 - Structure.MainStemPopn / Structure.TotalStemPopn, 0);
+                    return LAI * fractionBranch;
+                }
+                else 
+                {
+                    return 0;
+                }
+            }
+        }
+
         #region Structures
         /// <summary>
         /// # Potential Leaf Area index
