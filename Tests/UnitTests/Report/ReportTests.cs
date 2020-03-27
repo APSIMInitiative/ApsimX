@@ -613,5 +613,23 @@ namespace Models
             Assert.AreEqual(storage.Get<DateTime>("Clock.Today"),
                             new DateTime[] { new DateTime(2017, 1, 3), new DateTime(2017, 1, 6), new DateTime(2017, 1, 10) });
         }
+
+        /// <summary>This test ensures that having lots of spacing is ok.</summary>
+        [Test]
+        public void EnsureLotsOfSpacingWorks()
+        {
+            clock.EndDate = new DateTime(2017, 1, 15);
+            report.VariableNames = new string[]
+            {
+                "sum   of   [Clock].Today.DayOfYear   from   [Report].DayAfterLastOutput   to   [Clock].Today   as   values",
+            };
+
+            // Run the simulation.
+            runner.Run();
+
+            Assert.AreEqual(storage.Get<double>("values"),
+                            new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 });
+        }
+
     }
 }
