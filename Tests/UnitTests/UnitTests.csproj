@@ -155,6 +155,7 @@
     <Compile Include="Core\Run\SimulationDescriptionTests.cs" />
     <Compile Include="Factorial\ExperimentTests.cs" />
     <Compile Include="IrrigationTests.cs" />
+    <Compile Include="MockModelValuesChangeDaily.cs" />
     <Compile Include="MockModel.cs" />
     <Compile Include="Resources\ResourceTests.cs" />
     <Compile Include="Soils\MockNutrientPool.cs" />
@@ -174,6 +175,7 @@
     <Compile Include="SummaryTests.cs" />
     <Compile Include="TextStorageReader.cs" />
     <Compile Include="APSIMShared\DBMergerTests.cs" />
+    <Compile Include="Weather\WeatherSamplerTests.cs" />
     <Compile Include="Weather\WeatherTests.cs" />
     <Compile Include="Core\ApsimFile\XMLToJSONTests.cs" />
     <Compile Include="Core\DocumentationTests.cs" />
