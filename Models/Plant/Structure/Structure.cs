@@ -208,7 +208,9 @@ namespace Models.PMF.Struct
         /// <summary>Relative progress toward final leaf.</summary>
         [XmlIgnore]
         public double RelativeNodeApperance { get { return LeafTipsAppeared / finalLeafNumber.Value(); } }
-
+        /// <summary>Total number of leaves per shoot .</summary>
+        [XmlIgnore]
+        public double TotalLeavesPerShoot { get; set; }
 
         // 6. Public methods
         //-------------------------------------------------------------------------------------------
@@ -216,6 +218,7 @@ namespace Models.PMF.Struct
         public void Clear()
         {
             TotalStemPopn = 0;
+            TotalLeavesPerShoot = 0;
             PotLeafTipsAppeared = 0;
             PlantTotalNodeNo = 0;
             ProportionBranchMortality = 0;
@@ -314,6 +317,8 @@ namespace Models.PMF.Struct
                         {
                             TotalStemPopn += branchingRate.Value() * MainStemPopn;
                             BranchNumber += branchingRate.Value();
+
+                            TotalLeavesPerShoot += BranchNumber + 1;
                             DoLeafTipAppearance();
                         }
                     }

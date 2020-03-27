@@ -620,33 +620,14 @@
               "Name": "Structure",
               "Children": [
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "$type": "Models.Functions.WangEngelTempFunction, Models",
+                  "MinTemp": 4.0,
+                  "OptTemp": 28.0,
+                  "MaxTemp": 40.0,
+                  "RefTemp": 25.0,
+                  "MaximumTemperatureWeighting": 0.5,
                   "Name": "ThermalTime",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 25.0,
-                      "Units": null,
-                      "Name": "RefTem",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.WangEngelTempFunction, Models",
-                      "MinTemp": 10.0,
-                      "OptTemp": 25.0,
-                      "MaxTemp": 37.0,
-                      "RefTemp": 25.0,
-                      "MaximumTemperatureWeighting": 0.5,
-                      "Name": "TempRes",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -659,8 +640,8 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 20.0,
-                      "Units": "degree day",
+                      "FixedValue": 1.8,
+                      "Units": "thermal day",
                       "Name": "Constant",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -684,7 +665,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 30.0,
+                          "FixedValue": 1.8,
                           "Units": null,
                           "Name": "Constant",
                           "Children": [],
@@ -705,9 +686,9 @@
                                 24.0
                               ],
                               "Y": [
-                                0.5,
-                                0.5,
-                                0.7,
+                                0.9,
+                                0.9,
+                                1.0,
                                 1.0
                               ],
                               "Name": "XYPairs",
@@ -742,7 +723,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 30.0,
+                  "FixedValue": 25.0,
                   "Units": "number",
                   "Name": "FinalLeafNumber",
                   "Children": [],
@@ -769,12 +750,12 @@
                             34.0
                           ],
                           "Y": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0
+                            0.3,
+                            0.3,
+                            0.3,
+                            0.3,
+                            0.3,
+                            0.3
                           ],
                           "Name": "XYPairs",
                           "Children": [],
@@ -873,7 +854,7 @@
                 },
                 {
                   "$type": "Models.Functions.HoldFunction, Models",
-                  "WhenToHold": "Flowering",
+                  "WhenToHold": "Veraison",
                   "Name": "HeightModel",
                   "Children": [
                     {
@@ -884,11 +865,11 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
-                            1000.0
+                            58.0
                           ],
                           "Y": [
-                            1000.0,
-                            2000.0
+                            1200.0,
+                            2200.0
                           ],
                           "Name": "XYPairs",
                           "Children": [
@@ -1311,7 +1292,7 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
-                            0.5,
+                            0.64,
                             1.0
                           ],
                           "Y": [
@@ -1348,14 +1329,16 @@
                           "X": [
                             0.0,
                             0.3,
-                            0.4,
-                            1.0
+                            0.5,
+                            1.0,
+                            1.1
                           ],
                           "Y": [
-                            150.0,
-                            150.0,
-                            150.0,
-                            150.0
+                            16.0,
+                            14.5,
+                            14.0,
+                            14.0,
+                            14.0
                           ],
                           "Name": "XYPairs",
                           "Children": [
@@ -1388,76 +1371,9 @@
                               ],
                               "LegendPosition": 3,
                               "LegendOrientation": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "LegendOutsideGraph": false,
                               "Name": "Graph",
-                              "Children": [
-                                {
-                                  "$type": "Models.Series, Models",
-                                  "Type": 1,
-                                  "XAxis": 3,
-                                  "YAxis": 0,
-                                  "ColourArgb": -65536,
-                                  "FactorToVaryColours": null,
-                                  "FactorToVaryMarkers": null,
-                                  "FactorToVaryLines": null,
-                                  "Marker": 11,
-                                  "MarkerSize": 0,
-                                  "Line": 0,
-                                  "LineThickness": 0,
-                                  "TableName": null,
-                                  "XFieldName": ".Simulations.Replacements.Grapevine.Leaf.CohortParameters.GrowthDuration.XYPairs.X",
-                                  "YFieldName": ".Simulations.Replacements.Grapevine.Leaf.CohortParameters.GrowthDuration.XYPairs.Y",
-                                  "X2FieldName": "",
-                                  "Y2FieldName": "",
-                                  "ShowInLegend": false,
-                                  "IncludeSeriesNameInLegend": false,
-                                  "Cumulative": false,
-                                  "CumulativeX": false,
-                                  "Filter": null,
-                                  "Name": "Series",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Graph, Models",
-                              "Caption": null,
-                              "Axis": [
-                                {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 0,
-                                  "Title": "Y",
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": false,
-                                  "CrossesAtZero": false
-                                },
-                                {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 3,
-                                  "Title": "X",
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": false,
-                                  "CrossesAtZero": false
-                                }
-                              ],
-                              "LegendPosition": 3,
-                              "LegendOrientation": 0,
-                              "DisabledSeries": null,
-                              "LegendOutsideGraph": false,
-                              "Name": "Graph1",
                               "Children": [
                                 {
                                   "$type": "Models.Series, Models",
@@ -1524,15 +1440,17 @@
                             0.3,
                             0.4,
                             0.73,
-                            1.0
+                            1.0,
+                            1.1
                           ],
                           "Y": [
-                            1000.0,
-                            1500.0,
-                            1800.0,
-                            1900.0,
-                            2000.0,
-                            2000.0
+                            50.0,
+                            75.0,
+                            90.0,
+                            95.0,
+                            100.0,
+                            100.0,
+                            100.0
                           ],
                           "Name": "XYPairs",
                           "Children": [],
@@ -1566,9 +1484,9 @@
                             1.0
                           ],
                           "Y": [
-                            1000.0,
-                            1000.0,
-                            1200.0
+                            40.0,
+                            40.0,
+                            50.0
                           ],
                           "Name": "XYPairs",
                           "Children": [],
@@ -1592,8 +1510,8 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1000000.0,
-                      "Units": "degreeDay",
+                      "FixedValue": 10.0,
+                      "Units": "thermalDay",
                       "Name": "DetachmentLagDuration",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1602,7 +1520,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1000000.0,
+                      "FixedValue": 200.0,
                       "Units": "degreeDay",
                       "Name": "DetachmentDuration",
                       "Children": [],
@@ -6616,76 +6534,6 @@
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
-        },
-        {
-          "$type": "Models.Core.Folder, Models",
-          "ShowPageOfGraphs": true,
-          "Name": "Management",
-          "Children": [
-            {
-              "$type": "Models.Manager, Models",
-              "Code": "using System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n       \r\n        [Description(\"Pruning_DAWS\")]         \r\n        public int Pruning_DAWS { get; set; }  //day\r\n\r\n        [Description(\"CordonDiameter_mm\")]         \r\n        public double CordonDiameter { get; set; }  //mm\r\n\r\n        [XmlIgnore] private DateTime PruneDate { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            //PruneDate = DateTime.Parse(PruneDateString);\r\n                        \r\n            if (weather.DaysSinceWinterSolstice == Pruning_DAWS)\r\n            {\r\n                Remove.SetPhenologyStage = 1;\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove);\r\n            }\r\n\r\n            {\r\n            zone.Set(\"Grapevine.Cordon.CordonDiameter.FixedValue\", CordonDiameter);   \r\n            //calculate the biomass by length 1 meter time 2 cordons time density (0.0005 g/mm3)\r\n            zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", 3.14*(CordonDiameter/2)*(CordonDiameter/2)*2000*0.0005); \r\n\r\n                }\r\n\r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
-              "Parameters": [
-                {
-                  "Key": "Pruning_DAWS",
-                  "Value": "314"
-                },
-                {
-                  "Key": "CordonDiameter",
-                  "Value": "10"
-                }
-              ],
-              "Name": "Pruning",
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Manager, Models",
-          "Code": "using Models.Zones;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\nusing System.Collections.Generic;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Weather weather = null;\r\n        private RectangularZone AlleyZone {get; set; }\r\n        private RectangularZone RowZone {get; set;}\r\n        private RectangularZone ThisZone {get; set;}\r\n        private double AreaWidth {get; set;}\r\n\r\n        public double FRadInt {get; set;}\r\n        public double ET {get; set;}\r\n        public double ES {get; set;}\r\n        public double PET {get; set;}\r\n        public double LAI {get; set;}\r\n        public double Height {get; set;}\r\n        public double RootDepth {get; set;}\r\n        public double PlantWidth {get; set;}\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void DoStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n               \r\n               ThisZone = this.Parent.Parent as RectangularZone;\r\n               RowZone = Apsim.Find(this.Parent.Parent.Parent,\"Row\") as RectangularZone;\r\n               AlleyZone = (RectangularZone)Apsim.Find(this.Parent.Parent.Parent,\"Alley\") as RectangularZone;\r\n               AreaWidth = AlleyZone.Width + RowZone.Width;\r\n               PlantWidth = 0;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void OnDoReportCalculations(object sender, EventArgs e)\r\n        {\r\n            if (ThisZone.Name == \"Row\")\r\n                {\r\n                FRadInt = ((double)RowZone.Get(\"Grapevine.Leaf.RadIntTot\") * RowZone.Width)/(weather.Radn * AreaWidth);\r\n                ET = (double)RowZone.Get(\"Grapevine.Leaf.Transpiration\") * RowZone.Width/AreaWidth;\r\n                LAI = (double)RowZone.Get(\"Grapevine.Leaf.LAI\");\r\n                Height = (double)RowZone.Get(\"Grapevine.Leaf.Height\");\r\n                RootDepth = (double)RowZone.Get(\"Grapevine.Root.Depth\");\r\n                PlantWidth = (double)RowZone.Get(\"Grapevine.Leaf.Width\");\r\n                }\r\n            else\r\n                {\r\n                FRadInt = ((double)AlleyZone.Get(\"Slurp.Leaf.RadIntTot\") * ThisZone.Width)/ (weather.Radn * AreaWidth);\r\n                ET = (double)AlleyZone.Get(\"Slurp.Leaf.Transpiration\") * ThisZone.Width/AreaWidth;\r\n                LAI = (double)AlleyZone.Get(\"Slurp.Leaf.LAI\");\r\n                Height = (double)AlleyZone.Get(\"Slurp.Leaf.Height\");\r\n                RootDepth = (double)AlleyZone.Get(\"Slurp.Root.Depth\");\r\n                }\r\n\r\n            ES = (double)ThisZone.Get(\"Soil.SoilWater.Es\") * ThisZone.Width/AreaWidth;\r\n            double PETWidth = Math.Min(Math.Max(PlantWidth,ThisZone.Width),AreaWidth);\r\n            PET = (double)ThisZone.Get(\"Soil.SoilWater.Eo\") * PETWidth/AreaWidth;\r\n        }\r\n    }\r\n}\r\n",
-          "Parameters": [
-            {
-              "Key": "FRadInt",
-              "Value": "0"
-            },
-            {
-              "Key": "ET",
-              "Value": "0"
-            },
-            {
-              "Key": "ES",
-              "Value": "0"
-            },
-            {
-              "Key": "PET",
-              "Value": "0"
-            },
-            {
-              "Key": "LAI",
-              "Value": "0"
-            },
-            {
-              "Key": "Height",
-              "Value": "0"
-            },
-            {
-              "Key": "RootDepth",
-              "Value": "0"
-            },
-            {
-              "Key": "PlantWidth",
-              "Value": "0"
-            }
-          ],
-          "Name": "PlantVariables",
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
         }
       ],
       "IncludeInDocumentation": true,
@@ -7341,14 +7189,12 @@
                 },
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                  "Canopies": [],
                   "InitialResidueName": "Grapevine",
                   "InitialResidueType": "Grapevine",
                   "InitialResidueMass": 2000.0,
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 80.0,
-                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": true,
@@ -7391,9 +7237,6 @@
                 {
                   "$type": "Models.PMF.Plant, Models",
                   "CropType": "Grapevine",
-                  "IsAlive": false,
-                  "IsEnding": false,
-                  "DaysAfterEnding": 0,
                   "ResourceName": "Grapevine",
                   "Name": "Grapevine",
                   "IncludeInDocumentation": true,
@@ -7490,6 +7333,7 @@
                   "EventNames": [
                     "[Clock].DoReport"
                   ],
+                  "GroupByVariableName": null,
                   "Name": "Report",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -9579,7 +9423,7 @@
                     {
                       "$type": "Models.Weather, Models",
                       "FileName": "Site1004_RPC.met",
-                      "ExcelWorkSheetName": null,
+                      "ExcelWorkSheetName": "",
                       "Name": "Weather",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -9653,9 +9497,6 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Slurp",
-                          "IsAlive": false,
-                          "IsEnding": false,
-                          "DaysAfterEnding": 0,
                           "ResourceName": null,
                           "Name": "Grapevine",
                           "Children": [],
@@ -9699,14 +9540,12 @@
                         },
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                          "Canopies": [],
                           "InitialResidueName": "wheat_stubble",
                           "InitialResidueType": "wheat",
                           "InitialResidueMass": 500.0,
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 100.0,
-                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -10364,7 +10203,6 @@
                             "[Grapevine].Leaf.InitialisedCohortNo",
                             "[Grapevine].Leaf.DeadCohortNo",
                             "[Grapevine].Leaf.AppearedCohortNo",
-                            "[Grapevine].Leaf.CohortSize",
                             "[Grapevine].Leaf.Fn",
                             "[Grapevine].Leaf.Fw",
                             "[Grapevine].Leaf.Live.Wt",
@@ -10397,6 +10235,7 @@
                           "EventNames": [
                             "[Clock].DoReport"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "Report",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -10428,6 +10267,7 @@
                           "EventNames": [
                             "[Clock].DoReport"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "Report",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -10436,14 +10276,12 @@
                         },
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                          "Canopies": [],
                           "InitialResidueName": "wheat_stubble",
                           "InitialResidueType": "wheat",
                           "InitialResidueMass": 500.0,
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 100.0,
-                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -10453,9 +10291,6 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Slurp",
-                          "IsAlive": false,
-                          "IsEnding": false,
-                          "DaysAfterEnding": 0,
                           "ResourceName": "Slurp",
                           "Name": "Slurp",
                           "IncludeInDocumentation": true,
@@ -10492,7 +10327,7 @@
                             },
                             {
                               "Key": "SowingDate",
-                              "Value": "07/01/2001 00:00:00"
+                              "Value": "01/01/2004 00:00:00"
                             },
                             {
                               "Key": "RootDepth",
@@ -14159,6 +13994,7 @@
                           "EventNames": [
                             "[Clock].DoReport"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "Report",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -14177,9 +14013,6 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Slurp",
-                          "IsAlive": false,
-                          "IsEnding": false,
-                          "DaysAfterEnding": 0,
                           "ResourceName": null,
                           "Name": "Grapevine",
                           "Children": [],
@@ -14277,14 +14110,12 @@
                         },
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                          "Canopies": [],
                           "InitialResidueName": "wheat_stubble",
                           "InitialResidueType": "wheat",
                           "InitialResidueMass": 500.0,
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 100.0,
-                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -14892,8 +14723,41 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        \r\n    }\r\n}\r\n",
-                          "Parameters": [],
+                          "Code": "using Models.Zones;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\nusing System.Collections.Generic;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Weather weather = null;\r\n        private RectangularZone AlleyZone {get; set; }\r\n        private RectangularZone RowZone {get; set;}\r\n        private RectangularZone ThisZone {get; set;}\r\n        private double AreaWidth {get; set;}\r\n\r\n        public double FRadInt {get; set;}\r\n        public double ET {get; set;}\r\n        public double ES {get; set;}\r\n        public double PET {get; set;}\r\n        public double LAI {get; set;}\r\n        public double Height {get; set;}\r\n        public double RootDepth {get; set;}\r\n        public double PlantWidth {get; set;}\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void DoStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n               \r\n               ThisZone = this.Parent.Parent as RectangularZone;\r\n               RowZone = Apsim.Find(this.Parent.Parent.Parent,\"Row\") as RectangularZone;\r\n               AlleyZone = (RectangularZone)Apsim.Find(this.Parent.Parent.Parent,\"Alley\") as RectangularZone;\r\n               AreaWidth = AlleyZone.Width + RowZone.Width;\r\n               PlantWidth = 0;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void OnDoReportCalculations(object sender, EventArgs e)\r\n        {\r\n            if (ThisZone.Name == \"Row\")\r\n                {\r\n                FRadInt = ((double)RowZone.Get(\"Grapevine.Leaf.RadIntTot\") * RowZone.Width)/(weather.Radn * AreaWidth);\r\n                ET = (double)RowZone.Get(\"Grapevine.Leaf.Transpiration\") * RowZone.Width/AreaWidth;\r\n                LAI = (double)RowZone.Get(\"Grapevine.Leaf.LAI\");\r\n                Height = (double)RowZone.Get(\"Grapevine.Leaf.Height\");\r\n                RootDepth = (double)RowZone.Get(\"Grapevine.Root.Depth\");\r\n                PlantWidth = (double)RowZone.Get(\"Grapevine.Leaf.Width\");\r\n                }\r\n            else\r\n                {\r\n                FRadInt = ((double)AlleyZone.Get(\"Slurp.Leaf.RadIntTot\") * ThisZone.Width)/ (weather.Radn * AreaWidth);\r\n                ET = (double)AlleyZone.Get(\"Slurp.Leaf.Transpiration\") * ThisZone.Width/AreaWidth;\r\n                LAI = (double)AlleyZone.Get(\"Slurp.Leaf.LAI\");\r\n                Height = (double)AlleyZone.Get(\"Slurp.Leaf.Height\");\r\n                RootDepth = (double)AlleyZone.Get(\"Slurp.Root.Depth\");\r\n                }\r\n\r\n            ES = (double)ThisZone.Get(\"Soil.SoilWater.Es\") * ThisZone.Width/AreaWidth;\r\n            double PETWidth = Math.Min(Math.Max(PlantWidth,ThisZone.Width),AreaWidth);\r\n            PET = (double)ThisZone.Get(\"Soil.SoilWater.Eo\") * PETWidth/AreaWidth;\r\n        }\r\n    }\r\n}\r\n",
+                          "Parameters": [
+                            {
+                              "Key": "FRadInt",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "ET",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "ES",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "PET",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "LAI",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "Height",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "RootDepth",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "PlantWidth",
+                              "Value": "0"
+                            }
+                          ],
                           "Name": "PlantVariables",
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -14938,6 +14802,7 @@
                           "EventNames": [
                             "[Clock].DoReport"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "Report",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -14946,14 +14811,12 @@
                         },
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                          "Canopies": [],
                           "InitialResidueName": "wheat_stubble",
                           "InitialResidueType": "wheat",
                           "InitialResidueMass": 500.0,
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 100.0,
-                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -14963,9 +14826,6 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Slurp",
-                          "IsAlive": false,
-                          "IsEnding": false,
-                          "DaysAfterEnding": 0,
                           "ResourceName": "Slurp",
                           "Name": "Slurp",
                           "IncludeInDocumentation": true,
@@ -15632,8 +15492,41 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        \r\n    }\r\n}\r\n",
-                          "Parameters": [],
+                          "Code": "using Models.Zones;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\nusing System.Collections.Generic;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Weather weather = null;\r\n        private RectangularZone AlleyZone {get; set; }\r\n        private RectangularZone RowZone {get; set;}\r\n        private RectangularZone ThisZone {get; set;}\r\n        private double AreaWidth {get; set;}\r\n\r\n        public double FRadInt {get; set;}\r\n        public double ET {get; set;}\r\n        public double ES {get; set;}\r\n        public double PET {get; set;}\r\n        public double LAI {get; set;}\r\n        public double Height {get; set;}\r\n        public double RootDepth {get; set;}\r\n        public double PlantWidth {get; set;}\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void DoStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n               \r\n               ThisZone = this.Parent.Parent as RectangularZone;\r\n               RowZone = Apsim.Find(this.Parent.Parent.Parent,\"Row\") as RectangularZone;\r\n               AlleyZone = (RectangularZone)Apsim.Find(this.Parent.Parent.Parent,\"Alley\") as RectangularZone;\r\n               AreaWidth = AlleyZone.Width + RowZone.Width;\r\n               PlantWidth = 0;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void OnDoReportCalculations(object sender, EventArgs e)\r\n        {\r\n            if (ThisZone.Name == \"Row\")\r\n                {\r\n                FRadInt = ((double)RowZone.Get(\"Grapevine.Leaf.RadIntTot\") * RowZone.Width)/(weather.Radn * AreaWidth);\r\n                ET = (double)RowZone.Get(\"Grapevine.Leaf.Transpiration\") * RowZone.Width/AreaWidth;\r\n                LAI = (double)RowZone.Get(\"Grapevine.Leaf.LAI\");\r\n                Height = (double)RowZone.Get(\"Grapevine.Leaf.Height\");\r\n                RootDepth = (double)RowZone.Get(\"Grapevine.Root.Depth\");\r\n                PlantWidth = (double)RowZone.Get(\"Grapevine.Leaf.Width\");\r\n                }\r\n            else\r\n                {\r\n                FRadInt = ((double)AlleyZone.Get(\"Slurp.Leaf.RadIntTot\") * ThisZone.Width)/ (weather.Radn * AreaWidth);\r\n                ET = (double)AlleyZone.Get(\"Slurp.Leaf.Transpiration\") * ThisZone.Width/AreaWidth;\r\n                LAI = (double)AlleyZone.Get(\"Slurp.Leaf.LAI\");\r\n                Height = (double)AlleyZone.Get(\"Slurp.Leaf.Height\");\r\n                RootDepth = (double)AlleyZone.Get(\"Slurp.Root.Depth\");\r\n                }\r\n\r\n            ES = (double)ThisZone.Get(\"Soil.SoilWater.Es\") * ThisZone.Width/AreaWidth;\r\n            double PETWidth = Math.Min(Math.Max(PlantWidth,ThisZone.Width),AreaWidth);\r\n            PET = (double)ThisZone.Get(\"Soil.SoilWater.Eo\") * PETWidth/AreaWidth;\r\n        }\r\n    }\r\n}\r\n",
+                          "Parameters": [
+                            {
+                              "Key": "FRadInt",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "ET",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "ES",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "PET",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "LAI",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "Height",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "RootDepth",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "PlantWidth",
+                              "Value": "0"
+                            }
+                          ],
                           "Name": "PlantVariables",
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -15646,6 +15539,102 @@
                     }
                   ],
                   "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "LeafNum",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16736653,
+                      "FactorToVaryColours": "Zone",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "Irri",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "Report",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Grapevine.Leaf.AppearedCohortNo",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16736653,
+                      "FactorToVaryColours": "Zone",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "Observed",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "leaf.no.shoot",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Observed",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -20838,6 +20827,7 @@
                           "EventNames": [
                             "[Clock].DoReport"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "Report",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -20856,9 +20846,6 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Slurp",
-                          "IsAlive": false,
-                          "IsEnding": false,
-                          "DaysAfterEnding": 0,
                           "ResourceName": null,
                           "Name": "Grapevine",
                           "Children": [],
@@ -20902,14 +20889,12 @@
                         },
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                          "Canopies": [],
                           "InitialResidueName": "wheat_stubble",
                           "InitialResidueType": "wheat",
                           "InitialResidueMass": 500.0,
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 100.0,
-                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -21037,15 +21022,6 @@
                           ],
                           "Name": "WinterRainfall",
                           "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Manager, Models",
-                          "Code": "using Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        \r\n    }\r\n}\r\n",
-                          "Parameters": [],
-                          "Name": "PlantVariables",
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -21564,6 +21540,48 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Manager, Models",
+                          "Code": "using Models.Zones;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\nusing System.Collections.Generic;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Weather weather = null;\r\n        private RectangularZone AlleyZone {get; set; }\r\n        private RectangularZone RowZone {get; set;}\r\n        private RectangularZone ThisZone {get; set;}\r\n        private double AreaWidth {get; set;}\r\n\r\n        public double FRadInt {get; set;}\r\n        public double ET {get; set;}\r\n        public double ES {get; set;}\r\n        public double PET {get; set;}\r\n        public double LAI {get; set;}\r\n        public double Height {get; set;}\r\n        public double RootDepth {get; set;}\r\n        public double PlantWidth {get; set;}\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void DoStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n               \r\n               ThisZone = this.Parent.Parent as RectangularZone;\r\n               RowZone = Apsim.Find(this.Parent.Parent.Parent,\"Row\") as RectangularZone;\r\n               AlleyZone = (RectangularZone)Apsim.Find(this.Parent.Parent.Parent,\"Alley\") as RectangularZone;\r\n               AreaWidth = AlleyZone.Width + RowZone.Width;\r\n               PlantWidth = 0;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void OnDoReportCalculations(object sender, EventArgs e)\r\n        {\r\n            if (ThisZone.Name == \"Row\")\r\n                {\r\n                FRadInt = ((double)RowZone.Get(\"Grapevine.Leaf.RadIntTot\") * RowZone.Width)/(weather.Radn * AreaWidth);\r\n                ET = (double)RowZone.Get(\"Grapevine.Leaf.Transpiration\") * RowZone.Width/AreaWidth;\r\n                LAI = (double)RowZone.Get(\"Grapevine.Leaf.LAI\");\r\n                Height = (double)RowZone.Get(\"Grapevine.Leaf.Height\");\r\n                RootDepth = (double)RowZone.Get(\"Grapevine.Root.Depth\");\r\n                PlantWidth = (double)RowZone.Get(\"Grapevine.Leaf.Width\");\r\n                }\r\n            else\r\n                {\r\n                FRadInt = ((double)AlleyZone.Get(\"Slurp.Leaf.RadIntTot\") * ThisZone.Width)/ (weather.Radn * AreaWidth);\r\n                ET = (double)AlleyZone.Get(\"Slurp.Leaf.Transpiration\") * ThisZone.Width/AreaWidth;\r\n                LAI = (double)AlleyZone.Get(\"Slurp.Leaf.LAI\");\r\n                Height = (double)AlleyZone.Get(\"Slurp.Leaf.Height\");\r\n                RootDepth = (double)AlleyZone.Get(\"Slurp.Root.Depth\");\r\n                }\r\n\r\n            ES = (double)ThisZone.Get(\"Soil.SoilWater.Es\") * ThisZone.Width/AreaWidth;\r\n            double PETWidth = Math.Min(Math.Max(PlantWidth,ThisZone.Width),AreaWidth);\r\n            PET = (double)ThisZone.Get(\"Soil.SoilWater.Eo\") * PETWidth/AreaWidth;\r\n        }\r\n    }\r\n}\r\n",
+                          "Parameters": [
+                            {
+                              "Key": "FRadInt",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "ET",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "ES",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "PET",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "LAI",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "Height",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "RootDepth",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "PlantWidth",
+                              "Value": "0"
+                            }
+                          ],
+                          "Name": "PlantVariables",
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -21604,6 +21622,7 @@
                           "EventNames": [
                             "[Clock].DoReport"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "Report",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -21612,14 +21631,12 @@
                         },
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                          "Canopies": [],
                           "InitialResidueName": "wheat_stubble",
                           "InitialResidueType": "wheat",
                           "InitialResidueMass": 500.0,
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 100.0,
-                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
@@ -21629,9 +21646,6 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Slurp",
-                          "IsAlive": false,
-                          "IsEnding": false,
-                          "DaysAfterEnding": 0,
                           "ResourceName": "Slurp",
                           "Name": "Slurp",
                           "IncludeInDocumentation": true,
@@ -21764,15 +21778,6 @@
                           ],
                           "Name": "WinterRainfall",
                           "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Manager, Models",
-                          "Code": "using Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        \r\n    }\r\n}\r\n",
-                          "Parameters": [],
-                          "Name": "PlantVariables",
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -22291,6 +22296,48 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Manager, Models",
+                          "Code": "using Models.Zones;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\nusing System.Collections.Generic;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Weather weather = null;\r\n        private RectangularZone AlleyZone {get; set; }\r\n        private RectangularZone RowZone {get; set;}\r\n        private RectangularZone ThisZone {get; set;}\r\n        private double AreaWidth {get; set;}\r\n\r\n        public double FRadInt {get; set;}\r\n        public double ET {get; set;}\r\n        public double ES {get; set;}\r\n        public double PET {get; set;}\r\n        public double LAI {get; set;}\r\n        public double Height {get; set;}\r\n        public double RootDepth {get; set;}\r\n        public double PlantWidth {get; set;}\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void DoStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n               \r\n               ThisZone = this.Parent.Parent as RectangularZone;\r\n               RowZone = Apsim.Find(this.Parent.Parent.Parent,\"Row\") as RectangularZone;\r\n               AlleyZone = (RectangularZone)Apsim.Find(this.Parent.Parent.Parent,\"Alley\") as RectangularZone;\r\n               AreaWidth = AlleyZone.Width + RowZone.Width;\r\n               PlantWidth = 0;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void OnDoReportCalculations(object sender, EventArgs e)\r\n        {\r\n            if (ThisZone.Name == \"Row\")\r\n                {\r\n                FRadInt = ((double)RowZone.Get(\"Grapevine.Leaf.RadIntTot\") * RowZone.Width)/(weather.Radn * AreaWidth);\r\n                ET = (double)RowZone.Get(\"Grapevine.Leaf.Transpiration\") * RowZone.Width/AreaWidth;\r\n                LAI = (double)RowZone.Get(\"Grapevine.Leaf.LAI\");\r\n                Height = (double)RowZone.Get(\"Grapevine.Leaf.Height\");\r\n                RootDepth = (double)RowZone.Get(\"Grapevine.Root.Depth\");\r\n                PlantWidth = (double)RowZone.Get(\"Grapevine.Leaf.Width\");\r\n                }\r\n            else\r\n                {\r\n                FRadInt = ((double)AlleyZone.Get(\"Slurp.Leaf.RadIntTot\") * ThisZone.Width)/ (weather.Radn * AreaWidth);\r\n                ET = (double)AlleyZone.Get(\"Slurp.Leaf.Transpiration\") * ThisZone.Width/AreaWidth;\r\n                LAI = (double)AlleyZone.Get(\"Slurp.Leaf.LAI\");\r\n                Height = (double)AlleyZone.Get(\"Slurp.Leaf.Height\");\r\n                RootDepth = (double)AlleyZone.Get(\"Slurp.Root.Depth\");\r\n                }\r\n\r\n            ES = (double)ThisZone.Get(\"Soil.SoilWater.Es\") * ThisZone.Width/AreaWidth;\r\n            double PETWidth = Math.Min(Math.Max(PlantWidth,ThisZone.Width),AreaWidth);\r\n            PET = (double)ThisZone.Get(\"Soil.SoilWater.Eo\") * PETWidth/AreaWidth;\r\n        }\r\n    }\r\n}\r\n",
+                          "Parameters": [
+                            {
+                              "Key": "FRadInt",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "ET",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "ES",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "PET",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "LAI",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "Height",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "RootDepth",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "PlantWidth",
+                              "Value": "0"
+                            }
+                          ],
+                          "Name": "PlantVariables",
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -22299,6 +22346,102 @@
                     }
                   ],
                   "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "LeafNum",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16736653,
+                      "FactorToVaryColours": "Zone",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "Irri",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "Report",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Grapevine.Leaf.AppearedCohortNo",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16736653,
+                      "FactorToVaryColours": "Zone",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "Observed",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "leaf.no.shoot.main",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Observed",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -24324,14 +24467,12 @@
                     },
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                      "Canopies": [],
                       "InitialResidueName": "Grapevine",
                       "InitialResidueType": "Grapevine",
                       "InitialResidueMass": 2000.0,
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 80.0,
-                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": true,
@@ -24374,9 +24515,6 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Grapevine",
-                      "IsAlive": false,
-                      "IsEnding": false,
-                      "DaysAfterEnding": 0,
                       "ResourceName": "Grapevine",
                       "Name": "Grapevine",
                       "IncludeInDocumentation": true,
@@ -24391,6 +24529,7 @@
                       "EventNames": [
                         "[Clock].DoReport"
                       ],
+                      "GroupByVariableName": null,
                       "Name": "Report",
                       "Children": [],
                       "IncludeInDocumentation": true,
