@@ -46,6 +46,8 @@
     <Word>of</Word>
     <Word>from</Word>
     <Word>to</Word>
+    <Word>mean</Word>
+    <Word>stddev</Word>
   </Keywords>
 
   <Rule name = "Comment">
