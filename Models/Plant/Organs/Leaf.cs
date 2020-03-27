@@ -238,7 +238,7 @@ namespace Models.PMF.Organs
             {
                 if(Structure != null)
                {
-                    double fractionMainStem = Math.Max(1, Structure.MainStemPopn / Structure.TotalStemPopn);
+                    double fractionMainStem = Math.Min(1, Structure.MainStemPopn / Structure.TotalStemPopn);
                     return LAI * fractionMainStem;
                 }
                 else
