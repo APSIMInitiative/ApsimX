@@ -72,7 +72,7 @@
     /// </remarks>
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
     [Serializable]
-    public class AggregatedReportColumn : IReportColumn
+    public class ReportColumn : IReportColumn
     {
         /// <summary>An instance of a locator service.</summary>
         private readonly ILocator locator;
@@ -127,7 +127,7 @@
         /// <param name="from">From clause to use.</param>
         /// <param name="to">To clause to use.</param>
         /// <returns>The newly created ReportColumn</returns>
-        public AggregatedReportColumn(string reportLine,
+        public ReportColumn(string reportLine,
                                       IClock clock, ILocator locator, IEvent events,
                                       string groupByVariableName,
                                       string from, string to)

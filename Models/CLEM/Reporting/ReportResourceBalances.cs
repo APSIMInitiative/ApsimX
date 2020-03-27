@@ -294,7 +294,7 @@ namespace Models.CLEM.Reporting
                 try
                 {
                     if (!string.IsNullOrEmpty(fullVariableName))
-                        columns.Add(new AggregatedReportColumn(fullVariableName, clock, locator, events, GroupByVariableName, from, to));
+                        columns.Add(new ReportColumn(fullVariableName, clock, locator, events, GroupByVariableName, from, to));
                 }
                 catch (Exception err)
                 {
