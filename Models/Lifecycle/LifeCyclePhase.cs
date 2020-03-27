@@ -201,8 +201,8 @@
                     if (dest.ProgenyToDestination>0)
                     {
                         IModel zone = Apsim.Parent(this.Parent, typeof(Zone));
-                        LifeCycle DestinationCylce = Apsim.Find(zone, dest.NameOfLifeCycleForProgeny) as LifeCycle;
-                        LifeCyclePhase DestinationPhase = Apsim.Find(DestinationCylce, dest.NameOfPhaseForProgeny) as LifeCyclePhase;
+                        LifeCycle DestinationCylce = Apsim.Child(zone, dest.NameOfLifeCycleForProgeny) as LifeCycle;
+                        LifeCyclePhase DestinationPhase = Apsim.Child(DestinationCylce, dest.NameOfPhaseForProgeny) as LifeCyclePhase;
                         DestinationPhase.NewCohort(dest.ProgenyToDestination, 0, 0);
                     }
                 }
