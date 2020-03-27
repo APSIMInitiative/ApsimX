@@ -30,6 +30,25 @@
         /// </summary>
         public string Name { get; set; }
 
+
+        /// <summary>
+        /// Gets the simulation tree adress of the model
+        /// </summary>
+        public string Address
+        {
+            get
+            {
+                string address = this.Name;
+                IModel parent = this.Parent;
+                while ((parent != null) && (parent.GetType().ToString() != "Simulations"))
+                {
+                    address = parent.Name + "." + address;
+                    parent = parent.Parent;
+                }
+                return address;
+            }
+        }
+
         /// <summary>
         /// Gets or sets a list of child models.   
         /// </summary>
