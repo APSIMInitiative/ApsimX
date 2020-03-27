@@ -134,6 +134,12 @@ namespace Models
         }
 
         /// <summary>
+        /// Hide individual graph titles?
+        /// </summary>
+        [Description("Hide individual graph titles?")]
+        public bool HideTitles { get; set; }
+
+        /// <summary>
         /// Use same x-axis scales for all graphs?
         /// </summary>
         [Separator("Axis settings")]
