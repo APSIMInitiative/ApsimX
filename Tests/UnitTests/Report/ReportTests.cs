@@ -631,5 +631,24 @@ namespace Models
                             new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 });
         }
 
+        /// <summary>This test ensures that having a dot in the alias is ok.</summary>
+        [Test]
+        public void EnsureDotInAliasWorks()
+        {
+            report.VariableNames = new string[]
+            {
+                "sum of [Clock].Today.DayOfYear from [Clock].StartOfSimulation to [Clock].EndOfSimulation as Total.DayOfYear",
+            };
+            report.EventNames = new string[]
+            {
+                "[Clock].EndOfSimulation",
+            };
+
+            // Run the simulation.
+            runner.Run();
+
+            Assert.AreEqual(storage.Get<double>("Total.DayOfYear"), new double[] { 55 });
+        }
+
     }
 }

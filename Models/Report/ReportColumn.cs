@@ -257,7 +257,7 @@
                           $@"(?<var>((?!\s+from\s+|\s+as\s+|\s+on\s+).)+)" +                    // APSIM variable or expression
                           $@"(\s+on\s+(?<on>((?!\s+from\s+|\s+as\s+).)+))?" +                   // on keyword
                           $@"(\s+from\s+(?<from>\S+)\s+to\s+(?<to>((?!\s+as)\S)+))?" +          // from and to keywords
-                          @"(\s+as\s+(?<alias>\w+))?";                                          // alias
+                          @"(\s+as\s+(?<alias>[\w.]+))?";                                       // alias
 
             var regEx = new Regex(pattern);
             var match = regEx.Match(descriptor);
