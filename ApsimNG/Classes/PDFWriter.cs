@@ -537,7 +537,7 @@
                 graphView.BackColor = OxyPlot.OxyColors.White;
                 graphView.ForegroundColour = OxyPlot.OxyColors.Black;
                 graphView.FontSize = 22;
-                graphView.MarkerSize = 8;
+                graphView.MarkerSize = MarkerSizeType.Normal;
                 graphView.Width = image.Width / numColumns;
                 graphView.Height = image.Height / numRows;
                 graphView.LeftRightPadding = 0;

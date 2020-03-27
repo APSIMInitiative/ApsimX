@@ -329,6 +329,8 @@ namespace UserInterface.Presenters
             // n.b. this will be called on the main thread.
             if (panel.HideTitles)
                 args.Data.FormatTitle(null);
+            args.Data.FontSize = panel.FontSize;
+            args.Data.MarkerSize = panel.MarkerSize;
         }
 
         private class WorkerStatus

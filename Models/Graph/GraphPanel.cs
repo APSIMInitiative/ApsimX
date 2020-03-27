@@ -140,6 +140,18 @@ namespace Models
         public bool HideTitles { get; set; }
 
         /// <summary>
+        /// Font Size.
+        /// </summary>
+        [Description("Font Size")]
+        public double FontSize { get; set; } = 14;
+
+        /// <summary>
+        /// Marker Size. Defaults to MarkerSizeType.Normal.
+        /// </summary>
+        [Description("Marker Size")]
+        public MarkerSizeType MarkerSize { get; set; }
+
+        /// <summary>
         /// Use same x-axis scales for all graphs?
         /// </summary>
         [Separator("Axis settings")]
