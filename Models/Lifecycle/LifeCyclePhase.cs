@@ -58,7 +58,7 @@
 
         /// <summary>The list of ReproductionDestinationPhases.</summary>
         [JsonIgnore]
-        public List<ReproductionDestinationPhase> Destinations { get; private set; }
+        public List<ProgenyDestinationPhase> Destinations { get; private set; }
 
         /// <summary>The list of cohorts in this LifeCyclePhase.</summary>
         [JsonIgnore]
@@ -158,8 +158,8 @@
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            Destinations = new List<ReproductionDestinationPhase>();
-            foreach (ReproductionDestinationPhase dest in Apsim.Children(this,typeof(ReproductionDestinationPhase)))
+            Destinations = new List<ProgenyDestinationPhase>();
+            foreach (ProgenyDestinationPhase dest in Apsim.Children(this,typeof(ProgenyDestinationPhase)))
                     Destinations.Add(dest);
         }
 
@@ -171,7 +171,7 @@
 
             Clear(); //Zero reporting properties for daily summing
 
-            foreach (ReproductionDestinationPhase dest in Destinations)
+            foreach (ProgenyDestinationPhase dest in Destinations)
                 dest.ProgenyToDestination = 0;
 
             if (Cohorts != null)
@@ -189,14 +189,14 @@
                     c.Population = Math.Max(0.0, c.Population - c.Mortality);
                     //Do reproduction for each cohort
                     Progeny += reproduction.Value();
-                    foreach (ReproductionDestinationPhase dest in Destinations)
+                    foreach (ProgenyDestinationPhase dest in Destinations)
                         dest.ProgenyToDestination += reproduction.Value() * dest.ProportionOfProgeny.Value();
                 }
 
                 // Add progeny into destination phase
                 if ((Destinations.Count == 0)&&(Progeny > 0))
                         throw new Exception(this.Name + " is predicting values for reproduction but has no ReprodionDestinationPhase specified");
-                foreach (ReproductionDestinationPhase dest in Destinations)
+                foreach (ProgenyDestinationPhase dest in Destinations)
                 {
                     if (dest.ProgenyToDestination>0)
                     {

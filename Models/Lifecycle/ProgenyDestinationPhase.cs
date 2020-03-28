@@ -18,7 +18,7 @@
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LifeCyclePhase))]
-    public class ReproductionDestinationPhase : Model
+    public class ProgenyDestinationPhase : Model
     {
         /// <summary> Specifies the destination LifeCycle that progeney from this LifeCyclePhaseReproduction will be created in</summary>
         [Description("Select Life cycle that progeny will be added to")]
