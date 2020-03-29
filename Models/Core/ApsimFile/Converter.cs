@@ -19,7 +19,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 88; } }
+        public static int LatestVersion { get { return 89; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1571,23 +1571,7 @@
                 new Tuple<string, string>(".DeadTissuesN",  ".DeadTissue.N")
             };
 
-            foreach (var manager in JsonUtilities.ChildManagers(root))
-            {
-                bool managerChanged = false;
-
-                foreach (var replacement in changes)
-                {
-                    if (manager.Replace(replacement.Item1, replacement.Item2))
-                        managerChanged = true;
-                }
-                if (managerChanged)
-                    manager.Save();
-            }
-            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
-            {
-                foreach (var replacement in changes)
-                    JsonUtilities.SearchReplaceReportVariableNames(report, replacement.Item1, replacement.Item2);
-            }
+            JsonUtilities.RenameVariablesInReportAndManager(root, changes);
         }
 
         /// <summary>
@@ -1912,6 +1896,24 @@
                 JsonUtilities.SearchReplaceReportVariableNames(report, "solute_flux_eff", "SoluteFluxEfficiency");
             }
 
+        }
+
+        /// <summary>
+        /// Rename AgPasture variables.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion89(JObject root, string fileName)
+        {
+            Tuple<string, string>[] changes =
+{
+                new Tuple<string, string>(".StandingHerbageWt",      ".Harvestable.Wt"),
+                new Tuple<string, string>(".StandingHerbageNConc",   ".Harvestable.NConc"),
+                new Tuple<string, string>(".StandingLiveHerbageWt",  ".HarvestableLive.Wt"),
+                new Tuple<string, string>(".StandingDeadHerbageWt",  ".HarvestableDead.Wt"),
+            };
+
+            JsonUtilities.RenameVariablesInReportAndManager(root, changes);
         }
 
         /// <summary>

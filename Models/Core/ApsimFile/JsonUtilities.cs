@@ -497,5 +497,30 @@ namespace Models.Core.ApsimFile
             }
         }
 
+        /// <summary>
+        /// Helper method for renaming variables in report and manager.
+        /// </summary>
+        /// <param name="node">The JSON root node.</param>
+        /// <param name="changes">List of old and new name tuples.</param>
+        public static void RenameVariablesInReportAndManager(JObject node, Tuple<string, string>[] changes)
+        {
+            foreach (var manager in JsonUtilities.ChildManagers(node))
+            {
+                bool managerChanged = false;
+
+                foreach (var replacement in changes)
+                {
+                    if (manager.Replace(replacement.Item1, replacement.Item2))
+                        managerChanged = true;
+                }
+                if (managerChanged)
+                    manager.Save();
+            }
+            foreach (var report in JsonUtilities.ChildrenOfType(node, "Report"))
+            {
+                foreach (var replacement in changes)
+                    JsonUtilities.SearchReplaceReportVariableNames(report, replacement.Item1, replacement.Item2);
+            }
+        }
     }
 }

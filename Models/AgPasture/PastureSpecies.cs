@@ -1739,30 +1739,7 @@
                 return dmTotal;
             }
         }
-        /// <summary>Gets the dry matter weight of standing herbage (kgDM/ha).</summary>
-        //[Description("Dry matter weight of standing herbage")]
-        [Units("kg/ha")]
-        public double StandingHerbageWt
-        {
-            get { return leaf.StandingHerbageWt + stem.StandingHerbageWt + stolon.StandingHerbageWt; }
-        }
-
-        /// <summary>Gets the dry matter weight of live standing herbage (kgDM/ha).</summary>
-        //[Description("Dry matter weight of live standing herbage")]
-        [Units("kg/ha")]
-        public double StandingLiveHerbageWt
-        {
-            get { return leaf.StandingLiveHerbageWt + stem.StandingLiveHerbageWt + stolon.StandingLiveHerbageWt; }
-        }
-
-        /// <summary>Gets the dry matter weight of dead standing herbage (kgDM/ha).</summary>
-        //[Description("Dry matter weight of dead standing herbage")]
-        [Units("kg/ha")]
-        public double StandingDeadHerbageWt
-        {
-            get { return leaf.StandingDeadHerbageWt + stem.StandingDeadHerbageWt + stolon.StandingDeadHerbageWt; }
-        }
-
+        
         /// <summary>Gets the dry matter weight of plant's leaves (kgDM/ha).</summary>
         //[Description("Dry matter weight of plant's leaves")]
         [Units("kg/ha")]
@@ -1915,30 +1892,6 @@
             }
         }
 
-        /// <summary>Gets the amount of N in standing herbage (kgN/ha).</summary>
-        //[Description("Amount of N in standing herbage")]
-        [Units("kg/ha")]
-        public double StandingHerbageN
-        {
-            get { return leaf.StandingHerbageN + stem.StandingHerbageN + stolon.StandingHerbageN; }
-        }
-
-        /// <summary>Gets the amount of N in live standing herbage (kgN/ha).</summary>
-        //[Description("Amount of N in live standing herbage")]
-        [Units("kg/ha")]
-        public double StandingLiveHerbageN
-        {
-            get { return leaf.StandingLiveHerbageN + stem.StandingLiveHerbageN + stolon.StandingLiveHerbageN; }
-        }
-
-        /// <summary>Gets the N content  of standing dead plant material (kg/ha).</summary>
-        //[Description("Amount of N in dead standing herbage")]
-        [Units("kg/ha")]
-        public double StandingDeadHerbageN
-        {
-            get { return leaf.StandingDeadHerbageN + stem.StandingDeadHerbageN + stolon.StandingDeadHerbageN; }
-        }
-
         /// <summary>Gets the amount of N in the plant's leaves (kgN/ha).</summary>
         //[Description("Amount of N in the plant's leaves")]
         [Units("kg/ha")]
@@ -2020,13 +1973,6 @@
             get { return MathUtilities.Divide(AboveGroundN, AboveGroundWt, 0.0); }
         }
 
-        /// <summary>Gets the average N concentration in standing herbage (kgN/kgDM).</summary>
-        //[Description("Average N concentration in standing herbage")]
-        [Units("kg/kg")]
-        public double StandingHerbageNConc
-        {
-            get { return MathUtilities.Divide(StandingHerbageN, StandingHerbageWt, 0.0); }
-        }
 
         /// <summary>Gets the average N concentration in plant's leaves (kgN/kgDM).</summary>
         //[Description("Average N concentration in plant's leaves")]
@@ -2647,16 +2593,42 @@
         }
 
 
-        /// <summary>Gets the dry matter weight available for harvesting (kgDM/ha).</summary>
-        //[Description("Dry matter weight available for harvesting")]
-        [Units("kg/ha")]
-        public double HarvestableWt
+        /// <summary>Dry matter and N available for harvesting (kgDM/ha).</summary>
+        public AGPBiomass Harvestable
         {
             get
             {
-                return leaf.DMLiveHarvestable + leaf.DMDeadHarvestable
-                       + stem.DMLiveHarvestable + stem.DMDeadHarvestable
-                       + stolon.DMLiveHarvestable + stolon.DMDeadHarvestable;
+                return new AGPBiomass()
+                {
+                    Wt = leaf.DMTotalHarvestable + stem.DMTotalHarvestable + stolon.DMTotalHarvestable,
+                    N = leaf.NTotalHarvestable + stem.NTotalHarvestable + stolon.NTotalHarvestable
+                };
+            }
+        }
+
+        /// <summary>Live dry matter and N available for harvesting.</summary>
+        public AGPBiomass HarvestableLive
+        {
+            get
+            {
+                return new AGPBiomass()
+                {
+                    Wt = leaf.DMLiveHarvestable + stem.DMLiveHarvestable + stolon.DMLiveHarvestable,
+                    N = leaf.NLiveHarvestable + stem.NLiveHarvestable + stolon.NLiveHarvestable
+                };
+            }
+        }
+
+        /// <summary>Dead dry matter and N available for harvesting.</summary>
+        public AGPBiomass HarvestableDead
+        {
+            get
+            {
+                return new AGPBiomass()
+                {
+                    Wt = leaf.DMDeadHarvestable + stem.DMDeadHarvestable + stolon.DMDeadHarvestable,
+                    N = leaf.NDeadHarvestable + stem.NDeadHarvestable + stolon.NDeadHarvestable
+                };
             }
         }
 
@@ -2707,10 +2679,10 @@
         {
             get
             {
-                if (MathUtilities.IsGreaterThan(StandingHerbageWt, 0.0))
+                if (MathUtilities.IsGreaterThan(Harvestable.Wt, 0.0))
                     return  (leaf.StandingDigestibility * leaf.DMTotal + 
                              stem.StandingDigestibility * stem.DMTotal + 
-                             stolon.StandingDigestibility * stolon.DMTotal) / StandingHerbageWt;
+                             stolon.StandingDigestibility * stolon.DMTotal) / Harvestable.Wt;
                 else
                     return 0.0;
             }
@@ -4091,9 +4063,9 @@
 
             if (isAlive)
             {
-                if (StandingHerbageWt <= PlantHeightMassForMax)
+                if (Harvestable.Wt <= PlantHeightMassForMax)
                 {
-                    double massRatio = StandingHerbageWt / PlantHeightMassForMax;
+                    double massRatio = Harvestable.Wt / PlantHeightMassForMax;
                     double heightF = PlantHeightExponent - (PlantHeightExponent * massRatio) + massRatio;
                     heightF *= Math.Pow(massRatio, PlantHeightExponent - 1);
                     TodaysHeight = Math.Max(TodaysHeight * heightF, PlantHeightMinimum);
@@ -4180,7 +4152,7 @@
         /// <exception cref="System.Exception"> Type of amount to remove on graze not recognized (use 'SetResidueAmount' or 'SetRemoveAmount'</exception>
         public void RemoveBiomass(string type, double amount)
         {
-            if (isAlive && HarvestableWt > Epsilon)
+            if (isAlive && Harvestable.Wt > Epsilon)
             {
                 // Get the amount required to remove
                 double amountRequired;
@@ -4200,7 +4172,7 @@
                 }
 
                 // Get the actual amount to remove
-                double amountToRemove = Math.Max(0.0, Math.Min(amountRequired, HarvestableWt));
+                double amountToRemove = Math.Max(0.0, Math.Min(amountRequired, Harvestable.Wt));
 
                 // Do the actual removal
                 if (amountToRemove > Epsilon)
@@ -4223,16 +4195,16 @@
             {
                 // Compute the fraction of each tissue to be removed
                 double[] fracRemoving = new double[6];
-                if (amountToRemove - HarvestableWt > -Epsilon)
+                if (amountToRemove - Harvestable.Wt > -Epsilon)
                 {
                     // All existing DM is removed
-                    amountToRemove = HarvestableWt;
-                    fracRemoving[0] = MathUtilities.Divide(leaf.DMLiveHarvestable, HarvestableWt, 0.0);
-                    fracRemoving[1] = MathUtilities.Divide(stem.DMLiveHarvestable, HarvestableWt, 0.0);
-                    fracRemoving[2] = MathUtilities.Divide(stolon.DMLiveHarvestable, HarvestableWt, 0.0);
-                    fracRemoving[3] = MathUtilities.Divide(leaf.DMDeadHarvestable, HarvestableWt, 0.0);
-                    fracRemoving[4] = MathUtilities.Divide(stem.DMDeadHarvestable, HarvestableWt, 0.0);
-                    fracRemoving[5] = MathUtilities.Divide(stolon.DMDeadHarvestable, HarvestableWt, 0.0);
+                    amountToRemove = Harvestable.Wt;
+                    fracRemoving[0] = MathUtilities.Divide(leaf.DMLiveHarvestable, Harvestable.Wt, 0.0);
+                    fracRemoving[1] = MathUtilities.Divide(stem.DMLiveHarvestable, Harvestable.Wt, 0.0);
+                    fracRemoving[2] = MathUtilities.Divide(stolon.DMLiveHarvestable, Harvestable.Wt, 0.0);
+                    fracRemoving[3] = MathUtilities.Divide(leaf.DMDeadHarvestable, Harvestable.Wt, 0.0);
+                    fracRemoving[4] = MathUtilities.Divide(stem.DMDeadHarvestable, Harvestable.Wt, 0.0);
+                    fracRemoving[5] = MathUtilities.Divide(stolon.DMDeadHarvestable, Harvestable.Wt, 0.0);
                 }
                 else
                 {

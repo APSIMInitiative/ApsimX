@@ -132,6 +132,7 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AgPasture\AGPBiomass.cs" />
     <Compile Include="AgPasture\TissuesHelper.cs" />
     <Compile Include="AgPasture\SimpleGrazing.cs" />
     <Compile Include="AgPasture\PastureSpecies.cs" />

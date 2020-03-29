@@ -123,52 +123,10 @@
         public double DMTotalHarvestable { get { return DMLiveHarvestable + DMDeadHarvestable; } }
 
         /// <summary>The harvestable dry matter in the live (green) tissues (kg/ha).</summary>
-        public double DMLiveHarvestable { get { return Math.Max(0, StandingLiveHerbageWt - MinimumLiveDM); } }
+        public double DMLiveHarvestable { get { return Math.Max(0, DMLive * FractionStanding - MinimumLiveDM); } }
 
         /// <summary>The harvestable dry matter in the dead tissues (kg/ha).</summary>
-        public virtual double DMDeadHarvestable { get { return StandingDeadHerbageWt; } }
-
-        /// <summary>Dry matter weight of standing herbage (kgDM/ha).</summary>
-        [Units("kg/ha")]
-        public double StandingHerbageWt
-        {
-            get { return DMTotal * FractionStanding; }
-        }
-
-        /// <summary>Dry matter weight of live standing herbage (kgDM/ha).</summary>
-        [Units("kg/ha")]
-        public double StandingLiveHerbageWt
-        {
-            get { return DMLive * FractionStanding; }
-        }
-
-        /// <summary>Dry matter weight of dead standing herbage (kgDM/ha).</summary>
-        [Units("kg/ha")]
-        public double StandingDeadHerbageWt
-        {
-            get { return DMDead * FractionStanding; }
-        }
-
-        /// <summary>N concent of the standing herbage (kg/ha).</summary>
-        [Units("kg/ha")]
-        public double StandingHerbageN
-        {
-            get { return NTotal * FractionStanding; }
-        }
-
-        /// <summary>N concent of the live standing herbage (kg/ha).</summary>
-        [Units("kg/ha")]
-        public double StandingLiveHerbageN
-        {
-            get { return NLive * FractionStanding; }
-        }
-
-        /// <summary>N concent of the dead standing herbage (kg/ha).</summary>
-        [Units("kg/ha")]
-        public double StandingDeadHerbageN
-        {
-            get { return NDead * FractionStanding; }
-        }
+        public virtual double DMDeadHarvestable { get { return DMDead * FractionStanding; } }
 
         /// <summary>The amount of N in the total harvestable dry matter (kg/ha).</summary>
         public double NTotalHarvestable { get { return NLiveHarvestable + NDeadHarvestable; } }
