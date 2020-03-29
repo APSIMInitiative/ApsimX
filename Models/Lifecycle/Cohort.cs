@@ -20,10 +20,13 @@
         public double PhysiologicalAge { get; set; }
                 
         /// <summary>Number of Mortalities from this cohort today.</summary>
-        public double Mortality { get; set; }
+        public double Mortalities { get; set; }
 
         /// <summary>Number of progeny created by this cohort</summary>
         public double Progeny { get; set; }
+
+        /// <summary>Number of migrants leaving this cohort</summary>
+        public double Migrants { get; set; }
 
         /// <summary>The LifeCyclePhase this cohort belongs to.</summary>
         public LifeCyclePhase BelongsToPhase;

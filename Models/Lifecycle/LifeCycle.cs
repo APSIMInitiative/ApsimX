@@ -84,7 +84,7 @@
                     stage.LifeCyclePhaseForGraduates = LifeCyclePhases[i + 1];
                 else
                     stage.LifeCyclePhaseForGraduates = null; //Last life cycle has no destination phase for graduates.  Everyone dies!!!
-                stage.Clear();
+                stage.ZeorDeltas();
                 i++;
             }
         }
