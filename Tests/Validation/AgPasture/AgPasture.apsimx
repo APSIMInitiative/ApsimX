@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 89,
+  "Version": 88,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -77664,6 +77664,16 @@
                         0.6
                       ],
                       "CNRatioDung": 0.0,
+                      "DaysSinceGraze": 0,
+                      "GrazingInterval": 0,
+                      "GrazedDM": 0.0,
+                      "GrazedN": 0.0,
+                      "GrazedME": 0.0,
+                      "AmountUrineNReturned": 0.0,
+                      "AmountDungCReturned": 0.0,
+                      "AmountDungNReturned": 0.0,
+                      "PreGrazeDM": 0.0,
+                      "PostGrazeDM": 0.0,
                       "Name": "SimpleGrazing",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -77762,12 +77772,14 @@
                     },
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                      "Canopies": [],
                       "InitialResidueName": "Sward",
                       "InitialResidueType": "grass",
                       "InitialResidueMass": 1000.0,
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 15.0,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": true,
@@ -78206,7 +78218,7 @@
                       "VariableNames": [
                         "[Clock].Today as Date",
                         "([AGPRyegrass].HarvestedWt + [AGPWhiteClover].HarvestedWt) as HarvestedWt",
-                        "([AGPRyegrass].Harvestable.Wt + [AGPWhiteClover].Harvestable.Wt) as StandingHerbageWt",
+                        "([AGPRyegrass].StandingHerbageWt + [AGPWhiteClover].StandingHerbageWt) as StandingHerbageWt",
                         "(Sum([Soil].SoilNitrogen.Urea.kgha) + Sum([Soil].SoilNitrogen.NH4.kgha) + Sum([Soil].SoilNitrogen.NO3.kgha)) as MinN",
                         "(Sum([Soil].SoilWater.ESW) as ESW ",
                         "",
@@ -78233,7 +78245,7 @@
                       "VariableNames": [
                         "[Clock].Today as Date",
                         "([AGPRyegrass].HarvestedWt + [AGPWhiteClover].HarvestedWt) as HarvestedWt",
-                        "([AGPRyegrass].Harvestable.Wt + [AGPWhiteClover].Harvestable.Wt) as StandingHerbageWt"
+                        "([AGPRyegrass].StandingHerbageWt + [AGPWhiteClover].StandingHerbageWt) as StandingHerbageWt"
                       ],
                       "EventNames": [
                         "[SimpleGrazing].Grazed"
@@ -78750,6 +78762,16 @@
                 0.6
               ],
               "CNRatioDung": 0.0,
+              "DaysSinceGraze": 0,
+              "GrazingInterval": 0,
+              "GrazedDM": 0.0,
+              "GrazedN": 0.0,
+              "GrazedME": 0.0,
+              "AmountUrineNReturned": 0.0,
+              "AmountDungCReturned": 0.0,
+              "AmountDungNReturned": 0.0,
+              "PreGrazeDM": 0.0,
+              "PostGrazeDM": 0.0,
               "Name": "SimpleGrazing",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -78774,12 +78796,14 @@
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "Canopies": [],
               "InitialResidueName": "Sward",
               "InitialResidueType": "grass",
               "InitialResidueMass": 1000.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 15.0,
+              "FractionFaecesAdded": 1.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
               "IncludeInDocumentation": true,
