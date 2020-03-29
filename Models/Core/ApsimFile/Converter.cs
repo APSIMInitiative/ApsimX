@@ -1917,13 +1917,16 @@
         {
             Tuple<string, string>[] changes =
 			{
+                new Tuple<string, string>(".HarvestableWt",          ".Harvestable.Wt"),
+                new Tuple<string, string>(".HarvestableN",           ".Harvestable.N"),
                 new Tuple<string, string>(".StandingHerbageWt",      ".Harvestable.Wt"),
                 new Tuple<string, string>(".StandingHerbageN",       ".Harvestable.N"),
                 new Tuple<string, string>(".StandingHerbageNConc",   ".Harvestable.NConc"),
                 new Tuple<string, string>(".StandingLiveHerbageWt",  ".HarvestableLive.Wt"),
-                new Tuple<string, string>(".StandingLiveHerbageN",  ".HarvestableLive.N"),
+                new Tuple<string, string>(".StandingLiveHerbageN",   ".HarvestableLive.N"),
                 new Tuple<string, string>(".StandingDeadHerbageWt",  ".HarvestableDead.Wt"),
-                new Tuple<string, string>(".StandingDeadHerbageN",  ".HarvestableDead.N"),
+                new Tuple<string, string>(".StandingDeadHerbageN",   ".HarvestableDead.N"),
+                new Tuple<string, string>(".HerbageDigestibility",   ".Harvestable.Digestibility")
             };
             JsonUtilities.RenameVariablesInReportAndManager(root, changes);
         }

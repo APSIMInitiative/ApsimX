@@ -2601,7 +2601,11 @@
                 return new AGPBiomass()
                 {
                     Wt = leaf.DMTotalHarvestable + stem.DMTotalHarvestable + stolon.DMTotalHarvestable,
-                    N = leaf.NTotalHarvestable + stem.NTotalHarvestable + stolon.NTotalHarvestable
+                    N = leaf.NTotalHarvestable + stem.NTotalHarvestable + stolon.NTotalHarvestable,
+                    Digestibility = MathUtilities.Divide(leaf.StandingDigestibility * leaf.DMTotal +
+                                                         stem.StandingDigestibility * stem.DMTotal +
+                                                         stolon.StandingDigestibility * stolon.DMTotal,
+                                                         leaf.DMTotalHarvestable + stem.DMTotalHarvestable + stolon.DMTotalHarvestable, 0.0)
                 };
             }
         }
@@ -2672,28 +2676,12 @@
             get { return PotentialMEOfHerbage * defoliatedDigestibility; }
         }
 
-        /// <summary>Gets the average digestibility of standing herbage (0-1).</summary>
-        //[Description("Average digestibility of standing herbage")]
-        [Units("0-1")]
-        public double HerbageDigestibility
-        {
-            get
-            {
-                if (MathUtilities.IsGreaterThan(Harvestable.Wt, 0.0))
-                    return  (leaf.StandingDigestibility * leaf.DMTotal + 
-                             stem.StandingDigestibility * stem.DMTotal + 
-                             stolon.StandingDigestibility * stolon.DMTotal) / Harvestable.Wt;
-                else
-                    return 0.0;
-            }
-        }
-
         /// <summary>Gets the average metabolisable energy concentration of standing herbage (MJ/kgDM).</summary>
         //[Description("Average metabolisable energy concentration of standing herbage")]
         [Units("MJ/kg")]
         public double HerbageME
         {
-            get { return PotentialMEOfHerbage * HerbageDigestibility; }
+            get { return PotentialMEOfHerbage * Harvestable.Digestibility; }
         }
 
         #region Tissue outputs  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

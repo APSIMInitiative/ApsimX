@@ -521,6 +521,18 @@ namespace Models.Core.ApsimFile
                 foreach (var replacement in changes)
                     JsonUtilities.SearchReplaceReportVariableNames(report, replacement.Item1, replacement.Item2);
             }
+
+            foreach (var simpleGrazing in JsonUtilities.ChildrenOfType(node, "SimpleGrazing"))
+            {
+                var expression = simpleGrazing["FlexibleExpressionForTimingOfGrazing"].ToString();
+                if (!string.IsNullOrEmpty(expression))
+                {
+                    foreach (var replacement in changes)
+                        expression = expression.Replace(replacement.Item1, replacement.Item2);
+                    simpleGrazing["FlexibleExpressionForTimingOfGrazing"] = expression;
+                }
+            }
+
         }
     }
 }
