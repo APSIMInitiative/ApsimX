@@ -30,9 +30,20 @@
         [Display(Type = DisplayType.LifePhaseName)]
         public string NameOfPhaseForProgeny { get; set; }
 
+        /// <summary> Specifies the proportion of the parent phases progeny that are added to the destination phase</summary>
+        [Link(IsOptional = true, Type = LinkType.Child, ByName = true)]
+        private IFunction proportionOfProgeny = null;
+
         /// <summary> Returns the proportion of the parent phases progeny that are added to the destination phase</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        public IFunction ProportionOfProgeny = null;
+        public double ProportionOfProgeny
+        {
+            get
+            {
+                if (proportionOfProgeny != null)
+                    return proportionOfProgeny.Value();
+                else return 1.0;
+            }
+        }
 
         /// <summary> the number of projeny added to the destination by this phase</summary>
         public double ProgenyToDestination { get; set; }
