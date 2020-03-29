@@ -26,15 +26,57 @@
     /// </summary>
     public class GraphView : ViewBase, IGraphView
     {
-        /// <summary>
-        /// Overall font size for the graph.
-        /// </summary>
-        public double FontSize = 14;
+        private double fontSize = 14;
 
         /// <summary>
         /// Overall font size for the graph.
         /// </summary>
-        public double MarkerSize = -1;
+        public double FontSize
+        {
+            get
+            {
+                return fontSize;
+            }
+            set
+            {
+                fontSize = value;
+                if (plot1 != null && plot1.Model != null)
+                {
+                    plot1.Model.DefaultFontSize = value;
+                    plot1.Model.LegendFontSize = value;
+
+                    foreach (OxyPlot.Annotations.Annotation annotation in this.plot1.Model.Annotations)
+                        if (annotation is OxyPlot.Annotations.TextAnnotation textAnnotation)
+                            textAnnotation.FontSize = value;
+                }
+            }
+        }
+
+        private MarkerSizeType markerSize;
+
+        /// <summary>
+        /// Marker size.
+        /// </summary>
+        public MarkerSizeType MarkerSize
+        {
+            get
+            {
+                return markerSize;
+            }
+            set
+            {
+                markerSize = value;
+                double numericValue = GetMarkerSizeNumericValue(value);
+                if (plot1 != null && plot1.Model != null)
+                    foreach (var series in plot1.Model.Series.OfType<Utility.LineSeriesWithTracker>())
+                        series.MarkerSize = numericValue;
+            }
+        }
+
+        /// <summary>
+        /// Overall font size for the graph.
+        /// </summary>
+        //public double MarkerSize = -1;
 
         /// <summary>
         /// Overall font to use.
@@ -394,16 +436,8 @@
                     series.MarkerType = type;
                 }
 
-                if (MarkerSize > -1)
-                    series.MarkerSize = MarkerSize;
-                else if (markerSize == MarkerSizeType.Normal)
-                    series.MarkerSize = 7.0;
-                else if (markerSize == MarkerSizeType.Large)
-                    series.MarkerSize = 9.0;
-                else if(markerSize == MarkerSizeType.Small)
-                    series.MarkerSize = 5.0;
-                else
-                    series.MarkerSize = 3.0;
+                MarkerSize = markerSize;
+                series.MarkerSize = GetMarkerSizeNumericValue(markerSize);
 
                 series.MarkerStroke = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
                 if (filled)
@@ -424,6 +458,23 @@
                 }
             }
 
+        }
+
+        private double GetMarkerSizeNumericValue(MarkerSizeType markerSize)
+        {
+            if (markerSize == MarkerSizeType.Large)
+                return 9.0;
+
+            if (markerSize == MarkerSizeType.Normal)
+                return 7.0;
+
+            if (markerSize == MarkerSizeType.Small)
+                return 5.0;
+
+            if (markerSize == MarkerSizeType.VerySmall)
+                return 3.0;
+
+            throw new NotImplementedException($"No supported marker size translation for {markerSize}");
         }
 
         /// <summary>

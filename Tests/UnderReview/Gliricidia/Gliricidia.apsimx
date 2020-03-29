@@ -197,7 +197,7 @@
             "[Maize].AboveGround.Wt",
             "[Maize].Total.N",
             "[Maize].Total.Wt",
-            "'max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax",
+            "max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax",
             "[Maize].Grain.Number",
             "[Maize].Grain.Size",
             "[Maize].Population"

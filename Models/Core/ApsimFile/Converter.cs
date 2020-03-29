@@ -19,7 +19,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 89; } }
+        public static int LatestVersion { get { return 90; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1899,23 +1899,32 @@
         }
 
         /// <summary>
-        /// Rename AgPasture variables.
+        /// Replace 'avg' with 'mean' in report variables.
         /// </summary>
         /// <param name="root"></param>
         /// <param name="fileName"></param>
         private static void UpgradeToVersion89(JObject root, string fileName)
         {
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+                JsonUtilities.SearchReplaceReportVariableNames(report, "avg of ", "mean of ");
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion90(JObject root, string fileName)
+        {
             Tuple<string, string>[] changes =
-{
+			{
                 new Tuple<string, string>(".StandingHerbageWt",      ".Harvestable.Wt"),
                 new Tuple<string, string>(".StandingHerbageNConc",   ".Harvestable.NConc"),
                 new Tuple<string, string>(".StandingLiveHerbageWt",  ".HarvestableLive.Wt"),
                 new Tuple<string, string>(".StandingDeadHerbageWt",  ".HarvestableDead.Wt"),
             };
-
             JsonUtilities.RenameVariablesInReportAndManager(root, changes);
         }
-
+		
         /// <summary>
         /// Refactor LifeCycle model
         /// </summary>
