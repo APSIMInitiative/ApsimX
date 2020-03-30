@@ -81,6 +81,7 @@ namespace Models.PMF.Struct
         [Link(Type = LinkType.Child, ByName = true)]
         public IFunction branchMortality = null;
 
+        [Link] private Clock clock = null;
 
         /// <summary>The Stage that cohorts are initialised on</summary>
         [Description("The Stage that cohorts are initialised on")]
@@ -233,6 +234,7 @@ namespace Models.PMF.Struct
             BranchNumber = 0;
             NextLeafProportion = 0;
             DeltaPlantPopulation = 0;
+            DateTime Date = clock.Today;
         }
 
         // 7. Private methods
