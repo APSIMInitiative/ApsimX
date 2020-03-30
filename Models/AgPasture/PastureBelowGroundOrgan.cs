@@ -73,11 +73,7 @@
             if (SoilNitrogen == null)
                 throw new Exception("Cannot find SoilNitrogen in zone");
 
-            // Typically two tissues below ground, one live and one dead
-            Tissue = new RootTissue[numTissues];
             nLayers = theSoil.Thickness.Length;
-            for (int t = 0; t < Tissue.Length; t++)
-                Tissue[t] = new RootTissue(nameOfSpecies, SoilNitrogen, nLayers);
 
             // save the parameters for this organ
             mySpeciesName = nameOfSpecies;            
@@ -111,13 +107,14 @@
             // Initialise root DM, N, depth, and distribution
             Depth = initialDepth;
             TargetDistribution = RootDistributionTarget();
-            double[] iniRootFraction = CurrentRootDistributionTarget();
-            for (int layer = 0; layer < nLayers; layer++)
-            {
-                Tissue[0].DMLayer[layer] = initialDM * iniRootFraction[layer];
-                Tissue[0].NamountLayer[layer] = NConcOptimum * Tissue[0].DMLayer[layer];
-            }
-            Tissue[0].UpdateDM();
+
+            double[] initialDMByLayer = MathUtilities.Multiply_Value(CurrentRootDistributionTarget(), initialDM);
+            double[] initialNByLayer = MathUtilities.Multiply_Value(initialDMByLayer, NConcOptimum);
+
+            // Typically two tissues below ground, one live and one dead
+            Tissue = new RootTissue[numTissues];
+            Tissue[0] = new RootTissue(nameOfSpecies, SoilNitrogen, nLayers, initialDMByLayer, initialNByLayer);
+            Tissue[1] = new RootTissue(nameOfSpecies, SoilNitrogen, nLayers, null, null);
         }
 
         #region Root specific characteristics  -----------------------------------------------------------------------------
@@ -530,10 +527,8 @@
             Depth = rootDepth;
 
             var rootFractions = CurrentRootDistributionTarget();
-            for (int i = 0; i < nLayers; i++)
-                Tissue[0].DMLayer[i] = rootWt * rootFractions[i];
-
-            Tissue[0].UpdateDM();
+            var rootBiomass = MathUtilities.Multiply_Value(CurrentRootDistributionTarget(), rootWt);
+            Tissue[0].ResetTo(rootBiomass);
         }
 
         /// <summary>Reset all amounts to zero in all tissues of this organ.</summary>
@@ -563,22 +558,18 @@
         }
 
         /// <summary>Kills part of the organ (transfer DM and N to dead tissue).</summary>
-        /// <param name="fraction">The fraction to kill in each tissue</param>
-        internal void DoKillOrgan(double fraction = 1.0)
+        /// <param name="fractionToRemove">The fraction to kill in each tissue</param>
+        internal void DoKillOrgan(double fractionToRemove = 1.0)
         {
-            if (1.0 - fraction > Epsilon)
+            if (1.0 - fractionToRemove > Epsilon)
             {
-                double fractionRemaining = 1.0 - fraction;
+                double fractionRemaining = 1.0 - fractionToRemove;
                 for (int t = 0; t < Tissue.Length - 1; t++)
                 {
-                    for (int layer = 0; layer <= BottomLayer; layer++)
-                    {
-                        Tissue[Tissue.Length - 1].DMLayer[layer] += Tissue[t].DMLayer[layer] * fraction;
-                        Tissue[Tissue.Length - 1].NamountLayer[layer] += Tissue[t].NamountLayer[layer] * fraction;
-                        Tissue[t].DMLayer[layer] *= fractionRemaining;
-                        Tissue[t].NamountLayer[layer] *= fractionRemaining;
-                    }
-                    Tissue[t].UpdateDM();
+                    double[] amountOfDMRemoved;
+                    double[] amountOfNRemoved;
+                    Tissue[t].RemoveBiomass(fractionToRemove, out amountOfDMRemoved, out amountOfNRemoved);
+                    Tissue[Tissue.Length - 1].AddBiomass(amountOfDMRemoved, amountOfNRemoved);
                 }
             }
             else

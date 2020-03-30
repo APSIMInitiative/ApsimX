@@ -17,16 +17,27 @@
         /// <param name="speciesNam">The name of the species this tissue belongs to.</param>
         /// <param name="nutrient">The nutrient model.</param>
         /// <param name="numLayers">The number of layers in the soil</param>
-        public RootTissue(string speciesNam, INutrient nutrient, int numLayers)
+        /// <param name="initialDMByLayer">Initial dry matter by layer.</param>
+        /// <param name="initialNByLayer">Initial nitrogen by layer.</param>
+        public RootTissue(string speciesNam, INutrient nutrient, int numLayers, double[] initialDMByLayer, double[] initialNByLayer)
         {
             speciesName = speciesNam;
             nutrientModel = nutrient;
             nLayers = numLayers;
-            DMLayer = new double[nLayers];
-            NamountLayer = new double[nLayers];
             PamountLayer = new double[nLayers];
             DMLayersTransferedIn = new double[nLayers];
             NLayersTransferedIn = new double[nLayers];
+            if (initialNByLayer != null && initialNByLayer != null)
+            {
+                DMLayer = initialDMByLayer;
+                NamountLayer = initialNByLayer;
+            }
+            else
+            {
+                DMLayer = new double[nLayers];
+                NamountLayer = new double[nLayers];
+            }
+            UpdateDM();
         }
 
         /// <summary>Number of layers in the soil.</summary>
@@ -134,22 +145,68 @@
             }
         }
 
+        /// <summary>
+        /// Remove a fraction of the biomass.
+        /// </summary>
+        /// <param name="fractionToRemove">The fraction from each layer to remove.</param>
+        /// <param name="amountDMRemoved">The amount of dry matter removed from each layer.</param>
+        /// <param name="amountNRemoved">The amount of nitrogen removed from each layer.</param>
+        /// <returns></returns>
+        public void RemoveBiomass(double fractionToRemove, out double[] amountDMRemoved, out double[] amountNRemoved)
+        {
+            amountDMRemoved = MathUtilities.Multiply_Value(DMLayer, fractionToRemove);
+            amountNRemoved = MathUtilities.Multiply_Value(NamountLayer, fractionToRemove);
+            for (int layer = 0; layer < nLayers; layer++)
+            {
+                DMLayer[layer] -= amountDMRemoved[layer];
+                NamountLayer[layer] -= amountNRemoved[layer];
+            }
+            UpdateDM();
+        }
+
+        /// <summary>
+        /// Add biomass.
+        /// </summary>
+        /// <param name="dmToAdd">The amount of dry matter to add (kg/ha).</param>
+        /// <param name="nToAdd">The amount of nitrogen to add (kg/ha).</param>
+        public void AddBiomass(double[] dmToAdd, double[] nToAdd)
+        {
+            for (int layer = 0; layer < nLayers; layer++)
+            {
+                DMLayer[layer] += dmToAdd[layer];
+                NamountLayer[layer] += nToAdd[layer];
+            }
+            UpdateDM();
+        }
+
+
         public void UpdateDM()
         {
             dm.Wt = DMLayer.Sum();
             dm.N = NamountLayer.Sum();
         }
 
-        public override void ResetTo(double dmAmount, double nAmount)
+        /// <summary>
+        /// Reset tissue to the specified amount.
+        /// </summary>
+        /// <param name="dmAmount">The amount of dry matter by layer to reset to (kg/ha).</param>
+        public void ResetTo(double[] dmAmount)
         {
-            base.ResetTo(dmAmount, nAmount);
-            throw new NotImplementedException("Not implemented: Need to check how root reset works.");
+            for (int layer = 0; layer < nLayers; layer++)
+                DMLayer[layer] += dmAmount[layer];
+
+            UpdateDM();
         }
 
         public override void Reset()
         {
             base.Reset();
-            throw new NotImplementedException("Not implemented: Need to check how root reset works.");
+            for (int layer = 0; layer < nLayers; layer++)
+            {
+                DMLayer[layer] = 0;
+                NamountLayer[layer] = 0;
+            }
         }
+
     }
 }

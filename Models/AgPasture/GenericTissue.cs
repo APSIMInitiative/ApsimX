@@ -168,7 +168,7 @@
         /// </summary>
         /// <param name="dmAmount">The amount of dry matter to reset to (kg/ha).</param>
         /// <param name="nAmount">The amount of nitrogen to reset to (kg/ha).</param>
-        public virtual void ResetTo(double dmAmount, double nAmount)
+        public void ResetTo(double dmAmount, double nAmount)
         {
             dm.Wt = dmAmount;
             dm.N = nAmount;
