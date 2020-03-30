@@ -99,7 +99,7 @@
         {
             if (!CheckValue(entryLatitude) || !CheckValue(entryLatitude))
                 return;
-            string url = googleGeocodingApi + "latlng=" + entryLatitude.Text + ',' + entryLongitude.Text;
+            string url = googleGeocodingApi + "latlng=" + LocText(entryLatitude) + ',' + LocText(entryLongitude);
             try
             {
                 MemoryStream stream = WebUtilities.ExtractDataFromURL(url);
@@ -355,7 +355,7 @@
             if (!CheckValue(entryLatitude) || !CheckValue(entryLatitude))
                 return null;
             string url = "http://www.asris.csiro.au/ASRISApi/api/APSIM/getApsoil?longitude=" +
-                entryLongitude.Text + "&latitude=" + entryLatitude.Text;
+                LocText(entryLongitude) + "&latitude=" + LocText(entryLatitude);
             Soil newSoil = null;
             WaitCursor = true;
             try
@@ -393,7 +393,7 @@
             if (!CheckValue(entryLatitude) || !CheckValue(entryLatitude))
                 return null;
             string url = "http://www.asris.csiro.au/ASRISApi/api/APSIM/getClosestApsoil?maxCnt=5&longitude=" +
-                entryLongitude.Text + "&latitude=" + entryLatitude.Text;
+                LocText(entryLongitude) + "&latitude=" + LocText(entryLatitude);
             Soil newSoil = null;
             WaitCursor = true;
             try
@@ -586,7 +586,7 @@
             if (!CheckValue(entryLatitude) || !CheckValue(entryLatitude))
                 return null;
             string url = "https://rest.soilgrids.org/query?lon=" +
-                entryLongitude.Text + "&lat=" + entryLatitude.Text;
+                LocText(entryLongitude) + "&lat=" + LocText(entryLatitude);
             WaitCursor = true;
             Soil newSoil = null;
             try
@@ -848,8 +848,8 @@
                     newSoil.Name = "Synthetic soil derived from ISRIC SoilGrids REST API";
                     newSoil.DataSource = "ISRIC SoilGrids";
                     newSoil.SoilType = soilType;
-                    newSoil.Latitude = Double.Parse(entryLatitude.Text, CultureInfo.InvariantCulture);
-                    newSoil.Longitude = Double.Parse(entryLongitude.Text, CultureInfo.InvariantCulture);
+                    newSoil.Latitude = Double.Parse(LocText(entryLatitude), CultureInfo.InvariantCulture);
+                    newSoil.Longitude = Double.Parse(LocText(entryLongitude), CultureInfo.InvariantCulture);
 
                     // ISRIC values are for "levels", not "intervals", so we need to convert to layers
                     // Following Andrew Moore's lead on layer thickness and weightings.
@@ -1039,7 +1039,7 @@
             if (!CheckValue(entryLatitude) || !CheckValue(entryLatitude))
                 return null;
             string url = "https://worldmodel.csiro.au/apsimsoil?lon=" +
-                entryLongitude.Text + "&lat=" + entryLatitude.Text;
+                LocText(entryLongitude) + "&lat=" + LocText(entryLatitude);
             Soil newSoil = null;
             WaitCursor = true;
             try
@@ -1065,6 +1065,23 @@
             {
                 WaitCursor = false;
             }
+        }
+
+        /// <summary>
+        /// Get the value from an entry box, which is assumed to be entered in the form of
+        /// user's locale and return that value formatted as a string in the "invariant" locale
+        /// </summary>
+        /// <param name="entryBox">An Entry widget, containing a numeric value formatted in the user's locale</param>
+        /// <returns>The value in the entry box reformatted in the invariant locale, or empty string on error</returns>
+        private string LocText(Entry entryBox)
+        {
+            string result = String.Empty;
+            double value;
+            if (Double.TryParse(entryBox.Text, out value))
+            {
+                result = value.ToString(CultureInfo.InvariantCulture);
+            }
+            return result;
         }
 
         private bool waiting = false;
