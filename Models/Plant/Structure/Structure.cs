@@ -149,11 +149,6 @@ namespace Models.PMF.Struct
         [XmlIgnore]
         public double TotalStemPopn { get; set; }
 
-        //Plant leaf number state variables
-        /// <summary>Number of mainstem nodes which have their tips appeared</summary>
-        [XmlIgnore]
-        public double PotLeafTipsAppeared { get; set; }
-
         /// <summary>"Number of mainstem nodes which have their tips appeared"</summary>
         [XmlIgnore]
         public double LeafTipsAppeared { get; set; }
@@ -220,7 +215,6 @@ namespace Models.PMF.Struct
         {
             TotalStemPopn = 0;
             TotalLeavesPerShoot = 0;
-            PotLeafTipsAppeared = 0;
             PlantTotalNodeNo = 0;
             ProportionBranchMortality = 0;
             ProportionPlantMortality = 0;
@@ -291,10 +285,9 @@ namespace Models.PMF.Struct
                         DeltaTipNumber = DeltaHaunStage; //DeltaTipNumber is only positive after emergence whereas deltaHaunstage is positive from germination
                     }
 
-                    PotLeafTipsAppeared += DeltaTipNumber;
-                    LeafTipsAppeared = Math.Min(PotLeafTipsAppeared, finalLeafNumber.Value());
+                    LeafTipsAppeared = Math.Min(LeafTipsAppeared += DeltaTipNumber, finalLeafNumber.Value());
 
-                    TimeForAnotherLeaf = PotLeafTipsAppeared >= (leaf.AppearedCohortNo + 1);
+                    TimeForAnotherLeaf = LeafTipsAppeared >= (leaf.AppearedCohortNo + 1);
                     int LeavesToAppear = (int)(LeafTipsAppeared - (leaf.AppearedCohortNo - (1 - NextLeafProportion)));
 
                     //Each time main-stem node number increases by one or more initiate the additional cohorts until final leaf number is reached
@@ -376,10 +369,6 @@ namespace Models.PMF.Struct
             CohortParams = new ApparingLeafParams() { };
             CohortParams.CohortToAppear = TipToAppear;
             CohortParams.TotalStemPopn = TotalStemPopn;
-            // if ((Math.Truncate(LeafTipsAppeared) + 1) == leaf.InitialisedCohortNo)
-            //    CohortParams.CohortAge = (PotLeafTipsAppeared - TipToAppear) * phyllochron.Value();
-            // else
-            //     CohortParams.CohortAge = (LeafTipsAppeared - TipToAppear) * phyllochron.Value();
             CohortParams.CohortAge = 0;
             CohortParams.FinalFraction = NextLeafProportion;
             if (LeafTipAppearance != null)
@@ -393,7 +382,7 @@ namespace Models.PMF.Struct
             for (int i = 1; i <= leaf.TipsAtEmergence; i++)
             {
                 InitParams = new CohortInitParams();
-                PotLeafTipsAppeared += 1;
+                LeafTipsAppeared += 1;
                 CohortToInitialise += 1;
                 InitParams.Rank = CohortToInitialise;
                 AddLeafCohort?.Invoke(this, InitParams);
@@ -428,7 +417,6 @@ namespace Models.PMF.Struct
             Clear();
             CohortToInitialise = 0;
             TipToAppear = 0;
-            PotLeafTipsAppeared = 0;
             ResetStemPopn();
         }
 
@@ -459,8 +447,7 @@ namespace Models.PMF.Struct
         {
             //Remove nodes from Structure properties
             LeafTipsAppeared = Math.Max(LeafTipsAppeared - NodesToRemove, 0);
-            PotLeafTipsAppeared = Math.Max(PotLeafTipsAppeared - NodesToRemove, 0);
-
+            
             //Remove corresponding cohorts from leaf
             int NodesStillToRemove = Math.Min(NodesToRemove + leaf.ApicalCohortNo, leaf.InitialisedCohortNo);
             while (NodesStillToRemove > 0)
@@ -470,21 +457,16 @@ namespace Models.PMF.Struct
                 leaf.RemoveHighestLeaf();
                 NodesStillToRemove -= 1;
             }
-            TipToAppear = Math.Max(TipToAppear + leaf.CohortsAtInitialisation, 1);
+            //TipToAppear = Math.Max(TipToAppear + leaf.CohortsAtInitialisation, 1);
             CohortToInitialise = Math.Max(CohortToInitialise, 1);
+            if (CohortToInitialise == LeafTipsAppeared) // If leaf appearance had reached final leaf number need to add another cohort back to get things moving again.
+                CohortToInitialise += 1;
+            InitParams = new CohortInitParams() { };
+            InitParams.Rank = CohortToInitialise;
+            if (AddLeafCohort != null)
+                AddLeafCohort.Invoke(this, InitParams);
             //Reinitiate apical cohorts ready for regrowth
-            if (leaf.InitialisedCohortNo > 0) //Sone cohorts remain after defoliation
-            {
-                for (int i = 1; i <= leaf.CohortsAtInitialisation; i++)
-                {
-                    InitParams = new CohortInitParams();
-                    CohortToInitialise += 1;
-                    InitParams.Rank = CohortToInitialise;
-                    if (AddLeafCohort != null)
-                        AddLeafCohort.Invoke(this, InitParams);
-                }
-            }
-            else   //If all nodes have been removed initalise again
+            if (leaf.InitialisedCohortNo == 0) //If all nodes have been removed initalise again
             {
                 leaf.Reset();
                 InitialiseLeafCohorts.Invoke(this, new EventArgs());
