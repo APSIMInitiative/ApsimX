@@ -172,7 +172,6 @@
               "$type": "Models.Report.Report, Models",
               "VariableNames": [
                 "[Soil].WEIRDO.Thickness as Thickness",
-                "[Soil].WEIRDO.Depth as Depth",
                 "[Soil].WEIRDO.PsiUpper as PsiUp",
                 "[Soil].WEIRDO.RelativePoreVolume as RelWC"
               ],
