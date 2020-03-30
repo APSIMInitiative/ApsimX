@@ -20,6 +20,7 @@ namespace UserInterface.Presenters
     using Models.Storage;
     using System.Globalization;
     using Models.LifeCycle;
+    using Models.PMF;
 
     /// <summary>
     /// <para>
@@ -691,25 +692,48 @@ namespace UserInterface.Presenters
         /// <returns>A list of cultivars.</returns>
         private string[] GetCultivarNames(IPlant crop)
         {
-            if (crop.CultivarNames.Length == 0)
+            Simulations simulations = Apsim.Parent(crop as IModel, typeof(Simulations)) as Simulations;
+            Replacements replacements = Apsim.Child(simulations, typeof(Replacements)) as Replacements;
+
+            if (replacements == null)
+                return crop.CultivarNames;
+
+            IPlant replacementCrop = Apsim.Child(replacements, (crop as IModel).Name) as IPlant;
+            if (replacementCrop != null)
+                return replacementCrop.CultivarNames;
+
+            // Check for cultivar folders under replacements.
+            List<string> cultivarNames = crop.CultivarNames.ToList();
+            foreach (IModel cultivarFolder in Apsim.Children(crop as IModel, typeof(CultivarFolder)))
             {
-                Simulations simulations = Apsim.Parent(crop as IModel, typeof(Simulations)) as Simulations;
-                Replacements replacements = Apsim.Child(simulations, typeof(Replacements)) as Replacements;
-                if (replacements != null)
+                IModel replacementFolder = Apsim.Child(replacements, cultivarFolder.Name);
+                if (replacementFolder != null)
                 {
-                    IPlant replacementCrop = Apsim.Child(replacements, (crop as IModel).Name) as IPlant;
-                    if (replacementCrop != null)
+                    // If we find a matching cultivar folder under replacements, remove
+                    // all cultivar names added by this folder in the official plant
+                    // model, and add the cultivar names added by the matching cultivar
+                    // folder under replacements.
+                    foreach (IModel cultivar in Apsim.ChildrenRecursively(cultivarFolder, typeof(Cultivar)))
                     {
-                        return replacementCrop.CultivarNames;
+                        cultivarNames.Remove(cultivar.Name);
+
+                        // If the cultivar has memo children, then the memo text will
+                        // be appended to the cultivar name after a vertical bar |.
+                        // Technically, there could be a cultivar x and x|y, but the UI
+                        // will prevent users from doing this, so the user would really
+                        // just be digging their own hole at this point.
+                        cultivarNames.RemoveAll(c => c.StartsWith(cultivar.Name + "|"));
                     }
+
+                    foreach (Alias alias in Apsim.ChildrenRecursively(cultivarFolder, typeof(Alias)))
+                        cultivarNames.RemoveAll(c => c.StartsWith(alias.Name + "|"));
+
+                    foreach (IModel cultivar in Apsim.ChildrenRecursively(replacementFolder, typeof(Cultivar)))
+                        cultivarNames.Add(cultivar.Name);
                 }
             }
-            else
-            {
-                return crop.CultivarNames;
-            }
 
-            return new string[0];
+            return cultivarNames.ToArray();
         }
 
         /// <summary>Get a list of life cycles in the zone.</summary>
