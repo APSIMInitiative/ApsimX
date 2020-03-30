@@ -27,8 +27,8 @@
             foreach (Sample sample in Apsim.Children(soil, typeof(Sample)))
                 SetSampleThickness(sample, targetThickness, soil);
 
-            if (soil.SoilWater != null)
-                SetSoilWaterThickness(soil.SoilWater as SoilWater, targetThickness);
+            if (soil.SoilWater is WaterModel.WaterBalance)
+                SetSoilWaterThickness(soil.SoilWater as WaterModel.WaterBalance, targetThickness);
             if (soil.Weirdo != null)
                 soil.Weirdo.MapVariables(targetThickness);
             SetAnalysisThickness(analysisNode, targetThickness);
@@ -92,7 +92,7 @@
         /// <summary>Sets the soil water thickness.</summary>
         /// <param name="soilWater">The soil water.</param>
         /// <param name="thickness">Thickness to change soil water to.</param>
-        private static void SetSoilWaterThickness(SoilWater soilWater, double[] thickness)
+        private static void SetSoilWaterThickness(WaterModel.WaterBalance soilWater, double[] thickness)
         {
             if (soilWater != null)
             {
@@ -103,7 +103,8 @@
 
                     soilWater.Thickness = thickness;
                 }
-
+                if (soilWater.SWCON == null)
+                    soilWater.SWCON = MathUtilities.CreateArrayOfValues(0.3, soilWater.Thickness.Length);
                 MathUtilities.ReplaceMissingValues(soilWater.SWCON, 0.0);
             }
         }
@@ -235,7 +236,7 @@
                 }
 
                 values.Add(defaultValueForBelowProfile);
-                thickness.Add(3000);
+                thickness.Add(30000);
                 double[] massValues = MathUtilities.Multiply(values.ToArray(), thickness.ToArray());
 
                 double[] newValues = MapMass(massValues, thickness.ToArray(), toThickness, allowMissingValues);

@@ -6,7 +6,6 @@
     using Models.Core.ApsimFile;
     using Models.Core.Run;
     using Models.Interfaces;
-    using Models.Report;
     using Models.Storage;
     using NUnit.Framework;
     using System;
@@ -34,24 +33,30 @@
         [SetUp]
         public void Setup()
         {
-            storage = new MockStorage();
-            clock = new Clock()
-            {
-                StartDate = new DateTime(2017, 1, 1),
-                EndDate = new DateTime(2017, 1, 10)
-            };
-            report = new Report()
-            {
-                VariableNames = new string[] { },
-                EventNames = new string[] { "[Clock].EndOfDay" },
-            };
-
             simulation = new Simulation()
             {
-                Children = new List<Model>() { storage, clock, report, new MockSummary() }
+                Children = new List<Model>()
+                {
+                    new MockStorage(),
+                    new MockSummary(),
+                    new Clock()
+                    {
+                        StartDate = new DateTime(2017, 1, 1),
+                        EndDate = new DateTime(2017, 1, 10)
+                    },
+                    new Report()
+                    {
+                        VariableNames = new string[] { },
+                        EventNames = new string[] { "[Clock].EndOfDay" },
+                    }
+                }
             };
+
             Apsim.InitialiseModel(simulation);
             runner = new Runner(simulation);
+            storage = simulation.Children[0] as MockStorage;
+            clock = simulation.Children[2] as Clock;
+            report = simulation.Children[3] as Report;
         }
 
         /// <summary>
@@ -74,7 +79,6 @@
             };
 
             runner.Run();
-
             Assert.AreEqual(storage.Get<double>("sum"),
                             new double[] { 1, 3, 6, 10, 15, 21, 28, 36, 45, 55 });
             Assert.AreEqual(storage.Get<double>("mean"),
@@ -106,6 +110,46 @@
 
             Assert.AreEqual(storage.Get<double>("weekly"),
                             new double[] { 1, 3, 6, 10, 15, 21, 28, 8, 17, 27, 38, 50, 63, 77, 15 });
+        }
+
+        /// <summary>This test ensures the 'on' keyword works.</summary>
+        [Test]
+        public void EnsureOnKeywordWorks()
+        {
+            clock.EndDate = new DateTime(2017, 1, 31);
+            report.EventNames = new string[]
+            {
+                "[Clock].EndOfMonth"
+            };
+            report.VariableNames = new string[]
+            {
+                "sum of [Clock].Today.DayOfYear from [Clock].StartOfSimulation to [Clock].EndOfSimulation as totalDoy1",
+                "sum of [Clock].Today.DayOfYear on [Clock].EndOfWeek from [Clock].EndOfSimulation to [Clock].StartOfSimulation as totalDoy2",
+            };
+
+            // Run the simulation.
+            runner.Run();
+
+            Assert.AreEqual(storage.Get<double>("totalDoy1"), new double[] { 496 });
+            Assert.AreEqual(storage.Get<double>("totalDoy2"), new double[] { 70 });
+        }
+
+        /// <summary>This test ensures an expression with spaces works.</summary>
+        [Test]
+        public void EnsureExpressionWorks()
+        {
+            report.VariableNames = new string[]
+            {
+                "sum of ([Clock].Today.DayOfYear + 1) from [Clock].StartOfSimulation to [Clock].EndOfSimulation as totalDoy",
+            };
+            report.EventNames = new string[]
+            {
+                "[Clock].EndOfSimulation"
+            };
+            // Run the simulation.
+            runner.Run();
+
+            Assert.AreEqual(storage.Get<double>("totalDoy"), new double[] { 65 });
         }
 
         /// <summary>This test ensures weekly aggregation works with weekly reporting frequency.</summary>
@@ -274,7 +318,7 @@
             Utilities.InjectLink(report, "clock", new MockClock());
 
             var events = new Events(report);
-            events.Publish("StartOfSimulation", new object[] { report, new EventArgs() });
+            events.Publish("FinalInitialise", new object[] { report, new EventArgs() });
 
             Assert.AreEqual(storage.tables[0].TableName, "_Factors");
             Assert.AreEqual(Utilities.TableToString(storage.tables[0]),
@@ -535,5 +579,76 @@ namespace Models
             string[] expected = Enumerable.Repeat("Red", actual.Length).ToArray();
             Assert.AreEqual(expected, actual);
         }
+
+        /// <summary>
+        /// Ensure a group by works.
+        /// </summary>
+        [Test]
+        public void TestGroupBySpecification()
+        {
+            report.EventNames = new string[] { "[Clock].EndOfSimulation" };
+            report.GroupByVariableName = "[Mock].A";
+
+            var model = new MockModelValuesChangeDaily
+                (aDailyValues: new double[] { 1, 1, 1, 2, 2, 2, 3, 3, 3,  3 },
+                 bDailyValues: new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })
+            { 
+                 Name = "Mock"
+            };
+
+            simulation.Children.Add(model);
+            Apsim.InitialiseModel(simulation);
+
+            report.VariableNames = new string[] 
+            { 
+                "[Clock].Today",
+                "sum of [Mock].B from [Clock].StartOfSimulation to [Clock].EndOfSimulation as SumA" 
+            };
+
+            Assert.IsNull(runner.Run());
+
+            Assert.AreEqual(storage.Get<double>("SumA"),
+                            new double[] { 6, 15, 34 });
+
+            Assert.AreEqual(storage.Get<DateTime>("Clock.Today"),
+                            new DateTime[] { new DateTime(2017, 1, 3), new DateTime(2017, 1, 6), new DateTime(2017, 1, 10) });
+        }
+
+        /// <summary>This test ensures that having lots of spacing is ok.</summary>
+        [Test]
+        public void EnsureLotsOfSpacingWorks()
+        {
+            clock.EndDate = new DateTime(2017, 1, 15);
+            report.VariableNames = new string[]
+            {
+                "sum   of   [Clock].Today.DayOfYear   from   [Report].DayAfterLastOutput   to   [Clock].Today   as   values",
+            };
+
+            // Run the simulation.
+            runner.Run();
+
+            Assert.AreEqual(storage.Get<double>("values"),
+                            new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 });
+        }
+
+        /// <summary>This test ensures that having a dot in the alias is ok.</summary>
+        [Test]
+        public void EnsureDotInAliasWorks()
+        {
+            report.VariableNames = new string[]
+            {
+                "sum of [Clock].Today.DayOfYear from [Clock].StartOfSimulation to [Clock].EndOfSimulation as Total.DayOfYear",
+            };
+            report.EventNames = new string[]
+            {
+                "[Clock].EndOfSimulation",
+            };
+
+            // Run the simulation.
+            runner.Run();
+
+            Assert.AreEqual(storage.Get<double>("Total.DayOfYear"), new double[] { 55 });
+        }
+
     }
 }

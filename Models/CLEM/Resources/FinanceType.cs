@@ -97,6 +97,11 @@ namespace Models.CLEM.Resources
             }
         }
 
+        /// <summary>
+        /// Overridded property to show that this resource type is capable of being traded with a market
+        /// </summary>
+        private new bool equivalentMarketStoreDetermined { get; set; }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -174,6 +179,12 @@ namespace Models.CLEM.Resources
                 return;
             }
 
+            // if this request aims to trade with a market see if we need to set up details for the first time
+            if (request.MarketTransactionMultiplier > 0)
+            {
+                FindEquivalentMarketStore();
+            }
+
             double amountRemoved = Math.Round(request.Required, 2, MidpointRounding.ToEven); 
             
             // more than positive balance can be taken if withdrawal limit set to false
@@ -182,14 +193,19 @@ namespace Models.CLEM.Resources
                 amountRemoved = Math.Min(amountRemoved, FundsAvailable);
             }
 
-            // avoid taking too much
-            //amountRemoved = Math.Min(this.Amount, amountRemoved);
             if (amountRemoved == 0)
             {
                 return;
             }
 
             this.amount -= amountRemoved;
+
+            // send to market if needed
+            if (request.MarketTransactionMultiplier > 0 && equivalentMarketStore != null)
+            {
+                (equivalentMarketStore as FinanceType).Add(amountRemoved * request.MarketTransactionMultiplier, request.ActivityModel, "Farm purchases");
+            }
+
 
             request.Provided = amountRemoved;
             ResourceTransaction details = new ResourceTransaction

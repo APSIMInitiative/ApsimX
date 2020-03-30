@@ -17,6 +17,7 @@
     using UserInterface.Views;
     using System.Globalization;
     using Models.Core.Apsim710File;
+    using Models.WaterModel;
 
     /// <summary>
     /// Class for displaying a dialog to select a soil description to be downloaded from ASRIS or ISRIC
@@ -46,6 +47,43 @@
         private string replaceNode;
         private ExplorerView owningView;
         private ExplorerPresenter explorerPresenter;
+
+        /// <summary>
+        /// Reads/writes the longitude input in a culture-sensitive manner.
+        /// </summary>
+        public double Longitude
+        {
+            get
+            {
+
+                if (!double.TryParse(entryLongitude.Text, NumberStyles.Number, CultureInfo.CurrentCulture, out double longitude))
+                    throw new Exception($"Unable to parse longitude from input: {entryLongitude.Text}");
+
+                return longitude;
+            }
+            set
+            {
+                entryLongitude.Text = value.ToString(CultureInfo.CurrentCulture);
+            }
+        }
+
+        /// <summary>
+        /// Reads/writes the latitude input in a culture-sensitive manner.
+        /// </summary>
+        public double Latitude
+        {
+            get
+            {
+                if (!double.TryParse(entryLatitude.Text, NumberStyles.Number, CultureInfo.CurrentCulture, out double latitude))
+                    throw new Exception($"Unable to parse longitude from input: {entryLatitude.Text}");
+
+                return latitude;
+            }
+            set
+            {
+                entryLatitude.Text = value.ToString(CultureInfo.CurrentCulture);
+            }
+        }
 
         /// <summary>
         /// Class constructor
@@ -98,7 +136,7 @@
         {
             if (!CheckValue(entryLatitude) || !CheckValue(entryLatitude))
                 return;
-            string url = googleGeocodingApi + "latlng=" + entryLatitude.Text + ',' + entryLongitude.Text;
+            string url = googleGeocodingApi + "latlng=" + Latitude.ToString(CultureInfo.InvariantCulture) + ',' + Longitude.ToString(CultureInfo.InvariantCulture);
             try
             {
                 MemoryStream stream = WebUtilities.ExtractDataFromURL(url);
@@ -149,11 +187,15 @@
                             if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("lat"))
                             {
                                 reader.Read();
+
+                                // This uses the current culture.
                                 entryLatitude.Text = reader.Value.ToString();
                             }
                             else if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("lng"))
                             {
                                 reader.Read();
+
+                                // This uses the current culture.
                                 entryLongitude.Text = reader.Value.ToString();
                             }
                         }
@@ -309,8 +351,8 @@
                 {
                     latitude = weatherObj.Latitude;
                     longitude = weatherObj.Longitude;
-                    entryLatitude.Text = latitude.ToString();
-                    entryLongitude.Text = longitude.ToString();
+                    entryLatitude.Text = latitude.ToString(CultureInfo.CurrentCulture);
+                    entryLongitude.Text = longitude.ToString(CultureInfo.CurrentCulture);
                 }
             }
             dialog1.Show();
@@ -354,7 +396,7 @@
             if (!CheckValue(entryLatitude) || !CheckValue(entryLatitude))
                 return null;
             string url = "http://www.asris.csiro.au/ASRISApi/api/APSIM/getApsoil?longitude=" +
-                entryLongitude.Text + "&latitude=" + entryLatitude.Text;
+                Longitude.ToString(CultureInfo.InvariantCulture) + "&latitude=" + Latitude.ToString(CultureInfo.InvariantCulture);
             Soil newSoil = null;
             WaitCursor = true;
             try
@@ -391,8 +433,9 @@
         {
             if (!CheckValue(entryLatitude) || !CheckValue(entryLatitude))
                 return null;
+
             string url = "http://www.asris.csiro.au/ASRISApi/api/APSIM/getClosestApsoil?maxCnt=5&longitude=" +
-                entryLongitude.Text + "&latitude=" + entryLatitude.Text;
+                Longitude.ToString(CultureInfo.InvariantCulture) + "&latitude=" + Latitude.ToString(CultureInfo.InvariantCulture);
             Soil newSoil = null;
             WaitCursor = true;
             try
@@ -585,7 +628,7 @@
             if (!CheckValue(entryLatitude) || !CheckValue(entryLatitude))
                 return null;
             string url = "https://rest.soilgrids.org/query?lon=" +
-                entryLongitude.Text + "&lat=" + entryLatitude.Text;
+                Longitude.ToString(CultureInfo.InvariantCulture) + "&lat=" + Latitude.ToString(CultureInfo.InvariantCulture);
             WaitCursor = true;
             Soil newSoil = null;
             try
@@ -806,7 +849,7 @@
                     Chemical analysis = new Chemical();
                     Physical waterNode = new Physical(); 
                     Organic organicMatter = new Organic();
-                    SoilWater soilWater = new SoilWater();
+                    WaterBalance soilWater = new WaterBalance();
                     InitialWater initialWater = new InitialWater();
                     Sample initialNitrogen = new Sample();
                     SoilNitrogen soilN = new SoilNitrogen();
@@ -847,8 +890,8 @@
                     newSoil.Name = "Synthetic soil derived from ISRIC SoilGrids REST API";
                     newSoil.DataSource = "ISRIC SoilGrids";
                     newSoil.SoilType = soilType;
-                    newSoil.Latitude = Double.Parse(entryLatitude.Text, CultureInfo.InvariantCulture);
-                    newSoil.Longitude = Double.Parse(entryLongitude.Text, CultureInfo.InvariantCulture);
+                    newSoil.Latitude = Latitude;
+                    newSoil.Longitude = Longitude;
 
                     // ISRIC values are for "levels", not "intervals", so we need to convert to layers
                     // Following Andrew Moore's lead on layer thickness and weightings.
@@ -1037,8 +1080,9 @@
         {
             if (!CheckValue(entryLatitude) || !CheckValue(entryLatitude))
                 return null;
+
             string url = "https://worldmodel.csiro.au/apsimsoil?lon=" +
-                entryLongitude.Text + "&lat=" + entryLatitude.Text;
+                Longitude.ToString(CultureInfo.InvariantCulture) + "&lat=" + Latitude.ToString(CultureInfo.InvariantCulture);
             Soil newSoil = null;
             WaitCursor = true;
             try

@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 76,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-01-31",
+  "Version": 80,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-06",
   "Name": "Simulations",
   "Children": [
     {
@@ -117,7 +117,7 @@
           "$type": "Models.GrazPlan.Stock, Models",
           "ParamFile": "",
           "RandSeed": 9999,
-          "GenoTypes": [],
+          "Genotypes": [],
           "Animals": [],
           "PaddockList": [
             {
@@ -246,8 +246,6 @@
             "[Stock].WeightAll as AveBodyWeight",
             "[Stock].CondScoreAll as AveCS",
             "[Stock].MilkWtAll as AveMilkWeight",
-            "[GrazeForageCrop].Script.CurrentLocationNum as CurrentLocationNum",
-            "[GrazeForageCrop].Script.HarvestableBiomass as harvestableBiomass",
             "[Supplement].stores[2].Stored as SupplementRemaining"
           ],
           "EventNames": [
@@ -598,6 +596,7 @@
               "d_interception": 0.0,
               "soil_albedo": 0.23,
               "SoilHeatFluxFraction": 0.4,
+              "MinimumHeightDiffForNewLayer": 0.0,
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
@@ -1089,6 +1088,7 @@
             {
               "$type": "Models.PMF.Plant, Models",
               "CropType": "Plantain",
+              "IsAlive": false,
               "IsEnding": false,
               "DaysAfterEnding": 0,
               "ResourceName": "Plantain",

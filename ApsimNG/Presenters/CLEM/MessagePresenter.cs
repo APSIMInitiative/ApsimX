@@ -69,6 +69,7 @@ namespace UserInterface.Presenters
                 ".errorlink {color:white; font-weight:bold; background-color:red !important;border-color:darkred; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px; }" +
                 ".setvalue {font-weight:bold; background-color: [ValueSetBack] !important; Color: [ValueSetFont]; border-color:#697c7c; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px;}" +
                 ".otherlink {font-weight:bold; color:#333333; background-color:#eeeeee !important;border-color:#999999; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px;}" +
+                ".marketlink {font-weight:bold; color:#1785FF; background-color:#DCEEFF !important;border-color:#1785FF; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px;}" +
                 ".messageentry {padding:5px 0px 5px 0px; line-height: 1.7em; }" +
                 ".holdermain {margin: 20px 0px 20px 0px}" +
                 "@media print { body { -webkit - print - color - adjust: exact; }}" +
@@ -227,6 +228,7 @@ namespace UserInterface.Presenters
                         msgStr = msgStr.Replace("[f=", "<span class=\"filterlink\">");
                         msgStr = msgStr.Replace("[x=", "<span class=\"filelink\">");
                         msgStr = msgStr.Replace("[o=", "<span class=\"otherlink\">");
+                        msgStr = msgStr.Replace("[m=", "<span class=\"marketlink\">");
                         msgStr = msgStr.Replace("[", "<span class=\"setvalue\">");
                         htmlString += "\n<div class=\"messageentry\">" + msgStr;
                         htmlString += "\n</div>";

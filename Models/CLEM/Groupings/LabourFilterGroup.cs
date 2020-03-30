@@ -1,10 +1,12 @@
 ﻿using Models.CLEM.Activities;
+using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace Models.CLEM.Groupings
 {
@@ -21,8 +23,13 @@ namespace Models.CLEM.Groupings
     [Description("Contains a group of filters to identify individuals able to undertake labour. Multiple filter groups will select groups of individuals required. Nested filter groups will determine others in order who can perform the task if insufficient labour.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/LabourFilterGroup.htm")]
-    public class LabourFilterGroup: CLEMModel
+    public class LabourFilterGroup: CLEMModel, IFilterGroup
     {
+        /// <summary>
+        /// Combined ML ruleset for LINQ expression tree
+        /// </summary>
+        [XmlIgnore]
+        public object CombinedRules { get; set; } = null;
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)

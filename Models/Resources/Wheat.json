@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 76,
+  "Version": 89,
   "Name": "Simulations",
   "Children": [
     {
@@ -26,20 +26,114 @@
           "Name": "Arbitrator",
           "Children": [
             {
-              "$type": "Models.PMF.RelativeAllocation, Models",
-              "Name": "NArbitrator",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
+              "$type": "Models.PMF.BiomassTypeArbitrator, Models",
+              "Name": "DMArbitration",
+              "Children": [
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "Name": "PotentialPartitioningMethods",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Arbitrator.ReallocationMethod, Models",
+                      "Name": "ReallocationMethod"
+                    },
+                    {
+                      "$type": "Models.PMF.Arbitrator.AllocateFixationMethod, Models",
+                      "Name": "AllocateFixationMethod"
+                    },
+                    {
+                      "$type": "Models.PMF.Arbitrator.RetranslocationMethod, Models",
+                      "Name": "RetranslocationMethod"
+                    },
+                    {
+                      "$type": "Models.PMF.Arbitrator.SendPotentialDMAllocationsMethod, Models",
+                      "Name": "SendPotentialDMAllocationsMethod"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "Name": "AllocationMethods",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Arbitrator.NutrientConstrainedAllocationMethod, Models",
+                      "Name": "NutrientConstrainedAllocationMethod"
+                    },
+                    {
+                      "$type": "Models.PMF.Arbitrator.DryMatterAllocationsMethod, Models",
+                      "Name": "DryMatterAllocationsMethod"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.PMF.RelativeAllocation, Models",
+                  "Name": "ArbitrationMethod",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ]
             },
             {
-              "$type": "Models.PMF.RelativeAllocation, Models",
-              "Name": "DMArbitrator",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
+              "$type": "Models.PMF.BiomassTypeArbitrator, Models",
+              "Name": "NArbitration",
+              "Children": [
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "Name": "PotentialPartitioningMethods",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Arbitrator.ReallocationMethod, Models",
+                      "Name": "ReallocationMethod"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "Name": "ActualPartitioningMethods",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Arbitrator.AllocateFixationMethod, Models",
+                      "Name": "AllocateFixationMethod"
+                    },
+                    {
+                      "$type": "Models.PMF.Arbitrator.RetranslocationMethod, Models",
+                      "Name": "RetranslocationMethod"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "Name": "AllocationMethods",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Arbitrator.NitrogenAllocationsMethod, Models",
+                      "Name": "NitrogenAllocationsMethod"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.PMF.RelativeAllocation, Models",
+                  "Name": "ArbitrationMethod",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Arbitrator.AllocateUptakesMethod, Models",
+                  "Name": "AllocateUptakesMethod"
+                }
+              ]
+            },
+            {
+              "$type": "Models.PMF.Arbitrator.WaterUptakeMethod, Models",
+              "Name": "WaterUptakeMethod"
+            },
+            {
+              "$type": "Models.PMF.Arbitrator.NitrogenUptakeMethod, Models",
+              "Name": "NitrogenUptakeMethod"
             }
           ],
           "IncludeInDocumentation": true,
@@ -466,7 +560,7 @@
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 0.0,
               "Units": null,
-              "Name": "EarlyReproductivePpSensitivity",
+              "Name": "HeadEmergencePpSensitivity",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -486,7 +580,7 @@
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 2.5,
               "Units": null,
-              "Name": "EarlyReproductiveLongDayBase",
+              "Name": "HeadEmergenceLongDayBase",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -538,7 +632,7 @@
             {
               "$type": "Models.PMF.Phen.NodeNumberPhase, Models",
               "Start": "Emergence",
-              "End": "TerminalSpikelet",
+              "End": "FloralInitiation",
               "Name": "Vegetative",
               "Children": [
                 {
@@ -554,6 +648,36 @@
                   "$type": "Models.Functions.VariableReference, Models",
                   "VariableName": "[Structure].HaunStageTerminalSpikelet",
                   "Name": "CompletionNodeNumber",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Phen.GenericPhase, Models",
+              "Start": "FloralInitiation",
+              "End": "TerminalSpikelet",
+              "Name": "SpikeletDifferentiation",
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].ThermalTime",
+                  "Name": "Progression",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "Target",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -596,8 +720,8 @@
             {
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "FlagLeaf",
-              "End": "Flowering",
-              "Name": "EarlyReproductive",
+              "End": "Heading",
+              "Name": "HeadEmergence",
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
@@ -627,7 +751,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].EarlyReproductiveLongDayBase",
+                          "VariableName": "[Phenology].HeadEmergenceLongDayBase",
                           "Name": "LongDayBase",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -674,7 +798,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].EarlyReproductivePpSensitivity",
+                              "VariableName": "[Phenology].HeadEmergencePpSensitivity",
                               "Name": "PpSensitivity",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -692,6 +816,36 @@
                       "ReadOnly": false
                     }
                   ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Phen.GenericPhase, Models",
+              "Start": "Heading",
+              "End": "Flowering",
+              "Name": "EarlyFlowering",
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].ThermalTime",
+                  "Name": "Progression",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "Target",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -842,7 +996,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.Phen.ZadokPMF, Models",
+              "$type": "Models.PMF.Phen.ZadokPMFWheat, Models",
               "Name": "Zadok",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -936,6 +1090,45 @@
                 {
                   "$type": "Models.Memo, Models",
                   "Text": "\nA function is used to provide maturity date as days after sowing(DAS).",
+                  "Name": "memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "PreEventValue",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].DaysAfterSowing",
+                  "Name": "PostEventValue",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.OnEventFunction, Models",
+              "SetEvent": "Emergence",
+              "ReSetEvent": "never",
+              "Name": "EmergenceDAS",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "\nA function is used to provide flowering date as days after sowing(DAS).\n",
                   "Name": "memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1459,11 +1652,15 @@
                         4.0,
                         5.0,
                         6.0,
-                        7.0
+                        7.0,
+                        8.0,
+                        9.0
                       ],
                       "Y": [
                         10.0,
                         200.0,
+                        200.0,
+                        1000.0,
                         1000.0,
                         1000.0,
                         1000.0
@@ -1731,7 +1928,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "([Structure].FinalLeafNumber.Value() - 2.85)/1.1",
+              "Expression": "([Structure].FinalLeafNumber - 2.85)/1.1",
               "Name": "HaunStageTerminalSpikelet",
               "Children": [
                 {
@@ -1780,6 +1977,71 @@
               "FixedValue": 0.0,
               "Units": null,
               "Name": "StemSenescenceAge",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.DivideFunction, Models",
+              "Name": "PTQ",
+              "Children": [
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "Radn_mol_per_m2",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[IWeather].Radn",
+                      "Name": "SolarRadiation",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 2.285,
+                      "Units": null,
+                      "Name": "Constant",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Multiply Radn (MJ/m2/d) by 4.57 to convert to mol/m2/day and divide by 2 to convert to mol PAR/m2/d",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].ThermalTime",
+                  "Name": "ThermalTime",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.021,
+              "Units": null,
+              "Name": "MaxLAR",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -2343,7 +2605,6 @@
           "GrowthRespiration": 0.0,
           "MaintenanceRespiration": 0.0,
           "RootAngle": 45.0,
-          "SWAvailabilityRatio": 0.0,
           "Name": "Root",
           "Children": [
             {
@@ -2811,10 +3072,12 @@
                                       "$type": "Models.Functions.XYPairs, Models",
                                       "X": [
                                         3.0,
-                                        4.0
+                                        4.0,
+                                        5.0
                                       ],
                                       "Y": [
                                         0.5,
+                                        0.2,
                                         0.2
                                       ],
                                       "Name": "XYPairs",
@@ -3047,6 +3310,15 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Root].MinimumNConc",
+              "Name": "CriticalNConc",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -3070,11 +3342,11 @@
           "Albedo": 0.25,
           "Gsmax350": 0.011,
           "R50": 150.0,
+          "LAI": 0.0,
           "FRGR": 0.0,
           "PotentialEP": 0.0,
           "WaterDemand": 0.0,
           "LightProfile": null,
-          "MicroClimatePresent": true,
           "KDead": 0.1,
           "MaximumMainStemLeafNumber": 30,
           "TipsAtEmergence": 0,
@@ -3106,7 +3378,7 @@
                 },
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
-                  "Expression": "([IWeather].CO2 - [Leaf].CO2internal.Value())/(350 - [Leaf].CO2internal.Value())",
+                  "Expression": "([IWeather].CO2 - [Leaf].CO2internal)/(350 - [Leaf].CO2internal)",
                   "Name": "RelativeCO2Gradient",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -3470,11 +3742,13 @@
                           "X": [
                             3.0,
                             3.45,
-                            4.0
+                            4.0,
+                            5.0
                           ],
                           "Y": [
                             0.1,
                             0.5,
+                            1.0,
                             1.0
                           ],
                           "Name": "XYPairs",
@@ -3542,10 +3816,12 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             3.0,
-                            4.0
+                            4.0,
+                            5.0
                           ],
                           "Y": [
                             0.4,
+                            1.0,
                             1.0
                           ],
                           "Name": "XYPairs",
@@ -3578,8 +3854,17 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].EarlyReproductive.Target",
-                              "Name": "EarlyReproductive",
+                              "VariableName": "[Phenology].HeadEmergence.Target",
+                              "Name": "HeadEmergence",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Phenology].EarlyFlowering.Target",
+                              "Name": "EarlyFlowering",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -3712,11 +3997,17 @@
                       "X": [
                         3.0,
                         4.0,
-                        6.0
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0
                       ],
                       "Y": [
                         0.05,
                         0.05,
+                        0.05,
+                        0.035,
+                        0.02,
                         0.02
                       ],
                       "Name": "XYPairs",
@@ -3752,11 +4043,17 @@
                           "X": [
                             3.0,
                             4.0,
-                            6.0
+                            5.0,
+                            6.0,
+                            7.0,
+                            8.0
                           ],
                           "Y": [
                             0.04,
                             0.04,
+                            0.04,
+                            0.0275,
+                            0.015,
                             0.015
                           ],
                           "Name": "XYPairs",
@@ -3827,9 +4124,15 @@
                       "X": [
                         3.0,
                         4.0,
-                        6.0
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0
                       ],
                       "Y": [
+                        0.01,
+                        0.01,
+                        0.01,
                         0.01,
                         0.01,
                         0.01
@@ -4007,11 +4310,17 @@
                       "X": [
                         3.0,
                         4.0,
-                        6.0
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0
                       ],
                       "Y": [
                         17000.0,
                         20000.0,
+                        20000.0,
+                        18500.0,
+                        17000.0,
                         17000.0
                       ],
                       "Name": "XYPairs",
@@ -4587,10 +4896,14 @@
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         3.0,
-                        4.7,
-                        5.0
+                        4.0,
+                        5.0,
+                        5.7,
+                        6.0
                       ],
                       "Y": [
+                        1.0,
+                        1.0,
                         1.0,
                         1.0,
                         1.2
@@ -4672,6 +4985,7 @@
           "DMDemand": null,
           "NDemand": null,
           "potentialDMAllocation": null,
+          "IsAboveGround": true,
           "Name": "Spike",
           "Children": [
             {
@@ -4752,14 +5066,20 @@
                 {
                   "$type": "Models.Functions.XYPairs, Models",
                   "X": [
+                    3.0,
                     4.0,
-                    4.5,
+                    5.0,
                     5.5,
-                    6.0
+                    6.5,
+                    7.0,
+                    8.0
                   ],
                   "Y": [
                     0.01,
                     0.01,
+                    0.01,
+                    0.01,
+                    0.025,
                     0.025,
                     0.025
                   ],
@@ -5056,12 +5376,16 @@
                     3.0,
                     4.0,
                     5.0,
-                    6.0
+                    6.0,
+                    7.0,
+                    8.0
                   ],
                   "Y": [
                     0.07,
                     0.04,
+                    0.04,
                     0.015,
+                    0.012,
                     0.012
                   ],
                   "Name": "XYPairs",
@@ -5115,15 +5439,21 @@
                               "X": [
                                 3.0,
                                 4.0,
-                                4.7,
                                 5.0,
+                                5.7,
+                                6.0,
                                 7.0,
-                                7.000001
+                                8.0,
+                                9.0,
+                                9.000001
                               ],
                               "Y": [
                                 0.0,
                                 0.0,
+                                0.0,
                                 0.01,
+                                0.7,
+                                0.7,
                                 0.7,
                                 0.7,
                                 0.0
@@ -5390,6 +5720,7 @@
           "DMDemand": null,
           "NDemand": null,
           "potentialDMAllocation": null,
+          "IsAboveGround": true,
           "Name": "Stem",
           "Children": [
             {
@@ -5400,11 +5731,21 @@
                   "$type": "Models.Functions.XYPairs, Models",
                   "X": [
                     3.0,
+                    4.0,
+                    5.0,
+                    6.0,
                     7.0,
                     8.0,
-                    9.0
+                    9.0,
+                    10.0,
+                    11.0
                   ],
                   "Y": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
                     0.0,
                     0.0,
                     0.2,
@@ -5450,12 +5791,16 @@
                     3.0,
                     4.0,
                     5.0,
-                    6.0
+                    6.0,
+                    7.0,
+                    8.0
                   ],
                   "Y": [
                     0.07,
                     0.04,
+                    0.04,
                     0.015,
+                    0.012,
                     0.012
                   ],
                   "Name": "XYPairs",
@@ -6339,7 +6684,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 9",
                     "[Phenology].VrnSensitivity.FixedValue = 10",
                     "[Phenology].PpSensitivity.FixedValue = 6",
-                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 5",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 5",
                     "[Structure].Phyllochron.BasePhyllochron.FixedValue = 80"
                   ],
                   "Name": "Amarok",
@@ -6367,7 +6712,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 8",
                     "[Phenology].VrnSensitivity.FixedValue = 8",
                     "[Phenology].PpSensitivity.FixedValue = 5",
-                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3",
                     "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
                     "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.7",
                     "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22"
@@ -6384,7 +6729,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 7",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 5",
-                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3",
                     "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
                     "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.7",
                     "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22"
@@ -6414,7 +6759,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 8",
                     "[Phenology].VrnSensitivity.FixedValue = 8",
                     "[Phenology].PpSensitivity.FixedValue = 8",
-                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3",
                     "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Claire",
@@ -6440,6 +6785,19 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 14",
+                    "[Phenology].VrnSensitivity.FixedValue = 1",
+                    "[Phenology].PpSensitivity.FixedValue = 2"
+                  ],
+                  "Name": "CRWT153",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
                     "[Phenology].MinimumLeafNumber.FixedValue = 8.5",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 0",
@@ -6451,8 +6809,8 @@
                     "[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 0,0,0,0,4,7,12,20",
                     "[Grain].MaximumNConc.FixedValue = 0.025",
                     "[Grain].MaxNConcDailyGrowth.FixedValue = 0.025",
-                    "[Leaf].ExtinctionCoeff.DevelopmentFactor.XYPairs.Y = 1,1,1.4",
-                    "[Leaf].CohortParameters.MinimumNConc.XYPairs.Y = 0.01,0.008,0.008",
+                    "[Leaf].ExtinctionCoeff.DevelopmentFactor.XYPairs.Y = 1,1,1,1,1.4",
+                    "[Leaf].CohortParameters.MinimumNConc.XYPairs.Y = 0.01,0.008, 0.008,0.008, 0.008, 0.008",
                     "[Stem].MinimumNConc.FixedValue = 0.006",
                     "[Spike].DMRetranslocationFactor.ReproductiveGrowth.DMRetranslocationFactor.FixedValue = 0.05"
                   ],
@@ -6530,7 +6888,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 6",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2",
                     "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Otane",
@@ -6597,7 +6955,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 7",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 2",
-                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3",
                     "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Rongotea",
@@ -6703,7 +7061,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 8",
                     "[Phenology].VrnSensitivity.FixedValue = 10",
                     "[Phenology].PpSensitivity.FixedValue = 0",
-                    "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 4",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 4",
                     "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
                     "[Phenology].DailyVernalisation.TempResponseProfile.XYPairs.X = 0,1,8",
                     "[Phenology].DailyVernalisation.TempResponseProfile.XYPairs.Y = 0,1.204,0",
@@ -6746,7 +7104,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 5",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 0",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0",
                     "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Axe",
@@ -6837,14 +7195,6 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "Buckly",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
                       "Name": "Burunga",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -6869,15 +7219,7 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "ChiefCLPlus",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "CLF_Janz",
+                      "Name": "Chief",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -6893,7 +7235,7 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "DBAAurora",
+                      "Name": "Aurora",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -6901,7 +7243,7 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "ElmoreCLPlus",
+                      "Name": "Elmore",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -6941,15 +7283,7 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "Hybrid_Meteor",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "JusticaCLPlus",
+                      "Name": "Meteor",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -6982,14 +7316,6 @@
                     {
                       "$type": "Models.Core.Alias, Models",
                       "Name": "Stiletto",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Ventura",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7030,16 +7356,8 @@
                     "[Phenology].PpSensitivity.FixedValue = 4",
                     "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
-                  "Name": "EGAGregory",
+                  "Name": "Gregory",
                   "Children": [
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Gregory",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
                     {
                       "$type": "Models.Core.Alias, Models",
                       "Name": "Lancer",
@@ -7073,8 +7391,8 @@
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 3.5",
                     "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
-                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 0",
-                    "[Phenology].EarlyReproductiveLongDayBase.FixedValue"
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue"
                   ],
                   "Name": "Gamenya",
                   "Children": [],
@@ -7103,14 +7421,6 @@
                     {
                       "$type": "Models.Core.Alias, Models",
                       "Name": "Chara",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Clearfield_stl",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7394,14 +7704,6 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "CLF_Stiletto",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
                       "Name": "Cobra",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -7434,14 +7736,6 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "Gladius",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
                       "Name": "Goroke",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -7450,7 +7744,7 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "GrenadeCLPlus",
+                      "Name": "Grenade",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7459,14 +7753,6 @@
                     {
                       "$type": "Models.Core.Alias, Models",
                       "Name": "Guardian",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Halbred",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7567,14 +7853,6 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Yitpi",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -7584,16 +7862,17 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 6",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 7",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 3.5",
+                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 80"
                   ],
-                  "Name": "Hibred_Mercury",
+                  "Name": "Mercury",
                   "Children": [
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "Agtscythe",
+                      "Name": "Scythe",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7609,7 +7888,7 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "Bonnie_rock",
+                      "Name": "BonnieRock",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7649,7 +7928,7 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "Emurock",
+                      "Name": "EmuRock",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7665,7 +7944,7 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "ImposeCLPlus",
+                      "Name": "Impose",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7674,14 +7953,6 @@
                     {
                       "$type": "Models.Core.Alias, Models",
                       "Name": "Kalka",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Kirchauff",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7705,15 +7976,7 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "LRPBArrow",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Mace",
+                      "Name": "Arrow",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7729,14 +7992,6 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "Ruby",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
                       "Name": "Tamaroi",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -7745,7 +8000,7 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "Young",
+                      "Name": "Katana",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7753,7 +8008,23 @@
                     },
                     {
                       "$type": "Models.Core.Alias, Models",
-                      "Name": "Katana",
+                      "Name": "Hume",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Alias, Models",
+                      "Name": "Merinda",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Alias, Models",
+                      "Name": "Wills",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7786,7 +8057,7 @@
                     "[Phenology].PpSensitivity.FixedValue = 4",
                     "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
-                  "Name": "Kelallac",
+                  "Name": "Kellalac",
                   "Children": [
                     {
                       "$type": "Models.Core.Alias, Models",
@@ -7926,7 +8197,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 7",
                     "[Phenology].VrnSensitivity.FixedValue = 5",
                     "[Phenology].PpSensitivity.FixedValue = 5",
-                    "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 3.5 ",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 3.5 ",
                     "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "MacKellar",
@@ -8000,21 +8271,6 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 7",
-                    "[Phenology].VrnSensitivity.FixedValue = 0",
-                    "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 3.5",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 80"
-                  ],
-                  "Name": "Mercury",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
                     "[Phenology].MinimumLeafNumber.FixedValue = 8",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
@@ -8061,7 +8317,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 6.5",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 3.5",
-                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 4",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 4",
                     "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Sunco",
@@ -8230,8 +8486,8 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 8",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 5",
-                    "[Phenology].EarlyReproductiveLongDayBase.FixedValue = 2.5",
-                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 5",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 2.5",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 5",
                     "[Structure].Phyllochron.BasePhyllochron.FixedValue = 80"
                   ],
                   "Name": "Yitpi",
@@ -8249,6 +8505,84 @@
                     "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Young",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 6.3",
+                    "[Phenology].PpSensitivity.FixedValue = 1.7",
+                    "[Phenology].VrnSensitivity.FixedValue = 5.0"
+                  ],
+                  "Name": "Scepter",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 5.7",
+                    "[Phenology].PpSensitivity.FixedValue = 5.3",
+                    "[Phenology].VrnSensitivity.FixedValue = 2.3"
+                  ],
+                  "Name": "Cutlass",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 8.0",
+                    "[Phenology].PpSensitivity.FixedValue = 1.7",
+                    "[Phenology].VrnSensitivity.FixedValue = 8.0"
+                  ],
+                  "Name": "Longsword",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 7.3",
+                    "[Phenology].PpSensitivity.FixedValue = 0.0",
+                    "[Phenology].VrnSensitivity.FixedValue = 6.3"
+                  ],
+                  "Name": "CSIROW007",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 7.0",
+                    "[Phenology].PpSensitivity.FixedValue = 1.7",
+                    "[Phenology].VrnSensitivity.FixedValue = 5.3"
+                  ],
+                  "Name": "CSIROW023",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 7.7",
+                    "[Phenology].PpSensitivity.FixedValue = 1.3",
+                    "[Phenology].VrnSensitivity.FixedValue = 6.3"
+                  ],
+                  "Name": "CSIROW073",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -8406,7 +8740,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 9",
                     "[Phenology].VrnSensitivity.FixedValue = 7",
                     "[Phenology].PpSensitivity.FixedValue = 3",
-                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3",
                     "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
                     "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.8"
                   ],
@@ -8422,7 +8756,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 9",
                     "[Phenology].VrnSensitivity.FixedValue = 7",
                     "[Phenology].PpSensitivity.FixedValue = 3",
-                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3",
                     "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
                     "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.8"
                   ],
@@ -8438,7 +8772,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 9",
                     "[Phenology].VrnSensitivity.FixedValue = 7",
                     "[Phenology].PpSensitivity.FixedValue = 3",
-                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3",
                     "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
                     "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.8"
                   ],

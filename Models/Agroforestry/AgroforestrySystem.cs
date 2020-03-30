@@ -46,9 +46,9 @@ namespace Models.Agroforestry
         public double RainfallInterceptionFraction { get; set; }
 
         /// <summary>
-        /// Width of the tree rain shaddow in terms of tree heights
+        /// Width of the tree rain shadow in terms of tree heights
         /// </summary>
-        [Description("Width of tree rainfall shaddow (H)")]
+        [Description("Width of tree rainfall shadow (H)")]
         public double RainShaddowWidth { get; set; }
 
         /// <summary>

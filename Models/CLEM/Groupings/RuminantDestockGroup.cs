@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Models.Core.Attributes;
+using System.Xml.Serialization;
+using Models.CLEM.Resources;
 
 namespace Models.CLEM.Groupings
 {
@@ -15,16 +17,20 @@ namespace Models.CLEM.Groupings
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(ActivitiesHolder))]
-    [ValidParent(ParentType = typeof(ActivityFolder))]
-    [ValidParent(ParentType = typeof(CLEMActivityBase))]
-    [ValidParent(ParentType = typeof(CLEMRuminantActivityBase))]
-    [ValidParent(ParentType = typeof(ReportRuminantHerd))]
-    [Description("This ruminant filter group selects specific individuals from the ruminant herd using any number of Ruminant Filters. Multiple filters will select groups of individuals required.")]
+    [ValidParent(ParentType = typeof(RuminantActivityManage))]
+    [ValidParent(ParentType = typeof(RuminantActivityPredictiveStocking))]
+    [ValidParent(ParentType = typeof(RuminantActivityPredictiveStockingENSO))]
+    [Description("This ruminant filter group specifies individuals from the ruminant herd for destocking using any number of Ruminant Filters. Multiple filters will select groups of individuals required.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/RuminantDestockGroup.htm")]
-    public class RuminantDestockGroup : CLEMModel
+    public class RuminantDestockGroup : CLEMModel, IFilterGroup
     {
+        /// <summary>
+        /// Combined ML ruleset for LINQ expression tree
+        /// </summary>
+        [XmlIgnore]
+        public object CombinedRules { get; set; } = null;
+
         /// <summary>
         /// Constructor
         /// </summary>

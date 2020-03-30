@@ -25,6 +25,9 @@
     /// KLAT has no effect and does not alter the amount of water coming into the layer. 
     /// KLAT only alters the amount of water flowing out of the layer
     /// </summary>
+    [ViewName("UserInterface.Views.ProfileView")]
+    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
+    [ValidParent(ParentType = typeof(WaterBalance))]
     [Serializable]
     public class LateralFlowModel : Model
     {
@@ -32,67 +35,42 @@
         [Link]
         private WaterBalance soil = null;
 
-        /// <summary>The discharge_width (m)</summary>
-        public double DischargeWidth { get; set; }
-
-        /// <summary>The slope</summary>
-        public double Slope { get; set; } 
-
-        /// <summary>The catchment_area (m2)</summary>
-        public double CatchmentArea { get; set; }
-
-        /// <summary>The KLAT (mm/day)</summary>
-        public double[] KLAT { get; set; }
-
         /// <summary>The amount of incoming water (mm)</summary>
         [XmlIgnore]
         public double[] InFlow { get; set; }
 
-        /// <summary>Constructor</summary>
-        public LateralFlowModel()
-        {
-            DischargeWidth = 5.0;
-            Slope = 0.5;
-            CatchmentArea = 10.0;
-        }
+        /// <summary>The amount of outgoing water (mm).</summary>
+        public double[] OutFlow { get; private set; } = new double[0];
 
         /// <summary>Perform the movement of water.</summary>
-        public double[] Values
+        public void Calculate()
         {
-            get
+            // Lateral flow does not move solutes. We should add this feature one day.
+            if (InFlow != null)
             {
-                // Lateral flow does not move solutes. We should add this feature one day.
-                if (InFlow == null)
-                    return new double[0];
+                if (OutFlow.Length != InFlow.Length)
+                    OutFlow = new double[InFlow.Length];
+                double[] SW = MathUtilities.Add(soil.Water, InFlow);
+                double[] DUL = MathUtilities.Multiply(soil.Properties.DUL, soil.Properties.Thickness);
+                double[] SAT = MathUtilities.Multiply(soil.Properties.SAT, soil.Properties.Thickness);
 
-                else
+                for (int layer = 0; layer < soil.Properties.Thickness.Length; layer++)
                 {
-                    double[] Out = new double[InFlow.Length];
-                    double[] SW = MathUtilities.Add(soil.Water, InFlow);
-                    double[] DUL = MathUtilities.Multiply(soil.Properties.Water.DUL, soil.Properties.Water.Thickness);
-                    double[] SAT = MathUtilities.Multiply(soil.Properties.Water.SAT, soil.Properties.Water.Thickness);
+                    // Calculate depth of water table (m)
+                    double depthWaterTable = soil.Properties.Thickness[layer] * MathUtilities.Divide((SW[layer] - DUL[layer]), (SAT[layer] - DUL[layer]), 0.0);
+                    depthWaterTable = Math.Max(0.0, depthWaterTable);  // water table depth in layer must be +ve
 
-                    for (int layer = 0; layer < soil.Properties.Water.Thickness.Length; layer++)
-                    {
-                        // Calculate depth of water table (m)
-                        double depthWaterTable = soil.Properties.Water.Thickness[layer] * MathUtilities.Divide((SW[layer] - DUL[layer]), (SAT[layer] - DUL[layer]), 0.0);
-                        depthWaterTable = Math.Max(0.0, depthWaterTable);  // water table depth in layer must be +ve
+                    // Calculate out flow (mm)
+                    double i, j;
+                    i = soil.KLAT[layer] * depthWaterTable * (soil.DischargeWidth / UnitConversion.mm2m) * soil.Slope;
+                    j = (soil.CatchmentArea * UnitConversion.sm2smm) * (Math.Pow((1.0 + Math.Pow(soil.Slope, 2)), 0.5));
+                    OutFlow[layer] = MathUtilities.Divide(i, j, 0.0);
 
-                        // Calculate out flow (mm)
-                        double i, j;
-                        i = KLAT[layer] * depthWaterTable * (DischargeWidth / UnitConversion.mm2m) * Slope;
-                        j = (CatchmentArea * UnitConversion.sm2smm) * (Math.Pow((1.0 + Math.Pow(Slope, 2)), 0.5));
-                        Out[layer] = MathUtilities.Divide(i, j, 0.0);
-
-                        // Bound out flow to max flow
-                        double max_flow = Math.Max(0.0, (SW[layer] - DUL[layer]));
-                        Out[layer] = MathUtilities.Bound(Out[layer], 0.0, max_flow);
-                    }
-
-                    return Out;
+                    // Bound out flow to max flow
+                    double max_flow = Math.Max(0.0, (SW[layer] - DUL[layer]));
+                    OutFlow[layer] = MathUtilities.Bound(OutFlow[layer], 0.0, max_flow);
                 }
             }
         }
-
     }
 }

@@ -1,7 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 73,
+  "Version": 83,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -59,6 +60,8 @@
                 300.0
               ],
               "ParticleSizeClay": null,
+              "ParticleSizeSand": null,
+              "ParticleSizeSilt": null,
               "BD": [
                 1.4,
                 1.4,
@@ -155,7 +158,7 @@
                   "XFMetadata": null,
                   "Name": "WheatSoil",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -193,12 +196,12 @@
                   "XFMetadata": null,
                   "Name": "MaizeSoil",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -251,7 +254,7 @@
               "PrecipitationInterception": 0.0,
               "Name": "SoilWater",
               "Children": [],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -323,7 +326,7 @@
               ],
               "Name": "Organic",
               "Children": [],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -379,7 +382,7 @@
               "ESP": null,
               "Name": "Chemical",
               "Children": [],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -391,7 +394,7 @@
               "RelativeTo": null,
               "Name": "InitialWater",
               "Children": [],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -428,7 +431,7 @@
               "PHUnits": 0,
               "Name": "InitialN",
               "Children": [],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -436,7 +439,7 @@
               "$type": "Models.Soils.CERESSoilTemperature, Models",
               "Name": "CERESSoilTemperature",
               "Children": [],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -532,22 +535,6 @@
                     "Colour": "White",
                     "OutlineColour": "White",
                     "Transparent": true
-                  },
-                  {
-                    "$type": "Models.Graph.Node, Models",
-                    "Name": "PlantAvailableNO3",
-                    "Location": "688, 415",
-                    "Colour": "86, 180, 233",
-                    "OutlineColour": "Black",
-                    "Transparent": false
-                  },
-                  {
-                    "$type": "Models.Graph.Node, Models",
-                    "Name": "PlantAvailableNH4",
-                    "Location": "691, 421",
-                    "Colour": "86, 180, 233",
-                    "OutlineColour": "Black",
-                    "Transparent": false
                   }
                 ],
                 "Arcs": [
@@ -667,12 +654,12 @@
               },
               "ResourceName": "Nutrient",
               "Name": "Nutrient",
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
+          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -694,6 +681,8 @@
             "[Maize].Leaf.Fn",
             "[Maize].Leaf.Transpiration",
             "[Maize].Leaf.CoverTotal",
+            "[Maize].Leaf.Photosynthesis",
+            "[Maize].Leaf.RadIntTot",
             "[Maize].Structure.LeafTipsAppeared",
             "[Maize].Leaf.ExpandedCohortNo",
             "[Maize].Structure.Height",
@@ -727,12 +716,12 @@
           ],
           "Name": "WURReport",
           "Children": [],
-          "IncludeInDocumentation": true,
+          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         }
       ],
-      "IncludeInDocumentation": true,
+      "IncludeInDocumentation": false,
       "Enabled": true,
       "ReadOnly": false
     },
@@ -744,13 +733,27 @@
       "Children": [
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
-          "FileName": "Observed.xlsx",
-          "FileNameMetadata": null,
+          "FileNames": [
+            "Observed.xlsx"
+          ],
           "SheetNames": [
             "Observed",
             "ObservedOld"
           ],
           "Name": "Observed",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.PredictedObserved, Models",
+          "PredictedTableName": "Report",
+          "ObservedTableName": "Observed",
+          "FieldNameUsedForMatch": "Clock.Today",
+          "FieldName2UsedForMatch": null,
+          "FieldName3UsedForMatch": null,
+          "Name": "PredictedObserved",
           "Children": [],
           "IncludeInDocumentation": true,
           "Enabled": true,
@@ -813,7 +816,7 @@
                   "$type": "Models.Report.Report, Models",
                   "VariableNames": [
                     "[Clock].Today",
-                    "[Wheat].EP"
+                    "[Wheat].Leaf.Transpiration"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -874,6 +877,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.01056473311131,
                         1.07145631083388,
@@ -1357,22 +1362,6 @@
                             "Colour": "White",
                             "OutlineColour": "White",
                             "Transparent": true
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "PlantAvailableNO3",
-                            "Location": "688, 415",
-                            "Colour": "86, 180, 233",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "PlantAvailableNH4",
-                            "Location": "691, 421",
-                            "Colour": "86, 180, 233",
-                            "OutlineColour": "Black",
-                            "Transparent": false
                           }
                         ],
                         "Arcs": [
@@ -1510,7 +1499,7 @@
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 100.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": false,
@@ -1520,6 +1509,7 @@
                 {
                   "$type": "Models.PMF.Plant, Models",
                   "CropType": "Wheat",
+                  "IsAlive": false,
                   "IsEnding": false,
                   "DaysAfterEnding": 0,
                   "ResourceName": "Wheat",
@@ -1536,6 +1526,7 @@
                   "d_interception": 0.0,
                   "soil_albedo": 0.3,
                   "SoilHeatFluxFraction": 0.4,
+                  "MinimumHeightDiffForNewLayer": 0.0,
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
@@ -1625,7 +1616,7 @@
                   "$type": "Models.Report.Report, Models",
                   "VariableNames": [
                     "[Clock].Today",
-                    "[Wheat].EP"
+                    "[Wheat].Leaf.Transpiration"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -1686,6 +1677,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.01056473311131,
                         1.07145631083388,
@@ -2169,22 +2162,6 @@
                             "Colour": "White",
                             "OutlineColour": "White",
                             "Transparent": true
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "PlantAvailableNO3",
-                            "Location": "688, 415",
-                            "Colour": "86, 180, 233",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "PlantAvailableNH4",
-                            "Location": "691, 421",
-                            "Colour": "86, 180, 233",
-                            "OutlineColour": "Black",
-                            "Transparent": false
                           }
                         ],
                         "Arcs": [
@@ -2322,7 +2299,7 @@
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 100.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": false,
@@ -2332,6 +2309,7 @@
                 {
                   "$type": "Models.PMF.Plant, Models",
                   "CropType": "Wheat",
+                  "IsAlive": false,
                   "IsEnding": false,
                   "DaysAfterEnding": 0,
                   "ResourceName": "Wheat",
@@ -2348,6 +2326,7 @@
                   "d_interception": 0.0,
                   "soil_albedo": 0.3,
                   "SoilHeatFluxFraction": 0.4,
+                  "MinimumHeightDiffForNewLayer": 0.0,
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
@@ -2437,7 +2416,7 @@
                   "$type": "Models.Report.Report, Models",
                   "VariableNames": [
                     "[Clock].Today",
-                    "[Wheat].EP"
+                    "[Wheat].Leaf.Transpiration"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -2498,6 +2477,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.01056473311131,
                         1.07145631083388,
@@ -2981,22 +2962,6 @@
                             "Colour": "White",
                             "OutlineColour": "White",
                             "Transparent": true
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "PlantAvailableNO3",
-                            "Location": "688, 415",
-                            "Colour": "86, 180, 233",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "PlantAvailableNH4",
-                            "Location": "691, 421",
-                            "Colour": "86, 180, 233",
-                            "OutlineColour": "Black",
-                            "Transparent": false
                           }
                         ],
                         "Arcs": [
@@ -3134,7 +3099,7 @@
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 100.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": false,
@@ -3144,6 +3109,7 @@
                 {
                   "$type": "Models.PMF.Plant, Models",
                   "CropType": "Wheat",
+                  "IsAlive": false,
                   "IsEnding": false,
                   "DaysAfterEnding": 0,
                   "ResourceName": "Wheat",
@@ -3160,6 +3126,7 @@
                   "d_interception": 0.0,
                   "soil_albedo": 0.3,
                   "SoilHeatFluxFraction": 0.4,
+                  "MinimumHeightDiffForNewLayer": 0.0,
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
@@ -3361,6 +3328,7 @@
               "d_interception": 0.0,
               "soil_albedo": 0.3,
               "SoilHeatFluxFraction": 0.4,
+              "MinimumHeightDiffForNewLayer": 0.0,
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
@@ -3381,7 +3349,7 @@
                   "$type": "Models.Report.Report, Models",
                   "VariableNames": [
                     "[Clock].Today",
-                    "[Wheat].EP"
+                    "[Wheat].Leaf.Transpiration"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -3442,6 +3410,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.01056473311131,
                         1.07145631083388,
@@ -3925,22 +3895,6 @@
                             "Colour": "White",
                             "OutlineColour": "White",
                             "Transparent": true
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "PlantAvailableNO3",
-                            "Location": "688, 415",
-                            "Colour": "86, 180, 233",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "PlantAvailableNH4",
-                            "Location": "691, 421",
-                            "Colour": "86, 180, 233",
-                            "OutlineColour": "Black",
-                            "Transparent": false
                           }
                         ],
                         "Arcs": [
@@ -4078,7 +4032,7 @@
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 100.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": false,
@@ -4088,6 +4042,7 @@
                 {
                   "$type": "Models.PMF.Plant, Models",
                   "CropType": "Wheat",
+                  "IsAlive": false,
                   "IsEnding": false,
                   "DaysAfterEnding": 0,
                   "ResourceName": "Wheat",
@@ -4168,6 +4123,7 @@
                   "d_interception": 0.0,
                   "soil_albedo": 0.23,
                   "SoilHeatFluxFraction": 0.4,
+                  "MinimumHeightDiffForNewLayer": 0.0,
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
@@ -4193,7 +4149,7 @@
                   "$type": "Models.Report.Report, Models",
                   "VariableNames": [
                     "[Clock].Today",
-                    "[Wheat].EP"
+                    "[Wheat].Leaf.Transpiration"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -4254,6 +4210,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.01056473311131,
                         1.07145631083388,
@@ -4737,22 +4695,6 @@
                             "Colour": "White",
                             "OutlineColour": "White",
                             "Transparent": true
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "PlantAvailableNO3",
-                            "Location": "688, 415",
-                            "Colour": "86, 180, 233",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "PlantAvailableNH4",
-                            "Location": "691, 421",
-                            "Colour": "86, 180, 233",
-                            "OutlineColour": "Black",
-                            "Transparent": false
                           }
                         ],
                         "Arcs": [
@@ -4890,7 +4832,7 @@
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 100.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": false,
@@ -4900,6 +4842,7 @@
                 {
                   "$type": "Models.PMF.Plant, Models",
                   "CropType": "Wheat",
+                  "IsAlive": false,
                   "IsEnding": false,
                   "DaysAfterEnding": 0,
                   "ResourceName": "Wheat",
@@ -4989,7 +4932,7 @@
                   "$type": "Models.Report.Report, Models",
                   "VariableNames": [
                     "[Clock].Today",
-                    "[Wheat].EP"
+                    "[Wheat].Leaf.Transpiration"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -5050,6 +4993,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.01056473311131,
                         1.07145631083388,
@@ -5533,22 +5478,6 @@
                             "Colour": "White",
                             "OutlineColour": "White",
                             "Transparent": true
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "PlantAvailableNO3",
-                            "Location": "688, 415",
-                            "Colour": "86, 180, 233",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "PlantAvailableNH4",
-                            "Location": "691, 421",
-                            "Colour": "86, 180, 233",
-                            "OutlineColour": "Black",
-                            "Transparent": false
                           }
                         ],
                         "Arcs": [
@@ -5686,7 +5615,7 @@
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 100.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": false,
@@ -5696,6 +5625,7 @@
                 {
                   "$type": "Models.PMF.Plant, Models",
                   "CropType": "Wheat",
+                  "IsAlive": false,
                   "IsEnding": false,
                   "DaysAfterEnding": 0,
                   "ResourceName": "Wheat",
@@ -5958,7 +5888,7 @@
                       "Values": null,
                       "Name": "SoleCrop",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -5973,7 +5903,7 @@
                       "Values": null,
                       "Name": "60WM",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -5988,7 +5918,7 @@
                       "Values": null,
                       "Name": "02WM",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -6002,17 +5932,17 @@
                       "Values": null,
                       "Name": "62WM",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -6059,6 +5989,7 @@
                   "d_interception": 0.0,
                   "soil_albedo": 0.3,
                   "SoilHeatFluxFraction": 0.4,
+                  "MinimumHeightDiffForNewLayer": 0.0,
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
@@ -6133,7 +6064,7 @@
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 100.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,
@@ -6182,6 +6113,8 @@
                             300.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.4,
                             1.4,
@@ -6703,22 +6636,6 @@
                                 "Colour": "White",
                                 "OutlineColour": "White",
                                 "Transparent": true
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "PlantAvailableNO3",
-                                "Location": "688, 415",
-                                "Colour": "86, 180, 233",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "PlantAvailableNH4",
-                                "Location": "691, 421",
-                                "Colour": "86, 180, 233",
-                                "OutlineColour": "Black",
-                                "Transparent": false
                               }
                             ],
                             "Arcs": [
@@ -6938,6 +6855,7 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Wheat",
+                      "IsAlive": false,
                       "IsEnding": false,
                       "DaysAfterEnding": 0,
                       "ResourceName": "Wheat",
@@ -7100,6 +7018,8 @@
                             300.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.4,
                             1.4,
@@ -7583,22 +7503,6 @@
                                 "Colour": "White",
                                 "OutlineColour": "White",
                                 "Transparent": true
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "PlantAvailableNO3",
-                                "Location": "688, 415",
-                                "Colour": "86, 180, 233",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "PlantAvailableNH4",
-                                "Location": "691, 421",
-                                "Colour": "86, 180, 233",
-                                "OutlineColour": "Black",
-                                "Transparent": false
                               }
                             ],
                             "Arcs": [
@@ -7736,7 +7640,7 @@
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 100.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,
@@ -7842,6 +7746,7 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Maize",
+                      "IsAlive": false,
                       "IsEnding": false,
                       "DaysAfterEnding": 0,
                       "ResourceName": "Maize",
@@ -8135,7 +8040,7 @@
                       "Filter": null,
                       "Name": "PreMaize",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -8165,7 +8070,7 @@
                       "Filter": null,
                       "Name": "PreWheat",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -8195,7 +8100,7 @@
                       "Filter": null,
                       "Name": "ObservedMaize",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -8225,12 +8130,12 @@
                       "Filter": null,
                       "Name": "ObservedWheat",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8887,7 +8792,7 @@
                       "Filter": null,
                       "Name": "PreMaize",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -8917,7 +8822,7 @@
                       "Filter": null,
                       "Name": "PreWheat",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -8947,7 +8852,7 @@
                       "Filter": null,
                       "Name": "ObservedMaize",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -8977,12 +8882,12 @@
                       "Filter": null,
                       "Name": "ObservedWheat",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -9045,7 +8950,7 @@
                       "Filter": null,
                       "Name": "PreMaize",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -9075,12 +8980,12 @@
                       "Filter": null,
                       "Name": "PreWheat",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -9143,7 +9048,7 @@
                       "Filter": null,
                       "Name": "PreMaize",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -9173,12 +9078,12 @@
                       "Filter": null,
                       "Name": "PreWheat",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -9213,7 +9118,7 @@
                   "LegendOrientation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
-                  "Name": "GrainNumber",
+                  "Name": "RadIntTotMaize",
                   "Children": [
                     {
                       "$type": "Models.Graph.Series, Models",
@@ -9231,17 +9136,17 @@
                       "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "Maize.Grain.Number",
+                      "YFieldName": "CheckpointID",
                       "X2FieldName": "",
                       "Y2FieldName": "",
-                      "ShowInLegend": false,
+                      "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "PreMaize",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -9253,7 +9158,7 @@
                       "ColourArgb": -16736653,
                       "FactorToVaryColours": "Treatment",
                       "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "SimulationName",
+                      "FactorToVaryLines": null,
                       "Marker": 11,
                       "MarkerSize": 0,
                       "Line": 0,
@@ -9261,82 +9166,22 @@
                       "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "Wheat.Grain.Number",
+                      "YFieldName": "Wheat.Leaf.Fn",
                       "X2FieldName": "",
                       "Y2FieldName": "",
-                      "ShowInLegend": false,
+                      "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "PreWheat",
                       "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -1663232,
-                      "FactorToVaryColours": "Treatment",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 1,
-                      "MarkerSize": 0,
-                      "Line": 4,
-                      "LineThickness": 0,
-                      "Checkpoint": "Current",
-                      "TableName": "Observed",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "Maize.AboveGround.Wt",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": true,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "ObservedMaize",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16736653,
-                      "FactorToVaryColours": "Treatment",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 0,
-                      "MarkerSize": 0,
-                      "Line": 4,
-                      "LineThickness": 0,
-                      "Checkpoint": "Current",
-                      "TableName": "Observed",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "Wheat.AboveGround.Wt",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": true,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "ObservedWheat",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -9376,7 +9221,7 @@
                       "Values": null,
                       "Name": "SoleCrop",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -9391,7 +9236,7 @@
                       "Values": null,
                       "Name": "60WM",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -9406,7 +9251,7 @@
                       "Values": null,
                       "Name": "02WM",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -9420,7 +9265,7 @@
                       "Values": null,
                       "Name": "62WM",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -9436,17 +9281,17 @@
                       "Values": null,
                       "Name": "63WM",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -9493,6 +9338,7 @@
                   "d_interception": 0.0,
                   "soil_albedo": 0.3,
                   "SoilHeatFluxFraction": 0.4,
+                  "MinimumHeightDiffForNewLayer": 0.0,
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
@@ -9737,10 +9583,8 @@
                         "[Wheat].Total.Wt",
                         "sum([Soil].SoilWater.SWmm) as SWTot",
                         "[Wheat].Root.Depth",
-                        "[Wheat].Root.Zones[0].Depth",
-                        "[Wheat].Root.Zones[1].Depth",
                         "([Wheat].Leaf.RadIntTot / [Weather].Radn) as WheatFPAR",
-                        "([MicroClimate].SurfaceRS[0] / [Weather].Radn) as WheatZoneTransmission"
+                        "([MicroClimate].SurfaceRS[1] / [Weather].Radn) as WheatZoneLightTransmission"
                       ],
                       "EventNames": [
                         "[Clock].DoReport"
@@ -9768,7 +9612,7 @@
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 100.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,
@@ -9817,6 +9661,8 @@
                             300.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.4,
                             1.4,
@@ -10338,22 +10184,6 @@
                                 "Colour": "White",
                                 "OutlineColour": "White",
                                 "Transparent": true
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "PlantAvailableNO3",
-                                "Location": "688, 415",
-                                "Colour": "86, 180, 233",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "PlantAvailableNH4",
-                                "Location": "691, 421",
-                                "Colour": "86, 180, 233",
-                                "OutlineColour": "Black",
-                                "Transparent": false
                               }
                             ],
                             "Arcs": [
@@ -10555,6 +10385,7 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Wheat",
+                      "IsAlive": false,
                       "IsEnding": false,
                       "DaysAfterEnding": 0,
                       "ResourceName": "Wheat",
@@ -10658,7 +10489,7 @@
                         "[Maize].Total.Wt",
                         "sum([Soil].SoilWater.SWmm) as SWTot",
                         "([Maize].Leaf.RadIntTot / [Weather].Radn) as MaizeFPAR",
-                        "([MicroClimate].SurfaceRS[1] / [Weather].Radn) as MaizeZoneTransmission"
+                        "([MicroClimate].SurfaceRS[2] / [Weather].Radn) as MaizeZoneLightTransmission"
                       ],
                       "EventNames": [
                         "[Clock].DoReport"
@@ -10719,6 +10550,8 @@
                             300.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.4,
                             1.4,
@@ -11202,22 +11035,6 @@
                                 "Colour": "White",
                                 "OutlineColour": "White",
                                 "Transparent": true
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "PlantAvailableNO3",
-                                "Location": "688, 415",
-                                "Colour": "86, 180, 233",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "PlantAvailableNH4",
-                                "Location": "691, 421",
-                                "Colour": "86, 180, 233",
-                                "OutlineColour": "Black",
-                                "Transparent": false
                               }
                             ],
                             "Arcs": [
@@ -11355,7 +11172,7 @@
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 100.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,
@@ -11435,6 +11252,7 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Maize",
+                      "IsAlive": false,
                       "IsEnding": false,
                       "DaysAfterEnding": 0,
                       "ResourceName": "Maize",
@@ -11542,7 +11360,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -11700,7 +11518,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -11736,7 +11554,7 @@
                       "Filter": null,
                       "Name": "PreMaize",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -11766,7 +11584,7 @@
                       "Filter": null,
                       "Name": "PreWheat",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -11796,7 +11614,7 @@
                       "Filter": null,
                       "Name": "ObservedMaize",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -11826,12 +11644,12 @@
                       "Filter": null,
                       "Name": "ObservedWheat",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -11858,7 +11676,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -12136,7 +11954,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -12294,7 +12112,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -12452,7 +12270,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -12488,7 +12306,7 @@
                       "Filter": null,
                       "Name": "PreMaize",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -12518,7 +12336,7 @@
                       "Filter": null,
                       "Name": "PreWheat",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -12548,7 +12366,7 @@
                       "Filter": null,
                       "Name": "ObservedMaize",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -12578,12 +12396,12 @@
                       "Filter": null,
                       "Name": "ObservedWheat",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -12610,7 +12428,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -12646,7 +12464,7 @@
                       "Filter": null,
                       "Name": "PreMaize",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -12676,12 +12494,12 @@
                       "Filter": null,
                       "Name": "PreWheat",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -12708,7 +12526,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -12744,7 +12562,7 @@
                       "Filter": null,
                       "Name": "PreMaize",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -12774,12 +12592,12 @@
                       "Filter": null,
                       "Name": "PreWheat",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -12806,7 +12624,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -12842,7 +12660,7 @@
                       "Filter": null,
                       "Name": "Pre",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -12872,12 +12690,12 @@
                       "Filter": null,
                       "Name": "Pre1",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -12904,7 +12722,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -12930,7 +12748,7 @@
                       "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "WheatZoneTransmission(1)",
+                      "YFieldName": "WheatZoneLightTransmission",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
@@ -13002,7 +12820,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -13028,7 +12846,7 @@
                       "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "WheatZoneTransmission(2)",
+                      "YFieldName": "MaizeZoneLightTransmission",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
@@ -13067,6 +12885,336 @@
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Observed",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Folder, Models",
+          "ShowPageOfGraphs": true,
+          "Name": "Combined Results",
+          "Children": [
+            {
+              "$type": "Models.Graph.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "Models.Graph.Axis, Models",
+                  "Type": 3,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Graph.Axis, Models",
+                  "Type": 0,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "MaizeBiomass",
+              "Children": [
+                {
+                  "$type": "Models.Graph.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": 0,
+                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "Checkpoint": "Current",
+                  "TableName": "PredictedObserved",
+                  "XFieldName": "Observed.Maize.AboveGround.Wt",
+                  "YFieldName": "Predicted.Maize.AboveGround.Wt",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": false,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "Models.Graph.Axis, Models",
+                  "Type": 3,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Graph.Axis, Models",
+                  "Type": 0,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "Wheat Biomass",
+              "Children": [
+                {
+                  "$type": "Models.Graph.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": 0,
+                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "Checkpoint": "Current",
+                  "TableName": "PredictedObserved",
+                  "XFieldName": "Observed.Wheat.AboveGround.Wt",
+                  "YFieldName": "Predicted.Wheat.AboveGround.Wt",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": false,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "Models.Graph.Axis, Models",
+                  "Type": 3,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Graph.Axis, Models",
+                  "Type": 0,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "MaizeZoneLightTransmission",
+              "Children": [
+                {
+                  "$type": "Models.Graph.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": 0,
+                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "Checkpoint": "Current",
+                  "TableName": "PredictedObserved",
+                  "XFieldName": "Observed.MaizeZoneLightTransmission",
+                  "YFieldName": "Predicted.MaizeZoneLightTransmission",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": false,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "Models.Graph.Axis, Models",
+                  "Type": 3,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Graph.Axis, Models",
+                  "Type": 0,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "WheatZoneLightTransmission",
+              "Children": [
+                {
+                  "$type": "Models.Graph.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": 0,
+                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "Checkpoint": "Current",
+                  "TableName": "PredictedObserved",
+                  "XFieldName": "Observed.WheatZoneLightTransmission",
+                  "YFieldName": "Predicted.WheatZoneLightTransmission",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": false,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,

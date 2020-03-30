@@ -24,6 +24,9 @@ namespace Models.PMF.Phen
         [Link]
         Weather met = null;
 
+        [Link]
+        private Clock clock = null;
+
         //2. Private and protected fields
         //-----------------------------------------------------------------------------------------------------------------
 
@@ -64,11 +67,22 @@ namespace Models.PMF.Phen
             bool proceedToNextPhase = false;
             if (First)
             {
-                StartDAWS = met.DaysSinceWinterSolstice;
+                //StartDAWS = met.DaysSinceWinterSolstice;
+                if (clock.Today.DayOfYear < met.WinterSolsticeDOY)
+                {
+                    if (DateTime.IsLeapYear(clock.Today.Year))
+                        StartDAWS = 366 - met.WinterSolsticeDOY + clock.Today.DayOfYear -1;
+                    else
+                        StartDAWS = 365 - met.WinterSolsticeDOY + clock.Today.DayOfYear -1;
+                } 
+                else
+                    StartDAWS = clock.Today.DayOfYear - met.WinterSolsticeDOY;
+
                 First = false;
             }
 
-            if ((met.DaysSinceWinterSolstice >= DAWStoProgress)||((DAWStoProgress >= 365) & (met.DaysSinceWinterSolstice == 0)))
+            if ((met.DaysSinceWinterSolstice >= DAWStoProgress)||
+                ((DAWStoProgress >= 365) & (met.DaysSinceWinterSolstice == 0)))
             {
                 proceedToNextPhase = true;
                 propOfDayToUse = 0.00001;
@@ -83,14 +97,9 @@ namespace Models.PMF.Phen
             StartDAWS = 0;
         }
 
-        /// <summary>Writes the summary.</summary>
-        /// <param name="writer">The writer.</param>
-        public void WriteSummary(TextWriter writer) { writer.WriteLine("      " + Name); }
-
         /// <summary>Called when [simulation commencing].</summary>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        { ResetPhase(); }
+        private void OnSimulationCommencing(object sender, EventArgs e) { ResetPhase(); }
     }
 }
 

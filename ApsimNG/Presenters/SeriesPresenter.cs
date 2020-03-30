@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="SeriesPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System;
     using System.Collections.Generic;
@@ -14,7 +9,7 @@ namespace UserInterface.Presenters
     using APSIM.Shared.Utilities;
     using Interfaces;
     using Models.Core;
-    using Models.Graph;
+    using Models;
     using Views;
     using Commands;
     using Models.Storage;
@@ -100,7 +95,6 @@ namespace UserInterface.Presenters
         /// <summary>Connect all view events.</summary>
         private void ConnectViewEvents()
         {
-            seriesView.Checkpoint.Changed += OnCheckpointChanged;
             seriesView.DataSource.Changed += OnDataSourceChanged;
             seriesView.SeriesType.Changed += OnSeriesTypeChanged;
             seriesView.LineType.Changed += OnLineTypeChanged;
@@ -125,7 +119,6 @@ namespace UserInterface.Presenters
         /// <summary>Disconnect all view events.</summary>
         private void DisconnectViewEvents()
         {
-            seriesView.Checkpoint.Changed -= OnCheckpointChanged;
             seriesView.DataSource.Changed -= OnDataSourceChanged;
             seriesView.SeriesType.Changed -= OnSeriesTypeChanged;
             seriesView.LineType.Changed -= OnLineTypeChanged;
@@ -441,15 +434,6 @@ namespace UserInterface.Presenters
             }
         }
 
-        /// <summary>User has changed the checkpoint.</summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">Event arguments</param>
-        private void OnCheckpointChanged(object sender, EventArgs e)
-        {
-            if (series.Checkpoint != this.seriesView.Checkpoint.SelectedValue)
-                this.SetModelProperty("Checkpoint", this.seriesView.Checkpoint.SelectedValue);
-        }
-
         /// <summary>User has changed the show in legend</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
@@ -502,16 +486,6 @@ namespace UserInterface.Presenters
             warnings.AddRange(PopulateMarkerDropDown());
             warnings.AddRange(PopulateLineDropDown());
             warnings.AddRange(PopulateColourDropDown());
-
-            // Populate the checkpoint drop down.
-            List<string> checkpoints = storage.Reader.CheckpointNames;
-            if (!checkpoints.Contains(series.Checkpoint) && !string.IsNullOrEmpty(series.Checkpoint))
-            {
-                checkpoints.Add(series.Checkpoint);
-                warnings.Add(string.Format("WARNING: {0}: Selected Checkpoint '{1}' is invalid. Have the simulations been run?", Apsim.FullPath(series), series.Checkpoint));
-            }
-            seriesView.Checkpoint.Values = checkpoints.ToArray();
-            seriesView.Checkpoint.SelectedValue = series.Checkpoint;
 
             // Populate line thickness drop down.
             List<string> thicknesses = new List<string>(Enum.GetNames(typeof(LineThicknessType)));

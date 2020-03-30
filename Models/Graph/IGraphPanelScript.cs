@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.Graph
+namespace Models
 {
     /// <summary>
     /// An interface for a graph panel script.

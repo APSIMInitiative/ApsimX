@@ -1,12 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="IGridCell.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-using System;
-using System.Drawing;
-
-namespace UserInterface.Interfaces
+﻿namespace UserInterface.Interfaces
 {
     /// <summary>
     /// An enumeration that specifies the allowed editor types for the cell.
@@ -39,9 +31,17 @@ namespace UserInterface.Interfaces
         DropDown,
 
         /// <summary>
-        /// A button editor
+        /// A button editor - clicking on the
+        /// button opens a file selection dialog.
         /// </summary>
-        Button
+        Button,
+
+        /// <summary>
+        /// A button editor - allows for
+        /// a file selection dialog which can
+        /// select multiple files.
+        /// </summary>
+        MultiFiles,
     }
 
     /// <summary>

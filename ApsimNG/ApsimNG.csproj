@@ -126,6 +126,7 @@
     <EmbeddedResource Include="Resources\Glade\FactorView.glade" />
     <EmbeddedResource Include="Resources\Glade\WeatherDownload.glade" />
     <EmbeddedResource Include="Resources\Glade\AddModelView.glade" />
+    <EmbeddedResource Include="Resources\Glade\CheckpointView.glade" />
     <None Include="Resources\InputNextBackView.glade" />
     <EmbeddedResource Include="Resources\Glade\StringEntryForm.glade" />
     <None Include="Resources\Report.xshd" />
@@ -185,6 +186,7 @@
     <Compile Include="Cloud\Azure\BatchConstants.cs" />
     <Compile Include="Cloud\Azure\Licence.cs" />
     <Compile Include="Cloud\DownloadOptions.cs" />
+    <Compile Include="EventArguments\CustomDataEventArgs.cs" />
     <Compile Include="Views\CloudDownloadView.cs" />
     <Compile Include="Cloud\ICloudInterface.cs" />
     <Compile Include="Cloud\JobDetails.cs" />
@@ -358,7 +360,6 @@
     <Compile Include="Views\CheckBoxView.cs" />
     <Compile Include="Views\CloudJobView.cs" />
     <Compile Include="Views\ColourDropDownView.cs" />
-    <Compile Include="Views\DataStoreView.cs" />
     <Compile Include="Views\DoubleEditView.cs" />
     <Compile Include="Views\DropDownView.cs" />
     <Compile Include="Views\EditBoxView.cs" />
@@ -476,12 +477,21 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\Infestation.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\LifeCyclePhase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\WeatherSampler.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\WaterBalance.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SimpleLeafAppearancePhase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\DocumentCheck.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Document.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RainfallShuffler.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourAERelationship.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RandomNumberGenerator.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourActivityFeedTargetPurchase.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\Market.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\ProtectedDivideFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\StorageNDemandFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\ShadedBarsOnGraph.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourAdultEquivalentRelationship.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\GraphPanel.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\AGPWhiteClover.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\AGPRyegrass.png" />
@@ -547,7 +557,6 @@
     <EmbeddedResource Include="Resources\TreeViewImages\HIReproductiveOrgan.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SwimSoluteParameters.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Swim3.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\LifeStageImmigrationProcess.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Morris.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Plantain.png" />
     <EmbeddedResource Include="Resources\TwoStageEvaporation.png" />
@@ -648,10 +657,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\Flow.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\NutrientPool.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Nutrient.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\LifeStageReproductionProcess.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\LifeStageProcess.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LifeCycle.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\LifeStage.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\EventNamesOnGraph.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Chicory.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\GenericBelowGroundOrgan.png" />
@@ -782,6 +788,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\AGPLucerne.png" />
     <EmbeddedResource Include="Resources\Sounds\Fail.wav" />
     <EmbeddedResource Include="Resources\TreeViewImages\SimpleGrazing.png" />
+    <EmbeddedResource Include="Presenters\CLEM\Chart.min.js" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />

@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="GridCell.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Classes
+﻿namespace UserInterface.Classes
 {
     using System;
     using Interfaces;
@@ -111,7 +106,7 @@ namespace UserInterface.Classes
                             /// TBI this.gridView.Grid[this.ColumnIndex, this.RowIndex] = new CalendarCell();
                             break;
                         }
-
+                    case EditorTypeEnum.MultiFiles:
                     case EditorTypeEnum.Button:
                         {
                             Tuple<int, int> key = new Tuple<int, int>(this.RowIndex, this.ColumnIndex);

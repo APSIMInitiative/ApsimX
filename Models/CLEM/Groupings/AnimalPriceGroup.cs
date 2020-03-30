@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Models.CLEM.Groupings
 {
@@ -21,7 +22,7 @@ namespace Models.CLEM.Groupings
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Purchase and sales identifier used")]
     [HelpUri(@"Content/Features/Filters/AnimalPriceGroup.htm")]
-    public class AnimalPriceGroup: CLEMModel
+    public class AnimalPriceGroup: CLEMModel, IFilterGroup
     {
         /// <summary>
         /// Style of pricing animals
@@ -43,6 +44,12 @@ namespace Models.CLEM.Groupings
         [Description("Purchase or sale price")]
         [System.ComponentModel.DefaultValueAttribute(PurchaseOrSalePricingStyleType.Both)]
         public PurchaseOrSalePricingStyleType PurchaseOrSale { get; set; }
+
+        /// <summary>
+        /// Combined ML ruleset for LINQ expression tree
+        /// </summary>
+        [XmlIgnore]
+        public object CombinedRules { get; set; } = null;
 
         /// <summary>
         /// Constructor

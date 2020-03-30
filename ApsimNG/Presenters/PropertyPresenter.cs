@@ -1,8 +1,3 @@
-//-----------------------------------------------------------------------
-// <copyright file="PropertyPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
 namespace UserInterface.Presenters
 {
     using System;
@@ -24,6 +19,7 @@ namespace UserInterface.Presenters
     using Models.CLEM.Resources;
     using Models.Storage;
     using System.Globalization;
+    using Models.LifeCycle;
 
     /// <summary>
     /// <para>
@@ -386,6 +382,30 @@ namespace UserInterface.Presenters
                             cell.DropDownStrings = GetCultivarNames(crop);
                         }
                     }
+
+                    else if (properties[i].Display != null &&
+                             properties[i].Display.Type == DisplayType.LifeCycleName)
+                    {
+                        Zone zone = Apsim.Find(model, typeof(Zone)) as Zone;
+                        if (zone != null)
+                        {
+                            cell.DropDownStrings = GetLifeCycleNames(zone);
+                        }
+                    }
+
+                    else if (properties[i].Display != null &&
+                        properties[i].Display.Type == DisplayType.LifePhaseName)
+                    {
+                        LifeCycle lifeCycle;
+                        if (properties[i].Display.LifeCycleName != null)
+                            lifeCycle = Apsim.FindAll(model, typeof(LifeCycle)).FirstOrDefault(p => p.Name == properties[i].Display.LifeCycleName) as LifeCycle;
+                        else
+                            lifeCycle = GetLifeCycle(properties);
+                        if (lifeCycle != null)
+                        {
+                            cell.DropDownStrings = GetPhaseNames(lifeCycle);
+                        }
+                    }
                     else if (properties[i].Display != null &&
                              properties[i].Display.Type == DisplayType.FieldName)
                     {
@@ -435,8 +455,11 @@ namespace UserInterface.Presenters
             int row = properties.IndexOf(property);
             if (property is VariableObject)
                 table.Rows.Add(new object[] { property.Value, null, null });
-            else if (property.Value is IModel)
-                table.Rows.Add(new object[] { property.Description, Apsim.FullPath(property.Value as IModel), property.Name });
+            else if (property.Value is IModel m)
+            {
+                string cellValue = IsSiblingOfModel(m) ? m.Name : Apsim.FullPath(m);
+                table.Rows.Add(new object[] { property.Description, cellValue, property.Name });
+            }
             else if (property is VariableProperty p)
                 table.Rows.Add(new object[] { property.Description, GetCellValue(property, row, 1), p.Tooltip });
             else
@@ -491,10 +514,40 @@ namespace UserInterface.Presenters
                         cell.DropDownStrings = GetCultivarNames(crop);
                     }
                 }
+
+                else if (properties[i].Display != null &&
+                         properties[i].Display.Type == DisplayType.LifeCycleName)
+                {
+                    cell.EditorType = EditorTypeEnum.DropDown;
+                    Zone zone = Apsim.Find(model,typeof(Zone)) as Zone;
+                    if (zone != null)
+                    {
+                        cell.DropDownStrings = GetLifeCycleNames(zone);
+                    }
+                }
+
+                else if (properties[i].Display != null &&
+                        properties[i].Display.Type == DisplayType.LifePhaseName)
+                {
+                    cell.EditorType = EditorTypeEnum.DropDown;
+                    LifeCycle lifeCycle;
+                    if (properties[i].Display.LifeCycleName != null)
+                        lifeCycle = Apsim.FindAll(model, typeof(LifeCycle)).FirstOrDefault(p => p.Name == properties[i].Display.LifeCycleName) as LifeCycle;
+                    else
+                        lifeCycle = GetLifeCycle(properties);
+                    if (lifeCycle != null)
+                    {
+                        cell.DropDownStrings = GetPhaseNames(lifeCycle);
+                    }
+                }
                 else if (properties[i].Display != null && 
                          properties[i].Display.Type == DisplayType.FileName)
                 {
                     cell.EditorType = EditorTypeEnum.Button;
+                }
+                else if (properties[i].Display != null && properties[i].Display.Type == DisplayType.FileNames)
+                {
+                    cell.EditorType = EditorTypeEnum.MultiFiles;
                 }
                 else if (properties[i].Display != null && 
                          properties[i].Display.Type == DisplayType.FieldName)
@@ -659,6 +712,52 @@ namespace UserInterface.Presenters
             return new string[0];
         }
 
+        /// <summary>Get a list of life cycles in the zone.</summary>
+        /// <param name="zone">The zone.</param>
+        /// <returns>A list of life cycles.</returns>
+        private string[] GetLifeCycleNames(Zone zone)
+        {
+            List<IModel> LifeCycles = Apsim.Children(zone, typeof(LifeCycle));
+            if (LifeCycles.Count > 0)
+            {
+                string[] Namelist = new string[LifeCycles.Count];
+                int i = 0;
+                foreach (IModel LC in LifeCycles)
+                {
+                    Namelist[i] = LC.Name;
+                    i++;
+                }
+                return Namelist;
+            }
+            return new string[0];
+        }
+
+        /// <summary>Get a list of phases for lifecycle.</summary>
+        /// <param name="lifecycle">The lifecycle.</param>
+        /// <returns>A list of phases.</returns>
+        private string[] GetPhaseNames(LifeCycle lifeCycle)
+        {
+            if (lifeCycle.LifeCyclePhaseNames.Length == 0)
+            {
+                Simulations simulations = Apsim.Parent(lifeCycle as IModel, typeof(Simulations)) as Simulations;
+                Replacements replacements = Apsim.Child(simulations, typeof(Replacements)) as Replacements;
+                if (replacements != null)
+                {
+                    LifeCycle replacementLifeCycle = Apsim.Child(replacements, (lifeCycle as IModel).Name) as LifeCycle;
+                    if (replacementLifeCycle != null)
+                    {
+                        return replacementLifeCycle.LifeCyclePhaseNames;
+                    }
+                }
+            }
+            else
+            {
+                return lifeCycle.LifeCyclePhaseNames;
+            }
+
+            return new string[0];
+        }
+
         /// <summary>Get a list of database fieldnames. 
         /// Returns the names associated with the first table name in the property list
         /// </summary>
@@ -708,6 +807,30 @@ namespace UserInterface.Presenters
 
             // Not found so look for one in scope.
             return Apsim.Find(model, typeof(IPlant)) as IPlant;
+        }
+
+        /// <summary>
+        /// Go find a Life Cycle property in the specified list of properties or if not
+        /// found, find the first Life Cycle in scope.
+        /// </summary>
+        /// <param name="properties">The list of properties to look through.</param>
+        /// <returns>The found Life Cycle or null if none found.</returns>
+        private LifeCycle GetLifeCycle(List<IVariable> properties)
+        {
+            foreach (IVariable property in properties)
+            {
+                if (property.DataType == typeof(LifeCycle))
+                {
+                    LifeCycle lifeCycle = property.Value as LifeCycle;
+                    if (lifeCycle != null)
+                    {
+                        return lifeCycle;
+                    }
+                }
+            }
+
+            // Not found so look for one in scope.
+            return Apsim.Find(model, typeof(LifeCycle)) as LifeCycle;
         }
 
         private string[] GetResidueNames()
@@ -789,7 +912,12 @@ namespace UserInterface.Presenters
 
             List<string> modelNames = new List<string>();
             foreach (IModel model in models)
-                modelNames.Add(Apsim.FullPath(model));
+            {
+                if (IsSiblingOfModel(model))
+                    modelNames.Add(model.Name);
+                else
+                    modelNames.Add(Apsim.FullPath(model));
+            }
             return modelNames.ToArray();
         }
 
@@ -844,6 +972,14 @@ namespace UserInterface.Presenters
             object result = property.ValueWithArrayHandling;
             if (property.DataType == typeof(double) && double.IsNaN((double)result))
                 result = "";
+            if (result is IModel m)
+            {
+                if (IsSiblingOfModel(m))
+                    return m.Name;
+
+                return Apsim.FullPath(m);
+            }
+
             return result;
         }
 
@@ -869,7 +1005,13 @@ namespace UserInterface.Presenters
                 return Apsim.Find(property.Object as IModel, cell.NewValue);
 
             if (property.Display != null && property.Display.Type == DisplayType.Model)
-                return Apsim.Get(property.Object as IModel, cell.NewValue);
+            {
+                object result = Apsim.Get(property.Object as IModel, cell.NewValue);
+                if (result == null)
+                    result = Apsim.Find(property.Object as IModel, cell.NewValue);
+
+                return result;
+            }
 
             try
             {
@@ -908,6 +1050,11 @@ namespace UserInterface.Presenters
                 IGridCell cell = grid.GetCell(1, i);
                 cell.IsRowReadonly = !IsPropertyEnabled(i);
             }
+
+            // Model has been modified - need to refresh the grid.
+            // Note: Refresh() interrogates the model. grid.Refresh()
+            // updates the UI.
+            Refresh();
             grid.Refresh();
         }
 
@@ -938,6 +1085,23 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// Checks if a given model is a sibling of this.model.
+        /// </summary>
+        /// <param name="m">The model to be tested.</param>
+        private bool IsSiblingOfModel(IModel m)
+        {
+            IModel parent = this.model.Parent;
+            if (parent is Manager)
+                parent = parent.Parent;
+
+            IModel targetParent = m.Parent;
+            if (targetParent is Manager)
+                targetParent = targetParent.Parent;
+
+            return parent == targetParent;
+        }
+
+        /// <summary>
         /// The model has changed, update the grid.
         /// </summary>
         /// <param name="changedModel">The model that has changed</param>
@@ -961,7 +1125,9 @@ namespace UserInterface.Presenters
                 Prompt = "Select file path",
                 InitialDirectory = e.OldValue
             };
-            string fileName = fileChooser.GetFile();
+
+            IGridCell cell = grid.GetCell(e.ColIndex, e.RowIndex);
+            string fileName = properties[e.RowIndex].Display.Type == DisplayType.FileNames ? string.Join(", ", fileChooser.GetFiles()) : fileChooser.GetFile();
 
             if (!string.IsNullOrWhiteSpace(fileName) && fileName != e.OldValue)
             {

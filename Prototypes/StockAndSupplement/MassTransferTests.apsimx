@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 76,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-01-31",
+  "Version": 80,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-06",
   "Name": "Simulations",
   "Children": [
     {
@@ -71,7 +71,7 @@
           "$type": "Models.GrazPlan.Stock, Models",
           "ParamFile": "",
           "RandSeed": 9999,
-          "GenoTypes": [
+          "Genotypes": [
             {
               "$type": "Models.GrazPlan.SingleGenotypeInits, Models",
               "DeathRate": [
@@ -394,6 +394,7 @@
             {
               "$type": "Models.PMF.Plant, Models",
               "CropType": "Slurp",
+              "IsAlive": false,
               "IsEnding": false,
               "DaysAfterEnding": 0,
               "ResourceName": "Slurp",
@@ -1005,7 +1006,7 @@
           "$type": "Models.GrazPlan.Stock, Models",
           "ParamFile": "",
           "RandSeed": 9999,
-          "GenoTypes": [
+          "Genotypes": [
             {
               "$type": "Models.GrazPlan.SingleGenotypeInits, Models",
               "DeathRate": [

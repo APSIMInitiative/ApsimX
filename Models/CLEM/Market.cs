@@ -20,7 +20,7 @@ namespace Models.CLEM
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [Description("This represents a shared market place for CLEM farms")]
-    [HelpUri(@"")]
+    [HelpUri(@"Content/Features/Market.htm")]
     [Version(1, 0, 2, "Tested and functioning for targeted feeding including transmutations but still needs movement of goods to market.")]
     [Version(1, 0, 1, "Early implementation of market place for multi-farm simulations. This is a major addition and is not checked for full functionality.")]
     [ScopedModel]
@@ -78,6 +78,14 @@ namespace Models.CLEM
                 string[] memberNames = new string[] { "CLEM.Activities" };
                 results.Add(new ValidationResult("A market place must contain only one (1) Activities Holder to manage activities", memberNames));
             }
+            // only one market
+            holderCount = Apsim.Children(Apsim.Parent(this, typeof(Zone)), typeof(Market)).Count();
+            if (holderCount > 1)
+            {
+                string[] memberNames = new string[] { "CLEM.Markets" };
+                results.Add(new ValidationResult("Only one [m=Market] place is allowed in a CLEM simulation", memberNames));
+            }
+
             return results;
         }
 
@@ -92,11 +100,6 @@ namespace Models.CLEM
         {
             string html = "";
             html += "\n<div class=\"holdermain\" style=\"opacity: " + ((!this.Enabled) ? "0.4" : "1") + "\">";
-            //html += "\n<div class=\"clearfix defaultbanner\">";
-            //html += "<div class=\"typediv\">" + this.GetType().Name + "</div>";
-            //html += "</div>";
-            //html += "\n<div class=\"defaultcontent\">";
-            //html += "\n</div>";
 
             foreach (CLEMModel cm in Apsim.Children(this, typeof(CLEMModel)).Cast<CLEMModel>())
             {

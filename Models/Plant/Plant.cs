@@ -12,6 +12,7 @@
     using System.Collections.Generic;
     using System.Data;
     using System.Xml.Serialization;
+    using APSIM.Shared.Utilities;
 
     ///<summary>
     /// # [Name]
@@ -36,7 +37,7 @@
         public Phenology Phenology = null;
         /// <summary>The arbitrator</summary>
         [Link(IsOptional = true)]
-        public OrganArbitrator Arbitrator = null;
+        public IArbitrator Arbitrator = null;
         /// <summary>The structure</summary>
         [Link(IsOptional = true)]
         public Structure Structure = null;
@@ -61,7 +62,9 @@
         #endregion
 
         #region Class properties and fields
+
         /// <summary>Used by several organs to determine the type of crop.</summary>
+        [Description("Used by several organs to determine the type of crop.")]
         public string CropType { get; set; }
 
         /// <summary>Gets a value indicating how leguminous a plant is</summary>
@@ -106,7 +109,29 @@
                 return new List<string>(cultivarNames).ToArray();
             }
         }
-        
+
+        /// <summary>Gets a list of cultivar names</summary>
+        public string[] CultivarList
+        {
+            get
+            {
+                List<string> cultivarNames = new List<string>();
+                foreach (Cultivar cultivar in this.Cultivars)
+                {
+                    string name = cultivar.Name;
+                    cultivarNames.Add(name);
+                    if (cultivar.Alias != null)
+                    {
+                        foreach (string alias in cultivar.Alias)
+                            cultivarNames.Add(alias);
+                    }
+                }
+                cultivarNames.Sort();
+                return cultivarNames.ToArray();
+            }
+        }
+
+
         /// <summary>A property to return all cultivar definitions.</summary>
         private List<Cultivar> Cultivars
         {
@@ -127,6 +152,9 @@
         /// </summary>
         public Plant()
         {
+            SowingData = new SowPlant2Type();
+            IsAlive = false;
+
             string photosyntheticPathway = (string) Apsim.Get(this, "Leaf.Photosynthesis.FCO2.PhotosyntheticPathway");
             IsC4 = photosyntheticPathway != null && photosyntheticPathway == "C4";
             Legumosity = 0;
@@ -165,7 +193,7 @@
         }
 
         /// <summary>Return true if plant is alive and in the ground.</summary>
-        public bool IsAlive { get { return SowingData != null; } }
+        public bool IsAlive { get; private set; }
 
         /// <summary>Return true if plant has emerged</summary>
         public bool IsEmerged
@@ -266,6 +294,9 @@
             IsEnding = false;
             DaysAfterEnding = 0;
             Clear();
+            IEnumerable<string> duplicates = CultivarList.GroupBy(x => x).Where(g => g.Count() > 1).Select(x => x.Key);
+            if (duplicates.Count() > 0)
+                throw new Exception("Duplicate Names in " + this.Name + " has duplicate cultivar names " + string.Join(",",duplicates));
         }
 
         /// <summary>Called when [phase changed].</summary>
@@ -316,8 +347,8 @@
         /// <summary>Sow the crop with the specified parameters.</summary>
         /// <param name="cultivar">The cultivar.</param>
         /// <param name="population">The population.</param>
-        /// <param name="depth">The depth.</param>
-        /// <param name="rowSpacing">The row spacing.</param>
+        /// <param name="depth">The depth mm.</param>
+        /// <param name="rowSpacing">The row spacing mm.</param>
         /// <param name="maxCover">The maximum cover.</param>
         /// <param name="budNumber">The bud number.</param>
         /// <param name="rowConfig">SkipRow configuration.</param>
@@ -334,6 +365,8 @@
             SowingData.BudNumber = budNumber;
             SowingData.RowSpacing = rowSpacing;
             SowingData.SkipRow = rowConfig;
+            IsAlive = true;
+
             this.Population = population;
 
             // Find cultivar and apply cultivar overrides.
@@ -414,6 +447,7 @@
             IsEnding = true;
             if (cultivarDefinition != null)
                 cultivarDefinition.Unapply();
+            IsAlive = false;
         }
         #endregion
 
@@ -421,11 +455,12 @@
         /// <summary>Clears this instance.</summary>
         private void Clear()
         {
-            SowingData = null;
+            SowingData = new SowPlant2Type();
             plantPopulation = 0.0;
+            IsAlive = false;
         }
         #endregion
-        
+
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
@@ -456,6 +491,43 @@
                 foreach (IModel child in Apsim.Children(this, typeof(IModel)))
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent, true);
             }
+        }
+
+        /// <summary>Removes a given amount of biomass (and N) from the plant.</summary>
+        /// <param name="amountToRemove">The amount of biomass to remove (kg/ha)</param>
+        public Biomass RemoveBiomass(double amountToRemove)
+        {
+            var defoliatedBiomass = new Biomass();
+            var preRemovalBiomass = AboveGround.Wt*10;
+            foreach (var organ in Organs.Cast<IOrganDamage>())
+            {
+                // These calculations convert organ live weight from g/m2 to kg/ha
+                var amountLiveToRemove = organ.Live.Wt * 10 / preRemovalBiomass * amountToRemove;
+                var amountDeadToRemove = organ.Dead.Wt * 10 / preRemovalBiomass * amountToRemove;
+                var fractionLiveToRemove = MathUtilities.Divide(amountLiveToRemove, (organ.Live.Wt * 10), 0);
+                var fractionDeadToRemove = MathUtilities.Divide(amountDeadToRemove, (organ.Dead.Wt * 10), 0);
+                var defoliatedDigestibility = organ.Live.DMDOfStructural * fractionLiveToRemove
+                                            + organ.Dead.DMDOfStructural * fractionDeadToRemove;
+                var defoliatedDM = amountLiveToRemove + amountDeadToRemove;
+                var defoliatedN = organ.Live.N * 10 * fractionLiveToRemove + organ.Dead.N * 10 * fractionDeadToRemove;
+                if (defoliatedDM > 0)
+                {
+                    RemoveBiomass(organ.Name, "Graze",
+                                  new OrganBiomassRemovalType()
+                                  {
+                                      FractionLiveToRemove = fractionLiveToRemove,
+                                      FractionDeadToRemove = fractionDeadToRemove
+                                  });
+
+                    defoliatedBiomass += new Biomass()
+                    {
+                        StructuralWt = defoliatedDM,
+                        StructuralN = defoliatedN,
+                        DMDOfStructural = defoliatedDigestibility
+                    };
+                }
+            }
+            return defoliatedBiomass;
         }
 
         /// <summary>

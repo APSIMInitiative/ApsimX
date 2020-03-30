@@ -166,6 +166,12 @@ namespace Models.CLEM.Resources
                 return;
             }
 
+            // if this request aims to trade with a market see if we need to set up details for the first time
+            if(request.MarketTransactionMultiplier > 0)
+            {
+                FindEquivalentMarketStore();
+            }
+
             double amountRequired = request.Required;
             foreach (HumanFoodStorePool pool in Pools.OrderByDescending(a => a.Age))
             {
@@ -175,6 +181,12 @@ namespace Models.CLEM.Resources
 
                 // remove resource from pool
                 pool.Remove(amountToRemove, request.ActivityModel, "Consumed");
+
+                // send to market if needed
+                if(request.MarketTransactionMultiplier > 0 && equivalentMarketStore != null)
+                {
+                    (equivalentMarketStore as HumanFoodStoreType).Add(new HumanFoodStorePool(amountToRemove* request.MarketTransactionMultiplier, pool.Age), request.ActivityModel, "Farm sales");
+                }
 
                 if (amountRequired <= 0)
                 {
@@ -277,7 +289,7 @@ namespace Models.CLEM.Resources
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "\n<div class=\"activityentry\">";
-            if (Units.ToUpper() != "KG")
+            if ((Units??"").ToUpper() != "KG")
             {
                 html += "Each unit of this resource is equivalent to ";
                 if (ConvertToKg == 0)
@@ -320,8 +332,8 @@ namespace Models.CLEM.Resources
             }
             html += "\n</div>";
 
-            html += "\n<div class=\"activityentry\">";
-            html += ((EdibleProportion == 1)?"All":EdibleProportion.ToString("%"))+" of this raw food is edible";
+            html += "\n<div class=\"activityentry\"><span class=\"setvalue\">";
+            html += ((EdibleProportion == 1)?"All":EdibleProportion.ToString("#0%"))+"</span> of this raw food is edible";
             html += "\n</div>";
 
             return html;

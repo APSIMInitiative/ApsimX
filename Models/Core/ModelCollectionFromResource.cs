@@ -9,11 +9,14 @@
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
+    using System.Xml.Serialization;
 
     /// <summary>This class loads a model from a resource</summary>
     [Serializable]
     public class ModelCollectionFromResource : Model, IOptionallySerialiseChildren
     {
+        private static string[] propertiesToExclude = new string[] { "Name", "Children", "IsHidden", "IncludeInDocumentation", "Enabled", "ReadOnly" };
+
         /// <summary>Gets or sets the name of the resource.</summary>
         public string ResourceName { get; set; }
 
@@ -54,7 +57,11 @@
                 if (officialChildren == null)
                     return Children;
 
-                return Children.Except(officialChildren, new ModelComparer()).ToList();
+                List<Model> toReturn = new List<Model>();
+                foreach (Model child in Children)
+                    if (!officialChildren.Any(m => m.GetType() == child.GetType() && string.Equals(m.Name, child.Name, StringComparison.InvariantCultureIgnoreCase)))
+                        toReturn.Add(child);
+                return toReturn;
             }
         }
 
@@ -77,7 +84,10 @@
                     Children.InsertRange(0, modelFromResource.Children);
 
                     CopyPropertiesFrom(modelFromResource);
-                    SetNotVisible(modelFromResource);
+
+                    // Make the model readonly if it's not under replacements.
+                    if (Apsim.Ancestor<Replacements>(this) == null)
+                        SetNotVisible(modelFromResource);
                     Apsim.ParentAllChildren(this);
                 }
             }
@@ -99,22 +109,38 @@
                     var json = JObject.Parse(contents);
                     var children = json["Children"] as JArray;
                     var simulations = children[0];
-                    foreach (var parameter in simulations.Children())
-                    {
-                        if (parameter is JProperty)
-                        {
-                            var property = parameter as JProperty;
-                            if (property.Name != "$type")
-                            {
-                                parameterNames.Add(property.Name);
-                            }
-                        }
-                    }
+
+                    GetParametersFromToken(simulations, null, parameterNames);
                     return parameterNames;
                 }
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Get a list of parameter names for the specified token.
+        /// </summary>
+        /// <param name="token">The token to extract parameter names from.</param>
+        /// <param name="namePrefix">The prefix to add in front of each name.</param>
+        /// <param name="parameterNames">The list of parameter names to add to.</param>
+        private static void GetParametersFromToken(JToken token, string namePrefix, List<string> parameterNames)
+        {
+            foreach (var parameter in token.Children())
+            {
+                if (parameter is JProperty)
+                {
+                    var property = parameter as JProperty;
+                    if (property.Name == "Children" && property.First is JArray)
+                    {
+                        var children = property.First as JArray;
+                        foreach (var child in children)
+                            GetParametersFromToken(child, namePrefix + child["Name"] + ".", parameterNames); // recursion
+                    }
+                    else if (property.Name != "$type" && !propertiesToExclude.Contains(property.Name))
+                        parameterNames.Add(namePrefix + property.Name);
+                }
+            }
         }
 
         private Model GetResourceModel()
@@ -157,17 +183,26 @@
                     property.Name != "ResourceName")
                 {
                     var description = property.GetCustomAttribute(typeof(DescriptionAttribute));
-                    if (description == null)
+                    var xmlIgnore = property.GetCustomAttribute(typeof(XmlIgnoreAttribute));
+                    var jsonIgnore = property.GetCustomAttribute(typeof(JsonIgnoreAttribute));
+                    if (description == null && xmlIgnore == null && jsonIgnore == null)
                     {
-                        object fromValue = property.GetValue(from);
-                        bool doSetPropertyValue;
-                        if (fromValue is double)
-                            doSetPropertyValue = Convert.ToDouble(fromValue, CultureInfo.InvariantCulture) != 0;
-                        else
-                            doSetPropertyValue = fromValue != null;
+                        try
+                        {
+                            object fromValue = property.GetValue(from);
+                            bool doSetPropertyValue;
+                            if (fromValue is double)
+                                doSetPropertyValue = Convert.ToDouble(fromValue, CultureInfo.InvariantCulture) != 0;
+                            else
+                                doSetPropertyValue = fromValue != null;
 
-                        if (doSetPropertyValue)
-                            property.SetValue(this, fromValue);
+                            if (doSetPropertyValue)
+                                property.SetValue(this, fromValue);
+                        }
+                        catch (Exception)
+                        {
+
+                        }
                     }
                 }
             }

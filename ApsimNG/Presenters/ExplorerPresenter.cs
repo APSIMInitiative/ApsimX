@@ -29,7 +29,7 @@
         private MainMenu mainMenu;
 
         /// <summary>The context menu</summary>
-        private ContextMenu contextMenu;
+        public ContextMenu ContextMenu { get; private set; }
 
         /// <summary>Show tick on tree nodes where models will be included in auto-doc?</summary>
         private bool showDocumentationStatus;
@@ -127,8 +127,8 @@
             this.ApsimXFile = model as Simulations;
             this.view = view as IExplorerView;
             this.mainMenu = new MainMenu(this);
-            this.contextMenu = new ContextMenu(this);
-            ApsimXFile.Links.Resolve(contextMenu);
+            this.ContextMenu = new ContextMenu(this);
+            ApsimXFile.Links.Resolve(ContextMenu);
 
             this.view.Tree.SelectedNodeChanged += this.OnNodeSelected;
             this.view.Tree.DragStarted += this.OnDragStart;
@@ -178,7 +178,7 @@
                 (this.view as Views.ExplorerView).MainWidget.Destroy();
             }
 
-            this.contextMenu = null;
+            this.ContextMenu = null;
             this.mainMenu = null;
             this.CommandHistory.Clear();
             this.ApsimXFile.ClearSimulationReferences();
@@ -583,7 +583,7 @@
                         MethodInfo enableMethod = typeof(ContextMenu).GetMethod(method.Name + "Enabled");
                         if (enableMethod != null)
                         {
-                            desc.Enabled = (bool)enableMethod.Invoke(this.contextMenu, null);
+                            desc.Enabled = (bool)enableMethod.Invoke(this.ContextMenu, null);
                         }
                         else
                         {
@@ -594,14 +594,14 @@
                         MethodInfo checkMethod = typeof(ContextMenu).GetMethod(method.Name + "Checked");
                         if (checkMethod != null)
                         {
-                            desc.Checked = (bool)checkMethod.Invoke(this.contextMenu, null);
+                            desc.Checked = (bool)checkMethod.Invoke(this.ContextMenu, null);
                         }
                         else
                         {
                             desc.Checked = false;
                         }
 
-                        EventHandler handler = (EventHandler)Delegate.CreateDelegate(typeof(EventHandler), this.contextMenu, method);
+                        EventHandler handler = (EventHandler)Delegate.CreateDelegate(typeof(EventHandler), this.ContextMenu, method);
                         desc.OnClick = handler;
 
                         descriptions.Add(desc);
@@ -700,8 +700,12 @@
                     {
                         ShowDescriptionInRightHandPanel(descriptionName?.ToString());
                     }
+                    if (viewName != null && viewName.ToString().Contains(".glade"))
+                        ShowInRightHandPanel(model,
+                                             newView: new ViewBase(view as ViewBase, viewName.ToString()),
+                                             presenter: Assembly.GetExecutingAssembly().CreateInstance(presenterName.ToString()) as IPresenter);
 
-                    if (viewName != null && presenterName != null)
+                    else if (viewName != null && presenterName != null)
                         ShowInRightHandPanel(model, viewName.ToString(), presenterName.ToString());
                 }
             }
@@ -1024,8 +1028,8 @@
         {
             TreeViewNode description = new TreeViewNode();
             description.Name = model.Name;
-
-            description.ResourceNameForImage = GetIconResourceName(model.GetType(), model.Name);
+            string resourceName = (model as ModelCollectionFromResource)?.ResourceName;
+            description.ResourceNameForImage = GetIconResourceName(model.GetType(), model.Name, resourceName);
 
             description.ToolTip = model.GetType().Name;
 
@@ -1053,38 +1057,40 @@
         /// </summary>
         /// <param name="modelType">The model type.</param>
         /// <param name="modelName">The model name.</param>
-        public static string GetIconResourceName(Type modelType, string modelName)
+        /// <param name="resourceName">Name of the model's resource file if one exists.null</param>
+        public static string GetIconResourceName(Type modelType, string modelName, string resourceName)
         {
             // We need to find an icon for this model. If the model is a ModelCollectionFromResource, we attempt to find 
-            // an image with the same name as the model.
+            // an image with the same resource name as the model (e.g. Wheat). If this fails, try the model type name.
             // Otherwise, we attempt to find an icon with the same name as the model's type.
             // e.g. A Graph called Biomass should use an icon called Graph.png
             // e.g. A Plant called Wheat should use an icon called Wheat.png
+            // e.g. A plant called Wheat with a resource name of Maize (don't do this) should use an icon called Maize.png.
 
             string resourceNameForImage;
-            if (modelType.GetInterface("ModelCollectionFromResource") != null && modelName != null)
-                resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelName + ".png";
+            ManifestResourceInfo info = null;
+            if (typeof(ModelCollectionFromResource).IsAssignableFrom(modelType) && modelName != null)
+            {
+                resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + resourceName + ".png";
+                info = Assembly.GetExecutingAssembly().GetManifestResourceInfo(resourceNameForImage);
+
+                // If there's no image for resource name (e.g. Wheat.png), try the model name (e.g. Plant.png)
+                if (info == null)
+                    resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelType.Name + ".png";
+            }
             else
             {
                 string modelNamespace = modelType.FullName.Split('.')[1] + ".";
                 resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelNamespace + modelType.Name + ".png";
 
                 if (MainView.MasterView != null && !MainView.MasterView.HasResource(resourceNameForImage))
-                {
                     resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelType.Name + ".png";
-                }
             }
 
             // Check to see if you can find the image in the resource for this project.
-            ManifestResourceInfo info = Assembly.GetExecutingAssembly().GetManifestResourceInfo(resourceNameForImage);
+            info = Assembly.GetExecutingAssembly().GetManifestResourceInfo(resourceNameForImage);
             if (info == null)
-            {
-                // Try the opposite.
-                if (modelType.GetInterface("ModelCollectionFromResource") != null && modelName != null)
-                    resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelType.Name + ".png";
-                else
-                    resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelName + ".png";
-            }
+                resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelName + ".png";
 
             return resourceNameForImage;
         }

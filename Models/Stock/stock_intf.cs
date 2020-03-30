@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="stock_intf.cs" company="CSIRO">
-// CSIRO Agriculture & Food
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace Models.GrazPlan
+﻿namespace Models.GrazPlan
 {
     using System;
     using System.Collections.Generic;
@@ -3937,6 +3931,7 @@ namespace Models.GrazPlan
                     numGroups = model.Count(); // get pre-split count of groups
                     for (param1 = 1; param1 <= numGroups; param1++)
                     {
+                        int groups = model.Count();
                         strParam = stockInfo.Type.ToLower();
                         value = stockInfo.Value;
                         tagNo = stockInfo.OtherTag;
@@ -3951,8 +3946,11 @@ namespace Models.GrazPlan
                             model.Split(param1, Convert.ToInt32(Math.Round(value), CultureInfo.InvariantCulture));
                         else
                             throw new Exception("Stock: invalid keyword (" + strParam + ") in \"split\" event");
-                        if ((tagNo > 0) && (model.Count() > numGroups))     // if a tag for any new group is given
-                            model.SetTag(model.Count(), tagNo);
+                        if ((tagNo > 0) && (model.Count() > groups))     // if a tag for any new group is given
+                        {
+                            for (int g = groups + 1; g <= model.Count(); g++)
+                                model.SetTag(g, tagNo);
+                        }
                     }
                 }
                 else if (stockEvent.GetType() == typeof(StockSplit))
@@ -3978,7 +3976,10 @@ namespace Models.GrazPlan
                     else
                         throw new Exception("Stock: invalid keyword (" + strParam + ") in \"split\" event");
                     if ((tagNo > 0) && (model.Count() > numGroups))     // if a tag for the new group is given
-                        model.SetTag(model.Count(), tagNo);
+                    {
+                        for (int g = numGroups + 1; g <= model.Count(); g++)
+                            model.SetTag(g, tagNo);
+                    }
                 }
                 else if (stockEvent.GetType() == typeof(StockTag))
                 {

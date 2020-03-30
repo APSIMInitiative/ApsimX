@@ -1,20 +1,12 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="CheckpointsPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using APSIM.Shared.Utilities;
-    using Interfaces;
+    using global::UserInterface.Interfaces;
     using Models.Core;
-    using Views;
     using Models.Storage;
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using Views;
 
     /// <summary>This presenter lets the user add/delete checkpoints</summary>
     public class CheckpointsPresenter : IPresenter
@@ -23,13 +15,28 @@ namespace UserInterface.Presenters
         private IModel model;
 
         /// <summary>The view</summary>
-        private IListButtonView view;
+        private ViewBase view;
 
         /// <summary>The parent explorer presenter</summary>
         private ExplorerPresenter explorerPresenter;
 
+        /// <summary>The checkpoint list on the view.</summary>
+        private TreeView checkpointList;
+
+        /// <summary>The add button on the view.</summary>
+        private ButtonView addButton;
+
+        /// <summary>The delete button on the view.</summary>
+        private ButtonView deleteButton;
+        
+        /// <summary>The checkpoint list popup menu.</summary>
+        private MenuDescriptionArgs popupMenu;
+
         /// <summary>Storage model</summary>
         private IDataStore storage = null;
+
+        /// <summary>Root node forthe checkpoints name list.</summary>
+        private TreeViewNode rootNode;
 
         /// <summary>Attach the specified Model and View.</summary>
         /// <param name="model">The axis model</param>
@@ -38,28 +45,64 @@ namespace UserInterface.Presenters
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.model = model as IModel;
-            this.view = view as IListButtonView;
+            this.view = view as ViewBase;
             this.explorerPresenter = explorerPresenter;
 
             storage = Apsim.Find(this.model, typeof(DataStore)) as DataStore;
 
-            this.view.List.IsModelList = false;
-            this.view.List.Values = storage.Reader.CheckpointNames.ToArray();
-            this.view.AddButton("Add", null, this.OnAddButtonClicked);
-            this.view.AddButton("Delete", null, this.OnDeleteButtonClicked);
-            this.view.AddButton("RevertTo", null, this.OnRevertToButtonClicked);
+            checkpointList = this.view.GetControl<TreeView>("CheckpointList");
+            addButton = this.view.GetControl<ButtonView>("AddButton");
+            deleteButton = this.view.GetControl<ButtonView>("DeleteButton");
+
+            popupMenu = new MenuDescriptionArgs()
+            {
+                Name = "Show on graphs?",
+                ResourceNameForImage = "empty"
+            };
+            popupMenu.OnClick += OnCheckpointTicked;
+            checkpointList.ContextMenu = new MenuView();
+            checkpointList.ContextMenu.Populate(new List<MenuDescriptionArgs>() { popupMenu });
+
             PopulateList();
+
+            addButton.Clicked += OnAddButtonClicked;
+            deleteButton.Clicked += OnDeleteButtonClicked;
         }
 
         /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
+            addButton.Clicked -= OnAddButtonClicked;
+            deleteButton.Clicked -= OnDeleteButtonClicked;
+            popupMenu.OnClick -= OnCheckpointTicked;
         }
 
-        /// <summary>Populate.</summary>
+        /// <summary>Populate the checkpoint list control.</summary>
+        /// <param name="models"></param>
         private void PopulateList()
         {
-            view.List.Values = storage.Reader.CheckpointNames.ToArray();
+            var checkpointNames = storage.Reader.CheckpointNames;
+            rootNode = new TreeViewNode()
+            {
+                Name = "Checkpoints",
+                ResourceNameForImage = ExplorerPresenter.GetIconResourceName(typeof(Folder), null, null)
+            };
+
+            foreach (var checkpointName in checkpointNames)
+            {
+                var node = new TreeViewNode()
+                {
+                    Name = checkpointName,
+                    ResourceNameForImage = "ApsimNG.Resources.TreeViewImages.Document.png"
+                };
+                if (storage.Reader.GetCheckpointShowOnGraphs(checkpointName))
+                    node.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages.DocumentCheck.png";
+
+                rootNode.Children.Add(node);
+            }
+
+            checkpointList.Populate(rootNode);
+            checkpointList.ExpandChildren(".Checkpoints");
         }
 
         /// <summary>The user has clicked the add button.</summary>
@@ -97,7 +140,7 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnDeleteButtonClicked(object sender, EventArgs e)
         {
-            string checkpointName = view.List.SelectedValue;
+            var checkpointName = checkpointList.SelectedNode.Replace(".Checkpoints.", "");
             if (explorerPresenter.MainPresenter.AskQuestion("Are you sure you want to delete checkpoint " + checkpointName + "?") == QuestionResponseEnum.Yes)
             {
                 if (checkpointName != null)
@@ -105,6 +148,7 @@ namespace UserInterface.Presenters
                     try
                     {
                         storage.Writer.DeleteCheckpoint(checkpointName);
+                        storage.Reader.Refresh();
                         PopulateList();
                         explorerPresenter.MainPresenter.ShowMessage("Checkpoint deleted", Simulation.MessageType.Information);
                     }
@@ -116,32 +160,17 @@ namespace UserInterface.Presenters
             }
         }
 
-        /// <summary>The user has clicked the revert to button.</summary>
+        /// <summary>The user has clicked a checkpoint.</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
-        private void OnRevertToButtonClicked(object sender, EventArgs e)
+        private void OnCheckpointTicked(object sender, EventArgs e)
         {
-            string checkpointName = view.List.SelectedValue;
-            if (explorerPresenter.MainPresenter.AskQuestion("Are you sure you want to revert to checkpoint " + checkpointName + "?") == QuestionResponseEnum.Yes)
-            {
-                if (checkpointName != null)
-                {
-                    try
-                    {
-                        explorerPresenter.MainPresenter.ShowWaitCursor(true);
-                        Simulations newSimulations = explorerPresenter.ApsimXFile.RevertCheckpoint(checkpointName);
-                        explorerPresenter.ApsimXFile = newSimulations;
-                        explorerPresenter.Refresh();
-                        explorerPresenter.MainPresenter.ShowMessage("Reverted to checkpoint: " + checkpointName, Simulation.MessageType.Information);
-                        explorerPresenter.MainPresenter.ShowWaitCursor(false);
-                    }
-                    catch (Exception err)
-                    {
-                        explorerPresenter.MainPresenter.ShowError(err);
-                    }
-                }
-            }
+            var checkpointName = checkpointList.SelectedNode.Replace(".Checkpoints.", "");
+            var checkpoint = rootNode.Children.Find(node => node.Name == checkpointName);
+    
+            storage.Writer.SetCheckpointShowGraphs(checkpoint.Name, !checkpoint.ResourceNameForImage.Contains("Check"));
+            storage.Reader.Refresh();
+            PopulateList();
         }
-
     }
 }

@@ -106,7 +106,7 @@ namespace Models.Core
         {
             get
             {
-                return GetApsimVersion();
+                return Assembly.GetExecutingAssembly().GetName().Version.ToString();
             }
             set
             {
@@ -136,7 +136,10 @@ namespace Models.Core
             filesReferenced.AddRange(FindAllReferencedFiles());
             DataStore storage = Apsim.Find(this, typeof(DataStore)) as DataStore;
             if (storage != null)
+            {
                 storage.Writer.AddCheckpoint(checkpointName, filesReferenced);
+                storage.Reader.Refresh();
+            }
         }
 
         /// <summary>
@@ -148,7 +151,10 @@ namespace Models.Core
         {
             IDataStore storage = Apsim.Find(this, typeof(DataStore)) as DataStore;
             if (storage != null)
+            {
                 storage.Writer.RevertCheckpoint(checkpointName);
+                storage.Reader.Refresh();
+            }
             List<Exception> creationExceptions = new List<Exception>();
             return FileFormat.ReadFromFile<Simulations>(FileName, out creationExceptions);
         }
@@ -169,18 +175,6 @@ namespace Models.Core
             File.Move(tempFileName, FileName);
             this.FileName = FileName;
             SetFileNameInAllSimulations();
-        }
-
-        /// <summary>Find and return a list of duplicate simulation names.</summary>
-        public List<string> FindDuplicateSimulationNames()
-        {
-            List<IModel> allSims = Apsim.ChildrenRecursively(this, typeof(Simulation));
-            List<string> allSimNames = allSims.Select(s => s.Name).ToList();
-            var duplicates = allSimNames
-                .GroupBy(i => i)
-                .Where(g => g.Count() > 1)
-                .Select(g => g.Key);
-            return duplicates.ToList();
         }
 
         /// <summary>Look through all models. For each simulation found set the filename.</summary>

@@ -214,7 +214,8 @@
                         var model = Apsim.Find(simulations, modelNameToDocument) as IModel;
                         if (model == null)
                             return null;
-                        var createDoc = new CreateParamsInputsOutputsDocCommand(explorerPresenter, model, destinationFolder);
+                        var outputFileName = documentObject["OutputFileName"]?.ToString();
+                        var createDoc = new CreateParamsInputsOutputsDocCommand(explorerPresenter, model, destinationFolder, outputFileName);
                         createDoc.Do(null);
                         href = Path.GetFileName(createDoc.FileNameWritten);
                     }

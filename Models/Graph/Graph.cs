@@ -1,19 +1,13 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Graph.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.Graph
+namespace Models
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Xml.Serialization;
-    using Models.Core;
     using Factorial;
+    using Models.Core;
+    using Models.Storage;
+    using System;
+    using System.Collections.Generic;
     using System.Data;
     using System.Linq;
-    using Models.Storage;
+    using System.Xml.Serialization;
 
     /// <summary>
     /// Represents a graph
@@ -43,45 +37,66 @@ namespace Models.Graph
         /// </remarks>
         public enum LegendPositionType
         {
-            /// <summary>
-            /// Top left corner of the graph
-            /// </summary>
-            TopLeft,
 
             /// <summary>
-            /// Top right corner of the graph
+            /// Place the legend box in the top-left corner.
             /// </summary>
-            TopRight,
+            TopLeft = 0,
 
             /// <summary>
-            /// Bottom left corner of the graph
+            ///     Place the legend box centered at the top.
             /// </summary>
-            BottomLeft,
+            TopCenter = 1,
 
             /// <summary>
-            /// Bottom right corner of the graph
+            /// Place the legend box in the top-right corner.
             /// </summary>
-            BottomRight,
+            TopRight = 2,
 
             /// <summary>
-            /// Left side of the graph, in the middle.
+            /// Place the legend box in the bottom-left corner.
             /// </summary>
-            LeftMiddle,
+            BottomLeft = 3,
 
             /// <summary>
-            /// Right side of the graph, in the middle.
+            /// Place the legend box centered at the bottom.
             /// </summary>
-            RightMiddle,
+            BottomCenter = 4,
 
             /// <summary>
-            /// Top of the graph, in the middle
+            /// Place the legend box in the bottom-right corner.
             /// </summary>
-            TopCenter,
+            BottomRight = 5,
 
             /// <summary>
-            /// Bottom of the graph, in the middle
+            /// Place the legend box in the left-top corner.
             /// </summary>
-            BottomCenter
+            LeftTop = 6,
+
+            /// <summary>
+            /// Place the legend box centered at the left.
+            /// </summary>
+            LeftMiddle = 7,
+
+            /// <summary>
+            /// Place the legend box in the left-bottom corner.
+            /// </summary>
+            LeftBottom = 8,
+
+            /// <summary>
+            /// Place the legend box in the right-top corner.
+            /// </summary>
+            RightTop = 9,
+
+            /// <summary>
+            /// Place the legend box centered at the right.
+            /// </summary>
+            RightMiddle = 10,
+
+            /// <summary>
+            /// Place the legend box in the right-bottom corner.
+            /// </summary>
+            RightBottom = 11
         }
 
         /// <summary>
@@ -180,7 +195,7 @@ namespace Models.Graph
         private void EnsureAllAxesExist()
         {
             // Get a list of all axis types that are referenced by the series.
-            List<Models.Graph.Axis.AxisType> allAxisTypes = new List<Models.Graph.Axis.AxisType>();
+            List<Models.Axis.AxisType> allAxisTypes = new List<Models.Axis.AxisType>();
             foreach (Series series in Series)
             {
                 allAxisTypes.Add(series.XAxis);

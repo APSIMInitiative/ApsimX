@@ -1,7 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 73,
+  "Version": 84,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -130,8 +131,9 @@
       "Children": [
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
-          "FileName": "Observed.xlsx",
-          "FileNameMetadata": null,
+          "FileNames": [
+            "Observed.xlsx"
+          ],
           "SheetNames": [
             "Observed"
           ],
@@ -143,8 +145,9 @@
         },
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
-          "FileName": "LeafSizeObserved.xlsx",
-          "FileNameMetadata": null,
+          "FileNames": [
+            "LeafSizeObserved.xlsx"
+          ],
           "SheetNames": [
             "LeafSize"
           ],
@@ -1670,6 +1673,8 @@
                                 400.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.1,
                                 1.1,
@@ -2098,6 +2103,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Barley",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Barley",
@@ -2115,7 +2121,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 80.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "Surface Organic Matter",
                           "IncludeInDocumentation": true,
@@ -2130,6 +2136,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.3,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -2452,7 +2459,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": true,
+                          "DateTimeAxis": false,
                           "CrossesAtZero": false
                         }
                       ],
@@ -2877,7 +2884,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": true,
+                          "DateTimeAxis": false,
                           "CrossesAtZero": false
                         }
                       ],
@@ -5502,6 +5509,8 @@
                                 200.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.2,
                                 1.2,
@@ -5924,7 +5933,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 80.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "Surface Organic Matter",
                           "IncludeInDocumentation": true,
@@ -5939,6 +5948,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.3,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -5966,6 +5976,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Barley",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Barley",
@@ -8256,6 +8267,8 @@
                                 200.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.23,
                                 1.23,
@@ -8672,6 +8685,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Barley",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Barley",
@@ -8689,7 +8703,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 80.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "Surface Organic Matter",
                           "IncludeInDocumentation": true,
@@ -8704,6 +8718,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.3,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -11062,6 +11077,8 @@
                                 300.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.23,
                                 1.1,
@@ -11453,6 +11470,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Barley",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Barley",
@@ -11470,7 +11488,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 80.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "Surface Organic Matter",
                           "IncludeInDocumentation": true,
@@ -11485,6 +11503,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.3,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -14374,6 +14393,8 @@
                                 200.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.23,
                                 1.23,
@@ -14762,6 +14783,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Barley",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Barley",
@@ -14779,7 +14801,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 80.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "Surface Organic Matter",
                           "IncludeInDocumentation": true,
@@ -14794,6 +14816,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.3,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -16675,7 +16698,7 @@
                       "Children": [
                         {
                           "$type": "Models.Factorial.Factor, Models",
-                          "Specification": null,
+                          "Specification": "",
                           "Name": "Water",
                           "Children": [
                             {
@@ -16711,6 +16734,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.0,
                                     1.15,
@@ -17039,6 +17064,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.0,
                                     1.15,
@@ -17358,6 +17385,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.0,
                                     1.15,
@@ -17677,6 +17706,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.0,
                                     1.15,
@@ -18083,6 +18114,8 @@
                                 300.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.0,
                                 1.15,
@@ -18549,6 +18582,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Barley",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Barley",
@@ -18566,7 +18600,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 80.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "Surface Organic Matter",
                           "IncludeInDocumentation": true,
@@ -18581,6 +18615,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.3,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -20525,7 +20560,7 @@
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factor, Models",
-                      "Specification": null,
+                      "Specification": "",
                       "Name": "NProp",
                       "Children": [
                         {
@@ -20904,6 +20939,8 @@
                                 300.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.0,
                                 1.1,
@@ -20965,10 +21002,10 @@
                                   "LL": [
                                     0.1,
                                     0.1,
-                                    0.157,
+                                    0.16,
+                                    0.17,
                                     0.173,
-                                    0.173,
-                                    0.165
+                                    0.17
                                   ],
                                   "KL": [
                                     0.1,
@@ -21296,6 +21333,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Barley",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Barley",
@@ -21313,7 +21351,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 15.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "Surface Organic Matter",
                           "IncludeInDocumentation": true,
@@ -21328,6 +21366,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.3,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -22334,7 +22373,7 @@
                       "Children": [
                         {
                           "$type": "Models.Factorial.Factor, Models",
-                          "Specification": null,
+                          "Specification": "",
                           "Name": "Sow",
                           "Children": [
                             {
@@ -22684,6 +22723,8 @@
                                 200.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.23,
                                 1.23,
@@ -23100,6 +23141,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Barley",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Barley",
@@ -23117,7 +23159,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 80.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "Surface Organic Matter",
                           "IncludeInDocumentation": true,
@@ -23132,6 +23174,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.3,
                           "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
@@ -24197,6 +24240,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.23,
                                     1.23,
@@ -24648,6 +24693,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Barley",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "Barley",
@@ -24665,7 +24711,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 80.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "Surface Organic Matter",
                               "IncludeInDocumentation": true,
@@ -24680,6 +24726,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.3,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -26386,6 +26433,8 @@
                                     300.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.38,
                                     1.34,
@@ -26909,7 +26958,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 100.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": false,
@@ -26924,6 +26973,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.3,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -26949,6 +26999,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Barley",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "Barley",
@@ -27039,7 +27090,7 @@
                       ],
                       "LegendPosition": 3,
                       "LegendOrientation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "LeafNumberTimeSeries",
                       "Children": [
@@ -28164,7 +28215,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 100.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": false,
@@ -28179,6 +28230,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.3,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -28243,6 +28295,8 @@
                                     300.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.33,
                                     1.36,
@@ -28657,6 +28711,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Barley",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "Barley",
@@ -29872,7 +29927,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 100.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": false,
@@ -29887,6 +29942,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.3,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -29947,6 +30003,8 @@
                                     350.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.54,
                                     1.41,
@@ -30315,6 +30373,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Barley",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "Barley",
@@ -30416,7 +30475,7 @@
                       ],
                       "LegendPosition": 3,
                       "LegendOrientation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "LeafNumberTimeSeries",
                       "Children": [
@@ -31718,6 +31777,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     0.93,
                                     0.97,
@@ -32259,6 +32320,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Barley",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "Barley",
@@ -32276,7 +32338,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 80.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": true,
@@ -32291,6 +32353,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -34540,6 +34603,8 @@
                                     300.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     0.9,
                                     1.01,
@@ -34997,6 +35062,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Barley",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "Barley",
@@ -35014,7 +35080,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 80.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": true,
@@ -35029,6 +35095,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -35685,6 +35752,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     0.93,
                                     0.97,
@@ -36306,6 +36375,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Barley",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "Barley",
@@ -36323,7 +36393,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 80.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": true,
@@ -36338,6 +36408,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -36985,6 +37056,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.3,
                                     1.3,
@@ -37526,6 +37599,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Barley",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "Barley",
@@ -37543,7 +37617,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 80.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": true,
@@ -37558,6 +37632,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -38340,6 +38415,8 @@
                                     300.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.38,
                                     1.34,
@@ -38811,7 +38888,7 @@
                               "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 100.0,
-                              "FractionFaecesAdded": 0.5,
+                              "FractionFaecesAdded": 1.0,
                               "ResourceName": "SurfaceOrganicMatter",
                               "Name": "SurfaceOrganicMatter",
                               "IncludeInDocumentation": false,
@@ -38821,6 +38898,7 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Barley",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "Barley",
@@ -38883,6 +38961,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.3,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -39707,6 +39786,8 @@
                             200.0
                           ],
                           "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
                           "BD": [
                             1.23,
                             1.23,
@@ -40087,6 +40168,7 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Barley",
+                      "IsAlive": false,
                       "IsEnding": false,
                       "DaysAfterEnding": 0,
                       "ResourceName": "Barley",
@@ -40104,7 +40186,7 @@
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 80.0,
-                      "FractionFaecesAdded": 0.5,
+                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "Surface Organic Matter",
                       "IncludeInDocumentation": true,
@@ -40119,6 +40201,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.3,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",

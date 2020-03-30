@@ -1,12 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="DGArc.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace ApsimNG.Classes.DirectedGraph
+﻿namespace ApsimNG.Classes.DirectedGraph
 {
     using Cairo;
-    using Models.Graph;
+    using Models;
     using OxyPlot;
     using OxyPlot.GtkSharp;
     using System;

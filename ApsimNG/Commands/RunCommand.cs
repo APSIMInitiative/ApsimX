@@ -139,13 +139,15 @@
         /// <param name="e"></param>
         private void OnTimerTick(object sender, ElapsedEventArgs e)
         {
-            if (jobRunner.TotalNumberOfSimulations > 0)
+            if (jobRunner == null)
+                timer?.Stop();
+            else if (jobRunner?.TotalNumberOfSimulations > 0)
             {
                 explorerPresenter.MainPresenter.ShowMessage(jobName + " running (" +
-                         jobRunner.NumberOfSimulationsCompleted + " of " +
-                         (jobRunner.TotalNumberOfSimulations) + " completed)", Simulation.MessageType.Information);
+                         jobRunner?.NumberOfSimulationsCompleted + " of " +
+                         (jobRunner?.TotalNumberOfSimulations) + " completed)", Simulation.MessageType.Information);
 
-                explorerPresenter.MainPresenter.ShowProgress(Convert.ToInt32(jobRunner.PercentComplete(), CultureInfo.InvariantCulture));
+                explorerPresenter.MainPresenter.ShowProgress(Convert.ToInt32(jobRunner?.PercentComplete(), CultureInfo.InvariantCulture));
             }
         }
     }

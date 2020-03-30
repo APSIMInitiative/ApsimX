@@ -33,7 +33,7 @@ annual_average_pet = 810.1           !Average annual PET (mm/yr)
 average_windspeed = 3.0              !Average windspeed (m/s)
 
      Location           xDate            year             day            rain            mint            maxt            avgt            radn            wind            evap              vp              rh           rhmin           rhmax
-           ()              ()              ()              ()            (mm)            (oC)            (oC)            (oC)        (MJ/m^2)           (m/s)            (mm)           (hPa)             (%)             (%)             (%)
+           ()    (dd/MM/yyyy)              ()              ()            (mm)            (oC)            (oC)            (oC)        (MJ/m^2)           (m/s)            (mm)           (hPa)             (%)             (%)             (%)
 VCS_Winchmore      01/01/1977            1977               1             0.0             8.5            15.4            11.9            27.9             3.2             3.5            10.2            72.4            58.3            91.9
 VCS_Winchmore      02/01/1977            1977               2             1.1             4.2            20.0            12.1            27.0             3.2             3.5            10.8            71.7            46.2           100.0
 VCS_Winchmore      03/01/1977            1977               3             1.4             9.5            21.7            15.6            30.2             3.2             3.6            13.2            73.2            50.8           100.0

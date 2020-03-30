@@ -1,14 +1,9 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="DirectedGraphView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using ApsimNG.Classes.DirectedGraph;
     using Cairo;
     using Gtk;
-    using Models.Graph;
+    using Models;
     using System;
     using System.Collections.Generic;
     using System.Drawing;

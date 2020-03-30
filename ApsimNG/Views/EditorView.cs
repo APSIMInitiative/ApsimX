@@ -1,19 +1,11 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="EditorView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using System;
-    using System.Collections.Generic;
     using System.Reflection;
     using EventArguments;
     using Gtk;
     using Mono.TextEditor;
     using Utility;
-    using Presenters;
     using Cairo;
     using System.Globalization;
     using Mono.TextEditor.Highlighting;
@@ -230,6 +222,7 @@ namespace UserInterface.Views
                         LoadReportSyntaxMode();
                     textEditor.Document.MimeType = "text/x-apsimreport";
                 }
+                textEditor.Document.SetNotDirtyState();
             }
         }
 
