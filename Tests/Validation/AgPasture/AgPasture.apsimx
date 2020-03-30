@@ -77772,14 +77772,12 @@
                     },
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                      "Canopies": [],
                       "InitialResidueName": "Sward",
                       "InitialResidueType": "grass",
                       "InitialResidueMass": 1000.0,
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 15.0,
-                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": true,
@@ -78265,7 +78263,7 @@
                         "[Weather].Season as Season",
                         "sum of [AGPWhiteClover].HarvestedWt from [Clock].StartOfSimulation to [Clock].EndOfSimulation as WhiteClover",
                         "sum of [AGPRyegrass].HarvestedWt from [Clock].StartOfSimulation to [Clock].EndOfSimulation as Ryegrass",
-                        "mean of ([AGPWhiteClover].AboveGroundWt / ([AGPWhiteClover].AboveGroundWt + [AGPRyegrass].AboveGroundWt + 1.0)) from [Clock].StartOfSimulation to [Clock].EndOfSimulation as PropCloverHarvested"
+                        "mean of ([AGPWhiteClover].HarvestedWt / ([AGPWhiteClover].HarvestedWt + [AGPRyegrass].HarvestedWt + 1.0)) on [SimpleGrazing].Grazed from [Clock].StartOfSimulation to [Clock].EndOfSimulation as PropCloverHarvested"
                       ],
                       "EventNames": [
                         "[Clock].EndOfSimulation"
@@ -78796,14 +78794,12 @@
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-              "Canopies": [],
               "InitialResidueName": "Sward",
               "InitialResidueType": "grass",
               "InitialResidueMass": 1000.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 15.0,
-              "FractionFaecesAdded": 1.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
               "IncludeInDocumentation": true,
