@@ -2,8 +2,10 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using System;
 
     /// <summary>AgPasture class for holding a biomass weight, N content and digestibility.</summary>
+    [Serializable]
     public class AGPBiomass
     {
         /// <summary>Dry matter weight.</summary>
@@ -21,5 +23,9 @@
         /// <summary>Digestibility of biomass.</summary>
         [Units("kg/kg")]
         public double Digestibility { get; set; }
+
+        /// <summary>Average metabolisable energy concentration of standing herbage (MJ/kgDM).</summary>
+        [Units("MJ/kg")]
+        public double ME { get { return PastureSpecies.PotentialMEOfHerbage * Digestibility; } }
     }
 }

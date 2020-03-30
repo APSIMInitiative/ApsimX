@@ -117,6 +117,7 @@
                 Tissue[0].DMLayer[layer] = initialDM * iniRootFraction[layer];
                 Tissue[0].NamountLayer[layer] = NConcOptimum * Tissue[0].DMLayer[layer];
             }
+            Tissue[0].UpdateDM();
         }
 
         #region Root specific characteristics  -----------------------------------------------------------------------------
@@ -213,7 +214,7 @@
             {
                 double result = 0.0;
                 for (int t = 0; t < Tissue.Length; t++)
-                    result += Tissue[t].DM;
+                    result += Tissue[t].dm.Wt;
 
                 return result;
             }
@@ -226,7 +227,7 @@
             {
                 double result = 0.0;
                 for (int t = 0; t < Tissue.Length - 1; t++)
-                    result += Tissue[t].DM;
+                    result += Tissue[t].dm.Wt;
 
                 return result;
             }
@@ -236,7 +237,7 @@
         /// <remarks>Last tissues is assumed to represent dead material.</remarks>
         internal double DMDead
         {
-            get { return Tissue[Tissue.Length - 1].DM; }
+            get { return Tissue[Tissue.Length - 1].dm.Wt; }
         }
 
         /// <summary>The total N amount in this tissue (kg/ha).</summary>
@@ -246,7 +247,7 @@
             {
                 double result = 0.0;
                 for (int t = 0; t < Tissue.Length; t++)
-                    result += Tissue[t].Namount;
+                    result += Tissue[t].dm.N;
 
                 return result;
             }
@@ -259,7 +260,7 @@
             {
                 double result = 0.0;
                 for (int t = 0; t < Tissue.Length - 1; t++)
-                    result += Tissue[t].Namount;
+                    result += Tissue[t].dm.N;
 
                 return result;
             }
@@ -269,7 +270,7 @@
         /// <remarks>Last tissues is assumed to represent dead material.</remarks>
         internal double NDead
         {
-            get { return Tissue[Tissue.Length - 1].Namount; }
+            get { return Tissue[Tissue.Length - 1].dm.N; }
         }
 
         /// <summary>Gets the average N concentration in this organ (kg/kg).</summary>
@@ -479,7 +480,7 @@
             get
             {
                 double[] result = new double[nLayers];
-                double totalRootLength = Tissue[0].DM * mySpecificRootLength; // m root/m2 
+                double totalRootLength = Tissue[0].dm.Wt * mySpecificRootLength; // m root/m2 
                 totalRootLength *= 0.0000001; // convert into mm root/mm2 soil)
                 for (int layer = 0; layer < result.Length; layer++)
                 {
@@ -531,6 +532,8 @@
             var rootFractions = CurrentRootDistributionTarget();
             for (int i = 0; i < nLayers; i++)
                 Tissue[0].DMLayer[i] = rootWt * rootFractions[i];
+
+            Tissue[0].UpdateDM();
         }
 
         /// <summary>Reset all amounts to zero in all tissues of this organ.</summary>
@@ -538,9 +541,7 @@
         {
             for (int t = 0; t < Tissue.Length; t++)
             {
-                Tissue[t].DM = 0.0;
-                Tissue[t].Namount = 0.0;
-                Tissue[t].Pamount = 0.0;
+                Tissue[t].Reset();
                 DoCleanTransferAmounts();
             }
         }
@@ -577,6 +578,7 @@
                         Tissue[t].DMLayer[layer] *= fractionRemaining;
                         Tissue[t].NamountLayer[layer] *= fractionRemaining;
                     }
+                    Tissue[t].UpdateDM();
                 }
             }
             else
@@ -588,8 +590,9 @@
                         Tissue[Tissue.Length - 1].DMLayer[layer] += Tissue[t].DMLayer[layer];
                         Tissue[Tissue.Length - 1].NamountLayer[layer] += Tissue[t].NamountLayer[layer];
                     }
-                    Tissue[t].DM = 0.0;
-                    Tissue[t].Namount = 0.0;
+                    Tissue[Tissue.Length - 1].UpdateDM();
+
+                    Tissue[t].Reset();
                 }
             }
         }
@@ -623,8 +626,8 @@
             {
                 if (turnoverRate[t] > 0.0)
                 {
-                    turnoverDM = Tissue[t].DM * turnoverRate[t];
-                    turnoverN = Tissue[t].Namount * turnoverRate[t];
+                    turnoverDM = Tissue[t].dm.Wt * turnoverRate[t];
+                    turnoverN = Tissue[t].dm.N * turnoverRate[t];
                     Tissue[t].DMTransferedOut += turnoverDM;
                     Tissue[t].NTransferedOut += turnoverN;
 
@@ -642,7 +645,7 @@
                         }
 
                         // get the amounts remobilisable (luxury N)
-                        double totalLuxuryN = (Tissue[t].DM + Tissue[t].DMTransferedIn - Tissue[t].DMTransferedOut) * (NconcLive - NConcOptimum);
+                        double totalLuxuryN = (Tissue[t].dm.Wt + Tissue[t].DMTransferedIn - Tissue[t].DMTransferedOut) * (NconcLive - NConcOptimum);
                         Tissue[t].NRemobilisable = Math.Max(0.0, totalLuxuryN * Tissue[t + 1].FractionNLuxuryRemobilisable);
                     }
                     else

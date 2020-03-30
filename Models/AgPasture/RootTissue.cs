@@ -2,7 +2,6 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Interfaces;
-    using Models.PMF;
     using Models.Soils;
     using System;
     using System.Linq;
@@ -40,45 +39,11 @@
 
         ////- State properties >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        /// <summary>Gets or sets the dry matter weight (kg/ha).</summary>
-        internal override double DM
-        {
-            get { return DMLayer.Sum(); }
-            set
-            {
-                double[] prevRootFraction = FractionWt;
-                for (int layer = 0; layer < nLayers; layer++)
-                    DMLayer[layer] = value * prevRootFraction[layer];
-            }
-        }
-
         /// <summary>Gets or sets the DM amount for each layer (kg/ha).</summary>
         internal double[] DMLayer;
 
-        /// <summary>Gets or sets the nitrogen content (kg/ha).</summary>
-        internal override double Namount
-        {
-            get { return NamountLayer.Sum(); }
-            set
-            {
-                for (int layer = 0; layer < nLayers; layer++)
-                    NamountLayer[layer] = value * FractionWt[layer];
-            }
-        }
-
         /// <summary>Gets or sets the N content for each layer (kg/ha).</summary>
         internal double[] NamountLayer;
-
-        /// <summary>Gets or sets the phosphorus content (kg/ha).</summary>
-        internal override double Pamount
-        {
-            get { return PamountLayer.Sum(); }
-            set
-            {
-                for (int layer = 0; layer < nLayers; layer++)
-                    PamountLayer[layer] = value * FractionWt[layer];
-            }
-        }
 
         /// <summary>Gets or sets the P content for each layer (kg/ha).</summary>
         internal double[] PamountLayer { get; set; }
@@ -102,7 +67,7 @@
             {
                 double[] result = new double[nLayers];
                 for (int layer = 0; layer < nLayers; layer++)
-                    result[layer] = MathUtilities.Divide(DMLayer[layer], DM, 0.0);
+                    result[layer] = MathUtilities.Divide(DMLayer[layer], dm.Wt, 0.0);
                 return result;
             }
         }
@@ -113,8 +78,15 @@
         internal override void DoUpdateTissue()
         {
             // removals first as they do not change distribution over the profile
-            DM -= DMTransferedOut;
-            Namount -= NTransferedOut;
+            var amountDMToRemove = dm.Wt - DMTransferedOut;
+            var amountNToRemove = dm.N - NTransferedOut;
+            double[] prevRootFraction = FractionWt;
+            for (int layer = 0; layer < nLayers; layer++)
+                DMLayer[layer] = amountDMToRemove * prevRootFraction[layer];
+
+            UpdateDM();
+            for (int layer = 0; layer < nLayers; layer++)
+                NamountLayer[layer] = amountNToRemove * FractionWt[layer];
 
             // additions need to consider distribution over the profile
             DMTransferedIn = DMLayersTransferedIn.Sum();
@@ -127,6 +99,7 @@
                     NamountLayer[layer] += NLayersTransferedIn[layer] - (NRemobilised * (NLayersTransferedIn[layer] / NTransferedIn));
                 }
             }
+            UpdateDM();
         }
 
         /// <summary>Adds a given amount of detached root material (DM and N) to the soil's FOM pool.</summary>
@@ -159,6 +132,24 @@
                 FOMData.Layer = FOMdataLayer;
                 nutrientModel.DoIncorpFOM(FOMData);
             }
+        }
+
+        public void UpdateDM()
+        {
+            dm.Wt = DMLayer.Sum();
+            dm.N = NamountLayer.Sum();
+        }
+
+        public override void ResetTo(double dmAmount, double nAmount)
+        {
+            base.ResetTo(dmAmount, nAmount);
+            throw new NotImplementedException("Not implemented: Need to check how root reset works.");
+        }
+
+        public override void Reset()
+        {
+            base.Reset();
+            throw new NotImplementedException("Not implemented: Need to check how root reset works.");
         }
     }
 }

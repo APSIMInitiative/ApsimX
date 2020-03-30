@@ -1927,6 +1927,10 @@
                 new Tuple<string, string>(".StandingDeadHerbageWt",  ".HarvestableDead.Wt"),
                 new Tuple<string, string>(".StandingDeadHerbageN",   ".HarvestableDead.N"),
                 new Tuple<string, string>(".HerbageDigestibility",   ".Harvestable.Digestibility")
+                // new Tuple<string, string>(".Leaf.DM",                ".Leaf.DM.Wt"),
+                // new Tuple<string, string>(".Leaf.Namount",           ".Leaf.DM.N"),
+                // new Tuple<string, string>(".Stem.DM",                ".Stem.DM.Wt"),
+                // new Tuple<string, string>(".Stem.Namount",           ".Stem.DM.N")
             };
             JsonUtilities.RenameVariablesInReportAndManager(root, changes);
         }

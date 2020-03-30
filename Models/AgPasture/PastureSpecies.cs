@@ -2676,13 +2676,6 @@
             get { return PotentialMEOfHerbage * defoliatedDigestibility; }
         }
 
-        /// <summary>Gets the average metabolisable energy concentration of standing herbage (MJ/kgDM).</summary>
-        //[Description("Average metabolisable energy concentration of standing herbage")]
-        [Units("MJ/kg")]
-        public double HerbageME
-        {
-            get { return PotentialMEOfHerbage * Harvestable.Digestibility; }
-        }
 
         #region Tissue outputs  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -3357,7 +3350,7 @@
             {
                 //only relevant for leaves+stems
                 double currentGreenDM = leaf.DMLive + stem.DMLive;
-                double currentMatureDM = leaf.Tissue[2].DM + stem.Tissue[2].DM;
+                double currentMatureDM = leaf.Tissue[2].dm.Wt + stem.Tissue[2].dm.Wt;
                 double dmGreenToBe = currentGreenDM - (currentMatureDM * gama);
                 double minimumStandingLive = leaf.MinimumLiveDM + stem.MinimumLiveDM;
                 if (dmGreenToBe < minimumStandingLive)
