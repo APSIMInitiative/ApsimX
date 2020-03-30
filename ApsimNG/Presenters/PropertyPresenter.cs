@@ -717,7 +717,7 @@ namespace UserInterface.Presenters
         /// <returns>A list of life cycles.</returns>
         private string[] GetLifeCycleNames(Zone zone)
         {
-            List<IModel> LifeCycles = Apsim.Children(zone, typeof(LifeCycle));
+            List<IModel> LifeCycles = Apsim.FindAll(zone, typeof(LifeCycle));
             if (LifeCycles.Count > 0)
             {
                 string[] Namelist = new string[LifeCycles.Count];

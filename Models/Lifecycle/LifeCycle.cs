@@ -1,6 +1,7 @@
 ﻿namespace Models.LifeCycle
 {
     using Models.Core;
+    using Models.Interfaces;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
@@ -24,6 +25,10 @@
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
+    [ValidParent(ParentType = typeof(LifeCycle))]
+    [ValidParent(ParentType = typeof(IPlant))]
+    [ValidParent(ParentType = typeof(ISoil))]
+    [ValidParent(ParentType = typeof(ISurfaceOrganicMatter))]
     public class LifeCycle : Model
     {
         [Link]
@@ -32,6 +37,9 @@
         /// <summary>List of LifeCyclePhases that make up the LifeCycle model</summary>
         [JsonIgnore]
         public List<LifeCyclePhase> LifeCyclePhases = null;
+
+        /// <summary>Occurs when a plant is about to be sown.</summary>
+        public event EventHandler LifeCycleProcessComplete;
 
         /// <summary>List of the names of LifeCyclePhases</summary>
         [JsonIgnore]
@@ -99,6 +107,9 @@
             {
                 stage.Process();
             }
+            // Invoke completion event.
+            if (LifeCycleProcessComplete != null)
+                LifeCycleProcessComplete.Invoke(this, new EventArgs());
         }
 
         /// <summary>Method to bring a new cohort of individuls to the specified LifeCyclePhase</summary>
@@ -107,7 +118,7 @@
         {
             LifeCyclePhase InfestingPhase = Immigrants.BelongsToPhase;
             InfestingPhase.NewCohort(Immigrants.Population, Immigrants.ChronologicalAge, Immigrants.PhysiologicalAge);
-            mySummary.WriteMessage(this, "An infestation of  " + Immigrants.Population + " " + this.Name + " " + Immigrants.BelongsToPhase.Name + "'s occured today, just now :-)");
+            mySummary.WriteMessage(this, "An infestation of  " + Immigrants.Population + " " + Apsim.FullPath(this) + " " + Immigrants.BelongsToPhase.Name + "'s occured today, just now :-)");
         }
     }
 }
