@@ -104,7 +104,11 @@
                 AutoDocumentation.DocumentModel(modelToDocument, tags, headingLevel: 1, indent: 0);
             else
             {
-                var clonedModel = Apsim.Clone(modelToDocument);
+                IModel clonedModel;
+                if (modelToDocument is Simulation sim)
+                    clonedModel = new Models.Core.Run.SimulationDescription(sim).ToSimulation();
+                else
+                    clonedModel = Apsim.Clone(modelToDocument);
                 try
                 {
                     explorerPresenter.ApsimXFile.Links.Resolve(clonedModel, true);

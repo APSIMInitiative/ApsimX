@@ -477,6 +477,8 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\MigrantDestinationPhase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ProgenyDestinationPhase.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Infestation.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LifeCyclePhase.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\WeatherSampler.png" />
@@ -789,6 +791,7 @@
     <EmbeddedResource Include="Resources\Sounds\Fail.wav" />
     <EmbeddedResource Include="Resources\TreeViewImages\SimpleGrazing.png" />
     <EmbeddedResource Include="Presenters\CLEM\Chart.min.js" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AccumulateCohortExpression.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />
