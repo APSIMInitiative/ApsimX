@@ -23,11 +23,11 @@ namespace Models.AgPasture
 
         /// <summary>Dry matter (kg/ha).</summary>
         [Units("kg/ha")]
-        public double Wt { get { return tissues.Sum(tissue => tissue.dm.Wt); } }
+        public double Wt { get { return tissues.Sum(tissue => tissue.DM.Wt); } }
 
         /// <summary>Nitrogen content (kg/ha).</summary>
         [Units("kg/ha")]
-        public double N { get { return tissues.Sum(tissue => tissue.dm.N); } }
+        public double N { get { return tissues.Sum(tissue => tissue.DM.N); } }
 
     }
 }

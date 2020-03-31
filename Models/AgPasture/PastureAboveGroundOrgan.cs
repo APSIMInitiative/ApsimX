@@ -93,7 +93,7 @@
             {
                 double result = 0.0;
                 for (int t = 0; t < Tissue.Length; t++)
-                    result += Tissue[t].dm.Wt;
+                    result += Tissue[t].DM.Wt;
 
                 return result;
             }
@@ -106,7 +106,7 @@
             {
                 double result = 0.0;
                 for (int t = 0; t < Tissue.Length - 1; t++)
-                    result += Tissue[t].dm.Wt;
+                    result += Tissue[t].DM.Wt;
 
                 return result;
             }
@@ -116,7 +116,7 @@
         /// <remarks>Last tissues is assumed to represent dead material.</remarks>
         public double DMDead
         {
-            get { return Tissue[Tissue.Length - 1].dm.Wt; }
+            get { return Tissue[Tissue.Length - 1].DM.Wt; }
         }
 
         /// <summary>The total harvestable dry matter (kg/ha).</summary>
@@ -144,7 +144,7 @@
             {
                 double result = 0.0;
                 for (int t = 0; t < Tissue.Length; t++)
-                    result += Tissue[t].dm.N;
+                    result += Tissue[t].DM.N;
 
                 return result;
             }
@@ -157,7 +157,7 @@
             {
                 double result = 0.0;
                 for (int t = 0; t < Tissue.Length - 1; t++)
-                    result += Tissue[t].dm.N;
+                    result += Tissue[t].DM.N;
 
                 return result;
             }
@@ -167,7 +167,7 @@
         /// <remarks>Last tissues is assumed to represent dead material.</remarks>
         public double NDead
         {
-            get { return Tissue[Tissue.Length - 1].dm.N; }
+            get { return Tissue[Tissue.Length - 1].DM.N; }
         }
 
         /// <summary>Gets the average N concentration in this organ (kg/kg).</summary>
@@ -275,7 +275,7 @@
             {
                 double digestableDM = 0.0;
                 for (int t = 0; t < Tissue.Length; t++)
-                    digestableDM += Tissue[t].Digestibility * Tissue[t].dm.Wt;
+                    digestableDM += Tissue[t].Digestibility * Tissue[t].DM.Wt;
 
                 return MathUtilities.Divide(digestableDM, DMTotal, 0.0);
             }
@@ -288,7 +288,7 @@
             {
                 double digestableDM = 0.0;
                 for (int t = 0; t < Tissue.Length - 1; t++)
-                    digestableDM += Tissue[t].Digestibility * Tissue[t].dm.Wt;
+                    digestableDM += Tissue[t].Digestibility * Tissue[t].DM.Wt;
 
                 return MathUtilities.Divide(digestableDM, DMLive, 0.0);
             }
@@ -389,7 +389,7 @@
                 double fractionRemaining = 1.0 - fractionToRemove;
                 for (int t = 0; t < Tissue.Length - 1; t++)
                 {
-                    DeadTissue.AddBiomass(Tissue[t].dm.Wt * fractionToRemove, Tissue[t].dm.N * fractionToRemove);
+                    DeadTissue.AddBiomass(Tissue[t].DM.Wt * fractionToRemove, Tissue[t].DM.N * fractionToRemove);
                     Tissue[t].RemoveBiomass(fractionToRemove, 0.0);
                 }
             }
@@ -397,7 +397,7 @@
             {
                 for (int t = 0; t < Tissue.Length - 1; t++)
                 {
-                    DeadTissue.AddBiomass(Tissue[t].dm.Wt, Tissue[t].dm.N);
+                    DeadTissue.AddBiomass(Tissue[t].DM.Wt, Tissue[t].DM.N);
                     Tissue[t].Reset();
                 }
             }
@@ -416,8 +416,8 @@
             {
                 if (turnoverRate[t] > 0.0)
                 {
-                    turnedoverDM = Tissue[t].dm.Wt * turnoverRate[t];
-                    turnedoverN = Tissue[t].dm.N * turnoverRate[t];
+                    turnedoverDM = Tissue[t].DM.Wt * turnoverRate[t];
+                    turnedoverN = Tissue[t].DM.N * turnoverRate[t];
                     Tissue[t].DMTransferedOut += turnedoverDM;
                     Tissue[t].NTransferedOut += turnedoverN;
 
@@ -428,7 +428,7 @@
                         Tissue[t + 1].NTransferedIn += turnedoverN;
 
                         // get the amounts remobilisable (luxury N)
-                        double totalLuxuryN = (Tissue[t].dm.Wt + Tissue[t].DMTransferedIn - Tissue[t].DMTransferedOut) * (NconcLive - NConcOptimum);
+                        double totalLuxuryN = (Tissue[t].DM.Wt + Tissue[t].DMTransferedIn - Tissue[t].DMTransferedOut) * (NconcLive - NConcOptimum);
                         Tissue[t].NRemobilisable = Math.Max(0.0, totalLuxuryN * Tissue[t].FractionNLuxuryRemobilisable);
                     }
                     else

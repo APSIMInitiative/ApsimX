@@ -12,6 +12,7 @@
     using APSIM.Shared.Utilities;
     using Models.Functions;
     using Models.PMF.Interfaces;
+    using Models.Surface;
 
     /// <summary>
     /// # [Name]
@@ -42,6 +43,10 @@
         /// <summary>Link to the Soil (provides soil information).</summary>
         [Link]
         private Soil mySoil = null;
+
+        /// <summary>Link to the surface organic matter mode.</summary>
+        [Link]
+        private SurfaceOrganicMatter surfaceOrganicMatter = null;
 
         /// <summary>Link to Apsim's Resource Arbitrator module.</summary>
         [Link(IsOptional = true)]
@@ -1812,23 +1817,6 @@
             }
         }
 
-        /// <summary>Gets the dry matter weight of roots in each soil layer ().</summary>
-        //[Description("Dry matter weight of roots in each soil layer")]
-        [Units("kg/ha")]
-        public double[] RootLayerWt
-        {
-            get
-            {
-                double[] rootLayerWt = root[0].Tissue[0].DMLayer;
-                //double[] rootLayerWt = new double[nLayers];
-                //foreach (PastureBelowGroundOrgan root in roots)
-                //    for (int layer = 0; layer < nLayers; layer++)
-                //        rootLayerWt[layer] += root.Tissue[0].DMLayer[layer];
-                // TODO: currently only the roots at the main/home zone are considered, must add the other zones too
-                return rootLayerWt;
-            }
-        }
-
         ////- N amount outputs >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Gets the total amount of N in the plant (kgN/ha).</summary>
@@ -2753,7 +2741,7 @@
                                         WaterAvailableMethod, NitrogenAvailableMethod,
                                         KNH4, KNO3, MaximumNUptake, kuNH4, kuNO3,
                                         ReferenceKSuptake, ReferenceRLD, ExponentSoilMoisture,
-                                        mySoil));
+                                        mySoil, surfaceOrganicMatter));
 
             // add any other zones that have been given at initialisation
             foreach (RootZone rootZone in RootZonesInitialisations)
@@ -2776,7 +2764,7 @@
                                          WaterAvailableMethod, NitrogenAvailableMethod,
                                          KNH4, KNO3, MaximumNUptake, kuNH4, kuNO3,
                                          ReferenceKSuptake, ReferenceRLD, ExponentSoilMoisture,
-                                         zoneSoil));
+                                         zoneSoil, surfaceOrganicMatter));
             }
 
             // initialise soil water and N variables
@@ -3350,7 +3338,7 @@
             {
                 //only relevant for leaves+stems
                 double currentGreenDM = leaf.DMLive + stem.DMLive;
-                double currentMatureDM = leaf.Tissue[2].dm.Wt + stem.Tissue[2].dm.Wt;
+                double currentMatureDM = leaf.Tissue[2].DM.Wt + stem.Tissue[2].DM.Wt;
                 double dmGreenToBe = currentGreenDM - (currentMatureDM * gama);
                 double minimumStandingLive = leaf.MinimumLiveDM + stem.MinimumLiveDM;
                 if (dmGreenToBe < minimumStandingLive)
@@ -3396,7 +3384,8 @@
 
             // - Roots (only 2 tissues)
             turnoverRates = new double[] { gamaR, 1.0 };
-            root[0].DoTissueTurnover(turnoverRates);
+
+            var rootBiomassDetached = root[0].DoTissueTurnover(turnoverRates);
             //foreach (PastureBelowGroundOrgan root in roots)
             //    root.DoTissueTurnover(turnoverRates);
             // TODO: currently only the roots at the main/home zone are considered, must add the other zones too
@@ -3414,8 +3403,8 @@
             // Get the amounts detached today
             detachedShootDM = leaf.DMDetached + stem.DMDetached + stolon.DMDetached;
             detachedShootN = leaf.NDetached + stem.NDetached + stolon.NDetached;
-            detachedRootDM = root[0].DMDetached;
-            detachedRootN = root[0].NDetached;
+            detachedRootDM = rootBiomassDetached.Wt;
+            detachedRootN = rootBiomassDetached.N;
             //foreach (PastureBelowGroundOrgan root in roots)
             //{
             //    detachedRootDM += root.DMDetached;
@@ -3439,11 +3428,14 @@
                 double toStolon = fractionToShoot * FractionToStolon;
                 double toRoot = 1.0 - fractionToShoot;
 
+                double dmToRoot = 0;
+                double nToRoot = 0;
+
                 // Allocate new DM growth to the growing tissues
                 leaf.Tissue[0].DMTransferedIn += toLeaf * dGrowthAfterNutrientLimitations;
                 stem.Tissue[0].DMTransferedIn += toStem * dGrowthAfterNutrientLimitations;
                 stolon.Tissue[0].DMTransferedIn += toStolon * dGrowthAfterNutrientLimitations;
-                root[0].Tissue[0].DMTransferedIn += toRoot * dGrowthAfterNutrientLimitations;
+                dmToRoot = toRoot * dGrowthAfterNutrientLimitations;
                 // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
 
                 // Evaluate allocation of N
@@ -3458,7 +3450,7 @@
                         leaf.Tissue[0].NTransferedIn += dNewGrowthN * toLeaf * leaf.NConcMaximum / Nsum;
                         stem.Tissue[0].NTransferedIn += dNewGrowthN * toStem * stem.NConcMaximum / Nsum;
                         stolon.Tissue[0].NTransferedIn += dNewGrowthN * toStolon * stolon.NConcMaximum / Nsum;
-                        root[0].Tissue[0].NTransferedIn += dNewGrowthN * toRoot * root[0].NConcMaximum / Nsum;
+                        nToRoot = dNewGrowthN * toRoot * root[0].NConcMaximum / Nsum;
                         // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
                     }
                     else
@@ -3477,7 +3469,7 @@
                         leaf.Tissue[0].NTransferedIn += dNewGrowthN * toLeaf * leaf.NConcOptimum / Nsum;
                         stem.Tissue[0].NTransferedIn += dNewGrowthN * toStem * stem.NConcOptimum / Nsum;
                         stolon.Tissue[0].NTransferedIn += dNewGrowthN * toStolon * stolon.NConcOptimum / Nsum;
-                        root[0].Tissue[0].NTransferedIn += dNewGrowthN * toRoot * root[0].NConcOptimum / Nsum;
+                        nToRoot = dNewGrowthN * toRoot * root[0].NConcOptimum / Nsum;
                         // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
                     }
                     else
@@ -3486,10 +3478,11 @@
                         throw new ApsimXException(this, "Allocation of new growth could not be completed");
                     }
                 }
+                var rootGrowth = root[0].Tissue[0].SetNewGrowthAllocation(dmToRoot, nToRoot);
 
                 // Update N variables
                 dGrowthShootN = leaf.Tissue[0].NTransferedIn + stem.Tissue[0].NTransferedIn + stolon.Tissue[0].NTransferedIn;
-                dGrowthRootN = root[0].Tissue[0].NTransferedIn;
+                dGrowthRootN = rootGrowth.N;
                 //foreach (PastureBelowGroundOrgan root in roots)
                 //    dGrowthRootN += root.Tissue[0].NTransferedIn;
                 // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
@@ -3526,8 +3519,8 @@
             if (stolon.DoOrganUpdate() == false)
                 throw new ApsimXException(this, "Growth and tissue turnover resulted in loss of mass balance for stolons");
 
-            if (root[0].DoOrganUpdate() == false)
-                throw new ApsimXException(this, "Growth and tissue turnover resulted in loss of mass balance for roots");
+            root[0].DoOrganUpdate();
+
             // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
 
             double postTotalWt = AboveGroundWt + BelowGroundWt;
@@ -3578,12 +3571,8 @@
                         growthRootFraction[layer] = growthRootFraction[layer] / layersTotal;
                 }
 
-                // allocate new growth to each layer in the root zone
-                for (int layer = 0; layer <= root[0].BottomLayer; layer++)
-                {
-                    root[0].Tissue[0].DMLayersTransferedIn[layer] = dGrowthRootDM * growthRootFraction[layer];
-                    root[0].Tissue[0].NLayersTransferedIn[layer] = dGrowthRootN * growthRootFraction[layer];
-                }
+                root[0].Tissue[0].SetBiomassTransferIn(dm: MathUtilities.Multiply_Value(growthRootFraction, dGrowthRootDM),
+                                                       n:  MathUtilities.Multiply_Value(growthRootFraction, dGrowthRootN));
             }
             // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
         }

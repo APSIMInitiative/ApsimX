@@ -6,7 +6,7 @@
 
     /// <summary>AgPasture class for holding a biomass weight, N content and digestibility.</summary>
     [Serializable]
-    public class AGPBiomass
+    public class AGPBiomass : IAGPBiomass
     {
         /// <summary>Dry matter weight.</summary>
         [Units("kg/ha")]

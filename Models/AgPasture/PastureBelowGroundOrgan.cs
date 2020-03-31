@@ -54,6 +54,7 @@
         /// <param name="referenceRLD">Parameter to compute available water, roots</param>
         /// <param name="exponentSoilMoisture">Parameter to compute available water</param>
         /// <param name="theSoil">Reference to the soil in the zone these roots are in</param>
+        /// <param name="surfaceOrganicMatter">The surface organic matter model.</param>
         public PastureBelowGroundOrgan(string nameOfSpecies, int numTissues,
                                        double initialDM, double initialDepth,
                                        double optNconc, double minNconc, double maxNconc,
@@ -66,7 +67,8 @@
                                        double kNH4, double kNO3, double maxNUptake,
                                        double kuNH4, double kuNO3, double referenceKSuptake,
                                        double referenceRLD, double exponentSoilMoisture,
-                                       Soil theSoil)
+                                       Soil theSoil,
+                                       Surface.SurfaceOrganicMatter surfaceOrganicMatter)
         {
             mySoil = theSoil;
             SoilNitrogen = Apsim.Find(mySoil, typeof(INutrient)) as INutrient;
@@ -113,8 +115,8 @@
 
             // Typically two tissues below ground, one live and one dead
             Tissue = new RootTissue[numTissues];
-            Tissue[0] = new RootTissue(nameOfSpecies, SoilNitrogen, nLayers, initialDMByLayer, initialNByLayer);
-            Tissue[1] = new RootTissue(nameOfSpecies, SoilNitrogen, nLayers, null, null);
+            Tissue[0] = new RootTissue(nameOfSpecies, SoilNitrogen, surfaceOrganicMatter, nLayers, initialDMByLayer, initialNByLayer);
+            Tissue[1] = new RootTissue(nameOfSpecies, SoilNitrogen, surfaceOrganicMatter, nLayers, null, null);
         }
 
         #region Root specific characteristics  -----------------------------------------------------------------------------
@@ -211,7 +213,7 @@
             {
                 double result = 0.0;
                 for (int t = 0; t < Tissue.Length; t++)
-                    result += Tissue[t].dm.Wt;
+                    result += Tissue[t].DM.Wt;
 
                 return result;
             }
@@ -224,7 +226,7 @@
             {
                 double result = 0.0;
                 for (int t = 0; t < Tissue.Length - 1; t++)
-                    result += Tissue[t].dm.Wt;
+                    result += Tissue[t].DM.Wt;
 
                 return result;
             }
@@ -234,7 +236,7 @@
         /// <remarks>Last tissues is assumed to represent dead material.</remarks>
         internal double DMDead
         {
-            get { return Tissue[Tissue.Length - 1].dm.Wt; }
+            get { return Tissue[Tissue.Length - 1].DM.Wt; }
         }
 
         /// <summary>The total N amount in this tissue (kg/ha).</summary>
@@ -244,7 +246,7 @@
             {
                 double result = 0.0;
                 for (int t = 0; t < Tissue.Length; t++)
-                    result += Tissue[t].dm.N;
+                    result += Tissue[t].DM.N;
 
                 return result;
             }
@@ -257,7 +259,7 @@
             {
                 double result = 0.0;
                 for (int t = 0; t < Tissue.Length - 1; t++)
-                    result += Tissue[t].dm.N;
+                    result += Tissue[t].DM.N;
 
                 return result;
             }
@@ -267,7 +269,7 @@
         /// <remarks>Last tissues is assumed to represent dead material.</remarks>
         internal double NDead
         {
-            get { return Tissue[Tissue.Length - 1].dm.N; }
+            get { return Tissue[Tissue.Length - 1].DM.N; }
         }
 
         /// <summary>Gets the average N concentration in this organ (kg/kg).</summary>
@@ -294,12 +296,6 @@
             get { return Tissue[Tissue.Length - 1].NRemobilisable; }
         }
 
-        /// <summary>Gets the amount of senesced N remobilised into new growth (kg/ha).</summary>
-        internal double NSenescedRemobilised
-        {
-            get { return Tissue[Tissue.Length - 1].NRemobilised; }
-        }
-
         /// <summary>Gets the amount of luxury N available for remobilisation (kg/ha).</summary>
         internal double NLuxuryRemobilisable
         {
@@ -311,55 +307,6 @@
 
                 return result;
             }
-        }
-
-        /// <summary>Gets the amount of senesced N remobilised into new growth (kg/ha).</summary>
-        internal double NLuxuryRemobilised
-        {
-            get
-            {
-                double result = 0.0;
-                for (int t = 0; t < Tissue.Length - 1; t++)
-                    result += Tissue[t].NRemobilised;
-
-                return result;
-            }
-        }
-
-        /// <summary>Gets the DM amount added to this organ via growth (kg/ha).</summary>
-        internal double DMGrowth
-        {
-            get { return Tissue[0].DMTransferedIn; }
-        }
-
-        /// <summary>Gets the amount of N added to this organ via growth (kg/ha).</summary>
-        internal double NGrowth
-        {
-            get { return Tissue[0].NTransferedIn; }
-        }
-
-        /// <summary>Gets the DM amount senescing from this organ (kg/ha).</summary>
-        internal double DMSenesced
-        {
-            get { return Tissue[Tissue.Length - 2].DMTransferedOut; }
-        }
-
-        /// <summary>Gets the amount of N senescing from this organ (kg/ha).</summary>
-        internal double NSenesced
-        {
-            get { return Tissue[Tissue.Length - 2].NTransferedOut; }
-        }
-
-        /// <summary>Gets the DM amount detached from this organ (kg/ha).</summary>
-        internal double DMDetached
-        {
-            get { return Tissue[Tissue.Length - 1].DMTransferedOut; }
-        }
-
-        /// <summary>Gets the amount of N detached from this organ (kg/ha).</summary>
-        internal double NDetached
-        {
-            get { return Tissue[Tissue.Length - 1].NTransferedOut; }
         }
 
         /// <summary>Finds out the amount of plant available water in the soil.</summary>
@@ -477,7 +424,7 @@
             get
             {
                 double[] result = new double[nLayers];
-                double totalRootLength = Tissue[0].dm.Wt * mySpecificRootLength; // m root/m2 
+                double totalRootLength = Tissue[0].DM.Wt * mySpecificRootLength; // m root/m2 
                 totalRootLength *= 0.0000001; // convert into mm root/mm2 soil)
                 for (int layer = 0; layer < result.Length; layer++)
                 {
@@ -545,47 +492,14 @@
         internal void DoCleanTransferAmounts()
         {
             for (int t = 0; t < Tissue.Length; t++)
-            {
-                Tissue[t].DMTransferedIn = 0.0;
-                Tissue[t].DMTransferedOut = 0.0;
-                Tissue[t].NTransferedIn = 0.0;
-                Tissue[t].NTransferedOut = 0.0;
-                Tissue[t].NRemobilisable = 0.0;
-                Tissue[t].NRemobilised = 0.0;
-                Array.Clear(Tissue[t].DMLayersTransferedIn, 0, Tissue[t].DMLayersTransferedIn.Length);
-                Array.Clear(Tissue[t].NLayersTransferedIn, 0, Tissue[t].NLayersTransferedIn.Length);
-            }
+                Tissue[t].DailyReset();
         }
 
         /// <summary>Kills part of the organ (transfer DM and N to dead tissue).</summary>
         /// <param name="fractionToRemove">The fraction to kill in each tissue</param>
         internal void DoKillOrgan(double fractionToRemove = 1.0)
         {
-            if (1.0 - fractionToRemove > Epsilon)
-            {
-                double fractionRemaining = 1.0 - fractionToRemove;
-                for (int t = 0; t < Tissue.Length - 1; t++)
-                {
-                    double[] amountOfDMRemoved;
-                    double[] amountOfNRemoved;
-                    Tissue[t].RemoveBiomass(fractionToRemove, out amountOfDMRemoved, out amountOfNRemoved);
-                    Tissue[Tissue.Length - 1].AddBiomass(amountOfDMRemoved, amountOfNRemoved);
-                }
-            }
-            else
-            {
-                for (int t = 0; t < Tissue.Length - 1; t++)
-                {
-                    for (int layer = 0; layer <= BottomLayer; layer++)
-                    {
-                        Tissue[Tissue.Length - 1].DMLayer[layer] += Tissue[t].DMLayer[layer];
-                        Tissue[Tissue.Length - 1].NamountLayer[layer] += Tissue[t].NamountLayer[layer];
-                    }
-                    Tissue[Tissue.Length - 1].UpdateDM();
-
-                    Tissue[t].Reset();
-                }
-            }
+            Tissue[0].MoveFractionToTissue(fractionToRemove, Tissue[1]);
         }
 
         /// <summary>Removes biomass from root layers when harvest, graze or cut events are called.</summary>
@@ -595,10 +509,14 @@
         {
             // Live removal
             for (int t = 0; t < Tissue.Length - 1; t++)
-                Tissue[t].RemoveBiomass(biomassToRemove.FractionLiveToRemove, biomassToRemove.FractionLiveToResidue);
+            {
+                Tissue[t].RemoveBiomass(biomassToRemove.FractionLiveToRemove, sendToSurfaceOrganicMatter: false);
+                Tissue[t].RemoveBiomass(biomassToRemove.FractionLiveToResidue, sendToSurfaceOrganicMatter: true);
+            }
 
             // Dead removal
-            Tissue[Tissue.Length - 1].RemoveBiomass(biomassToRemove.FractionDeadToRemove, biomassToRemove.FractionDeadToResidue);
+            Tissue[Tissue.Length - 1].RemoveBiomass(biomassToRemove.FractionDeadToRemove, sendToSurfaceOrganicMatter: false);
+            Tissue[Tissue.Length - 1].RemoveBiomass(biomassToRemove.FractionDeadToResidue, sendToSurfaceOrganicMatter:true);
 
             if (biomassRemoveType != "Harvest")
                 IsKLModiferDueToDamageActive = true;
@@ -607,63 +525,16 @@
         /// <summary>Computes the DM and N amounts turned over for all tissues.</summary>
         /// <param name="turnoverRate">The turnover rate for each tissue</param>
         /// <returns>The DM and N amount detached from this organ</returns>
-        internal void DoTissueTurnover(double[] turnoverRate)
+        internal BiomassAndN DoTissueTurnover(double[] turnoverRate)
         {
-            double turnoverDM;
-            double turnoverN;
-
-            // get amounts turned over
-            for (int t = 0; t < Tissue.Length; t++)
-            {
-                if (turnoverRate[t] > 0.0)
-                {
-                    turnoverDM = Tissue[t].dm.Wt * turnoverRate[t];
-                    turnoverN = Tissue[t].dm.N * turnoverRate[t];
-                    Tissue[t].DMTransferedOut += turnoverDM;
-                    Tissue[t].NTransferedOut += turnoverN;
-
-                    if (t < Tissue.Length - 1)
-                    {
-                        // pass amounts turned over from this tissue to the next
-                        Tissue[t + 1].DMTransferedIn += turnoverDM;
-                        Tissue[t + 1].NTransferedIn += turnoverN;
-
-                        // incoming stuff need to be given for each layer
-                        for (int layer = 0; layer <= BottomLayer; layer++)
-                        {
-                            Tissue[t + 1].DMLayersTransferedIn[layer] = turnoverDM * Tissue[t].FractionWt[layer];
-                            Tissue[t + 1].NLayersTransferedIn[layer] = turnoverN * Tissue[t].FractionWt[layer];
-                        }
-
-                        // get the amounts remobilisable (luxury N)
-                        double totalLuxuryN = (Tissue[t].dm.Wt + Tissue[t].DMTransferedIn - Tissue[t].DMTransferedOut) * (NconcLive - NConcOptimum);
-                        Tissue[t].NRemobilisable = Math.Max(0.0, totalLuxuryN * Tissue[t + 1].FractionNLuxuryRemobilisable);
-                    }
-                    else
-                    {
-                        // N transferred into dead tissue in excess of minimum N concentration is remobilisable
-                        double remobilisableN = Tissue[t].DMTransferedIn * (NconcLive - NConcMinimum);
-                        Tissue[t].NRemobilisable = Math.Max(0.0, remobilisableN);
-                    }
-                }
-            }
+            Tissue[0].DoTissueTurnover(turnoverRate[0], BottomLayer, Tissue[1], NconcLive - NConcOptimum);
+            return Tissue[1].DoTissueTurnover(turnoverRate[1], BottomLayer, null, NconcLive - NConcMinimum);
         }
 
         /// <summary>Updates each tissue, make changes in DM and N effective.</summary>
-        internal bool DoOrganUpdate()
+        internal void DoOrganUpdate()
         {
-            // save current state
-            double previousDM = DMTotal;
-            double previousN = NTotal;
-
-            // update all tissues
-            for (int t = 0; t < Tissue.Length; t++)
-                Tissue[t].DoUpdateTissue();
-
-            // check mass balance
-            bool dmIsOk = Math.Abs(previousDM + DMGrowth - DMDetached - DMTotal) <= Epsilon;
-            bool nIsOk = Math.Abs(previousN + NGrowth - NSenescedRemobilised - NDetached - NTotal) <= Epsilon;
-            return (dmIsOk || nIsOk);
+            RootTissue.UpdateTissues(Tissue[0], Tissue[1]);
         }
 
         /// <summary>Finds out the amount of plant available nitrogen (NH4 and NO3) in the soil.</summary>

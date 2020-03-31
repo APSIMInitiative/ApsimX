@@ -36,7 +36,7 @@
 
         /// <summary>Amount of dry matter.</summary>
         [XmlIgnore]
-        public AGPBiomass dm = new AGPBiomass();
+        public AGPBiomass DM { get; set; } = new AGPBiomass();
 
         /// <summary>Gets or sets the DM amount transferred into this tissue (kg/ha).</summary>
         internal double DMTransferedIn { get; set; }
@@ -69,12 +69,12 @@
             get
             {
                 double tissueDigestibility = 0.0;
-                if (dm.Wt > 0.0)
+                if (DM.Wt > 0.0)
                 {
-                    double cnTissue = dm.Wt * CarbonFractionInDM / dm.N;
+                    double cnTissue = DM.Wt * CarbonFractionInDM / DM.N;
                     double ratio1 = CNratioCellWall / cnTissue;
                     double ratio2 = CNratioCellWall / CNratioProtein;
-                    double fractionSugar = DMTransferedIn * FractionSugarNewGrowth / dm.Wt;
+                    double fractionSugar = DMTransferedIn * FractionSugarNewGrowth / DM.Wt;
                     double fractionProtein = (ratio1 - (1.0 - fractionSugar)) / (ratio2 - 1.0);
                     double fractionCellWall = 1.0 - fractionSugar - fractionProtein;
                     tissueDigestibility = fractionSugar + (fractionProtein * DigestibilityProtein) + (fractionCellWall * DigestibilityCellWall);
@@ -94,8 +94,8 @@
         /// <summary>Updates the tissue state, make changes in DM and N effective.</summary>
         internal virtual void DoUpdateTissue()
         {
-            dm.Wt += DMTransferedIn - DMTransferedOut;
-            dm.N += NTransferedIn - (NTransferedOut + NRemobilised);
+            DM.Wt += DMTransferedIn - DMTransferedOut;
+            DM.N += NTransferedIn - (NTransferedOut + NRemobilised);
         }
 
         /// <summary>Average carbon content in plant dry matter (kg/kg).</summary>
@@ -125,17 +125,17 @@
         /// <param name="fractionToSoil">The fraction of the total biomass to send to soil.</param>
         public void RemoveBiomass(double fractionToRemove, double fractionToSoil)
         {
-            var dmToSoil = fractionToSoil * dm.Wt;
-            var nToSoil = fractionToSoil * dm.N;
+            var dmToSoil = fractionToSoil * DM.Wt;
+            var nToSoil = fractionToSoil * DM.N;
             var totalFraction = fractionToRemove + fractionToSoil;
 
-            DMRemoved = totalFraction * dm.Wt;
-            NRemoved = totalFraction * dm.N;
+            DMRemoved = totalFraction * DM.Wt;
+            NRemoved = totalFraction * DM.N;
 
             if (totalFraction > 0)
             {
-                dm.Wt *= (1 - totalFraction);
-                dm.N *= (1 - totalFraction);
+                DM.Wt *= (1 - totalFraction);
+                DM.N *= (1 - totalFraction);
                 NRemobilisable *= (1 - totalFraction);
             }
 
@@ -150,8 +150,8 @@
         /// <param name="nAmount">The amount of nitrogen to add (kg/ha).</param>
         public void AddBiomass(double dmAmount, double nAmount)
         {
-            dm.Wt += dmAmount;
-            dm.N += nAmount;
+            DM.Wt += dmAmount;
+            DM.N += nAmount;
         }
 
         /// <summary>Adds a given amount of detached root material (DM and N) to the surface organic matter pool.</summary>
@@ -170,15 +170,15 @@
         /// <param name="nAmount">The amount of nitrogen to reset to (kg/ha).</param>
         public void ResetTo(double dmAmount, double nAmount)
         {
-            dm.Wt = dmAmount;
-            dm.N = nAmount;
+            DM.Wt = dmAmount;
+            DM.N = nAmount;
         }
 
         /// <summary>Reset tissue to zero.</summary>
         public virtual void Reset()
         {
-            dm.Wt = 0;
-            dm.N = 0;
+            DM.Wt = 0;
+            DM.N = 0;
         }
     }
 }

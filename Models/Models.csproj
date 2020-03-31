@@ -133,6 +133,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AgPasture\AGPBiomass.cs" />
+    <Compile Include="AgPasture\BiomassAndN.cs" />
+    <Compile Include="AgPasture\BiomassAndNLayered.cs" />
+    <Compile Include="AgPasture\IAGPBiomass.cs" />
     <Compile Include="AgPasture\TissuesHelper.cs" />
     <Compile Include="AgPasture\SimpleGrazing.cs" />
     <Compile Include="AgPasture\PastureSpecies.cs" />
