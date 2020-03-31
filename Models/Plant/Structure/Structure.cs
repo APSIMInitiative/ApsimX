@@ -81,7 +81,6 @@ namespace Models.PMF.Struct
         [Link(Type = LinkType.Child, ByName = true)]
         public IFunction branchMortality = null;
 
-        [Link] private Clock clock = null;
 
         /// <summary>The Stage that cohorts are initialised on</summary>
         [Description("The Stage that cohorts are initialised on")]
@@ -149,6 +148,11 @@ namespace Models.PMF.Struct
         [XmlIgnore]
         public double TotalStemPopn { get; set; }
 
+        //Plant leaf number state variables
+        /// <summary>Number of mainstem nodes which have their tips appeared</summary>
+        [XmlIgnore]
+        public double PotLeafTipsAppeared { get; set; }
+
         /// <summary>"Number of mainstem nodes which have their tips appeared"</summary>
         [XmlIgnore]
         public double LeafTipsAppeared { get; set; }
@@ -215,6 +219,7 @@ namespace Models.PMF.Struct
         {
             TotalStemPopn = 0;
             TotalLeavesPerShoot = 0;
+            PotLeafTipsAppeared = 0;
             PlantTotalNodeNo = 0;
             ProportionBranchMortality = 0;
             ProportionPlantMortality = 0;
@@ -228,7 +233,6 @@ namespace Models.PMF.Struct
             BranchNumber = 0;
             NextLeafProportion = 0;
             DeltaPlantPopulation = 0;
-            DateTime Date = clock.Today;
         }
 
         // 7. Private methods
@@ -285,9 +289,10 @@ namespace Models.PMF.Struct
                         DeltaTipNumber = DeltaHaunStage; //DeltaTipNumber is only positive after emergence whereas deltaHaunstage is positive from germination
                     }
 
-                    LeafTipsAppeared = Math.Min(LeafTipsAppeared += DeltaTipNumber, finalLeafNumber.Value());
+                    PotLeafTipsAppeared += DeltaTipNumber;
+                    LeafTipsAppeared = Math.Min(PotLeafTipsAppeared, finalLeafNumber.Value());
 
-                    TimeForAnotherLeaf = LeafTipsAppeared >= (leaf.AppearedCohortNo + NextLeafProportion);
+                    TimeForAnotherLeaf = PotLeafTipsAppeared >= (leaf.AppearedCohortNo + 1);
                     int LeavesToAppear = (int)(LeafTipsAppeared - (leaf.AppearedCohortNo - (1 - NextLeafProportion)));
 
                     //Each time main-stem node number increases by one or more initiate the additional cohorts until final leaf number is reached
@@ -382,7 +387,7 @@ namespace Models.PMF.Struct
             for (int i = 1; i <= leaf.TipsAtEmergence; i++)
             {
                 InitParams = new CohortInitParams();
-                LeafTipsAppeared += 1;
+                PotLeafTipsAppeared += 1;
                 CohortToInitialise += 1;
                 InitParams.Rank = CohortToInitialise;
                 AddLeafCohort?.Invoke(this, InitParams);
@@ -417,6 +422,7 @@ namespace Models.PMF.Struct
             Clear();
             CohortToInitialise = 0;
             TipToAppear = 0;
+            PotLeafTipsAppeared = 0;
             ResetStemPopn();
         }
 
@@ -447,7 +453,8 @@ namespace Models.PMF.Struct
         {
             //Remove nodes from Structure properties
             LeafTipsAppeared = Math.Max(LeafTipsAppeared - NodesToRemove, 0);
-            
+            PotLeafTipsAppeared = Math.Max(PotLeafTipsAppeared - NodesToRemove, 0);
+
             //Remove corresponding cohorts from leaf
             int NodesStillToRemove = Math.Min(NodesToRemove + leaf.ApicalCohortNo, leaf.InitialisedCohortNo);
             while (NodesStillToRemove > 0)
