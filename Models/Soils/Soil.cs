@@ -152,7 +152,7 @@
         }
 
         /// <summary>Find our children.</summary>
-        private void FindChildren()
+        public void FindChildren()
         {
             waterNode = Apsim.Child(this, typeof(Physical)) as Physical;
 
