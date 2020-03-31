@@ -287,7 +287,7 @@ namespace Models.PMF.Struct
 
                     LeafTipsAppeared = Math.Min(LeafTipsAppeared += DeltaTipNumber, finalLeafNumber.Value());
 
-                    TimeForAnotherLeaf = LeafTipsAppeared >= (leaf.AppearedCohortNo + 1);
+                    TimeForAnotherLeaf = LeafTipsAppeared >= (leaf.AppearedCohortNo + NextLeafProportion);
                     int LeavesToAppear = (int)(LeafTipsAppeared - (leaf.AppearedCohortNo - (1 - NextLeafProportion)));
 
                     //Each time main-stem node number increases by one or more initiate the additional cohorts until final leaf number is reached
