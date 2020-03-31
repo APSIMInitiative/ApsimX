@@ -374,10 +374,6 @@ namespace Models.PMF.Struct
             CohortParams = new ApparingLeafParams() { };
             CohortParams.CohortToAppear = TipToAppear;
             CohortParams.TotalStemPopn = TotalStemPopn;
-            // if ((Math.Truncate(LeafTipsAppeared) + 1) == leaf.InitialisedCohortNo)
-            //    CohortParams.CohortAge = (PotLeafTipsAppeared - TipToAppear) * phyllochron.Value();
-            // else
-            //     CohortParams.CohortAge = (LeafTipsAppeared - TipToAppear) * phyllochron.Value();
             CohortParams.CohortAge = 0;
             CohortParams.FinalFraction = NextLeafProportion;
             if (LeafTipAppearance != null)
@@ -468,21 +464,16 @@ namespace Models.PMF.Struct
                 leaf.RemoveHighestLeaf();
                 NodesStillToRemove -= 1;
             }
-            TipToAppear = Math.Max(TipToAppear + leaf.CohortsAtInitialisation, 1);
+            //TipToAppear = Math.Max(TipToAppear + leaf.CohortsAtInitialisation, 1);
             CohortToInitialise = Math.Max(CohortToInitialise, 1);
+            if (CohortToInitialise == LeafTipsAppeared) // If leaf appearance had reached final leaf number need to add another cohort back to get things moving again.
+                CohortToInitialise += 1;
+            InitParams = new CohortInitParams() { };
+            InitParams.Rank = CohortToInitialise;
+            if (AddLeafCohort != null)
+                AddLeafCohort.Invoke(this, InitParams);
             //Reinitiate apical cohorts ready for regrowth
-            if (leaf.InitialisedCohortNo > 0) //Sone cohorts remain after defoliation
-            {
-                for (int i = 1; i <= leaf.CohortsAtInitialisation; i++)
-                {
-                    InitParams = new CohortInitParams();
-                    CohortToInitialise += 1;
-                    InitParams.Rank = CohortToInitialise;
-                    if (AddLeafCohort != null)
-                        AddLeafCohort.Invoke(this, InitParams);
-                }
-            }
-            else   //If all nodes have been removed initalise again
+            if (leaf.InitialisedCohortNo == 0) //If all nodes have been removed initalise again
             {
                 leaf.Reset();
                 InitialiseLeafCohorts.Invoke(this, new EventArgs());
