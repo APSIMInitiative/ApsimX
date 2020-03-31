@@ -7103,8 +7103,6 @@
                 },
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": null,
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -7112,6 +7110,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "Juvenile",
                   "Children": [
                     {
@@ -7189,6 +7188,27 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -7197,8 +7217,6 @@
                 },
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": "Juvenile",
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -7206,6 +7224,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "Adult",
                   "Children": [
                     {
@@ -7353,6 +7372,27 @@
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Development",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "Juvenile",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -8077,8 +8117,6 @@
               "Children": [
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": null,
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -8086,6 +8124,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "Juvenile",
                   "Children": [
                     {
@@ -8163,6 +8202,27 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -8171,8 +8231,6 @@
                 },
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": "Juvenile",
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -8180,6 +8238,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "Adult",
                   "Children": [
                     {
@@ -8309,6 +8368,27 @@
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Development",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "Juvenile",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -9306,8 +9386,6 @@
               "Children": [
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": null,
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -9315,6 +9393,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "Juvenile",
                   "Children": [
                     {
@@ -9365,6 +9444,27 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -9373,8 +9473,6 @@
                 },
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": "Juvenile",
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -9382,6 +9480,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "Adult",
                   "Children": [
                     {
@@ -9502,6 +9601,27 @@
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Development",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "Juvenile",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -10500,8 +10620,6 @@
               "Children": [
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": null,
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -10509,6 +10627,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "Juvenile",
                   "Children": [
                     {
@@ -10559,6 +10678,27 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -10567,8 +10707,6 @@
                 },
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": "Juvenile",
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -10576,6 +10714,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "Adult",
                   "Children": [
                     {
@@ -10696,6 +10835,27 @@
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Development",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "Juvenile",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -11626,8 +11786,6 @@
               "Children": [
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": null,
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -11635,6 +11793,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "Juvenile",
                   "Children": [
                     {
@@ -11685,6 +11844,27 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -11693,8 +11873,6 @@
                 },
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": "Juvenile",
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -11702,6 +11880,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "Adult",
                   "Children": [
                     {
@@ -11822,6 +12001,27 @@
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Development",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "Juvenile",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -12750,8 +12950,6 @@
               "Children": [
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": null,
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -12759,6 +12957,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "Juvenile",
                   "Children": [
                     {
@@ -12809,6 +13008,27 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -12817,8 +13037,6 @@
                 },
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": "Juvenile",
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -12826,6 +13044,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "Adult",
                   "Children": [
                     {
@@ -12946,6 +13165,27 @@
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Development",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "Juvenile",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -13713,8 +13953,6 @@
               "Children": [
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": null,
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -13722,6 +13960,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "Juvenile",
                   "Children": [
                     {
@@ -13792,6 +14031,27 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -13800,8 +14060,6 @@
                 },
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": "Juvenile",
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -13809,6 +14067,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "Adult",
                   "Children": [
                     {
@@ -13929,6 +14188,27 @@
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Development",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "Juvenile",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -14713,8 +14993,6 @@
               "Children": [
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": null,
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -14722,6 +15000,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "Juvenile",
                   "Children": [
                     {
@@ -14915,6 +15194,27 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -14923,8 +15223,6 @@
                 },
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": "Juvenile",
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -14932,6 +15230,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "Adult",
                   "Children": [
                     {
@@ -15185,6 +15484,27 @@
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Development",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "Juvenile",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -16030,8 +16350,6 @@
               "Children": [
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": null,
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -16039,6 +16357,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "Juvenile",
                   "Children": [
                     {
@@ -16245,6 +16564,27 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -16253,8 +16593,6 @@
                 },
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": "Juvenile",
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -16262,6 +16600,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "Adult",
                   "Children": [
                     {
@@ -16538,6 +16877,27 @@
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Development",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "Juvenile",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -17536,8 +17896,6 @@
               "Children": [
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": null,
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -17545,6 +17903,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "Juvenile",
                   "Children": [
                     {
@@ -17812,6 +18171,27 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -17820,8 +18200,6 @@
                 },
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": "Juvenile",
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -17829,6 +18207,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "Adult",
                   "Children": [
                     {
@@ -18337,6 +18716,27 @@
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Development",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "Juvenile",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -19326,8 +19726,6 @@
               "Children": [
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": null,
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -19335,6 +19733,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "Juvenile",
                   "Children": [
                     {
@@ -19612,6 +20011,27 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -19620,8 +20040,6 @@
                 },
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": "Juvenile",
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -19629,6 +20047,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "Adult",
                   "Children": [
                     {
@@ -19967,6 +20386,27 @@
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Development",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "Juvenile",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -21092,8 +21532,6 @@
               "Children": [
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": null,
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -21101,6 +21539,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "Spore",
                   "Children": [
                     {
@@ -21422,6 +21861,27 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -21430,8 +21890,6 @@
                 },
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": null,
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -21439,6 +21897,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "Infective",
                   "Children": [
                     {
@@ -21725,6 +22184,27 @@
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Development",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -22535,8 +23015,6 @@
               "Children": [
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": null,
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -22544,6 +23022,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "DormantSeeds",
                   "Children": [
                     {
@@ -22608,6 +23087,27 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -22616,8 +23116,6 @@
                 },
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": null,
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -22625,6 +23123,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "NonDormantSeeds",
                   "Children": [
                     {
@@ -22652,6 +23151,27 @@
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Development",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -23484,8 +24004,6 @@
               "Children": [
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": null,
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -23493,6 +24011,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "DormantSeeds",
                   "Children": [
                     {
@@ -23608,6 +24127,27 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -23616,8 +24156,6 @@
                 },
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": null,
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -23625,6 +24163,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "NonDormantSeeds",
                   "Children": [
                     {
@@ -23703,6 +24242,27 @@
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Development",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -24631,8 +25191,6 @@
               "Children": [
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": null,
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -24640,6 +25198,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "LongDormancy",
                   "Children": [
                     {
@@ -24755,6 +25314,27 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -24763,8 +25343,6 @@
                 },
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": null,
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -24772,6 +25350,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "MediumDormancy",
                   "Children": [
                     {
@@ -24887,6 +25466,27 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -24895,8 +25495,6 @@
                 },
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": null,
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -24904,6 +25502,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "ShortDormancy",
                   "Children": [
                     {
@@ -25019,6 +25618,27 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -25027,8 +25647,6 @@
                 },
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": null,
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -25036,6 +25654,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "NonDormantSeeds",
                   "Children": [
                     {
@@ -25161,6 +25780,27 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -25169,8 +25809,6 @@
                 },
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": null,
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -25178,6 +25816,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "GermitableSeeds",
                   "Children": [
                     {
@@ -25205,6 +25844,27 @@
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Development",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -26303,8 +26963,6 @@
               "Children": [
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": null,
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -26312,6 +26970,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "DormantSeeds",
                   "Children": [
                     {
@@ -26435,6 +27094,27 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -26443,8 +27123,6 @@
                 },
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": null,
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -26452,6 +27130,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "GerminableSeeds",
                   "Children": [
                     {
@@ -26479,6 +27158,27 @@
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Development",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -27961,8 +28661,6 @@
               "Children": [
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": null,
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -27970,6 +28668,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "DormantSeeds",
                   "Children": [
                     {
@@ -28093,6 +28792,27 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -28101,8 +28821,6 @@
                 },
                 {
                   "$type": "Models.LifeCycle.LifeCyclePhase, Models",
-                  "NameOfPhaseForProgeny": null,
-                  "LifeCyclePhaseForProgeny": null,
                   "LifeCyclePhaseForGraduates": null,
                   "CurrentCohort": null,
                   "Immigrants": 0.0,
@@ -28110,6 +28828,7 @@
                   "Mortalities": 0.0,
                   "Graduates": 0.0,
                   "Progeny": 0.0,
+                  "Migrants": 0.0,
                   "Name": "GerminableSeeds",
                   "Children": [
                     {
@@ -28137,6 +28856,27 @@
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Development",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Migration",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.LifeCycle.ProgenyDestinationPhase, Models",
+                      "NameOfLifeCycleForProgeny": "LifeCycle",
+                      "NameOfPhaseForProgeny": "",
+                      "ProgenyToDestination": 0.0,
+                      "Name": "ProgenyDestination",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,

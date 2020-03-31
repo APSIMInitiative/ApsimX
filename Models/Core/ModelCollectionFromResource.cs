@@ -86,8 +86,7 @@
                     CopyPropertiesFrom(modelFromResource);
 
                     // Make the model readonly if it's not under replacements.
-                    if (Apsim.Ancestor<Replacements>(this) == null)
-                        SetNotVisible(modelFromResource);
+                    SetNotVisible(modelFromResource, Apsim.Ancestor<Replacements>(this) == null);
                     Apsim.ParentAllChildren(this);
                 }
             }
@@ -210,13 +209,14 @@
 
         /// <summary>Sets the not visible.</summary>
         /// <param name="ModelFromResource">The model from resource.</param>
-        private static void SetNotVisible(Model ModelFromResource)
+        /// <param name="invisible">If true, make model invisible. Else make model visible.</param>
+        private static void SetNotVisible(Model ModelFromResource, bool invisible)
         {
             foreach (Model child in ModelFromResource.Children)
             {
-                child.IsHidden = true;
-                child.ReadOnly = true;
-                SetNotVisible(child);
+                child.IsHidden = invisible;
+                child.ReadOnly = invisible;
+                SetNotVisible(child, invisible);
             }
         }
 
