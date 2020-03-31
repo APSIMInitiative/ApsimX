@@ -63,7 +63,18 @@ namespace UnitTests.Resources
             string serialized = FileFormat.WriteToString(topLevel);
 
             JObject root = JObject.Parse(serialized);
-            JObject wheat = JsonUtilities.ChildWithName(JsonUtilities.ChildWithName(root, "Replacements"), "Wheat");
+
+            // This file contains 2 wheat models - one under replacements, and one under a folder.
+            JObject fullWheat = JsonUtilities.ChildWithName(JsonUtilities.ChildWithName(root, "Replacements"), "Wheat");
+            JObject wheat = JsonUtilities.ChildWithName(JsonUtilities.ChildWithName(root, "Folder"), "Wheat");
+
+            // The wheat model under replacements should have its full
+            // model structure (properties + children) serialized.
+            Assert.NotNull(fullWheat);
+            Assert.AreNotEqual(0, JsonUtilities.Children(fullWheat).Count);
+
+            // The wheat model under the folder should *not* have its
+            // full model structure (properties + children) serialized.
             Assert.NotNull(wheat);
             Assert.AreEqual(0, JsonUtilities.Children(wheat).Count);
         }

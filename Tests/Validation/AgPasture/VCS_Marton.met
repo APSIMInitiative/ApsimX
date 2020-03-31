@@ -33,7 +33,7 @@ annual_average_pet = 871.3           !Average annual PET (mm/yr)
 average_windspeed = 4.3              !Average windspeed (m/s)
 
   Location        xDate         year          day         rain         mint         maxt         avgt         radn         wind         evap           vp           rh        rhmin        rhmax
-        ()           ()           ()           ()         (mm)         (oC)         (oC)         (oC)     (MJ/m^2)        (m/s)         (mm)        (hPa)          (%)          (%)          (%)
+        () (dd/MM/yyyy)           ()           ()         (mm)         (oC)         (oC)         (oC)     (MJ/m^2)        (m/s)         (mm)        (hPa)          (%)          (%)          (%)
 VCS_Marton   01/01/1973         1973            1          0.0         13.3         22.7         18.0         26.8          4.7          4.7         17.5         88.0         63.4        100.0
 VCS_Marton   02/01/1973         1973            2          0.0          9.4         22.0         15.7         27.8          4.7          4.4         12.8         69.0         48.4        100.0
 VCS_Marton   03/01/1973         1973            3          0.0          8.2         27.4         17.8         32.4          4.7          7.1         11.2         44.6         30.7        100.0

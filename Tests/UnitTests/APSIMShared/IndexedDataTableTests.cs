@@ -2,7 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
-    using Models.Report;
+    using Models;
     using NUnit.Framework;
     using System.Data;
 

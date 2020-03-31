@@ -1,6 +1,7 @@
 ﻿namespace UserInterface.Views
 {
     using System;
+    using GLib;
     using Gtk;
 
     interface IReportView
@@ -14,10 +15,26 @@
         /// <summary>Provides access to the DataGrid.</summary>
         ViewBase DataStoreView { get; }
 
+        /// <summary>Provides access to the group by edit.</summary>
+        IEditView GroupByEdit { get; }
+
+        /// <summary>
+        /// Invoked when the user moves the vertical splitter
+        /// between the two text editors.
+        /// </summary>
+        event EventHandler SplitterChanged;
+
         /// <summary>
         /// Indicates the index of the currently active tab
         /// </summary>
         int TabIndex { get; set; }
+
+        /// <summary>
+        /// Position of the splitter between the variable and
+        /// frequency text editors. Larger number means further
+        /// down.
+        /// </summary>
+        int SplitterPosition { get; set; }
     }
 
     public class ReportView : ViewBase, IReportView
@@ -30,6 +47,14 @@
         private EditorView variableEditor;
         private EditorView frequencyEditor;
         private ViewBase dataStoreView1;
+        private VPaned panel;
+        private EditView groupByEdit;
+
+        /// <summary>
+        /// Invoked when the user moves the vertical splitter
+        /// between the two text editors.
+        /// </summary>
+        public event EventHandler SplitterChanged;
 
         /// <summary>Constructor</summary>
         public ReportView(ViewBase owner) : base(owner)
@@ -39,6 +64,14 @@
             vbox1 = (VBox)builder.GetObject("vbox1");
             vbox2 = (VBox)builder.GetObject("vbox2");
             alignment1 = (Alignment)builder.GetObject("alignment1");
+            
+            panel = (VPaned)builder.GetObject("vpaned1");
+            panel.Events |= Gdk.EventMask.PropertyChangeMask;
+            panel.AddNotification(OnPropertyNotified);
+
+            groupByEdit = new EditView(owner,
+                                      (Entry)builder.GetObject("groupByEdit")); 
+
             mainWidget = notebook1;
 
             variableEditor = new EditorView(this);
@@ -52,6 +85,30 @@
             dataStoreView1 = new ViewBase(this, "ApsimNG.Resources.Glade.DataStoreView.glade");
             alignment1.Add(dataStoreView1.MainWidget);
             mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        /// <summary>
+        /// Called whenever a property of vpaned1 is modified.
+        /// We use this to trap when the user moves the handle
+        /// which separates the two text editors. Unfortunately,
+        /// this is called many times per second as long as the
+        /// user is dragging the handle. I couldn't find a better
+        /// event to trap - the MoveHandle event only fires when
+        /// the handle is moved via keypresses.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void OnPropertyNotified(object sender, NotifyArgs args)
+        {
+            try
+            {
+                if (args.Property == "position")
+                    SplitterChanged?.Invoke(this, EventArgs.Empty);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -78,6 +135,7 @@
         {
             try
             {
+                panel.RemoveNotification(OnPropertyNotified);
                 variableEditor.StyleChanged -= OnStyleChanged;
                 frequencyEditor.StyleChanged -= OnStyleChanged;
                 variableEditor.MainWidget.Destroy();
@@ -101,6 +159,9 @@
         /// <summary>Provides access to the variable list.</summary>
         public IEditorView EventList { get { return frequencyEditor; } }
 
+        /// <summary>Provides access to the group by edit.</summary>
+        public IEditView GroupByEdit {  get { return groupByEdit; } }
+
         /// <summary>Provides access to the DataGrid.</summary>
         public ViewBase DataStoreView { get { return dataStoreView1; } }
 
@@ -111,6 +172,23 @@
         {
             get { return notebook1.CurrentPage; }
             set { notebook1.CurrentPage = value; }
+        }
+
+        /// <summary>
+        /// Position of the splitter between the variable and
+        /// frequency text editors. Larger number means further
+        /// down.
+        /// </summary>
+        public int SplitterPosition
+        {
+            get
+            {
+                return panel.Position;
+            }
+            set
+            {
+                panel.Position = value;
+            }
         }
     }
 }

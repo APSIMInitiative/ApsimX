@@ -9,6 +9,7 @@
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
+    using System.Xml.Serialization;
 
     /// <summary>This class loads a model from a resource</summary>
     [Serializable]
@@ -83,7 +84,9 @@
                     Children.InsertRange(0, modelFromResource.Children);
 
                     CopyPropertiesFrom(modelFromResource);
-                    SetNotVisible(modelFromResource);
+
+                    // Make the model readonly if it's not under replacements.
+                    SetNotVisible(modelFromResource, Apsim.Ancestor<Replacements>(this) == null);
                     Apsim.ParentAllChildren(this);
                 }
             }
@@ -179,17 +182,26 @@
                     property.Name != "ResourceName")
                 {
                     var description = property.GetCustomAttribute(typeof(DescriptionAttribute));
-                    if (description == null)
+                    var xmlIgnore = property.GetCustomAttribute(typeof(XmlIgnoreAttribute));
+                    var jsonIgnore = property.GetCustomAttribute(typeof(JsonIgnoreAttribute));
+                    if (description == null && xmlIgnore == null && jsonIgnore == null)
                     {
-                        object fromValue = property.GetValue(from);
-                        bool doSetPropertyValue;
-                        if (fromValue is double)
-                            doSetPropertyValue = Convert.ToDouble(fromValue, CultureInfo.InvariantCulture) != 0;
-                        else
-                            doSetPropertyValue = fromValue != null;
+                        try
+                        {
+                            object fromValue = property.GetValue(from);
+                            bool doSetPropertyValue;
+                            if (fromValue is double)
+                                doSetPropertyValue = Convert.ToDouble(fromValue, CultureInfo.InvariantCulture) != 0;
+                            else
+                                doSetPropertyValue = fromValue != null;
 
-                        if (doSetPropertyValue)
-                            property.SetValue(this, fromValue);
+                            if (doSetPropertyValue)
+                                property.SetValue(this, fromValue);
+                        }
+                        catch (Exception)
+                        {
+
+                        }
                     }
                 }
             }
@@ -197,13 +209,14 @@
 
         /// <summary>Sets the not visible.</summary>
         /// <param name="ModelFromResource">The model from resource.</param>
-        private static void SetNotVisible(Model ModelFromResource)
+        /// <param name="invisible">If true, make model invisible. Else make model visible.</param>
+        private static void SetNotVisible(Model ModelFromResource, bool invisible)
         {
             foreach (Model child in ModelFromResource.Children)
             {
-                child.IsHidden = true;
-                child.ReadOnly = true;
-                SetNotVisible(child);
+                child.IsHidden = invisible;
+                child.ReadOnly = invisible;
+                SetNotVisible(child, invisible);
             }
         }
 

@@ -27,7 +27,7 @@
               ]
             },
             {
-              "$type": "Models.Report.Report, Models",
+              "$type": "Models.Report, Models",
               "VariableNames": [
                 "[Soil].SoilWater.Eo",
                 "[Soil].Water.LL15",

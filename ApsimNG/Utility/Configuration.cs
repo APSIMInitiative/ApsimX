@@ -41,6 +41,12 @@ namespace Utility
         /// <summary>The previous height of the status panel</summary>
         public int StatusPanelHeight { get; set; }
 
+        /// <summary>
+        /// The position of the splitter between the variables
+        /// and frequency text editors in the report UI.
+        /// </summary>
+        public int ReportSplitterPosition { get; set; }
+
         /// <summary>Keeps track of whether the dark theme is enabled.</summary>
         public bool DarkTheme { get; set; }
 

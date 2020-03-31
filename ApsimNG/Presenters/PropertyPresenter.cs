@@ -19,6 +19,8 @@ namespace UserInterface.Presenters
     using Models.CLEM.Resources;
     using Models.Storage;
     using System.Globalization;
+    using Models.LifeCycle;
+    using Models.PMF;
 
     /// <summary>
     /// <para>
@@ -381,6 +383,30 @@ namespace UserInterface.Presenters
                             cell.DropDownStrings = GetCultivarNames(crop);
                         }
                     }
+
+                    else if (properties[i].Display != null &&
+                             properties[i].Display.Type == DisplayType.LifeCycleName)
+                    {
+                        Zone zone = Apsim.Find(model, typeof(Zone)) as Zone;
+                        if (zone != null)
+                        {
+                            cell.DropDownStrings = GetLifeCycleNames(zone);
+                        }
+                    }
+
+                    else if (properties[i].Display != null &&
+                        properties[i].Display.Type == DisplayType.LifePhaseName)
+                    {
+                        LifeCycle lifeCycle;
+                        if (properties[i].Display.LifeCycleName != null)
+                            lifeCycle = Apsim.FindAll(model, typeof(LifeCycle)).FirstOrDefault(p => p.Name == properties[i].Display.LifeCycleName) as LifeCycle;
+                        else
+                            lifeCycle = GetLifeCycle(properties);
+                        if (lifeCycle != null)
+                        {
+                            cell.DropDownStrings = GetPhaseNames(lifeCycle);
+                        }
+                    }
                     else if (properties[i].Display != null &&
                              properties[i].Display.Type == DisplayType.FieldName)
                     {
@@ -430,8 +456,11 @@ namespace UserInterface.Presenters
             int row = properties.IndexOf(property);
             if (property is VariableObject)
                 table.Rows.Add(new object[] { property.Value, null, null });
-            else if (property.Value is IModel)
-                table.Rows.Add(new object[] { property.Description, Apsim.FullPath(property.Value as IModel), property.Name });
+            else if (property.Value is IModel m)
+            {
+                string cellValue = IsSiblingOfModel(m) ? m.Name : Apsim.FullPath(m);
+                table.Rows.Add(new object[] { property.Description, cellValue, property.Name });
+            }
             else if (property is VariableProperty p)
                 table.Rows.Add(new object[] { property.Description, GetCellValue(property, row, 1), p.Tooltip });
             else
@@ -484,6 +513,32 @@ namespace UserInterface.Presenters
                     if (crop != null)
                     {
                         cell.DropDownStrings = GetCultivarNames(crop);
+                    }
+                }
+
+                else if (properties[i].Display != null &&
+                         properties[i].Display.Type == DisplayType.LifeCycleName)
+                {
+                    cell.EditorType = EditorTypeEnum.DropDown;
+                    Zone zone = Apsim.Find(model,typeof(Zone)) as Zone;
+                    if (zone != null)
+                    {
+                        cell.DropDownStrings = GetLifeCycleNames(zone);
+                    }
+                }
+
+                else if (properties[i].Display != null &&
+                        properties[i].Display.Type == DisplayType.LifePhaseName)
+                {
+                    cell.EditorType = EditorTypeEnum.DropDown;
+                    LifeCycle lifeCycle;
+                    if (properties[i].Display.LifeCycleName != null)
+                        lifeCycle = Apsim.FindAll(model, typeof(LifeCycle)).FirstOrDefault(p => p.Name == properties[i].Display.LifeCycleName) as LifeCycle;
+                    else
+                        lifeCycle = GetLifeCycle(properties);
+                    if (lifeCycle != null)
+                    {
+                        cell.DropDownStrings = GetPhaseNames(lifeCycle);
                     }
                 }
                 else if (properties[i].Display != null && 
@@ -637,22 +692,91 @@ namespace UserInterface.Presenters
         /// <returns>A list of cultivars.</returns>
         private string[] GetCultivarNames(IPlant crop)
         {
-            if (crop.CultivarNames.Length == 0)
+            Simulations simulations = Apsim.Parent(crop as IModel, typeof(Simulations)) as Simulations;
+            Replacements replacements = Apsim.Child(simulations, typeof(Replacements)) as Replacements;
+
+            if (replacements == null)
+                return crop.CultivarNames;
+
+            IPlant replacementCrop = Apsim.Child(replacements, (crop as IModel).Name) as IPlant;
+            if (replacementCrop != null)
+                return replacementCrop.CultivarNames;
+
+            // Check for cultivar folders under replacements.
+            List<string> cultivarNames = crop.CultivarNames.ToList();
+            foreach (IModel cultivarFolder in Apsim.Children(crop as IModel, typeof(CultivarFolder)))
             {
-                Simulations simulations = Apsim.Parent(crop as IModel, typeof(Simulations)) as Simulations;
+                IModel replacementFolder = Apsim.Child(replacements, cultivarFolder.Name);
+                if (replacementFolder != null)
+                {
+                    // If we find a matching cultivar folder under replacements, remove
+                    // all cultivar names added by this folder in the official plant
+                    // model, and add the cultivar names added by the matching cultivar
+                    // folder under replacements.
+                    foreach (IModel cultivar in Apsim.ChildrenRecursively(cultivarFolder, typeof(Cultivar)))
+                    {
+                        cultivarNames.Remove(cultivar.Name);
+
+                        // If the cultivar has memo children, then the memo text will
+                        // be appended to the cultivar name after a vertical bar |.
+                        // Technically, there could be a cultivar x and x|y, but the UI
+                        // will prevent users from doing this, so the user would really
+                        // just be digging their own hole at this point.
+                        cultivarNames.RemoveAll(c => c.StartsWith(cultivar.Name + "|"));
+                    }
+
+                    foreach (Alias alias in Apsim.ChildrenRecursively(cultivarFolder, typeof(Alias)))
+                        cultivarNames.RemoveAll(c => c.StartsWith(alias.Name + "|"));
+
+                    foreach (IModel cultivar in Apsim.ChildrenRecursively(replacementFolder, typeof(Cultivar)))
+                        cultivarNames.Add(cultivar.Name);
+                }
+            }
+
+            return cultivarNames.ToArray();
+        }
+
+        /// <summary>Get a list of life cycles in the zone.</summary>
+        /// <param name="zone">The zone.</param>
+        /// <returns>A list of life cycles.</returns>
+        private string[] GetLifeCycleNames(Zone zone)
+        {
+            List<IModel> LifeCycles = Apsim.FindAll(zone, typeof(LifeCycle));
+            if (LifeCycles.Count > 0)
+            {
+                string[] Namelist = new string[LifeCycles.Count];
+                int i = 0;
+                foreach (IModel LC in LifeCycles)
+                {
+                    Namelist[i] = LC.Name;
+                    i++;
+                }
+                return Namelist;
+            }
+            return new string[0];
+        }
+
+        /// <summary>Get a list of phases for lifecycle.</summary>
+        /// <param name="lifecycle">The lifecycle.</param>
+        /// <returns>A list of phases.</returns>
+        private string[] GetPhaseNames(LifeCycle lifeCycle)
+        {
+            if (lifeCycle.LifeCyclePhaseNames.Length == 0)
+            {
+                Simulations simulations = Apsim.Parent(lifeCycle as IModel, typeof(Simulations)) as Simulations;
                 Replacements replacements = Apsim.Child(simulations, typeof(Replacements)) as Replacements;
                 if (replacements != null)
                 {
-                    IPlant replacementCrop = Apsim.Child(replacements, (crop as IModel).Name) as IPlant;
-                    if (replacementCrop != null)
+                    LifeCycle replacementLifeCycle = Apsim.Child(replacements, (lifeCycle as IModel).Name) as LifeCycle;
+                    if (replacementLifeCycle != null)
                     {
-                        return replacementCrop.CultivarNames;
+                        return replacementLifeCycle.LifeCyclePhaseNames;
                     }
                 }
             }
             else
             {
-                return crop.CultivarNames;
+                return lifeCycle.LifeCyclePhaseNames;
             }
 
             return new string[0];
@@ -707,6 +831,30 @@ namespace UserInterface.Presenters
 
             // Not found so look for one in scope.
             return Apsim.Find(model, typeof(IPlant)) as IPlant;
+        }
+
+        /// <summary>
+        /// Go find a Life Cycle property in the specified list of properties or if not
+        /// found, find the first Life Cycle in scope.
+        /// </summary>
+        /// <param name="properties">The list of properties to look through.</param>
+        /// <returns>The found Life Cycle or null if none found.</returns>
+        private LifeCycle GetLifeCycle(List<IVariable> properties)
+        {
+            foreach (IVariable property in properties)
+            {
+                if (property.DataType == typeof(LifeCycle))
+                {
+                    LifeCycle lifeCycle = property.Value as LifeCycle;
+                    if (lifeCycle != null)
+                    {
+                        return lifeCycle;
+                    }
+                }
+            }
+
+            // Not found so look for one in scope.
+            return Apsim.Find(model, typeof(LifeCycle)) as LifeCycle;
         }
 
         private string[] GetResidueNames()
@@ -788,7 +936,12 @@ namespace UserInterface.Presenters
 
             List<string> modelNames = new List<string>();
             foreach (IModel model in models)
-                modelNames.Add(Apsim.FullPath(model));
+            {
+                if (IsSiblingOfModel(model))
+                    modelNames.Add(model.Name);
+                else
+                    modelNames.Add(Apsim.FullPath(model));
+            }
             return modelNames.ToArray();
         }
 
@@ -843,6 +996,14 @@ namespace UserInterface.Presenters
             object result = property.ValueWithArrayHandling;
             if (property.DataType == typeof(double) && double.IsNaN((double)result))
                 result = "";
+            if (result is IModel m)
+            {
+                if (IsSiblingOfModel(m))
+                    return m.Name;
+
+                return Apsim.FullPath(m);
+            }
+
             return result;
         }
 
@@ -868,7 +1029,13 @@ namespace UserInterface.Presenters
                 return Apsim.Find(property.Object as IModel, cell.NewValue);
 
             if (property.Display != null && property.Display.Type == DisplayType.Model)
-                return Apsim.Get(property.Object as IModel, cell.NewValue);
+            {
+                object result = Apsim.Get(property.Object as IModel, cell.NewValue);
+                if (result == null)
+                    result = Apsim.Find(property.Object as IModel, cell.NewValue);
+
+                return result;
+            }
 
             try
             {
@@ -939,6 +1106,23 @@ namespace UserInterface.Presenters
                 return false;
             }
             return true;
+        }
+
+        /// <summary>
+        /// Checks if a given model is a sibling of this.model.
+        /// </summary>
+        /// <param name="m">The model to be tested.</param>
+        private bool IsSiblingOfModel(IModel m)
+        {
+            IModel parent = this.model.Parent;
+            if (parent is Manager)
+                parent = parent.Parent;
+
+            IModel targetParent = m.Parent;
+            if (targetParent is Manager)
+                targetParent = targetParent.Parent;
+
+            return parent == targetParent;
         }
 
         /// <summary>

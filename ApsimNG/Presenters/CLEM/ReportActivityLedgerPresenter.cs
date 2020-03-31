@@ -5,7 +5,6 @@ namespace UserInterface.Presenters
     using Models;
     using Models.Core;
     using Models.Factorial;
-    using Models.Report;
     using System;
     using System.Data;
     using EventArguments;

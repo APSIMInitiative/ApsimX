@@ -16,7 +16,7 @@ namespace Models.LifeCycle
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(LifeStage))]
+    [ValidParent(ParentType = typeof(LifeCyclePhase))]
     public class PlantOrganConsumption : Model
     {
         /// <summary>Returns the potential damage that an individual can cause per day</summary>
@@ -25,7 +25,7 @@ namespace Models.LifeCycle
         private IFunction RateOfOrganConsumptionPerIndividual = null;
 
         [Link(Type = LinkType.Ancestor)]
-        private LifeStage ParentStage = null;
+        private LifeCyclePhase ParentStage = null;
 
         /// <summary>Host plant that Pest/Disease bothers</summary>
         [Description("Select host plant that Pest/Disease may bother")]

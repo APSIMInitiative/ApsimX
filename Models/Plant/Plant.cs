@@ -62,7 +62,9 @@
         #endregion
 
         #region Class properties and fields
+
         /// <summary>Used by several organs to determine the type of crop.</summary>
+        [Description("Used by several organs to determine the type of crop.")]
         public string CropType { get; set; }
 
         /// <summary>Gets a value indicating how leguminous a plant is</summary>
@@ -345,8 +347,8 @@
         /// <summary>Sow the crop with the specified parameters.</summary>
         /// <param name="cultivar">The cultivar.</param>
         /// <param name="population">The population.</param>
-        /// <param name="depth">The depth.</param>
-        /// <param name="rowSpacing">The row spacing.</param>
+        /// <param name="depth">The depth mm.</param>
+        /// <param name="rowSpacing">The row spacing mm.</param>
         /// <param name="maxCover">The maximum cover.</param>
         /// <param name="budNumber">The bud number.</param>
         /// <param name="rowConfig">SkipRow configuration.</param>
@@ -496,7 +498,7 @@
         public Biomass RemoveBiomass(double amountToRemove)
         {
             var defoliatedBiomass = new Biomass();
-            var preRemovalBiomass = AboveGround.Wt;
+            var preRemovalBiomass = AboveGround.Wt*10;
             foreach (var organ in Organs.Cast<IOrganDamage>())
             {
                 // These calculations convert organ live weight from g/m2 to kg/ha

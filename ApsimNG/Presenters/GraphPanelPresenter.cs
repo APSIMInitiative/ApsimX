@@ -1,6 +1,6 @@
 ﻿using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Graph;
+using Models;
 using Models.Storage;
 using System;
 using System.Collections.Generic;
@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UserInterface.Interfaces;
 using UserInterface.Views;
+using ApsimNG.EventArguments;
 
 namespace UserInterface.Presenters
 {
@@ -64,6 +65,7 @@ namespace UserInterface.Presenters
                 throw new ArgumentException();
 
             presenter.CommandHistory.ModelChanged += OnModelChanged;
+            this.view.GraphViewCreated += ModifyGraphView;
 
             properties = new PropertyPresenter();
             properties.Attach(panel, this.view.PropertiesGrid, presenter);
@@ -85,6 +87,7 @@ namespace UserInterface.Presenters
             processingThread.DoWork -= WorkerThread;
 
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
+            this.view.GraphViewCreated -= ModifyGraphView;
             ClearGraphs();
             properties.Detach();
         }
@@ -312,9 +315,22 @@ namespace UserInterface.Presenters
         private void OnModelChanged(object changedModel)
         {
             if (changedModel == panel || Apsim.ChildrenRecursively(panel).Contains(changedModel as Model))
-            {
                 Refresh();
-            }
+        }
+
+        /// <summary>
+        /// Called whenever the view creates a graph. Allows for modifications
+        /// to the graph view to be applied.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void ModifyGraphView(object sender, CustomDataEventArgs<IGraphView> args)
+        {
+            // n.b. this will be called on the main thread.
+            if (panel.HideTitles)
+                args.Data.FormatTitle(null);
+            args.Data.FontSize = panel.FontSize;
+            args.Data.MarkerSize = panel.MarkerSize;
         }
 
         private class WorkerStatus

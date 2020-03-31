@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 80,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-06",
+  "Version": 84,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -1066,7 +1066,7 @@
                     },
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Expression": "([IWeather].CO2 - [Leaf].CO2internal.Value())/(350 - [Leaf].CO2internal.Value())",
+                      "Expression": "([IWeather].CO2 - [Leaf].CO2internal)/(350 - [Leaf].CO2internal)",
                       "Name": "RelativeCO2Gradient",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -3272,6 +3272,15 @@
                     }
                   ],
                   "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Root].MinimumNConc",
+                  "Name": "CriticalNConc",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -7587,7 +7596,7 @@
                                     0.304,
                                     0.298,
                                     0.285,
-                                    0.384,
+                                    0.364,
                                     0.335,
                                     0.37,
                                     0.332,
@@ -12958,7 +12967,7 @@
                                     0.304,
                                     0.298,
                                     0.285,
-                                    0.384,
+                                    0.364,
                                     0.335,
                                     0.37,
                                     0.332,
@@ -62602,7 +62611,7 @@
                                 0.304,
                                 0.298,
                                 0.285,
-                                0.384,
+                                0.364,
                                 0.335,
                                 0.37,
                                 0.332,

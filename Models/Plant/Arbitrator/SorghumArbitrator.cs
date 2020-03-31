@@ -10,6 +10,7 @@ using System.Xml.Serialization;
 using Models.PMF.Organs;
 using Models.PMF.Phen;
 using Newtonsoft.Json;
+using Models.Functions;
 
 namespace Models.PMF
 {
@@ -40,7 +41,7 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class SorghumArbitrator: BaseArbitrator
+    public class SorghumArbitrator : BaseArbitrator
     {
         #region Links and Input parameters
 
@@ -95,7 +96,7 @@ namespace Models.PMF
         /// <summary>Gets the water demand.</summary>
         /// <value>The water demand.</value>
         public double NDiffusionSupply { get; private set; }
-        
+
         #endregion
         private List<IModel> uptakeModels = null;
         private List<IModel> zones = null;
@@ -103,11 +104,21 @@ namespace Models.PMF
         private IPhase previousPhase;
         private double accumTT;
 
+        ///// <summary>
+        ///// Total TTFM accumulated from flowering.
+        ///// </summary>
+        //[JsonIgnore]
+        //public double TTFMFromFlowering { get; private set; }
+
         /// <summary>
         /// Total TTFM accumulated from flowering.
         /// </summary>
-        [JsonIgnore]
-        public double TTFMFromFlowering { get; private set; }
+        [Link(Type = LinkType.Path, Path = "[Phenology].TTFMFromFlowering")]
+        protected IFunction TTFMFromFlowering = null;
+
+        /// <summary>ThermalTime after Flowering to stop N Uptake</summary>
+        [Link(Type = LinkType.Path, Path = "[Root].NUptakeCease")]
+        private IFunction NUptakeCease { get; set; }
 
         /// <summary>
         /// Used in stem DM demand function. Need to reconsider how this works.
@@ -159,7 +170,7 @@ namespace Models.PMF
         {
             for (int i = 0; i < Organs.Count; i++)
                 N.UptakeSupply[i] = 0;
-            UpdateTTElapsed();
+            //UpdateTTElapsed();
         }
 
         /// <summary>Clears this instance.</summary>
@@ -170,13 +181,13 @@ namespace Models.PMF
             WatSupply = 0.0;
             NMassFlowSupply = 0.0;
             NDiffusionSupply = 0.0;
-            TTFMFromFlowering = 0.0;
-            
+            //TTFMFromFlowering = 0.0;
+
             SWAvailRatio = 0.0;
             SDRatio = 0.0;
             PhotoStress = 0.0;
-            TotalAvail  = 0.0;
-            TotalPotAvail  = 0.0;
+            TotalAvail = 0.0;
+            TotalPotAvail = 0.0;
         }
 
         #region IUptake interface
@@ -220,8 +231,10 @@ namespace Models.PMF
             // Give the water uptake for each zone to Root so that it can perform the uptake
             // i.e. Root will do pass the uptake to the soil water balance.
             foreach (ZoneWaterAndN zone in zones)
-            {
                 StoreWaterVariablesForNitrogenUptake(zone);
+
+            foreach (ZoneWaterAndN zone in zones)
+            {
                 Plant.Root.DoWaterUptake(zone.Water, zone.Zone.Name);
             }
         }
@@ -267,7 +280,7 @@ namespace Models.PMF
                 var totalAvail = myZone.AvailableSW.Sum();
                 var totalAvailPot = myZone.PotentialAvailableSW.Sum();
                 var totalSupply = myZone.Supply.Sum();
-                WatSupply = totalSupply; 
+                WatSupply = totalSupply;
 
                 // Set reporting variables.
                 Avail = myZone.AvailableSW;
@@ -276,7 +289,7 @@ namespace Models.PMF
                 TotalPotAvail = myZone.PotentialAvailableSW.Sum();
 
                 //used for SWDef PhenologyStress table lookup
-                SWAvailRatio = MathUtilities.Bound(MathUtilities.Divide(totalAvail, totalAvailPot, 1.0),0.0,10.0);
+                SWAvailRatio = MathUtilities.Bound(MathUtilities.Divide(totalAvail, totalAvailPot, 1.0), 0.0, 10.0);
 
                 //used for SWDef ExpansionStress table lookup
                 SDRatio = MathUtilities.Bound(MathUtilities.Divide(totalSupply, WDemand, 1.0), 0.0, 10);
@@ -331,7 +344,7 @@ namespace Models.PMF
                 //have to correct the leaf demand calculation
                 var leaf = Organs[leafIndex] as SorghumLeaf;
                 var leafAdjustment = leaf.calculateClassicDemandDelta();
-                
+
                 //double NDemand = (N.TotalPlantDemand - N.TotalReallocation) / kgha2gsm * Plant.Zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
                 //old sorghum uses g/m^2 - need to convert after it is used to calculate actual diffusion
                 // leaf adjustment is not needed here because it is an adjustment for structural demand - we only look at metabolic here.
@@ -360,7 +373,7 @@ namespace Models.PMF
                     var root = Organs[rootIndex] as Root;
 
                     //Get Nuptake supply from each organ and set the PotentialUptake parameters that are passed to the soil arbitrator
-                    
+
                     //at present these 2arrays arenot being used within the CalculateNitrogenSupply function
                     //sorghum uses Diffusion & Massflow variables currently
                     double[] organNO3Supply = new double[zone.NO3N.Length]; //kg/ha - dltNo3 in old apsim
@@ -385,12 +398,13 @@ namespace Models.PMF
                         var actualMassFlow = DltTT > 0 ? totalMassFlow : 0.0;
                         var maxDiffusionConst = root.MaxDiffusion.Value();
 
-                        double NUptakeCease = (Apsim.Find(this, "NUptakeCease") as Functions.IFunction).Value();
-                        if (TTFMFromFlowering > NUptakeCease)
+                        //double nUptakeCease = NUptakeCease.Value();
+
+                        if (TTFMFromFlowering.Value() > NUptakeCease.Value())
                             totalMassFlow = 0;
                         actualMassFlow = totalMassFlow;
-                        
-                        if (totalMassFlow < nDemand && TTFMFromFlowering < NUptakeCease) // fixme && ttElapsed < nUptakeCease
+
+                        if (totalMassFlow < nDemand && TTFMFromFlowering.Value() < NUptakeCease.Value()) // fixme && ttElapsed < nUptakeCease
                         {
                             actualDiffusion = MathUtilities.Bound(nDemand - totalMassFlow, 0.0, totalDiffusion);
                             actualDiffusion = MathUtilities.Divide(actualDiffusion, maxDiffusionConst, 0.0);
@@ -445,7 +459,7 @@ namespace Models.PMF
             {
                 var swdep = myZone.StartWater[layer]; //mm
                 var dltSwdep = myZone.WaterUptake[layer];
-                
+
                 //NO3N is in kg/ha - old sorghum used g/m^2
                 var no3conc = MathUtilities.Divide(zone.NO3N[layer] * kgha2gsm, swdep, 0);
                 var no3massFlow = no3conc * (-dltSwdep);
@@ -490,7 +504,7 @@ namespace Models.PMF
                     //NMassFlowSupply += MathUtilities.Sum(Z.NH4N);
                     nSupply += supply * Z.Zone.Area;
 
-                    for(int i = 0; i < Z.NH4N.Length; ++i)
+                    for (int i = 0; i < Z.NH4N.Length; ++i)
                         Z.NH4N[i] = 0;
                 }
 
@@ -512,23 +526,23 @@ namespace Models.PMF
 
         #endregion
 
-        private void UpdateTTElapsed()
-        {
-            // Can't do this at end of day because it will be too late.
-            // Can't do this in DoPhenology because it will happen before daily
-            // phenology development.
-            int flowering = phenology.StartStagePhaseIndex("Flowering");
-            int maturity = phenology.EndStagePhaseIndex("Maturity");
-            if (phenology.Between(flowering, maturity))
-            {
-                double dltTT;
-                if (phenology.CurrentPhase.Start == "Flowering" && phenology.CurrentPhase is GenericPhase)
-                    dltTT = (phenology.CurrentPhase as GenericPhase).ProgressionForTimeStep;
-                else
-                    dltTT = ((double?)Apsim.Get(this, "[Phenology].DltTTFM.Value()") ?? (double)Apsim.Get(this, "[Phenology].ThermalTime.Value()"));
-                TTFMFromFlowering += dltTT;
-            }
-        }
+        //private void UpdateTTElapsed()
+        //{
+        //    // Can't do this at end of day because it will be too late.
+        //    // Can't do this in DoPhenology because it will happen before daily
+        //    // phenology development.
+        //    int flowering = phenology.StartStagePhaseIndex("Flowering");
+        //    int maturity = phenology.EndStagePhaseIndex("Maturity");
+        //    if (phenology.Between(flowering, maturity))
+        //    {
+        //        double dltTT;
+        //        if (phenology.CurrentPhase.Start == "Flowering" && phenology.CurrentPhase is GenericPhase)
+        //            dltTT = (phenology.CurrentPhase as GenericPhase).ProgressionForTimeStep;
+        //        else
+        //            dltTT = ((double?)Apsim.Get(this, "[Phenology].DltTTFM.Value()") ?? (double)Apsim.Get(this, "[Phenology].ThermalTime.Value()"));
+        //        TTFMFromFlowering += dltTT;
+        //    }
+        //}
 
         #region Plant interface methods
 

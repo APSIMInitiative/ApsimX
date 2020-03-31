@@ -94,10 +94,6 @@ namespace Models.PMF.Phen
             First = true;
         }
 
-        /// <summary>Writes the summary.</summary>
-        public void WriteSummary(TextWriter writer)  { writer.WriteLine("      " + Name); }
-
-
         //7. Private methods
         //-----------------------------------------------------------------------------------------------------------------
 

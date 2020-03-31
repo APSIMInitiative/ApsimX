@@ -156,7 +156,7 @@ namespace UnitTests
                                 Area = 1,
                                 Children = new List<Model>()
                                 {
-                                    new Models.Report.Report()
+                                    new Models.Report()
                                     {
                                         VariableNames = new string[]
                                         {

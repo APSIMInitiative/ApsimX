@@ -15,6 +15,7 @@ namespace Models.PMF
     /// Single Pass Relative allocation rules used to determine partitioning
     /// </summary>
     [Serializable]
+    [ValidParent(ParentType = typeof(BiomassTypeArbitrator))]
     public class RelativeAllocationSinglePass : Model, IArbitrationMethod, ICustomDocumentation
     {
         /// <summary>Relatives the allocation.</summary>
