@@ -277,8 +277,11 @@
     <Compile Include="Graph\MultiDescriptorPainter.cs" />
     <Compile Include="Graph\SequentialPainter.cs" />
     <Compile Include="Graph\SeriesDefinition.cs" />
+    <Compile Include="Lifecycle\AccumulateCohortExpression.cs" />
     <Compile Include="Lifecycle\IInfest.cs" />
     <Compile Include="Lifecycle\Infestation.cs" />
+    <Compile Include="Lifecycle\ProgenyDestinationPhase.cs" />
+    <Compile Include="Lifecycle\MigrantDestinationPhase.cs" />
     <Compile Include="Lifecycle\PlantAssimilateConsumption.cs" />
     <Compile Include="Lifecycle\PlantOrganFunctionalDimensionReduction.cs" />
     <Compile Include="Lifecycle\PlantOrganConsumption.cs" />
