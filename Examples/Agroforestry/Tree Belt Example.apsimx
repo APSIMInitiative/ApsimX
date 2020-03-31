@@ -349,7 +349,6 @@
                     "[Clock].Today",
                     "[Zone].Area",
                     "Parent.Distance as Distance",
-                    "Radn",
                     "[LocalMicroClimate].Radn",
                     "[TreeProxy].Shade"
                   ],
