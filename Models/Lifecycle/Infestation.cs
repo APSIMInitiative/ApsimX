@@ -77,9 +77,6 @@
         /// <summary>Method to send infestation event to LifeCycle</summary>
         public void Infest()
         {
-            IModel zone = Apsim.Parent(this, typeof(Zone));
-            InfestingOrganisum = Apsim.Find(zone, InfestingOrganisum.Name) as LifeCycle;
-            InfestingPhase = Apsim.Find(InfestingOrganisum, InfestingPhase.Name) as LifeCyclePhase;
             Cohort Immigrants = new Cohort(InfestingPhase);
             Immigrants.Population = NumberOfImmigrants.Value();
             Immigrants.ChronologicalAge = ChronoAgeOfImmigrants;
@@ -94,7 +91,9 @@
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             InfestingOrganisum = Apsim.Find(this.Parent, InfestingOrganisumName) as LifeCycle;
-            InfestingPhase = Apsim.Find(InfestingOrganisum, InfestingPhaseName) as LifeCyclePhase;
+            if (InfestingOrganisum == null)
+                throw new Exception(Apsim.FullPath(this) + " Could not find an infesting organisum called " + InfestingOrganisumName);
+            InfestingPhase = Apsim.Child(InfestingOrganisum, InfestingPhaseName) as LifeCyclePhase;
         }
 
         /// <summary>Call infest() events at specified time steps</summary>
