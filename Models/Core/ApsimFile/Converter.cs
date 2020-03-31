@@ -19,7 +19,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 91; } }
+        public static int LatestVersion { get { return 90; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1910,32 +1910,13 @@
         }
 
         /// <summary>
-        /// Add progeny destination phase and mortality function.
         /// </summary>
         /// <param name="root"></param>
         /// <param name="fileName"></param>
         private static void UpgradeToVersion90(JObject root, string fileName)
         {
-            foreach (JObject LC in JsonUtilities.ChildrenRecursively(root, "LifeCycle"))
-            {
-                foreach (JObject LP in JsonUtilities.ChildrenRecursively(LC, "LifeCyclePhase"))
-                {
-                    JsonUtilities.AddConstantFunctionIfNotExists(LP, "Migration", "0.0");
-                    JObject ProgDest = JsonUtilities.CreateNewChildModel(LP, "ProgenyDestination", "Models.LifeCycle.ProgenyDestinationPhase");
-                    ProgDest["NameOfLifeCycleForProgeny"] = LC["Name"].ToString();
-                    ProgDest["NameOfPhaseForProgeny"] = LP["NameOfPhaseForProgeny"].ToString();
-                }
-            }
-        }
-		
-        /// <summary>
-        /// </summary>
-        /// <param name="root"></param>
-        /// <param name="fileName"></param>
-        private static void UpgradeToVersion91(JObject root, string fileName)
-        {
             Tuple<string, string>[] changes =
-			{
+            {
                 new Tuple<string, string>(".HarvestableWt",          ".Harvestable.Wt"),
                 new Tuple<string, string>(".HarvestableN",           ".Harvestable.N"),
                 new Tuple<string, string>(".StandingHerbageWt",      ".Harvestable.Wt"),
@@ -1952,7 +1933,28 @@
                 // new Tuple<string, string>(".Stem.Namount",           ".Stem.DM.N")
             };
             JsonUtilities.RenameVariablesInReportAndManager(root, changes);
-        }		
+        }
+
+
+
+        /// <summary>
+        /// Add progeny destination phase and mortality function.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion900(JObject root, string fileName)
+        {
+            foreach (JObject LC in JsonUtilities.ChildrenRecursively(root, "LifeCycle"))
+            {
+                foreach (JObject LP in JsonUtilities.ChildrenRecursively(LC, "LifeCyclePhase"))
+                {
+                    JsonUtilities.AddConstantFunctionIfNotExists(LP, "Migration", "0.0");
+                    JObject ProgDest = JsonUtilities.CreateNewChildModel(LP, "ProgenyDestination", "Models.LifeCycle.ProgenyDestinationPhase");
+                    ProgDest["NameOfLifeCycleForProgeny"] = LC["Name"].ToString();
+                    ProgDest["NameOfPhaseForProgeny"] = LP["NameOfPhaseForProgeny"].ToString();
+                }
+            }
+        }
 
         /// <summary>
         /// Refactor LifeCycle model
