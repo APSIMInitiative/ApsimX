@@ -34,7 +34,7 @@ namespace Models.Functions
         {
             object o = locator.Get(VariableName.Trim());
             if (o == null)
-                throw new Exception("Unable to locate " + VariableName.Trim() + " called from the variable reference function " + Name + " within "+ Apsim.FullPath(this));
+                throw new Exception("Unable to locate " + VariableName.Trim() + " called from the variable reference function " + Apsim.FullPath(this));
 
             if (o is IFunction)
                 return (o as IFunction).Value(arrayIndex);
