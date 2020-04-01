@@ -542,6 +542,24 @@ namespace Models.PMF.Struct
 			}
 		}
 
+		/// <summary>
+		/// In old apsim, we update the stage variable of each plant part
+		/// immediately after the call to phenology::development();
+		/// 
+		/// This stage variable can probably be refactored out now
+		/// in favour of just using phenology.Stage, but I will
+		/// do a separate pull request for this to ensure that the
+		/// changes don't get masked by the effects of the tillering
+		/// implementation.
+		/// </summary>
+		/// <param name="sender">Sender object.</param>
+		/// <param name="e">Event arguments.</param>
+		[EventSubscribe("PostPhenology")]
+		private void PostPhenology(object sender, EventArgs e)
+		{
+			stage = phenology.Stage;
+		}
+
 		private double GetTTFi()
 		{
 			// fixme
