@@ -456,7 +456,9 @@ namespace Models.Core.ApsimFile
         public static void RemoveChild(JObject node, string childName)
         {
             var child = ChildWithName(node, childName);
-            if (child == null) return;
+            if (child == null)
+                return;
+
             child.Remove();
         }
 
