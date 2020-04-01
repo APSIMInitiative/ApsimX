@@ -31,11 +31,6 @@
       "GrowthRespirationCoefficient": 0.25,
       "RespirationTReference": 20.0,
       "RespirationExponent": 1.5,
-      "NThresholdsForRoots": [
-        0.0225,
-        0.01,
-        0.0275
-      ],
       "DegreesDayForGermination": 125.0,
       "TargetShootRootRatio": 4.0,
       "MaxRootAllocation": 0.25,
@@ -82,8 +77,6 @@
       "RootDepthMinimum": 30.0,
       "RootDepthMaximum": 350.0,
       "RootElongationRate": 25.0,
-      "RootDistributionDepthParam": 70.0,
-      "RootDistributionExponent": 2.5,
       "MinimumGreenWt": 50.0,
       "PreferenceForGreenOverDead": 1.0,
       "PreferenceForLeafOverStems": 1.0,
@@ -244,6 +237,12 @@
         },
         {
             "$type": "Models.AgPasture.PastureBelowGroundOrgan, Models",
+            "NConcOptimum": 0.0225,
+            "NConcMinimum": 0.01,
+            "NConcMaximum": 0.0275,
+            "RootDistributionDepthParam": 70.0,
+            "RootDistributionExponent": 2.5,
+            "RootBottomDistributionFactor": 1.05,
             "Name": "Root",
             "Children": [
                 {

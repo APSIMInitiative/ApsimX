@@ -38,15 +38,9 @@
         /// <param name="zone">The zone the roots belong in.</param>
         /// <param name="initialDM">Initial dry matter weight</param>
         /// <param name="initialDepth">Initial root depth</param>
-        /// <param name="optNconc">The optimum N concentration</param>
-        /// <param name="minNconc">The minimum N concentration</param>
-        /// <param name="maxNconc">The maximum N concentration</param>
         /// <param name="minLiveDM">The minimum biomass for this organ</param>
         /// <param name="specificRootLength">The specific root length (m/g)</param>
         /// <param name="rootDepthMaximum">The maximum root depth</param>
-        /// <param name="rootDistributionDepthParam">Parameter to compute root distribution, depth with constant root</param>
-        /// <param name="rootBottomDistributionFactor">Parameter to compute root distribution, </param>
-        /// <param name="rootDistributionExponent">Parameter to compute root distribution, exponent for root decrease</param>
         /// <param name="waterAvailableMethod">Method to compute water available</param>
         /// <param name="nitrogenAvailableMethod">Method to compute N available</param>
         /// <param name="kNH4">Parameter to compute NN4 available, default method</param>
@@ -58,11 +52,8 @@
         /// <param name="referenceRLD">Parameter to compute available water, roots</param>
         /// <param name="exponentSoilMoisture">Parameter to compute available water</param>
         public void Initialise(Zone zone, double initialDM, double initialDepth,
-                               double optNconc, double minNconc, double maxNconc,
                                double minLiveDM,
                                double specificRootLength, double rootDepthMaximum,
-                               double rootDistributionDepthParam, double rootDistributionExponent,
-                               double rootBottomDistributionFactor,
                                PastureSpecies.PlantAvailableWaterMethod waterAvailableMethod,
                                PastureSpecies.PlantAvailableNitrogenMethod nitrogenAvailableMethod,
                                double kNH4, double kNO3, double maxNUptake,
@@ -86,15 +77,9 @@
 
             // save the parameters for this organ
             nLayers = mySoil.Thickness.Length;
-            NConcOptimum = optNconc;
-            NConcMinimum = minNconc;
-            NConcMaximum = maxNconc;
             MinimumLiveDM = minLiveDM;
             mySpecificRootLength = specificRootLength;
             myRootDepthMaximum = rootDepthMaximum;
-            myRootDistributionDepthParam = rootDistributionDepthParam;
-            myRootDistributionExponent = rootDistributionExponent;
-            myRootBottomDistributionFactor = rootBottomDistributionFactor;
             myWaterAvailableMethod = waterAvailableMethod;
             myNitrogenAvailableMethod = nitrogenAvailableMethod;
             myKNO3 = kNO3;
@@ -130,15 +115,29 @@
 
         /// <summary>Gets or sets the N concentration for optimum growth (kg/kg).</summary>
         [XmlIgnore]
-        public double NConcOptimum { get; set; } = 2.0;
+        public double NConcOptimum { get; set; } = 0.02;
 
         /// <summary>Gets or sets the minimum N concentration, structural N (kg/kg).</summary>
         [XmlIgnore]
-        public double NConcMinimum { get; set; } = 0.6;
+        public double NConcMinimum { get; set; } = 0.006;
 
         /// <summary>Gets or sets the maximum N concentration, for luxury uptake (kg/kg).</summary>
         [XmlIgnore]
-        public double NConcMaximum { get; set; } = 2.5;
+        public double NConcMaximum { get; set; } = 0.025;
+
+        /// <summary>Depth from surface where root proportion starts to decrease (mm).</summary>
+        [XmlIgnore]
+        [Units("mm")]
+        public double RootDistributionDepthParam { get; set; } = 90.0;
+
+        /// <summary>Exponent controlling the root distribution as function of depth (>0.0).</summary>
+        [XmlIgnore]
+        [Units("-")]
+        public double RootDistributionExponent { get; set; } = 3.2;
+
+        /// <summary>Factor for root distribution; controls where the function is zero below maxRootDepth.</summary>
+        [XmlIgnore]
+        public double RootBottomDistributionFactor { get; set; } = 1.05;
 
         /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
         internal double MinimumLiveDM = 0.0;
@@ -148,15 +147,6 @@
 
         /// <summary>Maximum rooting depth (mm).</summary>
         private double myRootDepthMaximum = 750.0;
-
-        /// <summary>Depth from surface where root proportion starts to decrease (mm).</summary>
-        private double myRootDistributionDepthParam = 90.0;
-
-        /// <summary>Exponent controlling the root distribution as function of depth (>0.0).</summary>
-        private double myRootDistributionExponent = 3.2;
-
-        /// <summary>Factor to compute root distribution (controls where, below maxRootDepth, the function is zero).</summary>
-        private double myRootBottomDistributionFactor = 1.05;
 
         /// <summary>Flag which method for computing soil available water will be used.</summary>
         private PastureSpecies.PlantAvailableWaterMethod myWaterAvailableMethod;
@@ -482,6 +472,7 @@
         /// <summary>Reset all amounts to zero in all tissues of this organ.</summary>
         internal void DoResetOrgan()
         {
+            Depth = 0;
             for (int t = 0; t < Tissue.Length; t++)
             {
                 Tissue[t].Reset();
@@ -772,7 +763,7 @@
             SoilCrop soilCropData = (SoilCrop)mySoil.Crop(species.Name);
             double depthTop = 0.0;
             double depthBottom = 0.0;
-            double depthFirstStage = Math.Min(myRootDepthMaximum, myRootDistributionDepthParam);
+            double depthFirstStage = Math.Min(myRootDepthMaximum, RootDistributionDepthParam);
 
             for (int layer = 0; layer < nLayers; layer++)
             {
@@ -790,10 +781,10 @@
                 else
                 {
                     // at least partially on second stage
-                    double maxRootDepth = myRootDepthMaximum * myRootBottomDistributionFactor;
-                    result[layer] = Math.Pow(maxRootDepth - Math.Max(depthTop, depthFirstStage), myRootDistributionExponent + 1)
-                                  - Math.Pow(maxRootDepth - Math.Min(depthBottom, myRootDepthMaximum), myRootDistributionExponent + 1);
-                    result[layer] /= (myRootDistributionExponent + 1) * Math.Pow(maxRootDepth - depthFirstStage, myRootDistributionExponent);
+                    double maxRootDepth = myRootDepthMaximum * RootBottomDistributionFactor;
+                    result[layer] = Math.Pow(maxRootDepth - Math.Max(depthTop, depthFirstStage), RootDistributionExponent + 1)
+                                  - Math.Pow(maxRootDepth - Math.Min(depthBottom, myRootDepthMaximum), RootDistributionExponent + 1);
+                    result[layer] /= (RootDistributionExponent + 1) * Math.Pow(maxRootDepth - depthFirstStage, RootDistributionExponent);
                     if (depthTop < depthFirstStage)
                     {
                         // partially in first stage
@@ -910,6 +901,12 @@
                 // No net growth
                 dRootDepth = 0.0;
             }
+        }
+
+        /// <summary>User is ending the pasture.</summary>
+        public void DoEndCrop()
+        {
+            Tissue[0].DetachBiomass(DMTotal, NTotal);
         }
 
         #endregion ---------------------------------------------------------------------------------------------------------

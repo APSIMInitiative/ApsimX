@@ -302,7 +302,7 @@
 
             // Incorporate all root mass to soil fresh organic matter
             foreach (PastureBelowGroundOrgan root in root)
-                root.Tissue[0].DetachBiomass(root.DMTotal, root.NTotal);
+                root.DoEndCrop();
 
             // zero all variables
             RefreshVariables();
@@ -315,7 +315,6 @@
             // clean up secondary variables
             greenLAI = 0.0;
             deadLAI = 0.0;
-            root[0].Depth = 0.0;
 
             isAlive = false;
             phenologicStage = -1;
@@ -1078,23 +1077,6 @@
         /// <summary>Daily root elongation rate at optimum temperature (mm/day).</summary>
         [Units("mm/day")]
         public double RootElongationRate { get; set; } = 25.0;
-
-        
-
-        /// <summary>Depth from surface where root proportion starts to decrease (mm).</summary>
-        [Units("mm")]
-        public double RootDistributionDepthParam { get; set; } = 90.0;
-
-        
-
-        /// <summary>Exponent controlling the root distribution as function of depth (>0.0).</summary>
-        [Units("-")]
-        public double RootDistributionExponent { get; set; } = 3.2;
-
-
-
-        /// <summary>Factor for root distribution; controls where the function is zero below maxRootDepth.</summary>
-        public double RootBottomDistributionFactor { get; set; } = 1.05;
 
         ////- Digestibility and feed quality >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -2727,10 +2709,8 @@
 
             // set the base or main root zone (use 2 tissues, one live other dead), more zones can be added by user
             root[0].Initialise(zone, InitialRootDM, InitialRootDepth,
-                               NThresholdsForRoots[0], NThresholdsForRoots[1], NThresholdsForRoots[2],
                                MinimumGreenWt * MinimumGreenRootProp, 
                                SpecificRootLength, RootDepthMaximum,
-                               RootDistributionDepthParam, RootDistributionExponent, RootBottomDistributionFactor,
                                WaterAvailableMethod, NitrogenAvailableMethod,
                                KNH4, KNO3, MaximumNUptake, kuNH4, kuNO3,
                                ReferenceKSuptake, ReferenceRLD, ExponentSoilMoisture);
@@ -2747,10 +2727,8 @@
                 // add the zone to the list
                 newRootOrgan.Initialise(zone, 
                                         rootZone.RootDM, rootZone.RootDepth,
-                                        NThresholdsForRoots[0], NThresholdsForRoots[1], NThresholdsForRoots[2],
                                         MinimumGreenWt * MinimumGreenRootProp,
                                         SpecificRootLength, RootDepthMaximum,
-                                        RootDistributionDepthParam, RootDistributionExponent, RootBottomDistributionFactor,
                                         WaterAvailableMethod, NitrogenAvailableMethod,
                                         KNH4, KNO3, MaximumNUptake, kuNH4, kuNO3,
                                         ReferenceKSuptake, ReferenceRLD, ExponentSoilMoisture);
