@@ -853,19 +853,9 @@
         [Units("m^2/kg")]
         public double SpecificLeafArea { get; set; } = 25.0;
 
-
-
-        /// <summary>Specific root length (m/gDM).</summary>
-        [Units("m/g")]
-        public double SpecificRootLength { get; set; } = 100.0;
-
-
-
         /// <summary>Fraction of stolon tissue used when computing green LAI (0-1).</summary>
         [Units("0-1")]
         public double StolonEffectOnLAI { get; set; } = 0.0;
-
-
 
         /// <summary>Maximum aboveground biomass for considering stems when computing LAI (kgDM/ha).</summary>
         [Units("kg/ha")]
@@ -1057,26 +1047,6 @@
         /// <summary>Exponent controlling shoot height as function of DM weight (>1.0).</summary>
         [Units(">1.0")]
         public double PlantHeightExponent { get; set; } = 2.8;
-
-        
-
-        ////- Root depth and distribution >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-        /// <summary>Minimum rooting depth at emergence (mm).</summary>
-        [Units("mm")]
-        public double RootDepthMinimum { get; set; } = 50.0;
-
-        
-
-        /// <summary>Maximum rooting depth (mm).</summary>
-        [Units("mm")]
-        public double RootDepthMaximum { get; set; } = 750.0;
-
-        
-
-        /// <summary>Daily root elongation rate at optimum temperature (mm/day).</summary>
-        [Units("mm/day")]
-        public double RootElongationRate { get; set; } = 25.0;
 
         ////- Digestibility and feed quality >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -2516,32 +2486,6 @@
             get { return root[0].BottomLayer; }
         }
 
-        /// <summary>Gets the fraction of root dry matter for each soil layer (0-1).</summary>
-        //[Description("Fraction of root dry matter for each soil layer")]
-        [Units("0-1")]
-        public double[] RootWtFraction
-        {
-            get { return root[0].Tissue[0].FractionWt; }
-        }
-
-        /// <summary>Gets the root length density by volume (mm/mm^3).</summary>
-        //[Description("Root length density by volume")]
-        [Units("mm/mm^3")]
-        public double[] RootLengthDensity
-        {
-            get
-            {
-                double[] result = new double[nLayers];
-                double totalRootLength = BelowGroundLiveWt * SpecificRootLength; // m root/m2 
-                totalRootLength *= 0.0000001; // convert into mm root/mm2 soil)
-                for (int layer = 0; layer < result.Length; layer++)
-                {
-                    result[layer] = RootWtFraction[layer] * totalRootLength / mySoil.Thickness[layer];
-                }
-                return result;
-            }
-        }
-
         ////- Harvest outputs >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Get above ground biomass</summary>
@@ -2710,7 +2654,6 @@
             // set the base or main root zone (use 2 tissues, one live other dead), more zones can be added by user
             root[0].Initialise(zone, InitialRootDM, InitialRootDepth,
                                MinimumGreenWt * MinimumGreenRootProp, 
-                               SpecificRootLength, RootDepthMaximum,
                                WaterAvailableMethod, NitrogenAvailableMethod,
                                KNH4, KNO3, MaximumNUptake, kuNH4, kuNO3,
                                ReferenceKSuptake, ReferenceRLD, ExponentSoilMoisture);
@@ -2728,7 +2671,6 @@
                 newRootOrgan.Initialise(zone, 
                                         rootZone.RootDM, rootZone.RootDepth,
                                         MinimumGreenWt * MinimumGreenRootProp,
-                                        SpecificRootLength, RootDepthMaximum,
                                         WaterAvailableMethod, NitrogenAvailableMethod,
                                         KNH4, KNO3, MaximumNUptake, kuNH4, kuNO3,
                                         ReferenceKSuptake, ReferenceRLD, ExponentSoilMoisture);
@@ -2838,7 +2780,7 @@
                                   matureWt: MinimumGreenWt * emergenceDMFractions[10],
                                   deadWt: 0.0);
 
-            root[0].Reset(root[0].MinimumLiveDM, RootDepthMinimum);
+            root[0].Reset(root[0].MinimumLiveDM, root[0].RootDepthMinimum);
 
             // 4. Set phenological stage to vegetative
             phenologicStage = 1;
@@ -3457,8 +3399,7 @@
 
                 // Evaluate root elongation and allocate new growth in each layer
                 if (phenologicStage > 0)
-                    root[0].EvaluateRootElongation(dGrowthRootDM, detachedRootDM, TemperatureLimitingFactor(Tmean(0.5)),
-                                                    RootDepthMinimum, RootDepthMaximum, RootElongationRate);
+                    root[0].EvaluateRootElongation(dGrowthRootDM, detachedRootDM, TemperatureLimitingFactor(Tmean(0.5)));
 
                 root[0].DoRootGrowthAllocation(dGrowthRootDM, dGrowthRootN);
             }

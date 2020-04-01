@@ -47,7 +47,6 @@
       "FractionLeafExponent": 3.0,
       "FractionToStolon": 0.2,
       "SpecificLeafArea": 30.0,
-      "SpecificRootLength": 50.0,
       "StolonEffectOnLAI": 0.3,
       "ShootMaxEffectOnLAI": 500.0,
       "MaxStemEffectOnLAI": 0.5,
@@ -74,9 +73,6 @@
       "PlantHeightMaximum": 300.0,
       "PlantHeightMassForMax": 7000.0,
       "PlantHeightExponent": 2.5,
-      "RootDepthMinimum": 50.0,
-      "RootDepthMaximum": 1000.0,
-      "RootElongationRate": 25.0,
       "MinimumGreenWt": 50.0,
       "PreferenceForGreenOverDead": 1.0,
       "PreferenceForLeafOverStems": 1.0,
@@ -275,6 +271,10 @@
             "RootDistributionDepthParam": 70.0,
             "RootDistributionExponent": 2.5,
             "RootBottomDistributionFactor": 1.05,
+            "SpecificRootLength": 50.0,
+            "RootDepthMinimum": 50.0,
+            "RootDepthMaximum": 1000.0,
+            "RootElongationRate": 25.0,
             "Name": "Root",
             "Children": [
                 {

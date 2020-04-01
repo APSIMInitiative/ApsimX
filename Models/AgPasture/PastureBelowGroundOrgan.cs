@@ -39,8 +39,6 @@
         /// <param name="initialDM">Initial dry matter weight</param>
         /// <param name="initialDepth">Initial root depth</param>
         /// <param name="minLiveDM">The minimum biomass for this organ</param>
-        /// <param name="specificRootLength">The specific root length (m/g)</param>
-        /// <param name="rootDepthMaximum">The maximum root depth</param>
         /// <param name="waterAvailableMethod">Method to compute water available</param>
         /// <param name="nitrogenAvailableMethod">Method to compute N available</param>
         /// <param name="kNH4">Parameter to compute NN4 available, default method</param>
@@ -53,7 +51,6 @@
         /// <param name="exponentSoilMoisture">Parameter to compute available water</param>
         public void Initialise(Zone zone, double initialDM, double initialDepth,
                                double minLiveDM,
-                               double specificRootLength, double rootDepthMaximum,
                                PastureSpecies.PlantAvailableWaterMethod waterAvailableMethod,
                                PastureSpecies.PlantAvailableNitrogenMethod nitrogenAvailableMethod,
                                double kNH4, double kNO3, double maxNUptake,
@@ -78,8 +75,6 @@
             // save the parameters for this organ
             nLayers = mySoil.Thickness.Length;
             MinimumLiveDM = minLiveDM;
-            mySpecificRootLength = specificRootLength;
-            myRootDepthMaximum = rootDepthMaximum;
             myWaterAvailableMethod = waterAvailableMethod;
             myNitrogenAvailableMethod = nitrogenAvailableMethod;
             myKNO3 = kNO3;
@@ -143,10 +138,21 @@
         internal double MinimumLiveDM = 0.0;
 
         /// <summary>Specific root length (m/gDM).</summary>
-        private double mySpecificRootLength = 100.0;
+        [XmlIgnore]
+        public double SpecificRootLength { get; set; } = 100.0;
+
+        /// <summary>Minimum rooting depth (mm).</summary>
+        [XmlIgnore]
+        public double RootDepthMinimum { get; set; } = 50.0;
 
         /// <summary>Maximum rooting depth (mm).</summary>
-        private double myRootDepthMaximum = 750.0;
+        [XmlIgnore]
+        public double RootDepthMaximum { get; set; } = 750.0;
+
+        /// <summary>Daily root elongation rate at optimum temperature (mm/day).</summary>
+        [Units("mm/day")]
+        [XmlIgnore]
+        public double RootElongationRate { get; set; } = 25.0;
 
         /// <summary>Flag which method for computing soil available water will be used.</summary>
         private PastureSpecies.PlantAvailableWaterMethod myWaterAvailableMethod;
@@ -415,7 +421,7 @@
             get
             {
                 double[] result = new double[nLayers];
-                double totalRootLength = Tissue[0].DM.Wt * mySpecificRootLength; // m root/m2 
+                double totalRootLength = Tissue[0].DM.Wt * SpecificRootLength; // m root/m2 
                 totalRootLength *= 0.0000001; // convert into mm root/mm2 soil)
                 for (int layer = 0; layer < result.Length; layer++)
                 {
@@ -459,7 +465,7 @@
         /// Reset this root organ's state.
         /// </summary>
         /// <param name="rootWt">The amount of root biomass (kg/ha).</param>
-        /// <param name="rootDepth">The depth of roots (mm).</param>
+        /// <param name="rootDepth">The depth of roots to reset to(mm).</param>
         public void Reset(double rootWt, double rootDepth)
         {
             Depth = rootDepth;
@@ -763,12 +769,12 @@
             SoilCrop soilCropData = (SoilCrop)mySoil.Crop(species.Name);
             double depthTop = 0.0;
             double depthBottom = 0.0;
-            double depthFirstStage = Math.Min(myRootDepthMaximum, RootDistributionDepthParam);
+            double depthFirstStage = Math.Min(RootDepthMaximum, RootDistributionDepthParam);
 
             for (int layer = 0; layer < nLayers; layer++)
             {
                 depthBottom += mySoil.Thickness[layer];
-                if (depthTop >= myRootDepthMaximum)
+                if (depthTop >= RootDepthMaximum)
                 {
                     // totally out of root zone
                     result[layer] = 0.0;
@@ -781,9 +787,9 @@
                 else
                 {
                     // at least partially on second stage
-                    double maxRootDepth = myRootDepthMaximum * RootBottomDistributionFactor;
+                    double maxRootDepth = RootDepthMaximum * RootBottomDistributionFactor;
                     result[layer] = Math.Pow(maxRootDepth - Math.Max(depthTop, depthFirstStage), RootDistributionExponent + 1)
-                                  - Math.Pow(maxRootDepth - Math.Min(depthBottom, myRootDepthMaximum), RootDistributionExponent + 1);
+                                  - Math.Pow(maxRootDepth - Math.Min(depthBottom, RootDepthMaximum), RootDistributionExponent + 1);
                     result[layer] /= (RootDistributionExponent + 1) * Math.Pow(maxRootDepth - depthFirstStage, RootDistributionExponent);
                     if (depthTop < depthFirstStage)
                     {
@@ -819,7 +825,7 @@
                 topLayersDepth += mySoil.Thickness[layer];
             }
             // Then consider layer at the bottom of the root zone
-            double layerFrac = Math.Min(1.0, (myRootDepthMaximum - topLayersDepth) / (Depth - topLayersDepth));
+            double layerFrac = Math.Min(1.0, (RootDepthMaximum - topLayersDepth) / (Depth - topLayersDepth));
             cumProportion += TargetDistribution[BottomLayer] * layerFrac;
 
             // Normalise the weights to be a fraction, adds up to one
@@ -882,11 +888,7 @@
         /// <param name="dGrowthRootDM">Root growth dry matter (kg/ha).</param>
         /// <param name="detachedRootDM">DM amount detached from roots, added to soil FOM (kg/ha)</param>
         /// <param name="temperatureLimitingFactor">Growth limiting factor due to temperature.</param>
-        /// <param name="RootDepthMinimum"></param>
-        /// <param name="RootDepthMaximum"></param>
-        /// <param name="RootElongationRate"></param>
-        public void EvaluateRootElongation(double dGrowthRootDM, double detachedRootDM, double temperatureLimitingFactor,
-                                           double RootDepthMinimum, double RootDepthMaximum, double RootElongationRate)
+        public void EvaluateRootElongation(double dGrowthRootDM, double detachedRootDM, double temperatureLimitingFactor)
         {
             // Check changes in root depth
             var dRootDepth = 0.0;
