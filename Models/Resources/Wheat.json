@@ -632,8 +632,8 @@
             {
               "$type": "Models.PMF.Phen.NodeNumberPhase, Models",
               "Start": "Emergence",
-              "End": "FloralInitiation",
-              "Name": "Vegetative",
+              "End": "VernalSaturation",
+              "Name": "Vernalising",
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
@@ -660,7 +660,7 @@
             },
             {
               "$type": "Models.PMF.Phen.GenericPhase, Models",
-              "Start": "FloralInitiation",
+              "Start": "VernalSaturation",
               "End": "TerminalSpikelet",
               "Name": "SpikeletDifferentiation",
               "Children": [
