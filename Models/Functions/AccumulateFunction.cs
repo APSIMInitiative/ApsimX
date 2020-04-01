@@ -123,7 +123,7 @@ namespace Models.Functions
             AccumulatedValue -= FractionRemovedOnCut * AccumulatedValue;
         }
 
-        /// <summary>Called when [cut].</summary>
+        /// <summary>Called when harvest.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Harvesting")]
@@ -131,7 +131,7 @@ namespace Models.Functions
         {
             AccumulatedValue -= FractionRemovedOnHarvest * AccumulatedValue;
         }
-        /// <summary>Called when [cut].</summary>
+        /// <summary>Called when Graze.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Grazing")]
@@ -140,7 +140,7 @@ namespace Models.Functions
             AccumulatedValue -= FractionRemovedOnGraze * AccumulatedValue;
         }
 
-        /// <summary>Called when [cut].</summary>
+        /// <summary>Called when winter pruning.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Pruning")]
