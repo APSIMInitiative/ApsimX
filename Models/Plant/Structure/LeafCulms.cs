@@ -537,8 +537,8 @@ namespace Models.PMF.Struct
 		{
 			if (plant.IsAlive)
 			{
-				TTTargetFI = GetTTFi();
 				CalcLeafNo();
+				TTTargetFI = GetTTFi();
 			}
 		}
 
