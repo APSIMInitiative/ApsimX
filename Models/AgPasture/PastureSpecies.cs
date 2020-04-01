@@ -32,6 +32,10 @@
         [Link]
         private Clock myClock = null;
 
+        /// <summary>Link to the zone this pasture species resides in.</summary>
+        [Link]
+        private Zone zone = null;
+
         /// <summary>Link to APSIM's WeatherFile (provides meteorological information).</summary>
         [Link]
         private IWeather myMetData = null;
@@ -43,10 +47,6 @@
         /// <summary>Link to the Soil (provides soil information).</summary>
         [Link]
         private Soil mySoil = null;
-
-        /// <summary>Link to the surface organic matter mode.</summary>
-        [Link]
-        private SurfaceOrganicMatter surfaceOrganicMatter = null;
 
         /// <summary>Link to Apsim's Resource Arbitrator module.</summary>
         [Link(IsOptional = true)]
@@ -1241,7 +1241,8 @@
         private PastureAboveGroundOrgan stolon = null;
 
         /// <summary>Holds the info about state of roots (DM and N). It is a list of root organs, one for each zone where roots are growing.</summary>
-        internal List<PastureBelowGroundOrgan> root;
+        [Link(Type = LinkType.Child)]
+        internal List<PastureBelowGroundOrgan> root = null;
 
         /// <summary>Above ground organs.</summary>
         [Link(Type = LinkType.Child)]
@@ -1396,11 +1397,6 @@
 
         /// <summary>Effective cover for computing photosynthesis (0-1).</summary>
         private double effectiveGreenCover;
-
-        ////- Root depth and distribution >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-        /// <summary>Daily variation in root depth (mm).</summary>
-        private double dRootDepth;
 
         ////- Amounts and fluxes of N in the plant >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -2729,19 +2725,15 @@
             // get the number of layers in the soil profile
             nLayers = mySoil.Thickness.Length;
 
-            // set up the organs (only root here, other organs are initialise indirectly, they have 4 tissues, last one is dead)
-            root = new List<PastureBelowGroundOrgan>();
             // set the base or main root zone (use 2 tissues, one live other dead), more zones can be added by user
-            root.Add(new PastureBelowGroundOrgan(Name, 2,
-                                        InitialRootDM, InitialRootDepth,
-                                        NThresholdsForRoots[0], NThresholdsForRoots[1], NThresholdsForRoots[2],
-                                        MinimumGreenWt * MinimumGreenRootProp, 
-                                        SpecificRootLength, RootDepthMaximum,
-                                        RootDistributionDepthParam, RootDistributionExponent, RootBottomDistributionFactor,
-                                        WaterAvailableMethod, NitrogenAvailableMethod,
-                                        KNH4, KNO3, MaximumNUptake, kuNH4, kuNO3,
-                                        ReferenceKSuptake, ReferenceRLD, ExponentSoilMoisture,
-                                        mySoil, surfaceOrganicMatter));
+            root[0].Initialise(zone, InitialRootDM, InitialRootDepth,
+                               NThresholdsForRoots[0], NThresholdsForRoots[1], NThresholdsForRoots[2],
+                               MinimumGreenWt * MinimumGreenRootProp, 
+                               SpecificRootLength, RootDepthMaximum,
+                               RootDistributionDepthParam, RootDistributionExponent, RootBottomDistributionFactor,
+                               WaterAvailableMethod, NitrogenAvailableMethod,
+                               KNH4, KNO3, MaximumNUptake, kuNH4, kuNO3,
+                               ReferenceKSuptake, ReferenceRLD, ExponentSoilMoisture);
 
             // add any other zones that have been given at initialisation
             foreach (RootZone rootZone in RootZonesInitialisations)
@@ -2750,21 +2742,19 @@
                 Zone zone = Apsim.Find(this, rootZone.ZoneName) as Zone;
                 if (zone == null)
                     throw new Exception("Cannot find zone: " + rootZone.ZoneName);
-                Soil zoneSoil = Apsim.Child(zone, typeof(Soil)) as Soil;
-                if (zoneSoil == null)
-                    throw new Exception("Cannot find a soil in zone : " + rootZone.ZoneName);
 
-                //add the zone to the list
-                root.Add(new PastureBelowGroundOrgan(Name, 2,
-                                         rootZone.RootDM, rootZone.RootDepth,
-                                         NThresholdsForRoots[0], NThresholdsForRoots[1], NThresholdsForRoots[2],
-                                         MinimumGreenWt * MinimumGreenRootProp,
-                                         SpecificRootLength, RootDepthMaximum,
-                                         RootDistributionDepthParam, RootDistributionExponent, RootBottomDistributionFactor,
-                                         WaterAvailableMethod, NitrogenAvailableMethod,
-                                         KNH4, KNO3, MaximumNUptake, kuNH4, kuNO3,
-                                         ReferenceKSuptake, ReferenceRLD, ExponentSoilMoisture,
-                                         zoneSoil, surfaceOrganicMatter));
+                var newRootOrgan = Apsim.Clone(root[0]) as PastureBelowGroundOrgan;
+                // add the zone to the list
+                newRootOrgan.Initialise(zone, 
+                                        rootZone.RootDM, rootZone.RootDepth,
+                                        NThresholdsForRoots[0], NThresholdsForRoots[1], NThresholdsForRoots[2],
+                                        MinimumGreenWt * MinimumGreenRootProp,
+                                        SpecificRootLength, RootDepthMaximum,
+                                        RootDistributionDepthParam, RootDistributionExponent, RootBottomDistributionFactor,
+                                        WaterAvailableMethod, NitrogenAvailableMethod,
+                                        KNH4, KNO3, MaximumNUptake, kuNH4, kuNO3,
+                                        ReferenceKSuptake, ReferenceRLD, ExponentSoilMoisture);
+                root.Add(newRootOrgan);
             }
 
             // initialise soil water and N variables
@@ -3488,8 +3478,11 @@
                 // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
 
                 // Evaluate root elongation and allocate new growth in each layer
-                EvaluateRootElongation();
-                DoRootGrowthAllocation();
+                if (phenologicStage > 0)
+                    root[0].EvaluateRootElongation(dGrowthRootDM, detachedRootDM, TemperatureLimitingFactor(Tmean(0.5)),
+                                                    RootDepthMinimum, RootDepthMaximum, RootElongationRate);
+
+                root[0].DoRootGrowthAllocation(dGrowthRootDM, dGrowthRootN);
             }
             else
             {
@@ -3538,43 +3531,6 @@
 
             // Update digestibility
             EvaluateDigestibility();
-        }
-
-        /// <summary>Computes the allocation of new growth to roots for each layer.</summary>
-        /// <remarks>
-        /// The current target distribution for roots changes whenever then root depth changes, this is then used to allocate 
-        ///  new growth to each layer within the root zone. The existing distribution is used on any DM removal, so it may
-        ///  take some time for the actual distribution to evolve to be equal to the target.
-        /// </remarks>
-        private void DoRootGrowthAllocation()
-        {
-            if (dGrowthRootDM > Epsilon)
-            {
-                // root DM is changing due to growth, check potential changes in distribution
-                double[] growthRootFraction;
-                double[] currentRootTarget = root[0].CurrentRootDistributionTarget();
-                if (MathUtilities.AreEqual(root[0].Tissue[0].FractionWt, currentRootTarget))
-                {
-                    // no need to change the distribution
-                    growthRootFraction = root[0].Tissue[0].FractionWt;
-                }
-                else
-                {
-                    // root distribution should change, get preliminary distribution (average of current and target)
-                    growthRootFraction = new double[nLayers];
-                    for (int layer = 0; layer <= root[0].BottomLayer; layer++)
-                        growthRootFraction[layer] = 0.5 * (root[0].Tissue[0].FractionWt[layer] + currentRootTarget[layer]);
-
-                    // normalise distribution of allocation
-                    double layersTotal = growthRootFraction.Sum();
-                    for (int layer = 0; layer <= root[0].BottomLayer; layer++)
-                        growthRootFraction[layer] = growthRootFraction[layer] / layersTotal;
-                }
-
-                root[0].Tissue[0].SetBiomassTransferIn(dm: MathUtilities.Multiply_Value(growthRootFraction, dGrowthRootDM),
-                                                       n:  MathUtilities.Multiply_Value(growthRootFraction, dGrowthRootN));
-            }
-            // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
         }
 
         /// <summary>Evaluates the phenological stage of annual plants.</summary>
@@ -3996,33 +3952,6 @@
             }
             else
                 fractionToLeaf = FractionLeafMaximum;
-        }
-
-        /// <summary>Computes the variations in root depth.</summary>
-        /// <remarks>
-        /// Root depth will increase if it is smaller than maximumRootDepth and there is a positive net DM accumulation.
-        /// The depth increase rate is of zero-order type, given by the RootElongationRate, but it is adjusted for temperature
-        ///  in a similar fashion as plant DM growth. Note that currently root depth never decreases.
-        ///  - The effect of temperature was reduced (average between that of growth DM and one) as soil temp varies less than air
-        /// </remarks>
-        private void EvaluateRootElongation()
-        {
-            // Check changes in root depth
-            dRootDepth = 0.0;
-            if (phenologicStage > 0)
-            {
-                if (((dGrowthRootDM - detachedRootDM) > Epsilon) && (root[0].Depth < RootDepthMaximum))
-                {
-                    double tempFactor = 0.5 + 0.5 * TemperatureLimitingFactor(Tmean(0.5));
-                    dRootDepth = RootElongationRate * tempFactor;
-                    root[0].Depth = Math.Min(RootDepthMaximum, Math.Max(RootDepthMinimum, root[0].Depth + dRootDepth));
-                }
-                else
-                {
-                    // No net growth
-                    dRootDepth = 0.0;
-                }
-            }
         }
 
         /// <summary>Calculates the plant height as function of DM.</summary>

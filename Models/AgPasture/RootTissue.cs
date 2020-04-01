@@ -18,15 +18,6 @@
         /// <summary>The fraction of luxury N remobilisable per day (0-1).</summary>
         private const double fractionNLuxuryRemobilisable = 0.1;
 
-        /// <summary>Parent species name.</summary>
-        private readonly string speciesName;
-
-        /// <summary>Nutrient model.</summary>
-        private readonly INutrient nutrientModel;
-
-        /// <summary>The surface organic matter model.</summary>
-        private SurfaceOrganicMatter surfaceOrganicMatter = null;
-
         /// <summary>Tissue biomass.</summary>
         private AGPBiomass biomass = new AGPBiomass();
 
@@ -60,21 +51,30 @@
         /// <summary>Nitrogen remobilised into new growth (kg/ha).</summary>
         private double nRemobilised;
 
-        /// <summary>Constructor.</summary>
-        /// <param name="speciesNam">The name of the species this tissue belongs to.</param>
-        /// <param name="nutrient">The nutrient model.</param>
-        /// <param name="surfaceOM">The surface organic matter model.</param>
-        /// <param name="numLayers">The number of layers in the soil</param>
+        /// <summary>Nutrient model.</summary>
+        [Link]
+        private PastureSpecies species = null;
+
+        /// <summary>Nutrient model.</summary>
+        [Link]
+        private Soil soil = null;
+
+        /// <summary>Nutrient model.</summary>
+        [Link]
+        private INutrient nutrient = null;
+
+        /// <summary>The surface organic matter model.</summary>
+        [Link]
+        private SurfaceOrganicMatter surfaceOrganicMatter = null;
+
+        /// <summary>Initialise this root instance.</summary>
         /// <param name="initialDMByLayer">Initial dry matter by layer.</param>
         /// <param name="initialNByLayer">Initial nitrogen by layer.</param>
-        public RootTissue(string speciesNam, INutrient nutrient, SurfaceOrganicMatter surfaceOM, int numLayers, double[] initialDMByLayer, double[] initialNByLayer)
+        public void Initialise(double[] initialDMByLayer, double[] initialNByLayer)
         {
-            speciesName = speciesNam;
-            nutrientModel = nutrient;
-            surfaceOrganicMatter = surfaceOM;
-            pLayer = new double[numLayers];
-            dmLayersTransferedIn = new double[numLayers];
-            nLayersTransferedIn = new double[numLayers];
+            pLayer = new double[soil.Thickness.Length];
+            dmLayersTransferedIn = new double[soil.Thickness.Length];
+            nLayersTransferedIn = new double[soil.Thickness.Length];
             if (initialNByLayer != null && initialNByLayer != null)
             {
                 dmLayer = initialDMByLayer;
@@ -82,13 +82,13 @@
             }
             else
             {
-                dmLayer = new double[numLayers];
-                nLayer = new double[numLayers];
+                dmLayer = new double[soil.Thickness.Length];
+                nLayer = new double[soil.Thickness.Length];
             }
             UpdateDM();
         }
 
-        /// <summary>Gets or sets the amount of N available for remobilisation (kg/ha).</summary>
+        /// <summary>The amount of N available for remobilisation (kg/ha).</summary>
         public double NRemobilisable { get; private set; }
 
         /// <summary>Amount of biomass.</summary>
@@ -107,7 +107,7 @@
         }
 
         /// <summary>Updates the tissue state, make changes in DM and N effective.</summary>
-        public void DoUpdateTissue()
+        public void Update()
         {
             // removals first as they do not change distribution over the profile
             var amountDMToRemove = DM.Wt - dmTransferedOut;
@@ -160,9 +160,9 @@
                 }
 
                 FOMLayerType FOMData = new FOMLayerType();
-                FOMData.Type = speciesName;
+                FOMData.Type = species.Name;
                 FOMData.Layer = FOMdataLayer;
-                nutrientModel.DoIncorpFOM(FOMData);
+                nutrient.DoIncorpFOM(FOMData);
             }
         }
 
@@ -185,7 +185,7 @@
             UpdateDM();
 
             if (sendToSurfaceOrganicMatter)
-                surfaceOrganicMatter.Add(removed.Wt.Sum(), removed.N.Sum(), 0.0, speciesName, speciesName);
+                surfaceOrganicMatter.Add(removed.Wt.Sum(), removed.N.Sum(), 0.0, species.Name, species.Name);
 
             return removed;
         }
@@ -208,7 +208,7 @@
         /// <param name="bottomLayer">Bottom layer index where roots are located.</param>
         /// <param name="to">The tissue to move the turned over material to.</param>
         /// <param name="nConc">The n concentration.</param>
-        /// <returns>The DM and N amount detached from this organ</returns>
+        /// <returns>The DM and N amount removed from this tissue.</returns>
         public BiomassAndN DoTissueTurnover(double turnoverRate, int bottomLayer, RootTissue to, double nConc)
         {
             if (turnoverRate > 0.0)
@@ -345,8 +345,8 @@
             double previousN = tissue1.DM.N + tissue2.DM.N;
 
             // update all tissues
-            tissue1.DoUpdateTissue();
-            tissue2.DoUpdateTissue();
+            tissue1.Update();
+            tissue2.Update();
 
             var currentDM = tissue1.DM.Wt + tissue2.DM.Wt;
             var currentN = tissue1.DM.N + tissue2.DM.N;
