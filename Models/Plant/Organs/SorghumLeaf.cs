@@ -507,6 +507,7 @@ namespace Models.PMF.Organs
             CoverDead = 0.0;
             LAIDead = 0.0;
             LossFromExpansionStress = 0.0;
+            culms.Initialize();
         }
         #endregion
 
