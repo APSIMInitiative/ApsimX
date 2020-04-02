@@ -1571,7 +1571,7 @@
                 new Tuple<string, string>(".DeadTissuesN",  ".DeadTissue.N")
             };
 
-            JsonUtilities.RenameVariablesInReportAndManager(root, changes);
+            JsonUtilities.RenameVariables(root, changes);
         }
 
         /// <summary>
@@ -1940,13 +1940,12 @@
                 new Tuple<string, string>(".StandingLiveHerbageN",   ".HarvestableLive.N"),
                 new Tuple<string, string>(".StandingDeadHerbageWt",  ".HarvestableDead.Wt"),
                 new Tuple<string, string>(".StandingDeadHerbageN",   ".HarvestableDead.N"),
-                new Tuple<string, string>(".HerbageDigestibility",   ".Harvestable.Digestibility")
-                // new Tuple<string, string>(".Leaf.DM",                ".Leaf.DM.Wt"),
-                // new Tuple<string, string>(".Leaf.Namount",           ".Leaf.DM.N"),
-                // new Tuple<string, string>(".Stem.DM",                ".Stem.DM.Wt"),
-                // new Tuple<string, string>(".Stem.Namount",           ".Stem.DM.N")
+                new Tuple<string, string>(".HerbageDigestibility",   ".Harvestable.Digestibility"),
+                new Tuple<string, string>(".RootDepthMaximum",       ".Root.RootDepthMaximum"),
+                new Tuple<string, string>("[AGPRyeGrass].RootLengthDensity", "[AGPRyeGrass].Root.RootLengthDensity"),
+                new Tuple<string, string>("[AGPWhiteClover].RootLengthDensity", "[AGPWhiteClover].Root.RootLengthDensity")
             };
-            JsonUtilities.RenameVariablesInReportAndManager(root, changes);
+            JsonUtilities.RenameVariables(root, changes);
         }
 		
         /// <summary>
