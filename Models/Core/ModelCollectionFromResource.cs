@@ -26,6 +26,9 @@
         {
             get
             {
+                if (Apsim.Ancestor<Replacements>(this) != null)
+                    return true;
+
                 if (string.IsNullOrEmpty(ResourceName))
                     return true;
 

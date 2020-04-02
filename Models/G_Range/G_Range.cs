@@ -122,8 +122,7 @@ namespace Models
         /// <summary>Gets or sets the R50.</summary> // What is an R50?
         public double R50 { get { return 200; } }
 
-        /// <summary>Gets the LAI</summary>
-        [Description("Leaf Area Index (m^2/m^2)")]
+        /// <summary>Gets the LAI (Leaf Area Index)</summary>
         [Units("m^2/m^2")]
         public double LAI { get { return 1.7; } set { } }
 
