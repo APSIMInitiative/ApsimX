@@ -402,8 +402,7 @@
         /// <summary>Add urine to the soil.</summary>
         private void AddUrineToSoil()
         {
-            AmountUrineNReturned = GetValueFromMonthArray(FractionOfBiomassToUrine) * GrazedN;
-            fertiliser.Apply(AmountUrineNReturned, Fertiliser.Types.UreaN, DepthUrineIsAdded);
+            fertiliser.Apply(AmountUrineNReturned, Fertiliser.Types.NO3N, DepthUrineIsAdded);
         }
 
         /// <summary>Return a value from an array that can have either 1 yearly value or 12 monthly values.</summary>
@@ -488,6 +487,9 @@
                     var amountToRemove = removeAmount * harvestableWt / totalHarvestableWt;
                     var grazed = forage.RemoveBiomass(amountToRemove);
                     var grazedMetabolisableEnergy = PotentialMEOfHerbage * grazed.DMDOfStructural;
+                    var returnedToSoilWt = (1 - grazed.DMDOfStructural) * grazed.Wt;
+                    var returnedToSoilN = (1 - grazed.DMDOfStructural) * grazed.N;
+
                     GrazedDM += grazed.Wt;
                     GrazedN += grazed.N;
                     GrazedME += grazedMetabolisableEnergy * grazed.Wt;
@@ -495,14 +497,15 @@
                     const double CToDMRatio = 0.4; // 0.4 is C:DM ratio.
 
                     double dungCReturned;
-                    var dungNReturned = GetValueFromMonthArray(FractionOfBiomassToDung) * grazed.N;
+                    var dungNReturned = GetValueFromMonthArray(FractionOfBiomassToDung) * returnedToSoilN;
                     if (CNRatioDung == 0)
-                        dungCReturned = (1 - grazed.DMDOfStructural) * grazed.Wt * CToDMRatio;
+                        dungCReturned = returnedToSoilWt * CToDMRatio;
                     else
                         dungCReturned = dungNReturned * CNRatioDung * CToDMRatio;
 
                     AmountDungNReturned += dungNReturned;
                     AmountDungCReturned += dungCReturned;
+                    AmountUrineNReturned += GetValueFromMonthArray(FractionOfBiomassToUrine) * returnedToSoilN;
                 }
             }
         }
