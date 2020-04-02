@@ -138,7 +138,6 @@
         public string NoGrazingEndString { get; set; }
 
         /// <summary></summary>
-
         [Separator("Urine and Dung - The remainder will be removed from the simulation.")]
 
         [Description("Proportion of defoliated N going to urine (0-1). Yearly or 12 monthly values.")]
@@ -156,6 +155,11 @@
         /// <summary></summary>
         [Description("C:N ratio of biomass for dung. If set to zero it will calculate the C:N using digestibility. ")]
         public double CNRatioDung { get; set; }
+
+        /// <summary></summary>
+        [Separator("Plant population modifier")]
+        [Description("Enter the fraction of population decline due to defoliation (0-1):")]
+        public double FractionPopulationDecline { get; set; }
 
 
         ////////////// Callbacks to enable/disable GUI parameters //////////////
@@ -368,6 +372,16 @@
             if (Verbose)
                 summary.WriteMessage(this, string.Format("Grazed {0:0.0} kgDM/ha, N content {1:0.0} kgN/ha, ME {2:0.0} MJME/ha", GrazedDM, GrazedN, GrazedME));
 
+            // Reduce plant population if necessary.
+            if (FractionPopulationDecline > 0)
+            {
+                foreach (var forage in forages)
+                    forage.ReducePopulation(forage.Population * (1.0 - FractionPopulationDecline));
+            }
+
+            // Convert PostGrazeDM to kg/ha
+            PostGrazeDM *= 10;
+
             // Invoke grazed event.
             Grazed?.Invoke(this, new EventArgs());
         }
@@ -388,8 +402,7 @@
         /// <summary>Add urine to the soil.</summary>
         private void AddUrineToSoil()
         {
-            AmountUrineNReturned = GetValueFromMonthArray(FractionOfBiomassToUrine) * GrazedN;
-            fertiliser.Apply(AmountUrineNReturned, Fertiliser.Types.UreaN, DepthUrineIsAdded);
+            fertiliser.Apply(AmountUrineNReturned, Fertiliser.Types.NO3N, DepthUrineIsAdded);
         }
 
         /// <summary>Return a value from an array that can have either 1 yearly value or 12 monthly values.</summary>
@@ -454,7 +467,7 @@
         }
 
         /// <summary>Remove biomass from the specified forage.</summary>
-        /// <param name="removeAmount">The total amount to remove from all forages.</param>
+        /// <param name="removeAmount">The total amount to remove from all forages (kg/ha).</param>
         private void RemoveDMFromPlants(double removeAmount)
         {
             // This is a simple implementation. It proportionally removes biomass from organs.
@@ -466,25 +479,33 @@
                 // Remove a proportion of required DM from each species
                 double totalHarvestableWt = 0.0;
                 foreach (var forage in forages)
-                    totalHarvestableWt += forage.Organs.Sum(organ => organ.Live.Wt + organ.Dead.Wt);
+                    totalHarvestableWt += forage.Organs.Sum(organ => organ.Live.Wt + organ.Dead.Wt);  // g/m2
 
                 foreach (var forage in forages)
                 {
-                    var harvestableWt = forage.Organs.Sum(organ => organ.Live.Wt + organ.Dead.Wt);
+                    var harvestableWt = forage.Organs.Sum(organ => organ.Live.Wt + organ.Dead.Wt);  // g/m2
                     var amountToRemove = removeAmount * harvestableWt / totalHarvestableWt;
                     var grazed = forage.RemoveBiomass(amountToRemove);
+                    var grazedMetabolisableEnergy = PotentialMEOfHerbage * grazed.DMDOfStructural;
+                    var returnedToSoilWt = (1 - grazed.DMDOfStructural) * grazed.Wt;
+                    var returnedToSoilN = (1 - grazed.DMDOfStructural) * grazed.N;
+
+                    GrazedDM += grazed.Wt;
+                    GrazedN += grazed.N;
+                    GrazedME += grazedMetabolisableEnergy * grazed.Wt;
 
                     const double CToDMRatio = 0.4; // 0.4 is C:DM ratio.
 
                     double dungCReturned;
-                    var dungNReturned = GetValueFromMonthArray(FractionOfBiomassToDung) * grazed.N;
+                    var dungNReturned = GetValueFromMonthArray(FractionOfBiomassToDung) * returnedToSoilN;
                     if (CNRatioDung == 0)
-                        dungCReturned = (1 - grazed.DMDOfStructural) * grazed.Wt * CToDMRatio;
+                        dungCReturned = returnedToSoilWt * CToDMRatio;
                     else
                         dungCReturned = dungNReturned * CNRatioDung * CToDMRatio;
 
                     AmountDungNReturned += dungNReturned;
                     AmountDungCReturned += dungCReturned;
+                    AmountUrineNReturned += GetValueFromMonthArray(FractionOfBiomassToUrine) * returnedToSoilN;
                 }
             }
         }
