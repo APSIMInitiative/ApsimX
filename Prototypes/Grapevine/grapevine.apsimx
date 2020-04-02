@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 281,
-  "Version": 89,
+  "Version": 90,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -220,6 +220,16 @@
                   "Name": "Budding",
                   "Children": [
                     {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 79.0,
+                      "Units": "days",
+                      "Name": "Target",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
                       "$type": "Models.Functions.WangEngelTempFunction, Models",
                       "MinTemp": 0.0,
                       "OptTemp": 22.0,
@@ -227,16 +237,6 @@
                       "RefTemp": 25.0,
                       "MaximumTemperatureWeighting": 0.5,
                       "Name": "Progression",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 79.0,
-                      "Units": "days",
-                      "Name": "Target",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
