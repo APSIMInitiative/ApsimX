@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 282,
   "Version": 90,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -56141,7 +56141,7 @@
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
-                  "Minimum": "NaN",
+                  "Minimum": 0.0,
                   "Maximum": "NaN",
                   "Interval": "NaN",
                   "DateTimeAxis": false,
