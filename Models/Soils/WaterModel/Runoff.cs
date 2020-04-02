@@ -40,34 +40,39 @@
     /// cumulative rain, ie.roughness is smoothed out by rain. 
     /// </summary>
     [Serializable]
+    [ViewName("UserInterface.Views.ProfileView")]
+    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
+    [ValidParent(ParentType = typeof(WaterBalance))]
     public class RunoffModel : Model, IFunction
     {
-        // --- Links -------------------------------------------------------------------------
-
         /// <summary>The water movement model.</summary>
         [Link]
         private WaterBalance soil = null;
 
+        /// <summary>The summary file model.</summary>
+        [Link]
+        private ISummary summary = null;
+
         /// <summary>A function for reducing CN due to cover.</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction reductionForCover = null;
+        private IFunction cnReductionForCover = null;
 
         /// <summary>A function for reducing CN due to tillage.</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction reductionForTillage = null;
-
-        // --- Privates ----------------------------------------------------------------------
+        private IFunction cnReductionForTillage = null;
 
         /// <summary>Effective hydraulic depth (mm)</summary>
         private double hydrolEffectiveDepth = 450;
 
-        // --- Settable properties -----------------------------------------------------------
+        /// <summary>Cumulative rainfall below which tillage reduces CN (mm).</summary>
+        public double TillageCnCumWater { get; set; }
 
-        /// <summary>Gets or sets the c n2 bare.</summary>
-        [DescriptionAttribute("Bare soil runoff curve number")]
-        public double CN2Bare { get; set; }
+        /// <summary>Reduction in CN due to tillage()</summary>
+        public double TillageCnRed { get; set; }
 
-        // --- Outputs -----------------------------------------------------------------------
+        /// <summary>Running total of cumulative rainfall since last tillage event. Used for tillage CN reduction (mm).</summary>
+        public double CumWaterSinceTillage { get; set; }
+
 
         /// <summary>Calculate and return the runoff (mm).</summary>
         public double Value(int arrayIndex = -1)
@@ -76,18 +81,29 @@
 
             if (soil.PotentialRunoff > 0.0)
             {
-                double cn2New = CN2Bare - reductionForCover.Value(arrayIndex) - reductionForTillage.Value(arrayIndex);
+                double cn2New = soil.CN2Bare - cnReductionForCover.Value(arrayIndex) - cnReductionForTillage.Value(arrayIndex);
 
-                // cut off response to cover at high covers
+                // Tillage reduction on cn
+                if (TillageCnCumWater > 0.0)
+                {
+                    // We minus 1 because we want the opposite fraction. 
+                    // Tillage Reduction is biggest (CnRed value) straight after Tillage and gets smaller and becomes 0 when reaches CumWater.
+                    // unlike the Cover Reduction, where the reduction starts out smallest (0) and gets bigger and becomes (CnRed value) when you hit CnCover.
+                    var tillageFract = MathUtilities.Divide(CumWaterSinceTillage, TillageCnCumWater, 0.0) - 1.0;
+                    var tillageReduction = TillageCnRed * tillageFract;
+                    cn2New = cn2New + tillageReduction;
+                }
+
+                // Cut off response to cover at high covers
                 cn2New = MathUtilities.Bound(cn2New, 0.0, 100.0);
 
                 // Calculate CN proportional in dry range (dul to ll15)
                 double[] runoff_wf = RunoffWeightingFactor();
                 double[] SW = soil.Water;
-                double[] LL15 = MathUtilities.Multiply(soil.Properties.Water.LL15, soil.Properties.Water.Thickness);
-                double[] DUL = MathUtilities.Multiply(soil.Properties.Water.DUL, soil.Properties.Water.Thickness);
+                double[] LL15 = MathUtilities.Multiply(soil.Properties.LL15, soil.Properties.Thickness);
+                double[] DUL = MathUtilities.Multiply(soil.Properties.DUL, soil.Properties.Thickness);
                 double cnpd = 0.0;
-                for (int i = 0; i < soil.Properties.Water.Thickness.Length; i++)
+                for (int i = 0; i < soil.Properties.Thickness.Length; i++)
                 {
                     double DULFraction = MathUtilities.Divide((SW[i] - LL15[i]), (DUL[i] - LL15[i]), 0.0);
                     cnpd = cnpd + DULFraction * runoff_wf[i];
@@ -112,6 +128,9 @@
                 // assign the output variable
                 runoff = MathUtilities.Divide(xpb * xpb, (soil.PotentialRunoff + 0.8 * s), 0.0);
 
+                CumWaterSinceTillage += soil.PotentialRunoff;
+                ShouldIStopTillageCNReduction();  //NB. this needs to be done _after_ cn calculation.
+
                 // bound check the ouput variable
                 return MathUtilities.Bound(runoff, 0.0, soil.PotentialRunoff);
             }
@@ -131,18 +150,18 @@
             double cumRunoffWeightingFactor = 0.0;
 
             // Get sumulative depth (mm)
-            double[] cumThickness = APSIM.Shared.APSoil.SoilUtilities.ToCumThickness(soil.Properties.Water.Thickness);
+            double[] cumThickness = APSIM.Shared.APSoil.SoilUtilities.ToCumThickness(soil.Properties.Thickness);
 
             // Ensure hydro effective depth doesn't go below bottom of soil.
-            hydrolEffectiveDepth = Math.Min(hydrolEffectiveDepth, MathUtilities.Sum(soil.Properties.Water.Thickness));
+            hydrolEffectiveDepth = Math.Min(hydrolEffectiveDepth, MathUtilities.Sum(soil.Properties.Thickness));
 
             // Scaling factor for wf function to sum to 1
             double scaleFactor = 1.0 / (1.0 - Math.Exp(-4.16));
 
             // layer number that the effective depth occurs
-            int hydrolEffectiveLayer = APSIM.Shared.APSoil.SoilUtilities.FindLayerIndex(soil.Properties, hydrolEffectiveDepth);
+            int hydrolEffectiveLayer =soil.Properties.LayerIndexOfDepth(hydrolEffectiveDepth);
 
-            double[] runoffWeightingFactor = new double[soil.Properties.Water.Thickness.Length];
+            double[] runoffWeightingFactor = new double[soil.Properties.Thickness.Length];
             for (int i = 0; i <= hydrolEffectiveLayer; i++)
             {
                 double cumDepth = cumThickness[i];
@@ -160,6 +179,24 @@
                 throw new Exception("Internal error. Total runoff weighting factor must be equal to one.");
 
             return runoffWeightingFactor;
+        }
+
+        /// <summary>
+        /// Accumulate rainfall for tillage cn reduction.
+        /// The reduction in the runoff as a result of doing a tillage (tillage_cn_red) ceases after a set amount of rainfall (tillage_cn_rain).
+        /// This function works out the accumulated rainfall since last tillage event, and turns off the reduction if it is over the amount of rain specified.
+        /// </summary>
+        private void ShouldIStopTillageCNReduction()
+        {
+            if (TillageCnCumWater > 0.0 && CumWaterSinceTillage > TillageCnCumWater)
+            {
+                // This tillage has lost all effect on cn. CN reduction
+                // due to tillage is off until the next tillage operation.
+                TillageCnCumWater = 0.0; 
+                TillageCnRed = 0.0;
+
+                summary.WriteMessage(this, "Tillage CN reduction finished");
+            }
         }
     }
 }

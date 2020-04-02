@@ -33,7 +33,7 @@ annual_average_pet = 1051.0          !Average annual PET (mm/yr)
 average_windspeed = 4.1              !Average windspeed (m/s)
 
     Location          xDate           year            day           rain           mint           maxt           avgt           radn           wind           evap             vp             rh          rhmin          rhmax
-          ()             ()             ()             ()           (mm)           (oC)           (oC)           (oC)       (MJ/m^2)          (m/s)           (mm)          (hPa)            (%)            (%)            (%)
+          ()   (dd/MM/yyyy)             ()             ()           (mm)           (oC)           (oC)           (oC)       (MJ/m^2)          (m/s)           (mm)          (hPa)            (%)            (%)            (%)
 VCS_Manutuke     01/01/1975           1975              1            0.0           16.7           24.3           20.5           13.7            4.3            3.8           19.5           74.7           64.2          100.0
 VCS_Manutuke     02/01/1975           1975              2            0.0           12.9           22.7           17.8           29.5            4.3            5.7           16.6           73.9           60.2          100.0
 VCS_Manutuke     03/01/1975           1975              3            0.0           10.3           22.8           16.6           30.6            4.3            5.8           13.8           67.0           49.7          100.0

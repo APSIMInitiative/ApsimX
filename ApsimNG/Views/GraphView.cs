@@ -8,7 +8,7 @@
     using System.Reflection;
     using Gtk;
     using Interfaces;
-    using Models.Graph;
+    using Models;
     using OxyPlot;
     using OxyPlot.Annotations;
     using OxyPlot.Axes;
@@ -26,15 +26,57 @@
     /// </summary>
     public class GraphView : ViewBase, IGraphView
     {
-        /// <summary>
-        /// Overall font size for the graph.
-        /// </summary>
-        public double FontSize = 14;
+        private double fontSize = 14;
 
         /// <summary>
         /// Overall font size for the graph.
         /// </summary>
-        public double MarkerSize = -1;
+        public double FontSize
+        {
+            get
+            {
+                return fontSize;
+            }
+            set
+            {
+                fontSize = value;
+                if (plot1 != null && plot1.Model != null)
+                {
+                    plot1.Model.DefaultFontSize = value;
+                    plot1.Model.LegendFontSize = value;
+
+                    foreach (OxyPlot.Annotations.Annotation annotation in this.plot1.Model.Annotations)
+                        if (annotation is OxyPlot.Annotations.TextAnnotation textAnnotation)
+                            textAnnotation.FontSize = value;
+                }
+            }
+        }
+
+        private MarkerSizeType markerSize;
+
+        /// <summary>
+        /// Marker size.
+        /// </summary>
+        public MarkerSizeType MarkerSize
+        {
+            get
+            {
+                return markerSize;
+            }
+            set
+            {
+                markerSize = value;
+                double numericValue = GetMarkerSizeNumericValue(value);
+                if (plot1 != null && plot1.Model != null)
+                    foreach (var series in plot1.Model.Series.OfType<Utility.LineSeriesWithTracker>())
+                        series.MarkerSize = numericValue;
+            }
+        }
+
+        /// <summary>
+        /// Overall font size for the graph.
+        /// </summary>
+        //public double MarkerSize = -1;
 
         /// <summary>
         /// Overall font to use.
@@ -333,13 +375,13 @@
              string xFieldName,
              string yFieldName,
              IEnumerable error,
-             Models.Graph.Axis.AxisType xAxisType,
-             Models.Graph.Axis.AxisType yAxisType,
+             Models.Axis.AxisType xAxisType,
+             Models.Axis.AxisType yAxisType,
              Color colour,
-             Models.Graph.LineType lineType,
-             Models.Graph.MarkerType markerType,
-             Models.Graph.LineThicknessType lineThickness,
-             Models.Graph.MarkerSizeType markerSize,
+             Models.LineType lineType,
+             Models.MarkerType markerType,
+             Models.LineThicknessType lineThickness,
+             Models.MarkerSizeType markerSize,
              bool showOnLegend)
         {
             Utility.LineSeriesWithTracker series = null;
@@ -394,16 +436,8 @@
                     series.MarkerType = type;
                 }
 
-                if (MarkerSize > -1)
-                    series.MarkerSize = MarkerSize;
-                else if (markerSize == MarkerSizeType.Normal)
-                    series.MarkerSize = 7.0;
-                else if (markerSize == MarkerSizeType.Large)
-                    series.MarkerSize = 9.0;
-                else if(markerSize == MarkerSizeType.Small)
-                    series.MarkerSize = 5.0;
-                else
-                    series.MarkerSize = 3.0;
+                MarkerSize = markerSize;
+                series.MarkerSize = GetMarkerSizeNumericValue(markerSize);
 
                 series.MarkerStroke = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
                 if (filled)
@@ -426,6 +460,23 @@
 
         }
 
+        private double GetMarkerSizeNumericValue(MarkerSizeType markerSize)
+        {
+            if (markerSize == MarkerSizeType.Large)
+                return 9.0;
+
+            if (markerSize == MarkerSizeType.Normal)
+                return 7.0;
+
+            if (markerSize == MarkerSizeType.Small)
+                return 5.0;
+
+            if (markerSize == MarkerSizeType.VerySmall)
+                return 3.0;
+
+            throw new NotImplementedException($"No supported marker size translation for {markerSize}");
+        }
+
         /// <summary>
         /// Draw a bar series with the specified arguments.
         /// </summary>
@@ -440,8 +491,8 @@
             string title,
             IEnumerable x,
             IEnumerable y,
-            Models.Graph.Axis.AxisType xAxisType,
-            Models.Graph.Axis.AxisType yAxisType,
+            Models.Axis.AxisType xAxisType,
+            Models.Axis.AxisType yAxisType,
             Color colour,
             bool showOnLegend)
         {
@@ -484,8 +535,8 @@
             IEnumerable y1,
             IEnumerable x2,
             IEnumerable y2,
-            Models.Graph.Axis.AxisType xAxisType,
-            Models.Graph.Axis.AxisType yAxisType,
+            Models.Axis.AxisType xAxisType,
+            Models.Axis.AxisType yAxisType,
             Color colour,
             bool showOnLegend)
         {
@@ -545,8 +596,8 @@
             string title,
             IEnumerable x,
             IEnumerable y,
-            Models.Graph.Axis.AxisType xAxisType,
-            Models.Graph.Axis.AxisType yAxisType,
+            Models.Axis.AxisType xAxisType,
+            Models.Axis.AxisType yAxisType,
             Color colour,
             bool showOnLegend)
         {
@@ -574,8 +625,8 @@
             string title,
             object[] x,
             double[] y,
-            Models.Graph.Axis.AxisType xAxisType,
-            Models.Graph.Axis.AxisType yAxisType,
+            Models.Axis.AxisType xAxisType,
+            Models.Axis.AxisType yAxisType,
             Color colour,
             bool showOnLegend)
         {
@@ -668,13 +719,13 @@
             string title,
             object[] x,
             double[] y,
-            Models.Graph.Axis.AxisType xAxisType,
-            Models.Graph.Axis.AxisType yAxisType,
+            Models.Axis.AxisType xAxisType,
+            Models.Axis.AxisType yAxisType,
             Color colour,
             bool showOnLegend,
-            Models.Graph.LineType lineType,
-            Models.Graph.MarkerType markerType,
-            Models.Graph.LineThicknessType lineThickness)
+            Models.LineType lineType,
+            Models.MarkerType markerType,
+            Models.LineThicknessType lineThickness)
         {
             if (x?.Length > 0 && y?.Length > 0)
             {
@@ -734,8 +785,8 @@
         }
 
         private List<BoxPlotItem> GetBoxPlotItems(object[] x, double[] data, 
-                                                  Models.Graph.Axis.AxisType xAxisType,
-                                                  Models.Graph.Axis.AxisType yAxisType)
+                                                  Models.Axis.AxisType xAxisType,
+                                                  Models.Axis.AxisType yAxisType)
         {
             data = data.Where(d => !double.IsNaN(d)).ToArray();
             double[] fiveNumberSummary = data.FiveNumberSummary();
@@ -791,8 +842,8 @@
             object y,
             bool leftAlign,
             double textRotation,
-            Models.Graph.Axis.AxisType xAxisType,
-            Models.Graph.Axis.AxisType yAxisType,
+            Models.Axis.AxisType xAxisType,
+            Models.Axis.AxisType yAxisType,
             Color colour)
         {
             OxyPlot.Annotations.TextAnnotation annotation = new OxyPlot.Annotations.TextAnnotation();
@@ -849,8 +900,8 @@
             object y1,
             object x2,
             object y2,
-            Models.Graph.LineType type,
-            Models.Graph.LineThicknessType thickness,
+            Models.LineType type,
+            Models.LineThicknessType thickness,
             Color colour,
             bool inFrontOfSeries,
             string toolTip)
@@ -862,9 +913,9 @@
                 x1Position = Convert.ToDouble(x1, System.Globalization.CultureInfo.InvariantCulture);
             double y1Position = 0.0;
             if ((double)y1 == double.MinValue)
-                y1Position = AxisMinimum(Models.Graph.Axis.AxisType.Left);
+                y1Position = AxisMinimum(Models.Axis.AxisType.Left);
             else if ((double)y1 == double.MaxValue)
-                y1Position = AxisMaximum(Models.Graph.Axis.AxisType.Left);
+                y1Position = AxisMaximum(Models.Axis.AxisType.Left);
             else
                 y1Position = (double)y1;
             double x2Position = 0.0;
@@ -874,9 +925,9 @@
                 x2Position = Convert.ToDouble(x2, System.Globalization.CultureInfo.InvariantCulture);
             double y2Position = 0.0;
             if ((double)y2 == double.MinValue)
-                y2Position = AxisMinimum(Models.Graph.Axis.AxisType.Left);
+                y2Position = AxisMinimum(Models.Axis.AxisType.Left);
             else if ((double)y2 == double.MaxValue)
-                y2Position = AxisMaximum(Models.Graph.Axis.AxisType.Left);
+                y2Position = AxisMaximum(Models.Axis.AxisType.Left);
             else
                 y2Position = (double)y2;
 
@@ -926,7 +977,7 @@
         /// <param name="interval">Axis scale interval</param>
         /// <param name="crossAtZero">Axis crosses at zero?</param>
         public void FormatAxis(
-            Models.Graph.Axis.AxisType axisType,
+            Models.Axis.AxisType axisType,
             string title,
             bool inverted,
             double minimum,
@@ -1305,8 +1356,8 @@
         private List<DataPoint> PopulateDataPointSeries(
             IEnumerable x,
             IEnumerable y,
-            Models.Graph.Axis.AxisType xAxisType,
-            Models.Graph.Axis.AxisType yAxisType)
+            Models.Axis.AxisType xAxisType,
+            Models.Axis.AxisType yAxisType)
         {
             List<DataPoint> points = new List<DataPoint>();
             if (x != null && y != null && ((ICollection)x).Count > 0 && ((ICollection)y).Count > 0)
@@ -1340,8 +1391,8 @@
             IEnumerable x,
             IEnumerable y,
             IEnumerable error,
-            Models.Graph.Axis.AxisType xAxisType,
-            Models.Graph.Axis.AxisType yAxisType)
+            Models.Axis.AxisType xAxisType,
+            Models.Axis.AxisType yAxisType)
         {
             List<ScatterErrorPoint> points = new List<ScatterErrorPoint>();
             if (x != null && y != null && error != null)
@@ -1368,7 +1419,7 @@
         /// <param name="xEnum">The enumumerator</param>
         /// <param name="axisType">Type of the axis.</param>
         /// <returns></returns>
-        private double[] GetDataPointValues(IEnumerator enumerator, Models.Graph.Axis.AxisType axisType)
+        private double[] GetDataPointValues(IEnumerator enumerator, Models.Axis.AxisType axisType)
         {
             List<double> dataPointValues = new List<double>();
             double x; // Used only as an out parameter, to maintain backward
@@ -1427,7 +1478,7 @@
         /// </summary>
         /// <param name="axisType">The axis type to check</param>
         /// <param name="dataType">The data type of the axis</param>
-        private void EnsureAxisExists(Models.Graph.Axis.AxisType axisType, Type dataType)
+        private void EnsureAxisExists(Models.Axis.AxisType axisType, Type dataType)
         {
             // Make sure we have an x axis at the correct position.
             if (this.GetAxis(axisType) == null)
@@ -1458,7 +1509,7 @@
         /// </summary>
         /// <param name="axisType">The axis type to retrieve </param>
         /// <returns>The axis</returns>
-        private OxyPlot.Axes.Axis GetAxis(Models.Graph.Axis.AxisType axisType)
+        private OxyPlot.Axes.Axis GetAxis(Models.Axis.AxisType axisType)
         {
             int i = this.GetAxisIndex(axisType);
             if (i == -1)
@@ -1472,7 +1523,7 @@
         /// </summary>
         /// <param name="axisType">The axis type to retrieve </param>
         /// <returns>The axis</returns>
-        private int GetAxisIndex(Models.Graph.Axis.AxisType axisType)
+        private int GetAxisIndex(Models.Axis.AxisType axisType)
         {
             AxisPosition position = this.AxisTypeToPosition(axisType);
             for (int i = 0; i < this.plot1.Model.Axes.Count; i++)
@@ -1491,17 +1542,17 @@
         /// </summary>
         /// <param name="type">The axis type</param>
         /// <returns>The position of the axis.</returns>
-        private AxisPosition AxisTypeToPosition(Models.Graph.Axis.AxisType type)
+        private AxisPosition AxisTypeToPosition(Models.Axis.AxisType type)
         {
-            if (type == Models.Graph.Axis.AxisType.Bottom)
+            if (type == Models.Axis.AxisType.Bottom)
             {
                 return AxisPosition.Bottom;
             }
-            else if (type == Models.Graph.Axis.AxisType.Left)
+            else if (type == Models.Axis.AxisType.Left)
             {
                 return AxisPosition.Left;
             }
-            else if (type == Models.Graph.Axis.AxisType.Top)
+            else if (type == Models.Axis.AxisType.Top)
             {
                 return AxisPosition.Top;
             }
@@ -1514,16 +1565,16 @@
         /// </summary>
         /// <param name="type">The axis type</param>
         /// <returns>The position of the axis.</returns>
-        private Models.Graph.Axis.AxisType AxisPositionToType(AxisPosition type)
+        private Models.Axis.AxisType AxisPositionToType(AxisPosition type)
         {
             if (type == AxisPosition.Bottom)
-                return Models.Graph.Axis.AxisType.Bottom;
+                return Models.Axis.AxisType.Bottom;
             else if (type == AxisPosition.Left)
-                return Models.Graph.Axis.AxisType.Left;
+                return Models.Axis.AxisType.Left;
             else if (type == AxisPosition.Top)
-                return Models.Graph.Axis.AxisType.Top;
+                return Models.Axis.AxisType.Top;
 
-            return Models.Graph.Axis.AxisType.Right;
+            return Models.Axis.AxisType.Right;
         }
 
         /// <summary>
@@ -1569,7 +1620,7 @@
                     Rectangle titleArea = new Rectangle(plotArea.X, 0, plotArea.Width, plotArea.Y);
                     Rectangle topAxisArea = new Rectangle(plotArea.X, 0, plotArea.Width, 0);
 
-                    if (this.GetAxis(Models.Graph.Axis.AxisType.Top) != null)
+                    if (this.GetAxis(Models.Axis.AxisType.Top) != null)
                     {
                         titleArea = new Rectangle(plotArea.X, 0, plotArea.Width, plotArea.Y / 2);
                         topAxisArea = new Rectangle(plotArea.X, plotArea.Y / 2, plotArea.Width, plotArea.Y / 2);
@@ -1589,19 +1640,19 @@
                     {
                         if (leftAxisArea.Contains(location))
                         {
-                            this.OnAxisClick.Invoke(Models.Graph.Axis.AxisType.Left);
+                            this.OnAxisClick.Invoke(Models.Axis.AxisType.Left);
                         }
                         else if (topAxisArea.Contains(location))
                         {
-                            this.OnAxisClick.Invoke(Models.Graph.Axis.AxisType.Top);
+                            this.OnAxisClick.Invoke(Models.Axis.AxisType.Top);
                         }
                         else if (rightAxisArea.Contains(location))
                         {
-                            this.OnAxisClick.Invoke(Models.Graph.Axis.AxisType.Right);
+                            this.OnAxisClick.Invoke(Models.Axis.AxisType.Right);
                         }
                         else if (bottomAxisArea.Contains(location))
                         {
-                            this.OnAxisClick.Invoke(Models.Graph.Axis.AxisType.Bottom);
+                            this.OnAxisClick.Invoke(Models.Axis.AxisType.Bottom);
                         }
                     }
                 }
@@ -1630,14 +1681,14 @@
             }
         }
 
-        public Models.Graph.Axis[] Axes
+        public Models.Axis[] Axes
         {
             get
             {
-                List<Models.Graph.Axis> axes = new List<Models.Graph.Axis>();
+                List<Models.Axis> axes = new List<Models.Axis>();
                 foreach (var oxyAxis in plot1.Model.Axes)
                 {
-                    var axis = new Models.Graph.Axis();
+                    var axis = new Models.Axis();
                     axis.CrossesAtZero = oxyAxis.PositionAtZeroCrossing;
                     axis.DateTimeAxis = oxyAxis is DateTimeAxis;
                     axis.Interval = oxyAxis.ActualMajorStep;
@@ -1657,7 +1708,7 @@
         /// <summary>
         /// Gets the maximum scale of the specified axis.
         /// </summary>
-        public double AxisMaximum(Models.Graph.Axis.AxisType axisType)
+        public double AxisMaximum(Models.Axis.AxisType axisType)
         {
             OxyPlot.Axes.Axis axis = GetAxis(axisType);
             if (axis != null)
@@ -1671,7 +1722,7 @@
         /// <summary>
         /// Gets the minimum scale of the specified axis.
         /// </summary>
-        public double AxisMinimum(Models.Graph.Axis.AxisType axisType)
+        public double AxisMinimum(Models.Axis.AxisType axisType)
         {
             OxyPlot.Axes.Axis axis = GetAxis(axisType);
 
@@ -1686,7 +1737,7 @@
         /// <summary>
         /// Gets the interval (major step) of the specified axis.
         /// </summary>
-        public string AxisTitle(Models.Graph.Axis.AxisType axisType)
+        public string AxisTitle(Models.Axis.AxisType axisType)
         {
             OxyPlot.Axes.Axis axis = GetAxis(axisType);
 
@@ -1699,7 +1750,7 @@
         /// <summary>
         /// Gets the interval (major step) of the specified axis.
         /// </summary>
-        public double AxisMajorStep(Models.Graph.Axis.AxisType axisType)
+        public double AxisMajorStep(Models.Axis.AxisType axisType)
         {
             OxyPlot.Axes.Axis axis = GetAxis(axisType);
 

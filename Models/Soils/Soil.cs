@@ -152,7 +152,7 @@
         }
 
         /// <summary>Find our children.</summary>
-        private void FindChildren()
+        public void FindChildren()
         {
             waterNode = Apsim.Child(this, typeof(Physical)) as Physical;
 
@@ -472,8 +472,8 @@
         { 
             get 
             {
-                if (SoilWater == null || !(SoilWater is SoilWater)) return null;
-                return (SoilWater as SoilWater).SWCON;
+                if (SoilWater == null || !(SoilWater is WaterModel.WaterBalance)) return null;
+                return (SoilWater as WaterModel.WaterBalance).SWCON;
             }
         }
 
@@ -486,7 +486,7 @@
             get
                 {
                 if (SoilWater == null) return null;
-                return (SoilWater as SoilWater).KLAT;
+                return (SoilWater as WaterModel.WaterBalance).KLAT;
             }
         }
 

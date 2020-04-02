@@ -1,4 +1,4 @@
-﻿namespace Models.Report
+namespace Models
 {
     using System;
 
@@ -29,9 +29,12 @@
         }
 
         /// <summary>Retrieve the current value</summary>
-        public object GetValue()
+        public object GetValue(int groupNumber)
         {
             return value;
         }
+
+        /// <summary>Retrieve the current value for the specified group number to be stored in the report.</summary>
+        public int NumberOfGroups {  get { return 1; } }
     }
 }

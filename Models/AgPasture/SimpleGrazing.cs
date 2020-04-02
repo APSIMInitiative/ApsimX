@@ -13,6 +13,7 @@
     using Models.Surface;
     using Models.Functions;
     using System.Linq;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// 
@@ -198,43 +199,57 @@
         ////////////// Outputs //////////////
 
         /// <summary>Number of days since grazing.</summary>
-        public int DaysSinceGraze { get; set; }
+        [JsonIgnore]
+        public int DaysSinceGraze { get; private set; }
 
         /// <summary></summary>
-        public int GrazingInterval { get; set; }
+        [JsonIgnore]
+        public int GrazingInterval { get; private set; }
 
         /// <summary>DM grazed</summary>
+        [JsonIgnore]
         [Units("kgDM/ha")]
-        public double GrazedDM { get; set; }
+        public double GrazedDM { get; private set; }
 
         /// <summary>N in the DM grazed.</summary>
+        [JsonIgnore]
         [Units("kgN/ha")]
-        public double GrazedN { get; set; }
+        public double GrazedN { get; private set; }
 
         /// <summary>N in the DM grazed.</summary>
+        [JsonIgnore]
         [Units("MJME/ha")]
-        public double GrazedME { get; set; }
+        public double GrazedME { get; private set; }
 
         /// <summary>N in urine returned to the paddock.</summary>
+        [JsonIgnore]
         [Units("kgN/ha")]
-        public double AmountUrineNReturned { get; set; }
+        public double AmountUrineNReturned { get; private set; }
 
         /// <summary>C in dung returned to the paddock.</summary>
+        [JsonIgnore]
         [Units("kgDM/ha")]
-        public double AmountDungCReturned { get; set; }
+        public double AmountDungCReturned { get; private set; }
 
         /// <summary>N in dung returned to the paddock.</summary>
+        [JsonIgnore]
         [Units("kgN/ha")]
-        public double AmountDungNReturned { get; set; }
+        public double AmountDungNReturned { get; private set; }
 
         /// <summary>Mass of herbage just before grazing.</summary>
+        [JsonIgnore]
         [Units("kgDM/ha")]
         public double PreGrazeDM { get; private set; }
 
         /// <summary>Mass of herbage just after grazing.</summary>
+        [JsonIgnore]
         [Units("kgDM/ha")]
         public double PostGrazeDM { get; private set; }
 
+        /// <summary>Proportion of each species biomass to the total biomass.</summary>
+        [JsonIgnore]
+        [Units("0-1")]
+        public double[] ProportionOfTotalDM { get; private set; }
 
         ////////////// Methods //////////////
 
@@ -242,6 +257,8 @@
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
+            ProportionOfTotalDM = new double[forages.Count];
+
             if (Verbose)
                 summary.WriteMessage(this, "Initialising the Manager for grazing, urine return and reporting");
 
@@ -314,14 +331,7 @@
 
             // Perform grazing if necessary.
             if (grazeNow)
-            {
                 GrazeToResidual(residualBiomass);
-
-                // Calculate post-grazed dry matter.
-                PostGrazeDM = 0.0;
-                foreach (var forage in forages)
-                    PostGrazeDM += forage.AboveGround.Wt;
-            }
         }
 
         /// <summary>Perform grazing.</summary>
@@ -339,12 +349,21 @@
             GrazingInterval = DaysSinceGraze;  // i.e. yesterday's value
             DaysSinceGraze = 0;
 
-
             RemoveDMFromPlants(amountDMToRemove);
 
             AddUrineToSoil();
 
             AddDungToSurface();
+
+            // Calculate post-grazed dry matter.
+            PostGrazeDM = forages.Sum(forage => forage.AboveGround.Wt);
+
+            // Calculate proportions of each species to the total biomass.
+            for (int i = 0; i < forages.Count; i++)
+            {
+                var proportionToTotalDM = MathUtilities.Divide(forages[i].AboveGround.Wt, PostGrazeDM, 0);
+                ProportionOfTotalDM[i] = proportionToTotalDM;
+            }
 
             if (Verbose)
                 summary.WriteMessage(this, string.Format("Grazed {0:0.0} kgDM/ha, N content {1:0.0} kgN/ha, ME {2:0.0} MJME/ha", GrazedDM, GrazedN, GrazedME));

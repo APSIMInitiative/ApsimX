@@ -1,4 +1,6 @@
-﻿using Models.Graph;
+﻿using ApsimNG.EventArguments;
+using Models;
+using System;
 using System.Collections.Generic;
 using UserInterface.Presenters;
 using UserInterface.Views;
@@ -23,5 +25,7 @@ namespace UserInterface.Interfaces
         /// Removes all graph tabs from the view.
         /// </summary>
         void RemoveGraphTabs();
+
+        event EventHandler<CustomDataEventArgs<IGraphView>> GraphViewCreated;
     }
 }

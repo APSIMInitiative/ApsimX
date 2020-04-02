@@ -33,7 +33,7 @@ annual_average_pet = 818.9           !Average annual PET (mm/yr)
 average_windspeed = 2.1              !Average windspeed (m/s)
 
     Location          xDate           year            day           rain           mint           maxt           avgt           radn           wind           evap             vp             rh          rhmin          rhmax
-          ()             ()             ()             ()           (mm)           (oC)           (oC)           (oC)       (MJ/m^2)          (m/s)           (mm)          (hPa)            (%)            (%)            (%)
+          ()   (dd/MM/yyyy)             ()             ()           (mm)           (oC)           (oC)           (oC)       (MJ/m^2)          (m/s)           (mm)          (hPa)            (%)            (%)            (%)
 VCS_Poolburn     01/01/1978           1978              1            0.0            3.2           18.0           10.6           23.1            2.8            3.8            8.3           65.0           40.2          100.0
 VCS_Poolburn     02/01/1978           1978              2            0.0            2.1           26.1           14.1           30.7            2.8            5.3           10.9           75.8           32.2          100.0
 VCS_Poolburn     03/01/1978           1978              3            0.0            8.5           25.3           16.9           25.4            2.8            5.7           11.5           51.8           35.7          100.0

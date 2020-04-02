@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 86,
+  "Version": 90,
   "Name": "Simulations",
   "Children": [
     {
@@ -831,11 +831,11 @@
                                   "Name": "XYPairs",
                                   "Children": [
                                     {
-                                      "$type": "Models.Graph.Graph, Models",
+                                      "$type": "Models.Graph, Models",
                                       "Caption": null,
                                       "Axis": [
                                         {
-                                          "$type": "Models.Graph.Axis, Models",
+                                          "$type": "Models.Axis, Models",
                                           "Type": 0,
                                           "Title": "Y",
                                           "Inverted": false,
@@ -846,7 +846,7 @@
                                           "CrossesAtZero": false
                                         },
                                         {
-                                          "$type": "Models.Graph.Axis, Models",
+                                          "$type": "Models.Axis, Models",
                                           "Type": 3,
                                           "Title": "X",
                                           "Inverted": false,
@@ -862,7 +862,7 @@
                                       "Name": "Graph",
                                       "Children": [
                                         {
-                                          "$type": "Models.Graph.Series, Models",
+                                          "$type": "Models.Series, Models",
                                           "Type": 1,
                                           "XAxis": 3,
                                           "YAxis": 0,
@@ -897,11 +897,11 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Graph.Graph, Models",
+                                      "$type": "Models.Graph, Models",
                                       "Caption": null,
                                       "Axis": [
                                         {
-                                          "$type": "Models.Graph.Axis, Models",
+                                          "$type": "Models.Axis, Models",
                                           "Type": 0,
                                           "Title": "Y",
                                           "Inverted": false,
@@ -912,7 +912,7 @@
                                           "CrossesAtZero": false
                                         },
                                         {
-                                          "$type": "Models.Graph.Axis, Models",
+                                          "$type": "Models.Axis, Models",
                                           "Type": 3,
                                           "Title": "X",
                                           "Inverted": false,
@@ -928,7 +928,7 @@
                                       "Name": "Graph",
                                       "Children": [
                                         {
-                                          "$type": "Models.Graph.Series, Models",
+                                          "$type": "Models.Series, Models",
                                           "Type": 1,
                                           "XAxis": 3,
                                           "YAxis": 0,
@@ -963,11 +963,11 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Graph.Graph, Models",
+                                      "$type": "Models.Graph, Models",
                                       "Caption": null,
                                       "Axis": [
                                         {
-                                          "$type": "Models.Graph.Axis, Models",
+                                          "$type": "Models.Axis, Models",
                                           "Type": 0,
                                           "Title": "Y",
                                           "Inverted": false,
@@ -978,7 +978,7 @@
                                           "CrossesAtZero": false
                                         },
                                         {
-                                          "$type": "Models.Graph.Axis, Models",
+                                          "$type": "Models.Axis, Models",
                                           "Type": 3,
                                           "Title": "X",
                                           "Inverted": false,
@@ -994,7 +994,7 @@
                                       "Name": "Graph",
                                       "Children": [
                                         {
-                                          "$type": "Models.Graph.Series, Models",
+                                          "$type": "Models.Series, Models",
                                           "Type": 1,
                                           "XAxis": 3,
                                           "YAxis": 0,
@@ -1029,11 +1029,11 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Graph.Graph, Models",
+                                      "$type": "Models.Graph, Models",
                                       "Caption": null,
                                       "Axis": [
                                         {
-                                          "$type": "Models.Graph.Axis, Models",
+                                          "$type": "Models.Axis, Models",
                                           "Type": 0,
                                           "Title": "Y",
                                           "Inverted": false,
@@ -1044,7 +1044,7 @@
                                           "CrossesAtZero": false
                                         },
                                         {
-                                          "$type": "Models.Graph.Axis, Models",
+                                          "$type": "Models.Axis, Models",
                                           "Type": 3,
                                           "Title": "X",
                                           "Inverted": false,
@@ -1060,7 +1060,7 @@
                                       "Name": "Graph",
                                       "Children": [
                                         {
-                                          "$type": "Models.Graph.Series, Models",
+                                          "$type": "Models.Series, Models",
                                           "Type": 1,
                                           "XAxis": 3,
                                           "YAxis": 0,
@@ -1095,11 +1095,11 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Graph.Graph, Models",
+                                      "$type": "Models.Graph, Models",
                                       "Caption": null,
                                       "Axis": [
                                         {
-                                          "$type": "Models.Graph.Axis, Models",
+                                          "$type": "Models.Axis, Models",
                                           "Type": 0,
                                           "Title": "Y",
                                           "Inverted": false,
@@ -1110,7 +1110,7 @@
                                           "CrossesAtZero": false
                                         },
                                         {
-                                          "$type": "Models.Graph.Axis, Models",
+                                          "$type": "Models.Axis, Models",
                                           "Type": 3,
                                           "Title": "X",
                                           "Inverted": false,
@@ -1126,7 +1126,7 @@
                                       "Name": "Graph",
                                       "Children": [
                                         {
-                                          "$type": "Models.Graph.Series, Models",
+                                          "$type": "Models.Series, Models",
                                           "Type": 1,
                                           "XAxis": 3,
                                           "YAxis": 0,
@@ -1161,11 +1161,11 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Graph.Graph, Models",
+                                      "$type": "Models.Graph, Models",
                                       "Caption": null,
                                       "Axis": [
                                         {
-                                          "$type": "Models.Graph.Axis, Models",
+                                          "$type": "Models.Axis, Models",
                                           "Type": 0,
                                           "Title": "Y",
                                           "Inverted": false,
@@ -1176,7 +1176,7 @@
                                           "CrossesAtZero": false
                                         },
                                         {
-                                          "$type": "Models.Graph.Axis, Models",
+                                          "$type": "Models.Axis, Models",
                                           "Type": 3,
                                           "Title": "X",
                                           "Inverted": false,
@@ -1192,7 +1192,7 @@
                                       "Name": "Graph",
                                       "Children": [
                                         {
-                                          "$type": "Models.Graph.Series, Models",
+                                          "$type": "Models.Series, Models",
                                           "Type": 1,
                                           "XAxis": 3,
                                           "YAxis": 0,
@@ -1227,11 +1227,11 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Graph.Graph, Models",
+                                      "$type": "Models.Graph, Models",
                                       "Caption": null,
                                       "Axis": [
                                         {
-                                          "$type": "Models.Graph.Axis, Models",
+                                          "$type": "Models.Axis, Models",
                                           "Type": 0,
                                           "Title": "Y",
                                           "Inverted": false,
@@ -1242,7 +1242,7 @@
                                           "CrossesAtZero": false
                                         },
                                         {
-                                          "$type": "Models.Graph.Axis, Models",
+                                          "$type": "Models.Axis, Models",
                                           "Type": 3,
                                           "Title": "X",
                                           "Inverted": false,
@@ -1258,7 +1258,7 @@
                                       "Name": "Graph",
                                       "Children": [
                                         {
-                                          "$type": "Models.Graph.Series, Models",
+                                          "$type": "Models.Series, Models",
                                           "Type": 1,
                                           "XAxis": 3,
                                           "YAxis": 0,
@@ -1293,11 +1293,11 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Graph.Graph, Models",
+                                      "$type": "Models.Graph, Models",
                                       "Caption": null,
                                       "Axis": [
                                         {
-                                          "$type": "Models.Graph.Axis, Models",
+                                          "$type": "Models.Axis, Models",
                                           "Type": 0,
                                           "Title": "Y",
                                           "Inverted": false,
@@ -1308,7 +1308,7 @@
                                           "CrossesAtZero": false
                                         },
                                         {
-                                          "$type": "Models.Graph.Axis, Models",
+                                          "$type": "Models.Axis, Models",
                                           "Type": 3,
                                           "Title": "X",
                                           "Inverted": false,
@@ -1324,7 +1324,7 @@
                                       "Name": "Graph",
                                       "Children": [
                                         {
-                                          "$type": "Models.Graph.Series, Models",
+                                          "$type": "Models.Series, Models",
                                           "Type": 1,
                                           "XAxis": 3,
                                           "YAxis": 0,
@@ -1740,11 +1740,11 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Graph, Models",
+                          "$type": "Models.Graph, Models",
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 0,
                               "Title": "Y",
                               "Inverted": false,
@@ -1755,7 +1755,7 @@
                               "CrossesAtZero": false
                             },
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 3,
                               "Title": "X",
                               "Inverted": false,
@@ -1771,7 +1771,7 @@
                           "Name": "Graph",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Series, Models",
+                              "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
@@ -1806,11 +1806,11 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Graph, Models",
+                          "$type": "Models.Graph, Models",
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 0,
                               "Title": "Y",
                               "Inverted": false,
@@ -1821,7 +1821,7 @@
                               "CrossesAtZero": false
                             },
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 3,
                               "Title": "X",
                               "Inverted": false,
@@ -1837,7 +1837,7 @@
                           "Name": "Graph",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Series, Models",
+                              "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
@@ -1993,11 +1993,11 @@
                               "Name": "XYPairs",
                               "Children": [
                                 {
-                                  "$type": "Models.Graph.Graph, Models",
+                                  "$type": "Models.Graph, Models",
                                   "Caption": null,
                                   "Axis": [
                                     {
-                                      "$type": "Models.Graph.Axis, Models",
+                                      "$type": "Models.Axis, Models",
                                       "Type": 0,
                                       "Title": "Y",
                                       "Inverted": false,
@@ -2008,7 +2008,7 @@
                                       "CrossesAtZero": false
                                     },
                                     {
-                                      "$type": "Models.Graph.Axis, Models",
+                                      "$type": "Models.Axis, Models",
                                       "Type": 3,
                                       "Title": "X",
                                       "Inverted": false,
@@ -2024,7 +2024,7 @@
                                   "Name": "Graph",
                                   "Children": [
                                     {
-                                      "$type": "Models.Graph.Series, Models",
+                                      "$type": "Models.Series, Models",
                                       "Type": 1,
                                       "XAxis": 3,
                                       "YAxis": 0,
@@ -2059,11 +2059,11 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Graph.Graph, Models",
+                                  "$type": "Models.Graph, Models",
                                   "Caption": null,
                                   "Axis": [
                                     {
-                                      "$type": "Models.Graph.Axis, Models",
+                                      "$type": "Models.Axis, Models",
                                       "Type": 0,
                                       "Title": "Y",
                                       "Inverted": false,
@@ -2074,7 +2074,7 @@
                                       "CrossesAtZero": false
                                     },
                                     {
-                                      "$type": "Models.Graph.Axis, Models",
+                                      "$type": "Models.Axis, Models",
                                       "Type": 3,
                                       "Title": "X",
                                       "Inverted": false,
@@ -2090,7 +2090,7 @@
                                   "Name": "Graph",
                                   "Children": [
                                     {
-                                      "$type": "Models.Graph.Series, Models",
+                                      "$type": "Models.Series, Models",
                                       "Type": 1,
                                       "XAxis": 3,
                                       "YAxis": 0,
@@ -2125,11 +2125,11 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Graph.Graph, Models",
+                                  "$type": "Models.Graph, Models",
                                   "Caption": null,
                                   "Axis": [
                                     {
-                                      "$type": "Models.Graph.Axis, Models",
+                                      "$type": "Models.Axis, Models",
                                       "Type": 0,
                                       "Title": "Y",
                                       "Inverted": false,
@@ -2140,7 +2140,7 @@
                                       "CrossesAtZero": false
                                     },
                                     {
-                                      "$type": "Models.Graph.Axis, Models",
+                                      "$type": "Models.Axis, Models",
                                       "Type": 3,
                                       "Title": "X",
                                       "Inverted": false,
@@ -2156,7 +2156,7 @@
                                   "Name": "Graph",
                                   "Children": [
                                     {
-                                      "$type": "Models.Graph.Series, Models",
+                                      "$type": "Models.Series, Models",
                                       "Type": 1,
                                       "XAxis": 3,
                                       "YAxis": 0,
@@ -2270,11 +2270,11 @@
                           "Name": "XYPairs",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Graph, Models",
+                              "$type": "Models.Graph, Models",
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 0,
                                   "Title": "Y",
                                   "Inverted": false,
@@ -2285,7 +2285,7 @@
                                   "CrossesAtZero": false
                                 },
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 3,
                                   "Title": "X",
                                   "Inverted": false,
@@ -2301,7 +2301,7 @@
                               "Name": "Graph",
                               "Children": [
                                 {
-                                  "$type": "Models.Graph.Series, Models",
+                                  "$type": "Models.Series, Models",
                                   "Type": 1,
                                   "XAxis": 3,
                                   "YAxis": 0,
@@ -2336,11 +2336,11 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Graph.Graph, Models",
+                              "$type": "Models.Graph, Models",
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 0,
                                   "Title": "Y",
                                   "Inverted": false,
@@ -2351,7 +2351,7 @@
                                   "CrossesAtZero": false
                                 },
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 3,
                                   "Title": "X",
                                   "Inverted": false,
@@ -2367,7 +2367,7 @@
                               "Name": "Graph",
                               "Children": [
                                 {
-                                  "$type": "Models.Graph.Series, Models",
+                                  "$type": "Models.Series, Models",
                                   "Type": 1,
                                   "XAxis": 3,
                                   "YAxis": 0,
@@ -2402,11 +2402,11 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Graph.Graph, Models",
+                              "$type": "Models.Graph, Models",
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 0,
                                   "Title": "Y",
                                   "Inverted": false,
@@ -2417,7 +2417,7 @@
                                   "CrossesAtZero": false
                                 },
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 3,
                                   "Title": "X",
                                   "Inverted": false,
@@ -2433,7 +2433,7 @@
                               "Name": "Graph",
                               "Children": [
                                 {
-                                  "$type": "Models.Graph.Series, Models",
+                                  "$type": "Models.Series, Models",
                                   "Type": 1,
                                   "XAxis": 3,
                                   "YAxis": 0,
@@ -2514,11 +2514,11 @@
                           "Name": "XYPairs",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Graph, Models",
+                              "$type": "Models.Graph, Models",
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 0,
                                   "Title": "Y",
                                   "Inverted": false,
@@ -2529,7 +2529,7 @@
                                   "CrossesAtZero": false
                                 },
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 3,
                                   "Title": "X",
                                   "Inverted": false,
@@ -2545,7 +2545,7 @@
                               "Name": "Graph",
                               "Children": [
                                 {
-                                  "$type": "Models.Graph.Series, Models",
+                                  "$type": "Models.Series, Models",
                                   "Type": 1,
                                   "XAxis": 3,
                                   "YAxis": 0,
@@ -2580,11 +2580,11 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Graph.Graph, Models",
+                              "$type": "Models.Graph, Models",
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 0,
                                   "Title": "Y",
                                   "Inverted": false,
@@ -2595,7 +2595,7 @@
                                   "CrossesAtZero": false
                                 },
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 3,
                                   "Title": "X",
                                   "Inverted": false,
@@ -2611,7 +2611,7 @@
                               "Name": "Graph",
                               "Children": [
                                 {
-                                  "$type": "Models.Graph.Series, Models",
+                                  "$type": "Models.Series, Models",
                                   "Type": 1,
                                   "XAxis": 3,
                                   "YAxis": 0,
@@ -2646,11 +2646,11 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Graph.Graph, Models",
+                              "$type": "Models.Graph, Models",
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 0,
                                   "Title": "Y",
                                   "Inverted": false,
@@ -2661,7 +2661,7 @@
                                   "CrossesAtZero": false
                                 },
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 3,
                                   "Title": "X",
                                   "Inverted": false,
@@ -2677,7 +2677,7 @@
                               "Name": "Graph",
                               "Children": [
                                 {
-                                  "$type": "Models.Graph.Series, Models",
+                                  "$type": "Models.Series, Models",
                                   "Type": 1,
                                   "XAxis": 3,
                                   "YAxis": 0,
@@ -2712,11 +2712,11 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Graph.Graph, Models",
+                              "$type": "Models.Graph, Models",
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 0,
                                   "Title": "Y",
                                   "Inverted": false,
@@ -2727,7 +2727,7 @@
                                   "CrossesAtZero": false
                                 },
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 3,
                                   "Title": "X",
                                   "Inverted": false,
@@ -2743,7 +2743,7 @@
                               "Name": "Graph",
                               "Children": [
                                 {
-                                  "$type": "Models.Graph.Series, Models",
+                                  "$type": "Models.Series, Models",
                                   "Type": 1,
                                   "XAxis": 3,
                                   "YAxis": 0,
@@ -2937,11 +2937,11 @@
                       "Name": "XYPairs",
                       "Children": [
                         {
-                          "$type": "Models.Graph.Graph, Models",
+                          "$type": "Models.Graph, Models",
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 0,
                               "Title": "Y",
                               "Inverted": false,
@@ -2952,7 +2952,7 @@
                               "CrossesAtZero": false
                             },
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 3,
                               "Title": "X",
                               "Inverted": false,
@@ -2968,7 +2968,7 @@
                           "Name": "Graph",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Series, Models",
+                              "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
@@ -3003,11 +3003,11 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Graph, Models",
+                          "$type": "Models.Graph, Models",
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 0,
                               "Title": "Y",
                               "Inverted": false,
@@ -3018,7 +3018,7 @@
                               "CrossesAtZero": false
                             },
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 3,
                               "Title": "X",
                               "Inverted": false,
@@ -3034,7 +3034,7 @@
                           "Name": "Graph",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Series, Models",
+                              "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
@@ -3069,11 +3069,11 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Graph, Models",
+                          "$type": "Models.Graph, Models",
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 0,
                               "Title": "Y",
                               "Inverted": false,
@@ -3084,7 +3084,7 @@
                               "CrossesAtZero": false
                             },
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 3,
                               "Title": "X",
                               "Inverted": false,
@@ -3100,7 +3100,7 @@
                           "Name": "Graph",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Series, Models",
+                              "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
@@ -3135,11 +3135,11 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Graph, Models",
+                          "$type": "Models.Graph, Models",
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 0,
                               "Title": "Y",
                               "Inverted": false,
@@ -3150,7 +3150,7 @@
                               "CrossesAtZero": false
                             },
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 3,
                               "Title": "X",
                               "Inverted": false,
@@ -3166,7 +3166,7 @@
                           "Name": "Graph",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Series, Models",
+                              "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
@@ -3236,11 +3236,11 @@
                       "Name": "XYPairs",
                       "Children": [
                         {
-                          "$type": "Models.Graph.Graph, Models",
+                          "$type": "Models.Graph, Models",
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 0,
                               "Title": "Y",
                               "Inverted": false,
@@ -3251,7 +3251,7 @@
                               "CrossesAtZero": false
                             },
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 3,
                               "Title": "X",
                               "Inverted": false,
@@ -3267,7 +3267,7 @@
                           "Name": "Graph",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Series, Models",
+                              "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
@@ -4587,11 +4587,11 @@
                           "Name": "XYPairs",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Graph, Models",
+                              "$type": "Models.Graph, Models",
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 0,
                                   "Title": "Y",
                                   "Inverted": false,
@@ -4602,7 +4602,7 @@
                                   "CrossesAtZero": false
                                 },
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 3,
                                   "Title": "X",
                                   "Inverted": false,
@@ -4618,7 +4618,7 @@
                               "Name": "Graph",
                               "Children": [
                                 {
-                                  "$type": "Models.Graph.Series, Models",
+                                  "$type": "Models.Series, Models",
                                   "Type": 1,
                                   "XAxis": 3,
                                   "YAxis": 0,
@@ -4653,11 +4653,11 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Graph.Graph, Models",
+                              "$type": "Models.Graph, Models",
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 0,
                                   "Title": "Y",
                                   "Inverted": false,
@@ -4668,7 +4668,7 @@
                                   "CrossesAtZero": false
                                 },
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 3,
                                   "Title": "X",
                                   "Inverted": false,
@@ -4684,7 +4684,7 @@
                               "Name": "Graph",
                               "Children": [
                                 {
-                                  "$type": "Models.Graph.Series, Models",
+                                  "$type": "Models.Series, Models",
                                   "Type": 1,
                                   "XAxis": 3,
                                   "YAxis": 0,
@@ -4784,11 +4784,11 @@
                           "Name": "XYPairs",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Graph, Models",
+                              "$type": "Models.Graph, Models",
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 0,
                                   "Title": "Y",
                                   "Inverted": false,
@@ -4799,7 +4799,7 @@
                                   "CrossesAtZero": false
                                 },
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 3,
                                   "Title": "X",
                                   "Inverted": false,
@@ -4815,7 +4815,7 @@
                               "Name": "Graph",
                               "Children": [
                                 {
-                                  "$type": "Models.Graph.Series, Models",
+                                  "$type": "Models.Series, Models",
                                   "Type": 1,
                                   "XAxis": 3,
                                   "YAxis": 0,
@@ -4850,11 +4850,11 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Graph.Graph, Models",
+                              "$type": "Models.Graph, Models",
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 0,
                                   "Title": "Y",
                                   "Inverted": false,
@@ -4865,7 +4865,7 @@
                                   "CrossesAtZero": false
                                 },
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 3,
                                   "Title": "X",
                                   "Inverted": false,
@@ -4881,7 +4881,7 @@
                               "Name": "Graph",
                               "Children": [
                                 {
-                                  "$type": "Models.Graph.Series, Models",
+                                  "$type": "Models.Series, Models",
                                   "Type": 1,
                                   "XAxis": 3,
                                   "YAxis": 0,
@@ -4916,11 +4916,11 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Graph.Graph, Models",
+                              "$type": "Models.Graph, Models",
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 0,
                                   "Title": "Y",
                                   "Inverted": false,
@@ -4931,7 +4931,7 @@
                                   "CrossesAtZero": false
                                 },
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 3,
                                   "Title": "X",
                                   "Inverted": false,
@@ -4947,7 +4947,7 @@
                               "Name": "Graph",
                               "Children": [
                                 {
-                                  "$type": "Models.Graph.Series, Models",
+                                  "$type": "Models.Series, Models",
                                   "Type": 1,
                                   "XAxis": 3,
                                   "YAxis": 0,
@@ -4982,11 +4982,11 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Graph.Graph, Models",
+                              "$type": "Models.Graph, Models",
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 0,
                                   "Title": "Y",
                                   "Inverted": false,
@@ -4997,7 +4997,7 @@
                                   "CrossesAtZero": false
                                 },
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 3,
                                   "Title": "X",
                                   "Inverted": false,
@@ -5013,7 +5013,7 @@
                               "Name": "Graph",
                               "Children": [
                                 {
-                                  "$type": "Models.Graph.Series, Models",
+                                  "$type": "Models.Series, Models",
                                   "Type": 1,
                                   "XAxis": 3,
                                   "YAxis": 0,
@@ -5048,11 +5048,11 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Graph.Graph, Models",
+                              "$type": "Models.Graph, Models",
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 0,
                                   "Title": "Y",
                                   "Inverted": false,
@@ -5063,7 +5063,7 @@
                                   "CrossesAtZero": false
                                 },
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 3,
                                   "Title": "X",
                                   "Inverted": false,
@@ -5079,7 +5079,7 @@
                               "Name": "Graph",
                               "Children": [
                                 {
-                                  "$type": "Models.Graph.Series, Models",
+                                  "$type": "Models.Series, Models",
                                   "Type": 1,
                                   "XAxis": 3,
                                   "YAxis": 0,
@@ -5114,11 +5114,11 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Graph.Graph, Models",
+                              "$type": "Models.Graph, Models",
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 0,
                                   "Title": "Y",
                                   "Inverted": false,
@@ -5129,7 +5129,7 @@
                                   "CrossesAtZero": false
                                 },
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 3,
                                   "Title": "X",
                                   "Inverted": false,
@@ -5145,7 +5145,7 @@
                               "Name": "Graph",
                               "Children": [
                                 {
-                                  "$type": "Models.Graph.Series, Models",
+                                  "$type": "Models.Series, Models",
                                   "Type": 1,
                                   "XAxis": 3,
                                   "YAxis": 0,
@@ -5180,11 +5180,11 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Graph.Graph, Models",
+                              "$type": "Models.Graph, Models",
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 0,
                                   "Title": "Y",
                                   "Inverted": false,
@@ -5195,7 +5195,7 @@
                                   "CrossesAtZero": false
                                 },
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 3,
                                   "Title": "X",
                                   "Inverted": false,
@@ -5211,7 +5211,7 @@
                               "Name": "Graph",
                               "Children": [
                                 {
-                                  "$type": "Models.Graph.Series, Models",
+                                  "$type": "Models.Series, Models",
                                   "Type": 1,
                                   "XAxis": 3,
                                   "YAxis": 0,
@@ -5246,11 +5246,11 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Graph.Graph, Models",
+                              "$type": "Models.Graph, Models",
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 0,
                                   "Title": "Y",
                                   "Inverted": false,
@@ -5261,7 +5261,7 @@
                                   "CrossesAtZero": false
                                 },
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 3,
                                   "Title": "X",
                                   "Inverted": false,
@@ -5277,7 +5277,7 @@
                               "Name": "Graph",
                               "Children": [
                                 {
-                                  "$type": "Models.Graph.Series, Models",
+                                  "$type": "Models.Series, Models",
                                   "Type": 1,
                                   "XAxis": 3,
                                   "YAxis": 0,
@@ -5358,11 +5358,11 @@
                           "Name": "XYPairs",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Graph, Models",
+                              "$type": "Models.Graph, Models",
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 0,
                                   "Title": "Y",
                                   "Inverted": false,
@@ -5373,7 +5373,7 @@
                                   "CrossesAtZero": false
                                 },
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 3,
                                   "Title": "X",
                                   "Inverted": false,
@@ -5389,7 +5389,7 @@
                               "Name": "Graph",
                               "Children": [
                                 {
-                                  "$type": "Models.Graph.Series, Models",
+                                  "$type": "Models.Series, Models",
                                   "Type": 1,
                                   "XAxis": 3,
                                   "YAxis": 0,
@@ -5424,11 +5424,11 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Graph.Graph, Models",
+                              "$type": "Models.Graph, Models",
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 0,
                                   "Title": "Y",
                                   "Inverted": false,
@@ -5439,7 +5439,7 @@
                                   "CrossesAtZero": false
                                 },
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 3,
                                   "Title": "X",
                                   "Inverted": false,
@@ -5455,7 +5455,7 @@
                               "Name": "Graph",
                               "Children": [
                                 {
-                                  "$type": "Models.Graph.Series, Models",
+                                  "$type": "Models.Series, Models",
                                   "Type": 1,
                                   "XAxis": 3,
                                   "YAxis": 0,
@@ -5490,11 +5490,11 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Graph.Graph, Models",
+                              "$type": "Models.Graph, Models",
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 0,
                                   "Title": "Y",
                                   "Inverted": false,
@@ -5505,7 +5505,7 @@
                                   "CrossesAtZero": false
                                 },
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 3,
                                   "Title": "X",
                                   "Inverted": false,
@@ -5521,7 +5521,7 @@
                               "Name": "Graph",
                               "Children": [
                                 {
-                                  "$type": "Models.Graph.Series, Models",
+                                  "$type": "Models.Series, Models",
                                   "Type": 1,
                                   "XAxis": 3,
                                   "YAxis": 0,
@@ -5556,11 +5556,11 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Graph.Graph, Models",
+                              "$type": "Models.Graph, Models",
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 0,
                                   "Title": "Y",
                                   "Inverted": false,
@@ -5571,7 +5571,7 @@
                                   "CrossesAtZero": false
                                 },
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 3,
                                   "Title": "X",
                                   "Inverted": false,
@@ -5587,7 +5587,7 @@
                               "Name": "Graph",
                               "Children": [
                                 {
-                                  "$type": "Models.Graph.Series, Models",
+                                  "$type": "Models.Series, Models",
                                   "Type": 1,
                                   "XAxis": 3,
                                   "YAxis": 0,
@@ -5622,11 +5622,11 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Graph.Graph, Models",
+                              "$type": "Models.Graph, Models",
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 0,
                                   "Title": "Y",
                                   "Inverted": false,
@@ -5637,7 +5637,7 @@
                                   "CrossesAtZero": false
                                 },
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 3,
                                   "Title": "X",
                                   "Inverted": false,
@@ -5653,7 +5653,7 @@
                               "Name": "Graph",
                               "Children": [
                                 {
-                                  "$type": "Models.Graph.Series, Models",
+                                  "$type": "Models.Series, Models",
                                   "Type": 1,
                                   "XAxis": 3,
                                   "YAxis": 0,
@@ -5688,11 +5688,11 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Graph.Graph, Models",
+                              "$type": "Models.Graph, Models",
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 0,
                                   "Title": "Y",
                                   "Inverted": false,
@@ -5703,7 +5703,7 @@
                                   "CrossesAtZero": false
                                 },
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 3,
                                   "Title": "X",
                                   "Inverted": false,
@@ -5719,7 +5719,7 @@
                               "Name": "Graph",
                               "Children": [
                                 {
-                                  "$type": "Models.Graph.Series, Models",
+                                  "$type": "Models.Series, Models",
                                   "Type": 1,
                                   "XAxis": 3,
                                   "YAxis": 0,
@@ -5754,11 +5754,11 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Graph.Graph, Models",
+                              "$type": "Models.Graph, Models",
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 0,
                                   "Title": "Y",
                                   "Inverted": false,
@@ -5769,7 +5769,7 @@
                                   "CrossesAtZero": false
                                 },
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 3,
                                   "Title": "X",
                                   "Inverted": false,
@@ -5785,7 +5785,7 @@
                               "Name": "Graph",
                               "Children": [
                                 {
-                                  "$type": "Models.Graph.Series, Models",
+                                  "$type": "Models.Series, Models",
                                   "Type": 1,
                                   "XAxis": 3,
                                   "YAxis": 0,
@@ -5992,11 +5992,11 @@
                       "Name": "XYPairs",
                       "Children": [
                         {
-                          "$type": "Models.Graph.Graph, Models",
+                          "$type": "Models.Graph, Models",
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 0,
                               "Title": "Y",
                               "Inverted": false,
@@ -6007,7 +6007,7 @@
                               "CrossesAtZero": false
                             },
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 3,
                               "Title": "X",
                               "Inverted": false,
@@ -6023,7 +6023,7 @@
                           "Name": "Graph",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Series, Models",
+                              "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
@@ -6174,11 +6174,11 @@
                       "Name": "XYPairs",
                       "Children": [
                         {
-                          "$type": "Models.Graph.Graph, Models",
+                          "$type": "Models.Graph, Models",
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 0,
                               "Title": "Y",
                               "Inverted": false,
@@ -6189,7 +6189,7 @@
                               "CrossesAtZero": false
                             },
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 3,
                               "Title": "X",
                               "Inverted": false,
@@ -6205,7 +6205,7 @@
                           "Name": "Graph",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Series, Models",
+                              "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
@@ -6240,11 +6240,11 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Graph, Models",
+                          "$type": "Models.Graph, Models",
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 0,
                               "Title": "Y",
                               "Inverted": false,
@@ -6255,7 +6255,7 @@
                               "CrossesAtZero": false
                             },
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 3,
                               "Title": "X",
                               "Inverted": false,
@@ -6271,7 +6271,7 @@
                           "Name": "Graph",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Series, Models",
+                              "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
@@ -6487,11 +6487,11 @@
                       "Name": "XYPairs",
                       "Children": [
                         {
-                          "$type": "Models.Graph.Graph, Models",
+                          "$type": "Models.Graph, Models",
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 0,
                               "Title": "Y",
                               "Inverted": false,
@@ -6502,7 +6502,7 @@
                               "CrossesAtZero": false
                             },
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 3,
                               "Title": "X",
                               "Inverted": false,
@@ -6518,7 +6518,7 @@
                           "Name": "Graph",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Series, Models",
+                              "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
@@ -6553,11 +6553,11 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Graph, Models",
+                          "$type": "Models.Graph, Models",
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 0,
                               "Title": "Y",
                               "Inverted": false,
@@ -6568,7 +6568,7 @@
                               "CrossesAtZero": false
                             },
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 3,
                               "Title": "X",
                               "Inverted": false,
@@ -6584,7 +6584,7 @@
                           "Name": "Graph",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Series, Models",
+                              "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
@@ -6619,11 +6619,11 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Graph, Models",
+                          "$type": "Models.Graph, Models",
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 0,
                               "Title": "Y",
                               "Inverted": false,
@@ -6634,7 +6634,7 @@
                               "CrossesAtZero": false
                             },
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 3,
                               "Title": "X",
                               "Inverted": false,
@@ -6650,7 +6650,7 @@
                           "Name": "Graph",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Series, Models",
+                              "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
@@ -6685,11 +6685,11 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Graph, Models",
+                          "$type": "Models.Graph, Models",
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 0,
                               "Title": "Y",
                               "Inverted": false,
@@ -6700,7 +6700,7 @@
                               "CrossesAtZero": false
                             },
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 3,
                               "Title": "X",
                               "Inverted": false,
@@ -6716,7 +6716,7 @@
                           "Name": "Graph",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Series, Models",
+                              "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
@@ -6751,11 +6751,11 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Graph, Models",
+                          "$type": "Models.Graph, Models",
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 0,
                               "Title": "Y",
                               "Inverted": false,
@@ -6766,7 +6766,7 @@
                               "CrossesAtZero": false
                             },
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 3,
                               "Title": "X",
                               "Inverted": false,
@@ -6782,7 +6782,7 @@
                           "Name": "Graph",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Series, Models",
+                              "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
@@ -6817,11 +6817,11 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Graph, Models",
+                          "$type": "Models.Graph, Models",
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 0,
                               "Title": "Y",
                               "Inverted": false,
@@ -6832,7 +6832,7 @@
                               "CrossesAtZero": false
                             },
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 3,
                               "Title": "X",
                               "Inverted": false,
@@ -6848,7 +6848,7 @@
                           "Name": "Graph",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Series, Models",
+                              "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
@@ -6883,11 +6883,11 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Graph, Models",
+                          "$type": "Models.Graph, Models",
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 0,
                               "Title": "Y",
                               "Inverted": false,
@@ -6898,7 +6898,7 @@
                               "CrossesAtZero": false
                             },
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 3,
                               "Title": "X",
                               "Inverted": false,
@@ -6914,7 +6914,7 @@
                           "Name": "Graph",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Series, Models",
+                              "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
@@ -6949,11 +6949,11 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Graph, Models",
+                          "$type": "Models.Graph, Models",
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 0,
                               "Title": "Y",
                               "Inverted": false,
@@ -6964,7 +6964,7 @@
                               "CrossesAtZero": false
                             },
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 3,
                               "Title": "X",
                               "Inverted": false,
@@ -6980,7 +6980,7 @@
                           "Name": "Graph",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Series, Models",
+                              "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
@@ -7015,11 +7015,11 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Graph, Models",
+                          "$type": "Models.Graph, Models",
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 0,
                               "Title": "Y",
                               "Inverted": false,
@@ -7030,7 +7030,7 @@
                               "CrossesAtZero": false
                             },
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 3,
                               "Title": "X",
                               "Inverted": false,
@@ -7046,7 +7046,7 @@
                           "Name": "Graph",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Series, Models",
+                              "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
@@ -7081,11 +7081,11 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Graph, Models",
+                          "$type": "Models.Graph, Models",
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 0,
                               "Title": "Y",
                               "Inverted": false,
@@ -7096,7 +7096,7 @@
                               "CrossesAtZero": false
                             },
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 3,
                               "Title": "X",
                               "Inverted": false,
@@ -7112,7 +7112,7 @@
                           "Name": "Graph",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Series, Models",
+                              "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
@@ -7147,11 +7147,11 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Graph, Models",
+                          "$type": "Models.Graph, Models",
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 0,
                               "Title": "Y",
                               "Inverted": false,
@@ -7162,7 +7162,7 @@
                               "CrossesAtZero": false
                             },
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 3,
                               "Title": "X",
                               "Inverted": false,
@@ -7178,7 +7178,7 @@
                           "Name": "Graph",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Series, Models",
+                              "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
@@ -7213,11 +7213,11 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Graph, Models",
+                          "$type": "Models.Graph, Models",
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 0,
                               "Title": "Y",
                               "Inverted": false,
@@ -7228,7 +7228,7 @@
                               "CrossesAtZero": false
                             },
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 3,
                               "Title": "X",
                               "Inverted": false,
@@ -7244,7 +7244,7 @@
                           "Name": "Graph",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Series, Models",
+                              "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
@@ -7323,11 +7323,11 @@
                       "Name": "XYPairs",
                       "Children": [
                         {
-                          "$type": "Models.Graph.Graph, Models",
+                          "$type": "Models.Graph, Models",
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 0,
                               "Title": "Y",
                               "Inverted": false,
@@ -7338,7 +7338,7 @@
                               "CrossesAtZero": false
                             },
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 3,
                               "Title": "X",
                               "Inverted": false,
@@ -7354,7 +7354,7 @@
                           "Name": "Graph",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Series, Models",
+                              "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
@@ -7389,11 +7389,11 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Graph, Models",
+                          "$type": "Models.Graph, Models",
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 0,
                               "Title": "Y",
                               "Inverted": false,
@@ -7404,7 +7404,7 @@
                               "CrossesAtZero": false
                             },
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 3,
                               "Title": "X",
                               "Inverted": false,
@@ -7420,7 +7420,7 @@
                           "Name": "Graph",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Series, Models",
+                              "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
@@ -7455,11 +7455,11 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Graph, Models",
+                          "$type": "Models.Graph, Models",
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 0,
                               "Title": "Y",
                               "Inverted": false,
@@ -7470,7 +7470,7 @@
                               "CrossesAtZero": false
                             },
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 3,
                               "Title": "X",
                               "Inverted": false,
@@ -7486,7 +7486,7 @@
                           "Name": "Graph",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Series, Models",
+                              "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
@@ -7521,11 +7521,11 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Graph, Models",
+                          "$type": "Models.Graph, Models",
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 0,
                               "Title": "Y",
                               "Inverted": false,
@@ -7536,7 +7536,7 @@
                               "CrossesAtZero": false
                             },
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 3,
                               "Title": "X",
                               "Inverted": false,
@@ -7552,7 +7552,7 @@
                           "Name": "Graph",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Series, Models",
+                              "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
@@ -7587,11 +7587,11 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Graph, Models",
+                          "$type": "Models.Graph, Models",
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 0,
                               "Title": "Y",
                               "Inverted": false,
@@ -7602,7 +7602,7 @@
                               "CrossesAtZero": false
                             },
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 3,
                               "Title": "X",
                               "Inverted": false,
@@ -7618,7 +7618,7 @@
                           "Name": "Graph",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Series, Models",
+                              "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
@@ -7653,11 +7653,11 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Graph, Models",
+                          "$type": "Models.Graph, Models",
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 0,
                               "Title": "Y",
                               "Inverted": false,
@@ -7668,7 +7668,7 @@
                               "CrossesAtZero": false
                             },
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 3,
                               "Title": "X",
                               "Inverted": false,
@@ -7684,7 +7684,7 @@
                           "Name": "Graph",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Series, Models",
+                              "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
@@ -7719,11 +7719,11 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Graph, Models",
+                          "$type": "Models.Graph, Models",
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 0,
                               "Title": "Y",
                               "Inverted": false,
@@ -7734,7 +7734,7 @@
                               "CrossesAtZero": false
                             },
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 3,
                               "Title": "X",
                               "Inverted": false,
@@ -7750,7 +7750,7 @@
                           "Name": "Graph",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Series, Models",
+                              "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
@@ -7785,11 +7785,11 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Graph, Models",
+                          "$type": "Models.Graph, Models",
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 0,
                               "Title": "Y",
                               "Inverted": false,
@@ -7800,7 +7800,7 @@
                               "CrossesAtZero": false
                             },
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 3,
                               "Title": "X",
                               "Inverted": false,
@@ -7816,7 +7816,7 @@
                           "Name": "Graph",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Series, Models",
+                              "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
@@ -7944,11 +7944,11 @@
                           "Name": "XYPairs",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Graph, Models",
+                              "$type": "Models.Graph, Models",
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 0,
                                   "Title": "Y",
                                   "Inverted": false,
@@ -7959,7 +7959,7 @@
                                   "CrossesAtZero": false
                                 },
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 3,
                                   "Title": "X",
                                   "Inverted": false,
@@ -7975,7 +7975,7 @@
                               "Name": "Graph",
                               "Children": [
                                 {
-                                  "$type": "Models.Graph.Series, Models",
+                                  "$type": "Models.Series, Models",
                                   "Type": 1,
                                   "XAxis": 3,
                                   "YAxis": 0,
@@ -8010,11 +8010,11 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Graph.Graph, Models",
+                              "$type": "Models.Graph, Models",
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 0,
                                   "Title": "Y",
                                   "Inverted": false,
@@ -8025,7 +8025,7 @@
                                   "CrossesAtZero": false
                                 },
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 3,
                                   "Title": "X",
                                   "Inverted": false,
@@ -8041,7 +8041,7 @@
                               "Name": "Graph",
                               "Children": [
                                 {
-                                  "$type": "Models.Graph.Series, Models",
+                                  "$type": "Models.Series, Models",
                                   "Type": 1,
                                   "XAxis": 3,
                                   "YAxis": 0,
@@ -8076,11 +8076,11 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Graph.Graph, Models",
+                              "$type": "Models.Graph, Models",
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 0,
                                   "Title": "Y",
                                   "Inverted": false,
@@ -8091,7 +8091,7 @@
                                   "CrossesAtZero": false
                                 },
                                 {
-                                  "$type": "Models.Graph.Axis, Models",
+                                  "$type": "Models.Axis, Models",
                                   "Type": 3,
                                   "Title": "X",
                                   "Inverted": false,
@@ -8107,7 +8107,7 @@
                               "Name": "Graph",
                               "Children": [
                                 {
-                                  "$type": "Models.Graph.Series, Models",
+                                  "$type": "Models.Series, Models",
                                   "Type": 1,
                                   "XAxis": 3,
                                   "YAxis": 0,
@@ -8699,11 +8699,11 @@
                   "Name": "XYPairs",
                   "Children": [
                     {
-                      "$type": "Models.Graph.Graph, Models",
+                      "$type": "Models.Graph, Models",
                       "Caption": null,
                       "Axis": [
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 0,
                           "Title": "Y",
                           "Inverted": false,
@@ -8714,7 +8714,7 @@
                           "CrossesAtZero": false
                         },
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 3,
                           "Title": "X",
                           "Inverted": false,
@@ -8730,7 +8730,7 @@
                       "Name": "Graph",
                       "Children": [
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -8765,11 +8765,11 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Graph.Graph, Models",
+                      "$type": "Models.Graph, Models",
                       "Caption": null,
                       "Axis": [
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 0,
                           "Title": "Y",
                           "Inverted": false,
@@ -8780,7 +8780,7 @@
                           "CrossesAtZero": false
                         },
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 3,
                           "Title": "X",
                           "Inverted": false,
@@ -8796,7 +8796,7 @@
                       "Name": "Graph",
                       "Children": [
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -8831,11 +8831,11 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Graph.Graph, Models",
+                      "$type": "Models.Graph, Models",
                       "Caption": null,
                       "Axis": [
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 0,
                           "Title": "Y",
                           "Inverted": false,
@@ -8846,7 +8846,7 @@
                           "CrossesAtZero": false
                         },
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 3,
                           "Title": "X",
                           "Inverted": false,
@@ -8862,7 +8862,7 @@
                       "Name": "Graph",
                       "Children": [
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -8897,11 +8897,11 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Graph.Graph, Models",
+                      "$type": "Models.Graph, Models",
                       "Caption": null,
                       "Axis": [
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 0,
                           "Title": "Y",
                           "Inverted": false,
@@ -8912,7 +8912,7 @@
                           "CrossesAtZero": false
                         },
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 3,
                           "Title": "X",
                           "Inverted": false,
@@ -8928,7 +8928,7 @@
                       "Name": "Graph",
                       "Children": [
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -8963,11 +8963,11 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Graph.Graph, Models",
+                      "$type": "Models.Graph, Models",
                       "Caption": null,
                       "Axis": [
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 0,
                           "Title": "Y",
                           "Inverted": false,
@@ -8978,7 +8978,7 @@
                           "CrossesAtZero": false
                         },
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 3,
                           "Title": "X",
                           "Inverted": false,
@@ -8994,7 +8994,7 @@
                       "Name": "Graph",
                       "Children": [
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -9029,11 +9029,11 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Graph.Graph, Models",
+                      "$type": "Models.Graph, Models",
                       "Caption": null,
                       "Axis": [
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 0,
                           "Title": "Y",
                           "Inverted": false,
@@ -9044,7 +9044,7 @@
                           "CrossesAtZero": false
                         },
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 3,
                           "Title": "X",
                           "Inverted": false,
@@ -9060,7 +9060,7 @@
                       "Name": "Graph",
                       "Children": [
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -9095,11 +9095,11 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Graph.Graph, Models",
+                      "$type": "Models.Graph, Models",
                       "Caption": null,
                       "Axis": [
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 0,
                           "Title": "Y",
                           "Inverted": false,
@@ -9110,7 +9110,7 @@
                           "CrossesAtZero": false
                         },
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 3,
                           "Title": "X",
                           "Inverted": false,
@@ -9126,7 +9126,7 @@
                       "Name": "Graph",
                       "Children": [
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -9161,11 +9161,11 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Graph.Graph, Models",
+                      "$type": "Models.Graph, Models",
                       "Caption": null,
                       "Axis": [
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 0,
                           "Title": "Y",
                           "Inverted": false,
@@ -9176,7 +9176,7 @@
                           "CrossesAtZero": false
                         },
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 3,
                           "Title": "X",
                           "Inverted": false,
@@ -9192,7 +9192,7 @@
                       "Name": "Graph",
                       "Children": [
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -9227,11 +9227,11 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Graph.Graph, Models",
+                      "$type": "Models.Graph, Models",
                       "Caption": null,
                       "Axis": [
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 0,
                           "Title": "Y",
                           "Inverted": false,
@@ -9242,7 +9242,7 @@
                           "CrossesAtZero": false
                         },
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 3,
                           "Title": "X",
                           "Inverted": false,
@@ -9258,7 +9258,7 @@
                       "Name": "Graph",
                       "Children": [
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -9293,11 +9293,11 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Graph.Graph, Models",
+                      "$type": "Models.Graph, Models",
                       "Caption": null,
                       "Axis": [
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 0,
                           "Title": "Y",
                           "Inverted": false,
@@ -9308,7 +9308,7 @@
                           "CrossesAtZero": false
                         },
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 3,
                           "Title": "X",
                           "Inverted": false,
@@ -9324,7 +9324,7 @@
                       "Name": "Graph",
                       "Children": [
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,

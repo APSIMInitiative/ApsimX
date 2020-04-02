@@ -3,7 +3,7 @@
     using APSIM.Shared.Utilities;
     using Commands;
     using Models.Core;
-    using Models.Graph;
+    using Models;
     using Models.Soils;
     using System;
     using System.Collections;
@@ -158,6 +158,7 @@
                         }
                     }
 
+                    this.graph.LegendPosition = Graph.LegendPositionType.RightTop;
                     explorerPresenter.ApsimXFile.Links.Resolve(graphPresenter);
                     this.graphPresenter.Attach(this.graph, this.view.Graph, this.explorerPresenter);
                     graphPresenter.LegendInsideGraph = false;

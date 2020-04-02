@@ -87,7 +87,7 @@
             {
                 Children = new List<Model>()
                 {
-                    new Folder()
+                    new Replacements()
                     {
                         Name = "Replacements",
                         Children = new List<Model>()
@@ -214,7 +214,7 @@
                                     }
                                 }
                             },
-                            new SoilWater(),
+                            new Models.WaterModel.WaterBalance(),
                             new Organic
                             {
                                 Thickness = new double[] { 100, 300 },
