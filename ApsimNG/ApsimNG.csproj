@@ -187,6 +187,7 @@
     <Compile Include="Cloud\Azure\Licence.cs" />
     <Compile Include="Cloud\DownloadOptions.cs" />
     <Compile Include="EventArguments\CustomDataEventArgs.cs" />
+    <Compile Include="Presenters\DocumentationPresenter.cs" />
     <Compile Include="Views\CloudDownloadView.cs" />
     <Compile Include="Cloud\ICloudInterface.cs" />
     <Compile Include="Cloud\JobDetails.cs" />
