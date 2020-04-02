@@ -904,8 +904,8 @@
                         {
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
-                            0.0,
-                            10.0,
+                            5.0,
+                            15.0,
                             32.0,
                             42.0
                           ],
@@ -1044,11 +1044,39 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
                   "Name": "SenescenceRate",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        5.0,
+                        10.0,
+                        15.0
+                      ],
+                      "Y": [
+                        1.0,
+                        0.1,
+                        0.02,
+                        0.0
+                      ],
+                      "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Weather].MinT",
+                      "Name": "XValue",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
@@ -16777,7 +16805,7 @@
                   "Children": [
                     {
                       "$type": "Models.Regression, Models",
-                      "ForEachSeries": true,
+                      "ForEachSeries": false,
                       "showOneToOne": true,
                       "showEquation": true,
                       "Name": "Regression",
