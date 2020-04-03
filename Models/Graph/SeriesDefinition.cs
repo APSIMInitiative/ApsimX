@@ -30,13 +30,20 @@
         /// <summary>The name of the checkpoint to show.</summary>
         public string CheckpointName { get; private set; }
 
-        /// <summary>The 0-1 modifier for colour.</summary>
-        private double colourModifier;
+        /// <summary>Colour brightness modifier for the series definition in range [-1, 1].</summary>
+        public double ColourModifier { get; private set; }
+
+        /// <summary>
+        /// Marker size modifier for the series definition in range [0, 1].
+        /// Larger value means smaller markers.
+        /// </summary>
+        public double MarkerModifier { get; private set; }
 
         /// <summary>Constructor</summary>
         /// <param name="series">The series instance to initialise from.</param>
         /// <param name="checkpoint">The checkpoint name.</param>
-        /// <param name="colModifier">The 0-1 modifier for colour.</param>
+        /// <param name="colModifier">The brightness modifier for colour in range  [-1, 1]. Negative means darker.</param>
+        /// <param name="markerModifier">Marker size modifier in range [0, 1]. Larger value means smaller markers.</param>
         /// <param name="whereClauseForInScopeData">A SQL where clause to specify data that is in scope.</param>
         /// <param name="filter">User specified filter.</param>
         /// <param name="descriptors">The descriptors for this series definition.</param>
@@ -44,6 +51,7 @@
         public SeriesDefinition(Series series,
                                 string checkpoint,
                                 double colModifier,
+                                double markerModifier,
                                 string whereClauseForInScopeData = null,
                                 string filter = null,
                                 List<SimulationDescription.Descriptor> descriptors = null,
@@ -51,7 +59,8 @@
         {
             this.series = series;
             CheckpointName = checkpoint;
-            colourModifier = colModifier;
+            ColourModifier = colModifier;
+            MarkerModifier = markerModifier;
             Colour = series.Colour;
             Line = series.Line;
             Marker = series.Marker;
@@ -147,9 +156,9 @@
 
                 if (series != null) // Can be null for regression lines or 1:1 lines
                 {
-                    if (colourModifier == 0.7)
+                    if (MarkerModifier == 0.7)
                         size = MarkerSizeType.Small;
-                    else if (colourModifier > 0.7)
+                    else if (MarkerModifier > 0.7)
                         size = MarkerSizeType.VerySmall;
                 }
                 return size;
@@ -239,7 +248,7 @@
         /// <param name="index">The colour index into the colour palette.</param>
         public static void SetColour(SeriesDefinition definition, int index)
         {
-            definition.Colour = ColourUtilities.ChangeColorBrightness(ColourUtilities.Colours[index], definition.colourModifier);
+            definition.Colour = ColourUtilities.ChangeColorBrightness(ColourUtilities.Colours[index], definition.ColourModifier);
         }
 
         /// <summary>A static setter function for line type from an index</summary>
