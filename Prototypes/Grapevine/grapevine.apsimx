@@ -2850,6 +2850,54 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.BetaGrowthFunction, Models",
+                  "Name": "PotentialRate",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Ymax",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 37.0,
+                      "Units": null,
+                      "Name": "tm",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 70.0,
+                      "Units": null,
+                      "Name": "te",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].ThermalTime",
+                      "Name": "XValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -7328,7 +7376,9 @@
                     "",
                     "[Berry].YieldComponent.BunchesPerVine as BunchesPerVine",
                     "[Berry].YieldComponent.BerryNum as BerryNum",
-                    "[Berry].YieldComponent.BerryMass as BerryMass"
+                    "[Berry].YieldComponent.BerryMass as BerryMass",
+                    "",
+                    "[Shoot].PotentialRate"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
