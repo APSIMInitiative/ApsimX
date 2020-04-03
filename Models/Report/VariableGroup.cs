@@ -49,8 +49,6 @@
         public void StoreValue()
         {
             object value = locator.Get(variableName);
-            //if (value == null)
-            //    throw new Exception($"Unable to locate report variable: {variableName}");
             if (value is IFunction function)
                 value = function.Value();
             else if (value != null && (value.GetType().IsArray || value.GetType().IsClass))
