@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 382,
-  "Version": 76,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-02-24",
+  "Version": 90,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -75,7 +75,7 @@
             },
             {
               "$type": "Models.CLEM.ZoneCLEM, Models",
-              "FarmMultiplier": 0.0,
+              "FarmMultiplier": 1.0,
               "ClimateRegion": 0,
               "EcologicalIndicatorsCalculationMonth": 12,
               "Area": 0.0,
@@ -893,6 +893,7 @@
                       "$type": "Models.CLEM.Reporting.ReportActivitiesPerformed, Models",
                       "VariableNames": null,
                       "EventNames": null,
+                      "GroupByVariableName": null,
                       "Name": "ReportActivitiesPerformed",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -911,6 +912,7 @@
                       "EventNames": [
                         ""
                       ],
+                      "GroupByVariableName": null,
                       "Name": "ReportResourceBalances",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -930,6 +932,7 @@
                       "EventNames": [
                         "[Activities].ResourceShortfallOccurred"
                       ],
+                      "GroupByVariableName": null,
                       "Name": "ReportResourceShortfalls",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -942,6 +945,7 @@
                         "GrazeFoodStore"
                       ],
                       "EventNames": null,
+                      "GroupByVariableName": null,
                       "Name": "GrazeFoodStoreLedger",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -954,6 +958,7 @@
                         "AnimalFoodStore"
                       ],
                       "EventNames": null,
+                      "GroupByVariableName": null,
                       "Name": "AnimalFoodLedger",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -966,6 +971,7 @@
                         "Finances"
                       ],
                       "EventNames": null,
+                      "GroupByVariableName": null,
                       "Name": "FinancesLedger",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -978,6 +984,7 @@
                         "Ruminants"
                       ],
                       "EventNames": null,
+                      "GroupByVariableName": null,
                       "Name": "HerdLedger",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -985,7 +992,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Report.Report, Models",
+                      "$type": "Models.Report, Models",
                       "VariableNames": [
                         "[Clock].Today",
                         "[Activities].SummariseHerd.ReportDetails.Breed as Breed",
@@ -1003,6 +1010,7 @@
                       "EventNames": [
                         "[Activities].SummariseHerd.OnReportItemGenerated"
                       ],
+                      "GroupByVariableName": null,
                       "Name": "HerdSummary",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -1020,11 +1028,11 @@
                   "Name": "Graphs",
                   "Children": [
                     {
-                      "$type": "Models.Graph.Graph, Models",
+                      "$type": "Models.Graph, Models",
                       "Caption": null,
                       "Axis": [
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 3,
                           "Title": null,
                           "Inverted": false,
@@ -1035,7 +1043,7 @@
                           "CrossesAtZero": true
                         },
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 0,
                           "Title": "$ Dollars",
                           "Inverted": false,
@@ -1053,7 +1061,7 @@
                       "Name": "Income vs Expenses",
                       "Children": [
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 0,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -1065,7 +1073,6 @@
                           "MarkerSize": 1,
                           "Line": 0,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "FinancesLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Gain",
@@ -1083,7 +1090,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 0,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -1095,7 +1102,6 @@
                           "MarkerSize": 1,
                           "Line": 0,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "FinancesLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Loss",
@@ -1113,7 +1119,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -1125,7 +1131,6 @@
                           "MarkerSize": 1,
                           "Line": 0,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "FinancesLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Loss",
@@ -1148,11 +1153,11 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Graph.Graph, Models",
+                      "$type": "Models.Graph, Models",
                       "Caption": null,
                       "Axis": [
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 3,
                           "Title": null,
                           "Inverted": false,
@@ -1163,7 +1168,7 @@
                           "CrossesAtZero": false
                         },
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 0,
                           "Title": null,
                           "Inverted": false,
@@ -1174,7 +1179,7 @@
                           "CrossesAtZero": false
                         },
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 2,
                           "Title": null,
                           "Inverted": false,
@@ -1192,7 +1197,7 @@
                       "Name": "Animal numbers vs Feed available",
                       "Children": [
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -1204,7 +1209,6 @@
                           "MarkerSize": 1,
                           "Line": 0,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "ReportResourceBalances",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "NativePasture",
@@ -1222,7 +1226,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -1234,7 +1238,6 @@
                           "MarkerSize": 1,
                           "Line": 1,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "ReportResourceBalances",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Hay",
@@ -1252,7 +1255,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 2,
@@ -1264,7 +1267,6 @@
                           "MarkerSize": 1,
                           "Line": 0,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "ReportResourceBalances",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Bos indicus",
@@ -1287,11 +1289,11 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Graph.Graph, Models",
+                      "$type": "Models.Graph, Models",
                       "Caption": null,
                       "Axis": [
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 3,
                           "Title": null,
                           "Inverted": false,
@@ -1302,7 +1304,7 @@
                           "CrossesAtZero": false
                         },
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 0,
                           "Title": "Pasture Growth",
                           "Inverted": false,
@@ -1313,7 +1315,7 @@
                           "CrossesAtZero": false
                         },
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 2,
                           "Title": "Bos indicus Grazing",
                           "Inverted": false,
@@ -1331,7 +1333,7 @@
                       "Name": "Graph_Pasture Growth vs Grazing",
                       "Children": [
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -1343,7 +1345,6 @@
                           "MarkerSize": 1,
                           "Line": 0,
                           "LineThickness": 1,
-                          "Checkpoint": "Current",
                           "TableName": "GrazeFoodStoreLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Gain",
@@ -1361,7 +1362,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 2,
@@ -1373,7 +1374,6 @@
                           "MarkerSize": 1,
                           "Line": 0,
                           "LineThickness": 1,
-                          "Checkpoint": "Current",
                           "TableName": "GrazeFoodStoreLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Loss",

@@ -1,7 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 57,
+  "Version": 90,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -30,7 +31,6 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
-          "Descriptors": null,
           "Name": "Single and Mixed Cropping",
           "Children": [
             {
@@ -44,8 +44,8 @@
             },
             {
               "$type": "Models.Clock, Models",
-              "StartDate": "2001-01-01T00:00:00",
-              "EndDate": "2010-12-31T00:00:00",
+              "Start": "2001-01-01T00:00:00",
+              "End": "2010-12-31T00:00:00",
               "Name": "clock",
               "Children": [],
               "IncludeInDocumentation": false,
@@ -65,17 +65,25 @@
             },
             {
               "$type": "Models.CLEM.ZoneCLEM, Models",
-              "RandomSeed": 1,
+              "FarmMultiplier": 1.0,
               "ClimateRegion": 0,
               "EcologicalIndicatorsCalculationMonth": 12,
               "Area": 0.0,
               "Slope": 0.0,
+              "AspectAngle": 0.0,
+              "Altitude": 50.0,
               "Name": "CLEM",
               "Children": [
                 {
                   "$type": "Models.CLEM.FileCrop, Models",
                   "FileName": "FileCrop_Example.prn",
                   "ExcelWorkSheetName": null,
+                  "CropNameColumnName": "CropName",
+                  "SoilTypeColumnName": "SoilNum",
+                  "YearColumnName": "Year",
+                  "MonthColumnName": "Month",
+                  "AmountColumnName": "AmtKg",
+                  "PercentNitrogenColumnName": null,
                   "Name": "FileCrop_Maize",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -86,6 +94,12 @@
                   "$type": "Models.CLEM.FileCrop, Models",
                   "FileName": "FileVegetables_Example2.prn",
                   "ExcelWorkSheetName": null,
+                  "CropNameColumnName": "CropName",
+                  "SoilTypeColumnName": "SoilNum",
+                  "YearColumnName": "Year",
+                  "MonthColumnName": "Month",
+                  "AmountColumnName": "AmtKg",
+                  "PercentNitrogenColumnName": null,
                   "Name": "FileCrop_Vegetables",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -151,6 +165,7 @@
                           "$type": "Models.CLEM.Resources.LabourType, Models",
                           "InitialAge": 42.0,
                           "Gender": 0,
+                          "DietaryComponentList": null,
                           "Individuals": 1,
                           "Hired": false,
                           "Name": "Male",
@@ -163,6 +178,7 @@
                           "$type": "Models.CLEM.Resources.LabourType, Models",
                           "InitialAge": 35.0,
                           "Gender": 1,
+                          "DietaryComponentList": null,
                           "Individuals": 1,
                           "Hired": false,
                           "Name": "Female",
@@ -218,6 +234,7 @@
                               "PacketSize": 10.0,
                               "UseWholePackets": true,
                               "PricePerPacket": 100.0,
+                              "PurchaseOrSale": 0,
                               "Name": "Pricing",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -250,6 +267,7 @@
                               "PacketSize": 10.0,
                               "UseWholePackets": false,
                               "PricePerPacket": 200.0,
+                              "PurchaseOrSale": 0,
                               "Name": "Pricing",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -692,6 +710,7 @@
                       "$type": "Models.CLEM.Reporting.ReportActivitiesPerformed, Models",
                       "VariableNames": null,
                       "EventNames": null,
+                      "GroupByVariableName": null,
                       "Name": "ReportActivitiesPerformed",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -712,6 +731,7 @@
                         "ProductStore"
                       ],
                       "EventNames": null,
+                      "GroupByVariableName": null,
                       "Name": "ProductsLedger",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -724,6 +744,7 @@
                         "Finances"
                       ],
                       "EventNames": null,
+                      "GroupByVariableName": null,
                       "Name": "FinancesLedger",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -736,6 +757,7 @@
                         "Labour"
                       ],
                       "EventNames": null,
+                      "GroupByVariableName": null,
                       "Name": "LabourLedger",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -753,6 +775,7 @@
                       "EventNames": [
                         ""
                       ],
+                      "GroupByVariableName": null,
                       "Name": "ReportResourceBalances",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -768,6 +791,7 @@
                         "HumanFoodStore"
                       ],
                       "EventNames": null,
+                      "GroupByVariableName": null,
                       "Name": "ReportResourceShortfalls",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -785,11 +809,11 @@
                   "Name": "Graphs_General Account",
                   "Children": [
                     {
-                      "$type": "Models.Graph.Graph, Models",
+                      "$type": "Models.Graph, Models",
                       "Caption": null,
                       "Axis": [
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 3,
                           "Title": "Date",
                           "Inverted": false,
@@ -800,7 +824,7 @@
                           "CrossesAtZero": true
                         },
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 0,
                           "Title": null,
                           "Inverted": false,
@@ -811,7 +835,7 @@
                           "CrossesAtZero": false
                         },
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 2,
                           "Title": "Income, Expenses",
                           "Inverted": false,
@@ -823,11 +847,13 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
                       "Name": "Account balance",
                       "Children": [
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -839,12 +865,11 @@
                           "MarkerSize": 1,
                           "Line": 0,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "ReportResourceBalances",
                           "XFieldName": "Date",
                           "YFieldName": "General account",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
@@ -857,7 +882,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 2,
@@ -869,12 +894,11 @@
                           "MarkerSize": 1,
                           "Line": 1,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "FinancesLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Gain",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
@@ -887,7 +911,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 2,
@@ -899,12 +923,11 @@
                           "MarkerSize": 1,
                           "Line": 1,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "FinancesLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Loss",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
@@ -922,11 +945,11 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Graph.Graph, Models",
+                      "$type": "Models.Graph, Models",
                       "Caption": null,
                       "Axis": [
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 3,
                           "Title": "Date",
                           "Inverted": false,
@@ -937,7 +960,7 @@
                           "CrossesAtZero": false
                         },
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 0,
                           "Title": "$Dollars",
                           "Inverted": false,
@@ -949,11 +972,13 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
                       "Name": "Income sources",
                       "Children": [
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -965,12 +990,11 @@
                           "MarkerSize": 1,
                           "Line": 0,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "FinancesLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Gain",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
@@ -983,7 +1007,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -995,12 +1019,11 @@
                           "MarkerSize": 1,
                           "Line": 0,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "FinancesLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Gain",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
@@ -1018,11 +1041,11 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Graph.Graph, Models",
+                      "$type": "Models.Graph, Models",
                       "Caption": null,
                       "Axis": [
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 3,
                           "Title": null,
                           "Inverted": false,
@@ -1033,7 +1056,7 @@
                           "CrossesAtZero": true
                         },
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 0,
                           "Title": "Sale, Expenses - $Dollars",
                           "Inverted": false,
@@ -1045,11 +1068,13 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
                       "Name": "Tomato paste _ Sales vs Expenses",
                       "Children": [
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 0,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -1061,12 +1086,11 @@
                           "MarkerSize": 0,
                           "Line": 0,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "FinancesLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Gain",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
@@ -1079,7 +1103,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -1091,12 +1115,11 @@
                           "MarkerSize": 1,
                           "Line": 0,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "FinancesLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Loss",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
@@ -1124,11 +1147,11 @@
                   "Name": "Graphs_ProductStore",
                   "Children": [
                     {
-                      "$type": "Models.Graph.Graph, Models",
+                      "$type": "Models.Graph, Models",
                       "Caption": null,
                       "Axis": [
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 3,
                           "Title": null,
                           "Inverted": false,
@@ -1139,7 +1162,7 @@
                           "CrossesAtZero": true
                         },
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 0,
                           "Title": "Kgs",
                           "Inverted": false,
@@ -1151,11 +1174,13 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
                       "Name": "Maize grain",
                       "Children": [
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -1167,12 +1192,11 @@
                           "MarkerSize": 1,
                           "Line": 0,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "ProductsLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Gain",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
@@ -1185,7 +1209,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -1197,12 +1221,11 @@
                           "MarkerSize": 1,
                           "Line": 0,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "ProductsLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Loss",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
@@ -1220,11 +1243,11 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Graph.Graph, Models",
+                      "$type": "Models.Graph, Models",
                       "Caption": null,
                       "Axis": [
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 3,
                           "Title": null,
                           "Inverted": false,
@@ -1235,7 +1258,7 @@
                           "CrossesAtZero": true
                         },
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 0,
                           "Title": "kgs",
                           "Inverted": false,
@@ -1247,11 +1270,13 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
                       "Name": "Tomatoes and Cucumbers",
                       "Children": [
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -1263,12 +1288,11 @@
                           "MarkerSize": 1,
                           "Line": 0,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "ProductsLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Gain",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
@@ -1281,7 +1305,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -1293,12 +1317,11 @@
                           "MarkerSize": 1,
                           "Line": 1,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "ProductsLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Loss",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
@@ -1311,7 +1334,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -1323,12 +1346,11 @@
                           "MarkerSize": 1,
                           "Line": 0,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "ProductsLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Gain",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
@@ -1362,7 +1384,6 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
-          "Descriptors": null,
           "Name": "Rotation cropping",
           "Children": [
             {
@@ -1376,8 +1397,8 @@
             },
             {
               "$type": "Models.Clock, Models",
-              "StartDate": "1903-01-01T00:00:00",
-              "EndDate": "1906-12-31T00:00:00",
+              "Start": "1903-01-01T00:00:00",
+              "End": "1906-12-31T00:00:00",
               "Name": "clock",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -1397,17 +1418,25 @@
             },
             {
               "$type": "Models.CLEM.ZoneCLEM, Models",
-              "RandomSeed": 1,
+              "FarmMultiplier": 1.0,
               "ClimateRegion": 0,
               "EcologicalIndicatorsCalculationMonth": 12,
               "Area": 0.0,
               "Slope": 0.0,
+              "AspectAngle": 0.0,
+              "Altitude": 50.0,
               "Name": "CLEM",
               "Children": [
                 {
                   "$type": "Models.CLEM.FileCrop, Models",
                   "FileName": "FileCrop_SorgWheat3.prn",
                   "ExcelWorkSheetName": null,
+                  "CropNameColumnName": "CropName",
+                  "SoilTypeColumnName": "SoilNum",
+                  "YearColumnName": "Year",
+                  "MonthColumnName": "Month",
+                  "AmountColumnName": "AmtKg",
+                  "PercentNitrogenColumnName": null,
                   "Name": "FileCrop",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1473,6 +1502,7 @@
                           "$type": "Models.CLEM.Resources.LabourType, Models",
                           "InitialAge": 42.0,
                           "Gender": 0,
+                          "DietaryComponentList": null,
                           "Individuals": 1,
                           "Hired": false,
                           "Name": "Male",
@@ -1531,6 +1561,7 @@
                               "PacketSize": 1000.0,
                               "UseWholePackets": false,
                               "PricePerPacket": 234.0,
+                              "PurchaseOrSale": 0,
                               "Name": "WheatPrice",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -1553,6 +1584,7 @@
                               "PacketSize": 1000.0,
                               "UseWholePackets": false,
                               "PricePerPacket": 219.0,
+                              "PurchaseOrSale": 0,
                               "Name": "SorghumPrice",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -2238,6 +2270,7 @@
                       "$type": "Models.CLEM.Reporting.ReportActivitiesPerformed, Models",
                       "VariableNames": null,
                       "EventNames": null,
+                      "GroupByVariableName": null,
                       "Name": "ReportActivitiesPerformed",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -2255,6 +2288,7 @@
                       "EventNames": [
                         ""
                       ],
+                      "GroupByVariableName": null,
                       "Name": "ReportResourceBalances",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -2274,6 +2308,7 @@
                       "EventNames": [
                         "[Activities].ResourceShortfallOccurred"
                       ],
+                      "GroupByVariableName": null,
                       "Name": "ReportResourceShortfalls",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -2286,6 +2321,7 @@
                         "Labour"
                       ],
                       "EventNames": null,
+                      "GroupByVariableName": null,
                       "Name": "LabourLedger",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -2298,6 +2334,7 @@
                         "Finances"
                       ],
                       "EventNames": null,
+                      "GroupByVariableName": null,
                       "Name": "FinancesLedger",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -2310,6 +2347,7 @@
                         "ProductStore"
                       ],
                       "EventNames": null,
+                      "GroupByVariableName": null,
                       "Name": "ProductStoreLedger",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -2335,11 +2373,11 @@
                   "Name": "Graphs",
                   "Children": [
                     {
-                      "$type": "Models.Graph.Graph, Models",
+                      "$type": "Models.Graph, Models",
                       "Caption": null,
                       "Axis": [
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 3,
                           "Title": null,
                           "Inverted": false,
@@ -2350,7 +2388,7 @@
                           "CrossesAtZero": true
                         },
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 0,
                           "Title": null,
                           "Inverted": false,
@@ -2362,11 +2400,13 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
                       "Name": "Income and Expenses",
                       "Children": [
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 0,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -2378,12 +2418,11 @@
                           "MarkerSize": 0,
                           "Line": 4,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "FinancesLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Gain",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
@@ -2396,7 +2435,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -2408,12 +2447,11 @@
                           "MarkerSize": 0,
                           "Line": 4,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "FinancesLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Loss",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
@@ -2426,7 +2464,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -2438,12 +2476,11 @@
                           "MarkerSize": 0,
                           "Line": 4,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "FinancesLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Loss",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
@@ -2456,7 +2493,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 0,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -2468,12 +2505,11 @@
                           "MarkerSize": 0,
                           "Line": 4,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "FinancesLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Gain",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
@@ -2486,7 +2522,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -2498,12 +2534,11 @@
                           "MarkerSize": 0,
                           "Line": 4,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "FinancesLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Loss",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
@@ -2516,7 +2551,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -2528,12 +2563,11 @@
                           "MarkerSize": 0,
                           "Line": 4,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "FinancesLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Loss",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
@@ -2551,11 +2585,11 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Graph.Graph, Models",
+                      "$type": "Models.Graph, Models",
                       "Caption": null,
                       "Axis": [
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 3,
                           "Title": null,
                           "Inverted": false,
@@ -2566,7 +2600,7 @@
                           "CrossesAtZero": false
                         },
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 0,
                           "Title": "Kgs",
                           "Inverted": false,
@@ -2578,11 +2612,13 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
                       "Name": "Crop Yields",
                       "Children": [
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 0,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -2594,12 +2630,11 @@
                           "MarkerSize": 0,
                           "Line": 1,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "ProductStoreLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Gain",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
@@ -2612,7 +2647,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 0,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -2624,12 +2659,11 @@
                           "MarkerSize": 0,
                           "Line": 1,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "ProductStoreLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Gain",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
@@ -2647,11 +2681,11 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Graph.Graph, Models",
+                      "$type": "Models.Graph, Models",
                       "Caption": null,
                       "Axis": [
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 3,
                           "Title": null,
                           "Inverted": false,
@@ -2662,7 +2696,7 @@
                           "CrossesAtZero": true
                         },
                         {
-                          "$type": "Models.Graph.Axis, Models",
+                          "$type": "Models.Axis, Models",
                           "Type": 0,
                           "Title": "Hours Labour",
                           "Inverted": true,
@@ -2674,11 +2708,13 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
                       "Name": "Labour requirements",
                       "Children": [
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 0,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -2690,12 +2726,11 @@
                           "MarkerSize": 0,
                           "Line": 0,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "LabourLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Loss",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
@@ -2708,7 +2743,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 0,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -2720,12 +2755,11 @@
                           "MarkerSize": 0,
                           "Line": 0,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "LabourLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Loss",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
@@ -2738,7 +2772,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 0,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -2750,12 +2784,11 @@
                           "MarkerSize": 0,
                           "Line": 4,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "LabourLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Loss",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
@@ -2768,7 +2801,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -2780,12 +2813,11 @@
                           "MarkerSize": 0,
                           "Line": 4,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "LabourLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Loss",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
@@ -2798,7 +2830,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -2810,12 +2842,11 @@
                           "MarkerSize": 0,
                           "Line": 0,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "LabourLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Loss",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
@@ -2828,7 +2859,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -2840,12 +2871,11 @@
                           "MarkerSize": 0,
                           "Line": 0,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "LabourLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Loss",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
@@ -2858,7 +2888,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -2870,12 +2900,11 @@
                           "MarkerSize": 0,
                           "Line": 4,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "LabourLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Loss",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
@@ -2888,7 +2917,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Graph.Series, Models",
+                          "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
                           "YAxis": 0,
@@ -2900,12 +2929,11 @@
                           "MarkerSize": 0,
                           "Line": 4,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": "LabourLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Loss",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
