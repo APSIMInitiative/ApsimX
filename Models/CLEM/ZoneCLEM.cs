@@ -272,9 +272,13 @@ namespace Models.CLEM
                     var property = model.GetType().GetProperty(validateError.MemberNames.FirstOrDefault());
                     if (property != null)
                     {
-                        var attribute = property.GetCustomAttributes(typeof(DescriptionAttribute), true)[0];
-                        var description = (DescriptionAttribute)attribute;
-                        text = description.ToString();
+                        text = "";
+                        if (property.GetCustomAttributes(typeof(DescriptionAttribute), true).Count() > 0)
+                        {
+                            var attribute = property.GetCustomAttributes(typeof(DescriptionAttribute), true)[0];
+                            var description = (DescriptionAttribute)attribute;
+                            text = description.ToString();
+                        }
                     }
                     string error = String.Format("@validation:Invalid parameter value in " + modelPath + "" + Environment.NewLine + "PARAMETER: " + validateError.MemberNames.FirstOrDefault());
                     if (text != "")
