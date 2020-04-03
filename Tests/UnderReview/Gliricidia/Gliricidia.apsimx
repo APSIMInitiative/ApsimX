@@ -4469,12 +4469,6 @@
                         },
                         {
                           "$type": "Models.Operation, Models",
-                          "Date": "1996-08-30",
-                          "Action": "[Gliricidia].Leaf.SenescenceRate=0.8",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
                           "Date": "1997-02-28",
                           "Action": "[CuttingManagement].Script.DoCut(1,1);",
                           "Enabled": true
