@@ -1943,7 +1943,8 @@
                 new Tuple<string, string>(".HerbageDigestibility",   ".Harvestable.Digestibility"),
                 new Tuple<string, string>(".RootDepthMaximum",       ".Root.RootDepthMaximum"),
                 new Tuple<string, string>("[AGPRyeGrass].RootLengthDensity", "[AGPRyeGrass].Root.RootLengthDensity"),
-                new Tuple<string, string>("[AGPWhiteClover].RootLengthDensity", "[AGPWhiteClover].Root.RootLengthDensity")
+                new Tuple<string, string>("[AGPWhiteClover].RootLengthDensity", "[AGPWhiteClover].Root.RootLengthDensity"),
+                new Tuple<string, string>("[AGPLucerne].RootLengthDensity", "[AGPLucerne].Root.RootLengthDensity")
             };
             JsonUtilities.RenameVariables(root, changes);
         }
