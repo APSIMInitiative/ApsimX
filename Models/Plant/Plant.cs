@@ -595,7 +595,18 @@
         /// <param name="newPlantPopulation">The new plant population.</param>
         public void ReducePopulation(double newPlantPopulation)
         {
-            throw new NotImplementedException();
+            double InitialPopn = plantPopulation;
+            if (IsAlive && newPlantPopulation <= 0.01)
+                EndCrop();  // the plant is dying due to population decline
+            else
+            {
+                plantPopulation = newPlantPopulation;
+                if (Structure != null)
+                {
+                    Structure.DeltaPlantPopulation = InitialPopn - newPlantPopulation;
+                    Structure.ProportionPlantMortality = 1 - (newPlantPopulation / InitialPopn);
+                }
+            }
         }
     }
 }
