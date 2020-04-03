@@ -904,8 +904,8 @@
                         {
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
-                            0.0,
-                            10.0,
+                            5.0,
+                            15.0,
                             32.0,
                             42.0
                           ],
@@ -1044,11 +1044,46 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "SenescenceRate",
-                  "Children": [],
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "LeafResidenceTime",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        5.0,
+                        10.0,
+                        15.0
+                      ],
+                      "Y": [
+                        1.0,
+                        120.0,
+                        184.0
+                      ],
+                      "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[IWeather].MinT",
+                      "Name": "XValue",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Assume leaves have a life span of approximately half a year.",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
@@ -1112,26 +1147,6 @@
                       "FractionLiveToResidue": 0.0,
                       "FractionDeadToResidue": 0.0,
                       "Name": "Thin",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 184.0,
-                  "Units": null,
-                  "Name": "LeafResidenceTime",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Assume leaves have a life span of approximately half a year.",
-                      "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
@@ -4450,12 +4465,6 @@
                           "$type": "Models.Operation, Models",
                           "Date": "1996-08-30",
                           "Action": "[Gliricidia].Leaf.LeafKillFraction=0.8",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "1996-08-30",
-                          "Action": "[Gliricidia].Leaf.SenescenceRate=0.8",
                           "Enabled": true
                         },
                         {
@@ -16777,7 +16786,7 @@
                   "Children": [
                     {
                       "$type": "Models.Regression, Models",
-                      "ForEachSeries": true,
+                      "ForEachSeries": false,
                       "showOneToOne": true,
                       "showEquation": true,
                       "Name": "Regression",
@@ -19905,6 +19914,15 @@
           "ShowPageOfGraphs": true,
           "Name": "Temperature Response",
           "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "The temperature requirements of Gliricidia sepium indicated by the distribution of native sites is for mean monthly temperatures in the range from approximately 21-29C ([simons19942]).  Trees shed leaves once night time temperatures fall below approximately 15C ([Whitemanetal1986])and the plant is susceptible to frosts unless pruned prior ([Stewartetal1992]).",
+              "Name": "Memo",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
             {
               "$type": "Models.Factorial.Experiment, Models",
               "DisabledSimNames": null,
