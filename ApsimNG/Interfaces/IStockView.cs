@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="IStockView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace UserInterface.Interfaces
+﻿namespace UserInterface.Interfaces
 {
     using System;
     using Models.GrazPlan;
@@ -23,6 +17,8 @@ namespace UserInterface.Interfaces
     public interface IStockView
     {
         SingleGenotypeInits[] Genotypes { get; set; }
+        
+        AnimalInits[] Animals { get; set; }
 
         void SetValues();
         void SetGenoParams(AnimalParamSet animalParams);

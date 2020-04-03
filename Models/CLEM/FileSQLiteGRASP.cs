@@ -12,12 +12,8 @@ using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
 using Models.CLEM.Activities;
 using System.Globalization;
+using System.Linq;
 
-// -----------------------------------------------------------------------
-// <copyright file="FileSQLiteGRASP.cs" company="CSIRO">
-//     Copyright (c) CSIRO
-// </copyright>
-//-----------------------------------------------------------------------
 namespace Models.CLEM
 {
     ///<summary>
@@ -34,6 +30,8 @@ namespace Models.CLEM
     [Description("This component reads a SQLite database with GRASP data for native pasture production used in the CLEM simulation.")]
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Added ability to define table and columns to use")]
+    [Version(1, 0, 3, "Includes access to ecological indicators from database")]
+    [Version(1, 0, 4, "Allow more categories of land condition and grass basal area in datacube lookup")]
     [HelpUri(@"Content/Features/DataReaders/GRASPDataReaderSQL.htm")]
     public class FileSQLiteGRASP : CLEMModel, IFileGRASP, IValidatableObject
     {
@@ -41,7 +39,20 @@ namespace Models.CLEM
         /// A link to the clock model.
         /// </summary>
         [Link]
-        private Clock clock = null;
+        private readonly Clock clock = null;
+
+        private List<ValidationResult> validationResults;
+        private RainfallShuffler shuffler = null;
+
+        /// <summary>
+        /// All the distinct Stocking Rates that were found in the database
+        /// </summary>
+        [XmlIgnore]
+        private double[] distinctStkRates;
+        [XmlIgnore]
+        private double[] distinctGBAs;
+        [XmlIgnore]
+        private double[] distinctLandConditions;
 
         /// <summary>
         /// Gets or sets the file name. Should be relative filename where possible.
@@ -133,6 +144,45 @@ namespace Models.CLEM
         [Required(AllowEmptyStrings = false, ErrorMessage = "Growth column name must be supplied")]
         public string GrowthColumnName { get; set; }
 
+        /// <summary>
+        /// Name of column holding erosion soilloss data
+        /// </summary>
+        [Summary]
+        [System.ComponentModel.DefaultValueAttribute("soilloss")]
+        [Description("Column name for erosion")]
+        public string ErosionColumnName { get; set; }
+
+        /// <summary>
+        /// Name of column holding runoff data
+        /// </summary>
+        [Summary]
+        [System.ComponentModel.DefaultValueAttribute("runoff")]
+        [Description("Column name for runoff")]
+        public string RunoffColumnName { get; set; }
+
+        /// <summary>
+        /// Name of column holding rainfall data
+        /// </summary>
+        [Summary]
+        [System.ComponentModel.DefaultValueAttribute("rainfall")]
+        [Description("Column name for rainfall")]
+        public string RainfallColumnName { get; set; }
+
+        /// <summary>
+        /// Name of column holding cover data
+        /// </summary>
+        [Summary]
+        [System.ComponentModel.DefaultValueAttribute("cover")]
+        [Description("Column name for cover")]
+        public string CoverColumnName { get; set; }
+
+        /// <summary>
+        /// Name of column holding tree basal area data
+        /// </summary>
+        [Summary]
+        [System.ComponentModel.DefaultValueAttribute("treeba")]
+        [Description("Column name for tree basal area")]
+        public string TBAColumnName { get; set; }
 
         /// <summary>
         /// APSIMx SQLite class
@@ -146,13 +196,6 @@ namespace Models.CLEM
         /// </summary>
         [XmlIgnore]
         public string ErrorMessage = string.Empty;
-
-
-        /// <summary>
-        /// All the distinct Stocking Rates that were found in the database
-        /// </summary>
-        [XmlIgnore]
-        private double[] distinctStkRates;
 
         /// <summary>
         /// Constructor
@@ -169,6 +212,16 @@ namespace Models.CLEM
         public bool FileExists
         {
             get { return File.Exists(this.FullFileName); }
+        }
+
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMInitialiseResource")]
+        private void OnCLEMInitialiseResource(object sender, EventArgs e)
+        {
+            // look for a shuffler
+            shuffler = Apsim.Children(this, typeof(RainfallShuffler)).FirstOrDefault() as RainfallShuffler;
         }
 
         /// <summary>
@@ -249,7 +302,7 @@ namespace Models.CLEM
             var results = new List<ValidationResult>();
 
             // check for file
-            if(!this.FileExists)
+            if (!this.FileExists)
             {
                 string[] memberNames = new string[] { "FileName" };
                 results.Add(new ValidationResult("The SQLite database [x="+FullFileName+"] could not be found for ["+this.Name+"]", memberNames));
@@ -264,8 +317,7 @@ namespace Models.CLEM
                 }
                 catch(Exception ex)
                 {
-                    string[] memberNames = new string[] { "SQLite database error" };
-                    results.Add(new ValidationResult("There was a problem opening the SQLite database [x=" + FullFileName + "] for [" + this.Name + "]\n" + ex.Message, memberNames));
+                    throw new ApsimXException(this, "There was a problem opening the SQLite database [x=" + FullFileName + "] for [" + this.Name + "]\n" + ((ex.Message == "file is not a database")?"The file is not a supported SQLite database":ex.Message));
                 }
 
                 // check all columns present
@@ -279,25 +331,51 @@ namespace Models.CLEM
                     YearColumnName,
                     MonthColumnName,
                     GrowthColumnName
-                //"Region","Soil","GrassBA","LandCon","StkRate",
-                //"Year", "Month", "Growth", "BP1", "BP2"
                 };
 
-                DataTable res = SQLiteReader.ExecuteQuery("PRAGMA table_info("+ TableName + ")");
-
-                List<string> dBcolumns = new List<string>();
-                foreach (DataRow row in res.Rows)
+                // add extra data columns if specified
+                if (ErosionColumnName != null || ErosionColumnName != "")
                 {
-                    dBcolumns.Add(row[1].ToString());
+                    expectedColumns.Add(ErosionColumnName);
+                }
+                if (RunoffColumnName != null || RunoffColumnName != "")
+                {
+                    expectedColumns.Add(RunoffColumnName);
+                }
+                if (RainfallColumnName != null || RainfallColumnName != "")
+                {
+                    expectedColumns.Add(RainfallColumnName);
+                }
+                if (CoverColumnName != null || CoverColumnName != "")
+                {
+                    expectedColumns.Add(CoverColumnName);
+                }
+                if (TBAColumnName != null || TBAColumnName != "")
+                {
+                    expectedColumns.Add(TBAColumnName);
                 }
 
-                foreach (string col in expectedColumns)
+                try
                 {
-                    if (!dBcolumns.Contains(col))
+                    DataTable res = SQLiteReader.ExecuteQuery("PRAGMA table_info(" + TableName + ")");
+                    List<string> dBcolumns = new List<string>();
+                    foreach (DataRow row in res.Rows)
                     {
-                        string[] memberNames = new string[] { "Missing SQLite database column" };
-                        results.Add(new ValidationResult("Unable to find column [o=" + col + "] in GRASP database [x=" + FullFileName + "] for [" + this.Name + "]", memberNames));
+                        dBcolumns.Add(row[1].ToString());
                     }
+
+                    foreach (string col in expectedColumns)
+                    {
+                        if (!dBcolumns.Contains(col))
+                        {
+                            string[] memberNames = new string[] { "Missing SQLite database column" };
+                            results.Add(new ValidationResult("Unable to find column [o=" + col + "] in GRASP database [x=" + FullFileName + "] for [" + this.Name + "]", memberNames));
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new ApsimXException(this, "There was a problem opening the SQLite database [x=" + FullFileName + "] for [" + this.Name + "]\n" + ((ex.Message == "file is not a database") ? "The file is not a supported SQLite database" : ex.Message));
                 }
             }
             return results;
@@ -315,8 +393,7 @@ namespace Models.CLEM
         {
             get
             {
-                Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
-                if (simulation != null && this.FileName != null)
+                if (Apsim.Parent(this, typeof(Simulation)) is Simulation simulation && this.FileName != null)
                 {
                     return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
                 }
@@ -348,26 +425,45 @@ namespace Models.CLEM
             }
 
             string sqlQuery = "SELECT  " +
-                RegionColumnName + "," +
-                LandIdColumnName + "," +
-                GrassBAColumnName + "," +
-                LandConColumnName + "," +
-                StkRateColumnName + "," +
-                YearColumnName + "," +
-                //"CutNum," +
-                MonthColumnName + "," +
-                GrowthColumnName +
-                //"BP1," +
-                //"BP2" +
-                " FROM " + TableName;
-                //Region, Soil,GrassBA,LandCon,StkRate,Year,CutNum,Month,Growth,BP1,BP2 FROM Native_Inputs";
-            //sqlQuery += " WHERE Year BETWEEN " + startYear + " AND " + endYear;
+            RegionColumnName + "," +
+            LandIdColumnName + "," +
+            GrassBAColumnName + "," +
+            LandConColumnName + "," +
+            StkRateColumnName + "," +
+            YearColumnName + "," +
+            //"CutNum," +
+            MonthColumnName + "," +
+            GrowthColumnName;
+            //"BP1," +
+            //"BP2" +
+
+            if (ErosionColumnName != null && ErosionColumnName != "")
+            {
+                sqlQuery += "," + ErosionColumnName;
+            }
+            if (RunoffColumnName != null || RunoffColumnName != "")
+            {
+                sqlQuery += "," + RunoffColumnName;
+            }
+            if (RainfallColumnName != null || RainfallColumnName != "")
+            {
+                sqlQuery += "," + RainfallColumnName;
+            }
+            if (CoverColumnName != null || CoverColumnName != "")
+            {
+                sqlQuery += "," + CoverColumnName;
+            }
+            if (TBAColumnName != null || TBAColumnName != "")
+            {
+                sqlQuery += "," + TBAColumnName;
+            }
+
+            sqlQuery += " FROM " + TableName;
             sqlQuery += " WHERE "+YearColumnName+" BETWEEN " + startYear + " AND " + endYear;
 
             try
             {
                 DataTable results = SQLiteReader.ExecuteQuery(sqlQuery);
-//                results.DefaultView.Sort = "Year, Month";
                 results.DefaultView.Sort = YearColumnName+", "+MonthColumnName;
                 return results;
             }
@@ -390,6 +486,10 @@ namespace Models.CLEM
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             //if the SQLite Database can't be opened throw an exception.
+            var validationContext = new ValidationContext(this, null, null);
+            validationResults = new List<ValidationResult>();
+            Validator.TryValidateObject(this, validationContext, validationResults, true);
+
             if (OpenSQLiteDB() == false)
             { 
                 throw new Exception(ErrorMessage);
@@ -398,6 +498,8 @@ namespace Models.CLEM
             // get list of distinct stocking rates available in database
             // database has already been opened and checked in Validate()
             this.distinctStkRates = GetCategories(StkRateColumnName);
+            this.distinctGBAs = GetCategories(GrassBAColumnName);
+            this.distinctLandConditions = GetCategories(LandConColumnName);
         }
 
         /// <summary>
@@ -414,28 +516,37 @@ namespace Models.CLEM
         }
 
         /// <summary>
-        /// Finds the closest Stocking Rate Category in the GRASP file for a given Stocking Rate.
-        /// The GRASP file does not have every stocking rate. 
-        /// Each GRASP file has its own set of stocking rate value categories
-        /// Need to find the closest the stocking rate category in the GRASP file for this stocking rate.
-        /// It will find the category with the next largest value to the actual stocking rate.
-        /// So if the stocking rate is 0 the category with the next largest value will normally be 1
+        /// Finds the closest Value of categorised lookup values form the database
+        /// This applies to Stocking rates, Grass Basal Area (or use GBA) and Land Condition
+        /// The GRASP file does not have every stocking rate, grass basal area or land condition. 
+        /// It will find the category with the next largest value to the actual value supplied.
+        /// So if the value is 0 the category with the next largest value will normally be the first entry
         /// </summary>
-        /// <param name="stockingRate"></param>
+        /// <param name="category">The name of the distict categories to use</param>
+        /// <param name="value">The value to search for</param>
         /// <returns></returns>
-        private double FindClosestStkRateCategory(double stockingRate)
+        private double FindClosestCategory(string category, double value)
         {
-            //https://stackoverflow.com/questions/41277957/get-closest-value-in-an-array
-            //https://msdn.microsoft.com/en-us/library/2cy9f6wb(v=vs.110).aspx
+            double[] valuesToUse;
+            switch (category)
+            {
+                case "StockingRate":
+                    valuesToUse = distinctStkRates;
+                    break;
+                case "GrassBasalArea":
+                case "GBA":
+                    valuesToUse = distinctGBAs;
+                    break;
+                case "LandCondition":
+                    valuesToUse = distinctLandConditions;
+                    break;
+                default:
+                    throw new ApsimXException(this, $"Unknown GRASP data cetegory [{category}] used in code behind [x={this.Name}]");
+            }
 
             // sorting not needed as now done at array creation
-            int index = Array.BinarySearch(distinctStkRates, stockingRate); 
-            if(index < 0)
-            {
-                throw new ApsimXException(this, $"Unable to locate a suitable dataset for stocking rate [{stockingRate}] in [x={this.FileName}] using the [x={this.Name}] datareader");
-            }
-            double category = (index < 0) ? distinctStkRates[~index] : distinctStkRates[index];
-            return category;
+            int index = Array.BinarySearch(valuesToUse, value);
+            return (index < 0) ? valuesToUse[~index] : valuesToUse[index];
         }
 
         /// <summary>
@@ -450,9 +561,16 @@ namespace Models.CLEM
         /// <param name="ecolCalculationDate"></param>
         /// <param name="ecolCalculationInterval"></param>
         /// <returns></returns>
-        public List<PastureDataType> GetIntervalsPastureData(int region, string soil, int grassBasalArea, int landCondition, int stockingRate,
+        public List<PastureDataType> GetIntervalsPastureData(int region, string soil, double grassBasalArea, double landCondition, double stockingRate,
                                          DateTime ecolCalculationDate, int ecolCalculationInterval)
         {
+            List<PastureDataType> pastureDetails = new List<PastureDataType>();
+
+            if (validationResults.Count > 0 | ecolCalculationDate > clock.EndDate)
+            {
+                return pastureDetails;
+            }
+
             int startYear = ecolCalculationDate.Year;
             int startMonth = ecolCalculationDate.Month;
             DateTime endDate = ecolCalculationDate.AddMonths(ecolCalculationInterval+1);
@@ -463,33 +581,75 @@ namespace Models.CLEM
             int endYear = endDate.Year;
             int endMonth = endDate.Month;
 
-            double stkRateCategory = FindClosestStkRateCategory(stockingRate);
+            double stkRateCategory = FindClosestCategory("StockingRate", stockingRate);
+            double grassBasalAreaCategory = FindClosestCategory("GBA", grassBasalArea);
+            double landConditionCategory = FindClosestCategory("LandCondition", landCondition);
 
-            string sqlQuery = "SELECT "+
+            string sqlQuery = "SELECT " +
                 YearColumnName + ", " +
-                //"CutNum," +
                 MonthColumnName + "," +
-                GrowthColumnName +
-                //"BP1," +
-                //"BP2" +
-                " FROM " + TableName +
+                GrowthColumnName;
+
+            if (ErosionColumnName != null && ErosionColumnName != "")
+            {
+                sqlQuery += "," + ErosionColumnName;
+            }
+            if (RunoffColumnName != null || RunoffColumnName != "")
+            {
+                sqlQuery += "," + RunoffColumnName;
+            }
+            if (RainfallColumnName != null || RainfallColumnName != "")
+            {
+                sqlQuery += "," + RainfallColumnName;
+            }
+            if (CoverColumnName != null || CoverColumnName != "")
+            {
+                sqlQuery += "," + CoverColumnName;
+            }
+            if (TBAColumnName != null || TBAColumnName != "")
+            {
+                sqlQuery += "," + TBAColumnName;
+            }
+
+            sqlQuery += " FROM " + TableName +
                 " WHERE "+RegionColumnName+" = " + region +
                 " AND "+LandIdColumnName+" = " + soil +
-                " AND "+GrassBAColumnName+" = " + grassBasalArea +
-                " AND "+LandConColumnName+" = " + landCondition +
+                " AND "+GrassBAColumnName+" = " + grassBasalAreaCategory +
+                " AND "+LandConColumnName+" = " + landConditionCategory +
                 " AND "+StkRateColumnName+" = " + stkRateCategory;
 
-            if (startYear == endYear)
+            if (shuffler != null)
             {
-                sqlQuery += " AND (( " + YearColumnName + " = " + startYear + " AND " + MonthColumnName + " >= " + startMonth + " AND " + MonthColumnName + " < " + endMonth + ")"
-                + ")";
+                int shuffleStartYear = shuffler.ShuffledYears.Where(a => a.Year == startYear).FirstOrDefault().RandomYear;
+                int shuffleEndYear = shuffler.ShuffledYears.Where(a => a.Year == endYear).FirstOrDefault().RandomYear;
+
+                // first year
+                sqlQuery += " AND (( " + YearColumnName + " = " + shuffleStartYear + " AND " + MonthColumnName + " >= " + startMonth + ")";
+
+                // any middle years
+                for (int i = startYear+1; i < endYear; i++)
+                {
+                    sqlQuery += " OR ( " + YearColumnName + " = " + shuffler.ShuffledYears[i] + ")";
+                }
+
+                //last year
+                sqlQuery += " OR ( " + YearColumnName + " = " + shuffleEndYear + " AND " + MonthColumnName + " <= " + endMonth + "))";
+
             }
             else
             {
-                sqlQuery += " AND (( " + YearColumnName + " = " + startYear + " AND " + MonthColumnName + " >= " + startMonth + ")"
-                + " OR  ( " + YearColumnName + " > " + startYear + " AND " + YearColumnName + " < " + endYear + ")"
-                + " OR  ( " + YearColumnName + " = " + endYear + " AND " + MonthColumnName + " < " + endMonth + ")"
-                + ")"; 
+                if (startYear == endYear)
+                {
+                    sqlQuery += " AND (( " + YearColumnName + " = " + startYear + " AND " + MonthColumnName + " >= " + startMonth + " AND " + MonthColumnName + " < " + endMonth + ")"
+                    + ")";
+                }
+                else
+                {
+                    sqlQuery += " AND (( " + YearColumnName + " = " + startYear + " AND " + MonthColumnName + " >= " + startMonth + ")"
+                    + " OR  ( " + YearColumnName + " > " + startYear + " AND " + YearColumnName + " < " + endYear + ")"
+                    + " OR  ( " + YearColumnName + " = " + endYear + " AND " + MonthColumnName + " < " + endMonth + ")"
+                    + ")";
+                }
             }
             
             DataTable results = SQLiteReader.ExecuteQuery(sqlQuery);
@@ -497,17 +657,25 @@ namespace Models.CLEM
             {
                 return null;
             }
-            //results.DefaultView.Sort = "Year, Month";
+
+            // re-label shuffled years
+            if (shuffler != null)
+            {
+                foreach (DataRow row in results.Rows)
+                {
+                    row["Year"] = shuffler.ShuffledYears.Where(a => a.RandomYear == Convert.ToInt32(row["Year"])).FirstOrDefault().Year;
+                }
+            }
+
             results.DefaultView.Sort = YearColumnName + ", " + MonthColumnName;
 
-            List<PastureDataType> pastureDetails = new List<PastureDataType>();
             foreach (DataRowView row in results.DefaultView)
             {
                 pastureDetails.Add(DataRow2PastureDataType(row));
             }
 
             CheckAllMonthsWereRetrieved(pastureDetails, ecolCalculationDate, endDate,
-                region, soil, grassBasalArea, landCondition, stockingRate);
+                region, soil, grassBasalAreaCategory, landConditionCategory, stkRateCategory);
 
             return pastureDetails;
         }
@@ -525,7 +693,7 @@ namespace Models.CLEM
         /// <param name="landCondition"></param>
         /// <param name="stockingRate"></param>
         private void CheckAllMonthsWereRetrieved(List<PastureDataType> filtered, DateTime startDate, DateTime endDate,
-            int region, string soil, int grassBasalArea, int landCondition, int stockingRate)
+            int region, string soil, double grassBasalArea, double landCondition, double stockingRate)
         {
             string errormessageStart = "Problem with GRASP input file." + System.Environment.NewLine
                         + "For Region: " + region + ", Soil: " + soil 
@@ -554,25 +722,20 @@ namespace Models.CLEM
                 }
                 tempdate = tempdate.AddMonths(1);
             }
-
-            //Check months go right up until EndDate
-            if ((tempdate.Month != endDate.Month)&&(tempdate.Year != endDate.Year))
-            {
-                throw new ApsimXException(this, errormessageStart
-                        + "Missing entry for Year: " + tempdate.Year + " and Month: " + tempdate.Month);
-            }
         }
 
-        private static PastureDataType DataRow2PastureDataType(DataRowView dr)
+        private PastureDataType DataRow2PastureDataType(DataRowView dr)
         {
             PastureDataType pasturedata = new PastureDataType
             {
                 Year = int.Parse(dr["Year"].ToString(), CultureInfo.InvariantCulture),
-                //CutNum = int.Parse(dr["CutNum"].ToString(), CultureInfo.InvariantCulture),
                 Month = int.Parse(dr["Month"].ToString(), CultureInfo.InvariantCulture),
                 Growth = double.Parse(dr["Growth"].ToString(), CultureInfo.InvariantCulture),
-                //BP1 = double.Parse(dr["BP1"].ToString(), CultureInfo.InvariantCulture),
-                //BP2 = double.Parse(dr["BP2"].ToString(), CultureInfo.InvariantCulture)
+                SoilLoss = ((ErosionColumnName!="" & dr.DataView.Table.Columns.Contains(ErosionColumnName))?double.Parse(dr[ErosionColumnName].ToString(), CultureInfo.InvariantCulture):0),
+                Runoff = ((RunoffColumnName != "" & dr.DataView.Table.Columns.Contains(RunoffColumnName)) ? double.Parse(dr[RunoffColumnName].ToString(), CultureInfo.InvariantCulture) : 0),
+                Rainfall = ((RainfallColumnName != "" & dr.DataView.Table.Columns.Contains(RainfallColumnName)) ? double.Parse(dr[RainfallColumnName].ToString(), CultureInfo.InvariantCulture) : 0),
+                Cover = ((CoverColumnName != "" & dr.DataView.Table.Columns.Contains(CoverColumnName)) ? double.Parse(dr[CoverColumnName].ToString(), CultureInfo.InvariantCulture) : 0),
+                TreeBA = ((TBAColumnName != "" & dr.DataView.Table.Columns.Contains(TBAColumnName)) ? double.Parse(dr[TBAColumnName].ToString(), CultureInfo.InvariantCulture) : 0),
             };
             return pasturedata;
         }
@@ -683,12 +846,56 @@ namespace Models.CLEM
                     html += "<span class=\"setvalue\">" + GrowthColumnName + "</span></div>";
                 }
 
+                // other data columns
+                if (ErosionColumnName is null || ErosionColumnName == "")
+                {
+                    html += "\n<div class=\"activityentry\">No erosion data will be obtained from database</div>";
+                }
+                else
+                {
+                    html += "\n<div class=\"activityentry\">Erosion data will be obtained from column named ";
+                    html += "<span class=\"setvalue\">" + ErosionColumnName + "</span></div>";
+                }
+                if (RunoffColumnName is null || RunoffColumnName == "")
+                {
+                    html += "\n<div class=\"activityentry\">No runoff data will be obtained from database</div>";
+                }
+                else
+                {
+                    html += "\n<div class=\"activityentry\">Runoff data will be obtained from column named ";
+                    html += "<span class=\"setvalue\">" + RunoffColumnName + "</span></div>";
+                }
+                if (RainfallColumnName is null || RainfallColumnName == "")
+                {
+                    html += "\n<div class=\"activityentry\">No rainfall data will be obtained from database</div>";
+                }
+                else
+                {
+                    html += "\n<div class=\"activityentry\">Rainfall data will be obtained from column named ";
+                    html += "<span class=\"setvalue\">" + RainfallColumnName + "</span></div>";
+                }
+                if (CoverColumnName is null || CoverColumnName == "")
+                {
+                    html += "\n<div class=\"activityentry\">No cover data will be obtained from database</div>";
+                }
+                else
+                {
+                    html += "\n<div class=\"activityentry\">Cover data will be obtained from column named ";
+                    html += "<span class=\"setvalue\">" + CoverColumnName + "</span></div>";
+                }
+                if (TBAColumnName is null || TBAColumnName == "")
+                {
+                    html += "\n<div class=\"activityentry\">No tree basal area data will be obtained from database</div>";
+                }
+                else
+                {
+                    html += "\n<div class=\"activityentry\">Tree basal area data will be obtained from column named ";
+                    html += "<span class=\"setvalue\">" + TBAColumnName + "</span></div>";
+                }
                 html += "\n</div>";
                 html += "\n</div>";
             }
             return html;
         }
-
     }
-
 }

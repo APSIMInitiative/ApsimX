@@ -11,7 +11,6 @@ using Models.PMF;
 using System.Runtime.Serialization;
 using Models.Surface;
 using Models.Soils;
-using Models.Soils.SoilWaterBackend;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using Models.Functions;
@@ -101,7 +100,7 @@ namespace Models.Soils
         public double[] FlowNO3 { get; set; }
         ///<summary> Who knows</summary>
         [XmlIgnore]
-        public double[] flow_urea { get; set; }
+        public double[] FlowUrea { get; set; }
         ///<summary> Who knows</summary>
         [XmlIgnore]
         public double[] Flux { get; set; }
@@ -1115,6 +1114,10 @@ namespace Models.Soils
         private double ProfileSaturation { get; set; }
         private double SODPondDepth { get; set; }
         private double EODPondDepth { get; set; }
+        /// <summary>The efficiency (0-1) that solutes move down with water.</summary>
+        public double[] SoluteFluxEfficiency { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        /// <summary>The efficiency (0-1) that solutes move up with water.</summary>
+        public double[] SoluteFlowEfficiency { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         #endregion
 
         #region Internal Properties and Methods

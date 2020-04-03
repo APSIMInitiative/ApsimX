@@ -1,7 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 382,
-  "Version": 57,
+  "Version": 83,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -10,7 +11,7 @@
       "CustomFileName": null,
       "Name": "DataStore",
       "Children": [],
-      "IncludeInDocumentation": true,
+      "IncludeInDocumentation": false,
       "Enabled": true,
       "ReadOnly": false
     },
@@ -30,7 +31,6 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
-          "Descriptors": null,
           "Name": "Grazing",
           "Children": [
             {
@@ -44,11 +44,11 @@
             },
             {
               "$type": "Models.Clock, Models",
-              "StartDate": "1970-01-01T00:00:00",
-              "EndDate": "1993-12-31T00:00:00",
+              "Start": "1970-01-01T00:00:00",
+              "End": "1993-12-31T00:00:00",
               "Name": "clock",
               "Children": [],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -59,23 +59,41 @@
               "CaptureSummaryText": true,
               "Name": "summaryfile",
               "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.CLEM.RandomNumberGenerator, Models",
+              "Seed": 0,
+              "Iteration": 0,
+              "Name": "RandomNumbers",
+              "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.CLEM.ZoneCLEM, Models",
-              "RandomSeed": 1,
+              "FarmMultiplier": 0.0,
               "ClimateRegion": 0,
               "EcologicalIndicatorsCalculationMonth": 12,
               "Area": 0.0,
               "Slope": 0.0,
+              "AspectAngle": 0.0,
+              "Altitude": 50.0,
               "Name": "CLEM",
               "Children": [
                 {
                   "$type": "Models.CLEM.FileCrop, Models",
                   "FileName": "FileForage.prn",
                   "ExcelWorkSheetName": null,
+                  "CropNameColumnName": "CropName",
+                  "SoilTypeColumnName": "SoilNum",
+                  "YearColumnName": "Year",
+                  "MonthColumnName": "Month",
+                  "AmountColumnName": "AmtKg",
+                  "PercentNitrogenColumnName": null,
                   "Name": "FileForage",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -100,12 +118,12 @@
                           "SoilType": "2",
                           "Name": "Paddock1",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -123,12 +141,12 @@
                           "InterestRatePaid": 2.0,
                           "Name": "General account",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -167,8 +185,6 @@
                           "GreenDietMax": 0.98,
                           "GreenDietCoefficient": 0.15,
                           "GreenDietZero": 0.04,
-                          "IntakeTropicalQuality": 0.16,
-                          "IntakeCoefficientQuality": 1.7,
                           "IntakeCoefficientBiomass": 0.006,
                           "StrictFeedingLimits": true,
                           "MilkIntakeCoefficient": 0.1206,
@@ -228,7 +244,7 @@
                                   "Sire": false,
                                   "Name": "WeanerF",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -243,7 +259,7 @@
                                   "Sire": false,
                                   "Name": "WeanerM",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -258,7 +274,7 @@
                                   "Sire": false,
                                   "Name": "Female3_4",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -273,7 +289,7 @@
                                   "Sire": false,
                                   "Name": "Male2_3",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -288,12 +304,12 @@
                                   "Sire": true,
                                   "Name": "Male3_4",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -315,12 +331,12 @@
                                       "Value": "12",
                                       "Name": "LT_12m",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -338,7 +354,7 @@
                                       "Value": "Female",
                                       "Name": "Female",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
@@ -349,12 +365,12 @@
                                       "Value": "36",
                                       "Name": "less36months",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -372,7 +388,7 @@
                                       "Value": "Female",
                                       "Name": "Female",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
@@ -383,12 +399,12 @@
                                       "Value": "36",
                                       "Name": "less36months",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -406,7 +422,7 @@
                                       "Value": "Female",
                                       "Name": "Female",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
@@ -417,12 +433,12 @@
                                       "Value": "36",
                                       "Name": "36months",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -440,7 +456,7 @@
                                       "Value": "Male",
                                       "Name": "Male",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
@@ -451,12 +467,12 @@
                                       "Value": "36",
                                       "Name": "less36months",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -474,7 +490,7 @@
                                       "Value": "Male",
                                       "Name": "Male",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
@@ -485,12 +501,12 @@
                                       "Value": "36",
                                       "Name": "36months",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -508,7 +524,7 @@
                                       "Value": "Male",
                                       "Name": "Male",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
@@ -519,17 +535,17 @@
                                       "Value": "True",
                                       "Name": "36months",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -538,20 +554,19 @@
                               "ConceptionRateCoefficent": -14.247,
                               "ConceptionRateIntercept": 5.182,
                               "ConceptionRateAsymptote": 90.0,
-                              "MaximumConceptionUncontrolledBreeding": 0.0,
                               "Name": "RuminantConceptionCurve",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -576,12 +591,12 @@
                           "IntakeQualityCoefficient": 1.7,
                           "Name": "NativePasture",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -609,27 +624,27 @@
                                   "CostPerUnit": 100.0,
                                   "Name": "Money",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -678,7 +693,7 @@
                           "OnPartialResourcesAvailableAction": 0,
                           "Name": "Grow all ruminants",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -693,7 +708,7 @@
                           "OnPartialResourcesAvailableAction": 0,
                           "Name": "Muster to pasture",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -706,7 +721,7 @@
                           "OnPartialResourcesAvailableAction": 2,
                           "Name": "Graze all",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -726,18 +741,17 @@
                               "Value": 1.0,
                               "Name": "Feed all",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.CLEM.Activities.RuminantActivityBreed, Models",
-                          "MaximumConceptionRateUncontrolled": 0.8,
                           "UseAI": true,
                           "InferStartupPregnancy": false,
                           "HerdFilters": null,
@@ -752,17 +766,18 @@
                               "MonthDue": 3,
                               "Name": "Controlled mating",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.CLEM.Activities.RuminantActivityWean, Models",
+                          "Style": 0,
                           "WeaningAge": 8.0,
                           "WeaningWeight": 100.0,
                           "GrazeFoodStoreName": "GrazeFoodStore.NativePasture",
@@ -778,12 +793,12 @@
                               "MonthDue": 4,
                               "Name": "Weaning",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -794,15 +809,17 @@
                           "MaximumBreederAge": 120.0,
                           "MaximumProportionBreedersPerPurchase": 1.0,
                           "NumberOfBreederPurchaseAgeClasses": 1,
+                          "AdjustBreedingFemalesAtStartup": false,
                           "MaximumSiresKept": 1.0,
-                          "MaximumBullAge": 96.0,
-						  "BullAgeAtPurchase": 48.0,
+                          "MaximumSireAge": 96.0,
+                          "SireAgeAtPurchase": 24.0,
                           "AllowSireReplacement": false,
                           "MaximumSiresPerPurchase": 1,
-                          "FillBreedingMalesAtStartup": false,
+                          "AdjustBreedingMalesAtStartup": false,
                           "MaleSellingAge": 18.0,
                           "MaleSellingWeight": 350.0,
-                          "GrazeFoodStoreName": "GrazeFoodStore.NativePasture",
+                          "GrazeFoodStoreNameSires": "GrazeFoodStore.NativePasture",
+                          "GrazeFoodStoreNameBreeders": "GrazeFoodStore.NativePasture",
                           "MinimumPastureBeforeRestock": 1500.0,
                           "SellFemalesLikeMales": true,
                           "ContinuousMaleSales": false,
@@ -818,12 +835,12 @@
                               "MonthDue": 8,
                               "Name": "every August",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -836,12 +853,12 @@
                           "OnPartialResourcesAvailableAction": 0,
                           "Name": "Buy and sell",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -850,7 +867,7 @@
                       "HerdFilters": null,
                       "Name": "SummariseHerd",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -858,12 +875,12 @@
                       "$type": "Models.CLEM.Reporting.ReportRuminantHerd, Models",
                       "Name": "ReportHerd",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -878,7 +895,7 @@
                       "EventNames": null,
                       "Name": "ReportActivitiesPerformed",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -896,7 +913,7 @@
                       ],
                       "Name": "ReportResourceBalances",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -915,7 +932,7 @@
                       ],
                       "Name": "ReportResourceShortfalls",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -927,7 +944,7 @@
                       "EventNames": null,
                       "Name": "GrazeFoodStoreLedger",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -939,7 +956,7 @@
                       "EventNames": null,
                       "Name": "AnimalFoodLedger",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -951,7 +968,7 @@
                       "EventNames": null,
                       "Name": "FinancesLedger",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -963,7 +980,7 @@
                       "EventNames": null,
                       "Name": "HerdLedger",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -988,12 +1005,12 @@
                       ],
                       "Name": "HerdSummary",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1030,7 +1047,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
                       "Name": "Income vs Expenses",
                       "Children": [
                         {
@@ -1050,13 +1069,13 @@
                           "TableName": "FinancesLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Gain",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "Reason = \"Bos indicus sales\"",
+                          "Filter": "",
                           "Name": "Income _ Bos Indicus Sales",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1080,13 +1099,13 @@
                           "TableName": "FinancesLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Loss",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "Reason = \"Bos indicus purchases\"",
+                          "Filter": "",
                           "Name": "Expenses _ Bos Indicus Purchases",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1110,13 +1129,13 @@
                           "TableName": "FinancesLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Loss",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "Reason = \"Purchase Hay\"",
+                          "Filter": "",
                           "Name": "Expenses _ Hay Purchases",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1151,7 +1170,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": true,
+                          "DateTimeAxis": false,
                           "CrossesAtZero": false
                         },
                         {
@@ -1162,12 +1181,14 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": true,
+                          "DateTimeAxis": false,
                           "CrossesAtZero": false
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
                       "Name": "Animal numbers vs Feed available",
                       "Children": [
                         {
@@ -1187,8 +1208,8 @@
                           "TableName": "ReportResourceBalances",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "NativePasture",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
@@ -1217,8 +1238,8 @@
                           "TableName": "ReportResourceBalances",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Hay",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
@@ -1247,8 +1268,8 @@
                           "TableName": "ReportResourceBalances",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Bos indicus",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
@@ -1304,7 +1325,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
                       "Name": "Graph_Pasture Growth vs Grazing",
                       "Children": [
                         {
@@ -1324,13 +1347,13 @@
                           "TableName": "GrazeFoodStoreLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Gain",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "Reason = \"Harvest\"",
+                          "Filter": "",
                           "Name": "Native Pasture Growth",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1354,13 +1377,13 @@
                           "TableName": "GrazeFoodStoreLedger",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Loss",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "Reason = \"Bos indicus grazing\"",
+                          "Filter": "",
                           "Name": "Native Pasture Grazed",
                           "Children": [],
                           "IncludeInDocumentation": true,

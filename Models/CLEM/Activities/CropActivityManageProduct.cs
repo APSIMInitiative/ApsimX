@@ -192,8 +192,9 @@ namespace Models.CLEM.Activities
             parentManagementActivity = Apsim.Parent(this, typeof(CropActivityManageCrop)) as CropActivityManageCrop;
 
             // Retrieve harvest data from the forage file for the entire run. 
+            // only get entries where a harvest happened (Amtkg > 0)
             HarvestData = fileCrop.GetCropDataForEntireRun(parentManagementActivity.LinkedLandItem.SoilType, CropName,
-                                                               Clock.StartDate, Clock.EndDate).OrderBy(a => a.Year * 100 + a.Month).ToList<CropDataType>();
+                                                               Clock.StartDate, Clock.EndDate).Where(a => a.AmtKg > 0).OrderBy(a => a.Year * 100 + a.Month).ToList<CropDataType>();
             if ((HarvestData == null) || (HarvestData.Count == 0))
             {
                 Summary.WriteWarning(this, String.Format("Unable to locate any harvest data in [x={0}] using [x={1}] for soil type [{2}] and crop name [{3}] between the dates [{4}] and [{5}]",
@@ -225,7 +226,6 @@ namespace Models.CLEM.Activities
                 HarvestData.RemoveAt(0);
             }
             NextHarvest = HarvestData.FirstOrDefault();
-
         }
 
         /// <summary>
@@ -239,7 +239,8 @@ namespace Models.CLEM.Activities
             // rotate harvest if needed
             if (HarvestData.Count() > 0 && Clock.Today.Year * 100 + Clock.Today.Month == HarvestData.First().Year * 100 + HarvestData.First().Month)
             {
-                if(this.ActivityEnabled)
+                // don't rotate activities that may have just had their enabled status changed in this timestep
+                if(this.ActivityEnabled & Status != ActivityStatus.Ignored)
                 {
                     parentManagementActivity.RotateCrop();
                 }
@@ -458,27 +459,6 @@ namespace Models.CLEM.Activities
                                 }
                                 LinkedResourceItem.Add(packet, this, addReason);
                             }
-
-                            ////if Npct column was not in the file 
-                            //if (double.IsNaN(NextHarvest.Npct))
-                            //{
-                            //    //Add without adding any new nitrogen.
-                            //    //The nitrogen value for this feed item in the store remains the same.
-                            //    LinkedResourceItem.Add(AmountHarvested, this, addReason);
-                            //}
-                            //else
-                            //{
-                            //    FoodResourcePacket packet = new FoodResourcePacket()
-                            //    {
-                            //        Amount = AmountHarvested,
-                            //        PercentN = NextHarvest.Npct
-                            //    };
-                            //    if (LinkedResourceItem.GetType() == typeof(GrazeFoodStoreType))
-                            //    {
-                            //        packet.DMD = (LinkedResourceItem as GrazeFoodStoreType).EstimateDMD(packet.PercentN);
-                            //    }
-                            //    LinkedResourceItem.Add(packet, this, addReason);
-                            //}
                             SetStatusSuccess();
                         }
                         else
@@ -494,6 +474,10 @@ namespace Models.CLEM.Activities
                 {
                     this.Status = ActivityStatus.NotNeeded;
                 }
+            }
+            else
+            {
+                this.Status = ActivityStatus.NotNeeded;
             }
         }
 

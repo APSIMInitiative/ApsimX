@@ -116,8 +116,8 @@ namespace Models.PMF.Organs
         [Link]
         ISummary Summary = null;
 
-        [Link]
-        private SorghumArbitrator Arbitrator = null;
+        //[Link]
+        //private IArbitrator Arbitrator = null;
 
         [Link]
         private Phenology phenology = null;
@@ -143,6 +143,9 @@ namespace Models.PMF.Organs
 
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction SDRatio = null;
+
+        [Link(Type = LinkType.Path, Path = "[Phenology].DltTT")]
+        private IFunction DltTT { get; set; }
 
         #region Canopy interface
 
@@ -477,17 +480,6 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>
-        /// Update globals
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        [EventSubscribe("EndOfDay")]
-        private void UpdateVars(object sender, EventArgs e)
-        {
-            sdRatio = Arbitrator.WDemand < 0.001 ? 1.0 : Math.Min(1, MathUtilities.Divide(Arbitrator.WatSupply, Arbitrator.WDemand, 0.0));
-        }
-
-        /// <summary>
         /// Calculates final leaf number. Doesn't update any globals.
         /// </summary>
         /// <returns></returns>
@@ -559,12 +551,13 @@ namespace Models.PMF.Organs
         
             LeafInitialised = false;
             laiEqlbLightTodayQ = new Queue<double>(10);
-            sdRatio = 0.0;
+            //sdRatio = 0.0;
             totalLaiEqlbLight = 0.0;
             avgLaiEquilibLight = 0.0;
 
             laiEquilibWaterQ = new Queue<double>(10);
             sdRatioQ = new Queue<double>(5);
+            totalLaiEquilibWater = 0;
             totalSDRatio = 0.0;
             avSDRatio = 0.0;
 
@@ -599,6 +592,22 @@ namespace Models.PMF.Organs
         }
 
         #region Top Level time step functions
+
+        [EventSubscribe("StartOfDay")]
+        private void ResetDailyVariables(object sender, EventArgs e)
+        {
+            BiomassRUE = 0;
+            BiomassTE = 0;
+            DltLAI = 0;
+            DltSenescedLai = 0;
+            DltSenescedLaiAge = 0;
+            DltSenescedLaiFrost = 0;
+            DltSenescedLaiLight = 0;
+            DltSenescedLaiN = 0;
+            DltSenescedLaiWater = 0;
+            DltSenescedN = 0;
+        }
+
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -756,7 +765,8 @@ namespace Models.PMF.Organs
         private double nDeadLeaves;
         private double dltDeadLeaves;
         private double[] leafSize;
-        private double sdRatio;
+        //private double sdRatio;
+        
         private double totalLaiEqlbLight;
         private double avgLaiEquilibLight;
         private Queue<double> laiEqlbLightTodayQ;
@@ -857,9 +867,13 @@ namespace Models.PMF.Organs
             double effectiveRue = MathUtilities.Divide(Photosynthesis.Value(), RadIntTot, 0);
 
             double radnCanopy = MathUtilities.Divide(RadIntTot, CoverGreen, MetData.Radn);
+            if (MathUtilities.FloatsAreEqual(CoverGreen, 0))
+                radnCanopy = 0;
 
             double sen_radn_crit = MathUtilities.Divide(dlt_dm_transp, effectiveRue, radnCanopy);
             double intc_crit = MathUtilities.Divide(sen_radn_crit, radnCanopy, 1.0);
+            if (MathUtilities.FloatsAreEqual(sen_radn_crit, 0))
+                intc_crit = 0;
 
             //            ! needs rework for row spacing
             double laiEquilibWaterToday;
@@ -870,7 +884,7 @@ namespace Models.PMF.Organs
 
             avLaiEquilibWater = updateAvLaiEquilibWater(laiEquilibWaterToday, 10);
 
-            avSDRatio = updateAvSDRatio(sdRatio, 5);
+            avSDRatio = updateAvSDRatio(SDRatio.Value(), 5);
             //// average of the last 10 days of laiEquilibWater`
             //laiEquilibWater.push_back(laiEquilibWaterToday);
             //double avLaiEquilibWater = movingAvgVector(laiEquilibWater, 10);
@@ -1268,7 +1282,7 @@ namespace Models.PMF.Organs
             //double nGreenToday = Live.N + BAT.TotalAllocation[leafIndex] + BAT.Retranslocation[leafIndex];
             double slnToday = calcSLN(laiToday, nGreenToday);
 
-            var dilutionN = Arbitrator.DltTT * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
+            var dilutionN = DltTT.Value() * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
             dilutionN = Math.Max(dilutionN, 0);
             if(phenology.Between("Germination", "Flowering"))
             {
@@ -1305,7 +1319,7 @@ namespace Models.PMF.Organs
                 laiToday = calcLAI();
                 slnToday = calcSLN(laiToday, nGreenToday);
 
-                var maxN = Arbitrator.DltTT * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
+                var maxN = DltTT.Value() * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
                 maxN = Math.Max(maxN, 0);
                 requiredN = Math.Min(requiredN, maxN);
 
@@ -1342,7 +1356,7 @@ namespace Models.PMF.Organs
                     laiToday = calcLAI();
                     slnToday = calcSLN(laiToday, nGreenToday);
 
-                    var maxN = Arbitrator.DltTT * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
+                    var maxN = DltTT.Value() * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
                     requiredN = Math.Min(requiredN, maxN);
 
                     double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - SenescedLeafSLN.Value()), 0.0), 0.0);
@@ -1372,7 +1386,7 @@ namespace Models.PMF.Organs
                     laiToday = calcLAI();
                     slnToday = calcSLN(laiToday, nGreenToday);
 
-                    var maxN = Arbitrator.DltTT * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
+                    var maxN = DltTT.Value() * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
                     requiredN = Math.Min(requiredN, maxN);
 
                     double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - SenescedLeafSLN.Value()), 0.0), 0.0);
@@ -1403,7 +1417,7 @@ namespace Models.PMF.Organs
             double nGreenToday = Live.N;
             double slnToday = MathUtilities.Divide(nGreenToday, laiToday, 0.0);
 
-            var dilutionN = Arbitrator.DltTT * ( NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
+            var dilutionN = DltTT.Value() * ( NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
 
             NSupply.Retranslocation = Math.Max(0, Math.Min(StartLive.N, availableLaiN + dilutionN));
 
@@ -1534,6 +1548,7 @@ namespace Models.PMF.Organs
             Removed = new Biomass();
             Live = new Biomass();
             Dead = new Biomass();
+
             Clear();
         }
 

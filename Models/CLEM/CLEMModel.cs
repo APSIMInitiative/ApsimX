@@ -98,6 +98,11 @@ namespace Models.CLEM
         }
 
         /// <summary>
+        /// Returns the opacity value for this component in the summary display
+        /// </summary>
+        public double SummaryOpacity(bool formatForParent) => ((!this.Enabled & (!formatForParent | (formatForParent & this.Parent.Enabled))) ? 0.4 : 1.0);
+
+        /// <summary>
         /// Determines if this component has a valid parent based on parent attributes
         /// </summary>
         /// <returns></returns>
@@ -105,6 +110,16 @@ namespace Models.CLEM
         {
             var parents = ReflectionUtilities.GetAttributes(this.GetType(), typeof(ValidParentAttribute), false).Cast<ValidParentAttribute>().ToList();
             return (parents.Where(a => a.ParentType.Name == this.Parent.GetType().Name).Count() > 0);
+        }
+
+        /// <summary>
+        /// Finds a shared marketplace
+        /// </summary>
+        /// <returns>Market</returns>
+        public Market FindMarket()
+        {
+            IModel parentSim = Apsim.Parent(this, typeof(Simulation));
+            return Apsim.Children(parentSim, typeof(Market)).Where(a => a.Enabled).FirstOrDefault() as Market;
         }
 
         /// <summary>
@@ -172,11 +187,14 @@ namespace Models.CLEM
         {
             string overall = "activity";
             string extra = "";
-            double opacity = 1;
 
             if(this.ModelSummaryStyle == HTMLSummaryStyle.Default)
             {
-                if (this.GetType().IsSubclassOf(typeof(ResourceBaseWithTransactions)))
+                if (this is Relationship || this.GetType().IsSubclassOf(typeof(Relationship)) )
+                {
+                    this.ModelSummaryStyle = HTMLSummaryStyle.Default;
+                }
+                else if (this.GetType().IsSubclassOf(typeof(ResourceBaseWithTransactions)))
                 {
                     this.ModelSummaryStyle = HTMLSummaryStyle.Resource;
                 }
@@ -188,15 +206,16 @@ namespace Models.CLEM
                 {
                     this.ModelSummaryStyle = HTMLSummaryStyle.Activity;
                 }
-                else if (this.GetType().IsSubclassOf(typeof(CLEMModel)))
-                {
-                    this.ModelSummaryStyle = HTMLSummaryStyle.Activity;
-                }
+                //else if (this.GetType().IsSubclassOf(typeof(CLEMModel)))
+                //{
+                //    this.ModelSummaryStyle = HTMLSummaryStyle.Activity;
+                //}
             }
 
             switch (ModelSummaryStyle)
             {
                 case HTMLSummaryStyle.Default:
+                    overall = "default";
                     break;
                 case HTMLSummaryStyle.Resource:
                     overall = "resource";
@@ -226,37 +245,11 @@ namespace Models.CLEM
                     break;
             }
 
-            if(!this.Enabled)
-            {
-                if(this.Parent.Enabled)
-                {
-                    opacity = 0.4;
-                }
-            }
-
             string html = "";
-            html += "\n<div class=\"holder"+ ((extra == "") ? "main" : "sub") + " " + overall  +"\">";
+            html += "\n<div class=\"holder"+ ((extra == "") ? "main" : "sub") + " " + overall  + "\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + ";\">";
             html += "\n<div class=\"clearfix "+overall+"banner"+extra+"\">" + this.ModelSummaryNameTypeHeader() + "</div>";
-            html += "\n<div class=\""+overall+"content"+  ((extra!="")? extra: "")+"\" style=\"opacity: "+opacity.ToString()+";\">";
+            html += "\n<div class=\""+overall+"content"+  ((extra!="")? extra: "")+"\">";
 
-            //if(this.GetType().IsSubclassOf(typeof(CLEMResourceTypeBase)))
-            //{
-            //    // add units when completed
-            //    string units = (this as IResourceType).Units;
-            //    if (units != "NA")
-            //    {
-            //        html += "\n<div class=\"activityentry\">This resource is measured in  ";
-            //        if (units == null || units == "")
-            //        {
-            //            html += "<span class=\"errorlink\">Not specified</span>";
-            //        }
-            //        else
-            //        {
-            //            html += "<span class=\"setvalue\">" + units + "</span>";
-            //        }
-            //        html += "</div>";
-            //    }
-            //}
             return html;
         }
 

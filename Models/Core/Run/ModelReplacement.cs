@@ -67,7 +67,10 @@
             newModel.Enabled = match.Enabled;
             match.Parent.Children.Remove(match as Model);
 
-            newModel.Parent.OnCreated();
+            // Don't call newModel.Parent.OnCreated(), because if we're replacing
+            // a child of a resource model, the resource model's OnCreated event
+            // will make it reread the resource string and replace this child with
+            // the 'official' child from the resource.
             foreach (var model in Apsim.ChildrenRecursively(newModel.Parent))
                 model.OnCreated();
         }

@@ -1,12 +1,6 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="DateUtilities.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace APSIM.Shared.Utilities
+﻿namespace APSIM.Shared.Utilities
 {
     using System;
-    using System.Collections.Generic;
     using System.Globalization;
     using System.Text.RegularExpressions;
 
@@ -351,6 +345,8 @@ namespace APSIM.Shared.Utilities
             else
             {
                 DateTime.TryParse(dateStr, out d);
+                if (d == DateTime.MinValue)
+                    return null;
                 returnDate = d.ToString("yyyy-MM-dd");
             }
             return returnDate;

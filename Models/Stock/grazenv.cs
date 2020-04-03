@@ -1,9 +1,3 @@
-// -----------------------------------------------------------------------
-// <copyright file="grazenv.cs" company="CSIRO">
-//      CSIRO Agriculture & Food
-// </copyright>
-// -----------------------------------------------------------------------
-
 namespace Models.GrazPlan
 {
     using System;

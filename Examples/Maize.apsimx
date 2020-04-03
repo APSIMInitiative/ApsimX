@@ -1,7 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 296,
-  "Version": 67,
+  "Version": 80,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-06",
   "Name": "Simulations",
   "Children": [
     {
@@ -51,6 +52,8 @@
           "$type": "Models.Core.Zone, Models",
           "Area": 1.0,
           "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
           "Name": "Field",
           "Children": [
             {
@@ -62,7 +65,7 @@
                 "[Maize].AboveGround.N",
                 "[Maize].Grain.Wt",
                 "[Maize].Grain.Size",
-                "[Maize].Grain.NumberFunction.Value()",
+                "[Maize].Grain.NumberFunction",
                 "[Maize].Grain.N",
                 "[Maize].Total.Wt"
               ],
@@ -125,6 +128,8 @@
                     300.0
                   ],
                   "ParticleSizeClay": null,
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
                   "BD": [
                     1.01056473311131,
                     1.07145631083388,
@@ -276,6 +281,7 @@
                     0.3
                   ],
                   "KLAT": null,
+                  "PrecipitationInterception": 0.0,
                   "Name": "SoilWater",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -607,22 +613,6 @@
                         "Colour": "White",
                         "OutlineColour": "White",
                         "Transparent": true
-                      },
-                      {
-                        "$type": "Models.Graph.Node, Models",
-                        "Name": "PlantAvailableNO3",
-                        "Location": "688, 415",
-                        "Colour": "0, 158, 115",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Graph.Node, Models",
-                        "Name": "PlantAvailableNH4",
-                        "Location": "691, 421",
-                        "Colour": "0, 158, 115",
-                        "OutlineColour": "Black",
-                        "Transparent": false
                       }
                     ],
                     "Arcs": [
@@ -753,13 +743,14 @@
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "Canopies": [],
               "InitialResidueName": "wheat_stubble",
               "InitialResidueType": "wheat",
               "InitialResidueMass": 500.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 100.0,
-              "FractionFaecesAdded": 0.5,
+              "FractionFaecesAdded": 1.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
               "IncludeInDocumentation": true,
@@ -769,6 +760,7 @@
             {
               "$type": "Models.PMF.Plant, Models",
               "CropType": "Maize",
+              "IsAlive": false,
               "IsEnding": false,
               "DaysAfterEnding": 0,
               "ResourceName": "Maize",
@@ -785,6 +777,7 @@
               "d_interception": 0.0,
               "soil_albedo": 0.3,
               "SoilHeatFluxFraction": 0.4,
+              "MinimumHeightDiffForNewLayer": 0.0,
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
@@ -813,7 +806,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Maize;\r\n        [Link] Soil Soil;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set; }\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set; }\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set; }\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n        \r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&\r\n                !Maize.IsAlive &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n                Maize.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Maize;\r\n        [Link] Soil Soil;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set; }\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set; }\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set; }\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName, PlantName = \"Maize\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n        \r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&\r\n                !Maize.IsAlive &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n                Maize.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "StartDate",
@@ -899,7 +892,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": null,
+          "LegendOutsideGraph": false,
           "Name": "Maize Yield Time Series",
           "Children": [
             {
@@ -919,8 +914,8 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Maize.Grain.Wt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,

@@ -124,21 +124,79 @@
                 return result;
             }
 
+            protected override IValueProvider CreateMemberValueProvider(MemberInfo member)
+            {
+                if (member.Name == "Children")
+                    return new ChildrenProvider(member);
+
+                return base.CreateMemberValueProvider(member);
+            }
+
             protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
             {
                 JsonProperty property = base.CreateProperty(member, memberSerialization);
 
                 if (property.PropertyName == "Children")
+                {
                     property.ShouldSerialize = instance =>
                     {
-                        if (instance is IOptionallySerialiseChildren)
-                            return (instance as IOptionallySerialiseChildren).DoSerialiseChildren;
+                        if (instance is IOptionallySerialiseChildren opt)
+                            return opt.DoSerialiseChildren;
+
                         return true;
                     };
+                }
+                else if (typeof(ModelCollectionFromResource).IsAssignableFrom(member.DeclaringType))
+                {
+                    property.ShouldSerialize = instance =>
+                    {
+                        var xmlIgnore = member.GetCustomAttribute<XmlIgnoreAttribute>();
+                        var jsonIgnore = member.GetCustomAttribute<JsonIgnoreAttribute>();
+                        if (xmlIgnore != null || jsonIgnore != null)
+                            return false;
+
+                        // If this property has a description attribute, then it's settable
+                        // from the UI, in which case it should always be serialized.
+                        var description = member.GetCustomAttribute<DescriptionAttribute>();
+                        if (description != null)
+                            return true;
+
+                        // If the model is under a replacements node, then serialize everything.
+                        ModelCollectionFromResource resource = instance as ModelCollectionFromResource;
+                        if (Apsim.Ancestor<Replacements>(resource) != null)
+                            return true;
+
+                        // Otherwise, only serialize if the property is inherited from
+                        // Model or ModelCollectionFromResource.
+                        return member.DeclaringType.IsAssignableFrom(typeof(ModelCollectionFromResource));
+                    };
+                }
 
                 return property;
             }
 
+            private class ChildrenProvider : IValueProvider
+            {
+                private MemberInfo memberInfo;
+
+                public ChildrenProvider(MemberInfo memberInfo)
+                {
+                    this.memberInfo = memberInfo;
+                }
+
+                public object GetValue(object target)
+                {
+                    if (target is ModelCollectionFromResource m && Apsim.Ancestor<Replacements>(m) == null)
+                        return m.ChildrenToSerialize;
+
+                    return new DynamicValueProvider(memberInfo).GetValue(target);
+                }
+
+                public void SetValue(object target, object value)
+                {
+                    new DynamicValueProvider(memberInfo).SetValue(target, value);
+                }
+            }
         }
     }
 }

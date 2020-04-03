@@ -1,22 +1,13 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ReportPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System;
-    using System.Data;
-    using APSIM.Shared.Utilities;
     using EventArguments;
-    using Interfaces;
-    using Models;
     using Models.Core;
     using Models.Factorial;
-    using Models.Report;
     using Models.Storage;
+    using Utility;
     using Views;
-    using System.Linq;
+    using Models;
 
     /// <summary>
     /// The Report presenter class
@@ -28,7 +19,7 @@ namespace UserInterface.Presenters
         /// Without this, it's difficult to know which editor (variables or events) to
         /// insert an intellisense item into.
         /// </summary>
-        private IEditorView currentEditor;
+        private object currentEditor;
 
         /// <summary>
         /// The report object
@@ -77,10 +68,15 @@ namespace UserInterface.Presenters
             this.view.EventList.Mode = EditorType.Report;
             this.view.VariableList.Lines = report.VariableNames;
             this.view.EventList.Lines = report.EventNames;
+            this.view.GroupByEdit.Value = report.GroupByVariableName;
             this.view.VariableList.ContextItemsNeeded += OnNeedVariableNames;
             this.view.EventList.ContextItemsNeeded += OnNeedEventNames;
+            this.view.GroupByEdit.IntellisenseItemsNeeded += OnNeedVariableNames;
             this.view.VariableList.TextHasChangedByUser += OnVariableNamesChanged;
             this.view.EventList.TextHasChangedByUser += OnEventNamesChanged;
+            this.view.GroupByEdit.Changed += OnGroupByChanged;
+            this.view.SplitterChanged += OnSplitterChanged;
+            this.view.SplitterPosition = Configuration.Settings.ReportSplitterPosition;
             this.explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
 
             Simulations simulations = Apsim.Parent(report, typeof(Simulations)) as Simulations;
@@ -106,8 +102,13 @@ namespace UserInterface.Presenters
                 dataStorePresenter.SimulationFilter = simulation;
 
             dataStorePresenter.Attach(dataStore, this.view.DataStoreView, explorerPresenter);
-            this.view.DataStoreView.TableList.SelectedValue = this.report.Name;
+            dataStorePresenter.tableDropDown.SelectedValue = this.report.Name;
             this.view.TabIndex = this.report.ActiveTabIndex;
+        }
+
+        private void OnSplitterChanged(object sender, EventArgs e)
+        {
+            Configuration.Settings.ReportSplitterPosition = this.view.SplitterPosition;
         }
 
         /// <summary>Detach the model from the view.</summary>
@@ -116,8 +117,11 @@ namespace UserInterface.Presenters
             this.report.ActiveTabIndex = this.view.TabIndex;
             this.view.VariableList.ContextItemsNeeded -= OnNeedVariableNames;
             this.view.EventList.ContextItemsNeeded -= OnNeedEventNames;
+            this.view.GroupByEdit.IntellisenseItemsNeeded -= OnNeedVariableNames; 
+            this.view.SplitterChanged -= OnSplitterChanged;
             this.view.VariableList.TextHasChangedByUser -= OnVariableNamesChanged;
             this.view.EventList.TextHasChangedByUser -= OnEventNamesChanged;
+            this.view.GroupByEdit.Changed -= OnGroupByChanged;
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
             dataStorePresenter.Detach();
             intellisense.ItemSelected -= OnIntellisenseItemSelected;
@@ -155,7 +159,7 @@ namespace UserInterface.Presenters
             try
             {
                 string currentLine = GetLine(e.Code, e.LineNo - 1);
-                currentEditor = sender as IEditorView;
+                currentEditor = sender;
                 if (!e.ControlShiftSpace && intellisense.GenerateGridCompletions(currentLine, e.ColNo, report, properties, methods, events, e.ControlSpace))
                     intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
             }
@@ -224,6 +228,23 @@ namespace UserInterface.Presenters
             }
         }
 
+        /// <summary>The event names have changed in the view.</summary>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The argument values</param>
+        private void OnGroupByChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                explorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(OnModelChanged);
+                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(report, "GroupByVariableName", view.GroupByEdit.Value));
+                explorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(OnModelChanged);
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
+        }
+
         /// <summary>The model has changed so update our view.</summary>
         /// <param name="changedModel">The model</param>
         private void OnModelChanged(object changedModel)
@@ -246,9 +267,19 @@ namespace UserInterface.Presenters
             if (string.IsNullOrEmpty(args.ItemSelected))
                 return;
             else if (string.IsNullOrEmpty(args.TriggerWord))
-                currentEditor.InsertAtCaret(args.ItemSelected);
+            {
+                if (currentEditor is IEditorView)
+                    (currentEditor as IEditorView).InsertAtCaret(args.ItemSelected);
+                else
+                    (currentEditor as IEditView).InsertAtCursor(args.ItemSelected);
+            }
             else
-                currentEditor.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
+            {
+                if (currentEditor is IEditorView)
+                    (currentEditor as IEditorView).InsertCompletionOption(args.ItemSelected, args.TriggerWord);
+                else
+                    (currentEditor as IEditView).InsertCompletionOption(args.ItemSelected, args.TriggerWord);
+            }
         }
     }
 }

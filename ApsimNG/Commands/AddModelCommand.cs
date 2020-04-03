@@ -19,8 +19,8 @@
         /// <summary>A string representation of the child model to add.</summary>
         private IModel child;
 
-        /// <summary>The explorer view.</summary>
-        IExplorerView view;
+        /// <summary>A string representation of the child model to add.</summary>
+        private string xmlOrJson;
 
         /// <summary>The explorer presenter.</summary>
         ExplorerPresenter presenter;
@@ -33,14 +33,24 @@
 
         /// <summary>Constructor.</summary>
         /// <param name="pathOfParent">The path of the parent model to add the child to.</param>
-        /// <param name="child">The string representation of the model to add.</param>
+        /// <param name="child">The model to add.</param>
         /// <param name="explorerView">The explorer view to work with.</param>
         /// <param name="explorerPresenter">The explorer presenter to work with.</param>
-        public AddModelCommand(string pathOfParent, IModel child, IExplorerView explorerView, ExplorerPresenter explorerPresenter)
+        public AddModelCommand(string pathOfParent, IModel child, ExplorerPresenter explorerPresenter)
         {
             parentPath = pathOfParent;
             this.child = child;
-            view = explorerView;
+            presenter = explorerPresenter;
+        }
+
+        /// <summary>Constructor.</summary>
+        /// <param name="pathOfParent">The path of the parent model to add the child to.</param>
+        /// <param name="textToAdd">The text string representation of the model to add.</param>
+        /// <param name="explorerPresenter">The explorer presenter to work with.</param>
+        public AddModelCommand(string pathOfParent, string textToAdd, ExplorerPresenter explorerPresenter)
+        {
+            parentPath = pathOfParent;
+            xmlOrJson = textToAdd;
             presenter = explorerPresenter;
         }
 
@@ -53,15 +63,13 @@
                 parent = Apsim.Get(presenter.ApsimXFile, parentPath) as IModel;
                 if (parent == null)
                     throw new Exception("Cannot find model " + parentPath);
-                
-                modelToAdd = child;
 
-                if (modelToAdd is Simulations && modelToAdd.Children.Count == 1)
-                    modelToAdd = modelToAdd.Children[0];
+                if (xmlOrJson != null)
+                    modelToAdd = Structure.Add(xmlOrJson, parent);
+                else
+                    modelToAdd = Structure.Add(child, parent);
 
-                Structure.Add(modelToAdd, parent);
-                var nodeDescription = presenter.GetNodeDescription(modelToAdd);
-                view.Tree.AddChild(Apsim.FullPath(parent), nodeDescription);
+                presenter.AddChildToTree(parentPath, modelToAdd);
                 modelAdded = true;
             }
             catch (Exception err)
@@ -78,7 +86,7 @@
             if (modelAdded && modelToAdd != null)
             {
                 parent.Children.Remove(modelToAdd as Model);
-                view.Tree.Delete(Apsim.FullPath(modelToAdd));
+                presenter.DeleteFromTree(Apsim.FullPath(modelToAdd));
             }
         }
     }

@@ -23,7 +23,9 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages ruminant stocking during the dry season based upon wet season pasture biomass. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
+    [Version(1, 0, 3, "Avoids double accounting while removing individuals")]
     [Version(1, 0, 1, "")]
+    [Version(1, 0, 2, "Updated assessment calculations and ability to report results")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantPredictiveStocking.htm")]
     public class RuminantActivityPredictiveStocking: CLEMRuminantActivityBase, IValidatableObject
     {
@@ -50,6 +52,31 @@ namespace Models.CLEM.Activities
         [Description("Minimum estimated feed (kg/ha) allowed at end of period")]
         [Required, GreaterThanEqualValue(0)]
         public double FeedLowLimit { get; set; }
+
+        /// <summary>
+        /// Predicted pasture at end of assessment period
+        /// </summary>
+        public double PasturePredicted { get; private set; }
+
+        /// <summary>
+        /// Predicted pasture shortfall at end of assessment period
+        /// </summary>
+        public double PastureShortfall { get {return Math.Max(0, FeedLowLimit - PasturePredicted); } }
+
+        /// <summary>
+        /// AE to destock
+        /// </summary>
+        public double AeToDestock { get; private set; }
+
+        /// <summary>
+        /// AE destocked
+        /// </summary>
+        public double AeDestocked { get; private set; }
+
+        /// <summary>
+        /// AE destock shortfall
+        /// </summary>
+        public double AeShortfall { get {return AeToDestock - AeDestocked; } }
 
         /// <summary>
         /// Validate this model
@@ -89,6 +116,8 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
+            AeToDestock = 0;
+            AeDestocked = 0;
             this.InitialiseHerd(false, true);
         }
 
@@ -109,7 +138,7 @@ namespace Models.CLEM.Activities
                     // multiple breeds are currently not supported as we need to work out what to do with diferent AEs
                     if(paddockGroup.GroupBy(a => a.Breed).Count() > 1)
                     {
-                        throw new ApsimXException(this, "Dry season destocking paddocks with multiple breeds is currently not supported\nActivity:"+this.Name+", Paddock: "+paddockGroup.Key);
+                        throw new ApsimXException(this, "Seasonal destocking paddocks containing multiple breeds is currently not supported\nActivity:"+this.Name+", Paddock: "+paddockGroup.Key);
                     }
 
                     // total adult equivalents not marked for sale of all breeds on pasture for utilisation
@@ -118,21 +147,31 @@ namespace Models.CLEM.Activities
                     double shortfallAE = 0;
                     // Determine total feed requirements for dry season for all ruminants on the pasture
                     // We assume that all ruminant have the BaseAnimalEquivalent to the specified herd
-                    shortfallAE = 0;
                     GrazeFoodStoreType pasture = Resources.GetResourceItem(this, typeof(GrazeFoodStore), paddockGroup.Key, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
                     double pastureBiomass = pasture.Amount;
 
-                    // Adjust fodder balance for detachment rate (6%/month)
+                    // Adjust fodder balance for detachment rate (6%/month in NABSA, user defined in CLEM, 3%)
+                    // AL found the best estimate for AAsh Barkly example was 2/3 difference between detachment and carryover detachment rate with average 12month pool ranging from 10 to 96% and average 46% of total pasture.
+                    double detachrate = pasture.DetachRate + ((pasture.CarryoverDetachRate - pasture.DetachRate) * 0.66);
+                    // Assume a consumption rate of 2% of body weight.
                     double feedRequiredAE = paddockGroup.FirstOrDefault().BreedParams.BaseAnimalEquivalent * 0.02 * 30.4; //  2% of AE animal per day
-                    for (int i = 0; i < this.DrySeasonLength; i++)
+                    for (int i = 0; i <= this.DrySeasonLength; i++)
                     {
-                        pastureBiomass *= (1.0 - pasture.DetachRate);
-                        pastureBiomass -= feedRequiredAE * totalAE;
+                        // only include detachemnt if current biomass is positive, not already overeaten
+                        if (pastureBiomass > 0)
+                        {
+                            pastureBiomass *= (1.0 - detachrate);
+                        }
+                        if (i > 0) // not in current month as already consumed by this time.
+                        {
+                            pastureBiomass -= (feedRequiredAE * totalAE);
+                        }
                     }
 
                     // Shortfall in Fodder in kg per hectare
                     // pasture at end of period in kg/ha
                     double pastureShortFallKgHa = pastureBiomass / pasture.Manager.Area;
+                    PasturePredicted = pastureShortFallKgHa;
                     // shortfall from low limit
                     pastureShortFallKgHa = Math.Max(0, FeedLowLimit - pastureShortFallKgHa);
                     // Shortfall in Fodder in kg for paddock
@@ -143,11 +182,15 @@ namespace Models.CLEM.Activities
                         return;
                     }
 
-                    // number of AE to sell to balance shortfall_kg
-                    shortfallAE = pastureShortFallKg / feedRequiredAE;
+                    // number of AE to sell to balance shortfall_kg over entire season
+                    shortfallAE = pastureShortFallKg / (feedRequiredAE* this.DrySeasonLength);
+                    AeToDestock = shortfallAE;
 
                     // get prediction
                     HandleDestocking(shortfallAE, paddockGroup.Key);
+
+                    // fire event to allow reporting of findings
+                    OnReportStatus(new EventArgs());
                 }
             }
             else
@@ -160,6 +203,7 @@ namespace Models.CLEM.Activities
         {
             if (animalEquivalentsforSale <= 0)
             {
+                AeDestocked = 0;
                 this.Status = ActivityStatus.Ignored;
                 return;
             }
@@ -182,21 +226,21 @@ namespace Models.CLEM.Activities
                 while (cnt < herd.Count() && animalEquivalentsforSale > 0)
                 {
                     this.Status = ActivityStatus.Success;
-                    animalEquivalentsforSale -= herd[cnt].AdultEquivalent;
-                    herd[cnt].SaleFlag = HerdChangeReason.DestockSale;
-                    if (animalEquivalentsforSale < herd.Min(a => a.AdultEquivalent))
+                    if(herd[cnt].SaleFlag != HerdChangeReason.DestockSale)
                     {
-                        animalEquivalentsforSale = 0;
+                        animalEquivalentsforSale -= herd[cnt].AdultEquivalent;
+                        herd[cnt].SaleFlag = HerdChangeReason.DestockSale;
                     }
                     cnt++;
                 }
                 if (animalEquivalentsforSale <= 0)
                 {
+                    AeDestocked = 0;
                     this.Status = ActivityStatus.Success;
                     return;
                 }
             }
-
+            AeDestocked = AeToDestock - animalEquivalentsforSale;
             this.Status = ActivityStatus.Partial;
 
             // Idea of possible destock groups
@@ -269,17 +313,31 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Resource shortfall occured event handler
+        /// Activity performed event handler
         /// </summary>
         public override event EventHandler ActivityPerformed;
 
         /// <summary>
-        /// Shortfall occurred 
+        /// Activity occurred 
         /// </summary>
         /// <param name="e"></param>
         protected override void OnActivityPerformed(EventArgs e)
         {
             ActivityPerformed?.Invoke(this, e);
+        }
+
+        /// <summary>
+        /// Report destock status
+        /// </summary>
+        public event EventHandler ReportStatus;
+
+        /// <summary>
+        /// Report status occurred 
+        /// </summary>
+        /// <param name="e"></param>
+        protected void OnReportStatus(EventArgs e)
+        {
+            ReportStatus?.Invoke(this, e);
         }
 
         /// <summary>

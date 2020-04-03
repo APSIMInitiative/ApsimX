@@ -43,6 +43,8 @@ if "%1"=="%examplessyntax%" (
 
 if "%1"=="%validationsyntax%" (
 	set testdir=%apsimx%\Tests
+	set soybean=%apsimx%\Tests\UnderReview\Soybean
+	echo %SOYBEAN_PASSWORD%| 7z x !soybean!\ObservedFACTS.7z -o!soybean!
 	goto :tests
 )
 

@@ -54,19 +54,7 @@
     /// </summary>
     /// <param name="Data">The data.</param>
     public delegate void WaterUptakesCalculatedDelegate(WaterUptakesCalculatedType Data);
-    /// <summary>
-    /// 
-    /// </summary>
-    public class WaterChangedType
-    {
-        /// <summary>The delta water</summary>
-        public Double[] DeltaWater;
-    }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="Data">The data.</param>
-    public delegate void WaterChangedDelegate(WaterChangedType Data);
+
     /// <summary>
     /// 
     /// </summary>

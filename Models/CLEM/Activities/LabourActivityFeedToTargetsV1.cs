@@ -118,7 +118,7 @@ namespace Models.CLEM.Activities
                 target.CurrentAchieved = target.OtherSourcesValue * aE * 30.4;
 
                 // calculate current level from previous intake this month (LabourActivityFeed)
-                target.CurrentAchieved += people.GetDietaryValue(target.Metric, IncludeHiredLabour) * aE * 30.4;
+                target.CurrentAchieved += people.GetDietaryValue(target.Metric, IncludeHiredLabour, true) * aE * 30.4;
             }
 
             // order food to achieve best returns for first criteria conversion factor decreasing

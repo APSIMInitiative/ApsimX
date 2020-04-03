@@ -84,16 +84,34 @@ namespace Models.CLEM.Resources
         /// A method to calculate the total dietary intake by metric
         /// </summary>
         /// <param name="metric">Metric to use</param>
-        /// <param name="includeLabour">Include hired labour in calculations</param>
-        /// <returns></returns>
-        public double GetDietaryValue(string metric, bool includeLabour)
+        /// <param name="includeHiredLabour">Include hired labour in calculations</param>
+        /// <param name="reportPerAE">Report result as per Adult Equivalent</param>
+        /// <returns>Amount eaten</returns>
+        public double GetDietaryValue(string metric, bool includeHiredLabour, bool reportPerAE)
         {
             double value = 0;
-            foreach (LabourType ind in Items.Where(a => includeLabour | (a.Hired == false)))
+            foreach (LabourType ind in Items.Where(a => includeHiredLabour | (a.Hired == false)))
             {
                 value += ind.GetDietDetails(metric);
             }
+            if(reportPerAE)
+            {
+                value /= AdultEquivalents(includeHiredLabour);
+            }
             return value;
+        }
+
+        /// <summary>
+        /// A method to calculate the total dietary intake by metric
+        /// </summary>
+        /// <param name="metric">Metric to use</param>
+        /// <param name="includeHiredLabour">Include hired labour in calculations</param>
+        /// <param name="reportPerAE">Report result as per Adult Equivalent</param>
+        /// <returns>Amount eaten per day</returns>
+        public double GetDailyDietaryValue(string metric, bool includeHiredLabour, bool reportPerAE)
+        {
+            int daysInMonth = DateTime.DaysInMonth(Clock.Today.Year, Clock.Today.Month);
+            return GetDietaryValue(metric, includeHiredLabour, reportPerAE) / daysInMonth;
         }
 
         /// <summary>
@@ -139,7 +157,7 @@ namespace Models.CLEM.Resources
                         InitialAge = labourChildModel.InitialAge,
                         AgeInMonths = labourChildModel.InitialAge * 12,
                         LabourAvailability = labourChildModel.LabourAvailability,
-                        Name = labourChildModel.Name + ((labourChildModel.Individuals > 1)?"_"+(i+1).ToString():""),
+                        Name = labourChildModel.Name + ((labourChildModel.Individuals > 1) ? "_" + (i + 1).ToString() : ""),
                         Hired = labourChildModel.Hired
                     };
                     labour.TransactionOccurred += Resource_TransactionOccurred;
@@ -269,17 +287,11 @@ namespace Models.CLEM.Resources
         {
             if (adultEquivalentRelationship != null)
             {
-                return adultEquivalentRelationship.SolveY(ageInMonths, true);
+                return adultEquivalentRelationship.SolveY(ageInMonths);
             }
             else
             {
                 // no AE relationship provided.
-                //string warningString = "No Adult Equivalent (AE) relationship is provided for [r="+this.Name+"]\nEach individual present is assumed to be an AE\nAdd a [Relationship] below [r=Labour] to define AE as a function of age in months";
-                //if (!WarningsNotFound.Contains(warningString))
-                //{
-                //    WarningsNotFound.Add(warningString);
-                //    Summary.WriteWarning(this, warningString);
-                //}
                 return null;
             }
         }
@@ -321,7 +333,7 @@ namespace Models.CLEM.Resources
                     }
                 }
                 // no price match found.
-                string warningString = "No pay entry was found for indiviudal [" + ind.Name + "] with details [f=age: " + ind.Age + "] [f=gender: " + ind.Gender.ToString() + "]";
+                string warningString = $"No [Pay] price entry was found for individual [r={ind.Name}] with details [f=age: {ind.Age}] [f=gender: {ind.Gender.ToString()}]";
                 if (!WarningsNotFound.Contains(warningString))
                 {
                     WarningsNotFound.Add(warningString);
@@ -375,7 +387,7 @@ namespace Models.CLEM.Resources
                 if (matchCriteria == null)
                 {
                     // report specific criteria not found in price list
-                    string warningString = "No pay rate entry was found meeting the required criteria [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".");
+                    string warningString = "No [Pay] rate entry was found meeting the required criteria [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".");
 
                     if (matchIndividual != null)
                     {

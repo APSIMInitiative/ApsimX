@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="MetDataPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System;
     using System.Collections.Generic;
@@ -15,7 +10,6 @@ namespace UserInterface.Presenters
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
-    using Models.Graph;
     using Views;
 
     /// <summary>A presenter for displaying weather data</summary>

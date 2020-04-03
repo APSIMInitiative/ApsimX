@@ -20,6 +20,12 @@
         /// <param name="data">The data to write.</param>
         void WriteTable(DataTable data);
 
+        /// <summary>
+        /// Deletes a table from the database.
+        /// </summary>
+        /// <param name="tableName">Name of the table to be deleted.</param>
+        void DeleteTable(string tableName);
+
         /// <summary>Delete all data in datastore, except for checkpointed data.</summary>
         void Empty();
 
@@ -35,6 +41,11 @@
             /// <summary>Revert a checkpoint.</summary>
         /// <param name="name">Name of checkpoint to revert to.</param>
         void RevertCheckpoint(string name);
+
+        /// <summary>Set a checkpoint show on graphs flag.</summary>
+        /// <param name="name">Name of checkpoint.</param>
+        /// <param name="showGraphs">Show graphs?</param>
+        void SetCheckpointShowGraphs(string name, bool showGraphs);
 
         /// <summary>Wait for all records to be written.</summary>
         void WaitForIdle();

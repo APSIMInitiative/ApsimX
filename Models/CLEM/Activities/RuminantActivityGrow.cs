@@ -146,6 +146,7 @@ namespace Models.CLEM.Activities
             ind.MilkIntakePotential = 0;
 
             // calculate milk intake shortfall for sucklings
+            // all in units per day and multiplied at end of this section
             if (!ind.Weaned)
             {
                 // potential milk intake/animal/day
@@ -160,6 +161,8 @@ namespace Models.CLEM.Activities
                 {
                     potentialIntake = Math.Max(0.0, ind.Weight * ind.BreedParams.MaxJuvenileIntake - ind.MilkIntake * ind.BreedParams.ProportionalDiscountDueToMilk);
                 }
+
+                ind.MilkIntake *= 30.4;
             }
             else
             {
@@ -614,7 +617,7 @@ namespace Models.CLEM.Activities
                     mortalityRate = 1 - (1 - ind.BreedParams.MortalityBase) * (1 - Math.Exp(Math.Pow(-(ind.BreedParams.MortalityCoefficient * (ind.Weight / ind.NormalisedAnimalWeight - ind.BreedParams.MortalityIntercept)), ind.BreedParams.MortalityExponent)));
                 }
                 // convert mortality from annual (calculated) to monthly (applied).
-                if (ZoneCLEM.RandomGenerator.NextDouble() <= (mortalityRate/12))
+                if (RandomNumberGenerator.Generator.NextDouble() <= (mortalityRate/12))
                 {
                     ind.Died = true;
                 }

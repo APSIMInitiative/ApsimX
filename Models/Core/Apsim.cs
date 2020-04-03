@@ -615,7 +615,7 @@
         public class ModelDescription : IComparable<ModelDescription>
         {
             /// <summary>Name of resource.</summary>
-            private readonly string resourceString;
+            public string ResourceString {get; private set; }
 
             /// <summary>Constructor.</summary>
             public ModelDescription(Type t) 
@@ -629,7 +629,7 @@
             { 
                 ModelType = t;
                 ModelName = name;
-                resourceString = resourceName; 
+                ResourceString = resourceName; 
             }
 
             /// <summary>Type of model.</summary>

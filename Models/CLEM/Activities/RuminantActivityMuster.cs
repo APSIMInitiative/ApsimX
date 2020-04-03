@@ -41,7 +41,7 @@ namespace Models.CLEM.Activities
         public bool PerformAtStartOfSimulation { get; set; }
 
         /// <summary>
-        /// Determines whether sucklings are automatically mustered with the mother or seperated
+        /// Determines whether sucklings are automatically mustered with the mother or separated
         /// </summary>
         [Description("Move sucklings with mother")]
         [Required]

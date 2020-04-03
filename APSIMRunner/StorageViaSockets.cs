@@ -113,5 +113,15 @@
         {
             throw new NotImplementedException();
         }
+
+        public void DeleteTable(string tableName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetCheckpointShowGraphs(string name, bool showGraphs)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -62,6 +62,15 @@ namespace UserInterface.Presenters
         {
             try
             {
+                try
+                {
+                    RemoveEmptyRows();
+                }
+                catch (Exception err)
+                {
+                    presenter.MainPresenter.ShowError(err);
+                }
+
                 base.Detach();
                 grid.CellsChanged -= OnCellsChanged;
                 presenter.CommandHistory.ModelChanged -= OnModelChanged;
@@ -267,7 +276,11 @@ namespace UserInterface.Presenters
         private object GetCellValue(int row, int column)
         {
             VariableProperty property = properties[column];
-            object value = (property.Value as Array)?.GetValue(row);
+            Array arr = property.Value as Array;
+            if (arr == null || arr.Length <= row)
+                return null;
+
+            object value = arr.GetValue(row);
             if (value == null)
                 return null;
 
@@ -348,14 +361,7 @@ namespace UserInterface.Presenters
         private void SetPropertyValue(ChangeProperty changedProperty)
         {
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
-            try
-            {
-                presenter.CommandHistory.Add(changedProperty);
-            }
-            catch (Exception err)
-            {
-                presenter.MainPresenter.ShowError(err);
-            }
+            presenter.CommandHistory.Add(changedProperty);
             presenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
@@ -529,11 +535,16 @@ namespace UserInterface.Presenters
                     if (change.NewValue == change.OldValue)
                         continue; // silently fail
 
+                    if (change.RowIndex >= newArray.Length && string.IsNullOrEmpty(change.NewValue))
+                        continue;
+
                     // If the user has entered data into a new row, we will need to
                     // resize all of the array properties.
                     changes.AddRange(CheckArrayLengths(change));
 
-                    object element = ReflectionUtilities.StringToObject(property.DataType.GetElementType(), change.NewValue);
+                    // Need to convert user input to a string using the current
+                    // culture.
+                    object element = ReflectionUtilities.StringToObject(property.DataType.GetElementType(), change.NewValue, CultureInfo.CurrentCulture);
                     if (newArray.Length <= change.RowIndex)
                         Resize(ref newArray, change.RowIndex + 1);
 
@@ -564,10 +575,82 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Deletes a row of data from all properties.
-        /// Returns a list of change property objects.
+        /// Remove all empty rows - that is, resize all property arrays
+        /// to remove elements where each array has NaN at a given
+        /// index.
+        /// 
+        /// E.g. if each array has NaN at the 3rd and 4th indices,
+        /// the arrays will all be resized to remove these elements.
         /// </summary>
-        /// <param name="row">Index of the row to be deleted.</param>
+        /// <returns></returns>
+        private bool RemoveEmptyRows()
+        {
+            int numRows = properties.Max(p => (p.Value as Array)?.Length ?? 0);
+
+            // First, check which rows need to be deleted.
+            List<int> rowsToDelete = new List<int>();
+            for (int i = 0; i < numRows; i++)
+                if (IsEmptyRow(i))
+                    rowsToDelete.Add(i);
+
+            if (rowsToDelete == null || rowsToDelete.Count < 1)
+                return false;
+
+            // Ideally, the entire change would be undoable in a single
+            // click. Unfortunately, this is not possible if the rows
+            // to be deleted are not all contiguous - e.g. if we want
+            // to delete rows 3, 4, 6, and 7. We can't just delete rows
+            // 3-7 because we want to keep row 5. We also can't delete
+            // rows 3-4, then 6-7 because the array indices will all
+            // change after we delete rows 3 and 4.
+            int from = rowsToDelete[0];
+            int numDeleted = 0;
+            for (int i = 0; i < rowsToDelete.Count; i++)
+            {
+                // Delete this batch of rows iff we've reached the last
+                // row to be deleted or there's a gap before the next
+                // row (ie next row to be deleted is not the row
+                // immediately below this one).
+                if (i == rowsToDelete.Count - 1 || rowsToDelete[i] + 1 != rowsToDelete[i + 1])
+                {
+                    // Need to subtract number of rows already deleted
+                    // from the to/from indices. E.g. if we've deleted
+                    // rows 3-4, the rows which were originally at
+                    // indices 6-7 will now be at indices 4-5.
+                    int to = rowsToDelete[i];
+                    SetPropertyValue(new ChangeProperty(DeleteRows(from - numDeleted, to - numDeleted)));
+                    numDeleted += to - from;
+                    if (i < rowsToDelete.Count - 1)
+                        from = rowsToDelete[i + 1];
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Returns true iff a given row is empty.
+        /// </summary>
+        /// <param name="row">The row to check.</param>
+        private bool IsEmptyRow(int row)
+        {
+            // Iterate over columns (each property is shown in its own column).
+            for (int j = 0; j < properties.Count; j++)
+                if (!string.IsNullOrEmpty(GetCellValue(row, j)?.ToString()))
+                    return false;
+
+            return true;
+        }
+
+        /// <summary>
+        /// Deletes a row of data from all properties.
+        /// Note that this method does not actually perform the
+        /// deletion, but instead returns a list of change property
+        /// objects which may be passed into the ChangeProperty
+        /// constructor and executed to be undoable in a single click.
+        /// </summary>
+        /// <param name="from">Index of the first row to be deleted.</param>
+        /// <param name="to">Index of the last row to be deleted.</param>
         private List<ChangeProperty.Property> DeleteRows(int from, int to)
         {
             if (from > to)

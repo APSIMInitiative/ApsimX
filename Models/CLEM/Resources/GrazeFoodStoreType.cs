@@ -458,7 +458,6 @@ namespace Models.CLEM.Resources
                     // expecting a GrazeFoodStoreResource (PastureManage) or FoodResourcePacket (CropManage) or Double from G-Range
                     throw new Exception(String.Format("ResourceAmount object of type {0} is not supported in Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
             }
-            pool.Growth += pool.Amount;
             if (pool.Amount > 0)
             {
                 // allow decaying or no pools currently available
@@ -671,6 +670,7 @@ namespace Models.CLEM.Resources
         protected virtual void OnEcologicalIndicatorsCalculated(EventArgs e)
         {
             EcologicalIndicatorsCalculated?.Invoke(this, e);
+            CurrentEcologicalIndicators.Reset();
         }
 
         /// <summary>

@@ -74,7 +74,7 @@ namespace Models.PMF.Phen
                 if (ProgressionForTimeStep > 0.0)
                 {
                     proceedToNextPhase = true;
-                    propOfDayToUse = (ProgressThroughPhase - Target) / ProgressionForTimeStep;
+                    propOfDayToUse *= (ProgressThroughPhase - Target) / ProgressionForTimeStep;
                     ProgressionForTimeStep *= (1 - propOfDayToUse);
                 }
                 ProgressThroughPhase = Target;
@@ -86,13 +86,6 @@ namespace Models.PMF.Phen
         /// <summary>Resets the phase.</summary>
         public void ResetPhase() { ProgressThroughPhase = 0.0; }
 
-        /// <summary>Writes the summary.</summary>
-        /// <param name="writer">The text writer.</param>
-        public void WriteSummary(TextWriter writer)
-        {
-            writer.WriteLine("      " + Name);
-            writer.WriteLine(string.Format("         Target                    = {0,8:F0} (dd)", Target));
-        }
 
         // 4. Private method
         //-----------------------------------------------------------------------------------------------------------------
@@ -116,16 +109,16 @@ namespace Models.PMF.Phen
                 tags.Add(new AutoDocumentation.Heading(Name + " Phase", headingLevel));
 
                 // write description of this class
-                tags.Add(new AutoDocumentation.Paragraph("This phase goes from " + Start + " to " + End + ". It uses a <i>ThermalTime Target</i> "
-                    + "to determine the duration between development <i>Stages</i>.  <i>ThermalTime</i> is accumulated until the <i>Target</i> is "
-                    + "met and remaining <i>ThermalTime</i> is forwarded to the next phase.", indent));
+                tags.Add(new AutoDocumentation.Paragraph("This <i>phase</i> goes from " + Start + " to " + End + ". It uses a <i>Target</i> "
+                    + "to determine the duration between development <i>Stages</i>.  Daily <i>progress</i> is accumulated until the <i>Target</i> is "
+                    + "met and remaining fraction of the day is forwarded to the next phase.", indent));
 
                 // write memos
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 // write intro to children
-                tags.Add(new AutoDocumentation.Paragraph("<i>ThermalTime Target</i> and the <i>Progression</i> toward " + End + " are described as follow:", indent));
+                tags.Add(new AutoDocumentation.Paragraph(" The <i>Target</i> and the daily <i>Progression</i> toward " + End + " are described as follow:", indent));
 
                 // write children
                 foreach (IModel child in Apsim.Children(this, typeof(IFunction)))

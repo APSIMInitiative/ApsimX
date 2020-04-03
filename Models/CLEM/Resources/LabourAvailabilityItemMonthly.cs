@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Models.CLEM.Resources
 {
@@ -20,7 +21,7 @@ namespace Models.CLEM.Resources
     [Description("An individual labour availability item with monthly days available")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Labour/LabourAvailabilityItemMonthly.htm")]
-    public class LabourAvailabilityItemMonthly : LabourSpecificationItem
+    public class LabourAvailabilityItemMonthly : LabourSpecificationItem, IFilterGroup
     {
         /// <summary>
         /// Monthly values. 
@@ -29,6 +30,12 @@ namespace Models.CLEM.Resources
         [Description("Availability each month of the year")]
         [Required, ArrayItemCount(12)]
         public double[] MonthlyValues { get; set; }
+
+        /// <summary>
+        /// Combined ML ruleset for LINQ expression tree
+        /// </summary>
+        [XmlIgnore]
+        public object CombinedRules { get; set; } = null;
 
         /// <summary>
         /// Provide the monthly labour availability

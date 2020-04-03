@@ -7,15 +7,45 @@
     using System.Linq;
     using System.Collections.Generic;
 
-    /// <summary>A micro climate wrapper around a Zone instance.</summary>
+    /// <summary>
+    /// A micro climate wrapper around a Zone instance.
+    /// </summary>
+    /// <remarks>
+    /// We need to store Radn, MaxT and MinT in here rather than weather because
+    /// of timestep issues. e.g. A manager module (in DoManagement) asks for 
+    /// CanopyCover from this zone. It is:
+    ///    RadiationIntercepted (yesterdays value) / weather.Radn (todays value)
+    /// RadiationIntercepted isn't updated until after DoManagement.
+    /// </remarks>
     [Serializable]
     public class MicroClimateZone
     {
         /// <summary>The clock model.</summary>
         private Clock clock;
 
-        /// <summary>The weather model.</summary>
-        private IWeather weather;
+        /// <summary>Solar radiation.</summary>
+        private double Radn;
+
+        /// <summary>Maximum temperature.</summary>
+        private double MaxT;
+
+        /// <summary>Maximum temperature.</summary>
+        private double MinT;
+
+        /// <summary>Rainfall.</summary>
+        private double Rain;
+
+        /// <summary>Vapour pressure.</summary>
+        private double VP;
+
+        /// <summary>Air pressure.</summary>
+        private double AirPressure;
+
+        /// <summary>Wind.</summary>
+        private double Wind;
+
+        /// <summary>Latitude.</summary>
+        private double Latitude;
 
         /// <summary>The surface organic matter model.</summary>
         private ISurfaceOrganicMatter surfaceOM;
@@ -131,18 +161,22 @@
         /// <summary>The dry leaf time fraction</summary>
         public double DryLeafFraction;
 
+        /// <summary>The height difference between canopies required for a new layer to be created (m).</summary>
+        public double MinimumHeightDiffForNewLayer { get; set; }
+
+
         /// <summary>Gets or sets the component data.</summary>
         public List<MicroClimateCanopy> Canopies = new List<MicroClimateCanopy>();
 
         /// <summary>Constructor.</summary>
         /// <param name="clockModel">The clock model.</param>
-        /// <param name="weatherModel">The weather model.</param>
         /// <param name="zoneModel">The zone model.</param>
-        public MicroClimateZone(Clock clockModel, IWeather weatherModel, Zone zoneModel)
+        /// <param name="minHeightDiffForNewLayer">Minimum canopy height diff for new layer.</param>
+        public MicroClimateZone(Clock clockModel, Zone zoneModel, double minHeightDiffForNewLayer)
         {
             clock = clockModel;
-            weather = weatherModel;
             Zone = zoneModel;
+            MinimumHeightDiffForNewLayer = minHeightDiffForNewLayer;
             canopyModels = Apsim.ChildrenRecursively(Zone, typeof(ICanopy)).Cast<ICanopy>();
             modelsThatHaveCanopies = Apsim.ChildrenRecursively(Zone, typeof(IHaveCanopy)).Cast<IHaveCanopy>();
             soilWater = Apsim.Find(Zone, typeof(ISoilWater)) as ISoilWater;
@@ -181,6 +215,11 @@
                 return totalInterception;
             }
         }
+
+        /// <summary>Gets the total canopy cover.</summary>
+        [Description("Total canopy cover (0-1)")]
+        [Units("0-1")]
+        public double CanopyCover {  get { return RadiationInterception / Radn; } }
 
         /// <summary>Gets the radiation term of PET.</summary>
         [Description("Radiation component of PET")]
@@ -225,12 +264,22 @@
         [Units("MJ/m2")]
         public double NetShortWaveRadiation
         {
-            get { return weather == null ? 0.0 : weather.Radn * (1.0 - Albedo); }
+            get { return Radn * (1.0 - Albedo); }
         }
 
         /// <summary>Called at the start of day to initialise the zone for the day.</summary>
-        public void OnStartOfDay()
+        /// <param name="weatherModel">The weather model.</param>
+        public void DailyInitialise(IWeather weatherModel)
         {
+            Radn = weatherModel.Radn;
+            MaxT = weatherModel.MaxT;
+            MinT = weatherModel.MinT;
+            Rain = weatherModel.Rain;
+            VP = weatherModel.VP;
+            AirPressure = weatherModel.AirPressure;
+            Latitude = weatherModel.Latitude;
+            Wind = weatherModel.Wind;
+
             Albedo = 0;
             Emissivity = 0;
             NetLongWaveRadiation = 0;
@@ -278,13 +327,13 @@
             for (int i = numLayers - 1; i >= 0; i += -1)
                 for (int j = 0; j <= Canopies.Count - 1; j++)
                 {
-                    Albedo += MathUtilities.Divide(Canopies[j].Rs[i], weather.Radn, 0.0) * Canopies[j].Canopy.Albedo;
-                    Emissivity += MathUtilities.Divide(Canopies[j].Rs[i], weather.Radn, 0.0) * canopyEmissivity;
+                    Albedo += MathUtilities.Divide(Canopies[j].Rs[i], Radn, 0.0) * Canopies[j].Canopy.Albedo;
+                    Emissivity += MathUtilities.Divide(Canopies[j].Rs[i], Radn, 0.0) * canopyEmissivity;
                     sumRs += Canopies[j].Rs[i];
                 }
 
-            Albedo += (1.0 - MathUtilities.Divide(sumRs, weather.Radn, 0.0)) * soilAlbedo;
-            Emissivity += (1.0 - MathUtilities.Divide(sumRs, weather.Radn, 0.0)) * soilEmissivity;
+            Albedo += (1.0 - MathUtilities.Divide(sumRs, Radn, 0.0)) * soilAlbedo;
+            Emissivity += (1.0 - MathUtilities.Divide(sumRs, Radn, 0.0)) * soilEmissivity;
         }
 
         /// <summary>
@@ -294,16 +343,16 @@
         /// <param name="dayLengthEvap">This is the length of time within the day during which the sun is above the horizon.</param>
         public void CalculateLongWaveRadiation(double dayLengthLight, double dayLengthEvap)
         {
-            double sunshineHours = CalcSunshineHours(weather.Radn, dayLengthLight, weather.Latitude, clock.Today.DayOfYear);
+            double sunshineHours = CalcSunshineHours(Radn, dayLengthLight, Latitude, clock.Today.DayOfYear);
             double fractionClearSky = MathUtilities.Divide(sunshineHours, dayLengthLight, 0.0);
-            double averageT = CalcAverageT(weather.MinT, weather.MaxT);
+            double averageT = CalcAverageT(MinT, MaxT);
             NetLongWaveRadiation = LongWave(averageT, fractionClearSky, Emissivity) * dayLengthEvap * hr2s / 1000000.0;             // W to MJ
 
             // Long Wave Balance Proportional to Short Wave Balance
             // ====================================================
             for (int i = numLayers - 1; i >= 0; i += -1)
                 for (int j = 0; j <= Canopies.Count - 1; j++)
-                    Canopies[j].Rl[i] = MathUtilities.Divide(Canopies[j].Rs[i], weather.Radn, 0.0) * NetLongWaveRadiation;
+                    Canopies[j].Rl[i] = MathUtilities.Divide(Canopies[j].Rs[i], Radn, 0.0) * NetLongWaveRadiation;
         }
 
         /// <summary>
@@ -313,20 +362,20 @@
         public void CalculateSoilHeatRadiation(double SoilHeatFluxFraction)
         {
             double radnint = sumRs;   // Intercepted SW radiation
-            SoilHeatFlux = CalculateSoilHeatFlux(weather.Radn, radnint, SoilHeatFluxFraction);
+            SoilHeatFlux = CalculateSoilHeatFlux(Radn, radnint, SoilHeatFluxFraction);
 
             // SoilHeat balance Proportional to Short Wave Balance
             // ====================================================
             for (int i = numLayers - 1; i >= 0; i += -1)
                 for (int j = 0; j <= Canopies.Count - 1; j++)
-                    Canopies[j].Rsoil[i] = MathUtilities.Divide(Canopies[j].Rs[i], weather.Radn, 0.0) * SoilHeatFlux;
+                    Canopies[j].Rsoil[i] = MathUtilities.Divide(Canopies[j].Rs[i], Radn, 0.0) * SoilHeatFlux;
         }
 
         /// <summary>Calculate the canopy conductance for system compartments</summary>
         /// <param name="dayLengthEvap">This is the length of time within the day during which the sun is above the horizon.</param>
         public void CalculateGc(double dayLengthEvap)
         {
-            double Rin = weather.Radn;
+            double Rin = Radn;
 
             for (int i = numLayers - 1; i >= 0; i += -1)
             {
@@ -349,7 +398,7 @@
         {
             double sumDeltaZ = MathUtilities.Sum(DeltaZ);
             double sumLAI = MathUtilities.Sum(LAItotsum);
-            double totalGa = AerodynamicConductanceFAO(weather.Wind, ReferenceHeight, sumDeltaZ, sumLAI);
+            double totalGa = AerodynamicConductanceFAO(Wind, ReferenceHeight, sumDeltaZ, sumLAI);
 
             for (int i = 0; i <= numLayers - 1; i++)
                 for (int j = 0; j <= Canopies.Count - 1; j++)
@@ -372,8 +421,8 @@
                     sumLAItot += Canopies[j].LAItot[i];
                 }
 
-            double totalInterception = a_interception * Math.Pow(weather.Rain, b_interception) + c_interception * sumLAItot + d_interception;
-            totalInterception = Math.Max(0.0, Math.Min(0.99 * weather.Rain, totalInterception));
+            double totalInterception = a_interception * Math.Pow(Rain, b_interception) + c_interception * sumLAItot + d_interception;
+            totalInterception = Math.Max(0.0, Math.Min(0.99 * Rain, totalInterception));
 
             for (int i = 0; i <= numLayers - 1; i++)
                 for (int j = 0; j <= Canopies.Count - 1; j++)
@@ -381,7 +430,7 @@
 
             if (soilWater != null)
             {
-                soilWater.PotentialInfiltration = Math.Max(0, weather.Rain - totalInterception);
+                soilWater.PotentialInfiltration = Math.Max(0, Rain - totalInterception);
                 soilWater.PrecipitationInterception = totalInterception;
             }
         }
@@ -409,7 +458,7 @@
             netRadiation = Math.Max(0.0, netRadiation);
 
             double freeEvapGc = freeEvapGa * 1000000.0; // infinite surface conductance
-            double freeEvap = CalcPenmanMonteith(netRadiation, weather.MinT, weather.MaxT, weather.VP, weather.AirPressure, dayLengthEvap, freeEvapGa, freeEvapGc);
+            double freeEvap = CalcPenmanMonteith(netRadiation, MinT, MaxT, VP, AirPressure, dayLengthEvap, freeEvapGa, freeEvapGc);
 
             DryLeafFraction = 1.0 - MathUtilities.Divide(sumInterception * (1.0 - nightInterceptionFraction), freeEvap, 0.0);
             DryLeafFraction = Math.Max(0.0, DryLeafFraction);
@@ -420,8 +469,8 @@
                     netRadiation = 1000000.0 * ((1.0 - Albedo) * Canopies[j].Rs[i] + Canopies[j].Rl[i] + Canopies[j].Rsoil[i]);
                     netRadiation = Math.Max(0.0, netRadiation);
 
-                    Canopies[j].PETr[i] = CalcPETr(netRadiation * DryLeafFraction, weather.MinT, weather.MaxT, weather.AirPressure, Canopies[j].Ga[i], Canopies[j].Gc[i]);
-                    Canopies[j].PETa[i] = CalcPETa(weather.MinT, weather.MaxT, weather.VP, weather.AirPressure, dayLengthEvap * DryLeafFraction, Canopies[j].Ga[i], Canopies[j].Gc[i]);
+                    Canopies[j].PETr[i] = CalcPETr(netRadiation * DryLeafFraction, MinT, MaxT, AirPressure, Canopies[j].Ga[i], Canopies[j].Gc[i]);
+                    Canopies[j].PETa[i] = CalcPETa(MinT, MaxT, VP, AirPressure, dayLengthEvap * DryLeafFraction, Canopies[j].Ga[i], Canopies[j].Gc[i]);
                     Canopies[j].PET[i] = Canopies[j].PETr[i] + Canopies[j].PETa[i];
                 }
         }
@@ -431,7 +480,7 @@
         {
             for (int i = 0; i <= numLayers - 1; i++)
                 for (int j = 0; j <= Canopies.Count - 1; j++)
-                    Canopies[j].Omega[i] = CalcOmega(weather.MinT, weather.MaxT, weather.AirPressure, Canopies[j].Ga[i], Canopies[j].Gc[i]);
+                    Canopies[j].Omega[i] = CalcOmega(MinT, MaxT, AirPressure, Canopies[j].Ga[i], Canopies[j].Gc[i]);
         }
 
         /// <summary>Send an energy balance event</summary>
@@ -466,10 +515,10 @@
                 if (Canopies[j].Canopy != null)
                     CoverGreen += (1 - CoverGreen) * Canopies[j].Canopy.CoverGreen;
 
-            if (weather != null && soilWater != null && surfaceOM != null)
-                soilWater.Eo = AtmosphericPotentialEvaporationRate(weather.Radn,
-                                                             weather.MaxT,
-                                                             weather.MinT,
+            if (soilWater != null && surfaceOM != null)
+                soilWater.Eo = AtmosphericPotentialEvaporationRate(Radn,
+                                                             MaxT,
+                                                             MinT,
                                                              soilWater.Salb,
                                                              surfaceOM.Cover,
                                                              CoverGreen);
@@ -485,7 +534,7 @@
                 double HeightMetres = Math.Round(Canopies[compNo].Canopy.Height, 5) / 1000.0; // Round off a bit and convert mm to m } }
                 double DepthMetres = Math.Round(Canopies[compNo].Canopy.Depth, 5) / 1000.0; // Round off a bit and convert mm to m } }
                 double canopyBase = HeightMetres - DepthMetres;
-                if (Array.IndexOf(nodes, HeightMetres) == -1)
+                if (IsNewLayer(nodes, HeightMetres, numNodes))
                 {
                     nodes[numNodes] = HeightMetres;
                     numNodes = numNodes + 1;
@@ -524,6 +573,24 @@
             }
             for (int i = 0; i <= numNodes - 2; i++)
                 DeltaZ[i] = nodes[i + 1] - nodes[i];
+        }
+
+        /// <summary>
+        /// Create a new layer for the specified height?
+        /// </summary>
+        /// <param name="nodes">The existing layer nodes.</param>
+        /// <param name="height">The height (m).</param>
+        /// <param name="numNodes">Number of nodes in nodes array.</param>
+        private bool IsNewLayer(double[] nodes, double height, int numNodes)
+        {
+            // Find height in nodes array within tolerance (minimumHeightDiffForNewLayer)
+            bool found = false;
+            for (int i = 1; i < numNodes; i++)
+                if (Math.Abs(nodes[i] - height) < MinimumHeightDiffForNewLayer)
+                    found = true;
+
+            // If it wasn't found then return true to signal create
+            return !found;
         }
 
         /// <summary>Break the components into layers</summary>
@@ -604,7 +671,7 @@
             double extraTerrestrialRadn = 37.6 * relativeDistance * (sunsetAngle * Math.Sin(latitude * deg2Rad) * Math.Sin(solarDeclination) + Math.Cos(latitude * deg2Rad) * Math.Cos(solarDeclination) * Math.Sin(sunsetAngle));
             double maxRadn = 0.75 * extraTerrestrialRadn;
             // finally calculate the sunshine hours as the ratio of maximum possible radiation
-            return Math.Min(maxSunHrs * weather.Radn / maxRadn, maxSunHrs);
+            return Math.Min(maxSunHrs * Radn / maxRadn, maxSunHrs);
         }
 
         private double CalcAverageT(double mint, double maxt)

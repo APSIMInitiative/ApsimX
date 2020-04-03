@@ -68,14 +68,14 @@
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="App.config" />
     <EmbeddedResource Include="Resources\Glade\ExplorerView.glade">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="Cloud\AzureSettings.settings">
+    <None Include="Cloud\Azure\AzureSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>AzureSettings.Designer.cs</LastGenOutput>
     </None>
@@ -126,6 +126,7 @@
     <EmbeddedResource Include="Resources\Glade\FactorView.glade" />
     <EmbeddedResource Include="Resources\Glade\WeatherDownload.glade" />
     <EmbeddedResource Include="Resources\Glade\AddModelView.glade" />
+    <EmbeddedResource Include="Resources\Glade\CheckpointView.glade" />
     <None Include="Resources\InputNextBackView.glade" />
     <EmbeddedResource Include="Resources\Glade\StringEntryForm.glade" />
     <None Include="Resources\Report.xshd" />
@@ -174,33 +175,30 @@
     <Compile Include="Classes\Intellisense\OverrideCompletionData.cs" />
     <Compile Include="Classes\Intellisense\ScriptProvider.cs" />
     <Compile Include="Classes\Intellisense\VariableCompletionData.cs" />
-    <Compile Include="Cloud\APSIMJob.cs" />
-    <Compile Include="Cloud\ApsimJobManagerExtension.cs" />
-    <Compile Include="Cloud\ApsimJobPrepExtension.cs" />
-    <Compile Include="Cloud\AzureCredentialsSetup.cs" />
-    <Compile Include="Cloud\AzureResultsDownloader.cs" />
-    <Compile Include="Cloud\AzureSettings.Designer.cs">
+    <Compile Include="Cloud\Azure\AzureCredentialsSetup.cs" />
+    <Compile Include="Cloud\Azure\AzureExtensions.cs" />
+    <Compile Include="Cloud\Azure\AzureSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>AzureSettings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Cloud\BatchConstants.cs" />
-    <Compile Include="Cloud\BatchCredentials.cs" />
-    <Compile Include="Cloud\DownloadWindow.cs" />
-    <Compile Include="Cloud\FileUploader.cs" />
-    <Compile Include="Cloud\ICloudJobPresenter.cs" />
+    <Compile Include="Cloud\Azure\AzureInterface.cs" />
+    <Compile Include="Cloud\Azure\BatchConstants.cs" />
+    <Compile Include="Cloud\Azure\Licence.cs" />
+    <Compile Include="Cloud\DownloadOptions.cs" />
+    <Compile Include="EventArguments\CustomDataEventArgs.cs" />
+    <Compile Include="Views\CloudDownloadView.cs" />
+    <Compile Include="Cloud\ICloudInterface.cs" />
     <Compile Include="Cloud\JobDetails.cs" />
     <Compile Include="Cloud\JobParameters.cs" />
-    <Compile Include="Cloud\PoolSettings.cs" />
-    <Compile Include="Cloud\StorageConstants.cs" />
-    <Compile Include="Cloud\StorageCredentials.cs" />
+    <Compile Include="Cloud\Azure\StorageConstants.cs" />
     <Compile Include="CommandHistory.cs" />
     <Compile Include="Commands\AddModelCommand.cs" />
     <Compile Include="Commands\BibTeX.cs" />
     <Compile Include="Commands\ChangeProperty.cs" />
-    <Compile Include="Commands\CreateModelDescriptionDocCommand.cs" />
+    <Compile Include="Commands\CreateParamsInputsOutputsDocCommand.cs" />
     <Compile Include="Commands\DeleteModelCommand.cs" />
-    <Compile Include="Commands\CreateDocCommand.cs" />
+    <Compile Include="Commands\CreateFileDocumentationCommand.cs" />
     <Compile Include="Commands\IExplorerPresenter.cs" />
     <Compile Include="Commands\MoveModelCommand.cs" />
     <Compile Include="Commands\MoveModelUpDownCommand.cs" />
@@ -209,6 +207,7 @@
     <Compile Include="Commands\RunCommand.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
     <Compile Include="Commands\SupplementCommands.cs" />
+    <Compile Include="EventArguments\AsyncEventHandler.cs" />
     <Compile Include="EventArguments\ErrorArgs.cs" />
     <Compile Include="EventArguments\FileActionArgs.cs" />
     <Compile Include="EventArguments\GridCellChangedArgs.cs" />
@@ -222,6 +221,7 @@
     <Compile Include="EventArguments\KeysArgs.cs" />
     <Compile Include="EventArguments\LegendClickArgs.cs" />
     <Compile Include="EventArguments\NeedContextItemsArgs.cs" />
+    <Compile Include="Interfaces\ICloudJobView.cs" />
     <Compile Include="Interfaces\IGraphPanelView.cs" />
     <Compile Include="Interfaces\IMethodCompletionView.cs" />
     <Compile Include="Interfaces\IPropertyTreeView.cs" />
@@ -246,6 +246,11 @@
     <Compile Include="Presenters\GraphPanelPresenter.cs" />
     <Compile Include="Presenters\ProfileGridPresenter.cs" />
     <Compile Include="Presenters\PropertyAndTablePresenter.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Utility\ApsimFileMetadata.cs" />
     <Compile Include="Presenters\TernaryGraphPresenter.cs" />
     <Compile Include="Utility\Colour.cs" />
@@ -300,11 +305,10 @@
     <Compile Include="Main.cs" />
     <Compile Include="Menus\ContextMenu.cs" />
     <Compile Include="Menus\MainMenu.cs" />
-    <Compile Include="Presenters\AddFunctionPresenter.cs" />
     <Compile Include="Presenters\CheckpointsPresenter.cs" />
     <Compile Include="Presenters\AddModelPresenter.cs" />
     <Compile Include="Presenters\AxisPresenter.cs" />
-    <Compile Include="Presenters\AzureJobDisplayPresenter.cs" />
+    <Compile Include="Presenters\CloudJobPresenter.cs" />
     <Compile Include="Presenters\CultivarPresenter.cs" />
     <Compile Include="Presenters\DataStorePresenter.cs" />
     <Compile Include="Presenters\ExplorerPresenter.cs" />
@@ -314,7 +318,6 @@
     <Compile Include="Presenters\GenericPresenter.cs" />
     <Compile Include="Presenters\GraphPresenter.cs" />
     <Compile Include="Presenters\IExportable.cs" />
-    <Compile Include="Presenters\INewCloudJobPresenter.cs" />
     <Compile Include="Presenters\InitialWaterPresenter.cs" />
     <Compile Include="Presenters\InputPresenter.cs" />
     <Compile Include="Presenters\IntellisensePresenter.cs" />
@@ -327,7 +330,7 @@
     <Compile Include="Presenters\MemoPresenter.cs" />
     <Compile Include="Presenters\MetDataPresenter.cs" />
     <Compile Include="Presenters\TablePresenter.cs" />
-    <Compile Include="Presenters\NewAzureJobPresenter.cs" />
+    <Compile Include="Presenters\RunOnCloudPresenter.cs" />
     <Compile Include="Presenters\OperationsPresenter.cs" />
     <Compile Include="Presenters\ProfilePresenter.cs" />
     <Compile Include="Presenters\GridPresenter.cs" />
@@ -342,11 +345,6 @@
     <Compile Include="Presenters\TreeProxyPresenter.cs" />
     <Compile Include="Presenters\XYPairsPresenter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Utility\ColumnXYSeries.cs" />
     <Compile Include="Utility\Configuration.cs" />
     <Compile Include="Utility\Excel.cs" />
@@ -360,9 +358,8 @@
     <Compile Include="Views\AxisView.cs" />
     <Compile Include="Views\ButtonView.cs" />
     <Compile Include="Views\CheckBoxView.cs" />
-    <Compile Include="Views\CloudJobDisplayView.cs" />
+    <Compile Include="Views\CloudJobView.cs" />
     <Compile Include="Views\ColourDropDownView.cs" />
-    <Compile Include="Views\DataStoreView.cs" />
     <Compile Include="Views\DoubleEditView.cs" />
     <Compile Include="Views\DropDownView.cs" />
     <Compile Include="Views\EditBoxView.cs" />
@@ -390,7 +387,7 @@
     <Compile Include="Views\ManagerView.cs" />
     <Compile Include="Views\MapView.cs" />
     <Compile Include="Views\MemoView.cs" />
-    <Compile Include="Views\NewAzureJobView.cs" />
+    <Compile Include="Views\RunOnCloudView.cs" />
     <Compile Include="Views\ProfileView.cs" />
     <Compile Include="Views\ReportView.cs" />
     <Compile Include="Views\SeriesView.cs" />
@@ -474,20 +471,29 @@
     <EmbeddedResource Include="Resources\MenuImages\Upgrade.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\notes.wav" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Resources\PresenterPictures\CircularZone.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\MigrantDestinationPhase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ProgenyDestinationPhase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Infestation.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\LifeCyclePhase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\WeatherSampler.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\WaterBalance.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SimpleLeafAppearancePhase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\DocumentCheck.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Document.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RainfallShuffler.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourAERelationship.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RandomNumberGenerator.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourActivityFeedTargetPurchase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\Market.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\ProtectedDivideFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\StorageNDemandFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\ShadedBarsOnGraph.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\SimpleGrazing.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourAdultEquivalentRelationship.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\GraphPanel.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\AGPWhiteClover.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\AGPRyegrass.png" />
@@ -553,7 +559,6 @@
     <EmbeddedResource Include="Resources\TreeViewImages\HIReproductiveOrgan.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SwimSoluteParameters.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Swim3.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\LifeStageImmigrationProcess.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Morris.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Plantain.png" />
     <EmbeddedResource Include="Resources\TwoStageEvaporation.png" />
@@ -654,10 +659,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\Flow.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\NutrientPool.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Nutrient.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\LifeStageReproductionProcess.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\LifeStageProcess.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LifeCycle.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\LifeStage.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\EventNamesOnGraph.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Chicory.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\GenericBelowGroundOrgan.png" />
@@ -774,6 +776,7 @@
     <EmbeddedResource Include="Resources\AgPastureTissueDynamics.png" />
     <EmbeddedResource Include="Resources\MenuImages\Settings.png" />
     <EmbeddedResource Include="Resources\LargeImages\WhiteClover.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\G_Range.png" />
     <EmbeddedResource Include="Resources\RadInt.jpg" />
     <EmbeddedResource Include="Resources\SyntaxHighlighting\Report.xml" />
     <EmbeddedResource Include="Resources\TreeViewImages\AGPBrownTop.png" />
@@ -785,11 +788,15 @@
     <EmbeddedResource Include="Resources\TreeViewImages\AGPRhodes.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\AGPTallFescue.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\AGPLucerne.png" />
+    <EmbeddedResource Include="Resources\Sounds\Fail.wav" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SimpleGrazing.png" />
+    <EmbeddedResource Include="Presenters\CLEM\Chart.min.js" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AccumulateCohortExpression.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />
     <None Include="Resources\Apsim1.png" />
-    <EmbeddedResource Include="Resources\success.wav" />
+    <EmbeddedResource Include="Resources\Sounds\Success.wav" />
     <None Include="Resources\XYPairsGraph.xml" />
     <None Include="Resources\window_delete.png" />
     <None Include="Resources\WaterGraph.xml" />
@@ -919,10 +926,6 @@
     <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj">
       <Project>{e243ae8d-35e3-4397-b180-ef1e8a91ae8c}</Project>
       <Name>APSIM.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Models\Importer\Importer.csproj">
-      <Project>{075f2644-f14e-4010-ba52-35e4b0011835}</Project>
-      <Name>Importer</Name>
     </ProjectReference>
     <ProjectReference Include="..\Models\Models.csproj">
       <Project>{a3e10705-f2bb-4182-a19c-7f63222584df}</Project>

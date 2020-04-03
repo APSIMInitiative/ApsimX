@@ -84,14 +84,14 @@ namespace Models.CLEM.Activities
             bool due = false;
             if (StartMonth <= EndMonth)
             {
-                if ((date.Month >= StartMonth) && (date.Month <= EndMonth))
+                if ((date.Month >= StartMonth) & (date.Month <= EndMonth))
                 {
                     due = true;
                 }
             }
             else
             {
-                if ((date.Month >= EndMonth) || (date.Month <= StartMonth))
+                if ((date.Month <= EndMonth) | (date.Month >= StartMonth))
                 {
                     due = true;
                 }
@@ -116,7 +116,6 @@ namespace Models.CLEM.Activities
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"filterborder clearfix\" style=\"opacity: " + ((this.Enabled) ? "1" : "0.4") + "\">";
             html += "\n<div class=\"filter\">";
             html += "Perform between ";
             if (StartMonth == 0)
@@ -143,7 +142,6 @@ namespace Models.CLEM.Activities
             {
                 html += " - DISABLED!";
             }
-            html += "\n</div>";
             return html;
         }
 
@@ -153,7 +151,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
-            return "";
+            return "</div>";
         }
 
         /// <summary>
@@ -162,7 +160,9 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
-            return "";
+            string html = "";
+            html += "\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
+            return html;
         }
     }
 }

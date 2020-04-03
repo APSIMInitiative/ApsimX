@@ -1,7 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 70,
+  "Version": 80,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-05",
   "Name": "Simulations",
   "Children": [
     {
@@ -29,6 +30,7 @@
         {
           "$type": "Models.PMF.Plant, Models",
           "CropType": "Wheat",
+          "IsAlive": false,
           "IsEnding": false,
           "DaysAfterEnding": 0,
           "ResourceName": null,
@@ -254,7 +256,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].Photoperiod.Value()",
+                          "VariableName": "[Phenology].Photoperiod",
                           "Name": "Photoperiod",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -311,7 +313,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].Vrn4.Value()",
+                              "VariableName": "[Phenology].Vrn4",
                               "Name": "If_Vrn4",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -320,7 +322,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].VernLag.Value()",
+                              "VariableName": "[Phenology].VernLag",
                               "Name": "IsLessThanLag",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -339,7 +341,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].DailyVernalisation.Value()",
+                              "VariableName": "[Phenology].DailyVernalisation",
                               "Name": "elseReturn_Vernalisation",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -367,7 +369,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].VernLag.Value()",
+                      "VariableName": "[Phenology].VernLag",
                       "Name": "MaxExpression",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -387,7 +389,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].DailyVernalisation.Value()",
+                          "VariableName": "[Phenology].DailyVernalisation",
                           "Name": "VernalisationConditioning",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -545,7 +547,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime.Value()",
+                      "VariableName": "[Phenology].ThermalTime",
                       "Name": "ThermalTime",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -574,7 +576,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime.Value()",
+                      "VariableName": "[Phenology].ThermalTime",
                       "Name": "Progression",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -587,7 +589,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Structure].MeanPhyllochron.Value()",
+                          "VariableName": "[Structure].MeanPhyllochron",
                           "Name": "Phyllochron",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -596,7 +598,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Structure].HaunStageTerminalSpikelet.Value()",
+                          "VariableName": "[Structure].HaunStageTerminalSpikelet",
                           "Name": "HSTS",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -639,7 +641,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime.Value()",
+                      "VariableName": "[Phenology].ThermalTime",
                       "Name": "ThermalTime",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -659,7 +661,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime.Value()",
+                      "VariableName": "[Phenology].ThermalTime",
                       "Name": "Progression",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -672,7 +674,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Structure].Phyllochron.BasePhyllochron.Value()",
+                          "VariableName": "[Structure].Phyllochron.BasePhyllochron",
                           "Name": "Phyllochron",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -685,7 +687,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].EarlyReproductiveLongDayBase.Value()",
+                              "VariableName": "[Phenology].EarlyReproductiveLongDayBase",
                               "Name": "LongDayBase",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -698,7 +700,6 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                  "XProperty": "[Phenology].Photoperiod.Value()",
                                   "Name": "PhotoPeriodResponse",
                                   "Children": [
                                     {
@@ -716,6 +717,15 @@
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Phenology].Photoperiod",
+                                      "Name": "XValue",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
                                     }
                                   ],
                                   "IncludeInDocumentation": true,
@@ -724,7 +734,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].EarlyReproductivePpSensitivity.Value()",
+                                  "VariableName": "[Phenology].EarlyReproductivePpSensitivity",
                                   "Name": "PpSensitivity",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -769,7 +779,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime.Value()",
+                      "VariableName": "[Phenology].ThermalTime",
                       "Name": "Progression",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -799,7 +809,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime.Value()",
+                      "VariableName": "[Phenology].ThermalTime",
                       "Name": "Progression",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -829,7 +839,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime.Value()",
+                      "VariableName": "[Phenology].ThermalTime",
                       "Name": "Progression",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -859,7 +869,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime.Value()",
+                      "VariableName": "[Phenology].ThermalTime",
                       "Name": "Progression",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -879,7 +889,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime.Value()",
+                      "VariableName": "[Phenology].ThermalTime",
                       "Name": "ThermalTime",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1029,7 +1039,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "ThermalTime",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1051,7 +1061,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Leaf].AppearedCohortNo",
                       "Name": "LeafStageFactor",
                       "Children": [
                         {
@@ -1079,6 +1088,15 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].AppearedCohortNo",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -1097,7 +1115,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Phenology].Photoperiod.Value()",
                       "Name": "PhotoPeriodEffect",
                       "Children": [
                         {
@@ -1113,6 +1130,15 @@
                             1.0
                           ],
                           "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].Photoperiod",
+                          "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -1153,7 +1179,6 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "XProperty": "[Structure].LeafTipsAppeared",
                               "Name": "PotentialBranchingRate",
                               "Children": [
                                 {
@@ -1179,6 +1204,15 @@
                                     20.0
                                   ],
                                   "Name": "XYPairs",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Structure].LeafTipsAppeared",
+                                  "Name": "XValue",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -1226,7 +1260,6 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Arbitrator].FN",
                           "Name": "NitrogenEffect",
                           "Children": [
                             {
@@ -1255,6 +1288,15 @@
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Arbitrator].FN",
+                              "Name": "XValue",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
                           "IncludeInDocumentation": true,
@@ -1263,7 +1305,6 @@
                         },
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Leaf].CoverTotal",
                           "Name": "CoverEffect",
                           "Children": [
                             {
@@ -1292,6 +1333,15 @@
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].CoverTotal",
+                              "Name": "XValue",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
                           "IncludeInDocumentation": true,
@@ -1300,7 +1350,6 @@
                         },
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Root].WaterTensionFactor",
                           "Name": "WaterStressEffect",
                           "Children": [
                             {
@@ -1314,6 +1363,15 @@
                                 1.0
                               ],
                               "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Root].WaterTensionFactor",
+                              "Name": "XValue",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -1350,7 +1408,6 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "XProperty": "[Structure].MeanTillerGrowthRate.Value()",
                               "Name": "MortalityPerDegDay",
                               "Children": [
                                 {
@@ -1368,6 +1425,15 @@
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Structure].MeanTillerGrowthRate",
+                                  "Name": "XValue",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
                                 }
                               ],
                               "IncludeInDocumentation": true,
@@ -1376,7 +1442,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].ThermalTime.Value()",
+                              "VariableName": "[Phenology].ThermalTime",
                               "Name": "ThermalTime",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -1404,7 +1470,6 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Phenology].Stage",
                       "Name": "PotentialHeight",
                       "Children": [
                         {
@@ -1428,6 +1493,15 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].Stage",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -1436,7 +1510,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Wheat].Leaf.Fw",
                       "Name": "WaterStress",
                       "Children": [
                         {
@@ -1450,6 +1523,15 @@
                             1.0
                           ],
                           "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Wheat].Leaf.Fw",
+                          "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -1486,7 +1568,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].ThermalTime.Value()",
+                          "VariableName": "[Phenology].ThermalTime",
                           "Name": "ThermalTime",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1520,7 +1602,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Structure].Phyllochron.Value()",
+                      "VariableName": "[Structure].Phyllochron",
                       "Name": "Phyllochron",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1543,7 +1625,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].MinimumLeafNumber.Value()",
+                          "VariableName": "[Phenology].MinimumLeafNumber",
                           "Name": "MinLeafNumber",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1556,7 +1638,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].VrnSensitivity.Value()",
+                              "VariableName": "[Phenology].VrnSensitivity",
                               "Name": "UnVernalisedLeaves",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -1579,7 +1661,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].Vrn1.Value()",
+                                  "VariableName": "[Phenology].Vrn1",
                                   "Name": "RelativeVrn1Expression",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -1602,7 +1684,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].PpSensitivity.Value()",
+                              "VariableName": "[Phenology].PpSensitivity",
                               "Name": "ShortPpLeaves",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -1611,7 +1693,6 @@
                             },
                             {
                               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "XProperty": "[Phenology].Photoperiod.Value()",
                               "Name": "PhotoPeriodReductionFactor",
                               "Children": [
                                 {
@@ -1625,6 +1706,15 @@
                                     0.0
                                   ],
                                   "Name": "XYPairs",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Phenology].Photoperiod",
+                                  "Name": "XValue",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -1804,7 +1894,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime.Value()",
+                      "VariableName": "[Phenology].ThermalTime",
                       "Name": "DailyThermalTimeValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1832,7 +1922,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Grain].NumberFunction.Value()",
+                              "VariableName": "[Grain].NumberFunction",
                               "Name": "NumberFunction",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -1841,7 +1931,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].GrainDevelopment.Target.Value()",
+                              "VariableName": "[Phenology].GrainDevelopment.Target",
                               "Name": "FillingDuration",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -1850,7 +1940,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].ThermalTime.Value()",
+                              "VariableName": "[Phenology].ThermalTime",
                               "Name": "ThermalTime",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -1863,7 +1953,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Grain].InitialGrainProportion.Value()",
+                                  "VariableName": "[Grain].InitialGrainProportion",
                                   "Name": "InitialProportion",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -1872,7 +1962,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Grain].MaximumPotentialGrainSize.Value()",
+                                  "VariableName": "[Grain].MaximumPotentialGrainSize",
                                   "Name": "MaximumSize",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -1906,7 +1996,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Grain].NumberFunction.Value()",
+                              "VariableName": "[Grain].NumberFunction",
                               "Name": "NumberFunction",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -1915,7 +2005,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].GrainFilling.Target.Value()",
+                              "VariableName": "[Phenology].GrainFilling.Target",
                               "Name": "FillingDuration",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -1924,7 +2014,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].ThermalTime.Value()",
+                              "VariableName": "[Phenology].ThermalTime",
                               "Name": "ThermalTime",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -1951,7 +2041,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Grain].InitialGrainProportion.Value()",
+                                      "VariableName": "[Grain].InitialGrainProportion",
                                       "Name": "InitialProportion",
                                       "Children": [],
                                       "IncludeInDocumentation": true,
@@ -1965,7 +2055,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Grain].MaximumPotentialGrainSize.Value()",
+                                  "VariableName": "[Grain].MaximumPotentialGrainSize",
                                   "Name": "MaximumSize",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -2027,7 +2117,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Grain].NumberFunction.Value()",
+                              "VariableName": "[Grain].NumberFunction",
                               "Name": "NumberFunction",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -2040,7 +2130,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].GrainDevelopment.Target.Value()",
+                                  "VariableName": "[Phenology].GrainDevelopment.Target",
                                   "Name": "FloweringToGrainFilling",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -2049,7 +2139,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].GrainFilling.Target.Value()",
+                                  "VariableName": "[Phenology].GrainFilling.Target",
                                   "Name": "GrainFilling",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -2063,7 +2153,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].ThermalTime.Value()",
+                              "VariableName": "[Phenology].ThermalTime",
                               "Name": "ThermalTime",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -2076,7 +2166,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Grain].MaximumPotentialGrainSize.Value()",
+                                  "VariableName": "[Grain].MaximumPotentialGrainSize",
                                   "Name": "MaximumSize",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -2085,7 +2175,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Grain].MaximumNConc.Value()",
+                                  "VariableName": "[Grain].MaximumNConc",
                                   "Name": "MaximumNConc",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -2304,9 +2394,7 @@
               "potentialDMAllocation": null,
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
-              "RootLengthDensityModifierDueToDamage": 1.0,
               "RootAngle": 45.0,
-              "SWAvailabilityRatio": 0.0,
               "Name": "Root",
               "Children": [
                 {
@@ -2460,7 +2548,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Root].LengthDensity",
                   "Name": "KNO3",
                   "Children": [
                     {
@@ -2478,6 +2565,15 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Root].LengthDensity",
+                      "Name": "XValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -2486,7 +2582,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Root].LengthDensity",
                   "Name": "KNH4",
                   "Children": [
                     {
@@ -2500,6 +2595,15 @@
                         0.01
                       ],
                       "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Root].LengthDensity",
+                      "Name": "XValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -2617,7 +2721,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[SoilWaterScale]",
                       "Name": "WaterFactor",
                       "Children": [
                         {
@@ -2645,6 +2748,15 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[SoilWaterScale]",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -2658,7 +2770,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[SoilWaterScale]",
                   "Name": "NUptakeSWFactor",
                   "Children": [
                     {
@@ -2689,6 +2800,15 @@
                       "$type": "Models.Memo, Models",
                       "Text": "This is modelled in the same way as the old wheat model",
                       "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[SoilWaterScale]",
+                      "Name": "XValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -2828,7 +2948,6 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                      "XProperty": "[Phenology].Stage",
                                       "Name": "AgeFactor",
                                       "Children": [
                                         {
@@ -2842,6 +2961,15 @@
                                             0.2
                                           ],
                                           "Name": "XYPairs",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Phenology].Stage",
+                                          "Name": "XValue",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
                                           "Enabled": true,
@@ -2933,7 +3061,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].DMDemands.Structural.StructuralFraction.Value()",
+                              "VariableName": "[Root].DMDemands.Structural.StructuralFraction",
                               "Name": "StructuralFraction",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -2965,7 +3093,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].minimumNconc.Value()",
+                          "VariableName": "[Root].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2996,7 +3124,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].criticalNConc.Value()",
+                              "VariableName": "[Root].criticalNConc",
                               "Name": "CritNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -3005,7 +3133,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].minimumNconc.Value()",
+                              "VariableName": "[Root].minimumNconc",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -3037,7 +3165,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].nitrogenDemandSwitch.Value()",
+                          "VariableName": "[Root].nitrogenDemandSwitch",
                           "Name": "NitrogenDemandSwitch",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3046,7 +3174,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].maximumNconc.Value()",
+                          "VariableName": "[Root].maximumNconc",
                           "Name": "MaxNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3256,7 +3384,6 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Wheat].Leaf.Fw",
                           "Name": "WaterStressFactor",
                           "Children": [
                             {
@@ -3274,6 +3401,15 @@
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Wheat].Leaf.Fw",
+                              "Name": "XValue",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
                           "IncludeInDocumentation": true,
@@ -3282,7 +3418,6 @@
                         },
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Wheat].Leaf.Fn",
                           "Name": "NitrogenStressFactor",
                           "Children": [
                             {
@@ -3298,6 +3433,15 @@
                                 1.0
                               ],
                               "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Wheat].Leaf.Fn",
+                              "Name": "XValue",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -3319,7 +3463,6 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Root].WaterTensionFactor",
                           "Name": "WaterStress",
                           "Children": [
                             {
@@ -3339,6 +3482,15 @@
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Root].WaterTensionFactor",
+                              "Name": "XValue",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
                           "IncludeInDocumentation": true,
@@ -3347,7 +3499,6 @@
                         },
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[IWeather].MeanT",
                           "Name": "TemperatureEffect",
                           "Children": [
                             {
@@ -3367,6 +3518,15 @@
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[IWeather].MeanT",
+                              "Name": "XValue",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
                           "IncludeInDocumentation": true,
@@ -3375,7 +3535,6 @@
                         },
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Wheat].Leaf.Fn",
                           "Name": "NitrogenStressFactor",
                           "Children": [
                             {
@@ -3391,6 +3550,15 @@
                                 1.0
                               ],
                               "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Wheat].Leaf.Fn",
+                              "Name": "XValue",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -3422,7 +3590,6 @@
                         },
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Phenology].Stage",
                           "Name": "AgeFactor",
                           "Children": [
                             {
@@ -3438,6 +3605,15 @@
                                 1.0
                               ],
                               "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Phenology].Stage",
+                              "Name": "XValue",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -3469,7 +3645,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Structure].Phyllochron.Value()",
+                          "VariableName": "[Structure].Phyllochron",
                           "Name": "Phyllochron",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3487,7 +3663,6 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Phenology].Stage",
                           "Name": "AgeFactor",
                           "Children": [
                             {
@@ -3501,6 +3676,15 @@
                                 1.0
                               ],
                               "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Phenology].Stage",
+                              "Name": "XValue",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -3521,7 +3705,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].EarlyReproductive.Target.Value()",
+                                  "VariableName": "[Phenology].EarlyReproductive.Target",
                                   "Name": "EarlyReproductive",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -3530,7 +3714,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].GrainDevelopment.Target.Value()",
+                                  "VariableName": "[Phenology].GrainDevelopment.Target",
                                   "Name": "GrainDevelopment",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -3539,7 +3723,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].GrainFilling.Target.Value()",
+                                  "VariableName": "[Phenology].GrainFilling.Target",
                                   "Name": "GrainFilling",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -3548,7 +3732,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].Maturing.Target.Value()",
+                                  "VariableName": "[Phenology].Maturing.Target",
                                   "Name": "Maturing",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -3557,7 +3741,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].Ripening.Target.Value()",
+                                  "VariableName": "[Phenology].Ripening.Target",
                                   "Name": "Ripening",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -3571,7 +3755,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].CohortParameters.SenescenceDuration.Value()",
+                              "VariableName": "[Leaf].CohortParameters.SenescenceDuration",
                               "Name": "SenescenceDuration",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -3604,7 +3788,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Structure].Phyllochron.Value()",
+                          "VariableName": "[Structure].Phyllochron",
                           "Name": "Phyllochron",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3648,7 +3832,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Phenology].Stage",
                       "Name": "MaximumNConc",
                       "Children": [
                         {
@@ -3668,6 +3851,15 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].Stage",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -3680,7 +3872,6 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Phenology].Stage",
                           "Name": "CriticalNConcAt350ppm",
                           "Children": [
                             {
@@ -3700,6 +3891,15 @@
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Phenology].Stage",
+                              "Name": "XValue",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
                           "IncludeInDocumentation": true,
@@ -3708,7 +3908,6 @@
                         },
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Weather].CO2",
                           "Name": "CO2Factor",
                           "Children": [
                             {
@@ -3726,6 +3925,15 @@
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Weather].CO2",
+                              "Name": "XValue",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
                           "IncludeInDocumentation": true,
@@ -3739,7 +3947,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Phenology].Stage",
                       "Name": "MinimumNConc",
                       "Children": [
                         {
@@ -3755,6 +3962,15 @@
                             0.005
                           ],
                           "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].Stage",
+                          "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -3795,7 +4011,6 @@
                             },
                             {
                               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "XProperty": "[Wheat].Leaf.Fw",
                               "Name": "StressFactor",
                               "Children": [
                                 {
@@ -3809,6 +4024,15 @@
                                     0.0
                                   ],
                                   "Name": "XYPairs",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Wheat].Leaf.Fw",
+                                  "Name": "XValue",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -3859,7 +4083,6 @@
                             },
                             {
                               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "XProperty": "[Wheat].Leaf.Fw",
                               "Name": "StressFactor",
                               "Children": [
                                 {
@@ -3873,6 +4096,15 @@
                                     0.0
                                   ],
                                   "Name": "XYPairs",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Wheat].Leaf.Fw",
+                                  "Name": "XValue",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -3895,7 +4127,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Phenology].Stage",
                       "Name": "SpecificLeafAreaMax",
                       "Children": [
                         {
@@ -3913,6 +4144,15 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].Stage",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -3921,7 +4161,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Leaf].Fn",
                       "Name": "SpecificLeafAreaMin",
                       "Children": [
                         {
@@ -3935,6 +4174,15 @@
                             18000.0
                           ],
                           "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Fn",
+                          "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -4021,7 +4269,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].ThermalTime.Value()",
+                          "VariableName": "[Phenology].ThermalTime",
                           "Name": "ThermalTime",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -4241,7 +4489,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "ThermalTime",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -4254,7 +4502,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Photosynthesis.LeafMaxGrossPhotosynthesis.TemperatureResponse.Value()",
+                      "VariableName": "[Leaf].Photosynthesis.LeafMaxGrossPhotosynthesis.TemperatureResponse",
                       "Name": "RUE_FT",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -4267,7 +4515,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].Photosynthesis.FN.Value()",
+                          "VariableName": "[Leaf].Photosynthesis.FN",
                           "Name": "RUE_FN",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -4276,7 +4524,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].Photosynthesis.FVPD.Value()",
+                          "VariableName": "[Leaf].Photosynthesis.FVPD",
                           "Name": "RUE_FVPD",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -4764,7 +5012,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Spike].MinimumNConc.Value()",
+                  "VariableName": "[Spike].MinimumNConc",
                   "Name": "CriticalNConc",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -4805,7 +5053,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].ThermalTime.Value()",
+                              "VariableName": "[Phenology].ThermalTime",
                               "Name": "ThermalTime",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -4824,7 +5072,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Spike].HeadNumber.Value()",
+                              "VariableName": "[Spike].HeadNumber",
                               "Name": "OrganPopulation",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -4857,7 +5105,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].EarlyReproductive.Target.Value()",
+                                  "VariableName": "[Phenology].EarlyReproductive.Target",
                                   "Name": "EarlyReproductive",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -4866,7 +5114,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].GrainDevelopment.Target.Value()",
+                                  "VariableName": "[Phenology].GrainDevelopment.Target",
                                   "Name": "GrainDevelopment",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -4928,7 +5176,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Spike].DMDemands.Structural.StructuralFraction.Value()",
+                              "VariableName": "[Spike].DMDemands.Structural.StructuralFraction",
                               "Name": "StructuralFraction",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -4960,7 +5208,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Spike].minimumNconc.Value()",
+                          "VariableName": "[Spike].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -4991,7 +5239,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Spike].criticalNConc.Value()",
+                              "VariableName": "[Spike].criticalNConc",
                               "Name": "CritNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -5000,7 +5248,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Spike].minimumNconc.Value()",
+                              "VariableName": "[Spike].minimumNconc",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -5032,7 +5280,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Spike].nitrogenDemandSwitch.Value()",
+                          "VariableName": "[Spike].nitrogenDemandSwitch",
                           "Name": "NitrogenDemandSwitch",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5041,7 +5289,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Spike].maximumNconc.Value()",
+                          "VariableName": "[Spike].maximumNconc",
                           "Name": "MaxNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5094,7 +5342,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Phenology].Stage",
                   "Name": "MaximumNConc",
                   "Children": [
                     {
@@ -5112,6 +5359,15 @@
                         0.012
                       ],
                       "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].Stage",
+                      "Name": "XValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -5446,7 +5702,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Stem].MinimumNConc.Value()",
+                  "VariableName": "[Stem].MinimumNConc",
                   "Name": "CriticalNConc",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -5657,7 +5913,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Stem].DMDemands.Structural.StructuralFraction.Value()",
+                              "VariableName": "[Stem].DMDemands.Structural.StructuralFraction",
                               "Name": "StructuralFraction",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -5689,7 +5945,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Stem].minimumNconc.Value()",
+                          "VariableName": "[Stem].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5720,7 +5976,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Stem].criticalNConc.Value()",
+                              "VariableName": "[Stem].criticalNConc",
                               "Name": "CritNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -5729,7 +5985,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Stem].minimumNconc.Value()",
+                              "VariableName": "[Stem].minimumNconc",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -5761,7 +6017,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Stem].nitrogenDemandSwitch.Value()",
+                          "VariableName": "[Stem].nitrogenDemandSwitch",
                           "Name": "NitrogenDemandSwitch",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5770,7 +6026,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Stem].maximumNconc.Value()",
+                          "VariableName": "[Stem].maximumNconc",
                           "Name": "MaxNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -6623,14 +6879,6 @@
                         },
                         {
                           "$type": "Models.Core.Alias, Models",
-                          "Name": "Ventura",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Core.Alias, Models",
                           "Name": "Wallup",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -7067,14 +7315,6 @@
                         },
                         {
                           "$type": "Models.Core.Alias, Models",
-                          "Name": "Gladius",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Core.Alias, Models",
                           "Name": "Goroke",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -7200,14 +7440,6 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Core.Alias, Models",
-                          "Name": "Yitpi",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -7226,7 +7458,7 @@
                       "Children": [
                         {
                           "$type": "Models.Core.Alias, Models",
-                          "Name": "Agtscythe",
+                          "Name": "Scythe",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -7346,14 +7578,6 @@
                         },
                         {
                           "$type": "Models.Core.Alias, Models",
-                          "Name": "Mace",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Core.Alias, Models",
                           "Name": "Ouyen",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -7362,23 +7586,7 @@
                         },
                         {
                           "$type": "Models.Core.Alias, Models",
-                          "Name": "Ruby",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Core.Alias, Models",
                           "Name": "Tamaroi",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Core.Alias, Models",
-                          "Name": "Young",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -8146,9 +8354,9 @@
             "[Clock].Today",
             "[Wheat].Phenology.CurrentPhaseName",
             "[Wheat].Phenology.CurrentStageName",
-            "[Wheat].Phenology.FlagLeafDAS.Value()",
-            "[Wheat].Phenology.FloweringDAS.Value()",
-            "[Wheat].Phenology.MaturityDAS.Value()",
+            "[Wheat].Phenology.FlagLeafDAS",
+            "[Wheat].Phenology.FloweringDAS",
+            "[Wheat].Phenology.MaturityDAS",
             "[Wheat].Grain.Wt",
             "[Wheat].Grain.N",
             "[Wheat].Grain.Number",
@@ -8157,8 +8365,8 @@
             "[Wheat].AboveGround.N",
             "[Wheat].Grain.Protein",
             "[Wheat].Grain.Size",
-            "[Wheat].Structure.HaunStage.Value()",
-            "[Wheat].Structure.FinalLeafNumber.Value()",
+            "[Wheat].Structure.HaunStage",
+            "[Wheat].Structure.FinalLeafNumber",
             "[Wheat].Structure.MainStemPopn",
             "[Wheat].SowingData.Cultivar",
             "[Wheat].SowingDate.DayOfYear",
@@ -8221,17 +8429,15 @@
             "[Wheat].Leaf.SpecificArea",
             "[Wheat].Leaf.Transpiration",
             "[Wheat].Leaf.Photosynthesis.FVPD",
-            "[Wheat].Leaf.Photosynthesis.Ft",
             "[Wheat].Phenology.CurrentPhaseName",
             "[Wheat].Phenology.CurrentStageName",
-            "[Wheat].Phenology.DailyVernalisation.Value()",
+            "[Wheat].Phenology.DailyVernalisation",
             "[Weather].MeanT",
-            "[Wheat].Phenology.Photoperiod.Value()",
+            "[Wheat].Phenology.Photoperiod",
             "[Wheat].Phenology.Stage",
-            "[Wheat].Phenology.ThermalTime.Value()",
-            "[Wheat].Phenology.Vrn1.Value()",
-            "[Wheat].Phenology.Vrn2.Value()",
-            "[Wheat].Phenology.Vrn4.Value()",
+            "[Wheat].Phenology.ThermalTime",
+            "[Wheat].Phenology.Vrn1",
+            "[Wheat].Phenology.Vrn4",
             "[Wheat].Phenology.Zadok.Stage",
             "[Wheat].Root.Depth",
             "[Wheat].Root.N",
@@ -8239,7 +8445,7 @@
             "[Wheat].Root.Nconc",
             "[Wheat].Root.WaterUptake",
             "[Wheat].Root.WaterTensionFactor",
-            "[Wheat].Root.RootFrontVelocity.TemperatureFactor.Value()",
+            "[Wheat].Root.RootFrontVelocity.TemperatureFactor",
             "[Wheat].Spike.N",
             "[Wheat].Spike.NConc",
             "[Wheat].Spike.Wt",
@@ -8252,14 +8458,13 @@
             "[Wheat].StemPlusSpike.Wt",
             "[Wheat].StemPlusSpike.N",
             "[Wheat].SowingData.Cultivar",
-            "[Wheat].Structure.HaunStage.Value()",
-            "[Wheat].Structure.HaunStage.Value()",
+            "[Wheat].Structure.HaunStage",
+            "[Wheat].Structure.HaunStage",
             "[Wheat].Structure.Height",
             "[Wheat].Structure.LeafTipsAppeared",
-            "[Wheat].Structure.FinalLeafNumber.Value()",
-            "[Wheat].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()",
+            "[Wheat].Structure.FinalLeafNumber",
             "[Wheat].Structure.MainStemPopn",
-            "[Wheat].Structure.MeanTillerGrowthRate.Value()",
+            "[Wheat].Structure.MeanTillerGrowthRate",
             "[Wheat].Structure.TotalStemPopn",
             "[Wheat].Total.N",
             "[Wheat].Total.Wt",
@@ -8322,8 +8527,9 @@
       "Children": [
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
-          "FileName": "..\\..\\Tests\\Validation\\Wheat\\Observed.xlsx",
-          "FileNameMetadata": null,
+          "FileNames": [
+            "..\\..\\Tests\\Validation\\Wheat\\Observed.xlsx"
+          ],
           "SheetNames": [
             "Observed",
             "MaxLeafSize"
@@ -8656,6 +8862,8 @@
                                 200.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.3,
                                 1.3,
@@ -8906,6 +9114,8 @@
                                 200.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 0.08,
                                 0.12,
@@ -9102,6 +9312,8 @@
                                 200.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.3,
                                 1.3,
@@ -9298,6 +9510,8 @@
                                 200.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.3,
                                 1.3,
@@ -9512,6 +9726,8 @@
                                 200.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.3,
                                 1.3,
@@ -9744,6 +9960,8 @@
                                 200.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.3,
                                 1.3,
@@ -9916,6 +10134,8 @@
                                 200.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.3,
                                 1.3,
@@ -10309,6 +10529,8 @@
                                 200.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.3,
                                 1.3,
@@ -10809,7 +11031,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 80.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "Surface Organic Matter",
                           "IncludeInDocumentation": true,
@@ -10832,6 +11054,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.3,
                           "SoilHeatFluxFraction": 0.0,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.0,
                           "ReferenceHeight": 0.0,
                           "Name": "MicroClimate",
@@ -10843,6 +11066,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Wheat",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Wheat",
@@ -10988,8 +11212,8 @@
                       "TableName": "DailyReport",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "ProfileWater",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -11018,8 +11242,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "ProfileWater",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": false,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -11091,8 +11315,8 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Soil.SoilWater.SW(1)",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -11121,8 +11345,8 @@
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Soil.SoilWater.SW(1)",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -11189,8 +11413,8 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Soil.SoilWater.SW(2)",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -11219,8 +11443,8 @@
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Soil.SoilWater.SW(2)",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -11287,8 +11511,8 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Soil.SoilWater.SW(3)",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -11317,8 +11541,8 @@
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Soil.SoilWater.SW(3)",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -11385,8 +11609,8 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Soil.SoilWater.SW(4)",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -11415,8 +11639,8 @@
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Soil.SoilWater.SW(4)",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -11483,8 +11707,8 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Soil.SoilWater.SW(5)",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -11513,8 +11737,8 @@
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Soil.SoilWater.SW(5)",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -11581,8 +11805,8 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Soil.SoilWater.SW(6)",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -11611,8 +11835,8 @@
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Soil.SoilWater.SW(6)",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -11679,8 +11903,8 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Soil.SoilWater.SW(7)",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -11709,8 +11933,8 @@
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Soil.SoilWater.SW(7)",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -11777,8 +12001,8 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Soil.SoilWater.SW(8)",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -11807,8 +12031,8 @@
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Soil.SoilWater.SW(8)",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -11880,8 +12104,8 @@
                       "TableName": "DailyReport",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Wheat.AboveGround.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -11910,8 +12134,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Wheat.AboveGround.Wt",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -11978,8 +12202,8 @@
                       "TableName": "DailyReport",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Wheat.Leaf.LAI",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -12008,8 +12232,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Wheat.Leaf.LAI",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -12076,8 +12300,8 @@
                       "TableName": "DailyReport",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Wheat.Structure.TotalStemPopn",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -12106,8 +12330,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Wheat.Structure.TotalStemPopn",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -12174,8 +12398,8 @@
                       "TableName": "DailyReport",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Wheat.Grain.Number",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -12204,8 +12428,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Wheat.Grain.Number",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -12277,8 +12501,8 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Wheat.AboveGroundLive.N",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -12318,8 +12542,8 @@
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Wheat.AboveGround.N",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -12386,8 +12610,8 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Wheat.Ear.N",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -12416,8 +12640,8 @@
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Wheat.Spike.N",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -12484,8 +12708,8 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Wheat.Stem.N",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -12514,8 +12738,8 @@
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Wheat.Stem.N",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -12582,8 +12806,8 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Wheat.Leaf.Live.N",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -12612,8 +12836,8 @@
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Wheat.Leaf.Live.N",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -12680,8 +12904,8 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Wheat.Ear.Nconc",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -12710,8 +12934,8 @@
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Wheat.Ear.Nconc",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -12778,8 +13002,8 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Wheat.Leaf.Live.Nconc",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -12808,8 +13032,8 @@
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Wheat.Leaf.Live.Nconc",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -12876,8 +13100,8 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Wheat.Stem.Nconc",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -12906,8 +13130,8 @@
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Wheat.Stem.Nconc",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -12984,8 +13208,8 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Wheat.Grain.Wt",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -13014,8 +13238,8 @@
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Wheat.Grain.Wt",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -13082,8 +13306,8 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Wheat.Stem.Wt",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -13112,8 +13336,8 @@
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Wheat.Stem.Wt",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -13180,8 +13404,8 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Wheat.Leaf.Live.Wt",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -13210,8 +13434,8 @@
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Wheat.Leaf.Live.Wt",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -13278,8 +13502,8 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Wheat.Spike.Wt",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -13308,8 +13532,8 @@
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Wheat.Spike.Wt",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -13381,8 +13605,8 @@
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Wheat.Population",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -13411,8 +13635,8 @@
                       "TableName": "DailyReport",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Wheat.Structure.MainStemPopn",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
                       "ShowInLegend": false,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
@@ -13822,6 +14046,8 @@
                                 200.0
                               ],
                               "ParticleSizeClay": null,
+                              "ParticleSizeSand": null,
+                              "ParticleSizeSilt": null,
                               "BD": [
                                 1.3,
                                 1.3,
@@ -14286,7 +14512,7 @@
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 80.0,
-                          "FractionFaecesAdded": 0.5,
+                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "Surface Organic Matter",
                           "IncludeInDocumentation": true,
@@ -14309,6 +14535,7 @@
                           "d_interception": 0.0,
                           "soil_albedo": 0.3,
                           "SoilHeatFluxFraction": 0.0,
+                          "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.0,
                           "ReferenceHeight": 0.0,
                           "Name": "MicroClimate",
@@ -14320,6 +14547,7 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Wheat",
+                          "IsAlive": false,
                           "IsEnding": false,
                           "DaysAfterEnding": 0,
                           "ResourceName": "Wheat",
@@ -14378,19 +14606,14 @@
                             "[Wheat].Arbitrator.FN",
                             "[Wheat].Arbitrator.N.TotalPlantDemand",
                             "[Wheat].Leaf.CohortMaxSize",
-                            "[Wheat].Leaf.CohortParameters.GrowthDuration.Value()",
-                            "[Wheat].Leaf.CohortParameters.LagDuration.Value()",
-                            "[Wheat].Leaf.CohortParameters.MaxArea.Value()",
-                            "[Wheat].Leaf.CohortParameters.SenescenceDuration.Value()",
-                            "[Wheat].Leaf.CohortParameters.SpecificLeafAreaMax.Value()",
-                            "[Wheat].Leaf.CohortParameters.SpecificLeafAreaMin.Value()",
-                            "[Wheat].Leaf.Photosynthesis.FT.Value()",
-                            "[Wheat].Leaf.Photosynthesis.FVPD.Value()",
-                            "[Wheat].Leaf.Photosynthesis.RueAct",
-                            "[Wheat].Stem.DMDemands.Structural.DMDemandFunction.HightLimitedDMAccumulation.Value()",
-                            "[Wheat].Stem.DMDemands.Structural.DMDemandFunction.PotentialDMAccumulation.Value()",
+                            "[Wheat].Leaf.CohortParameters.GrowthDuration",
+                            "[Wheat].Leaf.CohortParameters.LagDuration",
+                            "[Wheat].Leaf.CohortParameters.MaxArea",
+                            "[Wheat].Leaf.CohortParameters.SenescenceDuration",
+                            "[Wheat].Leaf.CohortParameters.SpecificLeafAreaMax",
+                            "[Wheat].Leaf.CohortParameters.SpecificLeafAreaMin",
                             "[Wheat].Leaf.NextExpandingLeafProportion",
-                            "[Wheat].Structure.MeanTillerGrowthRate.Value()"
+                            "[Wheat].Structure.MeanTillerGrowthRate"
                           ],
                           "EventNames": [
                             "[Clock].DoReport"
@@ -14474,8 +14697,8 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Wheat.AboveGround.N",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -14504,8 +14727,8 @@
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Wheat.AboveGround.N",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -14572,8 +14795,8 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Wheat.AboveGround.N",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -14602,8 +14825,8 @@
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Wheat.AboveGround.N",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -14670,8 +14893,8 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Wheat.AboveGround.Wt",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -14700,8 +14923,8 @@
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Wheat.AboveGround.Wt",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -14768,8 +14991,8 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Wheat.AboveGround.Wt",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -14798,8 +15021,8 @@
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Wheat.AboveGround.Wt",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -14866,8 +15089,8 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Wheat.Phenology.Zadok.Stage",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -14896,8 +15119,8 @@
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Wheat.Phenology.Zadok.Stage",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -14964,8 +15187,8 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "ProfileWater",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -14994,8 +15217,8 @@
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "ProfileWater",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
                           "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -15067,8 +15290,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Ear.Wt",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -15097,8 +15320,8 @@
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Ear.Wt",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -15165,8 +15388,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Ear.Wt",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -15195,8 +15418,8 @@
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Ear.Wt",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -15263,8 +15486,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Leaf.Live.Wt",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -15293,8 +15516,8 @@
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Leaf.Live.Wt",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -15361,8 +15584,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Leaf.Live.Wt",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -15391,8 +15614,8 @@
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Leaf.Live.Wt",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -15459,8 +15682,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Stem.Wt",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -15500,8 +15723,8 @@
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Stem.Wt",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -15568,8 +15791,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Stem.Wt",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -15598,8 +15821,8 @@
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Stem.Wt",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -15676,8 +15899,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Ear.N",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -15706,8 +15929,8 @@
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Ear.N",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -15774,8 +15997,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Ear.N",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -15804,8 +16027,8 @@
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Ear.N",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -15872,8 +16095,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Leaf.Live.N",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -15902,8 +16125,8 @@
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Leaf.Live.N",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -15970,8 +16193,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Leaf.Live.N",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -16000,8 +16223,8 @@
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Leaf.Live.N",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -16068,8 +16291,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Stem.N",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -16098,8 +16321,8 @@
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Stem.N",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -16166,8 +16389,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Stem.N",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -16196,8 +16419,8 @@
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Stem.N",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -16274,8 +16497,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Ear.Nconc",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -16304,8 +16527,8 @@
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Ear.Nconc",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -16372,8 +16595,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Ear.Nconc",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -16402,8 +16625,8 @@
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Ear.Nconc",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -16470,8 +16693,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Leaf.Live.Nconc",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -16500,8 +16723,8 @@
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Leaf.Live.Nconc",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -16568,8 +16791,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Leaf.Live.Nconc",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -16598,8 +16821,8 @@
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Leaf.Live.Nconc",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -16666,8 +16889,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Stem.Nconc",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -16696,8 +16919,8 @@
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Stem.Nconc",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -16764,8 +16987,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Stem.Nconc",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -16794,8 +17017,8 @@
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Stem.Nconc",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -16872,8 +17095,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Leaf.LAI",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -16913,8 +17136,8 @@
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Leaf.LAI",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -16981,8 +17204,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Leaf.LAI",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -17022,8 +17245,8 @@
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Leaf.LAI",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -17090,8 +17313,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Structure.TotalStemPopn",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -17131,8 +17354,8 @@
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Structure.TotalStemPopn",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -17199,8 +17422,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Structure.TotalStemPopn",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -17229,8 +17452,8 @@
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Structure.TotalStemPopn",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -17297,8 +17520,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Leaf.CoverTotal",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -17338,8 +17561,8 @@
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Leaf.CoverTotal",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -17406,8 +17629,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Leaf.CoverTotal",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -17436,8 +17659,8 @@
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Leaf.CoverTotal",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -17503,9 +17726,9 @@
                               "Checkpoint": "Current",
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
-                              "YFieldName": "Wheat.Structure.HaunStage.Value()",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "YFieldName": "Wheat.Structure.HaunStage",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -17534,8 +17757,8 @@
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Structure.LeafTipsAppeared",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": true,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -17602,8 +17825,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Leaf.AppearedCohortNo",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -17643,8 +17866,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Leaf.ExpandedCohortNo",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -17721,8 +17944,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Soil.SoilWater.SW(1)",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": true,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -17751,8 +17974,8 @@
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Soil.SoilWater.SW(1)",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": true,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -17819,8 +18042,8 @@
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Soil.SoilWater.SW(2)",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -17849,8 +18072,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Soil.SoilWater.SW(2)",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": true,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -17917,8 +18140,8 @@
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Soil.SoilWater.SW(3)",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -17947,8 +18170,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Soil.SoilWater.SW(3)",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": true,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -18015,8 +18238,8 @@
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Soil.SoilWater.SW(4)",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -18045,8 +18268,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Soil.SoilWater.SW(4)",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": true,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -18113,8 +18336,8 @@
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Soil.SoilWater.SW(5)",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -18143,8 +18366,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Soil.SoilWater.SW(5)",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": true,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -18211,8 +18434,8 @@
                               "TableName": "Observed",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Soil.SoilWater.SW(6)",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -18241,8 +18464,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Soil.SoilWater.SW(6)",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": true,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -18309,8 +18532,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Soil.SoilWater.SW(7)",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": true,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -18377,8 +18600,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Soil.SoilWater.SW(8)",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": true,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -18445,8 +18668,8 @@
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
                               "YFieldName": "Wheat.Stem.PercentWSC",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": true,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -18539,8 +18762,8 @@
                   "TableName": "HarvestObsPred",
                   "XFieldName": "Observed.Wheat.Grain.Wt",
                   "YFieldName": "Predicted.Wheat.Grain.Wt",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
@@ -18619,8 +18842,8 @@
                   "TableName": "HarvestObsPred",
                   "XFieldName": "Observed.Wheat.AboveGround.Wt",
                   "YFieldName": "Predicted.Wheat.AboveGround.Wt",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
@@ -18699,8 +18922,8 @@
                   "TableName": "HarvestObsPred",
                   "XFieldName": "Observed.Wheat.Grain.Number",
                   "YFieldName": "Predicted.Wheat.Grain.Number",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,

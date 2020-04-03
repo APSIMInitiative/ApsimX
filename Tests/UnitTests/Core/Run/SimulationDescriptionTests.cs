@@ -87,7 +87,7 @@
             {
                 Children = new List<Model>()
                 {
-                    new Folder()
+                    new Replacements()
                     {
                         Name = "Replacements",
                         Children = new List<Model>()
@@ -214,6 +214,7 @@
                                     }
                                 }
                             },
+                            new Models.WaterModel.WaterBalance(),
                             new Organic
                             {
                                 Thickness = new double[] { 100, 300 },
@@ -237,7 +238,8 @@
                                 NO3N = new double[] { 27 },
                                 OC = new double[] { 1.35 },
                                 SWUnits = Sample.SWUnitsEnum.Volumetric
-                            }
+                            },
+                            new CERESSoilTemperature(),
                         }
                     }
                 }
@@ -254,8 +256,8 @@
             var newSim = simulationDescription.ToSimulation();
 
             var water = newSim.Children[0].Children[0] as Physical;
-            var soilOrganicMatter = newSim.Children[0].Children[1] as Organic;
-            var sample = newSim.Children[0].Children[3] as Sample;
+            var soilOrganicMatter = newSim.Children[0].Children[2] as Organic;
+            var sample = newSim.Children[0].Children[4] as Sample;
 
             // Make sure layer structures have been standardised.
             Assert.AreEqual(water.Thickness, originalWater.Thickness);

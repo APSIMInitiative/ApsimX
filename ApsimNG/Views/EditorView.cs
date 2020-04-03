@@ -1,19 +1,11 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="EditorView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using System;
-    using System.Collections.Generic;
     using System.Reflection;
     using EventArguments;
     using Gtk;
     using Mono.TextEditor;
     using Utility;
-    using Presenters;
     using Cairo;
     using System.Globalization;
     using Mono.TextEditor.Highlighting;
@@ -230,6 +222,7 @@ namespace UserInterface.Views
                         LoadReportSyntaxMode();
                     textEditor.Document.MimeType = "text/x-apsimreport";
                 }
+                textEditor.Document.SetNotDirtyState();
             }
         }
 
@@ -698,8 +691,17 @@ namespace UserInterface.Views
             if (textEditor.Text.Length > index + triggerWord.Length)
                 textAfterTriggerWord = textEditor.Text.Substring(index + triggerWord.Length);
 
+            // Changing the text property of the text editor will reset the scroll
+            // position. To work around this, we record the scroll position before
+            // we change the text then reset it manually afterwards.
+            double verticalPosition = scroller.Vadjustment.Value;
+            double horizontalPosition = scroller.Hadjustment.Value;
+
             textEditor.Text = textBeforeTriggerWord + completionOption + textAfterTriggerWord;
             textEditor.Caret.Offset = index + completionOption.Length;
+
+            scroller.Vadjustment.Value = verticalPosition;
+            scroller.Hadjustment.Value = horizontalPosition;
         }
 
         /// <summary>

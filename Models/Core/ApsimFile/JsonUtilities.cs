@@ -448,6 +448,29 @@ namespace Models.Core.ApsimFile
             return newChild;
         }
 
+        /// <summary>
+        /// Renames a child node if it exists.
+        /// </summary>
+        /// <param name="node">Parent node.</param>
+        /// <param name="childName">Name of the child to be removed.</param>
+        public static void RemoveChild(JObject node, string childName)
+        {
+            var child = ChildWithName(node, childName);
+            if (child == null)
+                return;
+
+            child.Remove();
+        }
+
+        /// <summary>
+        /// Renames a child node if it exists.
+        /// </summary>
+        /// <param name="node">Parent node.</param>
+        public static void RemoveChildren(JObject node)
+        {
+            var children = node["Children"] as JArray;
+            children.RemoveAll();
+        }
 
         /// <summary>
         /// Helper method for <see cref="ChildrenRecursively(JObject)"/>.

@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="MainPresenter.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Win32;
@@ -295,26 +290,37 @@ namespace Models.Utilities
             }
 
             string rKey;
+            if (subKeyNames == null)
+                throw new Exception("Unable to find R entry in Registry - is R installed?.");
             if (subKeyNames.Contains("R64"))
                 rKey = registryKey + @"\R64";
             else if (subKeyNames.Contains("R"))
                 rKey = registryKey + @"\R";
             else
-                throw new Exception("Unable to find R entry in Registry.");
+                throw new Exception("Unable to find R entry in Registry - is R installed?.");
 
             List<string> versions = GetSubKeys(rKey);
             if (versions == null)
-                throw new Exception("Unable to find R entry in Registry.");
+                throw new Exception("Unable to find R entry in Registry - is R installed?.");
             else
             {
                 // Ignore Microsoft R client. 
                 string latestVersionKeyName = rKey + @"\" + versions.Where(v => !v.Contains("Microsoft R Client")).OrderByDescending(i => i).First();
+                string installDirectory = null; 
                 using (RegistryKey latestVersionKey = Registry.LocalMachine.OpenSubKey(latestVersionKeyName))
                 {
-                    return Registry.GetValue(latestVersionKey.ToString(), "InstallPath", null) as string;
+                    if (latestVersionKey != null)
+                        installDirectory = Registry.GetValue(latestVersionKey.ToString(), "InstallPath", null) as string;
                 }
+                if (installDirectory == null)
+                    using (RegistryKey latestVersionKey = Registry.CurrentUser.OpenSubKey(latestVersionKeyName))
+                    {
+                        if (latestVersionKey != null)
+                            installDirectory = Registry.GetValue(latestVersionKey.ToString(), "InstallPath", null) as string;
+                    }
+                return installDirectory;
             }
-            
+
         }
 
         /// <summary>
@@ -326,10 +332,20 @@ namespace Models.Utilities
         {
             try
             {
+                List<string> keys;
                 using (RegistryKey key = Registry.LocalMachine.OpenSubKey(keyName))
                 {
-                    return key?.GetSubKeyNames().ToList();
+                    keys = key?.GetSubKeyNames().ToList();
                 }
+
+                if (keys == null)
+                    using (RegistryKey key = Registry.CurrentUser.OpenSubKey(keyName))
+                    {
+                        keys = key?.GetSubKeyNames().ToList();
+                    }
+
+
+                return keys;
             }
             catch
             {
@@ -365,8 +381,14 @@ namespace Models.Utilities
                 WebClient web = new WebClient();
                 web.DownloadFileCompleted += (sender, e) =>
                 {
-                    OnDownloadCompleted?.Invoke();
-                    InstallR(fileName);
+                    try
+                    {
+                        OnDownloadCompleted?.Invoke();
+                        InstallR(fileName);
+                    }
+                    catch
+                    {
+                    }
                 };
                 web.DownloadFileAsync(new Uri(windowsDownloadUrl), fileName);
             }
@@ -401,8 +423,8 @@ namespace Models.Utilities
             // Copy installer to working directory.
             try
             {
-                string newInstallerPath = Path.Combine(workingDirectory, Path.GetFileNameWithoutExtension(installerPath));
-                File.Copy(installerPath, newInstallerPath);
+                string newInstallerPath = Path.Combine(workingDirectory, Path.GetFileName(installerPath));
+                File.Copy(installerPath, newInstallerPath, true);
                 installerPath = newInstallerPath;
             }
             catch

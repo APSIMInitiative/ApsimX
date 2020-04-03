@@ -34,7 +34,19 @@
                 {
                     try
                     {
-                        string st = FileFormat.WriteToString(simulation);
+                        Simulations sims = new Simulations()
+                        {
+                            Name = "Simulations",
+                            Children = new List<Model>()
+                            {
+                                new Storage.DataStore()
+                                {
+                                    Name = "DataStore"
+                                },
+                                simulation
+                            }
+                        };
+                        string st = FileFormat.WriteToString(sims);
                         File.WriteAllText(Path.Combine(path, simulation.Name + ".apsimx"), st);
                     }
                     catch (Exception err)

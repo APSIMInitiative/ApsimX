@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="stock.cs" company="CSIRO">
-//      Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace Models.GrazPlan
+﻿namespace Models.GrazPlan
 {
     using System;
     using System.Collections.Generic;
@@ -258,6 +252,25 @@ namespace Models.GrazPlan
         }
 
         #region Initialisation properties ====================================================
+
+        /// <summary>
+        /// Gets or sets the parameter filename for the stock model
+        /// </summary>
+        [Description("Name of an XML file containing genotypic parameters. If an empty string is specified, a default parameter set that is compiled into APSIM is used. " +
+                     "If a file name is used, the parameters in the file modify (rather than replacing) the default parameter set")]
+        [Units("")]
+        [Summary]
+        public string ParamFile
+        {
+            get { return stockModel.ParamFile; }
+            set 
+            {
+                if (value != string.Empty)
+                    this.outputSummary.WriteMessage(this, "Using animal parameters from " + value);
+                stockModel.ParamFile = value; 
+            }
+        }
+        
         /// <summary>
         /// Gets or sets the Seed for the random number generator. Used when computing numbers of animals dying and conceiving from the equations for mortality and conception rates
         /// </summary>
@@ -274,7 +287,7 @@ namespace Models.GrazPlan
         /// </summary>
         [Description("Information about each animal genotype")]
         [Units("")]
-        public SingleGenotypeInits[] GenoTypes
+        public SingleGenotypeInits[] Genotypes
         {
             get
             {
@@ -297,9 +310,9 @@ namespace Models.GrazPlan
         {
             get
             {
-                AnimalInits[] animal = new AnimalInits[1];
-                StockVars.MakeAnimalValue(this.stockModel, ref animal);
-                return animal;
+                //AnimalInits[] animal = new AnimalInits[1];
+                //StockVars.MakeAnimalValue(this.stockModel, ref animal);
+                return this.animalInits;
             }
             set
             {
@@ -4305,9 +4318,11 @@ namespace Models.GrazPlan
         /// (d) Unallocated animal groups are then assigned to paddocks in rank order(e.g.those with the lowest positive score are placed in the best unoccupied paddock). 
         ///     Animal groups with the same priority score are placed in the same paddock
         /// </summary>
-        /// <param name="closedZones">Names of paddocks to be excluded from consideration as possible destinations</param>
-        public void Draft(StockDraft closedZones)
+        /// <param name="zonesClosed">Names of paddocks to be excluded from consideration as possible destinations</param>
+        public void Draft(string[] zonesClosed)
         {
+            StockDraft closedZones = new StockDraft();
+            closedZones.Closed = zonesClosed;
             this.RequestAvailableToAnimal();
             this.outputSummary.WriteMessage(this, "Drafting animals. Excluding paddocks: " + string.Join(", ", closedZones.Closed));
             this.stockModel.DoStockManagement(this.stockModel, closedZones, this.localWeather.TheDay, this.localWeather.Latitude);
@@ -4316,25 +4331,30 @@ namespace Models.GrazPlan
         /// <summary>
         /// Removes animals from the simulation.  sell without parameters will remove all sheep in the stock sub-model.
         /// </summary>
+        /// <param name="number">Number of animals to sell.</param>
         /// <param name="group">Index number of the animal group from which animals are to be removed. 
         /// A value of zero denotes that each animal group should be processed in turn until the nominated number of animals has been removed.</param>
-        /// <param name="number">Number of animals to sell.</param>
-        public void Sell(int group, double number)
+        public void Sell(double number, int group = 0)
         {
             StockSell selling = new StockSell();
             selling.Group = group;
             selling.Number = Convert.ToInt32(number, CultureInfo.InvariantCulture);
-            this.outputSummary.WriteMessage(this, "Selling " + number.ToString() + " animals");
+            string msg = "Selling " + number.ToString() + " animals ";
+            if (group == 0)
+                msg += "from all groups";
+            else
+                msg += "from group " + group.ToString();
+            this.outputSummary.WriteMessage(this, msg);
             this.stockModel.DoStockManagement(this.stockModel, selling, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
         /// <summary>
         /// Removes animals from the simulation by tag number.
         /// </summary>
+        /// <param name="number">Number of animals to sell.</param>
         /// <param name="tag">Tag number of the animals from which animals are to be removed. 
         /// Animals are removed starting from the group with the smallest index.</param>
-        /// <param name="number">Number of animals to sell.</param>
-        public void SellTag(int tag, int number)
+        public void SellTag(int number, int tag)
         {
             StockSellTag selling = new StockSellTag();
             selling.Tag = tag;
@@ -4346,25 +4366,30 @@ namespace Models.GrazPlan
         /// <summary>
         /// Shears sheep. The event has no effect on cattle
         /// </summary>
-        /// <param name="group">Index number of the animal group to be shorn. 
-        /// A value of zero denotes that all animal groups should be processed.</param>
         /// <param name="subGroup">Denotes whether the main group of animals, suckling lambs, or both should be shorn. 
         /// Feasible values are the null string (main group), ‘adults’ (main group), ‘lambs’ (suckling lambs), ‘both’ (both).</param>
-        public void Shear(int group, string subGroup)
+        /// <param name="group">Index number of the animal group to be shorn. 
+        /// A value of zero denotes that all animal groups should be processed.</param>
+        public void Shear(string subGroup, int group = 0)
         {
             StockShear shearing = new StockShear();
             shearing.Group = group;
             shearing.SubGroup = subGroup;
-            this.outputSummary.WriteMessage(this, "Shearing animals");
+            string msg = "Shearing animals ";
+            if (group == 0)
+                msg += "in all groups";
+            else
+                msg += "in group " + group.ToString();
+            this.outputSummary.WriteMessage(this, msg);
             this.stockModel.DoStockManagement(this.stockModel, shearing, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
         /// <summary>
         /// Changes the paddock to which an animal group is assigned.
         /// </summary>
-        /// <param name="group">Index number of the animal group to be moved.</param>
         /// <param name="paddock">Name of the paddock to which the animal group is to be moved.</param>
-        public void Move(int group, string paddock)
+        /// <param name="group">Index number of the animal group to be moved.</param>
+        public void Move(string paddock, int group)
         {
             StockMove move = new StockMove();
             move.Group = group;
@@ -4374,20 +4399,45 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
+        /// Move the animals by tag number
+        /// </summary>
+        /// <param name="paddock">Name of the paddock to which the animals are to be moved.</param>
+        /// <param name="tag">The tag number</param>
+        public void MoveTag(string paddock, int tag)
+        {
+            StockMove move = new StockMove();
+            move.Paddock = paddock;
+            for (int g = 1; g <= this.stockModel.Count(); g++)
+            {
+                if ((this.stockModel.At(g) != null) && (tag == this.stockModel.GetTag(g)))
+                {
+                    move.Group = g;
+                    this.outputSummary.WriteMessage(this, "Moving " + this.stockModel.At(g).NoAnimals.ToString() + " animals tagged " + tag.ToString() + " to " + paddock);
+                    this.stockModel.DoStockManagement(this.stockModel, move, this.localWeather.TheDay, this.localWeather.Latitude);
+                }
+            }
+        }
+
+        /// <summary>
         /// Commences mating of a particular group of animals.  If the animals are not empty females, or if they are too young, has no effect
         /// </summary>
-        /// <param name="group">Index number of the animal group for which mating is to commence. 
-        /// A value of zero denotes that all empty females of sufficient age should be mated</param>
         /// <param name="mateTo">Genotype of the rams or bulls with which the animals are mated. 
         /// Must match the name field of a member of the genotypes property.</param>
         /// <param name="mateDays">Length of the mating period in days.</param>
-        public void Join(int group, string mateTo, int mateDays)
+        /// <param name="group">Index number of the animal group for which mating is to commence. 
+        /// A value of zero denotes that all empty females of sufficient age should be mated</param>
+        public void Join(string mateTo, int mateDays, int group = 0)
         {
             StockJoin join = new StockJoin();
             join.Group = group;
             join.MateTo = mateTo;
             join.MateDays = mateDays;
-            this.outputSummary.WriteMessage(this, "Joining animal group " + group.ToString() + " to " + mateTo);
+            string msg = "Joining animals in ";
+            if (group == 0)
+                msg += "all groups to " + mateTo;
+            else
+                msg += "group " + group.ToString() + " to " + mateTo;
+            this.outputSummary.WriteMessage(this, msg);
             this.stockModel.DoStockManagement(this.stockModel, join, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4397,15 +4447,20 @@ namespace Models.GrazPlan
         /// the sub-group with castrated offspring will remain at the original index and the sub-group with offspring that were not castrated will 
         /// be added at the end of the set of animal groups.
         /// </summary>
+        /// <param name="number">Number of male lambs or calves to be castrated.</param>
         /// <param name="group">Index number of the animal group, the lambs or calves of which are to be castrated. 
         /// A value of zero denotes that each animal group should be processed in turn until the nominated number of offspring has been castrated.</param>
-        /// <param name="number">Number of male lambs or calves to be castrated.</param>
-        public void Castrate(int group, int number)
+        public void Castrate(int number, int group = 0)
         {
             StockCastrate castrate = new StockCastrate();
             castrate.Group = group;
             castrate.Number = number;
-            this.outputSummary.WriteMessage(this, "Castrate " + number.ToString() + " animals in group " + group.ToString());
+            string msg = "Castrate " + number.ToString() + " animals ";
+            if (group == 0)
+                msg += "from all groups";
+            else
+                msg += "in group " + group.ToString();
+            this.outputSummary.WriteMessage(this, msg);
             this.stockModel.DoStockManagement(this.stockModel, castrate, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4413,10 +4468,26 @@ namespace Models.GrazPlan
         /// Weans some or all of the lambs or calves from an animal group. 
         /// The newly weaned animals are added to the end of the list of animal groups, with males and females in separate groups.
         /// </summary>
-        /// <param name="wean">The weaning data</param>
-        public void Wean(StockWean wean)
+        /// <param name="sex">The sex to wean.
+        /// Feasible values are:
+        /// ‘all’       Female and male lambs or calves are to be weaned.
+        /// ‘females’   Only female lambs or calves are to be weaned.
+        /// ‘males’     Only male lambs or calves are to be weaned</param>
+        /// <param name="number">The number of lambs or calves to be weaned</param>
+        /// <param name="group">The index number of the animal group from which animals are to be removed. 
+        /// A value of zero denotes that each animal group should be processed in turn until the nominated number of lambs or calves has been weaned</param>
+        public void Wean(string sex, int number, int group = 0)
         {
-            this.outputSummary.WriteMessage(this, "Weaning " + wean.Number.ToString() + " " + wean.Sex.ToString());
+            StockWean wean = new StockWean();
+            wean.Sex = sex;
+            wean.Group = group;
+            wean.Number = number;
+            string msg = "Weaning " + wean.Number.ToString() + " " + wean.Sex;
+            if (wean.Group == 0)
+                msg += " from all groups";
+            else
+                msg += " from group " + wean.Group.ToString();
+            this.outputSummary.WriteMessage(this, msg);
             this.stockModel.DoStockManagement(this.stockModel, wean, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4425,15 +4496,20 @@ namespace Models.GrazPlan
         /// If the number of cows in a nominated group is greater than the number to be dried off, the animal group will be split; 
         /// the sub-group that is no longer lactating will remain at the original index and the sub-group that continues lactating will be added at the end of the set of animal groups
         /// </summary>
+        /// <param name="number">Number of females for which lactation is to end.</param>
         /// <param name="group">Index number of the animal group for which lactation is to end. 
         /// A value of zero denotes that each animal group should be processed in turn until the nominated number of cows has been dried off.</param>
-        /// <param name="number">Number of females for which lactation is to end.</param>
-        public void DryOff(int group, int number)
+        public void DryOff(int number, int group = 0)
         {
             StockDryoff dryoff = new StockDryoff();
             dryoff.Group = group;
             dryoff.Number = number;
-            this.outputSummary.WriteMessage(this, "Drying off " + number.ToString() + " animals in group " + group.ToString());
+            string msg = "Drying off " + number.ToString() + " animals ";
+            if (group == 0)
+                msg += "over all groups";
+            else
+                msg += "in group " + group.ToString();
+            this.outputSummary.WriteMessage(this, msg);
             this.stockModel.DoStockManagement(this.stockModel, dryoff, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4468,9 +4544,9 @@ namespace Models.GrazPlan
         /// (e.g. to identify animals that are to be managed as a single mob even though they differ physiologically) 
         /// and to keep otherwise similar animal groups distinct from one another.
         /// </summary>
-        /// <param name="group">Index number of the animal group to be assigned a tag value.</param>
         /// <param name="value">Tag value to be assigned.</param>
-        public void Tag(int group, int value)
+        /// <param name="group">Index number of the animal group to be assigned a tag value.</param>
+        public void Tag(int value, int group)
         {
             StockTag tag = new StockTag();
             tag.Group = group;
@@ -4482,9 +4558,9 @@ namespace Models.GrazPlan
         /// <summary>
         /// Sets the "priority" of an animal group for later use in a draft event. It is usual practice to use positive values for priorities.
         /// </summary>
-        /// <param name="group">Index number of the animal group for which priority is to be set.</param>
         /// <param name="value">New priority value for the group.</param>
-        public void Prioritise(int group, int value)
+        /// <param name="group">Index number of the animal group for which priority is to be set.</param>
+        public void Prioritise(int value, int group)
         {
             StockPrioritise prioritise = new StockPrioritise();
             prioritise.Group = group;
@@ -4690,7 +4766,7 @@ namespace Models.GrazPlan
         {
             AnimalParamSet paramSet = stockModel.BaseParams;   
             string[] genoParams = GenotypeNames(animal);
-            foreach (SingleGenotypeInits geno in GenoTypes)
+            foreach (SingleGenotypeInits geno in Genotypes)
             {
                 if (!genoParams.Contains(geno.GenotypeName))
                 {
@@ -4723,7 +4799,7 @@ namespace Models.GrazPlan
                 genoParams.CopyTo(allGenoNames, allGenoNames.Length - genoParams.Length);
             }
 
-            foreach (SingleGenotypeInits geno in GenoTypes)
+            foreach (SingleGenotypeInits geno in Genotypes)
             {
                 if (!allGenoNames.Contains(geno.GenotypeName))
                 {

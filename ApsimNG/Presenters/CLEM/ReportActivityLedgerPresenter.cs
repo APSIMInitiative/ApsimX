@@ -5,7 +5,6 @@ namespace UserInterface.Presenters
     using Models;
     using Models.Core;
     using Models.Factorial;
-    using Models.Report;
     using System;
     using System.Data;
     using EventArguments;
@@ -60,8 +59,9 @@ namespace UserInterface.Presenters
             dataStorePresenter.Attach(dataStore, this.view.DataStoreView, explorerPresenter);
             activityGridPresenter.ModelName = this.report.Name;
             activityGridPresenter.SimulationName = simulation.Name;
+            activityGridPresenter.ZoneName = paddock.Name;
             activityGridPresenter.Attach(dataStore, this.view.DisplayView, explorerPresenter);
-            this.view.DataStoreView.TableList.SelectedValue = this.report.Name;
+            dataStorePresenter.tableDropDown.SelectedValue = this.report.Name;
         }
 
         /// <summary>Detach the model from the view.</summary>

@@ -2,6 +2,8 @@
 namespace UserInterface.Presenters
 {
     using System.Collections.Generic;
+    using System.IO;
+    using System.Reflection;
     using System.Text;
     using Models.CLEM;
     using Models.Core;
@@ -53,7 +55,7 @@ namespace UserInterface.Presenters
                 "body {color: [FontColor]; max-width:1000px; font-size:10pt;}" + 
                 "table {border-collapse: collapse; font-size:0.8em; }" +
                 ".resource table,th,td {border: 1px solid #996633; }" +
-                "table th {padding:8px; }" +
+                "table th {padding:8px; color:[HeaderFontColor];}" +
                 "table td {padding:8px; }" +
                 " td:nth-child(n+2) {text-align:center;}" +
                 " th:nth-child(1) {text-align:left;}" +
@@ -119,13 +121,14 @@ namespace UserInterface.Presenters
                 ".holdermain {margin: 20px 0px 20px 0px}" +
                 ".holdersub {margin: 5px 0px 5px}" +
                 "@media print { body { -webkit - print - color - adjust: exact; }}"+
-                "\n</style>\n</head>\n<body>";
+                "\n</style>\n<!-- graphscript --></ head>\n<body>";
 
             // apply theme based settings
             if(!Utility.Configuration.Settings.DarkTheme)
             {
                 // light theme
                 htmlString = htmlString.Replace("[FontColor]", "black");
+                htmlString = htmlString.Replace("[HeaderFontColor]", "white");
 
                 // resources
                 htmlString = htmlString.Replace("[ResRowBack]", "floralwhite");
@@ -162,6 +165,7 @@ namespace UserInterface.Presenters
             {
                 // dark theme
                 htmlString = htmlString.Replace("[FontColor]", "#E5E5E5");
+                htmlString = htmlString.Replace("[HeaderFontColor]", "black");
 
                 // resources
                 htmlString = htmlString.Replace("[ResRowBack]", "#281A0E");
@@ -195,9 +199,13 @@ namespace UserInterface.Presenters
                 htmlString = htmlString.Replace("[ValueSetFont]", "#0e2023");
             }
 
-            if (model.GetType() == typeof(ZoneCLEM))
+            if (model is ZoneCLEM)
             {
                 htmlString += (model as ZoneCLEM).GetFullSummary(model, true, htmlString);
+            }
+            else if (model is Market)
+            {
+                htmlString += (model as Market).GetFullSummary(model, true, htmlString);
             }
             else
             {
@@ -205,6 +213,30 @@ namespace UserInterface.Presenters
             }
             htmlString += "\n</body>\n</html>";
 
+            if(htmlString.Contains("<canvas"))
+            {
+                Assembly _assembly = Assembly.GetExecutingAssembly();
+                StreamReader _textStreamReader = new StreamReader(_assembly.GetManifestResourceStream("ApsimNG.Presenters.CLEM.Chart.min.js"));
+                htmlString = htmlString.Replace("<!-- graphscript -->", $"<script>{_textStreamReader.ReadToEnd()}</script>");
+            }
+
+            if (!Utility.Configuration.Settings.DarkTheme)
+            {
+                htmlString = htmlString.Replace("[GraphGridLineColour]", "#eee");
+                htmlString = htmlString.Replace("[GraphGridZeroLineColour]", "#999");
+                htmlString = htmlString.Replace("[GraphPointColour]", "#00bcd6");
+                htmlString = htmlString.Replace("[GraphLineColour]", "#fda50f");
+                htmlString = htmlString.Replace("[GraphLabelColour]", "#888");
+            }
+            else
+            {
+                // dark theme
+                htmlString = htmlString.Replace("[GraphGridLineColour]", "#555");
+                htmlString = htmlString.Replace("[GraphGridZeroLineColour]", "#888");
+                htmlString = htmlString.Replace("[GraphPointColour]", "#00bcd6");
+                htmlString = htmlString.Replace("[GraphLineColour]", "#ff0");
+                htmlString = htmlString.Replace("[GraphLabelColour]", "#888");
+            }
             return htmlString;
         }
 

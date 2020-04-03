@@ -148,6 +148,7 @@ namespace Models.CLEM.Activities
             // purchase details only on timer
             if(TimingOK)
             {
+                this.Status = ActivityStatus.NotNeeded;
                 // remove any old potential sales from list as these will be updated here
                 Resources.RuminantHerd().PurchaseIndividuals.RemoveAll(a => a.Breed == this.PredictedHerdBreed && a.SaleFlag == HerdChangeReason.TradePurchase);
 
@@ -156,15 +157,16 @@ namespace Models.CLEM.Activities
                     double number = purchasetype.Number;
                     if(numberToStock != null && foodStore != null)
                     {
-                        number = Convert.ToInt32(numberToStock.SolveY(foodStore.TonnesPerHectare, false), CultureInfo.InvariantCulture);
+                        //NOTE: ensure calculation method in relationship is fixed values
+                        number = Convert.ToInt32(numberToStock.SolveY(foodStore.TonnesPerHectare), CultureInfo.InvariantCulture);
                     }
 
                     for (int i = 0; i < number; i++)
                     {
                         object ruminantBase = null;
 
-                        double u1 = ZoneCLEM.RandomGenerator.NextDouble();
-                        double u2 = ZoneCLEM.RandomGenerator.NextDouble();
+                        double u1 = RandomNumberGenerator.Generator.NextDouble();
+                        double u2 = RandomNumberGenerator.Generator.NextDouble();
                         double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
                                      Math.Sin(2.0 * Math.PI * u2);
                         double weight = purchasetype.Weight + purchasetype.WeightSD * randStdNormal;
@@ -204,6 +206,7 @@ namespace Models.CLEM.Activities
                         }
 
                         Resources.RuminantHerd().PurchaseIndividuals.Add(ruminantBase as Ruminant);
+                        this.Status = ActivityStatus.Success;
                     }
                 }
             }
@@ -213,10 +216,12 @@ namespace Models.CLEM.Activities
                 if (ind.Age - ind.PurchaseAge >= MinMonthsKept)
                 {
                     ind.SaleFlag = HerdChangeReason.TradeSale;
+                    this.Status = ActivityStatus.Success;
                 }
                 if (TradeWeight > 0 && ind.Weight >= TradeWeight)
                 {
                     ind.SaleFlag = HerdChangeReason.TradeSale;
+                    this.Status = ActivityStatus.Success;
                 }
             }
         }

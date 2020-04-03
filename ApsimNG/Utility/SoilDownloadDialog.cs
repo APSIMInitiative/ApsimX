@@ -2,7 +2,6 @@
 {
     using APSIM.Shared.Utilities;
     using Gtk;
-    using Importer;
     using Newtonsoft.Json;
     using Models;
     using Models.Core;
@@ -17,6 +16,8 @@
     using UserInterface.Presenters;
     using UserInterface.Views;
     using System.Globalization;
+    using Models.Core.Apsim710File;
+    using Models.WaterModel;
 
     /// <summary>
     /// Class for displaying a dialog to select a soil description to be downloaded from ASRIS or ISRIC
@@ -46,6 +47,43 @@
         private string replaceNode;
         private ExplorerView owningView;
         private ExplorerPresenter explorerPresenter;
+
+        /// <summary>
+        /// Reads/writes the longitude input in a culture-sensitive manner.
+        /// </summary>
+        public double Longitude
+        {
+            get
+            {
+
+                if (!double.TryParse(entryLongitude.Text, NumberStyles.Number, CultureInfo.CurrentCulture, out double longitude))
+                    throw new Exception($"Unable to parse longitude from input: {entryLongitude.Text}");
+
+                return longitude;
+            }
+            set
+            {
+                entryLongitude.Text = value.ToString(CultureInfo.CurrentCulture);
+            }
+        }
+
+        /// <summary>
+        /// Reads/writes the latitude input in a culture-sensitive manner.
+        /// </summary>
+        public double Latitude
+        {
+            get
+            {
+                if (!double.TryParse(entryLatitude.Text, NumberStyles.Number, CultureInfo.CurrentCulture, out double latitude))
+                    throw new Exception($"Unable to parse longitude from input: {entryLatitude.Text}");
+
+                return latitude;
+            }
+            set
+            {
+                entryLatitude.Text = value.ToString(CultureInfo.CurrentCulture);
+            }
+        }
 
         /// <summary>
         /// Class constructor
@@ -98,7 +136,7 @@
         {
             if (!CheckValue(entryLatitude) || !CheckValue(entryLatitude))
                 return;
-            string url = googleGeocodingApi + "latlng=" + entryLatitude.Text + ',' + entryLongitude.Text;
+            string url = googleGeocodingApi + "latlng=" + Latitude.ToString(CultureInfo.InvariantCulture) + ',' + Longitude.ToString(CultureInfo.InvariantCulture);
             try
             {
                 MemoryStream stream = WebUtilities.ExtractDataFromURL(url);
@@ -149,11 +187,15 @@
                             if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("lat"))
                             {
                                 reader.Read();
+
+                                // This uses the current culture.
                                 entryLatitude.Text = reader.Value.ToString();
                             }
                             else if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("lng"))
                             {
                                 reader.Read();
+
+                                // This uses the current culture.
                                 entryLongitude.Text = reader.Value.ToString();
                             }
                         }
@@ -270,7 +312,7 @@
                 }
                 else if (dest is Zone)
                 {
-                    AddModelCommand command = new AddModelCommand(replaceNode, newSoil, owningView, explorerPresenter);
+                    var command = new AddModelCommand(replaceNode, newSoil, explorerPresenter);
                     explorerPresenter.CommandHistory.Add(command, true);
                 }
                 MessageDialog md = new MessageDialog(owningView.MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok,
@@ -309,8 +351,8 @@
                 {
                     latitude = weatherObj.Latitude;
                     longitude = weatherObj.Longitude;
-                    entryLatitude.Text = latitude.ToString();
-                    entryLongitude.Text = longitude.ToString();
+                    entryLatitude.Text = latitude.ToString(CultureInfo.CurrentCulture);
+                    entryLongitude.Text = longitude.ToString(CultureInfo.CurrentCulture);
                 }
             }
             dialog1.Show();
@@ -328,7 +370,7 @@
             {
                 XmlDocument soilDoc = new XmlDocument();
                 XmlNode rootNode = soilDoc.CreateNode("element", "root", "");
-                APSIMImporter importer = new APSIMImporter();
+                var importer = new Importer();
                 XmlNode newNode = null;
                 newNode = importer.ImportSoil(soil, rootNode, newNode);
 
@@ -354,7 +396,7 @@
             if (!CheckValue(entryLatitude) || !CheckValue(entryLatitude))
                 return null;
             string url = "http://www.asris.csiro.au/ASRISApi/api/APSIM/getApsoil?longitude=" +
-                entryLongitude.Text + "&latitude=" + entryLatitude.Text;
+                Longitude.ToString(CultureInfo.InvariantCulture) + "&latitude=" + Latitude.ToString(CultureInfo.InvariantCulture);
             Soil newSoil = null;
             WaitCursor = true;
             try
@@ -391,8 +433,9 @@
         {
             if (!CheckValue(entryLatitude) || !CheckValue(entryLatitude))
                 return null;
+
             string url = "http://www.asris.csiro.au/ASRISApi/api/APSIM/getClosestApsoil?maxCnt=5&longitude=" +
-                entryLongitude.Text + "&latitude=" + entryLatitude.Text;
+                Longitude.ToString(CultureInfo.InvariantCulture) + "&latitude=" + Latitude.ToString(CultureInfo.InvariantCulture);
             Soil newSoil = null;
             WaitCursor = true;
             try
@@ -585,7 +628,7 @@
             if (!CheckValue(entryLatitude) || !CheckValue(entryLatitude))
                 return null;
             string url = "https://rest.soilgrids.org/query?lon=" +
-                entryLongitude.Text + "&lat=" + entryLatitude.Text;
+                Longitude.ToString(CultureInfo.InvariantCulture) + "&lat=" + Latitude.ToString(CultureInfo.InvariantCulture);
             WaitCursor = true;
             Soil newSoil = null;
             try
@@ -806,7 +849,7 @@
                     Chemical analysis = new Chemical();
                     Physical waterNode = new Physical(); 
                     Organic organicMatter = new Organic();
-                    SoilWater soilWater = new SoilWater();
+                    WaterBalance soilWater = new WaterBalance();
                     InitialWater initialWater = new InitialWater();
                     Sample initialNitrogen = new Sample();
                     SoilNitrogen soilN = new SoilNitrogen();
@@ -847,8 +890,8 @@
                     newSoil.Name = "Synthetic soil derived from ISRIC SoilGrids REST API";
                     newSoil.DataSource = "ISRIC SoilGrids";
                     newSoil.SoilType = soilType;
-                    newSoil.Latitude = Double.Parse(entryLatitude.Text, CultureInfo.InvariantCulture);
-                    newSoil.Longitude = Double.Parse(entryLongitude.Text, CultureInfo.InvariantCulture);
+                    newSoil.Latitude = Latitude;
+                    newSoil.Longitude = Longitude;
 
                     // ISRIC values are for "levels", not "intervals", so we need to convert to layers
                     // Following Andrew Moore's lead on layer thickness and weightings.
@@ -908,8 +951,10 @@
                         dul[i] = thetaWwp[i] + awc20[i];  // This could be made Moore complex
                     waterNode.DUL = ConvertLayers(dul, layerCount);
 
-                    var particleSizeSand = ConvertLayers(sand, layerCount);
+                    waterNode.ParticleSizeSand = ConvertLayers(sand, layerCount);
+                    waterNode.ParticleSizeSilt = ConvertLayers(silt, layerCount);
                     waterNode.ParticleSizeClay = ConvertLayers(clay, layerCount);
+                    // waterNode.Rocks = ConvertLayers(coarse, layerCount);
                     analysis.PH = ConvertLayers(phWater, layerCount);
                     // Obviously using the averaging in "ConvertLayers" for texture classes is not really correct, but should be OK as a first pass if we don't have sharply contrasting layers
                     double[] classes = ConvertLayers(texture, layerCount);
@@ -931,7 +976,7 @@
 
                     for (int i = 0; i < layerCount; i++)
                     {
-                        xf[i] = 1.0 - (waterNode.BD[i] - (p1 + p2 * 0.01 * particleSizeSand[i])) / p3;
+                        xf[i] = 1.0 - (waterNode.BD[i] - (p1 + p2 * 0.01 * waterNode.ParticleSizeSand[i])) / p3;
                         xf[i] = Math.Max(0.1, Math.Min(1.0, xf[i]));
                         double effectiveThickness = thickness[i] * xf[i];
                         double bottomEffDepth = topEffDepth + effectiveThickness;
@@ -1035,8 +1080,9 @@
         {
             if (!CheckValue(entryLatitude) || !CheckValue(entryLatitude))
                 return null;
+
             string url = "https://worldmodel.csiro.au/apsimsoil?lon=" +
-                entryLongitude.Text + "&lat=" + entryLatitude.Text;
+                Longitude.ToString(CultureInfo.InvariantCulture) + "&lat=" + Latitude.ToString(CultureInfo.InvariantCulture);
             Soil newSoil = null;
             WaitCursor = true;
             try

@@ -1,14 +1,7 @@
-// -----------------------------------------------------------------------
-// <copyright file="grazparam.cs" company="CSIRO">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
 namespace Models.GrazPlan
 {
     using System;
     using System.Globalization;
-    using CMPServices;
 
     /// <summary>
     /// ParameterDefinition                                                         
@@ -22,7 +15,7 @@ namespace Models.GrazPlan
     {
         private string FName;
         private string FNamePart;
-        private TTypedValue.TBaseType FType;
+        private Type FType;
         private ParameterDefinition[] FItems;
         private int FCount;
         private int FParamCount;
@@ -47,7 +40,7 @@ namespace Models.GrazPlan
         /// <param name="defnStrings">Definition strings</param>
         /// <param name="baseType">Base type</param>
         /// <param name="offset">Offset index</param>
-        public ParameterDefinition(string[] defnStrings, TTypedValue.TBaseType baseType, int offset = 0)
+        public ParameterDefinition(string[] defnStrings, Type baseType, int offset = 0)
         {
             this.FItems = new ParameterDefinition[0];
             string[] subDefnStrings = new string[0];
@@ -162,7 +155,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets the parameter type
         /// </summary>
-        public TTypedValue.TBaseType ParamType
+        public Type ParamType
         {
             get { return this.FType; }
         }
@@ -360,22 +353,22 @@ namespace Models.GrazPlan
         /// <summary>
         /// Real-single type
         /// </summary>
-        protected const TTypedValue.TBaseType TYPEREAL = TTypedValue.TBaseType.ITYPE_SINGLE;
+        protected static readonly Type TYPEREAL = typeof(float);
 
         /// <summary>
         /// Integer type
         /// </summary>
-        protected const TTypedValue.TBaseType TYPEINT = TTypedValue.TBaseType.ITYPE_INT4;
+        protected static readonly Type TYPEINT = typeof(int);
 
         /// <summary>
         /// Boolean type
         /// </summary>
-        protected const TTypedValue.TBaseType TYPEBOOL = TTypedValue.TBaseType.ITYPE_BOOL;
+        protected static readonly Type TYPEBOOL = typeof(bool);
 
         /// <summary>
         /// String type
         /// </summary>
-        protected const TTypedValue.TBaseType TYPETEXT = TTypedValue.TBaseType.ITYPE_STR;
+        protected static readonly Type TYPETEXT = typeof(string);
 
         private string FVersion;
         private string FName;
@@ -426,7 +419,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="tagDefinition">Tag definition</param>
         /// <param name="baseType">The definition type</param>
-        protected void DefineParameters(string tagDefinition, TTypedValue.TBaseType baseType)
+        protected void DefineParameters(string tagDefinition, Type baseType)
         {
             string[] defn = new string[0];
             int kdx;
@@ -481,17 +474,14 @@ namespace Models.GrazPlan
 
             if (defn.IsScalar() && (srcSet != null) && (srcSet.IsDefined(defn.FullName)))
             {
-                switch (defn.ParamType)
-                {
-                    case TYPEREAL: this.SetParam(defn.FullName, srcSet.ParamReal(defn.FullName));
-                        break;
-                    case TYPEINT: this.SetParam(defn.FullName, srcSet.ParamInt(defn.FullName));
-                        break;
-                    case TYPEBOOL: this.SetParam(defn.FullName, srcSet.ParamBool(defn.FullName));
-                        break;
-                    case TYPETEXT: this.SetParam(defn.FullName, srcSet.ParamStr(defn.FullName));
-                        break;
-                }
+                if (defn.ParamType == TYPEREAL)
+                    this.SetParam(defn.FullName, srcSet.ParamReal(defn.FullName));
+                else if (defn.ParamType == TYPEINT)
+                    this.SetParam(defn.FullName, srcSet.ParamInt(defn.FullName));
+                else if (defn.ParamType == TYPEBOOL)
+                    this.SetParam(defn.FullName, srcSet.ParamBool(defn.FullName));
+                else if (defn.ParamType == TYPETEXT)
+                    this.SetParam(defn.FullName, srcSet.ParamStr(defn.FullName));
             }
             else if (defn.IsScalar())
                 this.SetUndefined(defn.FullName);
@@ -1335,19 +1325,18 @@ namespace Models.GrazPlan
                 throw new Exception("Parameter value undefined: " + tag);
             else
             {
-                switch (definition.ParamType)
+                if (definition.ParamType == TYPETEXT)
+                    result = this.GetTextParam(tagList);
+                else if (definition.ParamType == TYPEREAL)
+                    result = string.Format("{0:G}", this.GetRealParam(tagList));
+                else if (definition.ParamType == TYPEINT)
+                    result = string.Format("{0:D}", this.GetIntParam(tagList));
+                else if (definition.ParamType == TYPEBOOL)
                 {
-                    case TYPETEXT: result = this.GetTextParam(tagList);
-                        break;
-                    case TYPEREAL: result = string.Format("{0:G}", this.GetRealParam(tagList));
-                        break;
-                    case TYPEINT: result = string.Format("{0:D}", this.GetIntParam(tagList));
-                        break;
-                    case TYPEBOOL: if (this.GetBoolParam(tagList))
-                            result = "true";
-                        else
-                            result = "false";
-                        break;
+                    if (this.GetBoolParam(tagList))
+                        result = "true";
+                    else
+                        result = "false";
                 }
                 return result;
             }
@@ -1435,46 +1424,40 @@ namespace Models.GrazPlan
                 throw new Exception("Invalid parameter name " + tag);
             else
             {
-                switch (definition.ParamType)
+                if (definition.ParamType == TYPETEXT)
+                    this.SetTextParam(tagList, newValue);
+                else if (definition.ParamType == TYPEREAL)
                 {
-                    case TYPETEXT: this.SetTextParam(tagList, newValue);
-                        break;
-                    case TYPEREAL:
-                        {
-                            try
-                            {
-                                dblValue = System.Convert.ToDouble(newValue, System.Globalization.CultureInfo.InvariantCulture);
-                                this.SetRealParam(tagList, dblValue);
-                            }
-                            catch
-                            {
-                                throw new Exception("Error parsing parameter " + tag + " = " + newValue);
-                            }
-                        }
-                        break;
-                    case TYPEINT:
-                        {
-                            try
-                            {
-                                intValue = System.Convert.ToInt32(newValue, CultureInfo.InvariantCulture);
-                                this.SetIntParam(tagList, intValue);
-                            }
-                            catch
-                            {
-                                throw new Exception("Error parsing parameter " + tag + " = " + newValue);
-                            }
-                        }
-                        break;
-                    case TYPEBOOL:
-                        {
-                            if (newValue.ToLower() == "true")
-                                this.SetBoolParam(tagList, true);
-                            else if (newValue.ToLower() == "false")
-                                this.SetBoolParam(tagList, false);
-                            else
-                                throw new Exception("Error parsing parameter " + tag + " = " + newValue);
-                        }
-                        break;
+                    try
+                    {
+                        dblValue = System.Convert.ToDouble(newValue, System.Globalization.CultureInfo.InvariantCulture);
+                        this.SetRealParam(tagList, dblValue);
+                    }
+                    catch
+                    {
+                        throw new Exception("Error parsing parameter " + tag + " = " + newValue);
+                    }
+                }
+                else if (definition.ParamType == TYPEINT)
+                {
+                    try
+                    {
+                        intValue = System.Convert.ToInt32(newValue, CultureInfo.InvariantCulture);
+                        this.SetIntParam(tagList, intValue);
+                    }
+                    catch
+                    {
+                        throw new Exception("Error parsing parameter " + tag + " = " + newValue);
+                    }
+                }
+                else if (definition.ParamType == TYPEBOOL)
+                {
+                    if (newValue.ToLower() == "true")
+                        this.SetBoolParam(tagList, true);
+                    else if (newValue.ToLower() == "false")
+                        this.SetBoolParam(tagList, false);
+                    else
+                        throw new Exception("Error parsing parameter " + tag + " = " + newValue);
                 }
                 definition.SetDefined(true);
             }

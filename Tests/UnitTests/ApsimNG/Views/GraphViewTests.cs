@@ -4,7 +4,6 @@ using Gtk;
 using Models;
 using Models.Core;
 using Models.Core.Run;
-using Models.Graph;
 using Models.Storage;
 using NUnit.Framework;
 using OxyPlot.GtkSharp;
@@ -17,6 +16,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnitTests.ApsimNG.Utilities;
+using UserInterface.Commands;
 using UserInterface.Presenters;
 using UserInterface.Views;
 using Utility;
@@ -58,7 +58,7 @@ namespace UnitTests.ApsimNG.Views
                                 Area = 1,
                                 Children = new List<Model>()
                                 {
-                                    new Models.Report.Report()
+                                    new Models.Report()
                                     {
                                         Name = "Report",
                                         VariableNames = new string[]
@@ -110,17 +110,27 @@ namespace UnitTests.ApsimNG.Views
             IModel paddock = Apsim.Find(sims, typeof(Zone));
             Folder graphs = new Folder();
             graphs.Name = "Graphs";
-            explorer.Add(graphs, Apsim.FullPath(paddock));
+
+            var command = new AddModelCommand(Apsim.FullPath(paddock),
+                                              graphs,
+                                              explorer);
+            explorer.CommandHistory.Add(command, true);
 
             // Add an empty graph to the folder.
-            Models.Graph.Graph graph = new Models.Graph.Graph();
+            Models.Graph graph = new Models.Graph();
             graph.Name = "Graph";
-            explorer.Add(graph, Apsim.FullPath(graphs));
+            command = new AddModelCommand(Apsim.FullPath(graphs),
+                                          graph,
+                                          explorer);
+            explorer.CommandHistory.Add(command, true);
 
             // Add an empty series to the graph.
-            Models.Graph.Series series = new Models.Graph.Series();
+            Models.Series series = new Models.Series();
             series.Name = "Series";
-            explorer.Add(series, Apsim.FullPath(graph));
+            command = new AddModelCommand(Apsim.FullPath(graph),
+                                          series,
+                                          explorer);
+            explorer.CommandHistory.Add(command, true);
 
             // click on the series node.
             explorer.SelectNode(Apsim.FullPath(series));
@@ -202,7 +212,7 @@ namespace UnitTests.ApsimNG.Views
             ComboBox combo = ReflectionUtilities.GetValueOfFieldOrProperty("combobox1", legendView) as ComboBox;
 
             // fixme - we should support all valid OxyPlot legend position types.
-            foreach (Models.Graph.Graph.LegendPositionType legendPosition in Enum.GetValues(typeof(Models.Graph.Graph.LegendPositionType)))
+            foreach (Models.Graph.LegendPositionType legendPosition in Enum.GetValues(typeof(Models.Graph.LegendPositionType)))
             {
                 string name = legendPosition.ToString();
                 GtkUtilities.SelectComboBoxItem(combo, name, wait: true);

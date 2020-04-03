@@ -33,7 +33,7 @@ annual_average_pet = 947.2           !Average annual PET (mm/yr)
 average_windspeed = 2.7              !Average windspeed (m/s)
 
        Location             xDate              year               day              rain              mint              maxt              avgt              radn              wind              evap                vp                rh             rhmin             rhmax
-             ()                ()                ()                ()              (mm)              (oC)              (oC)              (oC)          (MJ/m^2)             (m/s)              (mm)             (hPa)               (%)               (%)               (%)
+             ()      (dd/MM/yyyy)                ()                ()              (mm)              (oC)              (oC)              (oC)          (MJ/m^2)             (m/s)              (mm)             (hPa)               (%)               (%)               (%)
 VCS_Maraekakaho        01/01/1973              1973                 1               0.0              13.4              25.4              19.4              20.8               3.0               4.7              16.5              67.4              50.9             100.0
 VCS_Maraekakaho        02/01/1973              1973                 2               0.0              15.6              28.0              21.8              27.4               3.0               6.5              17.4              70.1              46.0              98.2
 VCS_Maraekakaho        03/01/1973              1973                 3               0.0              10.6              24.7              17.6              30.4               3.0               6.1              13.0              57.7              41.8             100.0

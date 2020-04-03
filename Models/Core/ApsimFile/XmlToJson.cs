@@ -35,7 +35,7 @@ namespace Models.Core.ApsimFile
             "Models.WaterModel.RunoffModel","Models.WaterModel.SaturatedFlowModel",
             "Models.WaterModel.WaterBalance","Models.WaterModel.UnsaturatedFlowModel",
             "Models.WaterModel.WaterTableModel","Models.Surface.SurfaceOrganicMatterCollectionFromResource",
-            "Models.Surface.ResidueTypes","Models.Report.Report",
+            "Models.Surface.ResidueTypes","Models.Report",
             "Models.PostSimulationTools.Probability","Models.PostSimulationTools.ExcelInput",
             "Models.PostSimulationTools.TimeSeriesStats","Models.PostSimulationTools.PredictedObserved",
             "Models.PostSimulationTools.Input","Models.GrazPlan.Supplement",
@@ -88,12 +88,12 @@ namespace Models.Core.ApsimFile
             "Models.PMF.Phen.GenericPhase","Models.PMF.Phen.GerminatingPhase",
             "Models.PMF.Phen.GotoPhase","Models.PMF.Phen.LeafAppearancePhase",
             "Models.PMF.Phen.LeafDeathPhase","Models.PMF.Phen.Phenology",
-            "Models.Graph.EventNamesOnGraph","Models.Graph.Regression",
+            "Models.EventNamesOnGraph","Models.Regression",
             "Models.Surface.SurfaceOrganicMatter",
     		"Models.Soils.Nutrients.Nutrient,",
     		"Models.PMF.Plant",
     		"Models.PMF.OilPalm.OilPalm,",
-            "Models.Graph.Series","Models.Graph.Graph",
+            "Models.Series","Models.Graph",
             "Models.Functions.DecumulateFunction","Models.Functions.EndOfDayFunction",
             "Models.Functions.AccumulateAtEvent","Models.Functions.DailyMeanVPD",
             "Models.Functions.CERESDenitrificationWaterFactor","Models.Functions.CERESDenitrificationTemperatureFactor",
@@ -467,15 +467,15 @@ namespace Models.Core.ApsimFile
                         else
                             toObject[propertyName] = value;
                     }
-                    else if (int.TryParse(value, out intValue))
+                    else if (int.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out intValue))
                         toObject[propertyName] = intValue;
-                    else if (double.TryParse(value, out doubleValue))
+                    else if (double.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out doubleValue))
                         toObject[propertyName] = doubleValue;
                     else if (value == "-INF")
                         toObject[propertyName] = double.NaN;
                     else if (bool.TryParse(value, out boolValue))
                         toObject[propertyName] = boolValue;
-                    else if (DateTime.TryParseExact(value, "MM/dd/yyyy hh:mm:ss", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out dateValue))
+                    else if (DateTime.TryParseExact(value, "MM/dd/yyyy hh:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateValue))
                         toObject[propertyName] = dateValue.ToString("yyyy-MM-dd");
                     else
                         toObject[propertyName] = value;

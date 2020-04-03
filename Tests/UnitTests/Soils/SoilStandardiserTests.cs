@@ -36,6 +36,8 @@
                             }
                         }
                     },
+                    new Models.WaterModel.WaterBalance(),
+                    new CERESSoilTemperature(),
                     new Organic
                     {
                         Thickness = new double[] { 100, 300 },
@@ -67,8 +69,8 @@
             SoilStandardiser.Standardise(soil);
 
             var water = soil.Children[0] as Physical;
-            var soilOrganicMatter = soil.Children[1] as Organic;
-            var sample = soil.Children[3] as Sample;
+            var soilOrganicMatter = soil.Children[3] as Organic;
+            var sample = soil.Children[5] as Sample;
 
             // Make sure layer structures have been standardised.
             var targetThickness = new double[] { 100, 300, 300 };
@@ -107,6 +109,8 @@
                             }
                         }
                     },
+                    new Models.WaterModel.WaterBalance(),
+                    new CERESSoilTemperature(),
                     new Organic
                     {
                         Thickness = new double[] { 100, 300 },
@@ -142,8 +146,8 @@
             SoilStandardiser.Standardise(soil);
 
             var water = soil.Children[0] as Physical;
-            var soilOrganicMatter = soil.Children[1] as Organic;
-            var sample = soil.Children[3] as Sample;
+            var soilOrganicMatter = soil.Children[3] as Organic;
+            var sample = soil.Children[5] as Sample;
 
             // Make sure layer structures have been standardised.
             var targetThickness = new double[] { 100, 300 };
@@ -172,6 +176,8 @@
                         DUL = new double[] { 0.365, 0.461 },
                         SAT = new double[] { 0.400, 0.481 },
                     },
+                    new Models.WaterModel.WaterBalance(),
+                    new CERESSoilTemperature(),
                     new Organic
                     {
                         Thickness = new double[] { 100, 200 },
@@ -204,8 +210,8 @@
 
             SoilStandardiser.Standardise(soil);
 
-            var initial = soil.Children[3] as Sample;
-            var analysis = soil.Children[2] as Chemical;
+            var initial = soil.Children[5] as Sample;
+            var analysis = soil.Children[4] as Chemical;
 
             Assert.AreEqual(Apsim.Children(soil, typeof(Sample)).Count, 1);
             Assert.AreEqual(initial.Name, "Initial");
@@ -216,7 +222,7 @@
             Assert.AreEqual(initial.PH, new double[] { 6.4, 6.9 });
             Assert.AreEqual(initial.EC, new double[] { 150, 200 });
 
-            var soilOrganicMatter = soil.Children[1] as Organic;
+            var soilOrganicMatter = soil.Children[3] as Organic;
             Assert.IsNull(soilOrganicMatter.Carbon);
 
             Assert.NotNull(analysis);

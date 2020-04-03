@@ -1,19 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Model.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.Core
+﻿namespace Models.Core
 {
-    using Storage;
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.IO;
-    using System.Reflection;
-    using System.Runtime.Serialization;
-    using System.Runtime.Serialization.Formatters.Binary;
-    using System.Xml;
     using System.Xml.Serialization;
 
     /// <summary>
@@ -78,20 +66,6 @@ namespace Models.Core
         /// Gets or sets whether the model is enabled
         /// </summary>
         public bool Enabled { get; set; }
-
-        /// <summary>
-        /// Return the current APSIM version number.
-        /// </summary>
-        public string ApsimVersion
-        {
-            get
-            {
-                string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-                FileInfo info = new FileInfo(Assembly.GetExecutingAssembly().Location);
-                string buildDate = info.LastWriteTime.ToString("yyyy-MM-dd");
-                return "Version " + version + ", built " + buildDate;
-            }
-        }
 
         /// <summary>
         /// Controls whether the model can be modified.

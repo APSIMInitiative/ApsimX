@@ -1,22 +1,17 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Report.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.Report
+namespace Models
 {
     using APSIM.Shared.Utilities;
+    using Models.CLEM;
     using Models.Core;
-    using Newtonsoft.Json;
-    using Models.Core.Run;
     using Models.Storage;
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Data;
     using System.IO;
     using System.Linq;
+    using System.Text.RegularExpressions;
     using System.Xml.Serialization;
-    using Models.CLEM;
 
     /// <summary>
     /// A report class for writing output to the data store.
@@ -38,6 +33,9 @@ namespace Models.Report
         /// <summary>The data to write to the data store.</summary>
         [NonSerialized]
         private ReportData dataToWriteToDb = null;
+
+        /// <summary>List of strings representing dates to report on.</summary>
+        private List<string> dateStringsToReportOn = new List<string>();
 
         /// <summary>Link to a simulation</summary>
         [Link]
@@ -85,11 +83,14 @@ namespace Models.Report
         [JsonIgnore]
         public DateTime DayAfterLastOutput { get; set; }
 
+        /// <summary>Group by variable name.</summary>
+        public string GroupByVariableName{ get; set; }
+
         /// <summary>An event handler to allow us to initialize ourselves.</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
-        [EventSubscribe("StartOfSimulation")]
-        private void OnCommencing(object sender, EventArgs e)
+        [EventSubscribe("FinalInitialise")]
+        private void OnFinalInitialise(object sender, EventArgs e)
         {
             DayAfterLastOutput = clock.Today;
             dataToWriteToDb = null;
@@ -110,6 +111,19 @@ namespace Models.Report
                 events.Subscribe(eventName, DoOutputEvent);
         }
 
+        /// <summary>An event handler called at the end of each day.</summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        [EventSubscribe("DoReport")]
+        private void OnDoReport(object sender, EventArgs e)
+        {
+            foreach (var dateString in dateStringsToReportOn)
+            {
+                if (DateUtilities.DatesAreEqual(dateString, clock.Today))
+                    DoOutput();
+            }
+        }
+
         /// <summary>
         /// Sanitises the event names and removes duplicates/comments.
         /// </summary>
@@ -127,7 +141,12 @@ namespace Models.Report
                     eventName = eventName.Substring(0, commentIndex);
 
                 if (!string.IsNullOrWhiteSpace(eventName))
-                    eventNames.Add(eventName.Trim());
+                {
+                    if (DateUtilities.validateDateString(eventName) != null)
+                        dateStringsToReportOn.Add(eventName);                       
+                    else
+                        eventNames.Add(eventName.Trim());
+                }
             }
 
             return eventNames.ToArray();
@@ -192,16 +211,35 @@ namespace Models.Report
                 };
             }
 
-            // Create a row ready for writing.
-            List<object> valuesToWrite = new List<object>();
-            for (int i = 0; i < columns.Count; i++)
-                valuesToWrite.Add(columns[i].GetValue());
+            // Get number of groups.
+            var numGroups = Math.Max(1, columns.Max(c => c.NumberOfGroups));
 
-            // Add row to our table that will be written to the db file
-            dataToWriteToDb.Rows.Add(valuesToWrite);
+            for (int groupIndex = 0; groupIndex < numGroups; groupIndex++)
+            {
+                // Create a row ready for writing.
+                List<object> valuesToWrite = new List<object>();
+                List<string> invalidVariables = new List<string>();
+                for (int i = 0; i < columns.Count; i++)
+                {
+                    try
+                    {
+                        valuesToWrite.Add(columns[i].GetValue(groupIndex));
+                    }
+                    catch// (Exception err)
+                    {
+                        // Should we include exception message?
+                        invalidVariables.Add(columns[i].Name);
+                    }
+                }
+                if (invalidVariables != null && invalidVariables.Count > 0)
+                    throw new Exception($"Error in report {Name}: Invalid report variables found:\n{string.Join("\n", invalidVariables)}");
+
+                // Add row to our table that will be written to the db file
+                dataToWriteToDb.Rows.Add(valuesToWrite);
+            }
 
             // Write the table if we reach our threshold number of rows.
-            if (dataToWriteToDb.Rows.Count == 100)
+            if (dataToWriteToDb.Rows.Count >= 100)
             {
                 storage.Writer.WriteTable(dataToWriteToDb);
                 dataToWriteToDb = null;
@@ -259,17 +297,53 @@ namespace Models.Report
         /// <summary>
         /// Fill the Members list with VariableMember objects for each variable.
         /// </summary>
-        private void FindVariableMembers()
+        protected void FindVariableMembers()
         {
             this.columns = new List<IReportColumn>();
 
             AddExperimentFactorLevels();
 
+            // If a group by variable was specified then all columns need to be aggregated
+            // columns. Find the first aggregated column so that we can, later, use its from and to
+            // variables to create an agregated column that doesn't have them.
+            string from = null;
+            string to =  null;
+            if (!string.IsNullOrEmpty(GroupByVariableName))
+                FindFromTo(out from, out to);
+
             foreach (string fullVariableName in this.VariableNames)
             {
-                if (fullVariableName != string.Empty)
-                    this.columns.Add(ReportColumn.Create(fullVariableName, clock, storage.Writer, locator, events));
+                try
+                {
+                    if (!string.IsNullOrEmpty(fullVariableName))
+                        columns.Add(new ReportColumn(fullVariableName, clock, locator, events, GroupByVariableName, from, to));
+                }
+                catch (Exception err)
+                {
+                    throw new Exception($"Error while creating report column '{fullVariableName}'", err);
+                }
             }
+        }
+
+        /// <summary>
+        /// Find and return a from and to clause in a variable.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        protected void FindFromTo(out string from, out string to)
+        {
+            // Find the first aggregation column.
+            var firstAggregatedVariableName = VariableNames.ToList().Find(var => var.Contains(" from "));
+            if (firstAggregatedVariableName == null)
+                throw new Exception("A report 'group by' can only be specified if there is at least one temporal aggregated column.");
+
+            var pattern = @".+from\W(?<from>.+)\Wto\W(?<to>.+)\Was\W.+";
+            var regEx = new Regex(pattern);
+            var match = regEx.Match(firstAggregatedVariableName);
+            if (!match.Success)
+                throw new Exception($"Invalid format for report agregation variable {firstAggregatedVariableName}");
+            from = match.Groups["from"].Value;
+            to = match.Groups["to"].Value;
         }
 
         /// <summary>Add the experiment factor levels as columns.</summary>

@@ -38,9 +38,9 @@ namespace Models.CLEM.Activities
         Clock Clock = null;
 
         /// <summary>
-        /// Use artificial insemination (no bulls required)
+        /// Use artificial insemination (no sires required)
         /// </summary>
-        [Description("Use controlled mating/artificial insemination (no bulls required)")]
+        [Description("Use controlled mating/artificial insemination (no sires required)")]
         [Required]
         public bool UseAI { get; set; }
 
@@ -57,6 +57,8 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
+            this.AllocationStyle = ResourceAllocationStyle.Manual;
+
             // Assignment of mothers was moved to RuminantHerd resource to ensure this is done even if no breeding activity is included
             this.InitialiseHerd(false, true);
 
@@ -75,8 +77,15 @@ namespace Models.CLEM.Activities
                     Summary.WriteWarning(this, String.Format("Breeding with Artificial Insemination (AI) requires a Timer otherwise breeding will be undertaken every time step in activity [a={0}]", this.Name));
                 }
             }
+            else
+            {
+                if (this.TimingExists)
+                {
+                    Summary.WriteWarning(this, String.Format("Uncontrolled/natural breeding will occur every month and the timer associated with [a={0}] will be ignored.", this.Name));
+                }
+            }
 
-            // work our pregnancy status of initial herd
+            // work out pregnancy status of initial herd
             if (InferStartupPregnancy)
             {
                 // set up pre start conception status of breeders
@@ -133,7 +142,7 @@ namespace Models.CLEM.Activities
                                         // calculate conception
                                         Reporting.ConceptionStatus status = Reporting.ConceptionStatus.NotMated;
                                         double conceptionRate = ConceptionRate(female, out status) * maleLimiter;
-                                        if (ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
+                                        if (RandomNumberGenerator.Generator.NextDouble() <= conceptionRate)
                                         {
                                             female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, i);
                                             // report conception status changed
@@ -158,7 +167,7 @@ namespace Models.CLEM.Activities
                                         double conceptionRate = ConceptionRate(female, out status);
                                         if (numberServiced <= numberPossible) // labour/finance limited number
                                         {
-                                            if (ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
+                                            if (RandomNumberGenerator.Generator.NextDouble() <= conceptionRate)
                                             {
                                                 female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, i);
                                                 // report conception status changed
@@ -189,12 +198,7 @@ namespace Models.CLEM.Activities
             // get list of all individuals of breeding age and condition
             // grouped by location
             var breeders = from ind in herd
-                            where ind.IsBreeder
-                            //(ind.Gender == Sex.Male && ind.Age >= ind.BreedParams.MinimumAge1stMating) ||
-                            //(ind.Gender == Sex.Female &&
-                            //ind.Age >= ind.BreedParams.MinimumAge1stMating &&
-                            //ind.HighWeight >= (ind.BreedParams.MinimumSize1stMating * ind.StandardReferenceWeight)
-                            //)
+                            where ind.IsBreedingCondition
                             group ind by ind.Location into grp
                             select grp;
 
@@ -241,6 +245,7 @@ namespace Models.CLEM.Activities
             {
                 // report that this activity was performed as it does not use base GetResourcesRequired
                 this.TriggerOnActivityPerformed();
+                this.Status = ActivityStatus.NotNeeded;
             }
 
             // for each location where parts of this herd are located
@@ -256,7 +261,7 @@ namespace Models.CLEM.Activities
                     // needs to be caclulated for each offspring carried.
                     for (int i = 0; i < female.CarryingCount; i++)
                     {
-                        if (ZoneCLEM.RandomGenerator.NextDouble() < (female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
+                        if (RandomNumberGenerator.Generator.NextDouble() < (female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
                         {
                             female.OneOffspringDies();
                             if (female.NumberOfOffspring == 0)
@@ -280,7 +285,7 @@ namespace Models.CLEM.Activities
                         {
                             // Foetal mortality is now performed each timestep at base of this method
                             object newCalf = null;
-                            bool isMale = (ZoneCLEM.RandomGenerator.NextDouble() <= female.BreedParams.ProportionOffspringMale);
+                            bool isMale = (RandomNumberGenerator.Generator.NextDouble() <= female.BreedParams.ProportionOffspringMale);
                             double weight = female.BreedParams.SRWBirth * female.StandardReferenceWeight * (1 - 0.33 * (1 - female.Weight / female.StandardReferenceWeight));
                             if (isMale)
                             {
@@ -307,14 +312,14 @@ namespace Models.CLEM.Activities
                             female.SucklingOffspringList.Add(newCalfRuminant);
                             // remove calf weight from female
                             female.WeightLossDueToCalf += newCalfRuminant.Weight;
+                            // this now reports for each individual born not a birth event as individual wean events are reported
+                            female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Birth, female, Clock.Today));
                         }
                         female.UpdateBirthDetails();
-                        // report conception status changed when last multiple birth dies.
-                        female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Birth, female, Clock.Today));
+                        this.Status = ActivityStatus.Success;
                     }
                 }
 
-                // restructure of conception between controlled and uncontrolled mating to combine neatly and remove duplicated code 11/11/2019
                 numberPossible = -1;
                 if (!UseAI)
                 {
@@ -346,13 +351,14 @@ namespace Models.CLEM.Activities
                         double conceptionRate = ConceptionRate(female, out status);
                         if (conceptionRate > 0)
                         {
-                            if (ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
+                            if (RandomNumberGenerator.Generator.NextDouble() <= conceptionRate)
                             {
                                 female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0);
                                 status = Reporting.ConceptionStatus.Conceived;
                             }
                         }
                         numberServiced++;
+                        this.Status = ActivityStatus.Success;
                     }
 
                     // report change in breeding status
@@ -430,7 +436,7 @@ namespace Models.CLEM.Activities
 
             // get only breeders for labour calculations
             List<Ruminant> herd = CurrentHerd(true).Where(a => a.Gender == Sex.Female &&
-                            a.IsBreeder).ToList();
+                            a.IsBreedingCondition).ToList();
             int head = herd.Count();
             double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
 
@@ -513,6 +519,18 @@ namespace Models.CLEM.Activities
                 }
             }
             return ResourceRequestList;
+        }
+
+        /// <summary>
+        /// Property to check if timing of this activity is ok based on child and parent ActivityTimers in UI tree
+        /// </summary>
+        /// <returns>T/F</returns>
+        public override bool TimingOK
+        {
+            get
+            {
+                return (!UseAI) ? true : base.TimingOK;
+            }
         }
 
         /// <summary>

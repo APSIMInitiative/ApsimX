@@ -152,16 +152,28 @@
         }
 
         /// <summary>Find our children.</summary>
-        private void FindChildren()
+        public void FindChildren()
         {
             waterNode = Apsim.Child(this, typeof(Physical)) as Physical;
+
             Weirdo = Apsim.Child(this, typeof(WEIRDO)) as WEIRDO;
-            structure = Apsim.Child(this, typeof(LayerStructure)) as LayerStructure; 
             SoilWater = Apsim.Child(this, typeof(ISoilWater)) as ISoilWater;
+            if (Weirdo == null && SoilWater == null)
+                throw new Exception($"{Name}: Unable to find SoilWater or WEIRDO child model");
+            if (Weirdo == null && waterNode == null)
+                throw new Exception($"{Name}: Unable to find Physical or WEIRDO child model");
+
             SoilOrganicMatter = Apsim.Child(this, typeof(Organic)) as Organic;
+            if (SoilOrganicMatter == null)
+                throw new Exception($"{Name}: Unable to find Organic child model");
+
             temperatureModel = Apsim.Child(this, typeof(ISoilTemperature)) as ISoilTemperature;
+            if (temperatureModel == null)
+                throw new Exception($"{Name}: Unable to find soil temperature child model");
+
             Initial = Children.Find(child => child is Sample) as Sample;
-            }
+            structure = Apsim.Child(this, typeof(LayerStructure)) as LayerStructure;
+        }
 
         /// <summary>
         /// Water node of soil.
@@ -460,8 +472,8 @@
         { 
             get 
             {
-                if (SoilWater == null || !(SoilWater is SoilWater)) return null;
-                return (SoilWater as SoilWater).SWCON;
+                if (SoilWater == null || !(SoilWater is WaterModel.WaterBalance)) return null;
+                return (SoilWater as WaterModel.WaterBalance).SWCON;
             }
         }
 
@@ -474,7 +486,7 @@
             get
                 {
                 if (SoilWater == null) return null;
-                return (SoilWater as SoilWater).KLAT;
+                return (SoilWater as WaterModel.WaterBalance).KLAT;
             }
         }
 

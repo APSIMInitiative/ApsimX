@@ -1,9 +1,3 @@
-// -----------------------------------------------------------------------
-// <copyright file="graztype.cs" company="CSIRO">
-//      CSIRO Agriculture & Food
-// </copyright>
-// -----------------------------------------------------------------------
-
 namespace Models.GrazPlan
 {
     using System;

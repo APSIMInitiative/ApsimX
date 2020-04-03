@@ -21,10 +21,11 @@ namespace Models.CLEM
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
-    [ValidParent(ParentType = typeof(Zone))]
-    [Description("This represents a CLEM farm resources")]
+    [Description("This represents all CLEM farm resources and activities")]
     [HelpUri(@"Content/Features/CLEMComponent.htm")]
-    [Version(1, 0, 2, "New ResourceUnitConverter functionality added that changes some reporting.\nThis change will cause errors for all previous custom resource ledger reports created using the APSIM Report component.\nTo fix errors add \".Name\" to all LastTransaction.ResourceType and LastTransaction.Activity entries in custom ledgers (i.e. LastTransaction.ResourceType.Name as Resource). The CLEM ReportResourceLedger component has been updated to automatically handle the changes.")]
+    [Version(1, 0, 4, "Random numbers and iteration property moved form this component to a stand-alone component\nChanges will be required to your setup")]
+    [Version(1, 0, 3, "Updated filtering logic to improve performance")]
+    [Version(1, 0, 2, "New ResourceUnitConverter functionality added that changes some reporting.\nThis change will cause errors for all previous custom resource ledger reports created using the APSIM Report component.\nTo fix errors add \".Name\" to all LastTransaction.ResourceType and LastTransaction.Activity entries in custom ledgers (i.e. LastTransaction.ResourceType.Name as Resource). The CLEM ReportResourceLedger component has been updated to automatically handle the changes")]
     [Version(1,0,1,"")]
     [ScopedModel]
     public class ZoneCLEM: Zone, IValidatableObject, ICLEMUI
@@ -38,8 +39,6 @@ namespace Models.CLEM
         [Link]
         IDataStore DataStore = null;
 
-        private static Random randomGenerator;
-
         /// <summary>
         /// Identifies the last selected tab for display
         /// </summary>
@@ -47,19 +46,12 @@ namespace Models.CLEM
         public string SelectedTab { get; set; }
 
         /// <summary>
-        /// Seed for random number generator (0 uses clock)
+        /// Multiplier from single farm to regional number of farms for market transactions
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(1)]
-        [Required, GreaterThanEqualValue(0) ]
-        [Description("Random number generator seed (0 to use clock)")]
-        public int RandomSeed { get; set; }
-
-        /// <summary>
-        /// Access the CLEM random number generator
-        /// </summary>
-        [XmlIgnore]
-        [Description("Random number generator for simulation")]
-        public static Random RandomGenerator { get { return randomGenerator; } }
+        [Required, GreaterThanEqualValue(0)]
+        [Description("Farm multiplier to supply and receive from market")]
+        public double FarmMultiplier { get; set; }
 
         /// <summary>
         /// Index of the simulation Climate Region
@@ -110,7 +102,6 @@ namespace Models.CLEM
         /// <summary>Local altitude (meters above sea level).</summary>
         [XmlIgnore]
         public new double Altitude { get; set; } = 50;
-
 
         /// <summary>
         /// Validate object
@@ -219,14 +210,6 @@ namespace Models.CLEM
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            if (RandomSeed==0)
-            {
-                randomGenerator = new Random(Guid.NewGuid().GetHashCode());
-            }
-            else
-            {
-                randomGenerator = new Random(RandomSeed);
-            }
             EcologicalIndicatorsCalculationInterval = 12;
         }
 
@@ -313,7 +296,7 @@ namespace Models.CLEM
             return valid;
         }
 
-            /// <summary>
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="model"></param>
@@ -323,25 +306,33 @@ namespace Models.CLEM
         public string GetFullSummary(object model, bool useFullDescription, string htmlString)
         {
             string html = "";
-            html += "\n<div class=\"holdermain\">";
-            html += "\n<div class=\"clearfix defaultbanner\">";
-            html += "<div class=\"typediv\">" + this.GetType().Name + "</div>";
-            html += "</div>";
-            html += "\n<div class=\"defaultcontent\">";
-            html += "\n<div class=\"activityentry\">Random numbers are used in this simultion. ";
-            if (RandomSeed == 0)
-            {
-                html += "Every run of this simulation will be different.";
-            }
-            else
-            {
-                html += "Each run of this simulation will be identical using the seed <span class=\"setvalue\">" + RandomSeed.ToString() + "</span>";
-            }
-            html += "\n</div>";
-            html += "\n</div>";
+            html += "\n<div class=\"holdermain\" style=\"opacity: " + ((!this.Enabled) ? "0.4" : "1") + "\">";
 
             // get clock
             IModel parentSim = Apsim.Parent(this, typeof(Simulation));
+
+            // find random number generator
+            RandomNumberGenerator rnd = Apsim.Children(parentSim, typeof(RandomNumberGenerator)).FirstOrDefault() as RandomNumberGenerator;
+            if(rnd != null)
+            {
+                html += "\n<div class=\"clearfix defaultbanner\">";
+                html += "<div class=\"namediv\">" + rnd.Name + "</div>";
+                html += "<div class=\"typediv\">RandomNumberGenerator</div>";
+                html += "</div>";
+                html += "\n<div class=\"defaultcontent\">";
+                html += "\n<div class=\"activityentry\">Random numbers are provided for this simultion.<br />";
+                if (rnd.Seed == 0)
+                {
+                    html += "Every run of this simulation will be different.";
+                }
+                else
+                {
+                    html += "Each run of this simulation will be identical using the seed <span class=\"setvalue\">" + rnd.Seed.ToString() + "</span>";
+                }
+                html += "\n</div>";
+                html += "\n</div>";
+            }
+
             Clock clk = Apsim.Children(parentSim, typeof(Clock)).FirstOrDefault() as Clock;
             if (clk != null)
             {

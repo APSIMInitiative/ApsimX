@@ -8,6 +8,7 @@
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Linq;
     using System.IO;
     using System.Threading;
     using System.Xml.Serialization;
@@ -36,33 +37,36 @@
         /// <summary>
         /// Gets or sets the file name to read from.
         /// </summary>
-        public string FileName { get; set; }
+        public string[] FileNames { get; set; }
 
         /// <summary>
         /// Gets or sets the full file name (with path). The user interface uses this. 
         /// </summary>
         [XmlIgnore]
         [Description("EXCEL file name")]
-        public string FullFileName
+        public string[] FullFileNames
         {
             get
             {
+                if (FileNames == null)
+                    return null;
+
                 if (storage == null)
-                    return PathUtilities.GetAbsolutePath(this.FileName, (Apsim.Parent(this, typeof(Simulations)) as Simulations).FileName);
-                return PathUtilities.GetAbsolutePath(this.FileName, storage.FileName);
+                    return FileNames.Select(f => PathUtilities.GetAbsolutePath(f, (Apsim.Parent(this, typeof(Simulations)) as Simulations).FileName)).ToArray();
+                return FileNames.Select(f => PathUtilities.GetAbsolutePath(f, storage.FileName)).ToArray();
             }
 
             set
             {
                 Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                this.FileName = PathUtilities.GetRelativePath(value, simulations.FileName);
+                this.FileNames = value.Select(v => PathUtilities.GetRelativePath(v, simulations.FileName)).ToArray();
             }
         }
 
         /// <summary>Return our input filenames</summary>
         public IEnumerable<string> GetReferencedFileNames()
         {
-            return new string[] { FileName };
+            return FileNames;
         }
 
         /// <summary>
@@ -70,68 +74,45 @@
         /// </summary>
         public void Run()
         {
-            string fullFileName = FullFileName;
-            if (fullFileName != null)
+            foreach (string fileName in FullFileNames)
             {
-                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                if (string.IsNullOrEmpty(fileName))
+                    continue;
 
-                DataTable data = GetTable();
+                DataTable data = GetTable(fileName);
                 if (data != null)
                 {
-                    data.TableName = this.Name;
+                    data.TableName = Name;
                     storage.Writer.WriteTable(data);
                 }
             }
         }
 
         /// <summary>
-        /// Provides an error message to display if something is wrong.
-        /// </summary>
-        [JsonIgnore]
-        [NonSerialized]
-        public string ErrorMessage = string.Empty;
-
-        /// <summary>
         /// Return a datatable for this input file. Returns null if no data.
         /// </summary>
         /// <returns></returns>
-        public DataTable GetTable()
+        public DataTable GetTable(string fileName)
         {
-            DataTable returnDataTable = null;
-            string fullFileName = FullFileName;
-            if (fullFileName != null)
+            ApsimTextFile textFile = new ApsimTextFile();
+            try
             {
-                if (File.Exists(fullFileName))
+                if (File.Exists(fileName))
                 {
-                    ApsimTextFile textFile = new ApsimTextFile();
-                    try
-                    {
-                        textFile.Open(fullFileName);
-                    }
-                    catch (Exception err)
-                    {
-                        ErrorMessage = err.Message;
-                        return null;
-                    }
-                    DataTable table = textFile.ToTable();
-                    textFile.Close();
-
-                    if (returnDataTable == null)
-                        returnDataTable = table;
-                    else
-                        returnDataTable.Merge(table);
+                    textFile.Open(fileName);
+                    return textFile.ToTable();
                 }
                 else
-                {
-                    ErrorMessage = "The specified file does not exist.";
-                }
+                    throw new Exception($"The specified file '{fileName}' does not exist.");
             }
-            else
+            catch (Exception err)
             {
-                ErrorMessage = "Please select a file to use.";
+                throw new Exception($"Error in input file {Name} while reading file {fileName}", err);
             }
-
-            return returnDataTable;
+            finally
+            {
+                textFile?.Close();
+            }
         }       
     }
 }

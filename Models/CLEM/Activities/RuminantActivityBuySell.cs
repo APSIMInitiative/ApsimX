@@ -95,9 +95,6 @@ namespace Models.CLEM.Activities
                 {
                     BuyWithTrucking();
                 }
-                // report that this activity was performed as it does not use base GetResourcesRequired
-                // only triggered on buy not sell.
-                //this.TriggerOnActivityPerformed();
             }
         }
 
@@ -107,6 +104,8 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMAnimalSell")]
         private void OnCLEMAnimalSell(object sender, EventArgs e)
         {
+            Status = ActivityStatus.NoTask;
+
             RuminantHerd ruminantHerd = Resources.RuminantHerd();
 
             int trucks = 0;
@@ -115,17 +114,25 @@ namespace Models.CLEM.Activities
             int head = 0;
             double aESum = 0;
 
-            // get current untrucked list of animals flagged for sale
-            List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.SaleFlag != HerdChangeReason.None).OrderByDescending(a => a.Weight).ToList();
+            // only perform this activity if timing ok, or selling required as a result of forces destock
+            List<Ruminant> herd = new List<Ruminant>();
+            if(this.TimingOK || this.CurrentHerd(false).Where(a => a.SaleFlag == HerdChangeReason.DestockSale).Count() > 0)
+            {
+                this.Status = ActivityStatus.NotNeeded;
+                // get current untrucked list of animals flagged for sale
+                herd = this.CurrentHerd(false).Where(a => a.SaleFlag != HerdChangeReason.None).OrderByDescending(a => a.Weight).ToList();
+            }
+
+            // no individuals to sell
+            if(herd.Count() == 0)
+            {
+                return;
+            }
 
             if (trucking == null)
             {
                 // no trucking just sell
-                head = herd.Count();
-                if(herd.Count()>0)
-                {
-                    SetStatusSuccess();
-                }
+                SetStatusSuccess();
                 foreach (var ind in herd)
                 {
                     aESum += ind.AdultEquivalent;
@@ -169,11 +176,9 @@ namespace Models.CLEM.Activities
                         herd = this.CurrentHerd(false).Where(a => a.SaleFlag != HerdChangeReason.None).OrderByDescending(a => a.Weight).ToList();
                     }
                     // create trucking emissions
-                    if(trucks>0)
-                    {
-                        SetStatusSuccess();
-                    }
                     trucking.ReportEmissions(trucks, true);
+                    // if sold all
+                    Status = (this.CurrentHerd(false).Where(a => a.SaleFlag != HerdChangeReason.None).Count() == 0) ? ActivityStatus.Success : ActivityStatus.Warning;
                 }
             }
             if (bankAccount != null && head > 0) //(trucks > 0 || trucking == null)
@@ -233,7 +238,10 @@ namespace Models.CLEM.Activities
             List<Ruminant> herd = ruminantHerd.PurchaseIndividuals.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).ToList();
             if (herd.Count() > 0)
             {
-                SetStatusSuccess();
+                if(this.Status!= ActivityStatus.Warning)
+                {
+                    this.Status = ActivityStatus.Success;
+                }
             }
 
             double fundsAvailable = 0;
@@ -328,10 +336,10 @@ namespace Models.CLEM.Activities
             }
 
             // if purchase herd > min loads before allowing trucking
-            if (herd.Select(a => a.Weight / 450.0).Sum() / trucking.Number450kgPerTruck >= trucking.MinimumTrucksBeforeSelling)
+            if (herd.Select(a => a.Weight / 450.0).Sum() / trucking.Number450kgPerTruck >= trucking.MinimumTrucksBeforeBuying)
             {
                 // while truck to fill
-                while (herd.Select(a => a.Weight / 450.0).Sum() / trucking.Number450kgPerTruck > trucking.MinimumLoadBeforeSelling)
+                while (herd.Select(a => a.Weight / 450.0).Sum() / trucking.Number450kgPerTruck > trucking.MinimumLoadBeforeBuying)
                 {
                     bool nonloaded = true;
                     trucks++;
@@ -392,11 +400,22 @@ namespace Models.CLEM.Activities
                     herd = ruminantHerd.PurchaseIndividuals.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).OrderByDescending(a => a.Weight).ToList();
                 }
 
+                if (Status != ActivityStatus.Warning)
+                {
+                    if(ruminantHerd.PurchaseIndividuals.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).Count() == 0)
+                    {
+                        SetStatusSuccess();
+                    }
+                    else
+                    {
+                        Status = ActivityStatus.Partial;
+                    }
+                }
+
                 // create trucking emissions
-                if(trucking != null && trucks > 0 )
+                if (trucking != null && trucks > 0 )
                 {
                     trucking.ReportEmissions(trucks, false);
-                    SetStatusSuccess();
                 }
 
                 if (bankAccount != null && (trucks > 0 || trucking == null))
@@ -446,6 +465,10 @@ namespace Models.CLEM.Activities
                         }
                     }
                 }
+            }
+            else
+            {
+                this.Status = ActivityStatus.Warning;
             }
         }
 

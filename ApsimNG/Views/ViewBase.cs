@@ -10,7 +10,7 @@
     public class ViewBase
     {
         /// <summary>A builder instance for extracting controls from resource.</summary>
-        private readonly Builder builder;
+        private Builder builder;
 
         private string gladeString;
 
@@ -154,6 +154,15 @@
         public ViewBase(ViewBase owner, string gladeResourceName)
         {
             this.owner = owner;
+            SetGladeResource(gladeResourceName);
+        }
+
+        /// <summary>
+        /// Set the GLADE resource to use.
+        /// </summary>
+        /// <param name="gladeResourceName">The GLADE resource name.</param>
+        public void SetGladeResource(string gladeResourceName)
+        {
             builder = GetBuilderFromResource(gladeResourceName);
             SetMainWidget();
         }

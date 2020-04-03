@@ -20,6 +20,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
+    [ValidParent(ParentType = typeof(Market))]
     [Description("This holds all resource groups used in the CLEM simulation")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/ResourcesHolder.htm")]
@@ -48,14 +49,23 @@ namespace Models.CLEM.Resources
         [XmlIgnore]
         private List<IModel> ResourceGroupList;
 
+        private void InitialiseResourceGroupList()
+        {
+            if(ResourceGroupList == null)
+            {
+                ResourceGroupList = Apsim.Children(this, typeof(IModel)).Where(a => a.Enabled).ToList();
+            }
+        }
+
         private IModel GetGroupByName(string name)
         {
-            return ResourceGroupList.Find(x => x.Name == name & x.Enabled);
+            InitialiseResourceGroupList();
+            return ResourceGroupList.Find(x => x.Name == name);
         }
 
         private IModel GetGroupByType(Type type)
         {
-            ResourceGroupList = Apsim.Children(this, typeof(IModel)).Where(a => a.Enabled).ToList();
+            InitialiseResourceGroupList();
             return ResourceGroupList.Find(x => x.GetType() == type);
         }
 
@@ -92,8 +102,8 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public object GetResourceGroupByName(string name)
         {
-            ResourceGroupList = Apsim.Children(this, typeof(IModel)).Where(a => a.Enabled).ToList();
-            return ResourceGroupList.Find(x => x.Name == name & x.Enabled);
+            InitialiseResourceGroupList();
+            return ResourceGroupList.Find(x => x.Name == name);
         }
 
         /// <summary>
@@ -103,7 +113,8 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public object GetResourceGroupByType(Type resourceGroupType)
         {
-            return ResourceGroupList.Find(x => x.GetType() == resourceGroupType & x.Enabled);
+            InitialiseResourceGroupList();
+            return ResourceGroupList.Find(x => x.GetType() == resourceGroupType);
         }
 
         /// <summary>
@@ -236,7 +247,7 @@ namespace Models.CLEM.Resources
         /// Retrieve a ResourceType from a ResourceGroup with specified names
         /// </summary>
         /// <param name="requestingModel">name of model requesting resource</param>
-        /// <param name="resourceGroupAndItem">Period seperated list of resource group and type</param>
+        /// <param name="resourceGroupAndItem">Period separated list of resource group and type</param>
         /// <param name="missingResourceAction">Action to take if requested resource group not found</param>
         /// <param name="missingResourceTypeAction">Action to take if requested resource type not found</param>
         /// <returns>A reference to the item of type object</returns>
@@ -291,6 +302,48 @@ namespace Models.CLEM.Resources
                 }
                 return null;
             }
+        }
+
+        /// <summary>
+        /// Returns the link to the matching resource in the market place if found or creates a new clone copy for future transactions
+        /// This allows this action to be performed once to store the link rather than at every transaction
+        /// This functionality allows resources not in the market at the start of the simulation to be traded.
+        /// </summary>
+        /// <param name="resourceType">The resource type to trade</param>
+        /// <param name="linkToResourceType">A link to the associated resource type</param>
+        /// <returns>Whether the search was successful</returns>
+        public bool ResourceTypeExists(CLEMResourceTypeBase resourceType, out object linkToResourceType)
+        {
+            linkToResourceType = null;
+
+            // find parent group type
+            ResourceBaseWithTransactions parent = (resourceType as Model).Parent as ResourceBaseWithTransactions;
+            ResourceBaseWithTransactions resGroup = GetResourceGroupByType(parent.GetType()) as ResourceBaseWithTransactions;
+            if (resGroup is null)
+            {
+                // add warning the market is not currently trading in this resource
+                string zoneName = Apsim.Parent(this, typeof(Zone)).Name;
+                Warnings.Add($"[{zoneName}] is currently not accepting resources of type [r={parent.GetType().ToString()}]\nOnly resources groups provided in the [r=ResourceHolder] in the simulation tree will be traded.");
+                return false;
+            }
+
+            // TODO: do some group checks. land units, currency
+
+            // TODO: if market and looking for finance only return or create "Bank"
+
+            // find resource type in group
+            var resType = resGroup.GetByName((resourceType as IModel).Name);
+            if( resType is null)
+            {
+                // clone resource
+                resType = resourceType.Clone as CLEMResourceTypeBase;
+                (resType as IModel).Parent = resGroup;
+
+                // wire up events
+                resGroup.AddChildEvents(resType as IResourceWithTransactionType);
+            }
+            linkToResourceType = resType;
+            return true;
         }
 
         /// <summary>
@@ -389,7 +442,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            ResourceGroupList = Apsim.Children(this, typeof(IModel));
+            InitialiseResourceGroupList();
         }
 
         /// <summary>
@@ -406,9 +459,17 @@ namespace Models.CLEM.Resources
                 if (request.AllowTransmutation && (queryOnly || request.TransmutationPossible))
                 {
                     // get resource type
-                    IModel model = this.GetResourceItem(request.ActivityModel, request.ResourceType, request.ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IModel;
+                    IModel model = request.Resource as IModel;
+                    if (model is null)
+                    {
+                        model = this.GetResourceItem(request.ActivityModel, request.ResourceType, request.ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IModel;
+                    }
                     if (model != null)
                     {
+                        // get the resource holder to use for this request
+                        // not it is either this class or the holder for the market place required.
+                        ResourcesHolder resHolder = model.Parent.Parent as ResourcesHolder;
+
                         // check if transmutations provided
                         foreach (Transmutation trans in Apsim.Children(model, typeof(Transmutation)))
                         {
@@ -439,12 +500,13 @@ namespace Models.CLEM.Resources
                                 IResourceType transResource = null;
                                 if (transcost.ResourceType.Name != "Labour")
                                 {
-                                    transResource = this.GetResourceItem(request.ActivityModel, transcost.ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
+//                                    transResource = this.GetResourceItem(request.ActivityModel, transcost.ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
+                                    transResource = resHolder.GetResourceItem(request.ActivityModel, transcost.ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
                                 }
 
                                 if (!queryOnly)
                                 {
-                                    //remove cost
+                                    // remove cost
                                     // create new request for this transmutation cost
                                     ResourceRequest transRequest = new ResourceRequest
                                     {
@@ -480,7 +542,7 @@ namespace Models.CLEM.Resources
                             if(!queryOnly)
                             {
                                 // Add resource
-                                (model as IResourceType).Add(unitsNeeded * trans.AmountPerUnitPurchase, trans, "");
+                                (model as IResourceType).Add(unitsNeeded * trans.AmountPerUnitPurchase, trans, "Transmutation");
                             }
                         }
                     }
@@ -526,7 +588,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
-            return "\n<div class=\"resource\">";
+            return "\n<div class=\"resource\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
         }
 
         /// <summary>

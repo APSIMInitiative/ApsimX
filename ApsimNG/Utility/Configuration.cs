@@ -41,8 +41,17 @@ namespace Utility
         /// <summary>The previous height of the status panel</summary>
         public int StatusPanelHeight { get; set; }
 
+        /// <summary>
+        /// The position of the splitter between the variables
+        /// and frequency text editors in the report UI.
+        /// </summary>
+        public int ReportSplitterPosition { get; set; }
+
         /// <summary>Keeps track of whether the dark theme is enabled.</summary>
         public bool DarkTheme { get; set; }
+
+        /// <summary>Iff true, the GUI will not play a sound when simulations finish running.</summary>
+        public bool Muted { get; set; }
 
         /// <summary>Return the name of the summary file JPG.</summary>
         public string SummaryPngFileName
@@ -101,6 +110,16 @@ namespace Utility
         /// Store the user's preferred font size
         /// </summary>
         public double BaseFontSize { get; set; } = 12.5;
+
+        /// <summary>
+        /// Simulation complete wav file.
+        /// </summary>
+        public string SimulationCompleteWavFileName { get; set; }
+
+        /// <summary>
+        /// Simulation complete with error wav file.
+        /// </summary>
+        public string SimulationCompleteWithErrorWavFileName { get; set; }
 
         /// <summary>
         /// Stores the user's preferred font.

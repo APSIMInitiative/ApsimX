@@ -17,6 +17,7 @@
     [ViewName("UserInterface.Views.TabbedMetDataView")]
     [PresenterName("UserInterface.Presenters.MetDataPresenter")]
     [ValidParent(ParentType=typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Zone))]
     public class Weather : Model, IWeather, IReferenceExternalFiles
     {
         /// <summary>
@@ -205,16 +206,32 @@
             }
         }
 
-        private int WinterSolsticeDOY
+        /// <summary>
+        /// days since winter solstice (day)
+        /// </summary>
+        [Units("day")]
+        [XmlIgnore]
+        public int WinterSolsticeDOY
         {
             get {
                 if (Latitude <= 0)
-                    return 173;
+                {
+                    if (DateTime.IsLeapYear(clock.Today.Year))
+                        return 173;
+                    else
+                        return 172;
+                }
                 else
-                    return 356;
+                {
+                    if (DateTime.IsLeapYear(clock.Today.Year))
+                        return 356;
+                    else
+                        return 355;
+                }
                 }
         }
-        
+
+        private bool First = true;
         /// <summary>
         /// Number of days lapsed since the winter solstice
         /// </summary>
@@ -356,6 +373,22 @@
             }
         }
 
+        /// <summary>First date of summer.</summary>
+        [XmlIgnore] 
+        public string FirstDateOfSummer { get; set; } = "1-dec";
+
+        /// <summary>First date of autumn / fall.</summary>
+        [XmlIgnore] 
+        public string FirstDateOfAutumn { get; set; } = "1-mar";
+
+        /// <summary>First date of winter.</summary>
+        [XmlIgnore] 
+        public string FirstDateOfWinter { get; set; } = "1-jun";
+
+        /// <summary>First date of spring.</summary>
+        [XmlIgnore] 
+        public string FirstDateOfSpring { get; set; } = "1-sep";
+
         /// <summary>
         /// Temporarily stores which tab is currently displayed.
         /// Meaningful only within the GUI
@@ -372,6 +405,45 @@
         /// </summary>
         [XmlIgnore] public int ShowYears = 1;
 
+        /// <summary>Start of spring event.</summary>
+        public event EventHandler StartOfSpring;
+
+        /// <summary>Start of summer event.</summary>
+        public event EventHandler StartOfSummer;
+
+        /// <summary>Start of autumn/fall event.</summary>
+        public event EventHandler StartOfAutumn;
+
+        /// <summary>Start of winter event.</summary>
+        public event EventHandler StartOfWinter;
+
+        /// <summary>End of spring event.</summary>
+        public event EventHandler EndOfSpring;
+
+        /// <summary>End of summer event.</summary>
+        public event EventHandler EndOfSummer;
+
+        /// <summary>End of autumn/fall event.</summary>
+        public event EventHandler EndOfAutumn;
+
+        /// <summary>End of winter event.</summary>
+        public event EventHandler EndOfWinter;
+
+        /// <summary>Name of current season.</summary>
+        public string Season
+        {
+            get
+            {
+                if (DateUtilities.WithinDates(FirstDateOfSummer, clock.Today, FirstDateOfAutumn))
+                    return "Summer";
+                else if (DateUtilities.WithinDates(FirstDateOfAutumn, clock.Today, FirstDateOfWinter))
+                    return "Autumn";
+                else if (DateUtilities.WithinDates(FirstDateOfWinter, clock.Today, FirstDateOfSpring))
+                    return "Winter";
+                else
+                    return "Spring";
+            }
+        }
 
         /// <summary>Return our input filenames</summary>
         public IEnumerable<string> GetReferencedFileNames()
@@ -415,6 +487,19 @@
             {
                 reader.Close();
                 reader = null;
+            }
+
+            if (Latitude > 0)
+            {
+                // Swap summer and winter dates.
+                var temp = FirstDateOfSummer;
+                FirstDateOfSummer = FirstDateOfWinter;
+                FirstDateOfWinter = temp;
+
+                // Swap spring and autumn dates.
+                temp = FirstDateOfSpring;
+                FirstDateOfSpring = FirstDateOfAutumn;
+                FirstDateOfAutumn = temp;
             }
         }
 
@@ -470,7 +555,16 @@
                 this.reader.SeekToDate(this.clock.Today);
             }
 
-            object[] values = this.reader.GetNextLineOfData();
+            object[] values;
+
+            try
+            {
+                values = this.reader.GetNextLineOfData();
+            }
+            catch (IndexOutOfRangeException err)
+            {
+                throw new Exception($"Unable to retrieve weather data on {clock.Today.ToString("yyy-MM-dd")} in file {FileName}", err);
+            }
 
             if (this.clock.Today != this.reader.GetDateFromValues(values))
                 throw new Exception("Non consecutive dates found in file: " + this.FileName + ".  Another posibility is that you have two clock objects in your simulation, there should only be one");
@@ -534,11 +628,69 @@
             if (this.PreparingNewWeatherData != null)
                 this.PreparingNewWeatherData.Invoke(this, new EventArgs());
 
-            if (clock.Today.DayOfYear == WinterSolsticeDOY)
+            if (First)
+            {
+                //StartDAWS = met.DaysSinceWinterSolstice;
+                if (clock.Today.DayOfYear < WinterSolsticeDOY)
+                {
+                    if (DateTime.IsLeapYear(clock.Today.Year))
+                        DaysSinceWinterSolstice = 366 - WinterSolsticeDOY + clock.Today.DayOfYear -1;  //minus 1 as we set the first day as zero
+                    else
+                        DaysSinceWinterSolstice = 365 - WinterSolsticeDOY + clock.Today.DayOfYear -1; 
+                }
+                else
+                    DaysSinceWinterSolstice = clock.Today.DayOfYear - WinterSolsticeDOY;
+                    
+                First = false;
+            }
+
+            if (clock.Today.DayOfYear == WinterSolsticeDOY & First == false)
                 DaysSinceWinterSolstice = 0;
             else DaysSinceWinterSolstice += 1;
 
             Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha,VP);
+        }
+
+        /// <summary>
+        /// An event handler for the start of day event.
+        /// </summary>
+        /// <param name="sender">The sender of the event</param>
+        /// <param name="e">The arguments of the event</param>
+        [EventSubscribe("StartOfDay")]
+        private void OnStartOfDay(object sender, EventArgs e)
+        {
+            if (StartOfSummer != null && DateUtilities.DatesEqual(FirstDateOfSummer, clock.Today))
+                StartOfSummer.Invoke(this, e);
+
+            if (StartOfAutumn != null && DateUtilities.DatesEqual(FirstDateOfAutumn, clock.Today))
+                StartOfAutumn.Invoke(this, e);
+
+            if (StartOfWinter != null && DateUtilities.DatesEqual(FirstDateOfWinter, clock.Today))
+                StartOfWinter.Invoke(this, e);
+
+            if (StartOfSpring != null && DateUtilities.DatesEqual(FirstDateOfSpring, clock.Today))
+                StartOfSpring.Invoke(this, e);
+        }
+
+        /// <summary>
+        /// An event handler for the end of day event.
+        /// </summary>
+        /// <param name="sender">The sender of the event</param>
+        /// <param name="e">The arguments of the event</param>
+        [EventSubscribe("EndOfDay")]
+        private void OnEndOfDay(object sender, EventArgs e)
+        {
+            if (EndOfSummer != null && DateUtilities.DatesEqual(FirstDateOfAutumn, clock.Today.AddDays(1)))
+                EndOfSummer.Invoke(this, e);
+
+            if (EndOfAutumn != null && DateUtilities.DatesEqual(FirstDateOfWinter, clock.Today.AddDays(1)))
+                EndOfAutumn.Invoke(this, e);
+
+            if (EndOfWinter != null && DateUtilities.DatesEqual(FirstDateOfSpring, clock.Today.AddDays(1)))
+                EndOfWinter.Invoke(this, e);
+
+            if (EndOfSpring != null && DateUtilities.DatesEqual(FirstDateOfSummer, clock.Today.AddDays(1)))
+                EndOfSpring.Invoke(this, e);
         }
 
         /// <summary>
@@ -623,14 +775,14 @@
             this.ProcessMonthlyTAVAMP(out tav, out amp);
 
             if (this.reader.Constant("tav") == null)
-                this.reader.AddConstant("tav", tav.ToString(), string.Empty, string.Empty); // add a new constant
+                this.reader.AddConstant("tav", tav.ToString(CultureInfo.InvariantCulture), string.Empty, string.Empty); // add a new constant
             else
-                this.reader.SetConstant("tav", tav.ToString());
+                this.reader.SetConstant("tav", tav.ToString(CultureInfo.InvariantCulture));
  
             if (this.reader.Constant("amp") == null)
-                this.reader.AddConstant("amp", amp.ToString(), string.Empty, string.Empty); // add a new constant
+                this.reader.AddConstant("amp", amp.ToString(CultureInfo.InvariantCulture), string.Empty, string.Empty); // add a new constant
             else
-                this.reader.SetConstant("amp", amp.ToString());
+                this.reader.SetConstant("amp", amp.ToString(CultureInfo.InvariantCulture));
         }
 
         /// <summary>
@@ -700,9 +852,12 @@
                 for (int m = 0; m < 12; m++)
                 {
                     monthlyMeans[m, y] = monthlySums[m, y] / monthlyDays[m, y];  // calc monthly mean
-                    sumOfMeans += monthlyMeans[m, y];
-                    maxMean = Math.Max(monthlyMeans[m, y], maxMean);
-                    minMean = Math.Min(monthlyMeans[m, y], minMean);
+                    if (monthlyDays[m, y] != 0)
+                    {
+                        sumOfMeans += monthlyMeans[m, y];
+                        maxMean = Math.Max(monthlyMeans[m, y], maxMean);
+                        minMean = Math.Min(monthlyMeans[m, y], minMean);
+                    }
                 }
 
                 yearlySumMeans += sumOfMeans / 12.0;        // accum the ave of monthly means

@@ -1,95 +1,42 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Cohort.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace Models.LifeCycle
+﻿namespace Models.LifeCycle
 {
     using System;
 
     /// <summary>
     /// # [Name]
-    /// A generic cohort item that exists in a LifeStage within a LifeCycle
-    /// 
-    ///|Property          .|Type    .|Units  .|Description              .| 
-    ///|---|---|---|:---|
-    ///|PhenoAge     |double   |time steps  |Developmental level (within a LifeStage)    |
-    ///|ChronoAge    |double   |time steps  |Period of existence since start of egg(?) stage |
-    ///|PhysiologicalAge |double |0-1 |The fraction of maturity for the cohort |
-    ///|Count        |double |  |Count of organisms in this cohort |
-    ///|Fecundity    |double |  |The fecundity for the time step |
-    ///|Mortality    |double |  |The mortality for the time step |
-    ///|OwningStage  |LifeStage|  |The LifeStage that owns this cohort |
-    ///
+    /// A class that holds the status of a group of individules (cohort) of the same developmental stage
     /// </summary>
+
     [Serializable]
     public class Cohort
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        public int Ident;
+        /// <summary>Number of individules in this cohort.</summary>
+        public double Population { get; set; }
 
-        /// <summary>
-        /// Developmental level (within a lifestage). In timesteps.
-        /// </summary>
-        public double PhenoAge { get; set; }
+        /// <summary>Days since this cohort was initiated</summary>
+        public double ChronologicalAge { get; set; }
 
-        /// <summary>
-        /// Period of existence since start of egg(?) stage. In timesteps.
-        /// </summary>
-        public double ChronoAge { get; set; }
-
-        /// <summary>
-        /// The fraction of maturity for the cohort. 0-1
-        /// </summary>
+        /// <summary>The maturity of the cohort (0-1)</summary>
         public double PhysiologicalAge { get; set; }
+                
+        /// <summary>Number of Mortalities from this cohort today.</summary>
+        public double Mortalities { get; set; }
 
-        /// <summary>
-        /// Count of creatures/spores in this cohort.
-        /// </summary>
-        public double Count { get; set; }
+        /// <summary>Number of progeny created by this cohort</summary>
+        public double Progeny { get; set; }
 
-        /// <summary>
-        /// The fecundity for the timestep.
-        /// </summary>
-        public double Fecundity = -1.0;
+        /// <summary>Number of migrants leaving this cohort</summary>
+        public double Migrants { get; set; }
 
-        /// <summary>
-        /// Mortality for the timestep.
-        /// </summary>
-        public double Mortality { get; set; }
+        /// <summary>The LifeCyclePhase this cohort belongs to.</summary>
+        public LifeCyclePhase BelongsToPhase;
 
-        /// <summary>
-        /// The Lifestage that owns this cohort.
-        /// </summary>
-        public LifeStage OwningStage;
-
-        /// <summary>
-        /// Default constructor
-        /// </summary>
-        public Cohort()
+        /// <summary> Construct and store reference to owner.</summary>
+        /// <param name="belongsTo"></param>
+        public Cohort(LifeCyclePhase belongsTo)
         {
-
+            BelongsToPhase = belongsTo;
         }
 
-        /// <summary>
-        /// Construct and store reference to owner.
-        /// </summary>
-        /// <param name="owner"></param>
-        public Cohort(LifeStage owner)
-        {
-            OwningStage = owner;
-        }
-
-        /// <summary>
-        /// Increment the timestep age of this cohort.
-        /// </summary>
-        public void AgeCohort()
-        {
-            PhenoAge++;
-            ChronoAge++;
-        }
     }
 }

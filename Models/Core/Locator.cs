@@ -1,18 +1,12 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Locater.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.Core
+﻿namespace Models.Core
 {
+    using APSIM.Shared.Utilities;
     using System;
+    using System.Collections;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Reflection;
-    using APSIM.Shared.Utilities;
-    using System.Collections;
-    using Functions;
-    using System.Globalization;
 
     /// <summary>
     /// This class is responsible for the location and retrieval of variables or models 
@@ -113,10 +107,8 @@ namespace Models.Core
                 return value as IVariable;
 
             IVariable returnVariable = null;
-            if (namePath == null || namePath.Length == 0)
-            {
-                return null;
-            }
+            if (string.IsNullOrEmpty(namePath))
+                throw new Exception($"Unable to find variable with null variable name");
             else if (namePath[0] != '.' &&
                      (namePath.Replace("()", "").IndexOfAny("+*/".ToCharArray()) != -1
                      | (namePath.IndexOfAny("(".ToCharArray()) >= 0 && namePath.Substring(0, (namePath.IndexOf('(')>=0? namePath.IndexOf('(') : 0)).IndexOfAny("[.".ToCharArray()) == -1)))
@@ -133,9 +125,8 @@ namespace Models.Core
                 {
                     int posCloseBracket = namePath.IndexOf(']');
                     if (posCloseBracket == -1)
-                    {
-                        return null;
-                    }
+                        throw new Exception($"No closing square bracket in variable name '{namePath}'.");
+
                     string modelName = namePath.Substring(1, posCloseBracket - 1);
                     namePath = namePath.Remove(0, posCloseBracket + 1);
                     Model foundModel = Apsim.Find(relativeTo, modelName) as Model;
@@ -148,7 +139,7 @@ namespace Models.Core
                             foundModel = Apsim.Find(relativeTo, modelTypes[0]) as Model;
                     }
                     if (foundModel == null)
-                        return null;
+                        throw new Exception($"Unable to find any model with name or type {modelName} in scope of {relativeTo.Name}");
                     else
                         relativeTo = foundModel;
                 }
@@ -177,7 +168,7 @@ namespace Models.Core
 
                 // Now walk the series of '.' separated path bits, assuming the path bits
                 // are child models. Stop when we can't find the child model.
-                string[] namePathBits = namePath.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                string[] namePathBits = namePath.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToArray();
                 int i;
                 for (i = 0; i < namePathBits.Length; i++)
                 {
@@ -213,9 +204,7 @@ namespace Models.Core
                     // Look for either a property or a child model.
                     IModel localModel = null;
                     if (relativeToObject == null)
-                    {
-                        return null;
-                    }
+                        throw new Exception($"Unable to locate model {namePath}");
 
                     // Check property info
                     PropertyInfo propertyInfo = relativeToObject.GetType().GetProperty(namePathBits[j]);
@@ -266,8 +255,11 @@ namespace Models.Core
                                         case TypeCode.String:
                                             argumentsList.Add(cleanArg);
                                             break;
-                                        default:
+                                        case TypeCode.Boolean:
+                                            argumentsList.Add(Convert.ToBoolean(cleanArg, CultureInfo.InvariantCulture));
                                             break;
+                                        default:
+                                            throw new ApsimXException(relativeToModel, "The type of argument (" + Type.GetTypeCode(pars[argid].ParameterType) + ") is not currently supported in Report methods");
                                     }
                                 }
                             }
@@ -281,14 +273,14 @@ namespace Models.Core
                     //}
                     //                    else if (propertyInfo == null && methodInfo == null && relativeToObject is Model)
 
-                    if (propertyInfo == null && methodInfo == null && relativeToObject is Model)
+                    if (propertyInfo == null && methodInfo == null && relativeToObject is IModel model)
                     {
                         // Not a property, may be an unchecked method or a child model.
-                        localModel = (relativeToObject as IModel).Children.FirstOrDefault(m => m.Name.Equals(namePathBits[j], compareType));
+                        localModel = model.Children.FirstOrDefault(m => m.Name.Equals(namePathBits[j], compareType));
                         if (localModel == null)
                         {
                             // Not a model
-                            return null;
+                            throw new Exception($"While locating model {namePath}: {namePathBits[j]} is not a child of {model.Name}");
                         }
                         else
                         {
@@ -301,6 +293,8 @@ namespace Models.Core
                         VariableProperty property = new VariableProperty(relativeToObject, propertyInfo, arraySpecifier);
                         properties.Add(property);
                         relativeToObject = property.Value;
+                        if (relativeToObject == null)
+                            return null;
                     }
                     else if (methodInfo != null)
                     {
@@ -316,6 +310,8 @@ namespace Models.Core
                         //                        VariableProperty property = new VariableProperty(relativeToObject, propertyInfo, arraySpecifier);
                         properties.Add(method);
                         relativeToObject = method.Value;
+                        if (relativeToObject == null)
+                            return null;
                     }
                     else if (relativeToObject is IList)
                     {
@@ -324,10 +320,12 @@ namespace Models.Core
                         VariableProperty property = new VariableProperty(relativeToObject, namePathBits[j]);
                         properties.Add(property);
                         relativeToObject = property.Value;
+                        if (relativeToObject == null)
+                            return null;
                     }
                     else
                     {
-                        return null;
+                        throw new Exception($"While locating model {namePath}: unknown model or property specification {namePathBits[j]}");
                     }
                 }
 
