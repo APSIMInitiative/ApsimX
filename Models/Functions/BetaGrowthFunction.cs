@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using Models.Core;
-using System.Xml.Serialization;
 
 namespace Models.Functions
 {
@@ -13,7 +12,7 @@ namespace Models.Functions
     /// See Yin et al 2003 A Flexible Sigmoid Function of Determinate Growth
     /// </summary>
     [Serializable]
-    [Description("Takes the value of the child as the x value and returns the y value from a beta growth function of the form y = Ymax * (1 + (te - t)/(te-tm))* (t/te)^(te/(te-tm))")]
+    [Description("Takes the value of the child (Ymax adnd Xvalue) and returns the y value from a beta growth function of the form y = Ymax * (1 + (te - t)/(te-tm))* (t/te)^(te/(te-tm))")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class BetaGrowthFunction : Model, IFunction, ICustomDocumentation
@@ -24,27 +23,34 @@ namespace Models.Functions
         /// <summary>The thermal time value</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction XValue = null;
+
         /// <summary>tm, the time at which the maximum growth RATE is obtained  </summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        IFunction tm = null;
+        [Description("tm, the time at which the maximum growth rate is obtained")]
+        public double tm { get; set; }
         /// <summary>te, the time at which Ymax is obtained </summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        IFunction te = null;
+        [Description("te, the time at which Ymax is obtained")]
+        public double te { get; set; }
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        /// <exception cref="System.Exception">Error with values to Sigmoid function</exception>
+        /// <exception cref="System.Exception">Error with values to Betagrwoth function</exception>
         public double Value(int arrayIndex = -1)
         {
             try
             {
                 //Ymax* (1 + (te - t) / (te - tm)) * (t / te) ^ (te / (te - tm))
-                return Ymax.Value(arrayIndex) * (1 + 
-                    (te.Value(arrayIndex) - XValue.Value(arrayIndex)) / 
-                    (te.Value(arrayIndex) - tm.Value(arrayIndex))) *
-                    Math.Pow(XValue.Value(arrayIndex) / te.Value(arrayIndex),
-                    te.Value(arrayIndex) / (te.Value(arrayIndex) - tm.Value(arrayIndex)));
-                        
+                if(XValue.Value(arrayIndex) <= te)
+                {
+                    return Ymax.Value(arrayIndex) * (1 +
+                    (te - XValue.Value(arrayIndex)) /
+                    (te - tm)) *
+                    Math.Pow(XValue.Value(arrayIndex) / te,
+                    te / (te - tm));
+                }
+                else 
+                {
+                    return Ymax.Value(arrayIndex);
+                }
             }
             catch (Exception)
             {
