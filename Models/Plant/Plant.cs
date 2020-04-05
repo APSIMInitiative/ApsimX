@@ -269,11 +269,13 @@
         public event EventHandler Harvesting;
         /// <summary>Occurs when a plant is ended via EndCrop.</summary>
         public event EventHandler PlantEnding;
-        /// <summary>Occurs when a plant is about to be pruned.</summary>
+        /// <summary>Occurs when a plant is about to be winter pruned.</summary>
         public event EventHandler Pruning;
-        /// <summary>Occurs when a plant is about to be pruned.</summary>
+        /// <summary>Occurs when a plant is about to be leaf plucking.</summary>
+        public event EventHandler LeafPlucking;
+        /// <summary>Occurs when a plant is about to be cutted.</summary>
         public event EventHandler Cutting;
-        /// <summary>Occurs when a plant is about to be pruned.</summary>
+        /// <summary>Occurs when a plant is about to be grazed.</summary>
         public event EventHandler Grazing;
         /// <summary>Occurs when a plant is about to flower</summary>
         public event EventHandler Flowering;
@@ -402,6 +404,9 @@
             
             if (biomassRemoveType == "Prune" && Pruning != null)
                 Pruning.Invoke(this, new EventArgs());
+
+            if (biomassRemoveType == "LeafPluck" && LeafPlucking != null)
+                LeafPlucking.Invoke(this, new EventArgs());
 
             if (biomassRemoveType == "Cut" && Cutting != null)
                 Cutting.Invoke(this, new EventArgs());
@@ -590,7 +595,18 @@
         /// <param name="newPlantPopulation">The new plant population.</param>
         public void ReducePopulation(double newPlantPopulation)
         {
-            throw new NotImplementedException();
+            double InitialPopn = plantPopulation;
+            if (IsAlive && newPlantPopulation <= 0.01)
+                EndCrop();  // the plant is dying due to population decline
+            else
+            {
+                plantPopulation = newPlantPopulation;
+                if (Structure != null)
+                {
+                    Structure.DeltaPlantPopulation = InitialPopn - newPlantPopulation;
+                    Structure.ProportionPlantMortality = 1 - (newPlantPopulation / InitialPopn);
+                }
+            }
         }
     }
 }

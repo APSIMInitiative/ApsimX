@@ -9,8 +9,8 @@ amp = 17.22 (oC) ! Annual amplitude in mean monthly temperature. Based on 1 Jan 
 daylength = 8.0
 
 
-        Date                  mint         maxt          rain      radn
-        ()                    (oC)         (oC)          (mm)      (MJ/m^2)
+                          Date         mint         maxt          rain      radn
+                  (dd/MM/yyyy)         (oC)         (oC)          (mm)      (MJ/m^2)
                      2/07/2018         22.1          22.1         0              3.8
                      3/07/2018           22            22         0              3.8
                      4/07/2018         21.7          21.7         0              3.8

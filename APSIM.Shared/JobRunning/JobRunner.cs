@@ -32,6 +32,12 @@
         /// </summary>
         public List<IRunnable> SimsRunning { get; private set; } = new List<IRunnable>();
 
+        /// <summary>
+        /// Lock object controlling access to SimsRunning list
+        /// </summary>
+        
+        public readonly object runningLock = new object();
+
         /// <summary>The number of jobs that are currently running.</summary>
         protected int numberJobsRunning;
 
@@ -150,7 +156,10 @@
             try
             {
                 if (!(job is JobRunnerSleepJob))
-                    SimsRunning.Add(job);
+                    lock (runningLock)
+                    {
+                        SimsRunning.Add(job);
+                    }
 
                 var startTime = DateTime.Now;
 
@@ -169,7 +178,10 @@
                 InvokeJobCompleted(job, jobManager, startTime, error);
 
                 if (!(job is JobRunnerSleepJob))
-                    SimsRunning.Remove(job);
+                    lock (runningLock)
+                    {
+                        SimsRunning.Remove(job);
+                    }
             }
             finally
             {
