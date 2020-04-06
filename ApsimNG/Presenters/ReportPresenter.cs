@@ -133,7 +133,7 @@
             this.view.VariableList.TextHasChangedByUser -= OnVariableNamesChanged;
             this.view.EventList.TextHasChangedByUser -= OnEventNamesChanged;
             this.view.GroupByEdit.Changed -= OnGroupByChanged;
-            this.view.TabChanged += OnChangeTab;
+            this.view.TabChanged -= OnChangeTab;
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
             dataStorePresenter.Detach();
             intellisense.ItemSelected -= OnIntellisenseItemSelected;
