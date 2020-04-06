@@ -987,13 +987,11 @@
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         60.0,
-                        2000.0,
-                        3000.0
+                        2000.0
                       ],
                       "Y": [
                         250.0,
-                        2500.0,
-                        12000.0
+                        2500.0
                       ],
                       "Name": "XYPairs",
                       "Children": [],
