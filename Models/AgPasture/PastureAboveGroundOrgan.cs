@@ -93,7 +93,7 @@
             {
                 double result = 0.0;
                 for (int t = 0; t < Tissue.Length; t++)
-                    result += Tissue[t].DM;
+                    result += Tissue[t].DM.Wt;
 
                 return result;
             }
@@ -106,7 +106,7 @@
             {
                 double result = 0.0;
                 for (int t = 0; t < Tissue.Length - 1; t++)
-                    result += Tissue[t].DM;
+                    result += Tissue[t].DM.Wt;
 
                 return result;
             }
@@ -116,59 +116,17 @@
         /// <remarks>Last tissues is assumed to represent dead material.</remarks>
         public double DMDead
         {
-            get { return Tissue[Tissue.Length - 1].DM; }
+            get { return Tissue[Tissue.Length - 1].DM.Wt; }
         }
 
         /// <summary>The total harvestable dry matter (kg/ha).</summary>
         public double DMTotalHarvestable { get { return DMLiveHarvestable + DMDeadHarvestable; } }
 
         /// <summary>The harvestable dry matter in the live (green) tissues (kg/ha).</summary>
-        public double DMLiveHarvestable { get { return Math.Max(0, StandingLiveHerbageWt - MinimumLiveDM); } }
+        public double DMLiveHarvestable { get { return Math.Max(0, DMLive * FractionStanding - MinimumLiveDM); } }
 
         /// <summary>The harvestable dry matter in the dead tissues (kg/ha).</summary>
-        public virtual double DMDeadHarvestable { get { return StandingDeadHerbageWt; } }
-
-        /// <summary>Dry matter weight of standing herbage (kgDM/ha).</summary>
-        [Units("kg/ha")]
-        public double StandingHerbageWt
-        {
-            get { return DMTotal * FractionStanding; }
-        }
-
-        /// <summary>Dry matter weight of live standing herbage (kgDM/ha).</summary>
-        [Units("kg/ha")]
-        public double StandingLiveHerbageWt
-        {
-            get { return DMLive * FractionStanding; }
-        }
-
-        /// <summary>Dry matter weight of dead standing herbage (kgDM/ha).</summary>
-        [Units("kg/ha")]
-        public double StandingDeadHerbageWt
-        {
-            get { return DMDead * FractionStanding; }
-        }
-
-        /// <summary>N concent of the standing herbage (kg/ha).</summary>
-        [Units("kg/ha")]
-        public double StandingHerbageN
-        {
-            get { return NTotal * FractionStanding; }
-        }
-
-        /// <summary>N concent of the live standing herbage (kg/ha).</summary>
-        [Units("kg/ha")]
-        public double StandingLiveHerbageN
-        {
-            get { return NLive * FractionStanding; }
-        }
-
-        /// <summary>N concent of the dead standing herbage (kg/ha).</summary>
-        [Units("kg/ha")]
-        public double StandingDeadHerbageN
-        {
-            get { return NDead * FractionStanding; }
-        }
+        public virtual double DMDeadHarvestable { get { return DMDead * FractionStanding; } }
 
         /// <summary>The amount of N in the total harvestable dry matter (kg/ha).</summary>
         public double NTotalHarvestable { get { return NLiveHarvestable + NDeadHarvestable; } }
@@ -186,7 +144,7 @@
             {
                 double result = 0.0;
                 for (int t = 0; t < Tissue.Length; t++)
-                    result += Tissue[t].Namount;
+                    result += Tissue[t].DM.N;
 
                 return result;
             }
@@ -199,7 +157,7 @@
             {
                 double result = 0.0;
                 for (int t = 0; t < Tissue.Length - 1; t++)
-                    result += Tissue[t].Namount;
+                    result += Tissue[t].DM.N;
 
                 return result;
             }
@@ -209,7 +167,7 @@
         /// <remarks>Last tissues is assumed to represent dead material.</remarks>
         public double NDead
         {
-            get { return Tissue[Tissue.Length - 1].Namount; }
+            get { return Tissue[Tissue.Length - 1].DM.N; }
         }
 
         /// <summary>Gets the average N concentration in this organ (kg/kg).</summary>
@@ -317,7 +275,7 @@
             {
                 double digestableDM = 0.0;
                 for (int t = 0; t < Tissue.Length; t++)
-                    digestableDM += Tissue[t].Digestibility * Tissue[t].DM;
+                    digestableDM += Tissue[t].Digestibility * Tissue[t].DM.Wt;
 
                 return MathUtilities.Divide(digestableDM, DMTotal, 0.0);
             }
@@ -330,7 +288,7 @@
             {
                 double digestableDM = 0.0;
                 for (int t = 0; t < Tissue.Length - 1; t++)
-                    digestableDM += Tissue[t].Digestibility * Tissue[t].DM;
+                    digestableDM += Tissue[t].Digestibility * Tissue[t].DM.Wt;
 
                 return MathUtilities.Divide(digestableDM, DMLive, 0.0);
             }
@@ -356,15 +314,10 @@
         /// <param name="deadWt">The amount of developing biomass (kg/ha).</param>
         public void Reset(double emergingWt, double developingWt, double matureWt, double deadWt)
         {
-            EmergingTissue.DM = emergingWt;
-            DevelopingTissue.DM = developingWt;
-            MatureTissue.DM = matureWt;
-            DeadTissue.DM = deadWt;
-
-            EmergingTissue.Namount = emergingWt * NConcOptimum;
-            DevelopingTissue.Namount = developingWt * NConcOptimum;
-            MatureTissue.Namount = matureWt * NConcOptimum;
-            DeadTissue.Namount = deadWt * NConcMinimum;
+            EmergingTissue.ResetTo(emergingWt, emergingWt * NConcOptimum);
+            DevelopingTissue.ResetTo(developingWt, developingWt * NConcOptimum);
+            MatureTissue.ResetTo(matureWt, matureWt * NConcOptimum);
+            DeadTissue.ResetTo(deadWt, deadWt * NConcMinimum);
         }
 
         /// <summary>
@@ -376,15 +329,10 @@
         /// <param name="deadWt">The amount of developing biomass (kg/ha).</param>
         public void ResetEmergence(double emergingWt, double developingWt, double matureWt, double deadWt)
         {
-            EmergingTissue.DM = emergingWt;
-            DevelopingTissue.DM = developingWt;
-            MatureTissue.DM = matureWt;
-            DeadTissue.DM = deadWt;
-
-            EmergingTissue.Namount = emergingWt * NConcOptimum;
-            DevelopingTissue.Namount = developingWt * NConcOptimum;
-            MatureTissue.Namount = matureWt * NConcOptimum;
-            DeadTissue.Namount = deadWt * NConcOptimum;
+            EmergingTissue.ResetTo(emergingWt, emergingWt * NConcOptimum);
+            DevelopingTissue.ResetTo(developingWt, developingWt * NConcOptimum);
+            MatureTissue.ResetTo(matureWt, matureWt * NConcOptimum);
+            DeadTissue.ResetTo(deadWt, deadWt * NConcOptimum);
         }
 
         /// <summary>
@@ -413,9 +361,7 @@
         {
             for (int t = 0; t < Tissue.Length; t++)
             {
-                Tissue[t].DM = 0.0;
-                Tissue[t].Namount = 0.0;
-                Tissue[t].Pamount = 0.0;
+                Tissue[t].Reset();
                 DoCleanTransferAmounts();
             }
         }
@@ -435,28 +381,24 @@
         }
 
         /// <summary>Kills part of the organ (transfer DM and N to dead tissue).</summary>
-        /// <param name="fraction">The fraction to kill in each tissue</param>
-        public void DoKillOrgan(double fraction = 1.0)
+        /// <param name="fractionToRemove">The fraction to kill in each tissue</param>
+        public void DoKillOrgan(double fractionToRemove = 1.0)
         {
-            if (MathUtilities.IsGreaterThan(1.0 - fraction, 0))
+            if (MathUtilities.IsGreaterThan(1.0 - fractionToRemove, 0))
             {
-                double fractionRemaining = 1.0 - fraction;
+                double fractionRemaining = 1.0 - fractionToRemove;
                 for (int t = 0; t < Tissue.Length - 1; t++)
                 {
-                    Tissue[Tissue.Length - 1].DM += Tissue[t].DM * fraction;
-                    Tissue[Tissue.Length - 1].Namount += Tissue[t].Namount * fraction;
-                    Tissue[t].DM *= fractionRemaining;
-                    Tissue[t].Namount *= fractionRemaining;
+                    DeadTissue.AddBiomass(Tissue[t].DM.Wt * fractionToRemove, Tissue[t].DM.N * fractionToRemove);
+                    Tissue[t].RemoveBiomass(fractionToRemove, 0.0);
                 }
             }
             else
             {
                 for (int t = 0; t < Tissue.Length - 1; t++)
                 {
-                    Tissue[Tissue.Length - 1].DM += Tissue[t].DM;
-                    Tissue[Tissue.Length - 1].Namount += Tissue[t].Namount;
-                    Tissue[t].DM = 0.0;
-                    Tissue[t].Namount = 0.0;
+                    DeadTissue.AddBiomass(Tissue[t].DM.Wt, Tissue[t].DM.N);
+                    Tissue[t].Reset();
                 }
             }
         }
@@ -474,8 +416,8 @@
             {
                 if (turnoverRate[t] > 0.0)
                 {
-                    turnedoverDM = Tissue[t].DM * turnoverRate[t];
-                    turnedoverN = Tissue[t].Namount * turnoverRate[t];
+                    turnedoverDM = Tissue[t].DM.Wt * turnoverRate[t];
+                    turnedoverN = Tissue[t].DM.N * turnoverRate[t];
                     Tissue[t].DMTransferedOut += turnedoverDM;
                     Tissue[t].NTransferedOut += turnedoverN;
 
@@ -486,7 +428,7 @@
                         Tissue[t + 1].NTransferedIn += turnedoverN;
 
                         // get the amounts remobilisable (luxury N)
-                        double totalLuxuryN = (Tissue[t].DM + Tissue[t].DMTransferedIn - Tissue[t].DMTransferedOut) * (NconcLive - NConcOptimum);
+                        double totalLuxuryN = (Tissue[t].DM.Wt + Tissue[t].DMTransferedIn - Tissue[t].DMTransferedOut) * (NconcLive - NConcOptimum);
                         Tissue[t].NRemobilisable = Math.Max(0.0, totalLuxuryN * Tissue[t].FractionNLuxuryRemobilisable);
                     }
                     else
