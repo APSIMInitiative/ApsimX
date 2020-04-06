@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 88,
+  "Version": 91,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -77656,24 +77656,13 @@
                       "FlexibleGrazePostDM": 0.0,
                       "NoGrazingStartString": "01-jun",
                       "NoGrazingEndString": "15-sep",
-                      "FractionOfBiomassToUrine": [
-                        0.3
-                      ],
+                      "FractionDefoliatedNRetainedByAnimal": "NaN",
                       "DepthUrineIsAdded": 250.0,
-                      "FractionOfBiomassToDung": [
+                      "FractionOfExcretedNToDung": [
                         0.6
                       ],
-                      "CNRatioDung": 0.0,
-                      "DaysSinceGraze": 0,
-                      "GrazingInterval": 0,
-                      "GrazedDM": 0.0,
-                      "GrazedN": 0.0,
-                      "GrazedME": 0.0,
-                      "AmountUrineNReturned": 0.0,
-                      "AmountDungCReturned": 0.0,
-                      "AmountDungNReturned": 0.0,
-                      "PreGrazeDM": 0.0,
-                      "PostGrazeDM": 0.0,
+                      "CNRatioDung": "NaN",
+                      "FractionPopulationDecline": 0.0,
                       "Name": "SimpleGrazing",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -78752,24 +78741,13 @@
               "FlexibleGrazePostDM": 0.0,
               "NoGrazingStartString": "01-jun",
               "NoGrazingEndString": "15-sep",
-              "FractionOfBiomassToUrine": [
-                0.3
-              ],
+              "FractionDefoliatedNRetainedByAnimal": 0.0,
               "DepthUrineIsAdded": 250.0,
-              "FractionOfBiomassToDung": [
+              "FractionOfExcretedNToDung": [
                 0.6
               ],
               "CNRatioDung": 0.0,
-              "DaysSinceGraze": 0,
-              "GrazingInterval": 0,
-              "GrazedDM": 0.0,
-              "GrazedN": 0.0,
-              "GrazedME": 0.0,
-              "AmountUrineNReturned": 0.0,
-              "AmountDungCReturned": 0.0,
-              "AmountDungNReturned": 0.0,
-              "PreGrazeDM": 0.0,
-              "PostGrazeDM": 0.0,
+              "FractionPopulationDecline": 0.0,
               "Name": "SimpleGrazing",
               "Children": [],
               "IncludeInDocumentation": true,

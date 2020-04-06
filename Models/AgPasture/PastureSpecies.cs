@@ -2639,14 +2639,27 @@
             get
             {
                 Biomass mass = new Biomass();
-                mass.StructuralWt = (leaf.DMLive + leaf.DMDead + stem.DMLive + stem.DMDead + stolon.DMLive + stolon.DMDead) / 10.0; // to g/m2
-                mass.StructuralN = (leaf.NLive + leaf.NDead + stem.NLive + stem.NDead + stolon.NLive + stolon.NDead) / 10.0;    // to g/m2
+                mass.StructuralWt = (leaf.StandingHerbageWt + stem.StandingHerbageWt + stolon.StandingHerbageWt) / 10.0; // to g/m2
+                mass.StructuralN = (leaf.StandingHerbageN + stem.StandingHerbageN + stolon.StandingHerbageN) / 10.0;    // to g/m2
                 mass.DMDOfStructural = leaf.DigestibilityLive;
                 return mass;
             }
         }
 
-
+        /// <summary>Get above ground biomass</summary>
+        [Units("g/m2")]
+        public Biomass AboveGroundHarvestable
+        {
+            get
+            {
+                Biomass mass = new Biomass();
+                mass.StructuralWt = HarvestableWt / 10.0; // to g/m2
+                mass.StructuralN = HarvestableN / 10.0;    // to g/m2
+                mass.DMDOfStructural = HarvestedDigestibility;
+                return mass;
+            }
+        }
+        
         /// <summary>Gets the dry matter weight available for harvesting (kgDM/ha).</summary>
         //[Description("Dry matter weight available for harvesting")]
         [Units("kg/ha")]
@@ -2657,6 +2670,19 @@
                 return leaf.DMLiveHarvestable + leaf.DMDeadHarvestable
                        + stem.DMLiveHarvestable + stem.DMDeadHarvestable
                        + stolon.DMLiveHarvestable + stolon.DMDeadHarvestable;
+            }
+        }
+
+        /// <summary>Gets the dry matter weight available for harvesting (kgDM/ha).</summary>
+        //[Description("Dry matter weight available for harvesting")]
+        [Units("kg/ha")]
+        public double HarvestableN
+        {
+            get
+            {
+                return leaf.NLiveHarvestable + leaf.NDeadHarvestable
+                       + stem.NLiveHarvestable + stem.NDeadHarvestable
+                       + stolon.NLiveHarvestable + stolon.NDeadHarvestable;
             }
         }
 

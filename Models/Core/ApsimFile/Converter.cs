@@ -19,7 +19,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 90; } }
+        public static int LatestVersion { get { return 91; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1937,6 +1937,19 @@
             foreach (JObject replacements in JsonUtilities.ChildrenRecursively(root, "Replacements"))
                 foreach (JObject manager in JsonUtilities.ChildrenRecursively(root, "Manager"))
                     JsonUtilities.RemoveChild(manager, "Script");
+        }
+
+        /// <summary>
+        /// Change names of a couple of parameters in SimpleGrazing.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion91(JObject root, string fileName)
+        {
+            foreach (JObject simpleGrazing in JsonUtilities.ChildrenRecursively(root, "SimpleGrazing"))
+            {
+                simpleGrazing["FractionOfExcretedNToDung"] = simpleGrazing["FractionOfBiomassToDung"];
+            }
         }
 
         /// <summary>

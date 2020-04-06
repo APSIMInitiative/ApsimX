@@ -55,7 +55,11 @@
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         public Biomass AboveGround { get; set; }
 
-       /// <summary> Clock </summary>
+        /// <summary>Above ground weight</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        public Biomass AboveGroundHarvestable { get { return AboveGround; } }
+
+        /// <summary> Clock </summary>
         [Link]
         public Clock Clock = null;
 
