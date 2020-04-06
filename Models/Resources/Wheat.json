@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 90,
+  "Version": 91,
   "Name": "Simulations",
   "Children": [
 {
@@ -572,6 +572,49 @@
             }
           ],
           "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.AccumulateFunction, Models",
+          "StartStageName": "Emergence",
+          "EndStageName": "FlagLeaf",
+          "ResetStageName": null,
+          "FractionRemovedOnCut": 0.0,
+          "FractionRemovedOnHarvest": 0.0,
+          "FractionRemovedOnGraze": 0.0,
+          "FractionRemovedOnPrune": 0.0,
+          "Name": "HaunStage",
+          "Children": [
+            {
+              "$type": "Models.Functions.DivideFunction, Models",
+              "Name": "DeltaLeaf",
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].ThermalTime",
+                  "Name": "ThermalTime",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Structure].Phyllochron",
+                  "Name": "Phyllochron",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -1373,46 +1416,6 @@
               "$type": "Models.Functions.VariableReference, Models",
               "VariableName": "[Phenology].DaysAfterSowing",
               "Name": "PostEventValue",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-          "Name": "RewindDueToBiomassRemoved",
-          "Children": [
-            {
-              "$type": "Models.Functions.XYPairs, Models",
-              "X": [
-                0.0,
-                0.1,
-                0.4,
-                0.5,
-                1.0
-              ],
-              "Y": [
-                0.0,
-                0.08,
-                0.4,
-                0.5,
-                1.0
-              ],
-              "Name": "XYPairs",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Phenology].FractionBiomassRemoved",
-              "Name": "XValue",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,

@@ -499,5 +499,60 @@ namespace Models.Core.ApsimFile
             }
         }
 
+        /// <summary>
+        /// Helper method for renaming variables in report and manager.
+        /// </summary>
+        /// <param name="node">The JSON root node.</param>
+        /// <param name="changes">List of old and new name tuples.</param>
+        public static void RenameVariables(JObject node, Tuple<string, string>[] changes)
+        {
+            foreach (var manager in JsonUtilities.ChildManagers(node))
+            {
+                bool managerChanged = false;
+
+                foreach (var replacement in changes)
+                {
+                    if (manager.Replace(replacement.Item1, replacement.Item2))
+                        managerChanged = true;
+                }
+                if (managerChanged)
+                    manager.Save();
+            }
+            foreach (var report in JsonUtilities.ChildrenOfType(node, "Report"))
+            {
+                foreach (var replacement in changes)
+                    JsonUtilities.SearchReplaceReportVariableNames(report, replacement.Item1, replacement.Item2);
+            }
+
+            foreach (var simpleGrazing in JsonUtilities.ChildrenOfType(node, "SimpleGrazing"))
+            {
+                var expression = simpleGrazing["FlexibleExpressionForTimingOfGrazing"].ToString();
+                if (!string.IsNullOrEmpty(expression))
+                {
+                    foreach (var replacement in changes)
+                        expression = expression.Replace(replacement.Item1, replacement.Item2);
+                    simpleGrazing["FlexibleExpressionForTimingOfGrazing"] = expression;
+                }
+            }
+
+            foreach (var compositeFactor in JsonUtilities.ChildrenOfType(node, "CompositeFactor"))
+            {
+                var specifications = compositeFactor["Specifications"] as JArray;
+                if (specifications != null)
+                {
+                    bool replacementFound = false;
+                    foreach (var replacement in changes)
+                        for (int i = 0; i < specifications.Count; i++)
+                        {
+                            replacementFound = replacementFound || specifications[i].ToString().Contains(replacement.Item1);
+                            specifications[i] = specifications[i].ToString().Replace(replacement.Item1, replacement.Item2);
+                        }
+                    if (replacementFound)
+                        compositeFactor["Specifications"] = specifications;
+                }
+            }
+
+
+        }
     }
 }
