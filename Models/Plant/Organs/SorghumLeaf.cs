@@ -119,9 +119,6 @@ namespace Models.PMF.Organs
         [Link]
         private LeafCulms culms = null;
 
-        //[Link]
-        //private IArbitrator Arbitrator = null;
-
         [Link]
         private Phenology phenology = null;
 
@@ -267,18 +264,6 @@ namespace Models.PMF.Organs
         /// <summary>The height function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction HeightFunction = null;
-
-        ///// <summary>The lai dead function</summary>
-        //[Link(Type = LinkType.Child, ByName = true)]
-        //IFunction dltLAIFunction = null;
-
-        ///// <summary>The lai dead function</summary>
-        //[Link]
-        //IFunction sdRatio = null;
-
-        ///// <summary>The structure</summary>
-        //[Link(IsOptional = true)]
-        //public Structure Structure = null;
 
         /// <summary>Water Demand Function</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
