@@ -576,6 +576,49 @@
           "ReadOnly": false
         },
         {
+          "$type": "Models.Functions.AccumulateFunction, Models",
+          "StartStageName": "Emergence",
+          "EndStageName": "FlagLeaf",
+          "ResetStageName": null,
+          "FractionRemovedOnCut": 0.0,
+          "FractionRemovedOnHarvest": 0.0,
+          "FractionRemovedOnGraze": 0.0,
+          "FractionRemovedOnPrune": 0.0,
+          "Name": "HaunStage",
+          "Children": [
+            {
+              "$type": "Models.Functions.DivideFunction, Models",
+              "Name": "DeltaLeaf",
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].ThermalTime",
+                  "Name": "ThermalTime",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Structure].Phyllochron",
+                  "Name": "Phyllochron",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.Functions.ExpressionFunction, Models",
           "Expression": "([Structure].FinalLeafNumber - 2.85)/1.1",
           "Name": "HaunStageTerminalSpikelet",
