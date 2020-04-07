@@ -2533,6 +2533,57 @@
             }
         }
 
+        /// <summary>Standing dry matter and N (kgDM/ha).</summary>
+        public AGPBiomass Standing
+        {
+            get
+            {
+                return new AGPBiomass()
+                {
+                    Wt = leaf.StandingHerbageWt + stem.StandingHerbageWt + stolon.StandingHerbageWt,
+                    N = leaf.StandingHerbageN + stem.StandingHerbageN + stolon.StandingHerbageN,
+                    Digestibility = MathUtilities.Divide(leaf.StandingDigestibility * leaf.StandingHerbageWt +
+                                                         stem.StandingDigestibility * stem.StandingHerbageWt +
+                                                         stolon.StandingDigestibility * stolon.StandingHerbageWt,
+                                                         leaf.StandingHerbageWt + stem.StandingHerbageWt + stolon.StandingHerbageWt, 0.0)
+                };
+            }
+        }
+
+        /// <summary>Standing live dry matter and N (kgDM/ha).</summary>
+        public AGPBiomass StandingLive
+        {
+            get
+            {
+                return new AGPBiomass()
+                {
+                    Wt = leaf.StandingLiveHerbageWt + stem.StandingLiveHerbageWt + stolon.StandingLiveHerbageWt,
+                    N = leaf.StandingLiveHerbageN + stem.StandingLiveHerbageN + stolon.StandingLiveHerbageN,
+                    Digestibility = MathUtilities.Divide(leaf.StandingLiveDigestibility * leaf.StandingLiveHerbageWt +
+                                                         stem.StandingLiveDigestibility * stem.StandingLiveHerbageWt +
+                                                         stolon.StandingLiveDigestibility * stolon.StandingLiveHerbageWt,
+                                                         leaf.StandingLiveHerbageWt + stem.StandingLiveHerbageWt + stolon.StandingLiveHerbageWt, 0.0)
+                };
+            }
+        }
+
+        /// <summary>Standing dead dry matter and N (kgDM/ha).</summary>
+        public AGPBiomass StandingDead
+        {
+            get
+            {
+                return new AGPBiomass()
+                {
+                    Wt = leaf.StandingDeadHerbageWt + stem.StandingDeadHerbageWt + stolon.StandingDeadHerbageWt,
+                    N = leaf.StandingDeadHerbageN + stem.StandingDeadHerbageN + stolon.StandingDeadHerbageN,
+                    Digestibility = MathUtilities.Divide(leaf.StandingDeadDigestibility * leaf.StandingDeadHerbageWt +
+                                                         stem.StandingDeadDigestibility * stem.StandingDeadHerbageWt +
+                                                         stolon.StandingDeadDigestibility * stolon.StandingDeadHerbageWt,
+                                                         leaf.StandingDeadHerbageWt + stem.StandingDeadHerbageWt + stolon.StandingDeadHerbageWt, 0.0)
+                };
+            }
+        }
+
         /// <summary>Live dry matter and N available for harvesting.</summary>
         public AGPBiomass HarvestableLive
         {

@@ -137,20 +137,21 @@
         [Display(EnabledCallback = "IsNotTimingControlledElsewhere")]
         public string NoGrazingEndString { get; set; }
 
-        /// <summary></summary>
-        [Separator("Urine and Dung - The remainder will be removed from the simulation.")]
 
-        [Description("Fraction of defoliated N retained by animal (0-1). If blank then digestibility is used: ")]
-        public double FractionDefoliatedNRetainedByAnimal { get; set; }
-        
+        /// <summary></summary>
+        [Separator("Urine and Dung.")]
+
+        [Description("Fraction of N that is exported in the animal (0-1): ")]
+        public double FractionNExportedInAnimal { get; set; }
+
+        /// <summary></summary>
+        [Description("Proportion of excreted N going to dung (0-1). Yearly or 12 monthly values.")]
+        public double[] FractionExcretedNToDung { get; set; }
+
         /// <summary></summary>
         [Description("Depth that urine is added (mm)")]
         [Units("mm")]
         public double DepthUrineIsAdded { get; set; }
-
-        /// <summary></summary>
-        [Description("Proportion of excreted N going to dung (0-1). Yearly or 12 monthly values.")]
-        public double[] FractionOfExcretedNToDung { get; set; }
 
         /// <summary></summary>
         [Description("C:N ratio of biomass for dung. If set to zero it will calculate the C:N using digestibility. ")]
@@ -288,12 +289,12 @@
                 expressionFunction.CompileExpression();
             }
 
-            if (FractionOfExcretedNToDung.Length != 1 && FractionOfExcretedNToDung.Length != 12)
-                throw new Exception("You must specify either a single value for 'proportion of biomass going to dung' or 12 monthly values.");
+            if (FractionExcretedNToDung.Length != 1 && FractionExcretedNToDung.Length != 12)
+                throw new Exception("You must specify either a single value for 'proportion of defoliated nitrogen going to dung' or 12 monthly values.");
 
             // Initialise the days since grazing.
             if (GrazingRotationType == GrazingRotationTypeEnum.SimpleRotation)
-                DaysSinceGraze = SimpleGrazingFrequency;
+            DaysSinceGraze = SimpleGrazingFrequency;
             else if ((GrazingRotationType == GrazingRotationTypeEnum.TargetMass ||
                       GrazingRotationType == GrazingRotationTypeEnum.Flexible) &&
                       MinimumRotationLengthArray != null)
@@ -443,7 +444,7 @@
                 else
                 {
                     summary.WriteMessage(this, "Defoliation will not happend because there is not enough plant material.");
-                    DaysSinceGraze = 0;
+                    DaysSinceGraze = -1;
                 }
             }
             return false;
@@ -521,20 +522,17 @@
                 foreach (var grazedForage in grazedForages)
                 {
                     returnedToSoilWt += (1 - grazedForage.DMDOfStructural) * grazedForage.Wt;
-                    if (double.IsNaN(FractionDefoliatedNRetainedByAnimal) || FractionDefoliatedNRetainedByAnimal == 0)
-                        returnedToSoilN += (1 - grazedForage.DMDOfStructural) * grazedForage.N;  // use digestibility.
-                    else 
-                        returnedToSoilN += (1 - FractionDefoliatedNRetainedByAnimal) * grazedForage.N;     // use proporation n to soil
+                    returnedToSoilN += (1 - FractionNExportedInAnimal) * grazedForage.N;
                 }
 
                 double dungNReturned;
-                if (FractionOfExcretedNToDung == null || FractionOfExcretedNToDung.Length == 0)
+                if (CNRatioDung == 0 || double.IsNaN(CNRatioDung))
+                    dungNReturned = GetValueFromMonthArray(FractionExcretedNToDung) * returnedToSoilN;
+                else
                 {
                     const double CToDMRatio = 0.4; // 0.4 is C:DM ratio.
                     dungNReturned = Math.Min(returnedToSoilN, returnedToSoilWt * CToDMRatio / CNRatioDung);
                 }
-                else 
-                    dungNReturned = GetValueFromMonthArray(FractionOfExcretedNToDung) * returnedToSoilN;
 
                 AmountDungNReturned += dungNReturned;
                 AmountDungWtReturned += returnedToSoilWt;

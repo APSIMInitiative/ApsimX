@@ -1933,14 +1933,14 @@
             {
                 new Tuple<string, string>(".HarvestableWt",          ".Harvestable.Wt"),
                 new Tuple<string, string>(".HarvestableN",           ".Harvestable.N"),
-                new Tuple<string, string>(".StandingHerbageWt",      ".Harvestable.Wt"),
-                new Tuple<string, string>(".StandingHerbageN",       ".Harvestable.N"),
-                new Tuple<string, string>(".StandingHerbageNConc",   ".Harvestable.NConc"),
-                new Tuple<string, string>(".StandingLiveHerbageWt",  ".HarvestableLive.Wt"),
-                new Tuple<string, string>(".StandingLiveHerbageN",   ".HarvestableLive.N"),
-                new Tuple<string, string>(".StandingDeadHerbageWt",  ".HarvestableDead.Wt"),
-                new Tuple<string, string>(".StandingDeadHerbageN",   ".HarvestableDead.N"),
-                new Tuple<string, string>(".HerbageDigestibility",   ".Harvestable.Digestibility"),
+                new Tuple<string, string>(".StandingHerbageWt",      ".Standing.Wt"),
+                new Tuple<string, string>(".StandingHerbageN",       ".Standing.N"),
+                new Tuple<string, string>(".StandingHerbageNConc",   ".Standing.NConc"),
+                new Tuple<string, string>(".StandingLiveHerbageWt",  ".StandingLive.Wt"),
+                new Tuple<string, string>(".StandingLiveHerbageN",   ".StandingLive.N"),
+                new Tuple<string, string>(".StandingDeadHerbageWt",  ".StandingDead.Wt"),
+                new Tuple<string, string>(".StandingDeadHerbageN",   ".StandingDead.N"),
+                new Tuple<string, string>(".HerbageDigestibility",   ".Standing.Digestibility"),
                 new Tuple<string, string>(".RootDepthMaximum",       ".Root.RootDepthMaximum"),
                 new Tuple<string, string>("[AGPRyeGrass].RootLengthDensity", "[AGPRyeGrass].Root.RootLengthDensity"),
                 new Tuple<string, string>("[AGPWhiteClover].RootLengthDensity", "[AGPWhiteClover].Root.RootLengthDensity"),
@@ -1958,7 +1958,9 @@
         {
             foreach (JObject simpleGrazing in JsonUtilities.ChildrenRecursively(root, "SimpleGrazing"))
             {
-                simpleGrazing["FractionOfExcretedNToDung"] = simpleGrazing["FractionOfBiomassToDung"];
+                simpleGrazing["FractionExcretedNToDung"] = simpleGrazing["FractionOfBiomassToDung"];
+                if (simpleGrazing["FractionNExportedInAnimal"] == null)
+                    simpleGrazing["FractionNExportedInAnimal"] = 0.75;
             }
         }
 		
