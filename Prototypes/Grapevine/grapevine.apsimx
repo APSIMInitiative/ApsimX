@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 281,
-  "Version": 91,
+  "Version": 92,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -5528,7 +5528,7 @@
                       "$type": "Models.Functions.PhaseLookupValue, Models",
                       "Start": "Flowering",
                       "End": "Veraison",
-                      "Name": "BeforeFlowering",
+                      "Name": "BeforeVeraison",
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
@@ -5549,7 +5549,7 @@
                       "$type": "Models.Functions.PhaseLookupValue, Models",
                       "Start": "Veraison",
                       "End": "LeafFall",
-                      "Name": "AfterFlowering",
+                      "Name": "AfterVeraison",
                       "Children": [
                         {
                           "$type": "Models.Functions.DivideFunction, Models",
@@ -5607,6 +5607,68 @@
                               "FixedValue": 0.0082,
                               "Units": null,
                               "Name": "constant",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.PhaseLookup, Models",
+                  "Name": "TitratableAcid",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "Flowering",
+                      "End": "Veraison",
+                      "Name": "BeforeVeraison",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "Constant",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "Veraison",
+                      "End": "LeafFall",
+                      "Name": "AfterVeraison",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.ExponentialFunction, Models",
+                          "A": 7.866,
+                          "B": 30.345,
+                          "C": -0.0923,
+                          "Name": "TitratableAcid",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Berry].ThermalTimeAfterVeraison",
+                              "Name": "XValue",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -5698,7 +5760,7 @@
                   "$type": "Models.Functions.AccumulateFunction, Models",
                   "StartStageName": "Veraison",
                   "EndStageName": "LeafFall",
-                  "ResetStageName": "Veraison",
+                  "ResetStageName": "Ecodormancy",
                   "FractionRemovedOnCut": 0.0,
                   "FractionRemovedOnHarvest": 0.0,
                   "FractionRemovedOnGraze": 0.0,
@@ -7554,6 +7616,7 @@
                     "[Berry].ThermalTimeAfterFlowering",
                     "[Berry].WaterContent",
                     "[Berry].Brix",
+                    "[Berry].TitratableAcid",
                     "[Berry].MetFactors.BUN_TmaxIni1 as BUN_TmaxIni",
                     "[Berry].MetFactors.BUN_RadIni1 as BUN_RadIni",
                     "[Berry].MetFactors.BEN_RainTotFlow as BEN_RainTotFlow",
@@ -8264,13 +8327,24 @@
                   "Interval": "NaN",
                   "DateTimeAxis": false,
                   "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 2,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
-              "Name": "Brix",
+              "Name": "BrixAcid",
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -8295,7 +8369,36 @@
                   "Cumulative": false,
                   "CumulativeX": false,
                   "Filter": null,
-                  "Name": "DWFW",
+                  "Name": "Brix",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 2,
+                  "ColourArgb": -990142,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Berry.TitratableAcid",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Acid",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
