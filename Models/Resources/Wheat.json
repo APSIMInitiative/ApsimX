@@ -283,7 +283,7 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Phenology].HaunStage.Delta",
+              "VariableName": "[Structure].DeltaHaunStage",
               "Name": "DeltaHaunStage",
               "Children": [],
               "IncludeInDocumentation": true,
