@@ -36,7 +36,7 @@ namespace Models.CLEM
         /// </summary>
         [Summary]
         [System.ComponentModel.DefaultValueAttribute("1")]
-        [Description("Month for the start of rainfall/growth season")]
+        [Description("Month for the start of rainfall season")]
         [Required, Month]
         public MonthsOfYear StartSeasonMonth { get; set; }
 
