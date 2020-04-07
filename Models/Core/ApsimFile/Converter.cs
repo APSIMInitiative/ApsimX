@@ -1962,6 +1962,12 @@
                 if (simpleGrazing["FractionNExportedInAnimal"] == null)
                     simpleGrazing["FractionNExportedInAnimal"] = 0.75;
             }
+
+            Tuple<string, string>[] changes =
+            {
+                new Tuple<string, string>(".AmountDungCReturned",  ".AmountDungWtReturned")
+            };
+            JsonUtilities.RenameVariables(root, changes);
         }
 		
         /// <summary>
