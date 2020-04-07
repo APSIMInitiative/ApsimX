@@ -119,6 +119,30 @@
             get { return Tissue[Tissue.Length - 1].DM.Wt; }
         }
 
+        /// <summary>The standing herbage weight (kg/ha).</summary>
+        public double StandingHerbageWt { get { return DMTotal * FractionStanding; } }
+
+        /// <summary>The standing live herbage weight (kg/ha).</summary>
+        public double StandingLiveHerbageWt { get { return DMLive * FractionStanding; } }
+
+        /// <summary>The standing live digestibility (0-1).</summary>
+        public double StandingLiveDigestibility { get { return 0; } }  // Todo: need to fix
+
+        /// <summary>The standing live digestibility (0-1).</summary>
+        public double StandingDeadDigestibility { get { return 0; } }  // Todo: need to fix
+
+        /// <summary>The standing dead herbage weight (kg/ha).</summary>
+        public double StandingDeadHerbageWt { get { return DMDead * FractionStanding; } }
+
+        /// <summary>The standing live herbage weight (kg/ha).</summary>
+        public double StandingLiveHerbageN { get { return NLive * FractionStanding; } }
+
+        /// <summary>The standing dead herbage weight (kg/ha).</summary>
+        public double StandingDeadHerbageN { get { return NDead * FractionStanding; } }
+
+        /// <summary>The standing herbage nitrogen (kg/ha).</summary>
+        public double StandingHerbageN { get { return NTotal * FractionStanding; } }
+
         /// <summary>The total harvestable dry matter (kg/ha).</summary>
         public double DMTotalHarvestable { get { return DMLiveHarvestable + DMDeadHarvestable; } }
 
