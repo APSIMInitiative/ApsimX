@@ -46,7 +46,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Does pricing exist for this tyep
+        /// Does pricing exist for this type
         /// </summary>
         public bool PricingExists 
         {
