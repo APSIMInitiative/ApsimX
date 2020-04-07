@@ -49,7 +49,7 @@ namespace Models.CLEM
         /// Multiplier from single farm to regional number of farms for market transactions
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(1)]
-        [Required, GreaterThanEqualValue(0)]
+        [Required, GreaterThanValue(0)]
         [Description("Farm multiplier to supply and receive from market")]
         public double FarmMultiplier { get; set; }
 
@@ -272,9 +272,13 @@ namespace Models.CLEM
                     var property = model.GetType().GetProperty(validateError.MemberNames.FirstOrDefault());
                     if (property != null)
                     {
-                        var attribute = property.GetCustomAttributes(typeof(DescriptionAttribute), true)[0];
-                        var description = (DescriptionAttribute)attribute;
-                        text = description.ToString();
+                        text = "";
+                        if (property.GetCustomAttributes(typeof(DescriptionAttribute), true).Count() > 0)
+                        {
+                            var attribute = property.GetCustomAttributes(typeof(DescriptionAttribute), true)[0];
+                            var description = (DescriptionAttribute)attribute;
+                            text = description.ToString();
+                        }
                     }
                     string error = String.Format("@validation:Invalid parameter value in " + modelPath + "" + Environment.NewLine + "PARAMETER: " + validateError.MemberNames.FirstOrDefault());
                     if (text != "")
