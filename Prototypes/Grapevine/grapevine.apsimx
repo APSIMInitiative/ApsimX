@@ -7574,24 +7574,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Manager, Models",
-                  "Code": "using System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n       \r\n        [Description(\"Pruning_DAWS\")]         \r\n        public int Pruning_DAWS { get; set; }  //day\r\n\r\n        [Description(\"CordonDiameter_mm\")]         \r\n        public double CordonDiameter { get; set; }  //mm\r\n\r\n        [XmlIgnore] private DateTime PruneDate { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            //PruneDate = DateTime.Parse(PruneDateString);\r\n                        \r\n            if (weather.DaysSinceWinterSolstice == Pruning_DAWS)\r\n            {\r\n                Remove.SetPhenologyStage = 1;\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove);\r\n            }\r\n\r\n            {\r\n            zone.Set(\"Grapevine.Cordon.CordonDiameter.FixedValue\", CordonDiameter);   \r\n            //calculate the biomass by length 1 meter time 2 cordons time density (0.0005 g/mm3)\r\n            zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", 3.14*(CordonDiameter/2)*(CordonDiameter/2)*2000*0.0005); \r\n\r\n                }\r\n\r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
-                  "Parameters": [
-                    {
-                      "Key": "Pruning_DAWS",
-                      "Value": "314"
-                    },
-                    {
-                      "Key": "CordonDiameter",
-                      "Value": "10"
-                    }
-                  ],
-                  "Name": "Pruning",
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Report, Models",
                   "VariableNames": [
                     "[Clock].Today",
