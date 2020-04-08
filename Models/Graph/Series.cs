@@ -150,7 +150,7 @@ namespace Models
                         // use only 0..1 so that we start with the normal colour
                         // and gradually get brighter.
                         double colourModifier = (double)checkpointNumber / reader.CheckpointNames.Count;
-                        double markerModifier = checkpointNumber * 0.7;
+                        double markerModifier = 1 + 1.0 * checkpointNumber / reader.CheckpointNames.Count;
 
                         // TableName exists so get the vary by fields and the simulation descriptions.
                         var varyByFieldNames = GetVaryByFieldNames();

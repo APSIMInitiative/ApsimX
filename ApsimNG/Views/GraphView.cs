@@ -382,6 +382,7 @@
              Models.MarkerType markerType,
              Models.LineThicknessType lineThickness,
              Models.MarkerSizeType markerSize,
+             double markerModifier,
              bool showOnLegend)
         {
             Utility.LineSeriesWithTracker series = null;
@@ -436,8 +437,8 @@
                     series.MarkerType = type;
                 }
 
-                MarkerSize = markerSize;
-                series.MarkerSize = GetMarkerSizeNumericValue(markerSize);
+                //MarkerSize = markerSize;
+                series.MarkerSize = GetMarkerSizeNumericValue(markerSize) * markerModifier;
 
                 series.MarkerStroke = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
                 if (filled)

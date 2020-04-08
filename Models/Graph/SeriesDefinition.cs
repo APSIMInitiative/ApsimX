@@ -152,16 +152,10 @@
         {
             get
             {
-                var size = MarkerSizeType.Normal;
+                if (series == null) // Can be null for regression lines or 1:1 lines
+                    return MarkerSizeType.Normal;
 
-                if (series != null) // Can be null for regression lines or 1:1 lines
-                {
-                    if (MarkerModifier == 0.7)
-                        size = MarkerSizeType.Small;
-                    else if (MarkerModifier > 0.7)
-                        size = MarkerSizeType.VerySmall;
-                }
-                return size;
+                return series.MarkerSize;
             }
         }
 

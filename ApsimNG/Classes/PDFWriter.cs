@@ -471,7 +471,7 @@
             graph.DrawLineAndMarkers("", graphAndTable.xyPairs.X, graphAndTable.xyPairs.Y, null, null, null,
                                      Models.Axis.AxisType.Bottom, Models.Axis.AxisType.Left,
                                      System.Drawing.Color.Blue, Models.LineType.Solid, Models.MarkerType.None,
-                                     Models.LineThicknessType.Normal, Models.MarkerSizeType.Normal, true);
+                                     Models.LineThicknessType.Normal, Models.MarkerSizeType.Normal, 1, true);
 
             graph.ForegroundColour = OxyPlot.OxyColors.Black;
             graph.BackColor = OxyPlot.OxyColors.White;
