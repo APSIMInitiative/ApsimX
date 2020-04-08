@@ -54,9 +54,14 @@ namespace Models.CLEM.Activities
         private FinanceType bankAccount;
 
         /// <summary>
-        /// Store finance type to use
+        /// Store type to use
         /// </summary>
         private IResourceType resourceToSell;
+
+        /// <summary>
+        /// Store type to place resource in within market if present
+        /// </summary>
+        private IResourceType resourceToPlace;
 
         private ResourcePricing price;
         private double unitsAvailable;
@@ -71,6 +76,21 @@ namespace Models.CLEM.Activities
             bankAccount = Resources.GetResourceItem(this, AccountName, OnMissingResourceActionTypes.ReportWarning, OnMissingResourceActionTypes.ReportErrorAndStop) as FinanceType;
             // get resource type to sell
             resourceToSell = Resources.GetResourceItem(this, ResourceTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
+            // find market if present
+            Market market = FindMarket();
+            // find a suitable store to place resource
+            if(market != null)
+            {
+                resourceToPlace = market.Resources.GetResourceItem(this, ResourceTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
+            }
+            if(resourceToPlace != null)
+            {
+                price = resourceToPlace.Price(PurchaseOrSalePricingStyleType.Sale);
+            }
+            if(price is null && resourceToSell.Price(PurchaseOrSalePricingStyleType.Purchase)  != null)
+            {
+                price = resourceToSell.Price(PurchaseOrSalePricingStyleType.Purchase);
+            }
         }
 
         /// <summary>
@@ -96,8 +116,6 @@ namespace Models.CLEM.Activities
         /// <returns>List of required resource requests</returns>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
-            // get pricing
-            price = resourceToSell.Price;
             unitsAvailable = unitsAvailableForSale;
             return null;
         }
@@ -130,6 +148,8 @@ namespace Models.CLEM.Activities
         public override void AdjustResourcesNeededForActivity()
         {
             // adjust resources sold based on labour shortfall
+            double labourLimit = this.LabourLimitProportion;
+            unitsAvailable *= labourLimit;
             return;
         }
 
@@ -165,6 +185,17 @@ namespace Models.CLEM.Activities
 
                 // transfer money earned
                 bankAccount.Add(units * price.PricePerPacket, this, "Sales");
+
+                // transfer to market if in place
+                if (resourceToPlace != null)
+                {
+                    purchaseRequest.Required *= this.FarmMultiplier;
+                    // resource
+                    resourceToPlace.Add(purchaseRequest, this, $"Sales from {this.Name}");
+                    // take money paid
+
+                }
+
                 SetStatusSuccess();
             }
         }

@@ -74,7 +74,7 @@ namespace Models.CLEM.Activities
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
             // get pricing.
-            price = resourceToBuy.Price;
+            price = resourceToBuy.Price(PurchaseOrSalePricingStyleType.Purchase);
             // calculate units
             units = Units;
             if (price.UseWholePackets)

@@ -48,46 +48,37 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Does pricing exist for this type
         /// </summary>
-        public bool PricingExists 
+        public bool PricingExists(PurchaseOrSalePricingStyleType priceType)
         {
-            get
-            {
-                // find pricing that is ok;
-                return Apsim.Children(this, typeof(ResourcePricing)).Where(a => (a as ResourcePricing).TimingOK).FirstOrDefault() != null;
-            }
+            // find pricing that is ok;
+            return Apsim.Children(this, typeof(ResourcePricing)).Where(a => ((a as ResourcePricing).PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | (a as ResourcePricing).PurchaseOrSale == priceType) && (a as ResourcePricing).TimingOK).FirstOrDefault() != null;
         }
 
         /// <summary>
         /// Resource price
         /// </summary>
-        public ResourcePricing Price
+        public ResourcePricing Price(PurchaseOrSalePricingStyleType priceType)
         {
-            get
+            // find pricing that is ok;
+            ResourcePricing price = Apsim.Children(this, typeof(ResourcePricing)).Where(a => ((a as ResourcePricing).PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | (a as ResourcePricing).PurchaseOrSale == priceType) && (a as ResourcePricing).TimingOK).FirstOrDefault() as ResourcePricing;
+
+            if (price == null)
             {
-                // find pricing that is ok;
-                ResourcePricing price = Apsim.Children(this, typeof(ResourcePricing)).Where(a => (a as ResourcePricing).TimingOK).FirstOrDefault() as ResourcePricing;
-
-                var q = Apsim.Children(this, typeof(ResourcePricing));
-                var r = q.Where(a => (a as ResourcePricing).TimingOK);
-
-                if (price == null)
+                string warn = "No pricing is available for [r=" + this.Parent.Name + "." + this.Name + "]";
+                if (Apsim.Children(this, typeof(ResourcePricing)).Count > 0)
                 {
-                    string warn = "No pricing is available for [r=" + this.Parent.Name + "." + this.Name + "]";
-                    if (Apsim.Children(this, typeof(ResourcePricing)).Count > 0)
-                    {
-                        warn += " in month [" + Clock.Today.ToString("MM yyyy") + "]";
-                    }
-                    warn += "\nAdd [r=ResourcePricing] component to [r=" + this.Parent.Name + "." + this.Name + "] to include financial transactions for purchases and sales.";
-
-                    if (!Warnings.Exists(warn))
-                    {
-                        Summary.WriteWarning(this, warn);
-                        Warnings.Add(warn);
-                    }
-                    return new ResourcePricing() { PricePerPacket=0, PacketSize=1, UseWholePackets=true };
+                    warn += " in month [" + Clock.Today.ToString("MM yyyy") + "]";
                 }
-                return price;
+                warn += "\nAdd [r=ResourcePricing] component to [r=" + this.Parent.Name + "." + this.Name + "] to include financial transactions for purchases and sales.";
+
+                if (!Warnings.Exists(warn))
+                {
+                    Summary.WriteWarning(this, warn);
+                    Warnings.Add(warn);
+                }
+                return new ResourcePricing() { PricePerPacket=0, PacketSize=1, UseWholePackets=true };
             }
+            return price;
         }
 
         /// <summary>
@@ -99,10 +90,23 @@ namespace Models.CLEM.Resources
         public object ConvertTo(string converterName, double amount)
         {
             // get converted value
-            if(converterName=="$")
+            if(converterName.StartsWith("$"))
             {
                 // calculate price as special case using pricing structure if present.
-                ResourcePricing price = Price;
+                ResourcePricing price;
+                switch (converterName)
+                {
+                    case "$+":
+                        price = Price(PurchaseOrSalePricingStyleType.Purchase);
+                        break;
+                    case "$-":
+                        price = Price(PurchaseOrSalePricingStyleType.Sale);
+                        break;
+                    default:
+                        price = Price(PurchaseOrSalePricingStyleType.Both);
+                        break;
+                }
+
                 if(price.PricePerPacket > 0)
                 {
                     double packets = amount / price.PacketSize;

@@ -175,7 +175,7 @@ namespace Models.CLEM.Activities
                         sumneeded = amountToProcess*item.Amount;
                         break;
                     case ResourcePaymentStyleType.perBlock:
-                        ResourcePricing price = resourceTypeProcessModel.Price;
+                        ResourcePricing price = resourceTypeProcessModel.Price(PurchaseOrSalePricingStyleType.Both);
                         double blocks = amountToProcess / price.PacketSize;
                         if(price.UseWholePackets)
                         {
