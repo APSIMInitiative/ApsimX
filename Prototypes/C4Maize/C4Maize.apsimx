@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 88,
+  "Version": 92,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -13078,6 +13078,7 @@
           "EventNames": [
             "[Clock].DoReport"
           ],
+          "GroupByVariableName": null,
           "Name": "DailyReport",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -13124,6 +13125,7 @@
           "EventNames": [
             "[C4Maize].Harvesting"
           ],
+          "GroupByVariableName": null,
           "Name": "HarvestReport",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -15134,14 +15136,12 @@
                         },
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                          "Canopies": [],
                           "InitialResidueName": "wheat",
                           "InitialResidueType": "wheat",
                           "InitialResidueMass": 1000.0,
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 80.0,
-                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": true,
@@ -15205,6 +15205,7 @@
                           "EventNames": [
                             "[Clock].DoReport"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "DailyReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -15214,9 +15215,6 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Maize",
-                          "IsAlive": false,
-                          "IsEnding": false,
-                          "DaysAfterEnding": 0,
                           "ResourceName": "Maize",
                           "Name": "C4Maize",
                           "IncludeInDocumentation": true,
@@ -15267,6 +15265,7 @@
                           "EventNames": [
                             "[C4Maize].Harvesting"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "HarvestReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -22387,14 +22386,12 @@
                         },
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                          "Canopies": [],
                           "InitialResidueName": "wheat",
                           "InitialResidueType": "wheat",
                           "InitialResidueMass": 1000.0,
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 80.0,
-                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": true,
@@ -22404,9 +22401,6 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Maize",
-                          "IsAlive": false,
-                          "IsEnding": false,
-                          "DaysAfterEnding": 0,
                           "ResourceName": "Maize",
                           "Name": "C4Maize",
                           "IncludeInDocumentation": true,
@@ -22486,6 +22480,7 @@
                           "EventNames": [
                             "[Clock].DoReport"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "DailyReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -22544,6 +22539,7 @@
                           "EventNames": [
                             "[C4Maize].Harvesting"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "HarvestReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -23160,14 +23156,12 @@
                         },
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                          "Canopies": [],
                           "InitialResidueName": "wheat",
                           "InitialResidueType": "wheat",
                           "InitialResidueMass": 1000.0,
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 80.0,
-                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": true,
@@ -23253,6 +23247,7 @@
                           "EventNames": [
                             "[Clock].DoReport"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "DailyReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -23262,9 +23257,6 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Maize",
-                          "IsAlive": false,
-                          "IsEnding": false,
-                          "DaysAfterEnding": 0,
                           "ResourceName": "Maize",
                           "Name": "C4Maize",
                           "IncludeInDocumentation": true,
@@ -23323,6 +23315,7 @@
                           "EventNames": [
                             "[C4Maize].Harvesting"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "HarvestReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -24001,14 +23994,12 @@
                         },
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                          "Canopies": [],
                           "InitialResidueName": "wheat",
                           "InitialResidueType": "wheat",
                           "InitialResidueMass": 1000.0,
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 80.0,
-                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": true,
@@ -24106,6 +24097,7 @@
                           "EventNames": [
                             "[Clock].DoReport"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "DailyReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -24115,9 +24107,6 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Maize",
-                          "IsAlive": false,
-                          "IsEnding": false,
-                          "DaysAfterEnding": 0,
                           "ResourceName": "Maize",
                           "Name": "C4Maize",
                           "IncludeInDocumentation": true,
@@ -24176,6 +24165,7 @@
                           "EventNames": [
                             "[C4Maize].Harvesting"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "HarvestReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -24868,14 +24858,12 @@
                         },
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                          "Canopies": [],
                           "InitialResidueName": "wheat",
                           "InitialResidueType": "wheat",
                           "InitialResidueMass": 1000.0,
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 80.0,
-                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": true,
@@ -24939,6 +24927,7 @@
                           "EventNames": [
                             "[Clock].DoReport"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "DailyReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -24948,9 +24937,6 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Maize",
-                          "IsAlive": false,
-                          "IsEnding": false,
-                          "DaysAfterEnding": 0,
                           "ResourceName": "Maize",
                           "Name": "C4Maize",
                           "IncludeInDocumentation": true,
@@ -25009,6 +24995,7 @@
                           "EventNames": [
                             "[C4Maize].Harvesting"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "HarvestReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -25894,14 +25881,12 @@
                         },
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                          "Canopies": [],
                           "InitialResidueName": "wheat",
                           "InitialResidueType": "wheat",
                           "InitialResidueMass": 1000.0,
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 80.0,
-                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": true,
@@ -25911,9 +25896,6 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Maize",
-                          "IsAlive": false,
-                          "IsEnding": false,
-                          "DaysAfterEnding": 0,
                           "ResourceName": "Maize",
                           "Name": "C4Maize",
                           "IncludeInDocumentation": true,
@@ -25963,6 +25945,15 @@
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Manager, Models",
+                              "Code": "// According to REMS, the simulation Maize_K841_K841QK6D\r\n// actually applies 40mm of irrigation on 1983-11-26, as\r\n// opposed to the 15mm applied in every other treatment\r\n// on this date. This script implements this discrepancy.\r\n\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n\t[Serializable]\r\n\tpublic class Script : Model\r\n\t{\r\n\t\t[Link] private Clock clock;\r\n\r\n\t\t[Link] private Plant crop;\r\n\t\t[Link] private Irrigation irrigation;\r\n\t\t[Link] private Operations operations;\r\n\r\n\t\tprivate DateTime irrigDate = new DateTime(1983, 11, 26);\r\n\r\n\t\t[EventSubscribe(\"DoManagement\")]\r\n\t\tprivate void OnDoCalculations(object sender, EventArgs e)\r\n\t\t{\r\n\t\t\t// The operations node will apply 15mm like every other sim.\r\n\t\t\t// Add in an extra 25mm to make up the difference.\r\n\t\t\tif (IsDrySim() && crop.SowingData.Cultivar == \"QK_694\" && IsToday(irrigDate))\r\n\t\t\t\tirrigation.Apply(25);\r\n\t\t}\r\n\r\n\t\tprivate bool IsDrySim()\r\n\t\t{\r\n\t\t\treturn operations.Operation.Count > 10; // eww\r\n\t\t}\r\n\r\n\t\tprivate bool IsToday(DateTime date)\r\n\t\t{\r\n\t\t\treturn clock.Today.Year == date.Year && clock.Today.DayOfYear == date.DayOfYear;\r\n\t\t}\r\n\t}\r\n}\r\n",
+                              "Parameters": [],
+                              "Name": "StupidIrrigationHack",
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
                           "IncludeInDocumentation": true,
@@ -25986,6 +25977,7 @@
                           "EventNames": [
                             ""
                           ],
+                          "GroupByVariableName": null,
                           "Name": "DailyReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -26014,6 +26006,7 @@
                           "EventNames": [
                             ""
                           ],
+                          "GroupByVariableName": null,
                           "Name": "HarvestReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -26893,14 +26886,12 @@
                         },
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                          "Canopies": [],
                           "InitialResidueName": "wheat",
                           "InitialResidueType": "wheat",
                           "InitialResidueMass": 1000.0,
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 80.0,
-                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": true,
@@ -26910,9 +26901,6 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Maize",
-                          "IsAlive": false,
-                          "IsEnding": false,
-                          "DaysAfterEnding": 0,
                           "ResourceName": "Maize",
                           "Name": "C4Maize",
                           "IncludeInDocumentation": true,
@@ -27048,6 +27036,7 @@
                           "EventNames": [
                             "[Clock].DoReport"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "DailyReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -27076,6 +27065,7 @@
                           "EventNames": [
                             "[C4Maize].Harvesting"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "HarvestReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -40785,14 +40775,12 @@
                       "Children": [
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                          "Canopies": [],
                           "InitialResidueName": "Maize",
                           "InitialResidueType": "Maize",
                           "InitialResidueMass": 50.0,
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 65.0,
-                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": true,
@@ -41334,9 +41322,6 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Maize",
-                          "IsAlive": false,
-                          "IsEnding": false,
-                          "DaysAfterEnding": 0,
                           "ResourceName": "Maize",
                           "Name": "C4Maize",
                           "IncludeInDocumentation": true,
@@ -41382,6 +41367,7 @@
                           "EventNames": [
                             "[Clock].DoReport"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "DailyReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -41410,6 +41396,7 @@
                           "EventNames": [
                             "[C4Maize].Harvesting"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "HarvestReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -51237,14 +51224,12 @@
                         },
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                          "Canopies": [],
                           "InitialResidueName": "Maize",
                           "InitialResidueType": "Maize",
                           "InitialResidueMass": 50.0,
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 65.0,
-                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": true,
@@ -51254,9 +51239,6 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Maize",
-                          "IsAlive": false,
-                          "IsEnding": false,
-                          "DaysAfterEnding": 0,
                           "ResourceName": "Maize",
                           "Name": "C4Maize",
                           "IncludeInDocumentation": true,
@@ -51299,6 +51281,7 @@
                           "EventNames": [
                             ""
                           ],
+                          "GroupByVariableName": null,
                           "Name": "DailyReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -51319,6 +51302,7 @@
                           "EventNames": [
                             ""
                           ],
+                          "GroupByVariableName": null,
                           "Name": "HarvestReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -51996,14 +51980,12 @@
                         },
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                          "Canopies": [],
                           "InitialResidueName": "Maize",
                           "InitialResidueType": "Maize",
                           "InitialResidueMass": 500.0,
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 65.0,
-                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": true,
@@ -52071,9 +52053,6 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Maize",
-                          "IsAlive": false,
-                          "IsEnding": false,
-                          "DaysAfterEnding": 0,
                           "ResourceName": "Maize",
                           "Name": "C4Maize",
                           "IncludeInDocumentation": true,
@@ -52119,6 +52098,7 @@
                           "EventNames": [
                             "[Clock].DoReport"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "DailyReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -52131,6 +52111,7 @@
                           "EventNames": [
                             "[C4Maize].Harvesting"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "HarvestReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -53915,14 +53896,12 @@
                         },
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                          "Canopies": [],
                           "InitialResidueName": "Maize",
                           "InitialResidueType": "Maize",
                           "InitialResidueMass": 300.0,
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 65.0,
-                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": true,
@@ -54021,9 +54000,6 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Maize",
-                          "IsAlive": false,
-                          "IsEnding": false,
-                          "DaysAfterEnding": 0,
                           "ResourceName": "Maize",
                           "Name": "C4Maize",
                           "IncludeInDocumentation": true,
@@ -54038,6 +54014,7 @@
                           "EventNames": [
                             "[Clock].DoReport"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "DailyReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -54058,6 +54035,7 @@
                           "EventNames": [
                             "[C4Maize].Harvesting"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "HarvestReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -54712,14 +54690,12 @@
                     },
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                      "Canopies": [],
                       "InitialResidueName": "wheat",
                       "InitialResidueType": "wheat",
                       "InitialResidueMass": 1000.0,
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 80.0,
-                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": true,
@@ -54961,6 +54937,7 @@
                       "EventNames": [
                         "[Clock].DoReport"
                       ],
+                      "GroupByVariableName": null,
                       "Name": "DailyReport",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -54979,9 +54956,6 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Maize",
-                      "IsAlive": false,
-                      "IsEnding": false,
-                      "DaysAfterEnding": 0,
                       "ResourceName": "Maize",
                       "Name": "C4Maize",
                       "IncludeInDocumentation": true,
@@ -55010,6 +54984,7 @@
                       "EventNames": [
                         "[C4Maize].Harvesting"
                       ],
+                      "GroupByVariableName": null,
                       "Name": "HarvestReport",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -55641,14 +55616,12 @@
                     },
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                      "Canopies": [],
                       "InitialResidueName": "wheat",
                       "InitialResidueType": "wheat",
                       "InitialResidueMass": 1000.0,
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 80.0,
-                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": true,
@@ -55926,6 +55899,7 @@
                       "EventNames": [
                         "[Clock].DoReport"
                       ],
+                      "GroupByVariableName": null,
                       "Name": "DailyReport",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -55944,9 +55918,6 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Maize",
-                      "IsAlive": false,
-                      "IsEnding": false,
-                      "DaysAfterEnding": 0,
                       "ResourceName": "Maize",
                       "Name": "C4Maize",
                       "IncludeInDocumentation": true,
@@ -55975,6 +55946,7 @@
                       "EventNames": [
                         "[C4Maize].Harvesting"
                       ],
+                      "GroupByVariableName": null,
                       "Name": "HarvestReport",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -56606,14 +56578,12 @@
                     },
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                      "Canopies": [],
                       "InitialResidueName": "wheat",
                       "InitialResidueType": "wheat",
                       "InitialResidueMass": 1000.0,
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 80.0,
-                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": true,
@@ -56921,6 +56891,7 @@
                       "EventNames": [
                         "[Clock].DoReport"
                       ],
+                      "GroupByVariableName": null,
                       "Name": "DailyReport",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -56939,9 +56910,6 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Maize",
-                      "IsAlive": false,
-                      "IsEnding": false,
-                      "DaysAfterEnding": 0,
                       "ResourceName": "Maize",
                       "Name": "C4Maize",
                       "IncludeInDocumentation": true,
@@ -56970,6 +56938,7 @@
                       "EventNames": [
                         "[C4Maize].Harvesting"
                       ],
+                      "GroupByVariableName": null,
                       "Name": "HarvestReport",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -57601,14 +57570,12 @@
                     },
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                      "Canopies": [],
                       "InitialResidueName": "wheat",
                       "InitialResidueType": "wheat",
                       "InitialResidueMass": 1000.0,
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 80.0,
-                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": true,
@@ -57910,6 +57877,7 @@
                       "EventNames": [
                         "[Clock].DoReport"
                       ],
+                      "GroupByVariableName": null,
                       "Name": "DailyReport",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -57928,9 +57896,6 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Maize",
-                      "IsAlive": false,
-                      "IsEnding": false,
-                      "DaysAfterEnding": 0,
                       "ResourceName": "Maize",
                       "Name": "C4Maize",
                       "IncludeInDocumentation": true,
@@ -57959,6 +57924,7 @@
                       "EventNames": [
                         "[C4Maize].Harvesting"
                       ],
+                      "GroupByVariableName": null,
                       "Name": "HarvestReport",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -58637,14 +58603,12 @@
                         },
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                          "Canopies": [],
                           "InitialResidueName": "wheat",
                           "InitialResidueType": "wheat",
                           "InitialResidueMass": 4000.0,
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 33.0,
-                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": true,
@@ -58654,9 +58618,6 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Maize",
-                          "IsAlive": false,
-                          "IsEnding": false,
-                          "DaysAfterEnding": 0,
                           "ResourceName": "Maize",
                           "Name": "C4Maize",
                           "IncludeInDocumentation": true,
@@ -58750,6 +58711,7 @@
                             "Height"
                           ],
                           "EventNames": null,
+                          "GroupByVariableName": null,
                           "Name": "DailyReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -58800,6 +58762,7 @@
                           "EventNames": [
                             "[C4Maize].Harvesting"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "HarvestReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -61481,14 +61444,12 @@
                         },
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                          "Canopies": [],
                           "InitialResidueName": "wheat",
                           "InitialResidueType": "wheat",
                           "InitialResidueMass": 4000.0,
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 33.0,
-                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": true,
@@ -61498,9 +61459,6 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Maize",
-                          "IsAlive": false,
-                          "IsEnding": false,
-                          "DaysAfterEnding": 0,
                           "ResourceName": "Maize",
                           "Name": "C4Maize",
                           "IncludeInDocumentation": true,
@@ -61594,6 +61552,7 @@
                             "Height"
                           ],
                           "EventNames": null,
+                          "GroupByVariableName": null,
                           "Name": "DailyReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -61653,6 +61612,7 @@
                           "EventNames": [
                             "[C4Maize].Harvesting"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "HarvestReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -62437,14 +62397,12 @@
                         },
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                          "Canopies": [],
                           "InitialResidueName": "wheat",
                           "InitialResidueType": "wheat",
                           "InitialResidueMass": 4000.0,
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 33.0,
-                          "FractionFaecesAdded": 1.0,
                           "ResourceName": "SurfaceOrganicMatter",
                           "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": true,
@@ -62454,9 +62412,6 @@
                         {
                           "$type": "Models.PMF.Plant, Models",
                           "CropType": "Maize",
-                          "IsAlive": false,
-                          "IsEnding": false,
-                          "DaysAfterEnding": 0,
                           "ResourceName": "Maize",
                           "Name": "C4Maize",
                           "IncludeInDocumentation": true,
@@ -62550,6 +62505,7 @@
                             "Height"
                           ],
                           "EventNames": null,
+                          "GroupByVariableName": null,
                           "Name": "DailyReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -62609,6 +62565,7 @@
                           "EventNames": [
                             "[C4Maize].Harvesting"
                           ],
+                          "GroupByVariableName": null,
                           "Name": "HarvestReport",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -63159,14 +63116,12 @@
                     },
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                      "Canopies": [],
                       "InitialResidueName": "wheat",
                       "InitialResidueType": "wheat",
                       "InitialResidueMass": 4000.0,
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 33.0,
-                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": true,
@@ -63176,9 +63131,6 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "CropType": "Maize",
-                      "IsAlive": false,
-                      "IsEnding": false,
-                      "DaysAfterEnding": 0,
                       "ResourceName": "Maize",
                       "Name": "C4Maize",
                       "IncludeInDocumentation": true,
@@ -63272,6 +63224,7 @@
                         "Height"
                       ],
                       "EventNames": null,
+                      "GroupByVariableName": null,
                       "Name": "DailyReport",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -63331,6 +63284,7 @@
                       "EventNames": [
                         "[C4Maize].Harvesting"
                       ],
+                      "GroupByVariableName": null,
                       "Name": "HarvestReport",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -63414,6 +63368,9 @@
     },
     {
       "$type": "Models.GraphPanel, Models",
+      "HideTitles": false,
+      "FontSize": 14.0,
+      "MarkerSize": 0,
       "SameXAxes": false,
       "SameYAxes": false,
       "LegendOutsideGraph": false,
