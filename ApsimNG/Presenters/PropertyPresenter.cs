@@ -256,6 +256,7 @@ namespace UserInterface.Presenters
 
         public void Refresh()
         {
+            grid.EndEdit();
             if (model == null)
                 return;
             properties.Clear();
