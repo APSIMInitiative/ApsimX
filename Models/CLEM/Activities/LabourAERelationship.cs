@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Resources;
+﻿using Models.CLEM.Activities;
+using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
@@ -9,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace Models.CLEM.Activities
+namespace Models.CLEM.Resources
 {
     /// <summary>
     /// This determines a relationship
@@ -41,26 +42,13 @@ namespace Models.CLEM.Activities
         [XmlIgnore]
         public new double Maximum { get; set; }
 
-        ///// <summary>
-        ///// X values of relationship
-        ///// </summary>
-        //[Description("X values of relationship")]
-        //[Required]
-        //public new double[] XValues { get; set; }
-
-        ///// <summary>
-        ///// Y values of relationship
-        ///// </summary>
-        //[Description("Y values of relationship")]
-        //[Required]
-        //public new double[] YValues { get; set; }
-
         /// <summary>
         /// Constructor
         /// </summary>
         public LabourAERelationship()
         {
             Minimum = 0;
+            Maximum = 2;
         }
 
         /// <summary>
