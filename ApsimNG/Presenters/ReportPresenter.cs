@@ -78,6 +78,7 @@
             this.view.SplitterChanged += OnSplitterChanged;
             this.view.SplitterPosition = Configuration.Settings.ReportSplitterPosition;
             this.explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+            this.view.TabChanged += OnChangeTab;
 
             Simulations simulations = Apsim.Parent(report, typeof(Simulations)) as Simulations;
             if (simulations != null)
@@ -102,8 +103,18 @@
                 dataStorePresenter.SimulationFilter = simulation;
 
             dataStorePresenter.Attach(dataStore, this.view.DataStoreView, explorerPresenter);
-            dataStorePresenter.tableDropDown.SelectedValue = this.report.Name;
             this.view.TabIndex = this.report.ActiveTabIndex;
+        }
+
+        /// <summary>
+        /// Invoked when the view's selected tab is changed.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnChangeTab(object sender, EventArgs e)
+        {
+            if (view.TabIndex == 1 && dataStorePresenter.tableDropDown.SelectedValue != report.Name)
+                dataStorePresenter.tableDropDown.SelectedValue = report.Name;
         }
 
         private void OnSplitterChanged(object sender, EventArgs e)
@@ -122,6 +133,7 @@
             this.view.VariableList.TextHasChangedByUser -= OnVariableNamesChanged;
             this.view.EventList.TextHasChangedByUser -= OnEventNamesChanged;
             this.view.GroupByEdit.Changed -= OnGroupByChanged;
+            this.view.TabChanged -= OnChangeTab;
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
             dataStorePresenter.Detach();
             intellisense.ItemSelected -= OnIntellisenseItemSelected;

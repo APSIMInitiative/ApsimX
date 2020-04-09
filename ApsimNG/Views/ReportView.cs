@@ -25,6 +25,11 @@
         event EventHandler SplitterChanged;
 
         /// <summary>
+        /// Invoked when the selected tab is changed.
+        /// </summary>
+        event EventHandler TabChanged;
+
+        /// <summary>
         /// Indicates the index of the currently active tab
         /// </summary>
         int TabIndex { get; set; }
@@ -56,6 +61,11 @@
         /// </summary>
         public event EventHandler SplitterChanged;
 
+        /// <summary>
+        /// Invoked when the selected tab is changed.
+        /// </summary>
+        public event EventHandler TabChanged;
+
         /// <summary>Constructor</summary>
         public ReportView(ViewBase owner) : base(owner)
         {
@@ -73,7 +83,7 @@
                                       (Entry)builder.GetObject("groupByEdit")); 
 
             mainWidget = notebook1;
-
+            notebook1.SwitchPage += OnSwitchPage;
             variableEditor = new EditorView(this);
             variableEditor.StyleChanged += OnStyleChanged;
             vbox1.PackStart(variableEditor.MainWidget, true, true, 0);
@@ -85,6 +95,28 @@
             dataStoreView1 = new ViewBase(this, "ApsimNG.Resources.Glade.DataStoreView.glade");
             alignment1.Add(dataStoreView1.MainWidget);
             mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        /// <summary>
+        /// Invoked when the selected tab is changed.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        /// <remarks>
+        /// Note that there is no [ConnectBefore] attribute,
+        /// so at the time this is called, this.TabIndex
+        /// will return the correct (updated) value.
+        /// </remarks>
+        private void OnSwitchPage(object sender, SwitchPageArgs args)
+        {
+            try
+            {
+                TabChanged?.Invoke(this, EventArgs.Empty);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -137,6 +169,7 @@
             {
                 panel.RemoveNotification(OnPropertyNotified);
                 variableEditor.StyleChanged -= OnStyleChanged;
+                notebook1.SwitchPage -= OnSwitchPage;
                 frequencyEditor.StyleChanged -= OnStyleChanged;
                 variableEditor.MainWidget.Destroy();
                 variableEditor = null;
