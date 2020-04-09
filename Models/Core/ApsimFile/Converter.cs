@@ -19,7 +19,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 90; } }
+        public static int LatestVersion { get { return 92; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1571,23 +1571,7 @@
                 new Tuple<string, string>(".DeadTissuesN",  ".DeadTissue.N")
             };
 
-            foreach (var manager in JsonUtilities.ChildManagers(root))
-            {
-                bool managerChanged = false;
-
-                foreach (var replacement in changes)
-                {
-                    if (manager.Replace(replacement.Item1, replacement.Item2))
-                        managerChanged = true;
-                }
-                if (managerChanged)
-                    manager.Save();
-            }
-            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
-            {
-                foreach (var replacement in changes)
-                    JsonUtilities.SearchReplaceReportVariableNames(report, replacement.Item1, replacement.Item2);
-            }
+            JsonUtilities.RenameVariables(root, changes);
         }
 
         /// <summary>
@@ -1939,6 +1923,53 @@
                     JsonUtilities.RemoveChild(manager, "Script");
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion91(JObject root, string fileName)
+        {
+            Tuple<string, string>[] changes =
+            {
+                new Tuple<string, string>(".HarvestableWt",          ".Harvestable.Wt"),
+                new Tuple<string, string>(".HarvestableN",           ".Harvestable.N"),
+                new Tuple<string, string>(".StandingHerbageWt",      ".Standing.Wt"),
+                new Tuple<string, string>(".StandingHerbageN",       ".Standing.N"),
+                new Tuple<string, string>(".StandingHerbageNConc",   ".Standing.NConc"),
+                new Tuple<string, string>(".StandingLiveHerbageWt",  ".StandingLive.Wt"),
+                new Tuple<string, string>(".StandingLiveHerbageN",   ".StandingLive.N"),
+                new Tuple<string, string>(".StandingDeadHerbageWt",  ".StandingDead.Wt"),
+                new Tuple<string, string>(".StandingDeadHerbageN",   ".StandingDead.N"),
+                new Tuple<string, string>(".HerbageDigestibility",   ".Standing.Digestibility"),
+                new Tuple<string, string>(".RootDepthMaximum",       ".Root.RootDepthMaximum"),
+                new Tuple<string, string>("[AGPRyeGrass].RootLengthDensity", "[AGPRyeGrass].Root.RootLengthDensity"),
+                new Tuple<string, string>("[AGPWhiteClover].RootLengthDensity", "[AGPWhiteClover].Root.RootLengthDensity"),
+                new Tuple<string, string>("[AGPLucerne].RootLengthDensity", "[AGPLucerne].Root.RootLengthDensity")
+            };
+            JsonUtilities.RenameVariables(root, changes);
+        }
+		
+        /// <summary>
+        /// Change names of a couple of parameters in SimpleGrazing.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion92(JObject root, string fileName)
+        {
+            foreach (JObject simpleGrazing in JsonUtilities.ChildrenRecursively(root, "SimpleGrazing"))
+            {
+                simpleGrazing["FractionExcretedNToDung"] = simpleGrazing["FractionOfBiomassToDung"];
+                if (simpleGrazing["FractionNExportedInAnimal"] == null)
+                    simpleGrazing["FractionNExportedInAnimal"] = 0.75;
+            }
+
+            Tuple<string, string>[] changes =
+            {
+                new Tuple<string, string>(".AmountDungCReturned",  ".AmountDungWtReturned")
+            };
+            JsonUtilities.RenameVariables(root, changes);
+        }
+		
         /// <summary>
         /// Add progeny destination phase and mortality function.
         /// </summary>

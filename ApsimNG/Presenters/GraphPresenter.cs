@@ -256,6 +256,7 @@
                                                     definition.Marker,
                                                     definition.LineThickness,
                                                     definition.MarkerSize,
+                                                    definition.MarkerModifier,
                                                     definition.ShowInLegend);
                     }
                     else if (definition.Type == SeriesType.Region)
