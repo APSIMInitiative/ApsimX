@@ -22,6 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages the sale of a specified resource.")]
     [HelpUri(@"Content/Features/activities/All resources/SellResource.htm")]
+    [Version(1, 0, 2, "Automatically handles transactions with Marketplace if present")]
     [Version(1, 0, 1, "")]
     public class ResourceActivitySell: CLEMActivityBase
     {
@@ -59,12 +60,13 @@ namespace Models.CLEM.Activities
         private IResourceType resourceToSell;
 
         /// <summary>
-        /// Store type to place resource in within market if present
+        /// Store type to place resource within market if present
         /// </summary>
         private IResourceType resourceToPlace;
 
         private ResourcePricing price;
         private double unitsAvailable;
+        private FinanceType marketBank;
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -81,15 +83,16 @@ namespace Models.CLEM.Activities
             // find a suitable store to place resource
             if(market != null)
             {
+                marketBank = market.BankAccount;
                 resourceToPlace = market.Resources.GetResourceItem(this, ResourceTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
             }
             if(resourceToPlace != null)
             {
-                price = resourceToPlace.Price(PurchaseOrSalePricingStyleType.Sale);
+                price = resourceToPlace.Price(PurchaseOrSalePricingStyleType.Purchase);
             }
-            if(price is null && resourceToSell.Price(PurchaseOrSalePricingStyleType.Purchase)  != null)
+            if(price is null && resourceToSell.Price(PurchaseOrSalePricingStyleType.Sale)  != null)
             {
-                price = resourceToSell.Price(PurchaseOrSalePricingStyleType.Purchase);
+                price = resourceToSell.Price(PurchaseOrSalePricingStyleType.Sale);
             }
         }
 
@@ -178,22 +181,18 @@ namespace Models.CLEM.Activities
                 {
                     ActivityModel = this,
                     Required = units * price.PacketSize,
-                    AllowTransmutation = false,
+                    AllowTransmutation = true,
                     Reason = "Sell " + (resourceToSell as Model).Name
                 };
                 resourceToSell.Remove(purchaseRequest);
 
                 // transfer money earned
-                bankAccount.Add(units * price.PricePerPacket, this, "Sales");
-
-                // transfer to market if in place
-                if (resourceToPlace != null)
+                if (bankAccount != null)
                 {
-                    purchaseRequest.Required *= this.FarmMultiplier;
-                    // resource
-                    resourceToPlace.Add(purchaseRequest, this, $"Sales from {this.Name}");
-                    // take money paid
-
+                    bankAccount.Add(units * price.PricePerPacket, this, "Sales");
+                    purchaseRequest.Required = units * price.PricePerPacket;
+                    purchaseRequest.Reason = "Sales to " + (resourceToSell as Model).Name;
+                    (bankAccount.EquivalentMarketStore as FinanceType).Remove(purchaseRequest);
                 }
 
                 SetStatusSuccess();

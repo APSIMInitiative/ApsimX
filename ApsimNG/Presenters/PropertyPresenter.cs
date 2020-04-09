@@ -893,7 +893,7 @@ namespace UserInterface.Presenters
                     IModel resGroup = Apsim.Child(resHolder, resGroupType);
                     if (resGroup != null)  //see if this group type is included in this particular simulation.
                     {
-                        foreach (IModel item in resGroup.Children)
+                        foreach (IModel item in resGroup.Children.Where(a => a.Enabled))
                         {
                             if (item.GetType() != typeof(Memo))
                             {

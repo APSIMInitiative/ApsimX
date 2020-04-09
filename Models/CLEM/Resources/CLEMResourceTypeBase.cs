@@ -26,7 +26,24 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// A link to the equivalent market store for trading.
         /// </summary>
-        protected CLEMResourceTypeBase equivalentMarketStore { get; set; }
+        [XmlIgnore]
+        public CLEMResourceTypeBase EquivalentMarketStore { get; set; }
+
+        /// <summary>
+        /// Has a market store been found
+        /// </summary>
+        [XmlIgnore]
+        public bool MarketStoreExists 
+        { 
+            get 
+            { 
+                if(!equivalentMarketStoreDetermined)
+                {
+                    FindEquivalentMarketStore();
+                }
+                return !(EquivalentMarketStore is null); 
+            } 
+        }
 
         /// <summary>
         /// Detemrines if an equivalent resource has been found in the market
@@ -41,7 +58,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return Apsim.Children(this, typeof(Transmutation)).Count() > 0;
+                return Apsim.Children(this, typeof(Transmutation)).Where(a => a.Enabled).Count() > 0;
             }
         }
 
@@ -51,7 +68,7 @@ namespace Models.CLEM.Resources
         public bool PricingExists(PurchaseOrSalePricingStyleType priceType)
         {
             // find pricing that is ok;
-            return Apsim.Children(this, typeof(ResourcePricing)).Where(a => ((a as ResourcePricing).PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | (a as ResourcePricing).PurchaseOrSale == priceType) && (a as ResourcePricing).TimingOK).FirstOrDefault() != null;
+            return Apsim.Children(this, typeof(ResourcePricing)).Where(a => a.Enabled & ((a as ResourcePricing).PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | (a as ResourcePricing).PurchaseOrSale == priceType) && (a as ResourcePricing).TimingOK).FirstOrDefault() != null;
         }
 
         /// <summary>
@@ -60,21 +77,28 @@ namespace Models.CLEM.Resources
         public ResourcePricing Price(PurchaseOrSalePricingStyleType priceType)
         {
             // find pricing that is ok;
-            ResourcePricing price = Apsim.Children(this, typeof(ResourcePricing)).Where(a => ((a as ResourcePricing).PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | (a as ResourcePricing).PurchaseOrSale == priceType) && (a as ResourcePricing).TimingOK).FirstOrDefault() as ResourcePricing;
+            ResourcePricing price = Apsim.Children(this, typeof(ResourcePricing)).Where(a => a.Enabled & ((a as ResourcePricing).PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | (a as ResourcePricing).PurchaseOrSale == priceType) && (a as ResourcePricing).TimingOK).FirstOrDefault() as ResourcePricing;
+
+            // does simulation have finance
+            ResourcesHolder resources = Apsim.Parent(this, typeof(ResourcesHolder)) as ResourcesHolder;
+            bool financesPresent = (resources.FinanceResource() != null);
 
             if (price == null)
             {
-                string warn = "No pricing is available for [r=" + this.Parent.Name + "." + this.Name + "]";
-                if (Apsim.Children(this, typeof(ResourcePricing)).Count > 0)
-                {
-                    warn += " in month [" + Clock.Today.ToString("MM yyyy") + "]";
-                }
-                warn += "\nAdd [r=ResourcePricing] component to [r=" + this.Parent.Name + "." + this.Name + "] to include financial transactions for purchases and sales.";
+                if (financesPresent)
+                { 
+                    string warn = "No pricing is available for [r=" + this.Parent.Name + "." + this.Name + "]";
+                    if (Apsim.Children(this, typeof(ResourcePricing)).Count > 0)
+                    {
+                        warn += " in month [" + Clock.Today.ToString("MM yyyy") + "]";
+                    }
+                    warn += "\nAdd [r=ResourcePricing] component to [r=" + this.Parent.Name + "." + this.Name + "] to include financial transactions for purchases and sales.";
 
-                if (!Warnings.Exists(warn))
-                {
-                    Summary.WriteWarning(this, warn);
-                    Warnings.Add(warn);
+                    if (!Warnings.Exists(warn))
+                    {
+                        Summary.WriteWarning(this, warn);
+                        Warnings.Add(warn);
+                    }
                 }
                 return new ResourcePricing() { PricePerPacket=0, PacketSize=1, UseWholePackets=true };
             }
@@ -194,7 +218,7 @@ namespace Models.CLEM.Resources
             if(!equivalentMarketStoreDetermined)
             {
                 // havent already found a market store
-                if(equivalentMarketStore is null)
+                if(EquivalentMarketStore is null)
                 {
                     // is there a market
                     Market market = FindMarket();
@@ -208,12 +232,13 @@ namespace Models.CLEM.Resources
                             holder.ResourceTypeExists(this, out store);
                             if (store != null)
                             {
-                                equivalentMarketStore = store as CLEMResourceTypeBase;
+                                EquivalentMarketStore = store as CLEMResourceTypeBase;
                             }
                         }
 
                     }
                 }
+                equivalentMarketStoreDetermined = true;
             }
         }
 
