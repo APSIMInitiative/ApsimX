@@ -460,12 +460,13 @@ namespace Models.CLEM
 
             // get the pricing 
             var w = Apsim.Parent(this, typeof(CLEMResourceTypeBase)) as IResourceType;
+            bool multiPrice = Apsim.Children(w as IModel, typeof(ResourcePricing)).Count() > 1;
             ResourcePricing price = w.Price(PurchaseOrSalePricingStyleType.Purchase);
             if (price!=null)
             {
                 html += "<div class=\"activityentry\">Use ";
                 html += (ResourceTypeName != null && ResourceTypeName != "") ? "<span class=\"resourcelink\">" + ResourceTypeName + "</span>" : "<span class=\"errorlink\">Account not set</span>";
-                html += " based upon the <span class=\"resourcelink\">" + price.Name+"</span> packet size and price for this resource</div>";
+                html += " based upon the " + (multiPrice ? "most suitable":"<span class=\"resourcelink\"> "+price.Name+"</span>") + " packet size and price for this resource</div>";
             }
             else
             {
