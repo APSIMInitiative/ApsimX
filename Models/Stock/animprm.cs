@@ -77,10 +77,15 @@ namespace Models.GrazPlan
             /// </summary>
             csSYSTEM1_9 };
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Serializable]
-        internal struct Ancestry
+        public struct Ancestry
         {
+            /// <summary></summary>
             public string sBaseBreed;
+            /// <summary></summary>
             public double fPropn;
         }
 
@@ -92,7 +97,10 @@ namespace Models.GrazPlan
         private double FDairyIntakeShape;
         private bool FUseDairyCurve;
 
-        private Ancestry[] FParentage = new Ancestry[0];
+        /// <summary>
+        /// 
+        /// </summary>
+        public Ancestry[] FParentage = new Ancestry[0];
 
         private void setSRW(double fValue)
         {

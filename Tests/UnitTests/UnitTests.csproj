@@ -163,6 +163,7 @@
     <Compile Include="MockModelThatThrows.cs" />
     <Compile Include="Soils\MockSoilTemperature.cs" />
     <Compile Include="Soils\SoilStandardiserTests.cs" />
+    <Compile Include="Stock\StockTests.cs" />
     <Compile Include="Storage\DataStoreReaderTests.cs" />
     <Compile Include="Report\ReportDataTests.cs" />
     <Compile Include="Core\ApsimFile\JsonUtilitiesTests.cs" />

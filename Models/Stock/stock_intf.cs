@@ -4,7 +4,10 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.Core.ApsimFile;
+    using Newtonsoft.Json.Linq;
     using StdUnits;
 
     /// <summary>
@@ -643,8 +646,14 @@
         /// <param name="fileName">The parameter file name</param>
         private void SetParamFile(string fileName)
         {
-            this.baseParams = null;
-            this.baseParams = StockList.MakeParamSet(fileName);
+            //this.baseParams = null;
+            //this.baseParams = StockList.MakeParamSet(fileName);
+
+            var allParams = ReflectionUtilities.GetResourceAsString("Models.Resources.Ruminant.json");
+            List<Exception> exceptions;
+            var simulations = FileFormat.ReadFromString<Simulations>(allParams, out exceptions);
+            baseParams = simulations.Children[0] as AnimalParamSet;
+
             this.paramFile = fileName;
         }
 

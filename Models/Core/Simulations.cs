@@ -32,8 +32,6 @@ namespace Models.Core
         [NonSerialized]
         private Links links;
 
-        private Checkpoints checkpoints;
-
         /// <summary>Gets or sets the width of the explorer.</summary>
         /// <value>The width of the explorer.</value>
         public Int32 ExplorerWidth { get; set; }
@@ -77,7 +75,6 @@ namespace Models.Core
         public Simulations()
         {
             Version = ApsimFile.Converter.LatestVersion;
-            checkpoints = new Checkpoints(this);
         }
 
         /// <summary>
@@ -212,7 +209,6 @@ namespace Models.Core
             if (storage != null)
                 services.Add(storage);
             services.Add(this);
-            services.Add(checkpoints);
             return services;
         }
 

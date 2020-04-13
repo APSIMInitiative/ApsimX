@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.IO;
     using System.Linq;
     using APSIM.Shared.Utilities;
     using Models.Core;
@@ -4085,6 +4086,8 @@
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
+            File.WriteAllText(@"C:\Users\holzworthdp\Work\Temp\New.json",
+                              ReflectionUtilities.JsonSerialise(stockModel.BaseParams, true));
             if (!this.paddocksGiven)
             {
                 // get the paddock areas from the simulation
