@@ -11,6 +11,8 @@ using HtmlAgilityPack;
 using UserInterface.Classes;
 using System.IO;
 using System.Drawing;
+using Utility;
+using System.Globalization;
 
 namespace UserInterface.Views
 {
@@ -199,7 +201,22 @@ namespace UserInterface.Views
                 // lie112: we do need a full update if the html code includes java <script> used for Chart.js otherwise it is not run and updated
                 Browser.Document.Body.InnerHtml = html;
             else
+            {
+                // When the browser loads and creates its body for the first time,
+                // its BackColor and ForeColor properties are reset to their default
+                // values (white/black). This causes a flicker when in dark mode.
+                // To work around this, we embed some css into the markup when we
+                // first load the document. This is a pretty gnarly workaround so
+                // may need to be tweaked if there's some strange html passed into here.
+
+                string bgColour = Colour.ToHex(Colour.FromGtk(HoldingWidget.Style.Background(StateType.Normal)));
+                string fgColour = Colour.ToHex(Colour.FromGtk(HoldingWidget.Style.Foreground(StateType.Normal)));
+                Pango.FontDescription font = HoldingWidget.Style.FontDescription;
+                // Don't want any peksy commas showing up during the conversion to string.
+                string fontSize = GetHtmlFontSize(font).ToString(CultureInfo.InvariantCulture);
+                html = $"<style>body {{ background-color: {bgColour}; color: {fgColour}; font-family: {font.Family}; font-size: {fontSize}; }}</style>" + html;
                 Browser.DocumentText = html;
+            }
             // Probably should make this conditional.
             // We use a timeout so we don't sit here forever if a document fails to load.
 
@@ -208,6 +225,11 @@ namespace UserInterface.Views
             while (Browser != null && Browser.ReadyState != WebBrowserReadyState.Complete && watch.ElapsedMilliseconds < 10000)
                 while (Gtk.Application.EventsPending())
                     Gtk.Application.RunIteration();
+        }
+
+        private double GetHtmlFontSize(Pango.FontDescription font)
+        {
+            return 1.5 * font.Size / Pango.Scale.PangoScale;
         }
 
         public System.Drawing.Color BackgroundColour
@@ -253,7 +275,8 @@ namespace UserInterface.Views
 
                 if (Browser.Document.Body.Style == null)
                     Browser.Document.Body.Style = "";
-                Browser.Document.Body.Style += $"font-family: {value.Family}; font-size: {1.5 * value.Size / Pango.Scale.PangoScale}px;";
+                string fontSize = GetHtmlFontSize(value).ToString(CultureInfo.InvariantCulture);
+                Browser.Document.Body.Style += $"font-family: {value.Family}; font-size: {fontSize}px;";
             }
         }
 
