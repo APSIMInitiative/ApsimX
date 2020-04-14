@@ -1983,7 +1983,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 1.05,
+                              "FixedValue": 1.5,
                               "Units": "g/MJ",
                               "Name": "Constant",
                               "Children": [],
