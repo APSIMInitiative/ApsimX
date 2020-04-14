@@ -1558,7 +1558,7 @@
                             1.0
                           ],
                           "Y": [
-                            40000.0,
+                            25000.0,
                             25000.0
                           ],
                           "Name": "XYPairs",
@@ -1583,7 +1583,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 20000.0,
+                      "FixedValue": 10000.0,
                       "Units": "mm2/g",
                       "Name": "SpecificLeafAreaMin",
                       "Children": [],
@@ -7628,9 +7628,9 @@
                     "[Berry].MetFactors.BM_RainTotVer as BM_RainTotVer",
                     "[Berry].MetFactors.BM_TmeanFlow as BM_TmeanFlow",
                     "",
-                    "[Berry].YieldComponent.BunchesPerVine as BunchesPerVine",
+                    "[Berry].YieldComponent.BunchesPerVine as bunch.no.vine",
                     "[Berry].YieldComponent.BerryNum as BerryNum",
-                    "[Berry].YieldComponent.BerryMass as BerryMass"
+                    "[Berry].YieldComponent.BerryMass as berry.fw.mean"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -10886,9 +10886,9 @@
                             "[Berry].MetFactors.BM_RainTotVer as BM_RainTotVer",
                             "[Berry].MetFactors.BM_TmeanFlow as BM_TmeanFlow",
                             "",
-                            "[Berry].YieldComponent.BunchesPerVine as BunchesPerVine",
+                            "[Berry].YieldComponent.BunchesPerVine as bunch.no.vine",
                             "[Berry].YieldComponent.BerryNum as BerryNum",
-                            "[Berry].YieldComponent.BerryMass as BerryMass"
+                            "[Berry].YieldComponent.BerryMass as berry.fw.mean"
                           ],
                           "EventNames": [
                             "[Clock].DoReport"
@@ -11961,8 +11961,8 @@
                           "Line": 4,
                           "LineThickness": 0,
                           "TableName": "PredictedObserved",
-                          "XFieldName": "Observed.BunchesPerVine",
-                          "YFieldName": "Predicted.BunchesPerVine",
+                          "XFieldName": "Observed.bunch.no.vine",
+                          "YFieldName": "Predicted.bunch.no.vine",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -12119,8 +12119,8 @@
                           "Line": 4,
                           "LineThickness": 0,
                           "TableName": "PredictedObserved",
-                          "XFieldName": "Observed.BerryMass",
-                          "YFieldName": "Predicted.BerryMass",
+                          "XFieldName": "Observed.berry.fw.mean",
+                          "YFieldName": "Predicted.berry.fw.mean",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -12199,86 +12199,7 @@
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "BUN_TmaxIni",
-                          "YFieldName": "BunchesPerVine",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
-                          "ShowInLegend": false,
-                          "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "Series",
-                          "Children": [
-                            {
-                              "$type": "Models.Regression, Models",
-                              "ForEachSeries": true,
-                              "showOneToOne": true,
-                              "showEquation": true,
-                              "Name": "Regression",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph, Models",
-                      "Caption": null,
-                      "Axis": [
-                        {
-                          "$type": "Models.Axis, Models",
-                          "Type": 3,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": true,
-                          "CrossesAtZero": false
-                        },
-                        {
-                          "$type": "Models.Axis, Models",
-                          "Type": 0,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        }
-                      ],
-                      "LegendPosition": 0,
-                      "LegendOrientation": 0,
-                      "DisabledSeries": [],
-                      "LegendOutsideGraph": false,
-                      "Name": "BunchesTmaxIni1",
-                      "Children": [
-                        {
-                          "$type": "Models.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Climate",
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 0,
-                          "MarkerSize": 0,
-                          "Line": 4,
-                          "LineThickness": 0,
-                          "TableName": "Report",
-                          "XFieldName": "Clock.Today",
-                          "YFieldName": "BunchesPerVine",
+                          "YFieldName": "bunch.no.vine",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -14683,9 +14604,9 @@
                             "[Berry].MetFactors.BM_RainTotVer as BM_RainTotVer",
                             "[Berry].MetFactors.BM_TmeanFlow as BM_TmeanFlow",
                             "",
-                            "[Berry].YieldComponent.BunchesPerVine as BunchesPerVine",
+                            "[Berry].YieldComponent.BunchesPerVine as bunch.no.vine",
                             "[Berry].YieldComponent.BerryNum as BerryNum",
-                            "[Berry].YieldComponent.BerryMass as BerryMass"
+                            "[Berry].YieldComponent.BerryMass as berry.fw.mean"
                           ],
                           "EventNames": [
                             "[Clock].DoReport"
@@ -21906,9 +21827,9 @@
                             "[Berry].MetFactors.BM_RainTotVer as BM_RainTotVer",
                             "[Berry].MetFactors.BM_TmeanFlow as BM_TmeanFlow",
                             "",
-                            "[Berry].YieldComponent.BunchesPerVine as BunchesPerVine",
+                            "[Berry].YieldComponent.BunchesPerVine as bunch.no.vine",
                             "[Berry].YieldComponent.BerryNum as BerryNum",
-                            "[Berry].YieldComponent.BerryMass as BerryMass"
+                            "[Berry].YieldComponent.BerryMass as berry.fw.mean"
                           ],
                           "EventNames": [
                             "[Clock].DoReport"
