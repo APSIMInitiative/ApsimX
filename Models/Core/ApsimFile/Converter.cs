@@ -19,7 +19,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 92; } }
+        public static int LatestVersion { get { return 93; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1969,7 +1969,31 @@
             };
             JsonUtilities.RenameVariables(root, changes);
         }
-		
+
+        /// <summary>
+        /// In SimpleGrazin, Turn "Fraction of defoliated N leaving the system" into a fraction of defoliated N going to soil.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion93(JObject root, string fileName)
+        {
+            foreach (JObject simpleGrazing in JsonUtilities.ChildrenRecursively(root, "SimpleGrazing"))
+            {
+                if (simpleGrazing["FractionNExportedInAnimal"] != null)
+                {
+                    var fractionNExportedInAnimal = Convert.ToDouble(simpleGrazing["FractionNExportedInAnimal"].Value<double>());
+                    simpleGrazing["FractionDefoliatedNToSoil"] = 1 - fractionNExportedInAnimal;
+
+                }
+                if (simpleGrazing["FractionExcretedNToDung"] != null)
+                {
+                    var fractionExcretedNToDung = simpleGrazing["FractionExcretedNToDung"] as JArray;
+                    if (fractionExcretedNToDung.Count > 0)
+                        simpleGrazing["CNRatioDung"] = "NaN";
+                }
+            }
+        }
+
         /// <summary>
         /// Add progeny destination phase and mortality function.
         /// </summary>
@@ -2186,12 +2210,12 @@
             }
         }
 
-            /// <summary>
-            /// Changes initial Root Wt to an array.
-            /// </summary>
-            /// <param name="root">The root JSON token.</param>
-            /// <param name="fileName">The name of the apsimx file.</param>
-            private static void UpgradeToVersion99(JObject root, string fileName)
+        /// <summary>
+        /// Changes initial Root Wt to an array.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion99(JObject root, string fileName)
         {
             // Delete all alias children.
             foreach (var soilNitrogen in JsonUtilities.ChildrenOfType(root, "SoilNitrogen"))
