@@ -19,7 +19,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 91; } }
+        public static int LatestVersion { get { return 93; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1933,14 +1933,14 @@
             {
                 new Tuple<string, string>(".HarvestableWt",          ".Harvestable.Wt"),
                 new Tuple<string, string>(".HarvestableN",           ".Harvestable.N"),
-                new Tuple<string, string>(".StandingHerbageWt",      ".Harvestable.Wt"),
-                new Tuple<string, string>(".StandingHerbageN",       ".Harvestable.N"),
-                new Tuple<string, string>(".StandingHerbageNConc",   ".Harvestable.NConc"),
-                new Tuple<string, string>(".StandingLiveHerbageWt",  ".HarvestableLive.Wt"),
-                new Tuple<string, string>(".StandingLiveHerbageN",   ".HarvestableLive.N"),
-                new Tuple<string, string>(".StandingDeadHerbageWt",  ".HarvestableDead.Wt"),
-                new Tuple<string, string>(".StandingDeadHerbageN",   ".HarvestableDead.N"),
-                new Tuple<string, string>(".HerbageDigestibility",   ".Harvestable.Digestibility"),
+                new Tuple<string, string>(".StandingHerbageWt",      ".Standing.Wt"),
+                new Tuple<string, string>(".StandingHerbageN",       ".Standing.N"),
+                new Tuple<string, string>(".StandingHerbageNConc",   ".Standing.NConc"),
+                new Tuple<string, string>(".StandingLiveHerbageWt",  ".StandingLive.Wt"),
+                new Tuple<string, string>(".StandingLiveHerbageN",   ".StandingLive.N"),
+                new Tuple<string, string>(".StandingDeadHerbageWt",  ".StandingDead.Wt"),
+                new Tuple<string, string>(".StandingDeadHerbageN",   ".StandingDead.N"),
+                new Tuple<string, string>(".HerbageDigestibility",   ".Standing.Digestibility"),
                 new Tuple<string, string>(".RootDepthMaximum",       ".Root.RootDepthMaximum"),
                 new Tuple<string, string>("[AGPRyeGrass].RootLengthDensity", "[AGPRyeGrass].Root.RootLengthDensity"),
                 new Tuple<string, string>("[AGPWhiteClover].RootLengthDensity", "[AGPWhiteClover].Root.RootLengthDensity"),
@@ -1949,6 +1949,51 @@
             JsonUtilities.RenameVariables(root, changes);
         }
 		
+        /// <summary>
+        /// Change names of a couple of parameters in SimpleGrazing.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion92(JObject root, string fileName)
+        {
+            foreach (JObject simpleGrazing in JsonUtilities.ChildrenRecursively(root, "SimpleGrazing"))
+            {
+                simpleGrazing["FractionExcretedNToDung"] = simpleGrazing["FractionOfBiomassToDung"];
+                if (simpleGrazing["FractionNExportedInAnimal"] == null)
+                    simpleGrazing["FractionNExportedInAnimal"] = 0.75;
+            }
+
+            Tuple<string, string>[] changes =
+            {
+                new Tuple<string, string>(".AmountDungCReturned",  ".AmountDungWtReturned")
+            };
+            JsonUtilities.RenameVariables(root, changes);
+        }
+
+        /// <summary>
+        /// In SimpleGrazin, Turn "Fraction of defoliated N leaving the system" into a fraction of defoliated N going to soil.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion93(JObject root, string fileName)
+        {
+            foreach (JObject simpleGrazing in JsonUtilities.ChildrenRecursively(root, "SimpleGrazing"))
+            {
+                if (simpleGrazing["FractionNExportedInAnimal"] != null)
+                {
+                    var fractionNExportedInAnimal = Convert.ToDouble(simpleGrazing["FractionNExportedInAnimal"].Value<double>());
+                    simpleGrazing["FractionDefoliatedNToSoil"] = 1 - fractionNExportedInAnimal;
+
+                }
+                if (simpleGrazing["FractionExcretedNToDung"] != null)
+                {
+                    var fractionExcretedNToDung = simpleGrazing["FractionExcretedNToDung"] as JArray;
+                    if (fractionExcretedNToDung.Count > 0)
+                        simpleGrazing["CNRatioDung"] = "NaN";
+                }
+            }
+        }
+
         /// <summary>
         /// Add progeny destination phase and mortality function.
         /// </summary>
@@ -2165,12 +2210,12 @@
             }
         }
 
-            /// <summary>
-            /// Changes initial Root Wt to an array.
-            /// </summary>
-            /// <param name="root">The root JSON token.</param>
-            /// <param name="fileName">The name of the apsimx file.</param>
-            private static void UpgradeToVersion99(JObject root, string fileName)
+        /// <summary>
+        /// Changes initial Root Wt to an array.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion99(JObject root, string fileName)
         {
             // Delete all alias children.
             foreach (var soilNitrogen in JsonUtilities.ChildrenOfType(root, "SoilNitrogen"))

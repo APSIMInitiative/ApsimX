@@ -115,6 +115,7 @@
              Models.MarkerType markerType,
              Models.LineThicknessType lineThickness,
              Models.MarkerSizeType markerSize,
+             double markerModifier,
              bool showInLegend);
 
         /// <summary>

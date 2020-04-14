@@ -636,6 +636,7 @@
                                                      MarkerType.None,
                                                      LineThicknessType.Normal,
                                                      MarkerSizeType.Normal,
+                                                     1,
                                                      true);
             this.weatherDataView.GraphSummary.DrawLineAndMarkers(
                                                      "Minimum Temperature",
@@ -651,6 +652,7 @@
                                                      MarkerType.None,
                                                      LineThicknessType.Normal,
                                                      MarkerSizeType.Normal,
+                                                     1,
                                                      true);
             this.weatherDataView.GraphSummary.FormatAxis(Axis.AxisType.Bottom, "Month", false, double.NaN, double.NaN, double.NaN, false);
             this.weatherDataView.GraphSummary.FormatAxis(Axis.AxisType.Left, "Rainfall (mm)", false, double.NaN, double.NaN, double.NaN, false);
@@ -720,6 +722,7 @@
                                                  MarkerType.None,
                                                  LineThicknessType.Normal,
                                                  MarkerSizeType.Normal,
+                                                 1,
                                                  true);
             }
 
@@ -751,6 +754,7 @@
                                                      MarkerType.None,
                                                      LineThicknessType.Normal,
                                                      MarkerSizeType.Normal,
+                                                     1,
                                                      true);
 
             this.weatherDataView.GraphTemperature.DrawLineAndMarkers(
@@ -767,6 +771,7 @@
                                                      MarkerType.None,
                                                      LineThicknessType.Normal,
                                                      MarkerSizeType.Normal,
+                                                     1,
                                                      true);
 
             this.weatherDataView.GraphTemperature.FormatAxis(Axis.AxisType.Bottom, "Date", false, double.NaN, double.NaN, double.NaN, false);
@@ -806,6 +811,7 @@
                                                      MarkerType.None,
                                                      LineThicknessType.Normal,
                                                      MarkerSizeType.Normal,
+                                                     1,
                                                      true);
             this.weatherDataView.GraphRadiation.DrawLineAndMarkers(
                                                      "Maximum Radiation",
@@ -821,6 +827,7 @@
                                                      MarkerType.None,
                                                      LineThicknessType.Normal,
                                                      MarkerSizeType.Normal,
+                                                     1,
                                                      true);
 
             this.weatherDataView.GraphRadiation.FormatAxis(Axis.AxisType.Bottom, "Date", false, double.NaN, double.NaN, double.NaN, false);

@@ -16,6 +16,9 @@
         /// <summary>Total amount of above ground biomass.</summary>
         Biomass AboveGround { get;  }
 
+        /// <summary>Total amount of harvestable above ground biomass.</summary>
+        Biomass AboveGroundHarvestable { get; }
+
         /// <summary>Plant population.</summary>
         double Population { get; }
 

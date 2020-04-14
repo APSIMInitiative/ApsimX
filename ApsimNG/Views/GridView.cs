@@ -2531,6 +2531,8 @@
 
             TreePath path = new TreePath(new int[1] { row });
             TreeViewColumn col = view.GetColumn(column);
+            if (path == null || col == null)
+                return;
             view.SetCursor(path, col, startEdit);
             view.ScrollToCell(path, col, false, 0, 1);
             selectedCellRowIndex = row;

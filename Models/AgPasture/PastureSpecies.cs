@@ -2495,13 +2495,26 @@
             get
             {
                 Biomass mass = new Biomass();
-                mass.StructuralWt = (leaf.DMLive + leaf.DMDead + stem.DMLive + stem.DMDead + stolon.DMLive + stolon.DMDead) / 10.0; // to g/m2
-                mass.StructuralN = (leaf.NLive + leaf.NDead + stem.NLive + stem.NDead + stolon.NLive + stolon.NDead) / 10.0;    // to g/m2
+                mass.StructuralWt = (leaf.StandingHerbageWt + stem.StandingHerbageWt + stolon.StandingHerbageWt) / 10.0; // to g/m2
+                mass.StructuralN = (leaf.StandingHerbageN + stem.StandingHerbageN + stolon.StandingHerbageN) / 10.0;    // to g/m2
                 mass.DMDOfStructural = leaf.DigestibilityLive;
                 return mass;
             }
         }
 
+        /// <summary>Get above ground biomass</summary>
+        [Units("g/m2")]
+        public Biomass AboveGroundHarvestable
+        {
+            get
+            {
+                Biomass mass = new Biomass();
+                mass.StructuralWt = Harvestable.Wt / 10.0; // to g/m2
+                mass.StructuralN = Harvestable.N / 10.0;    // to g/m2
+                mass.DMDOfStructural = Harvestable.Digestibility;
+                return mass;
+            }
+        }
 
         /// <summary>Dry matter and N available for harvesting (kgDM/ha).</summary>
         public AGPBiomass Harvestable
@@ -2516,6 +2529,57 @@
                                                          stem.StandingDigestibility * stem.DMTotal +
                                                          stolon.StandingDigestibility * stolon.DMTotal,
                                                          leaf.DMTotalHarvestable + stem.DMTotalHarvestable + stolon.DMTotalHarvestable, 0.0)
+                };
+            }
+        }
+
+        /// <summary>Standing dry matter and N (kgDM/ha).</summary>
+        public AGPBiomass Standing
+        {
+            get
+            {
+                return new AGPBiomass()
+                {
+                    Wt = leaf.StandingHerbageWt + stem.StandingHerbageWt + stolon.StandingHerbageWt,
+                    N = leaf.StandingHerbageN + stem.StandingHerbageN + stolon.StandingHerbageN,
+                    Digestibility = MathUtilities.Divide(leaf.StandingDigestibility * leaf.StandingHerbageWt +
+                                                         stem.StandingDigestibility * stem.StandingHerbageWt +
+                                                         stolon.StandingDigestibility * stolon.StandingHerbageWt,
+                                                         leaf.StandingHerbageWt + stem.StandingHerbageWt + stolon.StandingHerbageWt, 0.0)
+                };
+            }
+        }
+
+        /// <summary>Standing live dry matter and N (kgDM/ha).</summary>
+        public AGPBiomass StandingLive
+        {
+            get
+            {
+                return new AGPBiomass()
+                {
+                    Wt = leaf.StandingLiveHerbageWt + stem.StandingLiveHerbageWt + stolon.StandingLiveHerbageWt,
+                    N = leaf.StandingLiveHerbageN + stem.StandingLiveHerbageN + stolon.StandingLiveHerbageN,
+                    Digestibility = MathUtilities.Divide(leaf.StandingLiveDigestibility * leaf.StandingLiveHerbageWt +
+                                                         stem.StandingLiveDigestibility * stem.StandingLiveHerbageWt +
+                                                         stolon.StandingLiveDigestibility * stolon.StandingLiveHerbageWt,
+                                                         leaf.StandingLiveHerbageWt + stem.StandingLiveHerbageWt + stolon.StandingLiveHerbageWt, 0.0)
+                };
+            }
+        }
+
+        /// <summary>Standing dead dry matter and N (kgDM/ha).</summary>
+        public AGPBiomass StandingDead
+        {
+            get
+            {
+                return new AGPBiomass()
+                {
+                    Wt = leaf.StandingDeadHerbageWt + stem.StandingDeadHerbageWt + stolon.StandingDeadHerbageWt,
+                    N = leaf.StandingDeadHerbageN + stem.StandingDeadHerbageN + stolon.StandingDeadHerbageN,
+                    Digestibility = MathUtilities.Divide(leaf.StandingDeadDigestibility * leaf.StandingDeadHerbageWt +
+                                                         stem.StandingDeadDigestibility * stem.StandingDeadHerbageWt +
+                                                         stolon.StandingDeadDigestibility * stolon.StandingDeadHerbageWt,
+                                                         leaf.StandingDeadHerbageWt + stem.StandingDeadHerbageWt + stolon.StandingDeadHerbageWt, 0.0)
                 };
             }
         }
@@ -2616,7 +2680,7 @@
         }
 
         /// <summary>Plant population.</summary>
-        public double Population => throw new NotImplementedException();
+        public double Population { get { return 0; } }
 
         /// <summary>Amount of assimilate available to be damaged.</summary>
         public double AssimilateAvailable => throw new NotImplementedException();
@@ -4684,7 +4748,7 @@
         /// <param name="newPlantPopulation">The new plant population.</param>
         public void ReducePopulation(double newPlantPopulation)
         {
-            throw new NotImplementedException();
+            throw new Exception("AgPasture does not simulate a plant population and so plant population cannot be reduced.");
         }
 
         #endregion  --------------------------------------------------------------------------------------------------------
