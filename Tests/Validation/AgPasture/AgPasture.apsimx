@@ -77430,84 +77430,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Manager, Models",
-                  "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        // - Links to APSIM models\r\n        [Link] Zone zone;\r\n        [Link] Clock Clock;\r\n        [Link] Weather Weather;\r\n        [Link] ISummary summary = null;\r\n\r\n        // - Paramters for this manager\r\n        [Description(\"Enable? Set to 'No' to completely disable this manager\")] public yesnoType AllowControl { get; set; }\r\n\r\n        [Separator(\"General settings\")]\r\n        [Description(\"Start the climate controls beginning on date (dd/mmm/yyyy): \")] public DateTime EnableDate { get; set; }\r\n        [Description(\"Implement climate control only during part of the year?\")] public yesnoType WithinYearControl { get; set; }\r\n        [Description(\"Within each year, the first day to start the climate controls is (dd-mmm)\")] public string ControlStart { get; set; }\r\n        [Description(\"Within each year, end last day of climate control is (dd-mmm)\")] public string ControlEnd { get; set; }\r\n\r\n        [Separator(\"Rainfall\")]\r\n        [Description(\"Rainfall multiplier (-): \")] public double RainfallMultiplier { get; set; }\r\n        [Description(\"Rainfall addition (mm): \")] public double RainfallAddition { get; set; }\r\n\r\n        [Separator(\"Radiation\")]\r\n        [Description(\"Radiation multiplier (-): \")] public double RadiationMultiplier { get; set; }\r\n        [Description(\"Radiation addition (MJ/m2): \")] public double RadiationAddition { get; set; }\r\n\r\n        [Separator(\"Minimum temperature\")]\r\n        [Description(\"Minimum temperature multiplier (-): \")] public double MinTMultiplier { get; set; }\r\n        [Description(\"Minimum temperature addition (C): \")] public double MinTAddition { get; set; }\r\n\r\n        [Separator(\"Maximum temperature\")]\r\n        [Description(\"Maximum temperature multiplier (-): \")] public double MaxTMultiplier { get; set; }\r\n        [Description(\"Maximum temperature addition (C): \")] public double MaxTAddition { get; set; }\r\n\r\n        [Separator(\"Wind speed\")]\r\n        [Description(\"Wind speed multiplier (-): \")] public double WindMultiplier { get; set; }\r\n        [Description(\"Wind speed addition (m/s): \")] public double WindAddition { get; set; }\r\n\r\n        [Separator(\"Vapour pressure\")]\r\n        [Description(\"Vapour pressure multiplier (-): \")] public double VPMultiplier { get; set; }\r\n        [Description(\"Vapour pressure addition (hPa): \")] public double VPAddition { get; set; }\r\n\r\n        [XmlIgnore] public string Message { get; set; }\r\n\r\n        [XmlIgnore] public bool doControl { get; set; }\r\n        [XmlIgnore] public int doControlInt { get; set; }\r\n        //public DateTime ControlStartDate { get; set; }\r\n        //public DateTime ControlEndDate { get; set; }\r\n\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")] private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {   \r\n            //Set the dates\r\n            //ControlStartDate = DateTime.Parse(ControlStart + \"-\" + Clock.Today.Year.ToString());\r\n            //ControlEndDate = DateTime.Parse(ControlEnd + \"-\" + Clock.Today.Year.ToString());\r\n            Message = \"\";\r\n        }\r\n\r\n\r\n        [EventSubscribe(\"PreparingNewWeatherData\")] private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            // Check if this manager is enabled\r\n            if ((AllowControl == yesnoType.yes) && (Clock.Today >= EnableDate))\r\n            {\r\n                doControl = true;\r\n                if (WithinYearControl == yesnoType.yes)\r\n                    doControl = DateUtilities.WithinDates(ControlStart, Clock.Today, ControlEnd); \r\n            }\r\n\r\n            if (doControl)\r\n                doControlInt = 1;\r\n            else\r\n                doControlInt = 0;\r\n\r\n            if (doControl)\r\n            {\r\n                // do the weather alterations \r\n                Weather.Rain = RainfallMultiplier * Weather.Rain + RainfallAddition;\r\n                Weather.Radn = RadiationMultiplier * Weather.Radn + RadiationAddition;\r\n                Weather.MinT = MinTMultiplier * Weather.MinT + MinTAddition;\r\n                Weather.MaxT = MaxTMultiplier * Weather.MaxT + MaxTAddition;\r\n                Weather.Wind = WindMultiplier * Weather.Wind + WindAddition;\r\n                Weather.VP = VPMultiplier * Weather.VP + VPAddition;\r\n            }\r\n        }\r\n\r\n        public enum yesnoType\r\n        {\r\n            /// <summary>a positive answer</summary>\r\n            yes,\r\n            /// <summary>a negative answer</summary>\r\n            no\r\n        }\r\n\r\n    }\r\n}\r\n",
-                  "Parameters": [
-                    {
-                      "Key": "AllowControl",
-                      "Value": "no"
-                    },
-                    {
-                      "Key": "EnableDate",
-                      "Value": "05/30/1979 00:00:00"
-                    },
-                    {
-                      "Key": "WithinYearControl",
-                      "Value": "no"
-                    },
-                    {
-                      "Key": "ControlStart",
-                      "Value": "01-jan"
-                    },
-                    {
-                      "Key": "ControlEnd",
-                      "Value": "31-dec"
-                    },
-                    {
-                      "Key": "RainfallMultiplier",
-                      "Value": "0.7791"
-                    },
-                    {
-                      "Key": "RainfallAddition",
-                      "Value": "0"
-                    },
-                    {
-                      "Key": "RadiationMultiplier",
-                      "Value": "1"
-                    },
-                    {
-                      "Key": "RadiationAddition",
-                      "Value": "0"
-                    },
-                    {
-                      "Key": "MinTMultiplier",
-                      "Value": "0.9484"
-                    },
-                    {
-                      "Key": "MinTAddition",
-                      "Value": "0"
-                    },
-                    {
-                      "Key": "MaxTMultiplier",
-                      "Value": "0.9484"
-                    },
-                    {
-                      "Key": "MaxTAddition",
-                      "Value": "0"
-                    },
-                    {
-                      "Key": "WindMultiplier",
-                      "Value": "1"
-                    },
-                    {
-                      "Key": "WindAddition",
-                      "Value": "0"
-                    },
-                    {
-                      "Key": "VPMultiplier",
-                      "Value": "1"
-                    },
-                    {
-                      "Key": "VPAddition",
-                      "Value": "0"
-                    }
-                  ],
-                  "Name": "ClimateController",
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Summary, Models",
                   "CaptureErrors": true,
                   "CaptureWarnings": true,
@@ -77656,12 +77578,12 @@
                       "FlexibleGrazePostDM": 0.0,
                       "NoGrazingStartString": "01-jun",
                       "NoGrazingEndString": "15-sep",
-                      "FractionNExportedInAnimal": 0.75,
+                      "FractionNExportedInAnimal": 0.5,
                       "FractionExcretedNToDung": [
-                        0.6
+                        0.45
                       ],
                       "DepthUrineIsAdded": 250.0,
-                      "CNRatioDung": "NaN",
+                      "CNRatioDung": 0.0,
                       "FractionPopulationDecline": 0.0,
                       "Name": "SimpleGrazing",
                       "Children": [],
@@ -78215,7 +78137,7 @@
                         "[Irrigation].IrrigationApplied as Irrigation",
                         "[SimpleGrazing].PreGrazeDM",
                         "",
-                        "([AGPRyegrass].HarvestableWt + [AGPWhiteClover].HarvestableWt) as HarvestableWt"
+                        "([AGPRyegrass].Harvestable.Wt + [AGPWhiteClover].Harvestable.Wt) as HarvestableWt"
                       ],
                       "EventNames": [
                         "[Clock].EndOfDay"
@@ -78232,7 +78154,9 @@
                       "VariableNames": [
                         "[Clock].Today as Date",
                         "([AGPRyegrass].HarvestedWt + [AGPWhiteClover].HarvestedWt) as HarvestedWt",
-                        "([AGPRyegrass].Standing.Wt + [AGPWhiteClover].Standing.Wt) as StandingHerbageWt"
+                        "([AGPRyegrass].Standing.Wt + [AGPWhiteClover].Standing.Wt) as StandingHerbageWt",
+                        "[SimpleGrazing].AmountUrineNReturned as UrineN",
+                        "[SimpleGrazing].AmountDungWtReturned as DungN"
                       ],
                       "EventNames": [
                         "[SimpleGrazing].Grazed"
