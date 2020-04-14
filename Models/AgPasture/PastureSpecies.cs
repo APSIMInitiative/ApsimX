@@ -2680,7 +2680,7 @@
         }
 
         /// <summary>Plant population.</summary>
-        public double Population => throw new NotImplementedException();
+        public double Population { get { return 0; } }
 
         /// <summary>Amount of assimilate available to be damaged.</summary>
         public double AssimilateAvailable => throw new NotImplementedException();
@@ -4748,7 +4748,7 @@
         /// <param name="newPlantPopulation">The new plant population.</param>
         public void ReducePopulation(double newPlantPopulation)
         {
-            throw new NotImplementedException();
+            throw new Exception("AgPasture does not simulate a plant population and so plant population cannot be reduced.");
         }
 
         #endregion  --------------------------------------------------------------------------------------------------------
