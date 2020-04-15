@@ -190,9 +190,12 @@ namespace Models.CLEM.Activities
                 if (bankAccount != null)
                 {
                     bankAccount.Add(units * price.PricePerPacket, this, "Sales");
-                    purchaseRequest.Required = units * price.PricePerPacket;
-                    purchaseRequest.Reason = "Sales to " + (resourceToSell as Model).Name;
-                    (bankAccount.EquivalentMarketStore as FinanceType).Remove(purchaseRequest);
+                    if (bankAccount.EquivalentMarketStore != null)
+                    {
+                        purchaseRequest.Required = units * price.PricePerPacket;
+                        purchaseRequest.Reason = "Sales to " + (resourceToSell as Model).Name;
+                        (bankAccount.EquivalentMarketStore as FinanceType).Remove(purchaseRequest);
+                    }
                 }
 
                 SetStatusSuccess();
