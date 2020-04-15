@@ -135,7 +135,8 @@ namespace Models.PMF.Phen
             if ((IsImbibed==true) && (IsAtFlagLeaf == false))
             {
                 double HS = (Apsim.Find(phenology, "HaunStage") as IFunction).Value();
-                
+                ZeroDeltas();
+
                 // Work base, cold induced and methylated Vrn1 expression
                 if (IsVernalised == false)
                 {    // If methalated Vrn1 expression is less that target do base expression
@@ -220,12 +221,15 @@ namespace Models.PMF.Phen
             TSHS = 0;
             FLN = 2.86;
             Vrn1Target = 1.0;
+            ZeroDeltas();
+        }
+        private void ZeroDeltas()
+        {
             dBaseVrn1 = 0;
             dColdURVrn1 = 0;
             dMethColdVrn1 = 0;
             dVrn2 = 0.0;
             dVrn3 = 0.0;
         }
-
     }
 }
