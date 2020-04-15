@@ -1,5 +1,6 @@
 ﻿using Models.Core;
 using Models.Functions;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Xml.Serialization;
@@ -84,43 +85,48 @@ namespace Models.PMF.Phen
         private double BasedVrn2 { get; set; } = 0;
         private double MUdVrn3 { get; set; } = 0.33;
 
+        // Development state variables
         private bool IsImbibed { get; set; } = false;
         /// <summary></summary>
-        public bool IsVernalised { get; set; } 
+        [JsonIgnore] public bool IsVernalised { get; set; } 
         private bool IsInduced { get; set; }
         private bool IsReproductive { get; set; } 
-        private bool IsAtFlagLeaf { get; set; } 
+        private bool IsAtFlagLeaf { get; set; }
 
+        /// Vrn gene expression parameters
         /// <summary></summary>
-        public double BaseVrn1 { get; private set; }
+        [JsonIgnore] public double BaseVrn1 { get; private set; }
         /// <summary></summary>
-        public double ColdVrn1 { get; private set; } 
+        [JsonIgnore] public double ColdVrn1 { get; private set; }
         /// <summary></summary>
-        public double MethVrn1 { get; private set; } 
+        [JsonIgnore] public double MethVrn1 { get; private set; }
         /// <summary></summary>
-        public double Vrn1 { get; private set; }
+        [JsonIgnore] public double Vrn1 { get; private set; }
         /// <summary></summary>
-        public double Vrn2 { get; private set; } 
+        [JsonIgnore] public double Vrn2 { get; private set; }
         /// <summary></summary>
-        public double Vrn3 { get; private set; } 
+        [JsonIgnore] public double Vrn3 { get; private set; }
         /// <summary></summary>
-        public double FIHS { get; private set; } 
+        [JsonIgnore] public double Vrn1Target { get; private set; }
         /// <summary></summary>
-        public double TSHS { get; private set; } 
+        [JsonIgnore] public double dBaseVrn1 { get; set; }
         /// <summary></summary>
-        public double FLN { get; private set; } 
+        [JsonIgnore] public double dColdURVrn1 { get; set; }
         /// <summary></summary>
-        public double Vrn1Target { get; private set; } 
+        [JsonIgnore] public double dMethColdVrn1 { get; set; }
         /// <summary></summary>
-        public double dBaseVrn1 { get; set; } 
+        [JsonIgnore] public double dVrn2 { get; set; }
         /// <summary></summary>
-        public double dColdURVrn1 { get; set; } 
+        [JsonIgnore] public double dVrn3 { get; set; }
+
+        /// Leaf number variables
         /// <summary></summary>
-        public double dMethColdVrn1 { get; set; } 
+        [JsonIgnore] public double FIHS { get; private set; }
         /// <summary></summary>
-        public double dVrn2 { get; set; } 
+        [JsonIgnore] public double TSHS { get; private set; }
         /// <summary></summary>
-        public double dVrn3 { get; set; } 
+        [JsonIgnore] public double FLN { get; private set; }
+
 
         [EventSubscribe("PrePhenology")]
         private void OnPrePhenology(object sender, EventArgs e)
