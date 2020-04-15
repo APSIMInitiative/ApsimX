@@ -477,6 +477,8 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\VernalisationPhase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CAMP.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\MigrantDestinationPhase.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\ProgenyDestinationPhase.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Infestation.png" />
