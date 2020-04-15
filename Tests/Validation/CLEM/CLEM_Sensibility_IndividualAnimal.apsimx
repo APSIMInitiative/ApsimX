@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 80,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-10",
+  "Version": 90,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -61,7 +61,7 @@
         },
         {
           "$type": "Models.CLEM.ZoneCLEM, Models",
-          "FarmMultiplier": 0.0,
+          "FarmMultiplier": 1.0,
           "ClimateRegion": 0,
           "EcologicalIndicatorsCalculationMonth": 12,
           "Area": 0.0,
@@ -337,7 +337,7 @@
               "Name": "Reports and Graphs",
               "Children": [
                 {
-                  "$type": "Models.Report.Report, Models",
+                  "$type": "Models.Report, Models",
                   "VariableNames": [
                     "[Clock].Today",
                     "[Activities].SummariseHerd.ReportDetails.Breed as Breed",
@@ -355,6 +355,7 @@
                   "EventNames": [
                     "[Activities].SummariseHerd.OnReportItemGenerated"
                   ],
+                  "GroupByVariableName": null,
                   "Name": "HerdSummary",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -362,7 +363,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Report.Report, Models",
+                  "$type": "Models.Report, Models",
                   "VariableNames": [
                     "[Clock].Today",
                     "[Activities].ReportHerd.ReportDetails.Individual.ID as UID",
@@ -371,6 +372,7 @@
                   "EventNames": [
                     "[Activities].ReportHerd.OnReportItemGenerated"
                   ],
+                  "GroupByVariableName": null,
                   "Name": "HerdReport",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -378,7 +380,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Report.Report, Models",
+                  "$type": "Models.Report, Models",
                   "VariableNames": [
                     "[Clock].Today as Date",
                     "[Resources].Ruminants.LastTransaction.ExtraInformation.ID as UId",
@@ -393,6 +395,7 @@
                   "EventNames": [
                     "[Resources].Ruminants.TransactionOccurred"
                   ],
+                  "GroupByVariableName": null,
                   "Name": "HerdLedger",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -405,6 +408,7 @@
                     "Finances"
                   ],
                   "EventNames": null,
+                  "GroupByVariableName": null,
                   "Name": "FinancesLedger",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -422,6 +426,7 @@
                   "EventNames": [
                     "[Clock].CLEMEndOfTimeStep"
                   ],
+                  "GroupByVariableName": null,
                   "Name": "ReportResourceBalances",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -432,6 +437,7 @@
                   "$type": "Models.CLEM.Reporting.ReportActivitiesPerformed, Models",
                   "VariableNames": null,
                   "EventNames": null,
+                  "GroupByVariableName": null,
                   "Name": "ReportActivitiesPerformed",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -439,11 +445,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Graph, Models",
+                  "$type": "Models.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 3,
                       "Title": "Year",
                       "Inverted": false,
@@ -454,7 +460,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 0,
                       "Title": "Rice straw (kg)",
                       "Inverted": false,
@@ -472,7 +478,7 @@
                   "Name": "AnimalFoodStoreBalance",
                   "Children": [
                     {
-                      "$type": "Models.Graph.Series, Models",
+                      "$type": "Models.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -484,7 +490,6 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
-                      "Checkpoint": "Current",
                       "TableName": "ReportResourceBalances",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "RiceStraw",
@@ -507,11 +512,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Graph, Models",
+                  "$type": "Models.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 3,
                       "Title": "Year",
                       "Inverted": false,
@@ -522,7 +527,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 0,
                       "Title": "Liveweight (kg)",
                       "Inverted": false,
@@ -540,7 +545,7 @@
                   "Name": "Liveweight_Individual",
                   "Children": [
                     {
-                      "$type": "Models.Graph.Series, Models",
+                      "$type": "Models.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -552,7 +557,6 @@
                       "MarkerSize": 1,
                       "Line": 0,
                       "LineThickness": 0,
-                      "Checkpoint": "Current",
                       "TableName": "HerdReport",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Weight",
@@ -575,11 +579,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Graph, Models",
+                  "$type": "Models.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 3,
                       "Title": "Year",
                       "Inverted": false,
@@ -590,7 +594,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 0,
                       "Title": "Weight gain (kg/month)",
                       "Inverted": false,
@@ -608,7 +612,7 @@
                   "Name": "WeightGain_Individual",
                   "Children": [
                     {
-                      "$type": "Models.Graph.Series, Models",
+                      "$type": "Models.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -620,7 +624,6 @@
                       "MarkerSize": 1,
                       "Line": 0,
                       "LineThickness": 0,
-                      "Checkpoint": "Current",
                       "TableName": "HerdSummary",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "AvgWtGn",
@@ -643,11 +646,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Graph, Models",
+                  "$type": "Models.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 3,
                       "Title": "Year",
                       "Inverted": false,
@@ -658,7 +661,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 0,
                       "Title": "Bank balance ($)",
                       "Inverted": false,
@@ -676,7 +679,7 @@
                   "Name": "BankBalance",
                   "Children": [
                     {
-                      "$type": "Models.Graph.Series, Models",
+                      "$type": "Models.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -688,7 +691,6 @@
                       "MarkerSize": 1,
                       "Line": 0,
                       "LineThickness": 0,
-                      "Checkpoint": "Current",
                       "TableName": "ReportResourceBalances",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "General account",

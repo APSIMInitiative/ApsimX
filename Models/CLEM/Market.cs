@@ -52,6 +52,36 @@ namespace Models.CLEM
         [XmlIgnore]
         public string SelectedTab { get; set; }
 
+        private ResourcesHolder resources;
+        /// <summary>
+        /// ResourceHolder for the market
+        /// </summary>
+        public ResourcesHolder Resources { get
+            {
+                if(resources == null)
+                {
+                    resources = this.Children.Where(a => a.GetType() == typeof(ResourcesHolder)).FirstOrDefault() as ResourcesHolder;
+                }
+                return resources; 
+            }
+        }
+
+        private FinanceType bankAccount;
+        /// <summary>
+        /// Default (first) bank account for the market
+        /// </summary>
+        public FinanceType BankAccount
+        {
+            get
+            {
+                if (bankAccount == null)
+                {
+                    bankAccount = Resources.FinanceResource().Children.FirstOrDefault() as FinanceType;
+                }
+                return bankAccount;
+            }
+        }
+
         /// <summary>
         /// Validate object
         /// </summary>

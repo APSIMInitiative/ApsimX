@@ -88,7 +88,8 @@ namespace Models.CLEM.Resources
                 {
                     if (sucklingList.Count > 0)
                     {
-                        Summary.WriteWarning(this, String.Format("Insufficient breeding females to assign [{0}] sucklings for herd [r={1}].\nUnassigned calves will need to graze or be fed and may have reduced growth until weaned.\nBreeding females must be at least minimum breeding age + gestation length at the start of the simulation to provide a calf.", sucklingList.Count, herdName));
+                        Summary.WriteWarning(this, String.Format("Insufficient breeding females to assign [{0}] sucklings for herd [r={1}].\nUnassigned calves will need to graze or be fed and may have reduced growth until weaned.\nBreeding females must be at least minimum breeding age + gestation length + age of sucklings at the start of the simulation to provide a calf.", sucklingList.Count, herdName));
+                        break;
                     }
                 }
                 else
@@ -163,7 +164,8 @@ namespace Models.CLEM.Resources
                         }
                         else
                         {
-                            Summary.WriteWarning(this, String.Format("Insufficient breeding females to assign [{0}] sucklings for herd [r={1}].\nUnassigned calves will need to graze or be fed and may have reduced growth until weaned.\nBreeding females must be at least minimum breeding age + gestation length at the start of the simulation to provide a calf.", sucklingList.Count - sucklingCount, herdName));
+                            Summary.WriteWarning(this, String.Format("Insufficient breeding females to assign [{0}] sucklings for herd [r={1}].\nUnassigned calves will need to graze or be fed and may have reduced growth until weaned.\nBreeding females must be at least minimum breeding age + gestation length + age of sucklings at the start of the simulation to provide a calf.", sucklingList.Count - sucklingCount, herdName));
+                            break;
                         }
                     }
 
