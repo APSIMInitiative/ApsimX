@@ -7,6 +7,7 @@
     using System.Linq;
     using System.Collections.Generic;
     using System.Xml.Serialization;
+    using Models.Soils;
 
     /// <summary>
     ///Soil evaporation is assumed to take place in two stages: the constant and the falling rate stages. 
@@ -38,11 +39,18 @@
     ///    Es = U x t + CONA x Sqrt(t-t<sub>1</sub>)
     /// </summary>
     [Serializable]
+    [ViewName("UserInterface.Views.ProfileView")]
+    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
+    [ValidParent(ParentType = typeof(WaterBalance))]
     public class EvaporationModel : Model
     {
         /// <summary>The water movement model.</summary>
         [Link]
-        private ISoil soil = null;
+        private WaterBalance waterBalance = null;
+
+        /// <summary>The water movement model.</summary>
+        [Link]
+        private Soil soilProperties = null;
 
         [Link]
         private IClock clock = null;
@@ -64,34 +72,11 @@
         private double sumes2;
 
         /// <summary>time after 2nd-stage soil evaporation begins (d)</summary>
-        public double t;            
-
-
-        /// <summary>Gets or sets the soil albedo.</summary>
-        [UnitsAttribute("0-1")]
-        public double SALB { get; set; }
-
-        /// <summary>Gets or sets the summer cona.</summary>
-        public double SummerCona { get; set; }
-
-        /// <summary>Gets or sets the winter cona.</summary>
-        public double WinterCona { get; set; }
-
-        /// <summary>Gets or sets the summer U.</summary>
-        public double SummerU { get; set; }
-
-        /// <summary>Gets or sets the winter U.</summary>
-        public double WinterU { get; set; }
-
-        /// <summary>Gets or sets the winter date (e.g. "1-nov").</summary>
-        public string SummerDate{ get; set; }
-
-        /// <summary>Gets or sets the winter date (e.g. "1-apr").</summary>
-        public string WinterDate { get; set; }
+        public double t;
 
         /// <summary>Atmospheric potential evaporation (mm)</summary>
         [XmlIgnore]
-        public double Eo { get; private set; }
+        public double Eo { get; set; }
 
         /// <summary>Eo reduced due to shading (mm).</summary>
         [XmlIgnore]
@@ -106,10 +91,10 @@
         {
             get
             {
-                if (isSummer)
-                    return SummerCona;
+                if (IsSummer)
+                    return waterBalance.SummerCona;
                 else
-                    return WinterCona;
+                    return waterBalance.WinterCona;
             }
         }
 
@@ -118,41 +103,66 @@
         {
             get
             {
-                if (isSummer)
-                    return SummerU;
+                if (IsSummer)
+                    return waterBalance.SummerU;
                 else
-                    return WinterU;
+                    return waterBalance.WinterU;
             }
         }
 
-        /// <summary>Constructor</summary>
-        public EvaporationModel()
+        /// <summary>Reset the evaporation model.</summary>
+        public void Initialise()
         {
-            SummerDate = "1-Nov";
-            WinterDate = "1-Apr";
-            SummerCona = 3.5;
-            WinterCona = 2.5;
-            SummerU = 6;
-            WinterU = 4;
-            SALB = 0.12;
+            double sw_top_crit = 0.9;
+            double sumes1_max = 100;
+            double sumes2_max = 25;
+            double u = waterBalance.WinterU;
+            double cona = waterBalance.WinterCona;
+            if (IsSummer)
+            {
+                u = waterBalance.SummerU;
+                cona = waterBalance.SummerCona;
+            }
+
+            //! set up evaporation stage
+            var swr_top = MathUtilities.Divide((waterBalance.Water[0] - soilProperties.LL15mm[0]), 
+                                            (soilProperties.DULmm[0] - soilProperties.LL15mm[0]), 
+                                            0.0);
+            swr_top = MathUtilities.Constrain(swr_top, 0.0, 1.0);
+
+            //! are we in stage1 or stage2 evap?
+            if (swr_top < sw_top_crit)
+            {
+                //! stage 2 evap
+                sumes2 = sumes2_max - (sumes2_max * MathUtilities.Divide(swr_top, sw_top_crit, 0.0));
+                sumes1 = u;
+                t = MathUtilities.Sqr(MathUtilities.Divide(sumes2, cona, 0.0));
+            }
+            else
+            {
+                //! stage 1 evap
+                sumes2 = 0.0;
+                sumes1 = sumes1_max - (sumes1_max * swr_top);
+                t = 0.0;
+            }
         }
 
         /// <summary>Calculate soil evaporation.</summary>
         /// <returns></returns>
         public double Calculate()
         {
-            CalcEo();
+            //CalcEo();  // Use EO from MicroClimate
             CalcEoReducedDueToShading();
             CalcEs();
             return Es;
         }
 
         /// <summary>Return true if simulation is in summer.</summary>
-        private bool isSummer
+        private bool IsSummer
         {
             get
             {
-                return DateUtilities.WithinDates(SummerDate, clock.Today, WinterDate);
+                return !DateUtilities.WithinDates(waterBalance.WinterDate, clock.Today, waterBalance.SummerDate);
             }
         }
 
@@ -162,7 +172,7 @@
             const double max_albedo = 0.23;
 
             double coverGreenSum = canopies.Sum(c => c.CoverGreen);
-            double albedo = max_albedo - (max_albedo - SALB) * (1.0 - coverGreenSum);
+            double albedo = max_albedo - (max_albedo - waterBalance.Salb) * (1.0 - coverGreenSum);
 
             // weighted mean temperature for the day (oC)
             double wt_ave_temp = (0.60 * weather.MaxT) + (0.40 * weather.MinT);
@@ -209,7 +219,9 @@
 
             double eos_residue_fract;     //! fraction of potential soil evaporation limited by crop residue (mm)
 
-            double coverTotalSum = canopies.Sum(c => c.CoverTotal);
+            double coverTotalSum = 0.0;
+            for (int i = 0; i < canopies.Count; i++)
+                coverTotalSum = 1.0 - (1.0 - coverTotalSum) * (1.0 - canopies[i].CoverTotal);
 
             // Based on Adams, Arkin & Ritchie (1976) Soil Sci. Soc. Am. J. 40:436-
             // Reduction in potential soil evaporation under a canopy is determined
@@ -276,7 +288,8 @@
             Es = 0.0;
 
             // Calculate available soil water in top layer for actual soil evaporation (mm)
-            double avail_sw_top = soil.Water[0] - soil.Properties.Water.AirDry[0];
+            var airdryMM = waterBalance.Properties.AirDry[0] * waterBalance.Properties.Thickness[0];
+            double avail_sw_top = waterBalance.Water[0] - airdryMM;
             avail_sw_top = MathUtilities.Bound(avail_sw_top, 0.0, Eo);
 
             // Calculate actual soil water evaporation
@@ -285,10 +298,10 @@
 
             // if infiltration, reset sumes1
             // reset sumes2 if infil exceeds sumes1      
-            if (soil.Infiltration > 0.0)
+            if (waterBalance.Infiltration > 0.0)
             {
-                sumes2 = Math.Max(0.0, (sumes2 - Math.Max(0.0, soil.Infiltration - sumes1)));
-                sumes1 = Math.Max(0.0, sumes1 - soil.Infiltration);
+                sumes2 = Math.Max(0.0, (sumes2 - Math.Max(0.0, waterBalance.Infiltration - sumes1)));
+                sumes1 = Math.Max(0.0, sumes1 - waterBalance.Infiltration);
 
                 // update t (incase sumes2 changed)
                 t = MathUtilities.Sqr(MathUtilities.Divide(sumes2, CONA, 0.0));

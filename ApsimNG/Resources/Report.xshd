@@ -21,6 +21,8 @@
               <Key word = "from" />
               <Key word = "to" />
               <Key word = "as" />
+              <Key word = "stddev" />
+              <Key word = "mean" />
             </KeyWords>
 
             </RuleSet>

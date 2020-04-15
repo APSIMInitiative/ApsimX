@@ -26,6 +26,16 @@ namespace Models.Core
         CultivarName,
 
         /// <summary>
+        /// A LifePhase name editor.
+        /// </summary>
+        LifeCycleName,
+
+        /// <summary>
+        /// A LifePhase name editor.
+        /// </summary>
+        LifePhaseName,
+
+        /// <summary>
         /// A file name editor.
         /// </summary>
         FileName,
@@ -124,5 +134,11 @@ namespace Models.Core
         /// Specifies the name of a plant whose cultivars should be displayed.
         /// </summary>
         public string PlantName { get; set; }
+
+        /// <summary>
+        /// Used in conjuction with <see cref="DisplayType.LifePhaseName"/>.
+        /// Specifies the name of a LifeCycle whose phases should be displayed.
+        /// </summary>
+        public string LifeCycleName { get; set; }
     }
 }

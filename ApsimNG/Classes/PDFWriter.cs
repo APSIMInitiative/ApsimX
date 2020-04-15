@@ -471,7 +471,7 @@
             graph.DrawLineAndMarkers("", graphAndTable.xyPairs.X, graphAndTable.xyPairs.Y, null, null, null,
                                      Models.Axis.AxisType.Bottom, Models.Axis.AxisType.Left,
                                      System.Drawing.Color.Blue, Models.LineType.Solid, Models.MarkerType.None,
-                                     Models.LineThicknessType.Normal, Models.MarkerSizeType.Normal, true);
+                                     Models.LineThicknessType.Normal, Models.MarkerSizeType.Normal, 1, true);
 
             graph.ForegroundColour = OxyPlot.OxyColors.Black;
             graph.BackColor = OxyPlot.OxyColors.White;
@@ -537,7 +537,7 @@
                 graphView.BackColor = OxyPlot.OxyColors.White;
                 graphView.ForegroundColour = OxyPlot.OxyColors.Black;
                 graphView.FontSize = 22;
-                graphView.MarkerSize = 8;
+                graphView.MarkerSize = MarkerSizeType.Normal;
                 graphView.Width = image.Width / numColumns;
                 graphView.Height = image.Height / numRows;
                 graphView.LeftRightPadding = 0;

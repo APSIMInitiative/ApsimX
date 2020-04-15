@@ -132,6 +132,10 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AgPasture\AGPBiomass.cs" />
+    <Compile Include="AgPasture\BiomassAndN.cs" />
+    <Compile Include="AgPasture\BiomassAndNLayered.cs" />
+    <Compile Include="AgPasture\IAGPBiomass.cs" />
     <Compile Include="AgPasture\TissuesHelper.cs" />
     <Compile Include="AgPasture\SimpleGrazing.cs" />
     <Compile Include="AgPasture\PastureSpecies.cs" />
@@ -265,6 +269,7 @@
     <Compile Include="Functions\CSharpExpressionFunction.cs" />
     <Compile Include="Functions\LiveOnEventFunction.cs" />
     <Compile Include="Functions\ProtectedDivideFunction.cs" />
+    <Compile Include="Functions\BetaGrowthFunction.cs" />
     <Compile Include="Graph\DefaultPainter.cs" />
     <Compile Include="Graph\ShadedBarsOnGraph.cs" />
     <Compile Include="Graph\GraphPanel.cs" />
@@ -273,9 +278,11 @@
     <Compile Include="Graph\MultiDescriptorPainter.cs" />
     <Compile Include="Graph\SequentialPainter.cs" />
     <Compile Include="Graph\SeriesDefinition.cs" />
-    <Compile Include="Lifecycle\ILifeStageProcess.cs" />
-    <Compile Include="Lifecycle\LifeStageTransfer.cs" />
-    <Compile Include="Lifecycle\LifeStageGrowth.cs" />
+    <Compile Include="Lifecycle\AccumulateCohortExpression.cs" />
+    <Compile Include="Lifecycle\IInfest.cs" />
+    <Compile Include="Lifecycle\Infestation.cs" />
+    <Compile Include="Lifecycle\ProgenyDestinationPhase.cs" />
+    <Compile Include="Lifecycle\MigrantDestinationPhase.cs" />
     <Compile Include="Lifecycle\PlantAssimilateConsumption.cs" />
     <Compile Include="Lifecycle\PlantOrganFunctionalDimensionReduction.cs" />
     <Compile Include="Lifecycle\PlantOrganConsumption.cs" />
@@ -285,6 +292,9 @@
     <Compile Include="Plant\Arbitrator\IUptakeMethod.cs" />
     <Compile Include="Plant\Arbitrator\Methods\AllocateFixationMethod.cs" />
     <Compile Include="Plant\Arbitrator\Methods\AllocateUptakesMethod.cs" />
+    <Compile Include="Plant\Arbitrator\Methods\C4NitrogenUptakeMethod.cs" />
+    <Compile Include="Plant\Arbitrator\Methods\C4RetranslocationMethod.cs" />
+    <Compile Include="Plant\Arbitrator\Methods\C4WaterUptakeMethod.cs" />
     <Compile Include="Plant\Arbitrator\Methods\DryMatterAllocationsMethod.cs" />
     <Compile Include="Plant\Arbitrator\Methods\IPartitionMethod.cs" />
     <Compile Include="Plant\Arbitrator\Methods\NitrogenAllocationsMethod.cs" />
@@ -293,6 +303,7 @@
     <Compile Include="Plant\Arbitrator\Methods\ReallocationMethod.cs" />
     <Compile Include="Plant\Arbitrator\Methods\RetranslocationMethod.cs" />
     <Compile Include="Plant\Arbitrator\Methods\SendPotentialDMAllocationsMethod.cs" />
+    <Compile Include="Plant\Arbitrator\Methods\UpdateLeafAreaMethod.cs" />
     <Compile Include="Plant\Arbitrator\RetranslocateAvailableN.cs" />
     <Compile Include="Factorial\CompositeFactor.cs" />
     <Compile Include="Plant\Arbitrator\Methods\WaterUptakeMethods.cs" />
@@ -304,6 +315,10 @@
     <EmbeddedResource Include="Resources\Scripts\GraphPanelScriptTemplate.cs" />
     <EmbeddedResource Include="Resources\Scripts\CSharpExpressionTemplate.cs" />
     <Compile Include="Plant\Phenology\Scales\ZadokPMFWheat.cs" />
+    <Compile Include="Plant\Structure\Culm.cs" />
+    <Compile Include="Plant\Structure\CulmParams.cs" />
+    <Compile Include="Plant\Structure\LeafCulms.cs" />
+    <Compile Include="Report\VariableGroup.cs" />
     <Compile Include="Soils\Nutrients\INutrientPool.cs" />
     <Compile Include="Soils\SoilTemp\SoilTemperature.cs" />
     <Compile Include="Soils\Standardiser\Layers.cs" />
@@ -345,15 +360,12 @@
     <Compile Include="Plant\Arbitrator\BaseArbitrator.cs" />
     <Compile Include="Plant\Arbitrator\RetranslocateNonStructural.cs" />
     <Compile Include="Plant\Interfaces\IRetranslocateMethod.cs" />
-    <Compile Include="Plant\Organs\Culm.cs" />
     <Compile Include="Plant\Organs\EnergyBalance.cs" />
     <Compile Include="Plant\Organs\SorghumLeaf.cs" />
-    <Compile Include="Plant\Structure\CulmStructure.cs" />
     <Compile Include="Sensitivity\FactorialAnova.cs" />
     <Compile Include="Sensitivity\SensitivityParameter.cs" />
     <Compile Include="Sensitivity\Sobol.cs" />
     <Compile Include="Sensitivity\Morris.cs" />
-    <Compile Include="Lifecycle\LifeStageImmigration.cs" />
     <Compile Include="Functions\AccumulateByDate.cs" />
     <Compile Include="Functions\AccumulateByNumericPhase.cs" />
     <Compile Include="Functions\TrackerFunction.cs" />
@@ -403,9 +415,7 @@
     <Compile Include="Interfaces\IWeather.cs" />
     <Compile Include="Lifecycle\Cohort.cs" />
     <Compile Include="Lifecycle\LifeCycle.cs" />
-    <Compile Include="Lifecycle\LifeStage.cs" />
-    <Compile Include="Lifecycle\LifeStageMortality.cs" />
-    <Compile Include="Lifecycle\LifeStageReproduction.cs" />
+    <Compile Include="Lifecycle\LifeCyclePhase.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="MicroClimate\MicroClimateCanopy.cs" />
     <Compile Include="MicroClimate\MicroClimateZone.cs" />
@@ -485,7 +495,6 @@
     <Compile Include="Core\ILocator.cs" />
     <Compile Include="Report\IReportColumn.cs" />
     <Compile Include="Storage\IStorageReader.cs" />
-    <Compile Include="Report\ReportColumnWithValues.cs" />
     <Compile Include="Report\ReportColumnConstantValue.cs" />
     <Compile Include="Report\ReportColumn.cs" />
     <Compile Include="Soils\Nutrients\NFlow.cs" />
@@ -511,11 +520,6 @@
     <Compile Include="Soils\SoilNitrogen\SoilNitrogen.CNPatchHandlers.cs" />
     <Compile Include="Soils\SoilNitrogen\SoilNitrogen.cs" />
     <Compile Include="Soils\SoilNitrogen\SoilNitrogen.Variables.cs" />
-    <Compile Include="Soils\SoilWaterBackend\SoilWaterDataTypes.cs" />
-    <Compile Include="Soils\SoilWaterBackend\SoilWaterEvap.cs" />
-    <Compile Include="Soils\SoilWaterBackend\SoilWaterRunoff.cs" />
-    <Compile Include="Soils\SoilWaterBackend\SoilWaterSoil.cs" />
-    <Compile Include="Soils\SoilWaterBackend\SoilWaterSurface.cs" />
     <Compile Include="Stock\animgrp.cs" />
     <Compile Include="Stock\animprm.cs" />
     <Compile Include="Stock\grazenv.cs" />
@@ -629,7 +633,6 @@
     <Compile Include="Soils\SWIM\SwimWaterTable.cs" />
     <Compile Include="Soils\TillageType.cs" />
     <Compile Include="Soils\Physical.cs" />
-    <Compile Include="Soils\SoilWaterBackend\SoilWater.cs" />
     <Compile Include="Summary.cs" />
     <Compile Include="Surface\AddFaecesType.cs" />
     <Compile Include="Surface\OMFractionType.cs" />
@@ -654,7 +657,6 @@
     <Compile Include="Soils\WaterModel\CNReductionForTillage.cs" />
     <Compile Include="Soils\WaterModel\Conversions.cs" />
     <Compile Include="Soils\WaterModel\EvaporationModel.cs" />
-    <Compile Include="Soils\WaterModel\ISoil.cs" />
     <Compile Include="Soils\WaterModel\LateralFlow.cs" />
     <Compile Include="Soils\WaterModel\Runoff.cs" />
     <Compile Include="Soils\WaterModel\SaturatedFlow.cs" />
@@ -767,6 +769,7 @@
     <Compile Include="CLEM\Validation.cs" />
     <Compile Include="CLEM\CLEMModel.cs" />
     <Compile Include="CLEM\ZoneCLEM.cs" />
+    <Compile Include="Weather\WeatherSampler.cs" />
     <Compile Include="Zones\CircularZone.cs" />
     <Compile Include="Zones\RectangularZone.cs" />
     <Compile Include="G_Range\G_Range.cs" />
@@ -794,6 +797,7 @@
     <EmbeddedResource Include="Resources\AGPRhodes.json" />
     <EmbeddedResource Include="Resources\AGPTallFescue.json" />
     <EmbeddedResource Include="Resources\AGPLucerne.json" />
+    <EmbeddedResource Include="Resources\WaterBalance.json" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">

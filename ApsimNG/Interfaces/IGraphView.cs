@@ -18,6 +18,16 @@
     public interface IGraphView
     {
         /// <summary>
+        /// Overall font size for the graph.
+        /// </summary>
+        double FontSize { get; set; }
+
+        /// <summary>
+        /// Marker size.
+        /// </summary>
+        MarkerSizeType MarkerSize { get; set; }
+
+        /// <summary>
         /// Invoked when the user clicks on the plot area (the area inside the axes)
         /// </summary>
         event EventHandler OnPlotClick;
@@ -105,6 +115,7 @@
              Models.MarkerType markerType,
              Models.LineThicknessType lineThickness,
              Models.MarkerSizeType markerSize,
+             double markerModifier,
              bool showInLegend);
 
         /// <summary>

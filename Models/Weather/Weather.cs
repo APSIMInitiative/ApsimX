@@ -373,6 +373,22 @@
             }
         }
 
+        /// <summary>First date of summer.</summary>
+        [XmlIgnore] 
+        public string FirstDateOfSummer { get; set; } = "1-dec";
+
+        /// <summary>First date of autumn / fall.</summary>
+        [XmlIgnore] 
+        public string FirstDateOfAutumn { get; set; } = "1-mar";
+
+        /// <summary>First date of winter.</summary>
+        [XmlIgnore] 
+        public string FirstDateOfWinter { get; set; } = "1-jun";
+
+        /// <summary>First date of spring.</summary>
+        [XmlIgnore] 
+        public string FirstDateOfSpring { get; set; } = "1-sep";
+
         /// <summary>
         /// Temporarily stores which tab is currently displayed.
         /// Meaningful only within the GUI
@@ -389,6 +405,45 @@
         /// </summary>
         [XmlIgnore] public int ShowYears = 1;
 
+        /// <summary>Start of spring event.</summary>
+        public event EventHandler StartOfSpring;
+
+        /// <summary>Start of summer event.</summary>
+        public event EventHandler StartOfSummer;
+
+        /// <summary>Start of autumn/fall event.</summary>
+        public event EventHandler StartOfAutumn;
+
+        /// <summary>Start of winter event.</summary>
+        public event EventHandler StartOfWinter;
+
+        /// <summary>End of spring event.</summary>
+        public event EventHandler EndOfSpring;
+
+        /// <summary>End of summer event.</summary>
+        public event EventHandler EndOfSummer;
+
+        /// <summary>End of autumn/fall event.</summary>
+        public event EventHandler EndOfAutumn;
+
+        /// <summary>End of winter event.</summary>
+        public event EventHandler EndOfWinter;
+
+        /// <summary>Name of current season.</summary>
+        public string Season
+        {
+            get
+            {
+                if (DateUtilities.WithinDates(FirstDateOfSummer, clock.Today, FirstDateOfAutumn))
+                    return "Summer";
+                else if (DateUtilities.WithinDates(FirstDateOfAutumn, clock.Today, FirstDateOfWinter))
+                    return "Autumn";
+                else if (DateUtilities.WithinDates(FirstDateOfWinter, clock.Today, FirstDateOfSpring))
+                    return "Winter";
+                else
+                    return "Spring";
+            }
+        }
 
         /// <summary>Return our input filenames</summary>
         public IEnumerable<string> GetReferencedFileNames()
@@ -432,6 +487,19 @@
             {
                 reader.Close();
                 reader = null;
+            }
+
+            if (Latitude > 0)
+            {
+                // Swap summer and winter dates.
+                var temp = FirstDateOfSummer;
+                FirstDateOfSummer = FirstDateOfWinter;
+                FirstDateOfWinter = temp;
+
+                // Swap spring and autumn dates.
+                temp = FirstDateOfSpring;
+                FirstDateOfSpring = FirstDateOfAutumn;
+                FirstDateOfAutumn = temp;
             }
         }
 
@@ -581,6 +649,48 @@
             else DaysSinceWinterSolstice += 1;
 
             Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha,VP);
+        }
+
+        /// <summary>
+        /// An event handler for the start of day event.
+        /// </summary>
+        /// <param name="sender">The sender of the event</param>
+        /// <param name="e">The arguments of the event</param>
+        [EventSubscribe("StartOfDay")]
+        private void OnStartOfDay(object sender, EventArgs e)
+        {
+            if (StartOfSummer != null && DateUtilities.DatesEqual(FirstDateOfSummer, clock.Today))
+                StartOfSummer.Invoke(this, e);
+
+            if (StartOfAutumn != null && DateUtilities.DatesEqual(FirstDateOfAutumn, clock.Today))
+                StartOfAutumn.Invoke(this, e);
+
+            if (StartOfWinter != null && DateUtilities.DatesEqual(FirstDateOfWinter, clock.Today))
+                StartOfWinter.Invoke(this, e);
+
+            if (StartOfSpring != null && DateUtilities.DatesEqual(FirstDateOfSpring, clock.Today))
+                StartOfSpring.Invoke(this, e);
+        }
+
+        /// <summary>
+        /// An event handler for the end of day event.
+        /// </summary>
+        /// <param name="sender">The sender of the event</param>
+        /// <param name="e">The arguments of the event</param>
+        [EventSubscribe("EndOfDay")]
+        private void OnEndOfDay(object sender, EventArgs e)
+        {
+            if (EndOfSummer != null && DateUtilities.DatesEqual(FirstDateOfAutumn, clock.Today.AddDays(1)))
+                EndOfSummer.Invoke(this, e);
+
+            if (EndOfAutumn != null && DateUtilities.DatesEqual(FirstDateOfWinter, clock.Today.AddDays(1)))
+                EndOfAutumn.Invoke(this, e);
+
+            if (EndOfWinter != null && DateUtilities.DatesEqual(FirstDateOfSpring, clock.Today.AddDays(1)))
+                EndOfWinter.Invoke(this, e);
+
+            if (EndOfSpring != null && DateUtilities.DatesEqual(FirstDateOfSummer, clock.Today.AddDays(1)))
+                EndOfSpring.Invoke(this, e);
         }
 
         /// <summary>

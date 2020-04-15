@@ -974,12 +974,17 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Water table depth (mm)</summary>
         [Units("mm")]
-        private double watertable
+        public double WaterTable
         {
             get
             {
-                return WaterTable();
+                return CalculateWaterTable();
+            }
+            set
+            {
+                
             }
         }
 
@@ -3244,17 +3249,21 @@ namespace Models.Soils
                 return 0.0;
         }
 
-        private double WaterTable()
+        private double CalculateWaterTable()
         {
-            //   Purpose
-            //      Calculate depth of water table from soil surface
-            for (int i = 0; i <= n; i++)
+            if (psi != null)
             {
-                if (_psi[i] > 0)
-                    return (x[i] - _psi[i]) * 10.0;
+                //   Purpose
+                //      Calculate depth of water table from soil surface
+                for (int i = 0; i <= n; i++)
+                {
+                    if (_psi[i] > 0)
+                        return (x[i] - _psi[i]) * 10.0;
+                }
+                // set default value to bottom of soil profile.
+                return x[n] * 10.0;
             }
-            // set default value to bottom of soil profile.
-            return x[n] * 10.0;
+            return 0;
         }
 
         private double Suction(int node, double theta)
@@ -5900,6 +5909,14 @@ namespace Models.Soils
             get { throw new NotImplementedException("SWIM doesn't implement ResidueInterception"); }
             set { throw new NotImplementedException("SWIM doesn't implement ResidueInterception"); }
         }
+
+        /// <summary>The efficiency (0-1) that solutes move down with water.</summary>
+        [XmlIgnore]
+        public double[] SoluteFluxEfficiency { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        /// <summary>The efficiency (0-1) that solutes move up with water.</summary>
+        [XmlIgnore]
+        public double[] SoluteFlowEfficiency { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// <summary>Sets the water table.</summary>
         /// <param name="InitialDepth">The initial depth.</param>

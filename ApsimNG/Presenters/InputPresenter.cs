@@ -67,7 +67,7 @@
                 {
                     Prompt = "Choose files",
                     Action = FileDialog.FileActionType.Open,
-                    FileType = "CSV Files (*.csv) | *.csv | All Files (*.*) | *.*",
+                    FileType = "CSV Files (*.csv)|*.csv|All Files (*.*)|*.*",
                 };
                 string[] files = dialog.GetFiles();
                 if (files != null && files.Length > 0)

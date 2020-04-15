@@ -28,6 +28,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This model holds a crop data file for the CLEM simulation.")]
+    [Version(1, 0, 5, "Fixed problem with passing soil type filter")]
     [Version(1, 0, 4, "Problem with pasture Nitrogen allocation resulting in very poor pasture quality now fixed")]
     [Version(1, 0, 3, "Added ability to use Excel spreadsheets with given worksheet name")]
     [Version(1, 0, 2, "Added customisable column names.\nDelete and recreate old FileCrop components to set default values as previously used.")]
@@ -193,8 +194,6 @@ namespace Models.CLEM
                 string errorMsg = String.Format("@error:Could not locate file [o={0}] for [x={1}]", FullFileName.Replace("\\", "\\&shy;"), this.Name);
                 throw new ApsimXException(this, errorMsg);
             }
-
-            //this.doSeek = true;
             this.soilNumIndex = 0;
             this.cropNameIndex = 0;
             this.yearIndex = 0;
@@ -263,15 +262,6 @@ namespace Models.CLEM
 
             if (this.OpenDataFile())
             {
-                //List<string> cropProps = new List<string>
-                //{
-                //    "SoilNum",
-                //    "CropName",
-                //    "Year",
-                //    "Month",
-                //    "AmtKg"
-                //};
-
                 List<string> cropProps = new List<string>
                 {
                     SoilTypeColumnName,
@@ -284,7 +274,6 @@ namespace Models.CLEM
                 //Only try to read it in if it exists in the file.
                 if (nitrogenPercentIndex != -1)
                 {
-                    //                    cropProps.Add("Npct");
                     cropProps.Add(PercentNitrogenColumnName);
                 }
 
@@ -329,7 +318,7 @@ namespace Models.CLEM
 
             //http://www.csharp-examples.net/dataview-rowfilter/
 
-            string filter = $"({SoilTypeColumnName} = " + landId + $") AND ({CropNameColumnName} = " + "'" + cropName + "'" + ")"
+            string filter = $"({SoilTypeColumnName} = '" + landId + $"') AND ({CropNameColumnName} = " + "'" + cropName + "'" + ")"
                 + " AND ("
                 + $"( {YearColumnName} = " + startYear + $" AND {MonthColumnName} >= " + startMonth + ")"
                 + $" OR  ( {YearColumnName} > " + startYear + $" AND {YearColumnName} < " + endYear + ")"
