@@ -15,7 +15,7 @@ The /Edit argument instructs APSIM to edit the .apsimx file rather than run it.
 
 The argument immediately following /Edit must be the path to a config file. The config file should contain zero or more lines of the form `path = value`.
 
-The path should be the path to a model or property of a model in the .apsimx file. This can be a relative or absolute path. An absolute path can be obtained by right-clicking on the model in the user interface and clicking "Copy path to node". This will copy the path to the model, not to one of the model's properties. For example:
+The path should be the path to a model or property of a model in the .apsimx file. This can be a [scoped or absolute path](/development/model/4-pathspecification). An absolute path can be obtained by right-clicking on the model in the user interface and clicking "Copy path to node". This will copy the path to the model, not to one of the model's properties. For example:
 
 ![Wheat clock image](/images/Usage.EditFile.WheatClock.png)
 
@@ -78,7 +78,7 @@ Then add something like this to the config file:
 
 Here we see a new syntax. On the right-hand side are two values, separated by a semicolon. The first value is the path to an .apsimx file. The second part (after the semicolon) specifies the path to the model inside this .apsimx file which will be replacing the model specified on the left-hand side.
 
-In this case, we are replacing the SoilWater model with the Swim3 model contained in replace.apsimx. This might be easier to read (although potentially less predictable) with relative paths:
+In this case, we are replacing the SoilWater model with the Swim3 model contained in replace.apsimx. This might be easier to read (although potentially less predictable) with scoped paths:
 
 ```
 [SoilWater] = replace.apsimx;[Swim3]
