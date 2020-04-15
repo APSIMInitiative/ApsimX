@@ -19,7 +19,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 89; } }
+        public static int LatestVersion { get { return 93; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1571,23 +1571,7 @@
                 new Tuple<string, string>(".DeadTissuesN",  ".DeadTissue.N")
             };
 
-            foreach (var manager in JsonUtilities.ChildManagers(root))
-            {
-                bool managerChanged = false;
-
-                foreach (var replacement in changes)
-                {
-                    if (manager.Replace(replacement.Item1, replacement.Item2))
-                        managerChanged = true;
-                }
-                if (managerChanged)
-                    manager.Save();
-            }
-            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
-            {
-                foreach (var replacement in changes)
-                    JsonUtilities.SearchReplaceReportVariableNames(report, replacement.Item1, replacement.Item2);
-            }
+            JsonUtilities.RenameVariables(root, changes);
         }
 
         /// <summary>
@@ -1926,6 +1910,91 @@
         }
 
         /// <summary>
+        /// Fixes a bug where a manager script's children were being serialized.
+        /// When attempting to reopen the file, the script's type cannot be resolved.
+        /// This converter will strip out all script children of managers under replacements.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion90(JObject root, string fileName)
+        {
+            foreach (JObject replacements in JsonUtilities.ChildrenRecursively(root, "Replacements"))
+                foreach (JObject manager in JsonUtilities.ChildrenRecursively(root, "Manager"))
+                    JsonUtilities.RemoveChild(manager, "Script");
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion91(JObject root, string fileName)
+        {
+            Tuple<string, string>[] changes =
+            {
+                new Tuple<string, string>(".HarvestableWt",          ".Harvestable.Wt"),
+                new Tuple<string, string>(".HarvestableN",           ".Harvestable.N"),
+                new Tuple<string, string>(".StandingHerbageWt",      ".Standing.Wt"),
+                new Tuple<string, string>(".StandingHerbageN",       ".Standing.N"),
+                new Tuple<string, string>(".StandingHerbageNConc",   ".Standing.NConc"),
+                new Tuple<string, string>(".StandingLiveHerbageWt",  ".StandingLive.Wt"),
+                new Tuple<string, string>(".StandingLiveHerbageN",   ".StandingLive.N"),
+                new Tuple<string, string>(".StandingDeadHerbageWt",  ".StandingDead.Wt"),
+                new Tuple<string, string>(".StandingDeadHerbageN",   ".StandingDead.N"),
+                new Tuple<string, string>(".HerbageDigestibility",   ".Standing.Digestibility"),
+                new Tuple<string, string>(".RootDepthMaximum",       ".Root.RootDepthMaximum"),
+                new Tuple<string, string>("[AGPRyeGrass].RootLengthDensity", "[AGPRyeGrass].Root.RootLengthDensity"),
+                new Tuple<string, string>("[AGPWhiteClover].RootLengthDensity", "[AGPWhiteClover].Root.RootLengthDensity"),
+                new Tuple<string, string>("[AGPLucerne].RootLengthDensity", "[AGPLucerne].Root.RootLengthDensity")
+            };
+            JsonUtilities.RenameVariables(root, changes);
+        }
+		
+        /// <summary>
+        /// Change names of a couple of parameters in SimpleGrazing.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion92(JObject root, string fileName)
+        {
+            foreach (JObject simpleGrazing in JsonUtilities.ChildrenRecursively(root, "SimpleGrazing"))
+            {
+                simpleGrazing["FractionExcretedNToDung"] = simpleGrazing["FractionOfBiomassToDung"];
+                if (simpleGrazing["FractionNExportedInAnimal"] == null)
+                    simpleGrazing["FractionNExportedInAnimal"] = 0.75;
+            }
+
+            Tuple<string, string>[] changes =
+            {
+                new Tuple<string, string>(".AmountDungCReturned",  ".AmountDungWtReturned")
+            };
+            JsonUtilities.RenameVariables(root, changes);
+        }
+
+        /// <summary>
+        /// In SimpleGrazin, Turn "Fraction of defoliated N leaving the system" into a fraction of defoliated N going to soil.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion93(JObject root, string fileName)
+        {
+            foreach (JObject simpleGrazing in JsonUtilities.ChildrenRecursively(root, "SimpleGrazing"))
+            {
+                if (simpleGrazing["FractionNExportedInAnimal"] != null)
+                {
+                    var fractionNExportedInAnimal = Convert.ToDouble(simpleGrazing["FractionNExportedInAnimal"].Value<double>());
+                    simpleGrazing["FractionDefoliatedNToSoil"] = 1 - fractionNExportedInAnimal;
+
+                }
+                if (simpleGrazing["FractionExcretedNToDung"] != null)
+                {
+                    var fractionExcretedNToDung = simpleGrazing["FractionExcretedNToDung"] as JArray;
+                    if (fractionExcretedNToDung.Count > 0)
+                        simpleGrazing["CNRatioDung"] = "NaN";
+                }
+            }
+        }
+
+        /// <summary>
         /// Add progeny destination phase and mortality function.
         /// </summary>
         /// <param name="root"></param>
@@ -2141,12 +2210,12 @@
             }
         }
 
-            /// <summary>
-            /// Changes initial Root Wt to an array.
-            /// </summary>
-            /// <param name="root">The root JSON token.</param>
-            /// <param name="fileName">The name of the apsimx file.</param>
-            private static void UpgradeToVersion99(JObject root, string fileName)
+        /// <summary>
+        /// Changes initial Root Wt to an array.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion99(JObject root, string fileName)
         {
             // Delete all alias children.
             foreach (var soilNitrogen in JsonUtilities.ChildrenOfType(root, "SoilNitrogen"))

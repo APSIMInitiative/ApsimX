@@ -132,6 +132,10 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AgPasture\AGPBiomass.cs" />
+    <Compile Include="AgPasture\BiomassAndN.cs" />
+    <Compile Include="AgPasture\BiomassAndNLayered.cs" />
+    <Compile Include="AgPasture\IAGPBiomass.cs" />
     <Compile Include="AgPasture\TissuesHelper.cs" />
     <Compile Include="AgPasture\SimpleGrazing.cs" />
     <Compile Include="AgPasture\PastureSpecies.cs" />
@@ -265,6 +269,7 @@
     <Compile Include="Functions\CSharpExpressionFunction.cs" />
     <Compile Include="Functions\LiveOnEventFunction.cs" />
     <Compile Include="Functions\ProtectedDivideFunction.cs" />
+    <Compile Include="Functions\BetaGrowthFunction.cs" />
     <Compile Include="Graph\DefaultPainter.cs" />
     <Compile Include="Graph\ShadedBarsOnGraph.cs" />
     <Compile Include="Graph\GraphPanel.cs" />
@@ -310,6 +315,9 @@
     <EmbeddedResource Include="Resources\Scripts\GraphPanelScriptTemplate.cs" />
     <EmbeddedResource Include="Resources\Scripts\CSharpExpressionTemplate.cs" />
     <Compile Include="Plant\Phenology\Scales\ZadokPMFWheat.cs" />
+    <Compile Include="Plant\Structure\Culm.cs" />
+    <Compile Include="Plant\Structure\CulmParams.cs" />
+    <Compile Include="Plant\Structure\LeafCulms.cs" />
     <Compile Include="Report\VariableGroup.cs" />
     <Compile Include="Soils\Nutrients\INutrientPool.cs" />
     <Compile Include="Soils\SoilTemp\SoilTemperature.cs" />
@@ -352,10 +360,8 @@
     <Compile Include="Plant\Arbitrator\BaseArbitrator.cs" />
     <Compile Include="Plant\Arbitrator\RetranslocateNonStructural.cs" />
     <Compile Include="Plant\Interfaces\IRetranslocateMethod.cs" />
-    <Compile Include="Plant\Organs\Culm.cs" />
     <Compile Include="Plant\Organs\EnergyBalance.cs" />
     <Compile Include="Plant\Organs\SorghumLeaf.cs" />
-    <Compile Include="Plant\Structure\CulmStructure.cs" />
     <Compile Include="Sensitivity\FactorialAnova.cs" />
     <Compile Include="Sensitivity\SensitivityParameter.cs" />
     <Compile Include="Sensitivity\Sobol.cs" />

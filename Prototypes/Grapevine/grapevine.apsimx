@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 281,
-  "Version": 89,
+  "Version": 93,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -220,6 +220,16 @@
                   "Name": "Budding",
                   "Children": [
                     {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 79.0,
+                      "Units": "days",
+                      "Name": "Target",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
                       "$type": "Models.Functions.WangEngelTempFunction, Models",
                       "MinTemp": 0.0,
                       "OptTemp": 22.0,
@@ -227,16 +237,6 @@
                       "RefTemp": 25.0,
                       "MaximumTemperatureWeighting": 0.5,
                       "Name": "Progression",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 79.0,
-                      "Units": "days",
-                      "Name": "Target",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -1285,31 +1285,50 @@
                   "Name": "CohortParameters",
                   "Children": [
                     {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "$type": "Models.Functions.MultiplyFunction, Models",
                       "Name": "MaxArea",
                       "Children": [
                         {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            0.2,
-                            1.0
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "Name": "MaxArea",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                0.0,
+                                0.2,
+                                1.0
+                              ],
+                              "Y": [
+                                10000.0,
+                                16000.0,
+                                16000.0
+                              ],
+                              "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Structure].RelativeNodeApperance",
+                              "Name": "XValue",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
                           ],
-                          "Y": [
-                            10000.0,
-                            16000.0,
-                            16000.0
-                          ],
-                          "Name": "XYPairs",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Structure].RelativeNodeApperance",
-                          "Name": "XValue",
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.5,
+                          "Units": null,
+                          "Name": "Constant",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -1539,7 +1558,7 @@
                             1.0
                           ],
                           "Y": [
-                            40000.0,
+                            25000.0,
                             25000.0
                           ],
                           "Name": "XYPairs",
@@ -1564,7 +1583,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 20000.0,
+                      "FixedValue": 10000.0,
                       "Units": "mm2/g",
                       "Name": "SpecificLeafAreaMin",
                       "Children": [],
@@ -1964,7 +1983,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 1.05,
+                              "FixedValue": 1.5,
                               "Units": "g/MJ",
                               "Name": "Constant",
                               "Children": [],
@@ -2249,8 +2268,8 @@
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
                       "FractionLiveToRemove": 0.0,
                       "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 1.0,
-                      "FractionDeadToResidue": 1.0,
+                      "FractionLiveToResidue": 0.0,
+                      "FractionDeadToResidue": 0.0,
                       "Name": "Harvest",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -2261,8 +2280,8 @@
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
                       "FractionLiveToRemove": 0.0,
                       "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.1,
-                      "FractionDeadToResidue": 0.1,
+                      "FractionLiveToResidue": 0.0,
+                      "FractionDeadToResidue": 0.0,
                       "Name": "Cut",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -2273,8 +2292,8 @@
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
                       "FractionLiveToRemove": 0.0,
                       "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.05,
-                      "FractionDeadToResidue": 0.05,
+                      "FractionLiveToResidue": 0.0,
+                      "FractionDeadToResidue": 0.0,
                       "Name": "Prune",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -2283,9 +2302,9 @@
                     },
                     {
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.5,
+                      "FractionLiveToRemove": 0.0,
                       "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.1,
+                      "FractionLiveToResidue": 0.0,
                       "FractionDeadToResidue": 0.0,
                       "Name": "Graze",
                       "Children": [],
@@ -2525,10 +2544,10 @@
                     },
                     {
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 1.0,
+                      "FractionLiveToRemove": 0.0,
                       "FractionDeadToRemove": 0.0,
                       "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 1.0,
+                      "FractionDeadToResidue": 0.0,
                       "Name": "Prune",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -2850,6 +2869,56 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.BetaGrowthFunction, Models",
+                  "tm": 0.0,
+                  "te": 0.0,
+                  "Name": "PotentialRate",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Ymax",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 37.0,
+                      "Units": null,
+                      "Name": "tm",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 70.0,
+                      "Units": null,
+                      "Name": "te",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].ThermalTime",
+                      "Name": "XValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -2993,10 +3062,10 @@
                     },
                     {
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 1.0,
+                      "FractionLiveToRemove": 0.0,
                       "FractionDeadToRemove": 0.0,
                       "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 1.0,
+                      "FractionDeadToResidue": 0.0,
                       "Name": "Prune",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -4882,7 +4951,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.9,
+                          "FixedValue": 2.3,
                           "Units": null,
                           "Name": "PreEventValue",
                           "Children": [],
@@ -5260,7 +5329,7 @@
                     {
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Berry].YieldComponent.BunchesPerVine",
-                      "Name": "BunchesPerShoot",
+                      "Name": "BunchesPerVine",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -5274,6 +5343,15 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Grapevine].Population",
+                      "Name": "Population",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -5282,24 +5360,200 @@
                 },
                 {
                   "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "BerryFreshWeight",
+                  "Name": "SingleBerryFW",
                   "Children": [
                     {
-                      "$type": "Models.Functions.DemandFunctions.BerryFillingRateFunction, Models",
-                      "FirstPhase": "BerryDevelopment",
-                      "SecondPhase": "LeafDeathPhase",
-                      "Wo1": 0.0001,
-                      "Wf1": 1.0,
-                      "Mu1": 0.07,
-                      "Wo2": 0.0001,
-                      "Wf2": 2.0,
-                      "Mu2": 0.1,
-                      "Name": "BerryFillingRate",
+                      "$type": "Models.Functions.BetaGrowthFunction, Models",
+                      "tm": 38.37,
+                      "te": 67.44,
+                      "Name": "BetaGrowthFunction",
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Structure].ThermalTime",
-                          "Name": "TT",
+                          "VariableName": "[Berry].YieldComponent.BerryMass",
+                          "Name": "Ymax",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Berry].ThermalTimeAfterFlowering",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "TotalBerryFW",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Berry].NumberFunction",
+                      "Name": "BerryNumber",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.BetaGrowthFunction, Models",
+                      "tm": 38.37,
+                      "te": 67.44,
+                      "Name": "BetaGrowthFunction",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Berry].YieldComponent.BerryMass",
+                          "Name": "Ymax",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Berry].ThermalTimeAfterFlowering",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "SingleBerryDW",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.BetaGrowthFunction, Models",
+                      "tm": 53.4,
+                      "te": 79.8,
+                      "Name": "BetaGrowthFunction",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.5529,
+                          "Units": "g",
+                          "Name": "Ymax",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Berry].ThermalTimeAfterFlowering",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.SubtractFunction, Models",
+                  "Name": "WaterContent",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Constant",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "Flowering",
+                      "End": "LeafFall",
+                      "Name": "AfterFlowering",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.DivideFunction, Models",
+                          "Name": "DivideFunction",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Berry].Live.Wt",
+                              "Name": "BerryDW",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Berry].TotalBerryFW",
+                              "Name": "TotalBerryFW",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.PhaseLookup, Models",
+                  "Name": "Brix",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "Flowering",
+                      "End": "Veraison",
+                      "Name": "BeforeVeraison",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 5.0,
+                          "Units": null,
+                          "Name": "Constant",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -5311,10 +5565,140 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Berry].NumberFunction",
-                      "Name": "BerryNumber",
-                      "Children": [],
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "Veraison",
+                      "End": "LeafFall",
+                      "Name": "AfterVeraison",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.DivideFunction, Models",
+                          "Name": "DivideFunction",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.MaximumFunction, Models",
+                              "Name": "MaximumFunction",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.SubtractFunction, Models",
+                                  "Name": "SubtractFunction",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 0.944,
+                                      "Units": null,
+                                      "Name": "constant",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Berry].WaterContent",
+                                      "Name": "WaterContent",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 0.0,
+                                  "Units": null,
+                                  "Name": "zero",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0082,
+                              "Units": null,
+                              "Name": "constant",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.PhaseLookup, Models",
+                  "Name": "TitratableAcid",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "Flowering",
+                      "End": "Veraison",
+                      "Name": "BeforeVeraison",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "Constant",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "Veraison",
+                      "End": "LeafFall",
+                      "Name": "AfterVeraison",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.ExponentialFunction, Models",
+                          "A": 7.866,
+                          "B": 30.345,
+                          "C": -0.0923,
+                          "Name": "TitratableAcid",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Berry].ThermalTimeAfterVeraison",
+                              "Name": "XValue",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -5329,36 +5713,59 @@
                   "Name": "DMDemandFunction",
                   "Children": [
                     {
-                      "$type": "Models.Functions.DemandFunctions.BerryFillingRateFunction, Models",
-                      "FirstPhase": "BerryDevelopment",
-                      "SecondPhase": "LeafDeathPhase",
-                      "Wo1": 0.0001,
-                      "Wf1": 0.15,
-                      "Mu1": 0.007,
-                      "Wo2": 0.0001,
-                      "Wf2": 0.3,
-                      "Mu2": 0.011,
-                      "Name": "BerryFillingRate",
+                      "$type": "Models.Functions.DeltaFunction, Models",
+                      "StartStageName": null,
+                      "Name": "DeltaFunction",
                       "Children": [
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Structure].ThermalTime",
-                          "Name": "TT",
-                          "Children": [],
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "Integral",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Berry].NumberFunction",
+                              "Name": "BerryNumber",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.BetaGrowthFunction, Models",
+                              "tm": 53.4,
+                              "te": 79.8,
+                              "Name": "BetaGrowthFunction",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 0.5529,
+                                  "Units": "g",
+                                  "Name": "Ymax",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Berry].ThermalTimeAfterFlowering",
+                                  "Name": "XValue",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Berry].NumberFunction",
-                      "Name": "BerryNumber",
-                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -5372,7 +5779,7 @@
                   "$type": "Models.Functions.AccumulateFunction, Models",
                   "StartStageName": "Veraison",
                   "EndStageName": "LeafFall",
-                  "ResetStageName": "Veraison",
+                  "ResetStageName": "Ecodormancy",
                   "FractionRemovedOnCut": 0.0,
                   "FractionRemovedOnHarvest": 0.0,
                   "FractionRemovedOnGraze": 0.0,
@@ -5397,7 +5804,7 @@
                   "$type": "Models.Functions.AccumulateFunction, Models",
                   "StartStageName": "Flowering",
                   "EndStageName": "LeafFall",
-                  "ResetStageName": "Flowering",
+                  "ResetStageName": "Ecodormancy",
                   "FractionRemovedOnCut": 0.0,
                   "FractionRemovedOnHarvest": 0.0,
                   "FractionRemovedOnGraze": 0.0,
@@ -5407,27 +5814,6 @@
                     {
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Phenology].ThermalTime",
-                      "Name": "ThermalTime",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.ExponentialFunction, Models",
-                  "A": 24.0,
-                  "B": -15.6582,
-                  "C": -0.040501,
-                  "Name": "SolubleSolidsConc",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Berry].DaysAfterVeraison",
                       "Name": "ThermalTime",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -5521,7 +5907,7 @@
                   "Children": [
                     {
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 1.0,
+                      "FractionLiveToRemove": 0.0,
                       "FractionDeadToRemove": 0.0,
                       "FractionLiveToResidue": 0.0,
                       "FractionDeadToResidue": 0.0,
@@ -5533,7 +5919,7 @@
                     },
                     {
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 1.0,
+                      "FractionLiveToRemove": 0.0,
                       "FractionDeadToRemove": 0.0,
                       "FractionLiveToResidue": 0.0,
                       "FractionDeadToResidue": 0.0,
@@ -5547,7 +5933,7 @@
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
                       "FractionLiveToRemove": 0.0,
                       "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 1.0,
+                      "FractionLiveToResidue": 0.0,
                       "FractionDeadToResidue": 0.0,
                       "Name": "Prune",
                       "Children": [],
@@ -5590,78 +5976,6 @@
                   "Units": "g fresh or dry",
                   "Name": "MaximumPotentialGrainSize",
                   "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.SubtractFunction, Models",
-                  "Name": "WaterContent",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.903,
-                      "Units": null,
-                      "Name": "Constant",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "Veraison",
-                      "End": "LeafFall",
-                      "Name": "PhaseLookupValue",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "Name": "LinearInterpolationFunction",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                0.0,
-                                100.0,
-                                200.0,
-                                300.0,
-                                400.0,
-                                600.0
-                              ],
-                              "Y": [
-                                0.0,
-                                0.01,
-                                0.02,
-                                0.04,
-                                0.15,
-                                0.15
-                              ],
-                              "Name": "XYPairs",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Berry].ThermalTimeAfterVeraison",
-                              "Name": "XValue",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -7260,24 +7574,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Manager, Models",
-                  "Code": "using System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n       \r\n        [Description(\"Pruning_DAWS\")]         \r\n        public int Pruning_DAWS { get; set; }  //day\r\n\r\n        [Description(\"CordonDiameter_mm\")]         \r\n        public double CordonDiameter { get; set; }  //mm\r\n\r\n        [XmlIgnore] private DateTime PruneDate { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            //PruneDate = DateTime.Parse(PruneDateString);\r\n                        \r\n            if (weather.DaysSinceWinterSolstice == Pruning_DAWS)\r\n            {\r\n                Remove.SetPhenologyStage = 1;\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove);\r\n            }\r\n\r\n            {\r\n            zone.Set(\"Grapevine.Cordon.CordonDiameter.FixedValue\", CordonDiameter);   \r\n            //calculate the biomass by length 1 meter time 2 cordons time density (0.0005 g/mm3)\r\n            zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", 3.14*(CordonDiameter/2)*(CordonDiameter/2)*2000*0.0005); \r\n\r\n                }\r\n\r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
-                  "Parameters": [
-                    {
-                      "Key": "Pruning_DAWS",
-                      "Value": "314"
-                    },
-                    {
-                      "Key": "CordonDiameter",
-                      "Value": "10"
-                    }
-                  ],
-                  "Name": "Pruning",
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Report, Models",
                   "VariableNames": [
                     "[Clock].Today",
@@ -7314,8 +7610,14 @@
                     "[Grapevine].Arbitrator.DM.TotalFixationSupply",
                     "",
                     "[Berry].Live.Wt",
-                    "[Berry].BerryFreshWeight",
+                    "[Berry].SingleBerryDW",
+                    "[Berry].SingleBerryFW",
+                    "[Berry].TotalBerryFW",
                     "[Berry].NumberFunction",
+                    "[Berry].ThermalTimeAfterFlowering",
+                    "[Berry].WaterContent",
+                    "[Berry].Brix",
+                    "[Berry].TitratableAcid",
                     "[Berry].MetFactors.BUN_TmaxIni1 as BUN_TmaxIni",
                     "[Berry].MetFactors.BUN_RadIni1 as BUN_RadIni",
                     "[Berry].MetFactors.BEN_RainTotFlow as BEN_RainTotFlow",
@@ -7326,9 +7628,9 @@
                     "[Berry].MetFactors.BM_RainTotVer as BM_RainTotVer",
                     "[Berry].MetFactors.BM_TmeanFlow as BM_TmeanFlow",
                     "",
-                    "[Berry].YieldComponent.BunchesPerVine as BunchesPerVine",
+                    "[Berry].YieldComponent.BunchesPerVine as bunch.no.vine",
                     "[Berry].YieldComponent.BerryNum as BerryNum",
-                    "[Berry].YieldComponent.BerryMass as BerryMass"
+                    "[Berry].YieldComponent.BerryMass as berry.fw.mean"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -7336,6 +7638,58 @@
                   "GroupByVariableName": null,
                   "Name": "Report",
                   "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n       [Link] Clock Clock;\r\n       [Link] Fertiliser Fertiliser;\r\n       [Link] Summary Summary;\r\n       [Link] Weather weather;\r\n\r\n        [Description(\"Fertilize_DAWS\")]\r\n         public int FertilizeDAWS { get; set; }\r\n        [Description(\"Amount of fertiliser to be applied\")]\r\n        public double Amount { get; set; }\r\n\r\n       [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n          if (weather.DaysSinceWinterSolstice == FertilizeDAWS)\r\n           Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);\r\n        }\r\n       \r\n    }\r\n}\r\n       \r\n",
+                  "Parameters": [
+                    {
+                      "Key": "FertilizeDAWS",
+                      "Value": "100"
+                    },
+                    {
+                      "Key": "Amount",
+                      "Value": "20"
+                    },
+                    {
+                      "Key": "totalIrrigation",
+                      "Value": "0"
+                    }
+                  ],
+                  "Name": "Fertilizer",
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "Code": "using System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        [Description(\"SummerPruning_DAWS\")]         \r\n        public int LeafPluckingDAWS { get; set; }  //day\r\n\r\n        [Description(\"LeafRanksToRemain\")]         \r\n        public int TargetLeafRank { get; set; }  //Number\r\n\r\n        [Description(\"Harvest_DAWS\")]\r\n        public int HarvestDAWS { get; set; }\r\n\r\n        [Description(\"Pruning_DAWS\")]         \r\n        public int PruningDAWS { get; set; }  //day\r\n\r\n        [Description(\"CordonDiameter_mm\")]         \r\n        public double CordonDiameter { get; set; }  //mm\r\n\r\n\r\n        [XmlIgnore] private RemovalFractions Remove_1 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_2 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_3 { get; set; }\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove_1 = new RemovalFractions();\r\n            Remove_2 = new RemovalFractions();\r\n            Remove_3 = new RemovalFractions();\r\n           \r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n    \t     //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n    \t     //PruneDate = DateTime.Parse(PruneDateString);\r\n    \t     if (weather.DaysSinceWinterSolstice == LeafPluckingDAWS && Grapevine.Phenology.Stage >= 3)\r\n    \t     {    \t\r\n    \t        double FractionToRemove = 0.3; //1- TargetLeafRank/LeafTipsAppeared;\r\n\t\t//\t\r\n    \t        Remove_1.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n    \t        Remove_1.SetFractionToRemove(\"Shoot\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Cordon\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Trunk\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Root\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Berry\", 0);\r\n\t\t//\t\r\n    \t        Remove_1.SetFractionToResidue(\"Leaf\", FractionToRemove, \"live\");\r\n    \t        Remove_1.SetFractionToResidue(\"Shoot\", FractionToRemove);\r\n    \t        Remove_1.SetFractionToResidue(\"Cordon\", 0);\r\n    \t        Remove_1.SetFractionToResidue(\"Trunk\", 0);\r\n    \t        Remove_1.SetFractionToResidue(\"Root\", 0);\r\n    \t        Remove_1.SetFractionToResidue(\"Berry\", 0);\r\n\t\t//\t\r\n    \t    \r\n    \t        Grapevine.RemoveBiomass(\"LeafPluck\", Remove_1);\r\n\r\n\t\t//\r\n    \t     }\r\n\r\n           if (weather.DaysSinceWinterSolstice == HarvestDAWS && Grapevine.Phenology.Stage >= 3)\r\n           {\r\n           \tdouble FractionToRemove = 0; //1- TargetLeafRank/LeafTipsAppeared;\r\n\t\t// \r\n               Remove_2.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n               Remove_2.SetFractionToRemove(\"Shoot\",  0);\r\n               Remove_2.SetFractionToRemove(\"Cordon\", 0);\r\n               Remove_2.SetFractionToRemove(\"Trunk\",  0);\r\n               Remove_2.SetFractionToRemove(\"Root\",   0);\r\n               Remove_2.SetFractionToRemove(\"Berry\",  1);\r\n\t\t// \r\n               Remove_2.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n               Remove_2.SetFractionToResidue(\"Shoot\",  0);\r\n               Remove_2.SetFractionToResidue(\"Cordon\", 0);\r\n               Remove_2.SetFractionToResidue(\"Trunk\",  0);\r\n               Remove_2.SetFractionToResidue(\"Root\",   0);\r\n               Remove_2.SetFractionToResidue(\"Berry\",  0);\r\n\t\t// \r\n               Grapevine.RemoveBiomass(\"LeafPluck\", Remove_2);\r\n           }\r\n                                   \r\n            if (weather.DaysSinceWinterSolstice == PruningDAWS&& Grapevine.Phenology.Stage >= 3)\r\n            {\r\n                Remove_3.SetPhenologyStage = 1;\r\n\r\n                double FractionToRemove = 1; //1- TargetLeafRank/LeafTipsAppeared;\r\n\r\n                Remove_3.SetFractionToRemove(\"Leaf\",   0, \"live\");\r\n                Remove_3.SetFractionToRemove(\"Shoot\",  0);\r\n                Remove_3.SetFractionToRemove(\"Cordon\", 0);\r\n                Remove_3.SetFractionToRemove(\"Trunk\",  0);\r\n                Remove_3.SetFractionToRemove(\"Root\",   0);\r\n                Remove_3.SetFractionToRemove(\"Berry\",  0);\r\n\r\n                Remove_3.SetFractionToResidue(\"Leaf\",   1, \"live\");\r\n                Remove_3.SetFractionToResidue(\"Shoot\",  0.8);\r\n                Remove_3.SetFractionToResidue(\"Cordon\", 1);\r\n                Remove_3.SetFractionToResidue(\"Trunk\",  0);\r\n                Remove_3.SetFractionToResidue(\"Root\",   0);\r\n                Remove_3.SetFractionToResidue(\"Berry\",  0);\r\n\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove_3);\r\n            }\r\n\r\n            {\r\n\t            zone.Set(\"Grapevine.Cordon.CordonDiameter.FixedValue\", CordonDiameter);   \r\n\t            //calculate the biomass by length 1 meter time 2 cordons time density (0.0005 g/mm3)\r\n\t            zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", 3.14*(CordonDiameter/2)*(CordonDiameter/2)*2000*0.0005); \r\n\r\n\t           \r\n\r\n             }\r\n\r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
+                  "Parameters": [
+                    {
+                      "Key": "LeafPluckingDAWS",
+                      "Value": "205"
+                    },
+                    {
+                      "Key": "TargetLeafRank",
+                      "Value": "18"
+                    },
+                    {
+                      "Key": "HarvestDAWS",
+                      "Value": "290"
+                    },
+                    {
+                      "Key": "PruningDAWS",
+                      "Value": "314"
+                    },
+                    {
+                      "Key": "CordonDiameter",
+                      "Value": "10"
+                    }
+                  ],
+                  "Name": "HarvestNPruning",
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -7358,7 +7712,7 @@
             {
               "$type": "Models.Clock, Models",
               "Start": "2001-01-01T00:00:00",
-              "End": "2006-10-31T00:00:00",
+              "End": "2014-10-31T00:00:00",
               "Name": "Clock",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -7593,54 +7947,14 @@
                   "Interval": "NaN",
                   "DateTimeAxis": false,
                   "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Axis, Models",
-                  "Type": 2,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
                 }
               ],
-              "LegendPosition": 0,
+              "LegendPosition": 1,
               "LegendOrientation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
-              "Name": "BerryWT",
+              "Name": "BerryMass",
               "Children": [
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 2,
-                  "ColourArgb": -1663232,
-                  "FactorToVaryColours": null,
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 11,
-                  "MarkerSize": 0,
-                  "Line": 0,
-                  "LineThickness": 0,
-                  "TableName": "Report",
-                  "XFieldName": "Clock.Today",
-                  "YFieldName": "Berry.YieldComponent.BerryMass",
-                  "X2FieldName": "",
-                  "Y2FieldName": "",
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": true,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "FreshMass",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
                 {
                   "$type": "Models.Series, Models",
                   "Type": 1,
@@ -7656,15 +7970,15 @@
                   "LineThickness": 0,
                   "TableName": "Report",
                   "XFieldName": "Clock.Today",
-                  "YFieldName": "Berry.Live.Wt",
+                  "YFieldName": "BerryMass",
                   "X2FieldName": "",
                   "Y2FieldName": "",
-                  "ShowInLegend": false,
+                  "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
                   "CumulativeX": false,
                   "Filter": null,
-                  "Name": "DryMass",
+                  "Name": "mass",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -7772,6 +8086,372 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "bunches",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 3,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": true,
+                  "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 0,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "WaterContents",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Berry.WaterContent",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "DWFW",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 3,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": true,
+                  "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 0,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "SingleBerryWT",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16736653,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Berry.SingleBerryFW",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Fw",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -2793984,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Berry.SingleBerryDW",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "DW",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 3,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": true,
+                  "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 0,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                }
+              ],
+              "LegendPosition": 1,
+              "LegendOrientation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "BerryLiveWt",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Berry.Live.Wt",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Livewt",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -2793984,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Berry.TotalBerryFW",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "totalFwt",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 3,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": true,
+                  "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 0,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 2,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "BrixAcid",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Berry.Brix",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Brix",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 2,
+                  "ColourArgb": -990142,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Berry.TitratableAcid",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Acid",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -9505,24 +10185,6 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Manager, Models",
-                          "Code": "using System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n       \r\n        [Description(\"Pruning_DAWS\")]         \r\n        public int Pruning_DAWS { get; set; }  //day\r\n\r\n        [Description(\"CordonDiameter_mm\")]         \r\n        public double CordonDiameter { get; set; }  //mm\r\n\r\n        [XmlIgnore] private DateTime PruneDate { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            //PruneDate = DateTime.Parse(PruneDateString);\r\n                        \r\n            if (weather.DaysSinceWinterSolstice == Pruning_DAWS)\r\n            {\r\n                Remove.SetPhenologyStage = 1;\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove);\r\n            }\r\n\r\n            {\r\n            zone.Set(\"Grapevine.Cordon.CordonDiameter.FixedValue\", CordonDiameter);   \r\n            //calculate the biomass by length 1 meter time 2 cordons time density (0.0005 g/mm3)\r\n            zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", 3.14*(CordonDiameter/2)*(CordonDiameter/2)*2000*0.0005); \r\n\r\n                }\r\n\r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
-                          "Parameters": [
-                            {
-                              "Key": "Pruning_DAWS",
-                              "Value": "314"
-                            },
-                            {
-                              "Key": "CordonDiameter",
-                              "Value": "10"
-                            }
-                          ],
-                          "Name": "Pruning",
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Irrigation, Models",
                           "Name": "Irrigation",
                           "Children": [],
@@ -10150,32 +10812,22 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n       [Link] Irrigation irrigation;\r\n        public void applyDripIrri(double amount)\r\n        {\r\n            double layerAmount = amount/4;\r\n            irrigation.Apply(layerAmount, 0);\r\n            irrigation.Apply(layerAmount*2, 220);\r\n            irrigation.Apply(layerAmount, 420);\r\n\r\n        }\r\n        public double totalIrrigation {get; set;}\r\n        [EventSubscribe(\"Irrigated\")]\r\n        private void OnIrrigated(object sender, \r\n        IrrigationApplicationType irrigData)\r\n        {\r\n            totalIrrigation += irrigData.Amount;\r\n         }\r\n    }\r\n}\r\n       \r\n",
+                          "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n       [Link] Irrigation irrigation;\r\n       [Link] Clock Clock;\r\n       [Link] Fertiliser Fertiliser;\r\n       [Link] Summary Summary;\r\n       [Link] Weather weather;\r\n\r\n        [Description(\"Fertilize_DAWS\")]\r\n         public int FertilizeDAWS { get; set; }\r\n        [Description(\"Amount of fertiliser to be applied\")]\r\n        public double Amount { get; set; }\r\n\r\n       [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n          if (weather.DaysSinceWinterSolstice == FertilizeDAWS)\r\n           Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);\r\n        }\r\n\r\n\r\n       public void applyDripIrri(double amount)\r\n        {\r\n            double layerAmount = amount/4;\r\n            irrigation.Apply(layerAmount, 0);\r\n            irrigation.Apply(layerAmount*2, 220);\r\n            irrigation.Apply(layerAmount, 420);\r\n\r\n        }\r\n        public double totalIrrigation {get; set;}\r\n        [EventSubscribe(\"Irrigated\")]\r\n        private void OnIrrigated(object sender, \r\n        IrrigationApplicationType irrigData)\r\n        {\r\n            totalIrrigation += irrigData.Amount;\r\n         }\r\n    }\r\n}\r\n       \r\n",
                           "Parameters": [
+                            {
+                              "Key": "FertilizeDAWS",
+                              "Value": "100"
+                            },
+                            {
+                              "Key": "Amount",
+                              "Value": "20"
+                            },
                             {
                               "Key": "totalIrrigation",
                               "Value": "0"
                             }
                           ],
                           "Name": "DripIrrigator",
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Manager, Models",
-                          "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Plant Grapevine;\r\n        [Link] Summary Summary;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Harvest date (d-mmm)\")]\r\n        public string HarvestDate { get; set; }\r\n        [Description(\"Pruning date (d-mmm)\")]\r\n        public string PruneDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n//            if (DateUtilities.WithinDates(HarvestDate, Clock.Today, HarvestDate))\r\n//            {\r\n//                Grapevine.RemoveBiomass(\"Harvest\");\r\n//                object NotHarvested = 0;\r\n//                zone.Set(\"Grapevine.Fruit.DMDemands.Structural.PartitionFraction.FruitGrowth.Fraction.NotHarvested.FixedValue\", NotHarvested);\r\n//            }\r\n//\r\n//            if (DateUtilities.WithinDates(PruneDate, Clock.Today, PruneDate))\r\n//            {\r\n//                Grapevine.RemoveBiomass(\"Prune\");\r\n//                object NotHarvested = 1;\r\n//                zone.Set(\"Grapevine.Fruit.DMDemands.Structural.PartitionFraction.FruitGrowth.Fraction.NotHarvested.FixedValue\", NotHarvested);\r\n//            }\r\n     }\r\n        \r\n    }\r\n}\r\n",
-                          "Parameters": [
-                            {
-                              "Key": "HarvestDate",
-                              "Value": "15-Apr"
-                            },
-                            {
-                              "Key": "PruneDate",
-                              "Value": "1-Jun"
-                            }
-                          ],
-                          "Name": "HarvestNPrune",
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -10203,6 +10855,7 @@
                             "[Grapevine].Leaf.InitialisedCohortNo",
                             "[Grapevine].Leaf.DeadCohortNo",
                             "[Grapevine].Leaf.AppearedCohortNo",
+                            "[Grapevine].Leaf.CohortSize",
                             "[Grapevine].Leaf.Fn",
                             "[Grapevine].Leaf.Fw",
                             "[Grapevine].Leaf.Live.Wt",
@@ -10216,8 +10869,13 @@
                             "[Grapevine].Arbitrator.DM.TotalFixationSupply",
                             "",
                             "[Berry].Live.Wt",
-                            "[Berry].BerryFreshWeight",
+                            "[Berry].SingleBerryDW",
+                            "[Berry].SingleBerryFW",
+                            "[Berry].TotalBerryFW",
                             "[Berry].NumberFunction",
+                            "[Berry].ThermalTimeAfterFlowering",
+                            "[Berry].WaterContent",
+                            "[Berry].Brix",
                             "[Berry].MetFactors.BUN_TmaxIni1 as BUN_TmaxIni",
                             "[Berry].MetFactors.BUN_RadIni1 as BUN_RadIni",
                             "[Berry].MetFactors.BEN_RainTotFlow as BEN_RainTotFlow",
@@ -10228,9 +10886,9 @@
                             "[Berry].MetFactors.BM_RainTotVer as BM_RainTotVer",
                             "[Berry].MetFactors.BM_TmeanFlow as BM_TmeanFlow",
                             "",
-                            "[Berry].YieldComponent.BunchesPerVine as BunchesPerVine",
+                            "[Berry].YieldComponent.BunchesPerVine as bunch.no.vine",
                             "[Berry].YieldComponent.BerryNum as BerryNum",
-                            "[Berry].YieldComponent.BerryMass as BerryMass"
+                            "[Berry].YieldComponent.BerryMass as berry.fw.mean"
                           ],
                           "EventNames": [
                             "[Clock].DoReport"
@@ -10238,6 +10896,36 @@
                           "GroupByVariableName": null,
                           "Name": "Report",
                           "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Manager, Models",
+                          "Code": "using System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        [Description(\"SummerPruning_DAWS\")]         \r\n        public int LeafPluckingDAWS { get; set; }  //day\r\n\r\n        [Description(\"LeafRanksToRemain\")]         \r\n        public int TargetLeafRank { get; set; }  //Number\r\n\r\n        [Description(\"Harvest_DAWS\")]\r\n        public int HarvestDAWS { get; set; }\r\n\r\n        [Description(\"Pruning_DAWS\")]         \r\n        public int PruningDAWS { get; set; }  //day\r\n\r\n        [Description(\"CordonDiameter_mm\")]         \r\n        public double CordonDiameter { get; set; }  //mm\r\n\r\n\r\n        [XmlIgnore] private RemovalFractions Remove_1 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_2 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_3 { get; set; }\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove_1 = new RemovalFractions();\r\n            Remove_2 = new RemovalFractions();\r\n            Remove_3 = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n    \t     //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n    \t     //PruneDate = DateTime.Parse(PruneDateString);\r\n    \t     if (weather.DaysSinceWinterSolstice == LeafPluckingDAWS && Grapevine.Phenology.Stage >= 3)\r\n    \t     {\r\n    \t            \r\n    \t        int LeafTipsAppeared = (int)Grapevine.Structure.LeafTipsAppeared;\r\n    \t        int NodesToRemove = (int)Math.Max(LeafTipsAppeared - TargetLeafRank, 1); \r\n    \t        double FractionToRemove = 0.3; //1- TargetLeafRank/LeafTipsAppeared;\r\n\t\t//\t\r\n    \t        Remove_1.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n    \t        Remove_1.SetFractionToRemove(\"Shoot\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Cordon\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Trunk\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Root\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Berry\", 0);\r\n\t\t//\t\r\n    \t        Remove_1.SetFractionToResidue(\"Leaf\", FractionToRemove, \"live\");\r\n    \t        Remove_1.SetFractionToResidue(\"Shoot\", FractionToRemove);\r\n    \t        Remove_1.SetFractionToResidue(\"Cordon\", 0);\r\n    \t        Remove_1.SetFractionToResidue(\"Trunk\", 0);\r\n    \t        Remove_1.SetFractionToResidue(\"Root\", 0);\r\n    \t        Remove_1.SetFractionToResidue(\"Berry\", 0);\r\n\t\t//\t\r\n    \t        //Remove_1.NodesToRemove = NodesToRemove;\r\n    \t        Grapevine.RemoveBiomass(\"LeafPluck\", Remove_1);\r\n\t\t//\r\n    \t     }\r\n\r\n           if (weather.DaysSinceWinterSolstice == HarvestDAWS && Grapevine.Phenology.Stage >= 3)\r\n           {\r\n           \tdouble FractionToRemove = 0; //1- TargetLeafRank/LeafTipsAppeared;\r\n\t\t// \r\n               Remove_2.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n               Remove_2.SetFractionToRemove(\"Shoot\",  0);\r\n               Remove_2.SetFractionToRemove(\"Cordon\", 0);\r\n               Remove_2.SetFractionToRemove(\"Trunk\",  0);\r\n               Remove_2.SetFractionToRemove(\"Root\",   0);\r\n               Remove_2.SetFractionToRemove(\"Berry\",  1);\r\n\t\t// \r\n               Remove_2.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n               Remove_2.SetFractionToResidue(\"Shoot\",  0);\r\n               Remove_2.SetFractionToResidue(\"Cordon\", 0);\r\n               Remove_2.SetFractionToResidue(\"Trunk\",  0);\r\n               Remove_2.SetFractionToResidue(\"Root\",   0);\r\n               Remove_2.SetFractionToResidue(\"Berry\",  0);\r\n\t\t// \r\n               Grapevine.RemoveBiomass(\"LeafPluck\", Remove_2);\r\n           }\r\n                                   \r\n            if (weather.DaysSinceWinterSolstice == PruningDAWS&& Grapevine.Phenology.Stage >= 3)\r\n            {\r\n                Remove_3.SetPhenologyStage = 1;\r\n\r\n                double FractionToRemove = 1; //1- TargetLeafRank/LeafTipsAppeared;\r\n\r\n                Remove_3.SetFractionToRemove(\"Leaf\",   0, \"live\");\r\n                Remove_3.SetFractionToRemove(\"Shoot\",  0);\r\n                Remove_3.SetFractionToRemove(\"Cordon\", 0);\r\n                Remove_3.SetFractionToRemove(\"Trunk\",  0);\r\n                Remove_3.SetFractionToRemove(\"Root\",   0);\r\n                Remove_3.SetFractionToRemove(\"Berry\",  0);\r\n\r\n                Remove_3.SetFractionToResidue(\"Leaf\",   1, \"live\");\r\n                Remove_3.SetFractionToResidue(\"Shoot\",  0.8);\r\n                Remove_3.SetFractionToResidue(\"Cordon\", 1);\r\n                Remove_3.SetFractionToResidue(\"Trunk\",  0);\r\n                Remove_3.SetFractionToResidue(\"Root\",   0);\r\n                Remove_3.SetFractionToResidue(\"Berry\",  0);\r\n\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove_3);\r\n            }\r\n\r\n            {\r\n\t            zone.Set(\"Grapevine.Cordon.CordonDiameter.FixedValue\", CordonDiameter);   \r\n\t            //calculate the biomass by length 1 meter time 2 cordons time density (0.0005 g/mm3)\r\n\t            zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", 3.14*(CordonDiameter/2)*(CordonDiameter/2)*2000*0.0005); \r\n\r\n             }\r\n\r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
+                          "Parameters": [
+                            {
+                              "Key": "LeafPluckingDAWS",
+                              "Value": "205"
+                            },
+                            {
+                              "Key": "TargetLeafRank",
+                              "Value": "18"
+                            },
+                            {
+                              "Key": "HarvestDAWS",
+                              "Value": "290"
+                            },
+                            {
+                              "Key": "PruningDAWS",
+                              "Value": "314"
+                            },
+                            {
+                              "Key": "CordonDiameter",
+                              "Value": "10"
+                            }
+                          ],
+                          "Name": "HarvestNPruning",
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -11273,8 +11961,8 @@
                           "Line": 4,
                           "LineThickness": 0,
                           "TableName": "PredictedObserved",
-                          "XFieldName": "Observed.BunchesPerVine",
-                          "YFieldName": "Predicted.BunchesPerVine",
+                          "XFieldName": "Observed.bunch.no.vine",
+                          "YFieldName": "Predicted.bunch.no.vine",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -11431,8 +12119,8 @@
                           "Line": 4,
                           "LineThickness": 0,
                           "TableName": "PredictedObserved",
-                          "XFieldName": "Observed.BerryMass",
-                          "YFieldName": "Predicted.BerryMass",
+                          "XFieldName": "Observed.berry.fw.mean",
+                          "YFieldName": "Predicted.berry.fw.mean",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -11511,86 +12199,7 @@
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "BUN_TmaxIni",
-                          "YFieldName": "BunchesPerVine",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
-                          "ShowInLegend": false,
-                          "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "Series",
-                          "Children": [
-                            {
-                              "$type": "Models.Regression, Models",
-                              "ForEachSeries": true,
-                              "showOneToOne": true,
-                              "showEquation": true,
-                              "Name": "Regression",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph, Models",
-                      "Caption": null,
-                      "Axis": [
-                        {
-                          "$type": "Models.Axis, Models",
-                          "Type": 3,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": true,
-                          "CrossesAtZero": false
-                        },
-                        {
-                          "$type": "Models.Axis, Models",
-                          "Type": 0,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        }
-                      ],
-                      "LegendPosition": 0,
-                      "LegendOrientation": 0,
-                      "DisabledSeries": [],
-                      "LegendOutsideGraph": false,
-                      "Name": "BunchesTmaxIni1",
-                      "Children": [
-                        {
-                          "$type": "Models.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Climate",
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 0,
-                          "MarkerSize": 0,
-                          "Line": 4,
-                          "LineThickness": 0,
-                          "TableName": "Report",
-                          "XFieldName": "Clock.Today",
-                          "YFieldName": "BunchesPerVine",
+                          "YFieldName": "bunch.no.vine",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -13945,7 +14554,9 @@
                             "[Irrigation].IrrigationApplied",
                             "[Soil].SoilWater.Drainage",
                             "",
-                            "",
+                            "[Row].Grapevine.Structure.TotalLeavesPerShoot",
+                            "[Row].Grapevine.Leaf.LAIMainStem/[Grapevine].Structure.MainStemPopn as LAIMeanMainStem",
+                            "[Row].Grapevine.Leaf.LAIBranch/[Grapevine].Structure.MainStemPopn as LAIMeanLateral",
                             "",
                             "[Grapevine].Phenology.CurrentSeason as CurrentSeason",
                             "[Grapevine].Phenology.Stage",
@@ -13959,10 +14570,6 @@
                             "[Grapevine].Structure.MainStemPopn",
                             "[Grapevine].Structure.LeafTipsAppeared",
                             "[Grapevine].Leaf.LAI",
-                            "[Row].Grapevine.Structure.TotalLeavesPerShoot",
-                            "",
-                            "[Row].Grapevine.Leaf.LAIMainStem/[Grapevine].Structure.MainStemPopn as LAIMeanMainStem",
-                            "[Row].Grapevine.Leaf.LAIBranch/[Grapevine].Structure.MainStemPopn as LAIMeanLateral",
                             "[Grapevine].Leaf.InitialisedCohortNo",
                             "[Grapevine].Leaf.DeadCohortNo",
                             "[Grapevine].Leaf.AppearedCohortNo",
@@ -13980,8 +14587,13 @@
                             "[Grapevine].Arbitrator.DM.TotalFixationSupply",
                             "",
                             "[Berry].Live.Wt",
-                            "[Berry].BerryFreshWeight",
+                            "[Berry].SingleBerryDW",
+                            "[Berry].SingleBerryFW",
+                            "[Berry].TotalBerryFW",
                             "[Berry].NumberFunction",
+                            "[Berry].ThermalTimeAfterFlowering",
+                            "[Berry].WaterContent",
+                            "[Berry].Brix",
                             "[Berry].MetFactors.BUN_TmaxIni1 as BUN_TmaxIni",
                             "[Berry].MetFactors.BUN_RadIni1 as BUN_RadIni",
                             "[Berry].MetFactors.BEN_RainTotFlow as BEN_RainTotFlow",
@@ -13992,9 +14604,9 @@
                             "[Berry].MetFactors.BM_RainTotVer as BM_RainTotVer",
                             "[Berry].MetFactors.BM_TmeanFlow as BM_TmeanFlow",
                             "",
-                            "[Berry].YieldComponent.BunchesPerVine as BunchesPerVine",
+                            "[Berry].YieldComponent.BunchesPerVine as bunch.no.vine",
                             "[Berry].YieldComponent.BerryNum as BerryNum",
-                            "[Berry].YieldComponent.BerryMass as BerryMass"
+                            "[Berry].YieldComponent.BerryMass as berry.fw.mean"
                           ],
                           "EventNames": [
                             "[Clock].DoReport"
@@ -14075,24 +14687,6 @@
                             }
                           ],
                           "Name": "TreeInitialisation",
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Manager, Models",
-                          "Code": "using System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n       \r\n        [Description(\"Pruning_DAWS\")]         \r\n        public int Pruning_DAWS { get; set; }  //day\r\n\r\n        [Description(\"CordonDiameter_mm\")]         \r\n        public double CordonDiameter { get; set; }  //mm\r\n\r\n        [XmlIgnore] private DateTime PruneDate { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            //PruneDate = DateTime.Parse(PruneDateString);\r\n                        \r\n            if (weather.DaysSinceWinterSolstice == Pruning_DAWS)\r\n            {\r\n                Remove.SetPhenologyStage = 1;\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove);\r\n            }\r\n\r\n            {\r\n            zone.Set(\"Grapevine.Cordon.CordonDiameter.FixedValue\", CordonDiameter);   \r\n            //calculate the biomass by length 1 meter time 2 cordons time density (0.0005 g/mm3)\r\n            zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", 3.14*(CordonDiameter/2)*(CordonDiameter/2)*2000*0.0005); \r\n\r\n                }\r\n\r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
-                          "Parameters": [
-                            {
-                              "Key": "Pruning_DAWS",
-                              "Value": "314"
-                            },
-                            {
-                              "Key": "CordonDiameter",
-                              "Value": "10"
-                            }
-                          ],
-                          "Name": "Pruning",
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -14684,24 +15278,6 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Manager, Models",
-                          "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Plant Grapevine;\r\n        [Link] Summary Summary;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Harvest date (d-mmm)\")]\r\n        public string HarvestDate { get; set; }\r\n        [Description(\"Pruning date (d-mmm)\")]\r\n        public string PruneDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n//            if (DateUtilities.WithinDates(HarvestDate, Clock.Today, HarvestDate))\r\n//            {\r\n//                Grapevine.RemoveBiomass(\"Harvest\");\r\n//                object NotHarvested = 0;\r\n//                zone.Set(\"Grapevine.Fruit.DMDemands.Structural.PartitionFraction.FruitGrowth.Fraction.NotHarvested.FixedValue\", NotHarvested);\r\n//            }\r\n//\r\n//            if (DateUtilities.WithinDates(PruneDate, Clock.Today, PruneDate))\r\n//            {\r\n//                Grapevine.RemoveBiomass(\"Prune\");\r\n//                object NotHarvested = 1;\r\n//                zone.Set(\"Grapevine.Fruit.DMDemands.Structural.PartitionFraction.FruitGrowth.Fraction.NotHarvested.FixedValue\", NotHarvested);\r\n//            }\r\n     }\r\n        \r\n    }\r\n}\r\n",
-                          "Parameters": [
-                            {
-                              "Key": "HarvestDate",
-                              "Value": "15-Apr"
-                            },
-                            {
-                              "Key": "PruneDate",
-                              "Value": "1-Jun"
-                            }
-                          ],
-                          "Name": "HarvestNPrune",
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Operations, Models",
                           "Operation": null,
                           "Name": "VineIrrigation",
@@ -14774,22 +15350,30 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        [Description(\"LeafRemovalDate\")]\r\n        public DateTime LeafRemovalDate { get; set; }\r\n\r\n\r\n        [Description(\"LeafRemoval_DAWS\")]         \r\n        public int LeafRemoval_DAWS { get; set; }  //day\r\n\r\n        [Description(\"LeafRanksToRemain\")]         \r\n        public int TargetLeafRank { get; set; }  //mm\r\n\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n                \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {                      \r\n            //if (weather.DaysSinceWinterSolstice == LeafRemoval_DAWS && Grapevine.Phenology.Stage >= 4)\r\n           if (Clock.Today.Date ==LeafRemovalDate)\r\n            {\r\n                   \r\n                int LeafTipsAppeared = (int)Grapevine.Structure.LeafTipsAppeared;\r\n                int NodesToRemove = (int)Math.Max(LeafTipsAppeared - TargetLeafRank, 1); \r\n                double FractionToRemove = 0.3; //1- TargetLeafRank/LeafTipsAppeared;\r\n\r\n                Remove.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n          //      Remove.SetFractionToRemove(\"Shoot\", 0);\r\n          //      Remove.SetFractionToRemove(\"Cordon\", 0);\r\n          //      Remove.SetFractionToRemove(\"Trunk\", 0);\r\n          //      Remove.SetFractionToRemove(\"Root\", 0);\r\n          //      Remove.SetFractionToRemove(\"Berry\", 0);\r\n\r\n                Remove.SetFractionToResidue(\"Leaf\", FractionToRemove, \"live\");\r\n         //       Remove.SetFractionToResidue(\"Shoot\", FractionToRemove);\r\n         //       Remove.SetFractionToResidue(\"Cordon\", 0);\r\n         //       Remove.SetFractionToResidue(\"Trunk\", 0);\r\n         //       Remove.SetFractionToResidue(\"Root\", 0);\r\n         //       Remove.SetFractionToResidue(\"Berry\", 0);\r\n\r\n                Remove.NodesToRemove = NodesToRemove;\r\n                Grapevine.RemoveBiomass(\"Cut\", Remove);\r\n\r\n            }\r\n\r\n//            {\r\n//            zone.Set(\"Grapevine.Cordon.CordonDiameter.FixedValue\", CordonDiameter);   \r\n//            //calculate the biomass by length 1 meter time 2 cordons time density (0.0005 g/mm3)\r\n//            zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", 3.14*(CordonDiameter/2)*(CordonDiameter/2)*2000*0.0005); \r\n//\r\n//                }\r\n\r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
+                          "Code": "using System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        [Description(\"SummerPruning_DAWS\")]         \r\n        public int LeafPluckingDAWS { get; set; }  //day\r\n\r\n        [Description(\"LeafRanksToRemain\")]         \r\n        public int TargetLeafRank { get; set; }  //Number\r\n\r\n        [Description(\"Harvest_DAWS\")]\r\n        public int HarvestDAWS { get; set; }\r\n\r\n        [Description(\"Pruning_DAWS\")]         \r\n        public int PruningDAWS { get; set; }  //day\r\n\r\n        [Description(\"CordonDiameter_mm\")]         \r\n        public double CordonDiameter { get; set; }  //mm\r\n\r\n\r\n        [XmlIgnore] private RemovalFractions Remove_1 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_2 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_3 { get; set; }\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove_1 = new RemovalFractions();\r\n            Remove_2 = new RemovalFractions();\r\n            Remove_3 = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n    \t     //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n    \t     //PruneDate = DateTime.Parse(PruneDateString);\r\n    \t     if (weather.DaysSinceWinterSolstice == LeafPluckingDAWS && Grapevine.Phenology.Stage >= 3)\r\n    \t     {\r\n    \t            \r\n    \t        int LeafTipsAppeared = (int)Grapevine.Structure.LeafTipsAppeared;\r\n    \t        int NodesToRemove = (int)Math.Max(LeafTipsAppeared - TargetLeafRank, 1); \r\n    \t        double FractionToRemove = 0.3; //1- TargetLeafRank/LeafTipsAppeared;\r\n\t\t\t\r\n    \t        Remove_1.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n    \t        Remove_1.SetFractionToRemove(\"Shoot\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Cordon\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Trunk\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Root\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Berry\", 0);\r\n\t\t\t\r\n    \t        Remove_1.SetFractionToResidue(\"Leaf\", FractionToRemove, \"live\");\r\n    \t        Remove_1.SetFractionToResidue(\"Shoot\", FractionToRemove);\r\n    \t        Remove_1.SetFractionToResidue(\"Cordon\", 0);\r\n    \t        Remove_1.SetFractionToResidue(\"Trunk\", 0);\r\n    \t        Remove_1.SetFractionToResidue(\"Root\", 0);\r\n    \t        Remove_1.SetFractionToResidue(\"Berry\", 0);\r\n\t\t\t\r\n    \t       // Remove_1.NodesToRemove = NodesToRemove;\r\n    \t        Grapevine.RemoveBiomass(\"LeafPluck\", Remove_1);\r\n\t\t\r\n    \t     }\r\n\r\n           if (weather.DaysSinceWinterSolstice == HarvestDAWS && Grapevine.Phenology.Stage >= 3)\r\n           {\r\n           \tdouble FractionToRemove = 0; //1- TargetLeafRank/LeafTipsAppeared;\r\n\t\t \r\n               Remove_2.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n               Remove_2.SetFractionToRemove(\"Shoot\",  0);\r\n               Remove_2.SetFractionToRemove(\"Cordon\", 0);\r\n               Remove_2.SetFractionToRemove(\"Trunk\",  0);\r\n               Remove_2.SetFractionToRemove(\"Root\",   0);\r\n               Remove_2.SetFractionToRemove(\"Berry\",  1);\r\n\t\t \r\n               Remove_2.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n               Remove_2.SetFractionToResidue(\"Shoot\",  0);\r\n               Remove_2.SetFractionToResidue(\"Cordon\", 0);\r\n               Remove_2.SetFractionToResidue(\"Trunk\",  0);\r\n               Remove_2.SetFractionToResidue(\"Root\",   0);\r\n               Remove_2.SetFractionToResidue(\"Berry\",  0);\r\n\t\t \r\n               Grapevine.RemoveBiomass(\"LeafPluck\", Remove_2);\r\n           }\r\n                                   \r\n            if (weather.DaysSinceWinterSolstice == PruningDAWS&& Grapevine.Phenology.Stage >= 3)\r\n            {\r\n                Remove_3.SetPhenologyStage = 1;\r\n\r\n                double FractionToRemove = 1; //1- TargetLeafRank/LeafTipsAppeared;\r\n\r\n                Remove_3.SetFractionToRemove(\"Leaf\",   0, \"live\");\r\n                Remove_3.SetFractionToRemove(\"Shoot\",  0);\r\n                Remove_3.SetFractionToRemove(\"Cordon\", 0);\r\n                Remove_3.SetFractionToRemove(\"Trunk\",  0);\r\n                Remove_3.SetFractionToRemove(\"Root\",   0);\r\n                Remove_3.SetFractionToRemove(\"Berry\",  0);\r\n\r\n                Remove_3.SetFractionToResidue(\"Leaf\",   1, \"live\");\r\n                Remove_3.SetFractionToResidue(\"Shoot\",  0.8);\r\n                Remove_3.SetFractionToResidue(\"Cordon\", 1);\r\n                Remove_3.SetFractionToResidue(\"Trunk\",  0);\r\n                Remove_3.SetFractionToResidue(\"Root\",   0);\r\n                Remove_3.SetFractionToResidue(\"Berry\",  0);\r\n\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove_3);\r\n            }\r\n\r\n            {\r\n\t            zone.Set(\"Grapevine.Cordon.CordonDiameter.FixedValue\", CordonDiameter);   \r\n\t            //calculate the biomass by length 1 meter time 2 cordons time density (0.0005 g/mm3)\r\n\t            zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", 3.14*(CordonDiameter/2)*(CordonDiameter/2)*2000*0.0005); \r\n\r\n             }\r\n\r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
                           "Parameters": [
                             {
-                              "Key": "LeafRemovalDate",
-                              "Value": "01/11/2003 00:00:00"
-                            },
-                            {
-                              "Key": "LeafRemoval_DAWS",
+                              "Key": "LeafPluckingDAWS",
                               "Value": "205"
                             },
                             {
                               "Key": "TargetLeafRank",
-                              "Value": "17"
+                              "Value": "20"
+                            },
+                            {
+                              "Key": "HarvestDAWS",
+                              "Value": "290"
+                            },
+                            {
+                              "Key": "PruningDAWS",
+                              "Value": "314"
+                            },
+                            {
+                              "Key": "CordonDiameter",
+                              "Value": "10"
                             }
                           ],
-                          "Name": "LeafRemoval",
+                          "Name": "HarvestNPruning",
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -21193,7 +21777,9 @@
                             "[Irrigation].IrrigationApplied",
                             "[Soil].SoilWater.Drainage",
                             "",
-                            "",
+                            "[Row].Grapevine.Structure.TotalLeavesPerShoot",
+                            "[Row].Grapevine.Leaf.LAIMainStem/[Grapevine].Structure.MainStemPopn as LAIMeanMainStem",
+                            "[Row].Grapevine.Leaf.LAIBranch/[Grapevine].Structure.MainStemPopn as LAIMeanLateral",
                             "",
                             "[Grapevine].Phenology.CurrentSeason as CurrentSeason",
                             "[Grapevine].Phenology.Stage",
@@ -21207,8 +21793,6 @@
                             "[Grapevine].Structure.MainStemPopn",
                             "[Grapevine].Structure.LeafTipsAppeared",
                             "[Grapevine].Leaf.LAI",
-                            "[Row].Grapevine.Leaf.LAIMainStem/[Grapevine].Structure.MainStemPopn as LAIMeanMainStem",
-                            "[Row].Grapevine.Leaf.LAIBranch/[Grapevine].Structure.MainStemPopn as LAIMeanLateral",
                             "[Grapevine].Leaf.InitialisedCohortNo",
                             "[Grapevine].Leaf.DeadCohortNo",
                             "[Grapevine].Leaf.AppearedCohortNo",
@@ -21226,8 +21810,13 @@
                             "[Grapevine].Arbitrator.DM.TotalFixationSupply",
                             "",
                             "[Berry].Live.Wt",
-                            "[Berry].BerryFreshWeight",
+                            "[Berry].SingleBerryDW",
+                            "[Berry].SingleBerryFW",
+                            "[Berry].TotalBerryFW",
                             "[Berry].NumberFunction",
+                            "[Berry].ThermalTimeAfterFlowering",
+                            "[Berry].WaterContent",
+                            "[Berry].Brix",
                             "[Berry].MetFactors.BUN_TmaxIni1 as BUN_TmaxIni",
                             "[Berry].MetFactors.BUN_RadIni1 as BUN_RadIni",
                             "[Berry].MetFactors.BEN_RainTotFlow as BEN_RainTotFlow",
@@ -21238,9 +21827,9 @@
                             "[Berry].MetFactors.BM_RainTotVer as BM_RainTotVer",
                             "[Berry].MetFactors.BM_TmeanFlow as BM_TmeanFlow",
                             "",
-                            "[Berry].YieldComponent.BunchesPerVine as BunchesPerVine",
+                            "[Berry].YieldComponent.BunchesPerVine as bunch.no.vine",
                             "[Berry].YieldComponent.BerryNum as BerryNum",
-                            "[Berry].YieldComponent.BerryMass as BerryMass"
+                            "[Berry].YieldComponent.BerryMass as berry.fw.mean"
                           ],
                           "EventNames": [
                             "[Clock].DoReport"
@@ -21267,24 +21856,6 @@
                           "ResourceName": null,
                           "Name": "Grapevine",
                           "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Manager, Models",
-                          "Code": "using System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n       \r\n        [Description(\"Pruning_DAWS\")]         \r\n        public int Pruning_DAWS { get; set; }  //day\r\n\r\n        [Description(\"CordonDiameter_mm\")]         \r\n        public double CordonDiameter { get; set; }  //mm\r\n\r\n        [XmlIgnore] private DateTime PruneDate { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            //PruneDate = DateTime.Parse(PruneDateString);\r\n                        \r\n            if (weather.DaysSinceWinterSolstice == Pruning_DAWS)\r\n            {\r\n                Remove.SetPhenologyStage = 1;\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove);\r\n            }\r\n\r\n            {\r\n            zone.Set(\"Grapevine.Cordon.CordonDiameter.FixedValue\", CordonDiameter);   \r\n            //calculate the biomass by length 1 meter time 2 cordons time density (0.0005 g/mm3)\r\n            zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", 3.14*(CordonDiameter/2)*(CordonDiameter/2)*2000*0.0005); \r\n\r\n                }\r\n\r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
-                          "Parameters": [
-                            {
-                              "Key": "Pruning_DAWS",
-                              "Value": "314"
-                            },
-                            {
-                              "Key": "CordonDiameter",
-                              "Value": "10"
-                            }
-                          ],
-                          "Name": "Pruning",
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -21383,38 +21954,6 @@
                             }
                           ],
                           "Name": "SetupTreeRootZones",
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Manager, Models",
-                          "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n       [Link] Irrigation irrigation;\r\n        public void applyDripIrri(double amount)\r\n        {\r\n            double layerAmount = amount/4;\r\n            irrigation.Apply(layerAmount, 0);\r\n            irrigation.Apply(layerAmount*2, 220);\r\n            irrigation.Apply(layerAmount, 420);\r\n\r\n        }\r\n        public double totalIrrigation {get; set;}\r\n        [EventSubscribe(\"Irrigated\")]\r\n        private void OnIrrigated(object sender, \r\n        IrrigationApplicationType irrigData)\r\n        {\r\n            totalIrrigation += irrigData.Amount;\r\n         }\r\n    }\r\n}\r\n       \r\n",
-                          "Parameters": [
-                            {
-                              "Key": "totalIrrigation",
-                              "Value": "0"
-                            }
-                          ],
-                          "Name": "DripIrrigator",
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Manager, Models",
-                          "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Plant Grapevine;\r\n        [Link] Summary Summary;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Harvest date (d-mmm)\")]\r\n        public string HarvestDate { get; set; }\r\n        [Description(\"Pruning date (d-mmm)\")]\r\n        public string PruneDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n//            if (DateUtilities.WithinDates(HarvestDate, Clock.Today, HarvestDate))\r\n//            {\r\n//                Grapevine.RemoveBiomass(\"Harvest\");\r\n//                object NotHarvested = 0;\r\n//                zone.Set(\"Grapevine.Fruit.DMDemands.Structural.PartitionFraction.FruitGrowth.Fraction.NotHarvested.FixedValue\", NotHarvested);\r\n//            }\r\n//\r\n//            if (DateUtilities.WithinDates(PruneDate, Clock.Today, PruneDate))\r\n//            {\r\n//                Grapevine.RemoveBiomass(\"Prune\");\r\n//                object NotHarvested = 1;\r\n//                zone.Set(\"Grapevine.Fruit.DMDemands.Structural.PartitionFraction.FruitGrowth.Fraction.NotHarvested.FixedValue\", NotHarvested);\r\n//            }\r\n     }\r\n        \r\n    }\r\n}\r\n",
-                          "Parameters": [
-                            {
-                              "Key": "HarvestDate",
-                              "Value": "15-Apr"
-                            },
-                            {
-                              "Key": "PruneDate",
-                              "Value": "1-Jun"
-                            }
-                          ],
-                          "Name": "HarvestNPrune",
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -22001,6 +22540,50 @@
                             }
                           ],
                           "Name": "PlantVariables",
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Manager, Models",
+                          "Code": "using System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        [Description(\"SummerPruning_DAWS\")]         \r\n        public int LeafPluckingDAWS { get; set; }  //day\r\n\r\n        [Description(\"LeafRanksToRemain\")]         \r\n        public int TargetLeafRank { get; set; }  //Number\r\n\r\n        [Description(\"Harvest_DAWS\")]\r\n        public int HarvestDAWS { get; set; }\r\n\r\n        [Description(\"Pruning_DAWS\")]         \r\n        public int PruningDAWS { get; set; }  //day\r\n\r\n        [Description(\"CordonDiameter_mm\")]         \r\n        public double CordonDiameter { get; set; }  //mm\r\n\r\n\r\n        [XmlIgnore] private RemovalFractions Remove_1 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_2 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_3 { get; set; }\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove_1 = new RemovalFractions();\r\n            Remove_2 = new RemovalFractions();\r\n            Remove_3 = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n    \t     //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n    \t     //PruneDate = DateTime.Parse(PruneDateString);\r\n    \t     if (weather.DaysSinceWinterSolstice == LeafPluckingDAWS && Grapevine.Phenology.Stage >= 3)\r\n    \t     {\r\n    \t            \r\n    \t        int LeafTipsAppeared = (int)Grapevine.Structure.LeafTipsAppeared;\r\n    \t        int NodesToRemove = (int)Math.Max(LeafTipsAppeared - TargetLeafRank, 1); \r\n    \t        double FractionToRemove = 0.3; //1- TargetLeafRank/LeafTipsAppeared;\r\n\t\t\t\r\n    \t        Remove_1.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n    \t        Remove_1.SetFractionToRemove(\"Shoot\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Cordon\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Trunk\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Root\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Berry\", 0);\r\n\t\t\t\r\n    \t        Remove_1.SetFractionToResidue(\"Leaf\", FractionToRemove, \"live\");\r\n    \t        Remove_1.SetFractionToResidue(\"Shoot\", FractionToRemove);\r\n    \t        Remove_1.SetFractionToResidue(\"Cordon\", 0);\r\n    \t        Remove_1.SetFractionToResidue(\"Trunk\", 0);\r\n    \t        Remove_1.SetFractionToResidue(\"Root\", 0);\r\n    \t        Remove_1.SetFractionToResidue(\"Berry\", 0);\r\n\t\t\t\r\n    \t       // Remove_1.NodesToRemove = NodesToRemove;\r\n    \t        Grapevine.RemoveBiomass(\"LeafPluck\", Remove_1);\r\n\t\t\r\n    \t     }\r\n\r\n           if (weather.DaysSinceWinterSolstice == HarvestDAWS && Grapevine.Phenology.Stage >= 3)\r\n           {\r\n           \tdouble FractionToRemove = 0; //1- TargetLeafRank/LeafTipsAppeared;\r\n\t\t \r\n               Remove_2.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n               Remove_2.SetFractionToRemove(\"Shoot\",  0);\r\n               Remove_2.SetFractionToRemove(\"Cordon\", 0);\r\n               Remove_2.SetFractionToRemove(\"Trunk\",  0);\r\n               Remove_2.SetFractionToRemove(\"Root\",   0);\r\n               Remove_2.SetFractionToRemove(\"Berry\",  1);\r\n\t\t \r\n               Remove_2.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n               Remove_2.SetFractionToResidue(\"Shoot\",  0);\r\n               Remove_2.SetFractionToResidue(\"Cordon\", 0);\r\n               Remove_2.SetFractionToResidue(\"Trunk\",  0);\r\n               Remove_2.SetFractionToResidue(\"Root\",   0);\r\n               Remove_2.SetFractionToResidue(\"Berry\",  0);\r\n\t\t \r\n               Grapevine.RemoveBiomass(\"LeafPluck\", Remove_2);\r\n           }\r\n                                   \r\n            if (weather.DaysSinceWinterSolstice == PruningDAWS&& Grapevine.Phenology.Stage >= 3)\r\n            {\r\n                Remove_3.SetPhenologyStage = 1;\r\n\r\n                double FractionToRemove = 1; //1- TargetLeafRank/LeafTipsAppeared;\r\n\r\n                Remove_3.SetFractionToRemove(\"Leaf\",   0, \"live\");\r\n                Remove_3.SetFractionToRemove(\"Shoot\",  0);\r\n                Remove_3.SetFractionToRemove(\"Cordon\", 0);\r\n                Remove_3.SetFractionToRemove(\"Trunk\",  0);\r\n                Remove_3.SetFractionToRemove(\"Root\",   0);\r\n                Remove_3.SetFractionToRemove(\"Berry\",  0);\r\n\r\n                Remove_3.SetFractionToResidue(\"Leaf\",   1, \"live\");\r\n                Remove_3.SetFractionToResidue(\"Shoot\",  0.8);\r\n                Remove_3.SetFractionToResidue(\"Cordon\", 1);\r\n                Remove_3.SetFractionToResidue(\"Trunk\",  0);\r\n                Remove_3.SetFractionToResidue(\"Root\",   0);\r\n                Remove_3.SetFractionToResidue(\"Berry\",  0);\r\n\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove_3);\r\n            }\r\n\r\n            {\r\n\t            zone.Set(\"Grapevine.Cordon.CordonDiameter.FixedValue\", CordonDiameter);   \r\n\t            //calculate the biomass by length 1 meter time 2 cordons time density (0.0005 g/mm3)\r\n\t            zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", 3.14*(CordonDiameter/2)*(CordonDiameter/2)*2000*0.0005); \r\n\r\n             }\r\n\r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
+                          "Parameters": [
+                            {
+                              "Key": "LeafPluckingDAWS",
+                              "Value": "205"
+                            },
+                            {
+                              "Key": "TargetLeafRank",
+                              "Value": "20"
+                            },
+                            {
+                              "Key": "HarvestDAWS",
+                              "Value": "290"
+                            },
+                            {
+                              "Key": "PruningDAWS",
+                              "Value": "314"
+                            },
+                            {
+                              "Key": "CordonDiameter",
+                              "Value": "10"
+                            }
+                          ],
+                          "Name": "HarvestNPruning",
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Manager, Models",
+                          "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n       [Link] Irrigation irrigation;\r\n        public void applyDripIrri(double amount)\r\n        {\r\n            double layerAmount = amount/4;\r\n            irrigation.Apply(layerAmount, 0);\r\n            irrigation.Apply(layerAmount*2, 220);\r\n            irrigation.Apply(layerAmount, 420);\r\n\r\n        }\r\n        public double totalIrrigation {get; set;}\r\n        [EventSubscribe(\"Irrigated\")]\r\n        private void OnIrrigated(object sender, \r\n        IrrigationApplicationType irrigData)\r\n        {\r\n            totalIrrigation += irrigData.Amount;\r\n         }\r\n    }\r\n}\r\n       \r\n",
+                          "Parameters": [
+                            {
+                              "Key": "totalIrrigation",
+                              "Value": "0"
+                            }
+                          ],
+                          "Name": "DripIrrigator",
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false

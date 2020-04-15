@@ -69,6 +69,29 @@ namespace Models.CLEM.Activities
             }
         }
 
+        ZoneCLEM parentZone = null;
+        /// <summary>
+        /// Multiplier for farms in this zone
+        /// </summary>
+        public double FarmMultiplier 
+        {
+            get
+            {
+                if(parentZone is null)
+                {
+                    parentZone = Apsim.Parent(this, typeof(ZoneCLEM)) as ZoneCLEM;
+                }
+                if(parentZone is null)
+                {
+                    return 1;
+                }
+                else
+                {
+                    return parentZone.FarmMultiplier;
+                }
+            }
+        }
+
         /// <summary>
         /// Resource allocation style
         /// </summary>
