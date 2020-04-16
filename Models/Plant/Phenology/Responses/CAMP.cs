@@ -127,6 +127,8 @@ namespace Models.PMF.Phen
         /// <summary></summary>
         [JsonIgnore] public double FLN { get; private set; }
 
+        private double Vrn1atVS { get; set; }
+
 
         [EventSubscribe("PrePhenology")]
         private void OnPrePhenology(object sender, EventArgs e)
@@ -159,21 +161,25 @@ namespace Models.PMF.Phen
                 Vrn2 += dVrn2;
                 Vrn1Target = 1.0 + Vrn2;
 
+                // The work out if vernalisation is complete
+                if ((MethVrn1 >= Vrn1Target) && (HS >= 1.1) && (IsVernalised == false))
+                {
+                    IsVernalised = true;
+                    Vrn1atVS = MethVrn1;
+                }
+
                 // Then work out Vrn3 expression
                 if ((IsVernalised == true) && (HS >= 1.1) && (IsReproductive == false))
                     dVrn3 = CalcdPPVrn(Pp.Value(), BasedVrn3.Value(), MUdVrn3, Tt.Value());
                 Vrn3 = Math.Min(1.0, Vrn3 + dVrn3);
 
-                // Then work out Vrn3 expression effects on  Vrn1 expression
-                if (IsVernalised == true)
-                    Vrn1 += dVrn3;
+                // Then add Vrn3 expression effects to Vrn1 upregulation
+                Vrn1 += dVrn3;
 
                 // Then work out phase progression based on Vrn expression
-                if ((MethVrn1 >= Vrn1Target) && (HS >= 1.1) && (IsVernalised == false))
-                    IsVernalised = true;
-                if ((Vrn1 >= (Vrn1Target + 0.3)) && (IsInduced == false))
+                if ((Vrn1 >= (Vrn1atVS + 0.3)) && (IsInduced == false))
                     IsInduced = true;
-                if ((Vrn1 >= (Vrn1Target + 1.0)) && (IsReproductive == false))
+                if ((Vrn1 >= (Vrn1atVS + 1.0)) && (IsReproductive == false))
                     IsReproductive = true;
                 if (IsInduced == false)
                     FIHS = HS;
@@ -222,6 +228,7 @@ namespace Models.PMF.Phen
             FLN = 2.86;
             Vrn1Target = 1.0;
             ZeroDeltas();
+            Vrn1atVS = 100;
         }
         private void ZeroDeltas()
         {
