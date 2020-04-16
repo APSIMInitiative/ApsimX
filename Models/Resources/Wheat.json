@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 92,
+  "Version": 93,
   "Name": "Simulations",
   "Children": [
     {
@@ -283,7 +283,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Structure].DeltaHaunStage",
+                  "VariableName": "[Phenology].HaunStage.Delta",
                   "Name": "DeltaHaunStage",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -587,29 +587,49 @@
               "Name": "HaunStage",
               "Children": [
                 {
-                  "$type": "Models.Functions.DivideFunction, Models",
-                  "Name": "DeltaLeaf",
+                  "$type": "Models.Functions.PhaseLookup, Models",
+                  "Name": "Delta",
                   "Children": [
                     {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime",
-                      "Name": "ThermalTime",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Structure].Phyllochron",
-                      "Name": "Phyllochron",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "Germination",
+                      "End": "HarvestRipe",
+                      "Name": "Growing",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.DivideFunction, Models",
+                          "Name": "Value",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Phenology].ThermalTime",
+                              "Name": "ThermalTime",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Structure].Phyllochron",
+                              "Name": "Phyllochron",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
