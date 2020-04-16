@@ -26,7 +26,24 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// A link to the equivalent market store for trading.
         /// </summary>
-        protected CLEMResourceTypeBase equivalentMarketStore { get; set; }
+        [XmlIgnore]
+        public CLEMResourceTypeBase EquivalentMarketStore { get; set; }
+
+        /// <summary>
+        /// Has a market store been found
+        /// </summary>
+        [XmlIgnore]
+        public bool MarketStoreExists 
+        { 
+            get 
+            { 
+                if(!equivalentMarketStoreDetermined)
+                {
+                    FindEquivalentMarketStore();
+                }
+                return !(EquivalentMarketStore is null); 
+            } 
+        }
 
         /// <summary>
         /// Detemrines if an equivalent resource has been found in the market
@@ -41,37 +58,35 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return Apsim.Children(this, typeof(Transmutation)).Count() > 0;
+                return Apsim.Children(this, typeof(Transmutation)).Where(a => a.Enabled).Count() > 0;
             }
         }
 
         /// <summary>
         /// Does pricing exist for this type
         /// </summary>
-        public bool PricingExists 
+        public bool PricingExists(PurchaseOrSalePricingStyleType priceType)
         {
-            get
-            {
-                // find pricing that is ok;
-                return Apsim.Children(this, typeof(ResourcePricing)).Where(a => (a as ResourcePricing).TimingOK).FirstOrDefault() != null;
-            }
+            // find pricing that is ok;
+            return Apsim.Children(this, typeof(ResourcePricing)).Where(a => a.Enabled & ((a as ResourcePricing).PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | (a as ResourcePricing).PurchaseOrSale == priceType) && (a as ResourcePricing).TimingOK).FirstOrDefault() != null;
         }
 
         /// <summary>
         /// Resource price
         /// </summary>
-        public ResourcePricing Price
+        public ResourcePricing Price(PurchaseOrSalePricingStyleType priceType)
         {
-            get
+            // find pricing that is ok;
+            ResourcePricing price = Apsim.Children(this, typeof(ResourcePricing)).Where(a => a.Enabled & ((a as ResourcePricing).PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | (a as ResourcePricing).PurchaseOrSale == priceType) && (a as ResourcePricing).TimingOK).FirstOrDefault() as ResourcePricing;
+
+            // does simulation have finance
+            ResourcesHolder resources = Apsim.Parent(this, typeof(ResourcesHolder)) as ResourcesHolder;
+            bool financesPresent = (resources.FinanceResource() != null);
+
+            if (price == null)
             {
-                // find pricing that is ok;
-                ResourcePricing price = Apsim.Children(this, typeof(ResourcePricing)).Where(a => (a as ResourcePricing).TimingOK).FirstOrDefault() as ResourcePricing;
-
-                var q = Apsim.Children(this, typeof(ResourcePricing));
-                var r = q.Where(a => (a as ResourcePricing).TimingOK);
-
-                if (price == null)
-                {
+                if (financesPresent)
+                { 
                     string warn = "No pricing is available for [r=" + this.Parent.Name + "." + this.Name + "]";
                     if (Apsim.Children(this, typeof(ResourcePricing)).Count > 0)
                     {
@@ -84,10 +99,10 @@ namespace Models.CLEM.Resources
                         Summary.WriteWarning(this, warn);
                         Warnings.Add(warn);
                     }
-                    return new ResourcePricing() { PricePerPacket=0, PacketSize=1, UseWholePackets=true };
                 }
-                return price;
+                return new ResourcePricing() { PricePerPacket=0, PacketSize=1, UseWholePackets=true };
             }
+            return price;
         }
 
         /// <summary>
@@ -99,10 +114,23 @@ namespace Models.CLEM.Resources
         public object ConvertTo(string converterName, double amount)
         {
             // get converted value
-            if(converterName=="$")
+            if(converterName.StartsWith("$"))
             {
                 // calculate price as special case using pricing structure if present.
-                ResourcePricing price = Price;
+                ResourcePricing price;
+                switch (converterName)
+                {
+                    case "$+":
+                        price = Price(PurchaseOrSalePricingStyleType.Purchase);
+                        break;
+                    case "$-":
+                        price = Price(PurchaseOrSalePricingStyleType.Sale);
+                        break;
+                    default:
+                        price = Price(PurchaseOrSalePricingStyleType.Both);
+                        break;
+                }
+
                 if(price.PricePerPacket > 0)
                 {
                     double packets = amount / price.PacketSize;
@@ -190,7 +218,7 @@ namespace Models.CLEM.Resources
             if(!equivalentMarketStoreDetermined)
             {
                 // havent already found a market store
-                if(equivalentMarketStore is null)
+                if(EquivalentMarketStore is null)
                 {
                     // is there a market
                     Market market = FindMarket();
@@ -204,12 +232,13 @@ namespace Models.CLEM.Resources
                             holder.ResourceTypeExists(this, out store);
                             if (store != null)
                             {
-                                equivalentMarketStore = store as CLEMResourceTypeBase;
+                                EquivalentMarketStore = store as CLEMResourceTypeBase;
                             }
                         }
 
                     }
                 }
+                equivalentMarketStoreDetermined = true;
             }
         }
 

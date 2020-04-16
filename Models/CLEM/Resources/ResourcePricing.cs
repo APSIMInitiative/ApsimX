@@ -26,6 +26,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(ProductStoreTypeManure))]
     [ValidParent(ParentType = typeof(WaterType))]
     [Description("This component defines the pricing of a resource type")]
+    [Version(1, 0, 2, "Includes option to specify sale and purchase pricing")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/ResourcePricing.htm")]
     public class ResourcePricing : CLEMModel
@@ -50,6 +51,14 @@ namespace Models.CLEM.Resources
         [Description("Price per packet")]
         [Required]
         public double PricePerPacket { get; set; }
+
+        /// <summary>
+        /// Determine whether this is a purchase or sale price, or both
+        /// </summary>
+        [Description("Purchase or sale price")]
+        [System.ComponentModel.DefaultValueAttribute(PurchaseOrSalePricingStyleType.Both)]
+        [Required]
+        public PurchaseOrSalePricingStyleType PurchaseOrSale { get; set; }
 
         /// <summary>
         /// Is the packet currently available
@@ -83,6 +92,24 @@ namespace Models.CLEM.Resources
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "\n<div class=\"activityentry\">";
+            html += "\nThis is a <span class=\"setvalue\">";
+            switch (PurchaseOrSale)
+            {
+                case PurchaseOrSalePricingStyleType.Both:
+                    html += "purchase and sell";
+                    break;
+                case PurchaseOrSalePricingStyleType.Purchase:
+                    html += "purchase";
+                    break;
+                case PurchaseOrSalePricingStyleType.Sale:
+                    html += "sell";
+                    break;
+                default:
+                    break;
+            }
+            html += "</span> price</div>";
+
+            html += "\n<div class=\"activityentry\">";
             html += "\nThis resource is managed ";
             if (UseWholePackets)
             {
@@ -92,7 +119,7 @@ namespace Models.CLEM.Resources
             {
                 html += "in ";
             }
-            html += "packages of ";
+            html += "packets ";
             if (PacketSize > 0)
             {
                 html += "<span class=\"setvalue\">" + this.PacketSize.ToString("#.###") + "</span>";
@@ -101,7 +128,8 @@ namespace Models.CLEM.Resources
             {
                 html += "<span class=\"errorlink\">Not defined</span>";
             }
-            html += "\n</div>";
+            html += " unit" + ((this.PacketSize == 1) ? "" : "s");
+            html += " in size\n</div>";
 
             html += "\n<div class=\"activityentry\">\nEach packet is worth ";
             if (PricePerPacket > 0)
