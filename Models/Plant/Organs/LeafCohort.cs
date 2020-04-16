@@ -748,7 +748,7 @@ namespace Models.PMF.Organs
             IsAppeared = true;
 
             MaxArea = leafCohortParameters.MaxArea.Value() * CellDivisionStressFactor;
-            GrowthDuration = leafCohortParameters.GrowthDuration.Value() * cohortParams.FinalFraction;
+            GrowthDuration = leafCohortParameters.GrowthDuration.Value();
             LagDuration = leafCohortParameters.LagDuration.Value();
             SenescenceDuration = leafCohortParameters.SenescenceDuration.Value();
             DetachmentLagDuration = leafCohortParameters.DetachmentLagDuration.Value();
