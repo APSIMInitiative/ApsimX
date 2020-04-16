@@ -4086,8 +4086,6 @@
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            File.WriteAllText(@"C:\Users\holzworthdp\Work\Temp\New.json",
-                              ReflectionUtilities.JsonSerialise(stockModel.BaseParams, true));
             if (!this.paddocksGiven)
             {
                 // get the paddock areas from the simulation

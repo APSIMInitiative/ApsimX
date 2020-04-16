@@ -521,7 +521,7 @@
         /// <summary>
         /// Base parameters
         /// </summary>
-        private AnimalParamSet baseParams;
+        private AnimalParamSet baseParams = null;
 
         /// <summary>
         /// Set of genotype parameters
@@ -649,10 +649,10 @@
             //this.baseParams = null;
             //this.baseParams = StockList.MakeParamSet(fileName);
 
-            var allParams = ReflectionUtilities.GetResourceAsString("Models.Resources.Ruminant.json");
-            List<Exception> exceptions;
-            var simulations = FileFormat.ReadFromString<Simulations>(allParams, out exceptions);
-            baseParams = simulations.Children[0] as AnimalParamSet;
+            // var allParams = ReflectionUtilities.GetResourceAsString("Models.Resources.Ruminant.json");
+            // List<Exception> exceptions;
+            // var simulations = FileFormat.ReadFromString<Simulations>(allParams, out exceptions);
+            // baseParams = simulations.Children[0] as AnimalParamSet;
 
             this.paramFile = fileName;
         }
@@ -1488,7 +1488,7 @@
             for (jdx = 0; jdx <= breedInits.Length - 1; jdx++)
                 this.genotypeParams[idx + jdx] = this.ParamsFromGenotypeInits(this.baseParams, breedInits, jdx);
         }
-        
+
         /// <summary>
         /// Get the genotype count
         /// </summary>
@@ -1532,7 +1532,11 @@
                     result = this.genotypeParams[idx];
                 else
                 {
-                    srcParamSet = this.baseParams.Match(genoName);
+                    srcParamSet = ConvertPRMToJson.GetGenotype(genoName);
+                    srcParamSet.EnglishName = genoName;
+                    srcParamSet.DeriveParams();
+                    //srcParamSet.Initialise();
+
                     if (srcParamSet != null)
                     {
                         result = new AnimalParamSet(null, srcParamSet);
@@ -3726,24 +3730,11 @@
         /// <returns>The animal parametes</returns>
         private AnimalParamSet FindGenotype(AnimalParamSet mainParams, SingleGenotypeInits[] genoInits, string searchName, int searchBefore)
         {
-            AnimalParamSet result;
-            AnimalParamSet foundParams;
-            int idx;
-
-            idx = 0;
-            while ((idx < searchBefore) && (searchName.ToLower() != genoInits[idx].GenotypeName.ToLower()))
-                idx++;
-            if (idx < searchBefore)
-                result = this.ParamsFromGenotypeInits(mainParams, genoInits, idx);
-            else
-            {
-                foundParams = mainParams.Match(searchName);
-                if (foundParams != null)
-                    result = new AnimalParamSet(null, foundParams);
-                else
-                    throw new Exception("Breed name \"" + searchName + "\" not recognised");
-            }
-            return result;
+            var genotype = ConvertPRMToJson.GetGenotype(searchName);
+            genotype.EnglishName = genotype.Name;
+            genotype.DeriveParams();
+            genotype.Initialise();
+            return genotype;
         }
 
         /// <summary>
