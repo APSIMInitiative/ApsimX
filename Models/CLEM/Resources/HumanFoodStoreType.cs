@@ -183,9 +183,9 @@ namespace Models.CLEM.Resources
                 pool.Remove(amountToRemove, request.ActivityModel, "Consumed");
 
                 // send to market if needed
-                if(request.MarketTransactionMultiplier > 0 && equivalentMarketStore != null)
+                if(request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
                 {
-                    (equivalentMarketStore as HumanFoodStoreType).Add(new HumanFoodStorePool(amountToRemove* request.MarketTransactionMultiplier, pool.Age), request.ActivityModel, "Farm sales");
+                    (EquivalentMarketStore as HumanFoodStoreType).Add(new HumanFoodStorePool(amountToRemove* request.MarketTransactionMultiplier, pool.Age), request.ActivityModel, "Farm sales");
                 }
 
                 if (amountRequired <= 0)

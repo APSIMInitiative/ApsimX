@@ -366,6 +366,7 @@ namespace Models.CLEM
         /// <summary>
         /// Type of resource to use
         /// </summary>
+        [XmlIgnore]
         public Type ResourceType { get; set; }
 
         /// <summary>
@@ -402,6 +403,7 @@ namespace Models.CLEM
         /// <summary>
         /// Get the price object for this transmutation cost
         /// </summary>
+        [XmlIgnore]
         public ResourcePricing Pricing { get {return pricing; } }
 
         /// <summary>
@@ -420,6 +422,18 @@ namespace Models.CLEM
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
+
+            // get pricing if available
+            IResourceType parentResource = Apsim.Parent(this, typeof(CLEMResourceTypeBase)) as IResourceType;
+            if (parentResource != null)
+            {
+                pricing = parentResource.Price(PurchaseOrSalePricingStyleType.Purchase);
+            }
+            if(pricing is null)
+            {
+                string[] memberNames = new string[] { "Resource pricing" };
+                results.Add(new ValidationResult($"No resource pricing was found for [r={(parentResource as IModel).Name}] required for a price based transmutation [{this.Name}]", memberNames));
+            }
             return results;
         }
 
@@ -433,9 +447,6 @@ namespace Models.CLEM
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             ResourceType = typeof(Finance);
-
-            // get pricing if available
-            pricing = Apsim.Children(Apsim.Parent(this, typeof(IResourceType)), typeof(ResourcePricing)).FirstOrDefault() as ResourcePricing;
         }
 
         /// <summary>
@@ -448,12 +459,14 @@ namespace Models.CLEM
             string html = "";
 
             // get the pricing 
-            ResourcePricing price = Apsim.Children(Apsim.Parent(this, typeof(IResourceType)), typeof(ResourcePricing)).FirstOrDefault() as ResourcePricing;
+            var w = Apsim.Parent(this, typeof(CLEMResourceTypeBase)) as IResourceType;
+            bool multiPrice = Apsim.Children(w as IModel, typeof(ResourcePricing)).Count() > 1;
+            ResourcePricing price = w.Price(PurchaseOrSalePricingStyleType.Purchase);
             if (price!=null)
             {
                 html += "<div class=\"activityentry\">Use ";
                 html += (ResourceTypeName != null && ResourceTypeName != "") ? "<span class=\"resourcelink\">" + ResourceTypeName + "</span>" : "<span class=\"errorlink\">Account not set</span>";
-                html += " based upon the <span class=\"resourcelink\">" + price.Name+"</span> packet size and price for this resource</div>";
+                html += " based upon the " + (multiPrice ? "most suitable":"<span class=\"resourcelink\"> "+price.Name+"</span>") + " packet size and price for this resource</div>";
             }
             else
             {
