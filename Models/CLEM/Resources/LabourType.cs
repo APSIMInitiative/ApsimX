@@ -116,20 +116,6 @@ namespace Models.CLEM.Resources
                 foreach (LabourDietComponent dietComponent in DietaryComponentList)
                 {
                     value += dietComponent.GetTotal(metric);
-
-                    //double doubleResult = 0;
-                    //if(dietComponent.FoodStore is null)
-                    //{
-                    //    doubleResult = dietComponent.
-                    //}
-
-
-                    //var result = (dietComponent.FoodStore as CLEMResourceTypeBase).ConvertTo(metric, dietComponent.AmountConsumed);
-                    //if (result != null)
-                    //{
-                    //    Double.TryParse(result.ToString(), out doubleResult);
-                    //}
-                    //value += doubleResult;
                 }
             }
             return value;
