@@ -98,7 +98,7 @@ namespace Models.CLEM.Reporting
                             bool pricingIncluded = false;
                             if (model.GetType() == typeof(RuminantHerd))
                             {
-                                pricingIncluded = Apsim.ChildrenRecursively(model, typeof(AnimalPricing)).Count() > 0;
+                                pricingIncluded = Apsim.ChildrenRecursively(model, typeof(AnimalPricing)).Where(a => a.Enabled).Count() > 0;
 
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.ID as uID");
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.Breed as Breed");
@@ -115,7 +115,7 @@ namespace Models.CLEM.Reporting
                             }
                             else
                             {
-                                pricingIncluded = Apsim.ChildrenRecursively(model, typeof(ResourcePricing)).Count() > 0;
+                                pricingIncluded = Apsim.ChildrenRecursively(model, typeof(ResourcePricing)).Where(a => a.Enabled).Count() > 0;
 
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Gain as Gain");
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Loss * -1.0 as Loss");
