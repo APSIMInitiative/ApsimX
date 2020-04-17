@@ -26,7 +26,7 @@ namespace Models.PMF.Organs
         private Plant plant = null;
 
         /// <summary>The root organ</summary>
-        private  Root root = null;
+        private Root root = null;
 
         /// <summary>The root front velocity function</summary>
         private IFunction rootFrontVelocity;
@@ -100,10 +100,10 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets AvailableSW during SW Uptake
         /// Old Sorghum does actual uptake at end of day
         /// PMF does actual uptake before N uptake</summary>
-        public double[] AvailableSW { get;  set; }
+        public double[] AvailableSW { get; set; }
 
         /// <summary>Gets or sets PotentialAvailableSW during SW Uptake</summary>
-        public double[] PotentialAvailableSW { get;  set; }
+        public double[] PotentialAvailableSW { get; set; }
 
         /// <summary>Record the Water level before </summary>
         public double[] StartWater { get; set; }
@@ -112,10 +112,10 @@ namespace Models.PMF.Organs
         public double[] Supply { get; set; }
 
         /// <summary>Gets or sets MassFlow during NitrogenUptake Calcs</summary>
-        public double[] MassFlow { get;  set; }
+        public double[] MassFlow { get; set; }
 
         /// <summary>Gets or sets Diffusion during NitrogenUptake Calcs</summary>
-        public double[] Diffusion { get;  set; }
+        public double[] Diffusion { get; set; }
 
 
         /// <summary>Constructor</summary>
@@ -129,7 +129,7 @@ namespace Models.PMF.Organs
         /// <param name="rfv">Root front velocity</param>
         /// <param name="mrd">Maximum root depth</param>
         /// <param name="remobCost">Remobilisation cost</param>
-        public ZoneState(Plant Plant, Root Root, Soil soil, double depth, 
+        public ZoneState(Plant Plant, Root Root, Soil soil, double depth,
                          double initialDM, double population, double maxNConc,
                          IFunction rfv, IFunction mrd, IFunction remobCost)
         {
@@ -169,7 +169,7 @@ namespace Models.PMF.Organs
                 LayerLive[layer].StructuralWt = toMass[layer] * population;
                 LayerLive[layer].StructuralN = LayerLive[layer].StructuralWt * maxNConc;
             }
-            if(plant.SowingData != null)
+            if (plant.SowingData != null)
             {
                 LeftDist = plant.SowingData.RowSpacing * (plant.SowingData.SkipRow - 0.5);
                 RightDist = plant.SowingData.RowSpacing * 0.5;
@@ -253,14 +253,15 @@ namespace Models.PMF.Organs
         public double[] CalculateRootActivityValues()
         {
             double[] RAw = new double[soil.Thickness.Length];
+
             for (int layer = 0; layer < soil.Thickness.Length; layer++)
             {
                 if (layer <= soil.LayerIndexOfDepth(Depth))
                     if (LayerLive[layer].Wt > 0)
                     {
-                        RAw[layer] = - WaterUptake[layer] / LayerLive[layer].Wt
+                        RAw[layer] = -WaterUptake[layer] / LayerLive[layer].Wt
                                    * soil.Thickness[layer]
-                                   * soil.ProportionThroughLayer(layer, Depth);
+                                   * root.RootProportionInLayer(layer, this);
                         RAw[layer] = Math.Max(RAw[layer], 1e-20);  // Make sure small numbers to avoid lack of info for partitioning
                     }
                     else if (layer > 0)

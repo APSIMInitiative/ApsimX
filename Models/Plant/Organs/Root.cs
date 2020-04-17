@@ -577,7 +577,6 @@
                 Z.MetabolicNDemand = new double[Z.soil.Thickness.Length];
                 //Note: MetabolicN is assumed to be zero
 
-                double[] RAw = Z.CalculateRootActivityValues();
                 for (int i = 0; i < Z.LayerLive.Length; i++)
                 {
                     Z.StructuralNDemand[i] = NDemand.Structural;
@@ -820,26 +819,21 @@
                 var currentLayer = PlantZone.soil.LayerIndexOfDepth(Depth);
                 var soilCrop = myZone.soil.Crop(parentPlant.Name);
 
-                double[] kl = soilCrop.KL;
-                double[] ll = soilCrop.LL;
+                double[] KL = soilCrop.KL;
+                double[] LL = soilCrop.LL;
 
-                double[] lldep = new double[myZone.soil.Thickness.Length];
                 double[] available = new double[myZone.soil.Thickness.Length];
                 double[] supply = new double[myZone.soil.Thickness.Length];
 
-                var proportionInLayer = 1.0;
-                var klMod = 1.0;
                 LayerMidPointDepth = myZone.soil.DepthMidPoints;
 
                 for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
                 {
                     if (layer <= myZone.soil.LayerIndexOfDepth(myZone.Depth))
                     {
-                        lldep[layer] = ll[layer] * myZone.soil.Thickness[layer];
-                        available[layer] = Math.Max(zone.Water[layer] - lldep[layer], 0.0);
-                        proportionInLayer = rootProportionInLayer(layer, myZone);
-                        klMod = klModifier.Value(layer);
-                        supply[layer] = Math.Max(0.0, kl[layer] * klMod * KLModiferDueToDamage(layer) * available[layer] * proportionInLayer);
+                        available[layer] = Math.Max(zone.Water[layer] - LL[layer] * myZone.soil.Thickness[layer], 0.0);
+                        supply[layer] = Math.Max(0.0, KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) * available[layer] * 
+                            RootProportionInLayer(layer, myZone));
                     }
                 }
                 return supply;
@@ -849,7 +843,7 @@
         /// <summary>Calculate the proportion of root in a layer within a zone.</summary>
         /// <param name="layer">The zone.</param>
         /// <param name="zone">The zone.</param>
-        public double rootProportionInLayer(int layer, ZoneState zone)
+        public double RootProportionInLayer(int layer, ZoneState zone)
         {
             if (RootFrontCalcSwitch?.Value() >= 1.0)
             {
@@ -1085,7 +1079,7 @@
             {
                 if (layer <= PlantZone.soil.LayerIndexOfDepth(Depth))
                     supply += Math.Max(0.0, KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) * (SWmm[layer] - LL[layer] * DZ[layer]) *
-                        rootProportionInLayer(layer, PlantZone));
+                        RootProportionInLayer(layer, PlantZone));
             }
             return supply;
         }
@@ -1095,6 +1089,7 @@
         public double PlantAvailableWaterSupply()
         {
             var soilCrop = PlantZone.soil.Crop(parentPlant.Name);
+            var currentLayer = PlantZone.soil.LayerIndexOfDepth(Depth);
 
             double[] LL = soilCrop.LL;
             double[] KL = soilCrop.KL;
@@ -1103,34 +1098,15 @@
             double[] available = new double[PlantZone.soil.Thickness.Length];
             double[] supply = new double[PlantZone.soil.Thickness.Length];
 
-            var currentLayer = PlantZone.soil.LayerIndexOfDepth(Depth);
-            var layertop = MathUtilities.Sum(PlantZone.soil.Thickness, 0, Math.Max(0, currentLayer - 1));
-            var layerBottom = MathUtilities.Sum(PlantZone.soil.Thickness, 0, currentLayer);
-            var layerProportion = Math.Min(MathUtilities.Divide(Depth - layertop, layerBottom - layertop, 0.0), 1.0);
-
-            for (int layer = 0; layer < LL.Length; layer++)
-            {
-                if (layer <= currentLayer)
-                {
-                    available[layer] = Math.Max(0.0, SWmm[layer] - LL[layer] * DZ[layer]);
-                }
-            }
-            available[currentLayer] *= layerProportion;
-
             double supplyTotal = 0;
-            for (int layer = 0; layer < LL.Length; layer++)
+            for (int layer = 0; layer <= currentLayer; layer++)
             {
-                if (layer <= currentLayer)
-                {
-                    var propoortion = rootProportionInLayer(layer, PlantZone);
-                    var kl = KL[layer];
-                    var klmod = klModifier.Value(layer);
+                available[layer] = Math.Max(0.0, SWmm[layer] - LL[layer] * DZ[layer]);
 
-                    supply[layer] = Math.Max(0.0, available[layer] * KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
-                        rootProportionInLayer(layer, PlantZone));
+                supply[layer] = Math.Max(0.0, available[layer] * KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
+                    RootProportionInLayer(layer, PlantZone));
 
-                    supplyTotal += supply[layer];
-                }
+                supplyTotal += supply[layer];
             }
             return supplyTotal;
         }

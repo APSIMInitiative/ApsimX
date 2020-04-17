@@ -274,7 +274,7 @@ namespace Models.PMF
                         myZone.PotentialAvailableSW[layer] *= currentLayerProportion;
                     }
 
-                    var proportion = root.rootProportionInLayer(layer, myZone);
+                    var proportion = root.RootProportionInLayer(layer, myZone);
                     myZone.Supply[layer] = Math.Max(myZone.AvailableSW[layer] * kl[layer] * proportion, 0.0);
                 }
                 var totalAvail = myZone.AvailableSW.Sum();
