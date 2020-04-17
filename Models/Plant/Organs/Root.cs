@@ -964,7 +964,7 @@
                 depth = (zone.RootFront - top) / 2.0 + top;
                 depthInLayer = zone.RootFront - top;
             }
-            double xDist = zone.RootSpread * Math.Sqrt(1 - (Math.Pow(depth, 2) / Math.Pow(zone.RootFront, 2)));
+            double xDist = zone.RootSpread * depth / zone.RootFront;
 
             return Math.Min(depthInLayer * xDist, depthInLayer * hDist);
         }
