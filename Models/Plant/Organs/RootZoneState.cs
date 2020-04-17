@@ -220,19 +220,21 @@ namespace Models.PMF.Organs
             if (root.RootDepthStressFactor != null)
                 rootDepthWaterStress = root.RootDepthStressFactor.Value(RootLayer);
 
+            double[] xf = 1;
             if (soil.Weirdo == null)
             {
                 // Limit root depth for impeded layers
                 var soilCrop = soil.Crop(plant.Name);
+                xf = soilCrop.XF;
                 for (int i = 0; i < soil.Thickness.Length; i++)
                 {
-                    if (soilCrop.XF[i] > 0)
+                    if (xf[i] > 0)
                         MaxDepth += soil.Thickness[i];
                     else
                         break;
                 }
 
-                Depth += rootFrontVelocity.Value(RootLayer) * soilCrop.XF[RootLayer] * rootDepthWaterStress;
+                Depth += rootFrontVelocity.Value(RootLayer) * xf[RootLayer] * rootDepthWaterStress;
             }
             else
             {
