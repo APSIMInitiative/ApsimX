@@ -827,7 +827,7 @@
                 double[] available = new double[myZone.soil.Thickness.Length];
                 double[] supply = new double[myZone.soil.Thickness.Length];
 
-                var proportionThroughLayer = 1.0;
+                var proportionInLayer = 1.0;
                 var klMod = 1.0;
                 LayerMidPointDepth = myZone.soil.DepthMidPoints;
 
@@ -837,14 +837,9 @@
                     {
                         lldep[layer] = ll[layer] * myZone.soil.Thickness[layer];
                         available[layer] = Math.Max(zone.Water[layer] - lldep[layer], 0.0);
-                        if (currentLayer == layer)
-                        {
-                            var layerproportion = myZone.soil.ProportionThroughLayer(layer, myZone.Depth);
-                            available[layer] *= layerproportion;
-                        }
-                        proportionThroughLayer = rootProportionInLayer(layer, myZone);
+                        proportionInLayer = rootProportionInLayer(layer, myZone);
                         klMod = klModifier.Value(layer);
-                        supply[layer] = Math.Max(0.0, kl[layer] * klMod * KLModiferDueToDamage(layer) * available[layer] * proportionThroughLayer);
+                        supply[layer] = Math.Max(0.0, kl[layer] * klMod * KLModiferDueToDamage(layer) * available[layer] * proportionInLayer);
                     }
                 }
                 return supply;
@@ -879,7 +874,7 @@
                 else
                 {
                     rootArea = calcRootArea(zone, top, bottom, zone.RightDist);    // Right side
-                    rootArea += calcRootArea(zone, top, bottom, zone.LeftDist);          // Left Side
+                    rootArea += calcRootArea(zone, top, bottom, zone.LeftDist);    // Left Side
                 }
 
                 double soilArea = (zone.RightDist + zone.LeftDist) * (bottom - top);
