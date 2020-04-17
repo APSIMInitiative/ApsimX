@@ -867,8 +867,8 @@
                 }
                 else
                 {
-                    rootArea = calcRootArea(zone, top, bottom, zone.RightDist);    // Right side
-                    rootArea += calcRootArea(zone, top, bottom, zone.LeftDist);    // Left Side
+                    rootArea = CalcRootArea(zone, top, bottom, zone.RightDist);    // Right side
+                    rootArea += CalcRootArea(zone, top, bottom, zone.LeftDist);    // Left Side
                 }
 
                 double soilArea = (zone.RightDist + zone.LeftDist) * (bottom - top);
@@ -917,7 +917,7 @@
             return rads * 180.0 / Math.PI;
         }
 
-        double calcRootArea(ZoneState zone, double top, double bottom, double hDist)
+        double CalcRootArea(ZoneState zone, double top, double bottom, double hDist)
         {
             if (zone.RootFront == 0.0)
             {
@@ -926,7 +926,7 @@
 
             double depth, depthInLayer;
 
-            zone.RootSpread = zone.RootFront * Math.Tan(DegToRad(RootAngle));   //Semi minor axis
+            zone.RootSpread = zone.RootFront * Math.Tan(DegToRad(RootAngle));   // Semi minor axis
 
             if (zone.RootFront >= bottom)
             {
@@ -938,9 +938,12 @@
                 depth = (zone.RootFront - top) / 2.0 + top;
                 depthInLayer = zone.RootFront - top;
             }
-            double xDist = zone.RootSpread * Math.Sqrt(1 - (Math.Pow(depth, 2) / Math.Pow(zone.RootFront, 2)));
 
-            return Math.Min(depthInLayer * xDist, depthInLayer * hDist);
+            //double xDist = Math.Min(hDist, zone.RootSpread * Math.Sqrt(1 - (Math.Pow(depth, 2) / Math.Pow(zone.RootFront, 2))));
+            double xDist = Math.Min(hDist, Math.Sqrt(2 * depth * zone.RootSpread - Math.Pow(depth, 2))); // A simpler equation, the same results.
+            double areaLayer = depthInLayer * xDist;
+
+            return areaLayer;
         }
 
         double GetRootArea(double top, double bottom, double rootLength, double hDist)
