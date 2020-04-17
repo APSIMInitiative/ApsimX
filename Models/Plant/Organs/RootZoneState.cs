@@ -213,7 +213,6 @@ namespace Models.PMF.Organs
         {
             // Do Root Front Advance
             int RootLayer = soil.LayerIndexOfDepth(Depth);
-            double MaxDepth = 0;
 
             //sorghum calc
             var rootDepthWaterStress = 1.0;
@@ -221,19 +220,10 @@ namespace Models.PMF.Organs
                 rootDepthWaterStress = root.RootDepthStressFactor.Value(RootLayer);
 
             double[] xf = null;
-
             if (soil.Weirdo == null)
             {
                 // Limit root depth for impeded layers
-                var soilCrop = soil.Crop(plant.Name);
-                xf = soilCrop.XF;
-                for (int i = 0; i < soil.Thickness.Length; i++)
-                {
-                    if (xf[i] > 0)
-                        MaxDepth += soil.Thickness[i];
-                    else
-                        break;
-                }
+                xf = soil.Crop(plant.Name).XF;
                 Depth += rootFrontVelocity.Value(RootLayer) * xf[RootLayer] * rootDepthWaterStress;
             }
             else
@@ -242,24 +232,20 @@ namespace Models.PMF.Organs
             }
 
             // Limit root depth for the crop specific maximum depth
-            if (MaxDepth > 0)
-            {
-                MaxDepth = Math.Min(maximumRootDepth.Value(), MaxDepth);
-                Depth = Math.Min(Depth, MaxDepth);
-            }
-            RootFront = Depth;
+            Depth = Math.Min(Math.Min(Depth, maximumRootDepth.Value()), soil.Thickness.Sum());
 
             //RootFront - needed by sorghum
-            if(root.RootFrontCalcSwitch?.Value() == 1)
+            if (root.RootFrontCalcSwitch?.Value() == 1)
             {
-                double xfR = 1;
-                if (xf != null) xfR = xf[RootLayer];
-                var dltRootFront = rootFrontVelocity.Value(RootLayer) * rootDepthWaterStress * xfR;
+                double xfr = xf != null ? xf[RootLayer] : 1;
+                var dltRootFront = rootFrontVelocity.Value(RootLayer) * rootDepthWaterStress * xfr;
 
                 double maxFront = Math.Sqrt(Math.Pow(Depth, 2) + Math.Pow(LeftDist, 2));
                 dltRootFront = Math.Min(dltRootFront, maxFront - RootFront);
-                RootFront = RootFront + dltRootFront;
+                RootFront += dltRootFront;
             }
+            else
+                RootFront = Depth;
         }
         /// <summary>
         /// Calculate Root Activity Values for water and nitrogen
