@@ -7,6 +7,7 @@
     using Models.PMF;
     using Models.PMF.Interfaces;
     using Models.Soils;
+    using Models.Surface;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
@@ -26,6 +27,7 @@
         [Link] List<IPlantDamage> forages = null;
         [Link] ISolute NO3 = null;
         [Link] Soil soil = null;
+        [Link] SurfaceOrganicMatter surfaceOrganicMatter = null;
 
         private double residualBiomass;
         private CSharpExpressionFunction expressionFunction;
@@ -158,6 +160,20 @@
         [Description("Enter the fraction of population decline due to defoliation (0-1):")]
         public double FractionPopulationDecline { get; set; }
 
+        /// <summary> </summary>
+        [Separator("Trampling")]
+        [Description("Turn trampling on?")]
+        public bool TramplingOn { get; set; }
+
+        /// <summary> </summary>
+        [Description("Maximum proportion of litter moved to the soil")]
+        [Display(EnabledCallback = "IsTramplingTurnedOn")]
+        public double MaximumPropLitterMovedToSoil { get; set; } = 0.1;
+
+        /// <summary> </summary>
+        [Description("Pasture removed at the maximum rate (e.g. 900 for heavy cattle, 1200 for ewes)")]
+        [Display(EnabledCallback = "IsTramplingTurnedOn")]
+        public double PastureConsumedAtMaximumRateOfLitterRemoval { get; set; } = 1200;
 
         ////////////// Callbacks to enable/disable GUI parameters //////////////
 
@@ -214,6 +230,9 @@
                 return double.IsNaN(CNRatioDung) || CNRatioDung == 0;
             }
         }
+
+        /// <summary></summary>
+        public bool IsTramplingTurnedOn { get { return TramplingOn; } }
 
         ////////////// Outputs //////////////
 
@@ -300,7 +319,7 @@
                 expressionFunction.CompileExpression();
             }
 
-            if (FractionExcretedNToDung.Length != 1 && FractionExcretedNToDung.Length != 12)
+            if (FractionExcretedNToDung != null && FractionExcretedNToDung.Length != 1 && FractionExcretedNToDung.Length != 12)
                 throw new Exception("You must specify either a single value for 'proportion of defoliated nitrogen going to dung' or 12 monthly values.");
 
             if (SimpleGrazingFrequencyString != null && SimpleGrazingFrequencyString.Equals("end of month", StringComparison.InvariantCultureIgnoreCase))
@@ -373,6 +392,14 @@
         {
             var amountDMToRemove = Math.Max(0, PreGrazeDM - residual);
             Graze(amountDMToRemove);
+
+
+            if (TramplingOn)
+            {
+                var proportionLitterMovedToSoil = Math.Min(MathUtilities.Divide(PastureConsumedAtMaximumRateOfLitterRemoval, amountDMToRemove, 0), 
+                                                           MaximumPropLitterMovedToSoil);
+                surfaceOrganicMatter.Incorporate(proportionLitterMovedToSoil, depth:100);
+            }
         }
 
         /// <summary>Perform grazing</summary>

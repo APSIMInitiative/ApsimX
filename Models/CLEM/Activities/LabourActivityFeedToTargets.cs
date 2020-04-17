@@ -247,7 +247,7 @@ namespace Models.CLEM.Activities
                     }
                 }
             }
-            foodParcels.AddRange(marketFoodParcels.OrderBy(a => a.FoodStore.Price.PricePerPacket));
+            foodParcels.AddRange(marketFoodParcels.OrderBy(a => a.FoodStore.Price(PurchaseOrSalePricingStyleType.Purchase).PricePerPacket));
 
             double fundsAvailable = double.PositiveInfinity;
             if (bankAccount != null)
@@ -286,11 +286,12 @@ namespace Models.CLEM.Activities
 
                     foodParcels[parcelIndex].Proportion = Math.Min(propCanBeEaten, propToTarget);
 
-                    // work out if there will be a cost limitation, only if a price structure esists for the resource
+                    // work out if there will be a cost limitation, only if a price structure exists for the resource
                     double propToPrice = 1;
-                    if (foodParcels[parcelIndex].FoodStore.PricingExists)
+                    if (foodParcels[parcelIndex].FoodStore.PricingExists(PurchaseOrSalePricingStyleType.Purchase))
                     {
-                        double cost = (foodParcels[parcelIndex].Pool.Amount * foodParcels[parcelIndex].Proportion) / foodParcels[parcelIndex].FoodStore.Price.PacketSize * foodParcels[parcelIndex].FoodStore.Price.PricePerPacket;
+                        ResourcePricing price = foodParcels[parcelIndex].FoodStore.Price(PurchaseOrSalePricingStyleType.Purchase);
+                        double cost = (foodParcels[parcelIndex].Pool.Amount * foodParcels[parcelIndex].Proportion) / price.PacketSize * price.PricePerPacket;
                         if (cost > 0)
                         {
                             propToPrice = Math.Min(1, fundsAvailable / cost);
@@ -336,13 +337,14 @@ namespace Models.CLEM.Activities
                 {
                     double financeLimit = 1;
                     // if obtained from the market make financial transaction before taking
-                    if(bankAccount != null && item.Key.Parent.Parent.Parent == Market && item.Key.Price.PricePerPacket > 0)
+                    ResourcePricing price = item.Key.Price(PurchaseOrSalePricingStyleType.Sale);
+                    if (bankAccount != null && item.Key.Parent.Parent.Parent == Market && price.PricePerPacket > 0)
                     {
                         // if shortfall reduce purchase
                         ResourceRequest marketRequest = new ResourceRequest
                         {
                             ActivityModel = this,
-                            Required = amount / item.Key.Price.PacketSize * item.Key.Price.PricePerPacket,
+                            Required = amount / price.PacketSize * price.PricePerPacket,
                             AllowTransmutation = false,
                             Reason = "Food purchase",
                             MarketTransactionMultiplier = 1
@@ -616,9 +618,9 @@ namespace Models.CLEM.Activities
                             {
                                 PacketSize = 1
                             }; 
-                            if(foodStore.PricingExists)
+                            if(foodStore.PricingExists(PurchaseOrSalePricingStyleType.Purchase))
                             {
-                                priceToUse = foodStore.Price;
+                                priceToUse = foodStore.Price(PurchaseOrSalePricingStyleType.Purchase);
                             }
 
                             double units = amountSold / priceToUse.PacketSize;

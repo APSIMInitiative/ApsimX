@@ -781,7 +781,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\G_Range.png" />
     <EmbeddedResource Include="Resources\RadInt.jpg" />
     <EmbeddedResource Include="Resources\SyntaxHighlighting\Report.xml" />
-    <EmbeddedResource Include="Resources\TreeViewImages\AGPBrownTop.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AGPBrowntop.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\AGPCocksfoot.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\AGPKikuyu.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\AGPPaspalum.png" />

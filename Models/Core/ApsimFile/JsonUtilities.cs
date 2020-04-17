@@ -526,7 +526,7 @@ namespace Models.Core.ApsimFile
 
             foreach (var simpleGrazing in JsonUtilities.ChildrenOfType(node, "SimpleGrazing"))
             {
-                var expression = simpleGrazing["FlexibleExpressionForTimingOfGrazing"].ToString();
+                var expression = simpleGrazing["FlexibleExpressionForTimingOfGrazing"]?.ToString();
                 if (!string.IsNullOrEmpty(expression))
                 {
                     foreach (var replacement in changes)
