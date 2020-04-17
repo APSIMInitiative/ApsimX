@@ -220,7 +220,8 @@ namespace Models.PMF.Organs
             if (root.RootDepthStressFactor != null)
                 rootDepthWaterStress = root.RootDepthStressFactor.Value(RootLayer);
 
-            double[] xf = 1;
+            double[] xf = null;
+
             if (soil.Weirdo == null)
             {
                 // Limit root depth for impeded layers
@@ -233,7 +234,6 @@ namespace Models.PMF.Organs
                     else
                         break;
                 }
-
                 Depth += rootFrontVelocity.Value(RootLayer) * xf[RootLayer] * rootDepthWaterStress;
             }
             else
@@ -252,7 +252,9 @@ namespace Models.PMF.Organs
             //RootFront - needed by sorghum
             if(root.RootFrontCalcSwitch?.Value() == 1)
             {
-                var dltRootFront = rootFrontVelocity.Value(RootLayer) * rootDepthWaterStress * xf[RootLayer];
+                double xfR = 1;
+                if (xf != null) xfR = xf[RootLayer];
+                var dltRootFront = rootFrontVelocity.Value(RootLayer) * rootDepthWaterStress * xfR;
 
                 double maxFront = Math.Sqrt(Math.Pow(Depth, 2) + Math.Pow(LeftDist, 2));
                 dltRootFront = Math.Min(dltRootFront, maxFront - RootFront);
