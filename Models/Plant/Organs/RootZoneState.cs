@@ -213,46 +213,48 @@ namespace Models.PMF.Organs
         {
             // Do Root Front Advance
             int RootLayer = soil.LayerIndexOfDepth(Depth);
-            var soilCrop = soil.Crop(plant.Name);
+            double MaxDepth = 0;
 
             //sorghum calc
             var rootDepthWaterStress = 1.0;
             if (root.RootDepthStressFactor != null)
                 rootDepthWaterStress = root.RootDepthStressFactor.Value(RootLayer);
 
-            double MaxDepth = 0;
-            double[] xf = soilCrop.XF;
-
-            // Limit root depth for impeded layers
-            for (int i = 0; i < soil.Thickness.Length; i++)
-            {
-                if (xf[i] > 0)
-                    MaxDepth += soil.Thickness[i];
-                else
-                    break;
-            }
-
             if (soil.Weirdo == null)
             {
-                Depth += rootFrontVelocity.Value(RootLayer) * xf[RootLayer] * rootDepthWaterStress;
+                // Limit root depth for impeded layers
+                var soilCrop = soil.Crop(plant.Name);
+                for (int i = 0; i < soil.Thickness.Length; i++)
+                {
+                    if (soilCrop.XF[i] > 0)
+                        MaxDepth += soil.Thickness[i];
+                    else
+                        break;
+                }
+
+                Depth += rootFrontVelocity.Value(RootLayer) * soilCrop.XF[RootLayer] * rootDepthWaterStress;
             }
             else
             {
-                Depth += rootFrontVelocity.Value(RootLayer) * xf[RootLayer];
+                Depth += rootFrontVelocity.Value(RootLayer) * rootDepthWaterStress;
             }
 
             // Limit root depth for the crop specific maximum depth
-            MaxDepth = Math.Min(maximumRootDepth.Value(), MaxDepth);
-            Depth = Math.Min(Depth, MaxDepth);
+            if (MaxDepth > 0)
+            {
+                MaxDepth = Math.Min(maximumRootDepth.Value(), MaxDepth);
+                Depth = Math.Min(Depth, MaxDepth);
+            }
             RootFront = Depth;
 
             //RootFront - needed by sorghum
-            if (root.RootFrontCalcSwitch?.Value() >= 1)
+            if(root.RootFrontCalcSwitch?.Value() == 1)
             {
                 var dltRootFront = rootFrontVelocity.Value(RootLayer) * rootDepthWaterStress * xf[RootLayer];
+
                 double maxFront = Math.Sqrt(Math.Pow(Depth, 2) + Math.Pow(LeftDist, 2));
                 dltRootFront = Math.Min(dltRootFront, maxFront - RootFront);
-                RootFront += dltRootFront;
+                RootFront = RootFront + dltRootFront;
             }
         }
         /// <summary>
