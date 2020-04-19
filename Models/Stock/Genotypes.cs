@@ -7,41 +7,72 @@
     using System;
     using System.Collections.Generic;
     using System.Xml;
+    using System.Linq;
 
     /// <summary>
-    /// Convert a stock .prm file to JSON.
+    /// Encapsulates a collection of stock genotype parameters. It can read the GrazPlan .prm
+    /// files as well as the APSIM ruminant JSON file format.
     /// </summary>
-    public class ConvertPRMToJson
+    [Serializable]
+    public class Genotypes
     {
-        /// <summary>Convert a GrazPlan PRM XML string to a folder of cultivars.</summary>
-        /// <param name="xmlString">The XML string to convert.</param>
-        public static Cultivar Go(string xmlString)
+        /// <summary>
+        /// 'Standard' genotypes. By default these are read from the Ruminant.json resource.
+        /// They can also be replaced by a GrazPlan PRM file.
+        /// </summary>
+        private Cultivar standardGenotypes;
+
+        /// <summary>
+        /// User supplied genotypes. These are searched first when looking for genotypes.
+        /// </summary>
+        private List<AnimalParamSet> userGenotypes;
+
+        /// <summary>Set the standard genotypes from the specified GrazPlan PRM XML string</summary>
+        /// <param name="xmlString">The GrazPlan PRM XML string.</param>
+        public Cultivar LoadPRMXml(string xmlString)
         {
             var xml = new XmlDocument();
             xml.LoadXml(xmlString);
             var parameters = xml.DocumentElement;
 
-            return ReadSet(parameters);
+            standardGenotypes = ReadPRM(parameters);
+            Apsim.ParentAllChildren(standardGenotypes);
+            return standardGenotypes;
+        }
+
+        /// <summary>Set the user specified genotypes.</summary>
+        /// <param name="genotypes">The user specified genotypes.</param>
+        public void SetUserGenotypes(List<AnimalParamSet> genotypes)
+        {
+            userGenotypes = genotypes;
         }
 
         /// <summary>
-        /// Get an animal parameter set for the given genotype name.
+        /// Get an animal parameter set for the given genotype name. Will throw if cannot find genotype.
         /// </summary>
-        /// <param name="genotypeName">Name of genotype.</param>
-        public static AnimalParamSet GetGenotype(string genotypeName)
+        /// <param name="genotypeName">Name of genotype to locate and return.</param>
+        public AnimalParamSet GetGenotype(string genotypeName)
         {
-            List<Exception> readExceptions;
-            var rootGenotype = FileFormat.ReadFromString<Cultivar>(ReflectionUtilities.GetResourceAsString("Models.Resources.Ruminant.json"), out readExceptions);
+            // Look in user genotypes first.
+            if (userGenotypes != null)
+            {
+                var animalParamSet = userGenotypes.Find(genotype => genotype.Name == genotypeName);
+                if (animalParamSet != null)
+                    return animalParamSet;
+            }
+            // Didn't find a user genotype. Look for it in standard genotypes.
+            EnsureStandardGenotypesLoaded();
+            var specificGenotype = Apsim.Find(standardGenotypes, genotypeName) as Cultivar;
 
-            // Find the genotype.
-            var specificGenotype = Apsim.Find(rootGenotype, genotypeName) as Cultivar;
+            // Did we find the genotype? If not throw exception.
             if (specificGenotype == null)
                 throw new Exception($"Cannot find stock genotype {genotypeName}");
 
+            // Convert the genotype into an AnimalParamSet
             var animal = new AnimalParamSet();
             animal.Name = specificGenotype.Name;
-            // From root genotype to specific genotype, apply genotype overrides.
 
+            // From root genotype to specific genotype, apply genotype overrides.
             // Get a list of all genotypes to apply from specific genotype to more general parent genotypes.
             var genotypesToApply = new List<Cultivar>();
             genotypesToApply.Add(specificGenotype);
@@ -62,13 +93,34 @@
         }
 
         /// <summary>
+        /// Return a collection of all genotypes.
+        /// </summary>
+        public IEnumerable<AnimalParamSet> GetGenotypes()
+        {
+            var genotypes = new List<AnimalParamSet>();
+
+            // Get a list of genotype names.
+            var genotypeNames = new List<string>();
+            if (userGenotypes != null)
+                genotypeNames.AddRange(userGenotypes.Select(genotype => genotype.Name));
+
+            EnsureStandardGenotypesLoaded();
+            genotypeNames.AddRange(Apsim.ChildrenRecursively(standardGenotypes).Select(genotype => genotype.Name));
+
+            // Convert each name into a genotype and store in return list.
+            foreach (var genotypeName in genotypeNames.Distinct())
+                genotypes.Add(GetGenotype(genotypeName));
+            return genotypes;
+        }
+
+        /// <summary>
         /// Read a parameter set and append to the json array.
         /// </summary>
         /// <param name="parameterNode">The XML parameter node to convert.</param>
-        private static Cultivar ReadSet(XmlNode parameterNode)
+        private Cultivar ReadPRM(XmlNode parameterNode)
         {
             var animalParamSet = new Cultivar();
-            animalParamSet.Name = XmlUtilities.Attribute(parameterNode, "Name");
+            animalParamSet.Name = XmlUtilities.Attribute(parameterNode, "Name").Replace(".", "");
 
             var commands = new List<string>();
             ConvertScalarToCommand(parameterNode, "editor", "sEditor", commands);
@@ -131,7 +183,7 @@
 
             // recurse through child parameter sets.
             foreach (var child in XmlUtilities.ChildNodes(parameterNode, "set"))
-                animalParamSet.Children.Add(ReadSet(child));
+                animalParamSet.Children.Add(ReadPRM(child));
 
             return animalParamSet;
         }
@@ -247,6 +299,21 @@
                     if (!string.IsNullOrEmpty(values[i]))
                         commands.Add($"{animalParamNames[i]} = {values[i]}");
                 }
+            }
+        }
+
+        /// <summary>
+        /// Ensure the standard genotypes are loaded.
+        /// </summary>
+        private void EnsureStandardGenotypesLoaded()
+        {
+            if (standardGenotypes == null)
+            {
+                // No - load them now.
+                List<Exception> readExceptions;
+                standardGenotypes = FileFormat.ReadFromString<Cultivar>(ReflectionUtilities.GetResourceAsString("Models.Resources.Ruminant.json"), out readExceptions);
+                if (readExceptions != null && readExceptions.Count > 0)
+                    throw new Exception("Error in ruminants.json", readExceptions[0]);
             }
         }
     }

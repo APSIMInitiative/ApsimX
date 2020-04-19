@@ -8,6 +8,7 @@
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Interfaces;
+    using Models.PMF;
     using Models.PMF.Interfaces;
     using Models.Soils;
     using Models.Surface;
@@ -180,7 +181,7 @@
         /// <summary>
         /// The random number host
         /// </summary>
-        private MyRandom randFactory;
+        public MyRandom randFactory;
 
         /// <summary>
         /// The supplement used
@@ -241,7 +242,7 @@
             this.userForages = new List<string>();
             this.userPaddocks = new List<string>();
             this.randFactory = new MyRandom(this.randSeed);       // random number generator
-            this.stockModel = new StockList(this.randFactory);
+            this.stockModel = new StockList(this);
 
             Array.Resize(ref this.genotypeInits, 0);
             Array.Resize(ref this.animalInits, 0);
@@ -253,24 +254,6 @@
         }
 
         #region Initialisation properties ====================================================
-
-        /// <summary>
-        /// Gets or sets the parameter filename for the stock model
-        /// </summary>
-        [Description("Name of an XML file containing genotypic parameters. If an empty string is specified, a default parameter set that is compiled into APSIM is used. " +
-                     "If a file name is used, the parameters in the file modify (rather than replacing) the default parameter set")]
-        [Units("")]
-        [Summary]
-        public string ParamFile
-        {
-            get { return stockModel.ParamFile; }
-            set 
-            {
-                if (value != string.Empty)
-                    this.outputSummary.WriteMessage(this, "Using animal parameters from " + value);
-                stockModel.ParamFile = value; 
-            }
-        }
         
         /// <summary>
         /// Gets or sets the Seed for the random number generator. Used when computing numbers of animals dying and conceiving from the equations for mortality and conception rates
@@ -303,6 +286,11 @@
                 }
             }
         }
+
+        /// <summary>
+        /// An instance that contains all stock genotypes.
+        /// </summary>
+        public Genotypes AllGenotypes { get; set; } = new Genotypes();
 
         /// <summary>
         /// Gets or sets the initial state of each animal group
@@ -4086,6 +4074,10 @@
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
+            var childGenotypes = Apsim.Children(this, typeof(AnimalParamSet)).Cast<AnimalParamSet>().ToList();
+            if (childGenotypes != null)
+                AllGenotypes.SetUserGenotypes(childGenotypes);
+
             if (!this.paddocksGiven)
             {
                 // get the paddock areas from the simulation

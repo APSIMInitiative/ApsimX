@@ -20,6 +20,7 @@
     using System.Text;
     using Models.Functions;
     using Models.Soils.Standardiser;
+    using Models.GrazPlan;
 
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -971,5 +972,18 @@
                 explorerPresenter.MainPresenter.ShowError(err);
             }
         }
+
+        [ContextMenu(MenuName = "Add all genotypes",
+                     AppliesTo = new[] { typeof(Stock) })]
+        public void AddSheepGenotypes(object sender, EventArgs e)
+        {
+            var stock = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Stock;
+            foreach (var genotype in stock.AllGenotypes.GetGenotypes())
+            {
+                var command = new AddModelCommand(explorerPresenter.CurrentNodePath, genotype, explorerPresenter);
+                command.Do(null);
+            }
+        }
+
     }
 }

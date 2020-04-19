@@ -1,3 +1,4 @@
+using Models.Core;
 using StdUnits;
 using System;
 using System.Collections.Generic;
@@ -45,6 +46,9 @@ namespace Models.GrazPlan
     /// Animal parameter set
     /// </summary>
     [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(Stock))]
     public class AnimalParamSet : ParameterSet
     {
         /*
@@ -95,15 +99,18 @@ namespace Models.GrazPlan
         /// <summary>
         /// 
         /// </summary>
+        [Description("Dairy intake peak (c-idy-0)")]
         public double FDairyIntakePeak { get; set; }
         /// <summary>
         /// 
         /// </summary>
+        [Description("Dairy intake time (c-idy-1)")]
         public double FDairyIntakeTime { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
+        [Description("Dairy intake shape (c-idy-2)")]
         public double FDairyIntakeShape { get; set; }
         private bool FUseDairyCurve;
 
@@ -786,14 +793,17 @@ namespace Models.GrazPlan
         /// <summary>
         /// Editor of the parameters
         /// </summary>
+        [Description("Editor")]
         public string sEditor { get; set; } = string.Empty;
         /// <summary>
         /// Date edited
         /// </summary>
+        [Description("Date edited")]
         public string sEditDate { get; set; } = string.Empty;
         /// <summary>
         /// Animal type
         /// </summary>
+        [Description("Animal type")]
         public GrazType.AnimalType Animal { get; set; }
         /// <summary>
         /// Maximum young
@@ -802,19 +812,23 @@ namespace Models.GrazPlan
         /// <summary>
         /// Standard reference weights
         /// </summary>
+        [Description("SRW Scalars c-srs-")]
         public double[] SRWScalars { get; set; } = new double[2];
 
         /// <summary>
         /// Potential greasy fleece weight:SRW
         /// </summary>
+        [Description("Fleece ration c-pfw-")]
         public double FleeceRatio { get; set; }
         /// <summary>
         /// In microns
         /// </summary>
+        [Description("Maximum fleece diameter c-mu-")]
         public double MaxFleeceDiam { get; set; }
         /// <summary>
         /// Fixed attribute (read in)
         /// </summary>
+        [Description("Dairy breed?")]
         public bool bDairyBreed { get; set; }
 
         /// <summary>
@@ -825,114 +839,142 @@ namespace Models.GrazPlan
         /// <summary>
         /// Background death rate, per day  [1..2]      
         /// </summary>
-        public double[] MortRate { get; set; } = new double[3];           
+        [Description("Background death rate, per day  [1..2] c-d-")]
+        public double[] MortRate { get; set; } = new double[3];
         /// <summary>
         /// 
         /// </summary>
+        [Description("Mortality age c-d-")]
         public double[] MortAge { get; set; } = new double[3];            //[1..2]
         /// <summary>
         /// Rate of mortality increase for underweight animals
         /// </summary>
+        [Description("Rate of mortality increase for underweight animals c-d-")]
         public double MortIntensity { get; set; }
         /// <summary>
         /// Fraction of normal body weight in animals of Size=1 at which mortality starts to increase
         /// </summary>
+        [Description("Fraction of normal body weight in animals of Size=1 at which mortality starts to increase c-d-")]
         public double MortCondConst { get; set; }
         /// <summary>
         /// Weight differential in dying animals  
         /// </summary>
+        [Description("Weight differential in dying animals c-d-")]
         public double MortWtDiff { get; set; }
         /// <summary>
         /// C(N)
         /// </summary>
-        public double[] GrowthC { get; set; } = new double[5];            
+        [Description("Growth C c-n-")]
+        public double[] GrowthC { get; set; } = new double[5];
         /// <summary>
         /// C(I)
         /// </summary>
-        public double[] IntakeC { get; set; } = new double[21];                                             
+        [Description("Intake C c-i-")]
+        public double[] IntakeC { get; set; } = new double[21];
         /// <summary>
         /// C(I,15)
         /// </summary>
-        public double[] IntakeLactC { get; set; } = new double[4];                                       
+        [Description("Intake Lact C c-imx-")]
+        public double[] IntakeLactC { get; set; } = new double[4];
         /// <summary>
         /// C(R)
         /// </summary>
-        public double[] GrazeC { get; set; } = new double[21];                                              
+        [Description("Graze C c-r-")]
+        public double[] GrazeC { get; set; } = new double[21];
         /// <summary>
         /// C(K)
         /// </summary>
-        public double[] EfficC { get; set; } = new double[17];                                              
+        [Description("Effic C c-k-")]
+        public double[] EfficC { get; set; } = new double[17];
         /// <summary>
         /// C(M)
         /// </summary>
-        public double[] MaintC { get; set; } = new double[18];                                              
+        [Description("Maintenance C c-m-")]
+        public double[] MaintC { get; set; } = new double[18];
         /// <summary>
         /// C(RDP)
         /// </summary>
-        public double[] DgProtC { get; set; } = new double[9];                                            
+        [Description("DgProtC c-rd-")]
+        public double[] DgProtC { get; set; } = new double[9];
         /// <summary>
         /// C(A)
         /// </summary>
-        public double[] ProtC { get; set; } = new double[10];                                               
+        [Description("Prot C c-a-")]
+        public double[] ProtC { get; set; } = new double[10];
         /// <summary>
         /// C(P)
         /// </summary>
-        public double[] PregC { get; set; } = new double[14];                                               
+        [Description("Preg C c-p-")]
+        public double[] PregC { get; set; } = new double[14];
         /// <summary>
         /// C(P,14,Y)
         /// </summary>
-        public double[] PregScale { get; set; } = new double[4];                                    
+        [Description("Preg scale c-p14-")]
+        public double[] PregScale { get; set; } = new double[4];
         /// <summary>
         /// C(P,15,Y)
         /// </summary>
-        public double[] BirthWtScale { get; set; } = new double[4];                              
+        [Description("Birth weight scale c-p15-")]
+        public double[] BirthWtScale { get; set; } = new double[4];
         /// <summary>
         /// C(L,0,Y)
         /// </summary>
-        public double[] PeakLactC { get; set; } = new double[4];                                     
+        [Description("Peak Lact C c-l0-")]
+        public double[] PeakLactC { get; set; } = new double[4];
         /// <summary>
         /// C(L)
         /// </summary>
-        public double[] LactC { get; set; } = new double[26];                                               
+        [Description("Lact C c-l-")]
+        public double[] LactC { get; set; } = new double[26];
         /// <summary>
         /// C(W)
         /// </summary>
-        public double[] WoolC { get; set; } = new double[15];                                               
+        [Description("Wool C c-w-")]
+        public double[] WoolC { get; set; } = new double[15];
         /// <summary>
         /// C(C)
         /// </summary>
-        public double[] ChillC { get; set; } = new double[17];                                             
+        [Description("Chill C c-c-")]
+        public double[] ChillC { get; set; } = new double[17];
         /// <summary>
         /// C(G)
         /// </summary>
-        public double[] GainC { get; set; } = new double[19];                                               
+        [Description("Gain C c-g-")]
+        public double[] GainC { get; set; } = new double[19];
         /// <summary>
         /// 
         /// </summary>
+        [Description("Phos C c-ph-")]
         public double[] PhosC { get; set; } = new double[16];
         /// <summary>
         /// 
         /// </summary>
+        [Description("Sulf C c-su-")]
         public double[] SulfC { get; set; } = new double[5];
         /// <summary>
         /// 
         /// </summary>
+        [Description("Meth C c-h-")]
         public double[] MethC { get; set; } = new double[8];
         /// <summary>
         /// Ash alkalinity values
         /// </summary>
-        public double[] AshAlkC { get; set; } = new double[4];            
+        [Description("Ash alkalinity C c-aa-")]
+        public double[] AshAlkC { get; set; } = new double[4];
         /// <summary>
         /// 
         /// </summary>
+        [Description("Ovulation period c-f4")]
         public int OvulationPeriod { get; set; }
         /// <summary>
         /// 
         /// </summary>
+        [Description("Puberty c-pbt-")]
         public int[] Puberty { get; set; } = new int[2];                  //array[Boolean]
         /// <summary>
         /// 
         /// </summary>
+        [Description("Day length constant c-f1-")]
         public double[] DayLengthConst { get; set; } = new double[4];     //array[1..3]
 
         /// <summary>
@@ -943,6 +985,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// 
         /// </summary>
+        [Description("Conceive sigs c-f2")]
         public double[] F2 
         { 
             get
@@ -962,6 +1005,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// 
         /// </summary>
+        [Description("Conceive sigs c-f3")]
         public double[] F3
         {
             get
@@ -985,18 +1029,22 @@ namespace Models.GrazPlan
         /// <summary>
         /// 
         /// </summary>
+        [Description("ToxaemiaSigss c-d")]
         public double[] ToxaemiaSigs { get; set; } = new double[2];       //array[0..1]
         /// <summary>
         /// 
         /// </summary>
+        [Description("DystokiaSigs c-d")]
         public double[] DystokiaSigs { get; set; } = new double[2];       //array[0..1]
         /// <summary>
         /// 
         /// </summary>
+        [Description("Exposure constants c-d")]
         public double[] ExposureConsts { get; set; } = new double[4];     //array[0..3]
         /// <summary>
         /// 
         /// </summary>
+        [Description("Self wean proportion c-swn")]
         public double SelfWeanPropn { get; set; }
 
         /// <summary>

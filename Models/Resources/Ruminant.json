@@ -415,7 +415,7 @@
                           "Command": [
                             "BreedSRW = 50.0"
                           ],
-                          "Name": "Southdown (U.S.)",
+                          "Name": "Southdown (US)",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -504,7 +504,7 @@
                           "Command": [
                             "BreedSRW = 90.0"
                           ],
-                          "Name": "Suffolk (U.S.)",
+                          "Name": "Suffolk (US)",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,

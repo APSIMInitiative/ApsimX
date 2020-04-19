@@ -3,10 +3,12 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.IO;
     using System.Linq;
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Core.ApsimFile;
+    using Models.PMF;
     using Newtonsoft.Json.Linq;
     using StdUnits;
 
@@ -484,6 +486,11 @@
     public class StockList
     {
         /// <summary>
+        /// The parent stock model.
+        /// </summary>
+        private Stock parentStockModel = null;
+
+        /// <summary>
         /// False flag
         /// </summary>
         private const int FALSE = 0;
@@ -512,11 +519,6 @@
         /// [AnimalType] Limits to breed SRW's                 
         /// </summary>          
         private double[] MAXSRW = { 120.0, 1000.0 };
-
-        /// <summary>
-        /// The animal parameter file name
-        /// </summary>
-        private string paramFile;
 
         /// <summary>
         /// Base parameters
@@ -554,23 +556,9 @@
         private ForageProviders forageProviders;
 
         /// <summary>
-        /// Gets or sets the ref to the hosts random number generator
-        /// </summary>
-        public MyRandom RandFactory { get; set; }
-
-        /// <summary>
         /// Gets or sets the start of the simulation
         /// </summary>
         public int StartRun { get; set; }
-
-        /// <summary>
-        /// Gets or sets the parameter file name
-        /// </summary>
-        public string ParamFile
-        {
-            get { return this.paramFile; }
-            set { this.SetParamFile(value); }
-        }
 
         /// <summary>
         /// Gets the base parameter set for this instance
@@ -638,23 +626,6 @@
             result.CurrLocale = GrazLocale.DefaultLocale();
 
             return result;
-        }
-
-        /// <summary>
-        /// Set the file name
-        /// </summary>
-        /// <param name="fileName">The parameter file name</param>
-        private void SetParamFile(string fileName)
-        {
-            //this.baseParams = null;
-            //this.baseParams = StockList.MakeParamSet(fileName);
-
-            // var allParams = ReflectionUtilities.GetResourceAsString("Models.Resources.Ruminant.json");
-            // List<Exception> exceptions;
-            // var simulations = FileFormat.ReadFromString<Simulations>(allParams, out exceptions);
-            // baseParams = simulations.Children[0] as AnimalParamSet;
-
-            this.paramFile = fileName;
         }
 
         /// <summary>
@@ -1460,12 +1431,11 @@
         /// <summary>
         /// Create a TStockList
         /// </summary>
-        /// <param name="randomFactory">The random number container</param>
-        public StockList(MyRandom randomFactory)
+        /// <param name="stockModel">The parent stock model.</param>
+        public StockList(Stock stockModel)
         {
+            this.parentStockModel = stockModel;
             this.StartRun = 0;
-            this.RandFactory = randomFactory;                                               // store the ptr
-            this.SetParamFile(string.Empty);                                                // Creates a default FBaseParams         
             Array.Resize(ref this.stock, 1);                                          // Set aside temporary storage           
             this.paddockList = new PaddockList();
             this.paddockList.Add(-1, string.Empty);                                      // The "null" paddock is added here      
@@ -1532,7 +1502,7 @@
                     result = this.genotypeParams[idx];
                 else
                 {
-                    srcParamSet = ConvertPRMToJson.GetGenotype(genoName);
+                    srcParamSet = parentStockModel.AllGenotypes.GetGenotype(genoName);
                     srcParamSet.EnglishName = genoName;
                     srcParamSet.DeriveParams();
                     //srcParamSet.Initialise();
@@ -1597,7 +1567,7 @@
                                         animalInits.AgeDays,
                                         animalInits.Weight,
                                         animalInits.FleeceWt,
-                                        this.RandFactory);
+                                        parentStockModel.randFactory);
             if (this.IsGiven(animalInits.MaxPrevWt))
                 newGroup.MaxPrevWeight = animalInits.MaxPrevWt;
             if (this.IsGiven(animalInits.FibreDiam))
@@ -2628,7 +2598,7 @@
                                             animalInfo.AgeDays,                       // Preg  field.                        
                                             liveWeight,
                                             animalInfo.GFW,
-                                            this.RandFactory);
+                                            parentStockModel.randFactory);
 
                 // Adjust the condition score if it has been given
                 if ((animalInfo.CondScore > 0.0) && (animalInfo.LiveWt > 0.0))        
@@ -3355,7 +3325,7 @@
             if (this.Count() > 0)
                 tempAnimals = this.At(1).Copy();
             else
-                tempAnimals = new AnimalGroup(this.GetGenotype("Medium Merino"), GrazType.ReproType.Empty, 1, 365 * 4, 50.0, 0.0, this.RandFactory);
+                tempAnimals = new AnimalGroup(this.GetGenotype("Medium Merino"), GrazType.ReproType.Empty, 1, 365 * 4, 50.0, 0.0, parentStockModel.randFactory);
             for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)
                 paddockRank[paddIdx] = this.GetPaddockRank(this.Paddocks.ByIndex(paddIdx), tempAnimals);
 
@@ -3730,7 +3700,7 @@
         /// <returns>The animal parametes</returns>
         private AnimalParamSet FindGenotype(AnimalParamSet mainParams, SingleGenotypeInits[] genoInits, string searchName, int searchBefore)
         {
-            var genotype = ConvertPRMToJson.GetGenotype(searchName);
+            var genotype = parentStockModel.AllGenotypes.GetGenotype(searchName);
             genotype.EnglishName = genotype.Name;
             genotype.DeriveParams();
             genotype.Initialise();
