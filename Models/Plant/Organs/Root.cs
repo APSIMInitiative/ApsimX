@@ -867,8 +867,8 @@
                 }
                 else
                 {
-                    rootArea = CalcRootAreaSemiEllipse(zone, top, bottom, zone.RightDist);    // Right side
-                    rootArea += CalcRootAreaSemiEllipse(zone, top, bottom, zone.LeftDist);    // Left Side
+                    rootArea = CalcRootAreaSemiCircle(zone, top, bottom, zone.RightDist);    // Right side
+                    rootArea += CalcRootAreaSemiCircle(zone, top, bottom, zone.LeftDist);    // Left Side
                 }
 
                 double soilArea = (zone.RightDist + zone.LeftDist) * (bottom - top);
@@ -939,9 +939,8 @@
                 depthInLayer = zone.RootFront - top;
             }
 
-            double a = Math.Pow(0.5 * zone.RootFront - depth, 2) / Math.Pow(0.5 * zone.RootFront, 2);
+            double a = Math.Pow(depth - 0.5 * zone.RootFront, 2) / Math.Pow(0.5 * zone.RootFront, 2);
             double xDist = Math.Min(hDist, Math.Sqrt(Math.Pow(zone.RootSpread, 2) * (1 - a)));
-            //double xDist2 = Math.Min(hDist, zone.RootSpread * Math.Sqrt(1 - (Math.Pow(depth, 2) / Math.Pow(zone.RootFront, 2))));
             double areaLayer = depthInLayer * xDist;
 
             return areaLayer;
@@ -969,7 +968,9 @@
                 depthInLayer = zone.RootFront - top;
             }
 
-            double xDist = Math.Min(hDist, zone.RootSpread * Math.Sqrt(1 - (Math.Pow(depth, 2) / Math.Pow(zone.RootFront, 2))));
+            // Ben (2020.04.19): The first line does not take into account the coordinate of the centre of the circl, which is (0, 0.5*zone.RootFront).
+            // double xDist = Math.Min(hDist, zone.RootSpread * Math.Sqrt(1 - (Math.Pow(depth, 2) / Math.Pow(zone.RootFront, 2))));
+            double xDist = Math.Min(hDist, zone.RootSpread * Math.Sqrt(1 - (Math.Pow(depth - 0.5 * zone.RootFront, 2) / Math.Pow(0.5 * zone.RootFront, 2))));
             double areaLayer = depthInLayer * xDist;
 
             return areaLayer;
