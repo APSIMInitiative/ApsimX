@@ -1,6 +1,7 @@
 ﻿using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.PMF.Interfaces;
+using Models.PMF.Organs;
 using Models.Soils.Arbitrator;
 using System;
 using System.Collections.Generic;
@@ -106,8 +107,16 @@ namespace Models.PMF.Arbitrator
             double waterSupply = 0;   //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
             foreach (ZoneWaterAndN Z in zones)
             {
-                waterSupply += MathUtilities.Sum(Z.Water) * Z.Zone.Area;
+                ZoneState myZone = plant.Root.Zones.Find(z => z.Name == Z.Zone.Name);
+                double[] proportion = new double[myZone.soil.Thickness.Length];
+
+                for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
+                {
+                    proportion[layer] = plant.Root.rootProportionInLayer(layer, myZone);
+                }
+                waterSupply += MathUtilities.Sum(MathUtilities.Multiply(Z.Water, proportion)) * Z.Zone.Area;
             }
+
             // Calculate total plant water demand.
             WDemand = 0.0; //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
             foreach (IArbitration o in Organs)

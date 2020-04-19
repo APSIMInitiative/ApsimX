@@ -1,6 +1,7 @@
 ﻿using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.PMF.Interfaces;
+using Models.PMF.Organs;
 using Models.Soils.Arbitrator;
 using System;
 using System.Collections.Generic;
@@ -76,12 +77,21 @@ namespace Models.PMF.Arbitrator
         /// <summary>Calculate the Actual Nitrogen Uptakes</summary>
         public void SetActualUptakes(List<ZoneWaterAndN> zones, IArbitration[] Organs)
         {
-            var N = Arbitrator.N;
             // Calculate the total no3 and nh4 across all zones.
             double NSupply = 0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
             foreach (ZoneWaterAndN Z in zones)
-                NSupply += (MathUtilities.Sum(Z.NO3N) + MathUtilities.Sum(Z.NH4N)) * Z.Zone.Area;
+            {
+                ZoneState myZone = plant.Root.Zones.Find(z => z.Name == Z.Zone.Name);
+                double[] proportion = new double[myZone.soil.Thickness.Length];
 
+                for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
+                {
+                    proportion[layer] = plant.Root.rootProportionInLayer(layer, myZone);
+                }
+                NSupply += (MathUtilities.Sum(MathUtilities.Multiply(Z.NO3N, proportion)) + MathUtilities.Sum((MathUtilities.Multiply(Z.NH4N, proportion)))) * Z.Zone.Area;
+            }
+
+            var N = Arbitrator.N;
             //Reset actual uptakes to each organ based on uptake allocated by soil arbitrator and the organs proportion of potential uptake
             //NUptakeSupply units should be g/m^2
             for (int i = 0; i < Organs.Count(); i++)
