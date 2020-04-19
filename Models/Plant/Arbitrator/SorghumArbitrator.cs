@@ -508,12 +508,17 @@ namespace Models.PMF
 
                 //NMassFlowSupply = 0.0; //rewporting variables
                 //NDiffusionSupply = 0.0;
-                var supply = 0.0;
                 foreach (ZoneWaterAndN Z in zones)
                 {
-                    supply += MathUtilities.Sum(Z.NO3N);
+                    ZoneState myZone = Plant.Root.Zones.Find(z => z.Name == Z.Zone.Name);
+                    double[] proportion = new double[myZone.soil.Thickness.Length];
+
+                    for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
+                    {
+                        proportion[layer] = Plant.Root.rootProportionInLayer(layer, myZone);
+                    }
+                    nSupply += MathUtilities.Sum(MathUtilities.Multiply(Z.NO3N, proportion)) * Z.Zone.Area;
                     //NMassFlowSupply += MathUtilities.Sum(Z.NH4N);
-                    nSupply += supply * Z.Zone.Area;
 
                     for (int i = 0; i < Z.NH4N.Length; ++i)
                         Z.NH4N[i] = 0;

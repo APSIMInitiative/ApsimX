@@ -306,7 +306,16 @@ namespace Models.PMF
                 // Calculate the total no3 and nh4 across all zones.
                 double NSupply = 0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
                 foreach (ZoneWaterAndN Z in zones)
-                    NSupply += (MathUtilities.Sum(Z.NO3N) + MathUtilities.Sum(Z.NH4N)) * Z.Zone.Area;
+                {
+                    ZoneState myZone = Plant.Root.Zones.Find(z => z.Name == Z.Zone.Name);
+                    double[] proportion = new double[myZone.soil.Thickness.Length];
+
+                    for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
+                    {
+                        proportion[layer] = Plant.Root.rootProportionInLayer(layer, myZone);
+                    }
+                    NSupply += (MathUtilities.Sum(MathUtilities.Multiply(Z.NO3N, proportion)) + MathUtilities.Sum((MathUtilities.Multiply(Z.NH4N, proportion)))) * Z.Zone.Area;
+                }
 
                 //Reset actual uptakes to each organ based on uptake allocated by soil arbitrator and the organs proportion of potential uptake
                 //NUptakeSupply units should be g/m^2
