@@ -852,11 +852,10 @@
                 double top;
 
                 top = layer == 0 ? 0 : MathUtilities.Sum(zone.soil.Thickness, 0, layer - 1);
-
-                if (top > zone.Depth)
-                    return 0;
-
                 double bottom = top + zone.soil.Thickness[layer];
+
+                if (zone.Depth < top || zone.Depth > bottom)
+                    return 0;
 
                 double rootArea;
                 IFunction calcType = Apsim.Child(this, "RootAreaCalcType") as IFunction;
