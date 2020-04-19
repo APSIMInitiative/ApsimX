@@ -82,13 +82,16 @@ namespace Models.PMF.Arbitrator
             foreach (ZoneWaterAndN Z in zones)
             {
                 ZoneState myZone = plant.Root.Zones.Find(z => z.Name == Z.Zone.Name);
-                double[] proportion = new double[myZone.soil.Thickness.Length];
-
-                for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
+                if (myZone!=null)
                 {
-                    proportion[layer] = plant.Root.rootProportionInLayer(layer, myZone);
+                    double[] proportion = new double[myZone.soil.Thickness.Length];
+
+                    for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
+                    {
+                        proportion[layer] = plant.Root.rootProportionInLayer(layer, myZone);
+                    }
+                    NSupply += (MathUtilities.Sum(MathUtilities.Multiply(Z.NO3N, proportion)) + MathUtilities.Sum((MathUtilities.Multiply(Z.NH4N, proportion)))) * Z.Zone.Area;
                 }
-                NSupply += (MathUtilities.Sum(MathUtilities.Multiply(Z.NO3N, proportion)) + MathUtilities.Sum((MathUtilities.Multiply(Z.NH4N, proportion)))) * Z.Zone.Area;
             }
 
             var N = Arbitrator.N;

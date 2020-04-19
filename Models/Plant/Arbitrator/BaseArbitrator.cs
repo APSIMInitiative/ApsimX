@@ -196,13 +196,16 @@ namespace Models.PMF
             foreach (ZoneWaterAndN Z in zones)
             {
                 ZoneState myZone = Plant.Root.Zones.Find(z => z.Name == Z.Zone.Name);
-                double[] proportion = new double[myZone.soil.Thickness.Length];
-
-                for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
+                if (myZone != null)
                 {
-                    proportion[layer] = Plant.Root.rootProportionInLayer(layer, myZone);
+                    double[] proportion = new double[myZone.soil.Thickness.Length];
+
+                    for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
+                    {
+                        proportion[layer] = Plant.Root.rootProportionInLayer(layer, myZone);
+                    }
+                    waterSupply += MathUtilities.Sum(MathUtilities.Multiply(Z.Water, proportion)) * Z.Zone.Area;
                 }
-                waterSupply += MathUtilities.Sum(MathUtilities.Multiply(Z.Water, proportion)) * Z.Zone.Area;
             }
 
             //// Calculate the total water supply across all zones.
@@ -308,13 +311,16 @@ namespace Models.PMF
                 foreach (ZoneWaterAndN Z in zones)
                 {
                     ZoneState myZone = Plant.Root.Zones.Find(z => z.Name == Z.Zone.Name);
-                    double[] proportion = new double[myZone.soil.Thickness.Length];
-
-                    for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
+                    if (myZone != null)
                     {
-                        proportion[layer] = Plant.Root.rootProportionInLayer(layer, myZone);
+                        double[] proportion = new double[myZone.soil.Thickness.Length];
+
+                        for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
+                        {
+                            proportion[layer] = Plant.Root.rootProportionInLayer(layer, myZone);
+                        }
+                        NSupply += (MathUtilities.Sum(MathUtilities.Multiply(Z.NO3N, proportion)) + MathUtilities.Sum((MathUtilities.Multiply(Z.NH4N, proportion)))) * Z.Zone.Area;
                     }
-                    NSupply += (MathUtilities.Sum(MathUtilities.Multiply(Z.NO3N, proportion)) + MathUtilities.Sum((MathUtilities.Multiply(Z.NH4N, proportion)))) * Z.Zone.Area;
                 }
 
                 //Reset actual uptakes to each organ based on uptake allocated by soil arbitrator and the organs proportion of potential uptake

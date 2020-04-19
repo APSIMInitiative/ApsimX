@@ -202,13 +202,16 @@ namespace Models.PMF
             foreach (ZoneWaterAndN Z in zones)
             {
                 ZoneState myZone = Plant.Root.Zones.Find(z => z.Name == Z.Zone.Name);
-                double[] proportion = new double[myZone.soil.Thickness.Length];
-
-                for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
+                if (myZone != null)
                 {
-                    proportion[layer] = Plant.Root.rootProportionInLayer(layer, myZone);
+                    double[] proportion = new double[myZone.soil.Thickness.Length];
+
+                    for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
+                    {
+                        proportion[layer] = Plant.Root.rootProportionInLayer(layer, myZone);
+                    }
+                    waterSupply += MathUtilities.Sum(MathUtilities.Multiply(Z.Water, proportion)) * Z.Zone.Area;
                 }
-                waterSupply += MathUtilities.Sum(MathUtilities.Multiply(Z.Water, proportion)) * Z.Zone.Area;
             }
 
             //foreach (ZoneWaterAndN Z in zones)
@@ -511,14 +514,17 @@ namespace Models.PMF
                 foreach (ZoneWaterAndN Z in zones)
                 {
                     ZoneState myZone = Plant.Root.Zones.Find(z => z.Name == Z.Zone.Name);
-                    double[] proportion = new double[myZone.soil.Thickness.Length];
-
-                    for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
+                    if (myZone != null)
                     {
-                        proportion[layer] = Plant.Root.rootProportionInLayer(layer, myZone);
+                        double[] proportion = new double[myZone.soil.Thickness.Length];
+
+                        for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
+                        {
+                            proportion[layer] = Plant.Root.rootProportionInLayer(layer, myZone);
+                        }
+                        nSupply += MathUtilities.Sum(MathUtilities.Multiply(Z.NO3N, proportion)) * Z.Zone.Area;
+                        //NMassFlowSupply += MathUtilities.Sum(Z.NH4N);
                     }
-                    nSupply += MathUtilities.Sum(MathUtilities.Multiply(Z.NO3N, proportion)) * Z.Zone.Area;
-                    //NMassFlowSupply += MathUtilities.Sum(Z.NH4N);
 
                     for (int i = 0; i < Z.NH4N.Length; ++i)
                         Z.NH4N[i] = 0;
