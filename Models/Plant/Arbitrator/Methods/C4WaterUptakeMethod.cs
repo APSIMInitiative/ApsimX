@@ -169,7 +169,7 @@ namespace Models.PMF.Arbitrator
                     myZone.Depth += 0; // wtf??
 
                 var currentLayer = myZone.soil.LayerIndexOfDepth(myZone.Depth);
-                var currentLayerProportion = myZone.soil.ProportionThroughLayer(currentLayer, myZone.Depth);
+
                 for (int layer = 0; layer <= currentLayer; ++layer)
                 {
                     myZone.StartWater[layer] = myZone.soil.Water[layer];
@@ -177,15 +177,13 @@ namespace Models.PMF.Arbitrator
                     myZone.AvailableSW[layer] = Math.Max(myZone.soil.Water[layer] - llDep[layer], 0);
                     myZone.PotentialAvailableSW[layer] = myZone.soil.DULmm[layer] - llDep[layer];
 
-                    if (layer == currentLayer)
-                    {
-                        myZone.AvailableSW[layer] *= currentLayerProportion;
-                        myZone.PotentialAvailableSW[layer] *= currentLayerProportion;
-                    }
-
                     var proportion = root.RootProportionInLayer(layer, myZone);
+             
+                    myZone.AvailableSW[layer] *= proportion;
+                    myZone.PotentialAvailableSW[layer] *= proportion;
                     myZone.Supply[layer] = Math.Max(myZone.AvailableSW[layer] * kl[layer] * proportion, 0.0);
                 }
+
                 var totalAvail = myZone.AvailableSW.Sum();
                 var totalAvailPot = myZone.PotentialAvailableSW.Sum();
                 var totalSupply = myZone.Supply.Sum();

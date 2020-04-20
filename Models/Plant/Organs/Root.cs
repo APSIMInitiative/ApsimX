@@ -693,13 +693,10 @@
                         //diffusion
                         var swAvailFrac = RWC[layer] = (water[layer] - ll15mm[layer]) / (dulmm[layer] - ll15mm[layer]);
                         //old sorghum stores N03 in g/ms not kg/ha
-                        var no3Diffusion = MathUtilities.Bound(swAvailFrac, 0.0, 1.0) * (zone.NO3N[layer] * kgha2gsm); 
+                        var no3Diffusion = MathUtilities.Bound(swAvailFrac, 0.0, 1.0) * (zone.NO3N[layer] * kgha2gsm);
 
-                        if (layer == currentLayer)
-                        {
-                            var proportion = myZone.soil.ProportionThroughLayer(currentLayer, myZone.Depth);
-                            no3Diffusion *= proportion;
-                        }
+                        var proportion = RootProportionInLayer(currentLayer, myZone);
+                        no3Diffusion *= proportion;
 
                         myZone.Diffusion[layer] = no3Diffusion;
 
