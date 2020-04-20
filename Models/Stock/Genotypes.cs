@@ -42,9 +42,9 @@
 
         /// <summary>Set the user specified genotypes.</summary>
         /// <param name="genotypes">The user specified genotypes.</param>
-        public void SetUserGenotypes(List<AnimalParamSet> genotypes)
+        public void SetUserGenotypes(IEnumerable<AnimalParamSet> genotypes)
         {
-            userGenotypes = genotypes;
+            userGenotypes = genotypes.ToList();
         }
 
         /// <summary>

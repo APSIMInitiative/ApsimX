@@ -53,6 +53,26 @@
             Assert.AreEqual(friesian.SelfWeanPropn, 0.05);
         }
 
+        /// <summary>Ensure that a user supplied genotype overrides a standard one.</summary>
+        [Test]
+        public void EnsureUserGenotypeOverridesStandardGenotype()
+        {
+            // Get a friesian genotype.
+            var genotypes = new Genotypes();
+            var friesian = genotypes.GetGenotype("Friesian");
+
+            // Change it.
+            friesian.BreedSRW = 1;
+
+            // Give it to the genotypes instance as a user genotype.
+            genotypes.SetUserGenotypes(new AnimalParamSet[] { friesian });
+
+            // Now ask for friesian again. This time it should return the user genotype, not the standard one.
+            friesian = genotypes.GetGenotype("Friesian");
+
+            Assert.AreEqual(friesian.BreedSRW, 1);
+        }
+
         /// <summary>Ensure there are no dot characters in genotype names.</summary>
         [Test]
         public void EnsureNoDotsInGenotypeNames()
@@ -63,18 +83,18 @@
                 Assert.IsFalse(genotypeName.Contains("."));
         }
 
-        /// <summary>Make sure nested, hierarchical parameter sets are read.</summary>
-        [Test]
-        public void GenerateRuminantJSON()
-        {
-            var xml = File.ReadAllText(@"C:\Users\holzworthdp\Work\Repos\ApsimX\Models\Resources\ruminant.prm");
+        ///// <summary>Make sure nested, hierarchical parameter sets are read.</summary>
+        //[Test]
+        //public void GenerateRuminantJSON()
+        //{
+        //    var xml = File.ReadAllText(@"C:\Users\holzworthdp\Work\Repos\ApsimX\Models\Resources\ruminant.prm");
 
-            var genotypes = new Genotypes();
-            var topLevelGenotype = genotypes.LoadPRMXml(xml);
+        //    var genotypes = new Genotypes();
+        //    var topLevelGenotype = genotypes.LoadPRMXml(xml);
 
-            File.WriteAllText(@"C:\Users\holzworthdp\Work\Repos\ApsimX\Models\Resources\Ruminant.json",
-                              FileFormat.WriteToString(topLevelGenotype));
-        }
+        //    File.WriteAllText(@"C:\Users\holzworthdp\Work\Repos\ApsimX\Models\Resources\Ruminant.json",
+        //                      FileFormat.WriteToString(topLevelGenotype));
+        //}
 
     }
 }
