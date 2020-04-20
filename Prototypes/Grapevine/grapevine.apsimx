@@ -1151,6 +1151,7 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "Albedo": 0.25,
@@ -2411,6 +2412,45 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "DMDemandPriorityFactors",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.99,
+                      "Units": null,
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.1,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -2423,6 +2463,7 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "IsAboveGround": true,
@@ -2756,6 +2797,45 @@
                 },
                 {
                   "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "DMDemandPriorityFactors",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.95,
+                      "Units": null,
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.05,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
                   "Name": "NDemands",
                   "Children": [
                     {
@@ -2931,6 +3011,7 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "IsAboveGround": true,
@@ -3387,6 +3468,45 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "DMDemandPriorityFactors",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.9,
+                      "Units": null,
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.1,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -3399,6 +3519,7 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "IsAboveGround": true,
@@ -3845,6 +3966,45 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "DMDemandPriorityFactors",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.85,
+                      "Units": null,
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.15,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -3856,6 +4016,7 @@
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "DMSupply": null,
               "NSupply": null,
@@ -6009,6 +6170,45 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "DMDemandPriorityFactors",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.8,
+                      "Units": null,
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.1,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -6020,6 +6220,7 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "GrowthRespiration": 0.0,
@@ -6641,6 +6842,45 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "DMDemandPriorityFactors",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.75,
+                      "Units": null,
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.25,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -6724,7 +6964,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.PMF.RelativeAllocation, Models",
+                      "$type": "Models.PMF.QPrioritythenRelativeAllocation, Models",
                       "Name": "ArbitrationMethod",
                       "Children": [],
                       "IncludeInDocumentation": true,

@@ -85,6 +85,11 @@
         [Units("g/m2/d")]
         private BiomassDemand dmDemands = null;
 
+        /// <summary>Factors for assigning priority to DM demands</summary>
+        [Link(IsOptional = true, Type = LinkType.Child, ByName = true)]
+        [Units("g/m2/d")]
+        private BiomassDemand dmDemandPriorityFactors = null;
+
         /// <summary>Link to the KNO3 link</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction kno3 = null;
@@ -211,6 +216,9 @@
 
         /// <summary>The dry matter demand</summary>
         public BiomassPoolType DMDemand { get; set; }
+
+        /// <summary>The dry matter demand</summary>
+        public BiomassPoolType DMDemandPriorityFactor { get; set; }
 
         /// <summary>Structural nitrogen demand</summary>
         public BiomassPoolType NDemand { get; set; }
@@ -552,6 +560,19 @@
                     DMDemand.Structural = 0;
                     DMDemand.Storage = 0;
                     DMDemand.Metabolic = 0;
+                }
+
+                if (dmDemandPriorityFactors != null)
+                {
+                    DMDemandPriorityFactor.Structural = dmDemandPriorityFactors.Structural.Value();
+                    DMDemandPriorityFactor.Metabolic = dmDemandPriorityFactors.Metabolic.Value();
+                    DMDemandPriorityFactor.Storage = dmDemandPriorityFactors.Storage.Value();
+                }
+                else
+                {
+                    DMDemandPriorityFactor.Structural = 1.0;
+                    DMDemandPriorityFactor.Metabolic = 1.0;
+                    DMDemandPriorityFactor.Storage = 1.0;
                 }
             }
         }
@@ -1259,6 +1280,7 @@
                                       rootFrontVelocity, maximumRootDepth, remobilisationCost);
             Zones = new List<ZoneState>();
             DMDemand = new BiomassPoolType();
+            DMDemandPriorityFactor = new BiomassPoolType();
             NDemand = new BiomassPoolType();
             DMSupply = new BiomassSupplyType();
             NSupply = new BiomassSupplyType();
