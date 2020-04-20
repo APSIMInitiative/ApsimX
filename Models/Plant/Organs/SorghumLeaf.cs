@@ -385,8 +385,11 @@ namespace Models.PMF.Organs
         [Description("Phosphorus Stress")]
         public double PhosphorusStress { get; set; }
 
-        /// <summary> /// Final Leaf Number. /// </summary>
+        /// <summary>Final Leaf Number.</summary>
         public double FinalLeafNo { get { return culms.FinalLeafNo; } }
+
+        /// <summary>Leaf number.</summary>
+        public double LeafNo { get { return culms.LeafNo; } }
 
         /// <summary> /// Sowing Density (Population). /// </summary>
         public double SowingDensity { get; set; }

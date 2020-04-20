@@ -790,7 +790,7 @@
     <EmbeddedResource Include="Resources\Potato.json" />
     <EmbeddedResource Include="Resources\RedClover.json" />
     <EmbeddedResource Include="Resources\WhiteClover.json" />
-    <EmbeddedResource Include="Resources\AGPBrownTop.json" />
+    <EmbeddedResource Include="Resources\AGPBrowntop.json" />
     <EmbeddedResource Include="Resources\AGPCocksfoot.json" />
     <EmbeddedResource Include="Resources\AGPKikuyu.json" />
     <EmbeddedResource Include="Resources\AGPPaspalum.json" />
