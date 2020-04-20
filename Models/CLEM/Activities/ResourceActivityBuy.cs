@@ -51,9 +51,7 @@ namespace Models.CLEM.Activities
 
         private ResourcePricing price;
         private FinanceType bankAccount;
-        //private FinanceType marketBank;
         private IResourceType resourceToBuy;
-        //private IResourceType resourceInMarket;
         private double unitsCanAfford;
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

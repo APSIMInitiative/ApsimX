@@ -158,7 +158,6 @@
     <Compile Include="CLEM\Activities\LabourActivityFeedToTargetsV1.cs" />
     <Compile Include="CLEM\Activities\LabourActivityPayHired.cs" />
     <Compile Include="CLEM\Activities\LabourActivityFeed.cs" />
-    <Compile Include="CLEM\Activities\LabourAERelationship.cs" />
     <Compile Include="CLEM\IFilterGroup.cs" />
     <Compile Include="CLEM\Market.cs" />
     <Compile Include="CLEM\RainfallShuffler.cs" />
@@ -686,7 +685,6 @@
     <Compile Include="CLEM\Activities\LabourActivityOffFarm.cs" />
     <Compile Include="CLEM\Activities\OtherAnimalsActivityGrow.cs" />
     <Compile Include="CLEM\Activities\PastureActivityBurn.cs" />
-    <Compile Include="CLEM\Activities\Relationship.cs" />
     <Compile Include="CLEM\Activities\ResourceActivitySell.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityGrazeAll.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityGrazePasture.cs" />
