@@ -447,7 +447,9 @@ namespace Models.GrazPlan
 
             this.Tokenise(tagDefinition, ref defn, "-");
             kdx = this.FDefinitions.Length;
-            Array.Resize(ref this.FDefinitions, kdx + 1);
+            var defs = FDefinitions;
+            Array.Resize(ref defs, kdx + 1);
+            FDefinitions = defs;
             this.FDefinitions[kdx] = new ParameterDefinition(defn, baseType);
         }
 
@@ -979,7 +981,9 @@ namespace Models.GrazPlan
             ParameterSet result = this.MakeChild();
             if (this.FChildren == null)
                 this.FChildren = new ParameterSet[0];
-            Array.Resize(ref this.FChildren, this.FChildren.Length + 1);
+            var children = FChildren;
+            Array.Resize(ref children, this.FChildren.Length + 1);
+            FChildren = children;
             this.FChildren[this.FChildren.Length - 1] = result;
             return this.FChildren[this.FChildren.Length - 1];
         }
@@ -996,7 +1000,9 @@ namespace Models.GrazPlan
             {
                 this.FChildren[jdx - 1] = this.FChildren[jdx];
             }
-            Array.Resize(ref this.FChildren, this.FChildren.Length - 1);
+            var children = FChildren;
+            Array.Resize(ref children, this.FChildren.Length - 1);
+            FChildren = children;
         }
 
         /// <summary>
