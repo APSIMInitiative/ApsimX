@@ -49,7 +49,6 @@ namespace Models.CLEM.Resources
             return this.Children.Where(a => a.Name == name).FirstOrDefault();
         }
 
-
         /// <summary>
         /// Add all events when a new child is added to this resource in run time
         /// </summary>
