@@ -310,10 +310,7 @@
             if (standardGenotypes == null)
             {
                 // No - load them now.
-                List<Exception> readExceptions;
-                standardGenotypes = FileFormat.ReadFromString<Cultivar>(ReflectionUtilities.GetResourceAsString("Models.Resources.Ruminant.json"), out readExceptions);
-                if (readExceptions != null && readExceptions.Count > 0)
-                    throw new Exception("Error in ruminants.json", readExceptions[0]);
+                LoadPRMXml(ReflectionUtilities.GetResourceAsString("Models.Resources.ruminant.prm"));
             }
         }
     }

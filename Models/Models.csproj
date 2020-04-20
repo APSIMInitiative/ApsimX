@@ -798,7 +798,6 @@
     <EmbeddedResource Include="Resources\AGPTallFescue.json" />
     <EmbeddedResource Include="Resources\AGPLucerne.json" />
     <EmbeddedResource Include="Resources\WaterBalance.json" />
-    <EmbeddedResource Include="Resources\Ruminant.json" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">

@@ -394,12 +394,12 @@ namespace Models.GrazPlan
         /// <summary>
         /// 
         /// </summary>
-        public ParameterSet[] FChildren;
+        public ParameterSet[] FChildren { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public ParameterDefinition[] FDefinitions = new ParameterDefinition[0];
+        public ParameterDefinition[] FDefinitions { get; set; } = new ParameterDefinition[0];
 
         private string FCurrLocale;
         private string FFileSource;

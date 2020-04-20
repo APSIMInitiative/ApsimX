@@ -32,12 +32,12 @@
             genotypes.LoadPRMXml(xml);
             var animalParamSet = genotypes.GetGenotype("sheep");
 
-            Assert.AreEqual(animalParamSet.sEditor, "Andrew Moore");
-            Assert.AreEqual(animalParamSet.sEditDate, "30 Jan 2013");
-            Assert.AreEqual(animalParamSet.bDairyBreed, false);
-            Assert.AreEqual(animalParamSet.SRWScalars, new double[] { 1.2, 1.4 });
-            Assert.AreEqual(animalParamSet.IntakeC, new double[] { 0, 0, 1.7, 0, 0, 0, 25.0, 22.0, 0, 0, 0, 0, 0.15, 0, 0.002, 0.5, 1.0, 0.01, 20, 3, 1.5 });
-            Assert.AreEqual(animalParamSet.WoolC, new double[] { 0.999, 1.1, 0.004, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
+            Assert.AreEqual("Andrew Moore", animalParamSet.sEditor);
+            Assert.AreEqual("30 Jan 2013", animalParamSet.sEditDate);
+            Assert.IsFalse(animalParamSet.bDairyBreed);
+            Assert.AreEqual(new double[] { 1.2, 1.4 }, animalParamSet.SRWScalars);
+            Assert.AreEqual(new double[] { 0, 0, 1.7, 0, 0, 0, 25.0, 22.0, 0, 0, 0, 0, 0.15, 0, 0.002, 0.5, 1.0, 0.01, 20, 3, 1.5 }, animalParamSet.IntakeC);
+            Assert.AreEqual(new double[] { 0.999, 1.1, 0.004, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, animalParamSet.WoolC);
         }
 
         /// <summary>Test that a genotype can be extracted from the stock resource file.</summary>
@@ -46,11 +46,11 @@
         {
             var genotypes = new Genotypes();
             var friesian = genotypes.GetGenotype("Friesian");
-            Assert.AreEqual(friesian.BreedSRW, 550);
-            Assert.AreEqual(friesian.bDairyBreed, true);
-            Assert.AreEqual(friesian.IntakeLactC, new double[] { 0.0, 0.577, 0.9, 0.0 });
-            Assert.AreEqual(friesian.GrowthC, new double[] { 0.0, 0.0115, 0.27, 0.4, 1.1 });
-            Assert.AreEqual(friesian.SelfWeanPropn, 0.05);
+            Assert.AreEqual(550,  friesian.BreedSRW, 550);
+            Assert.AreEqual(0.05, friesian.SelfWeanPropn);
+            Assert.IsTrue(friesian.bDairyBreed);
+            Assert.AreEqual(new double[] { 0.0, 0.577, 0.9, 0.0 },        friesian.IntakeLactC);
+            Assert.AreEqual(new double[] { 0.0, 0.0115, 0.27, 0.4, 1.1 }, friesian.GrowthC);
         }
 
         /// <summary>Ensure that a user supplied genotype overrides a standard one.</summary>
@@ -70,7 +70,7 @@
             // Now ask for friesian again. This time it should return the user genotype, not the standard one.
             friesian = genotypes.GetGenotype("Friesian");
 
-            Assert.AreEqual(friesian.BreedSRW, 1);
+            Assert.AreEqual(1, friesian.BreedSRW);
         }
 
         /// <summary>Ensure there are no dot characters in genotype names.</summary>
@@ -82,19 +82,5 @@
             foreach (var genotypeName in allGenotypes.Select(genotype => genotype.Name))
                 Assert.IsFalse(genotypeName.Contains("."));
         }
-
-        ///// <summary>Make sure nested, hierarchical parameter sets are read.</summary>
-        //[Test]
-        //public void GenerateRuminantJSON()
-        //{
-        //    var xml = File.ReadAllText(@"C:\Users\holzworthdp\Work\Repos\ApsimX\Models\Resources\ruminant.prm");
-
-        //    var genotypes = new Genotypes();
-        //    var topLevelGenotype = genotypes.LoadPRMXml(xml);
-
-        //    File.WriteAllText(@"C:\Users\holzworthdp\Work\Repos\ApsimX\Models\Resources\Ruminant.json",
-        //                      FileFormat.WriteToString(topLevelGenotype));
-        //}
-
     }
 }
