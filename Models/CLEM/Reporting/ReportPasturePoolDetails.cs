@@ -94,13 +94,14 @@ namespace Models.CLEM.Reporting
                                 // make each pool entry
                                 for (int j = 0; j <= 12; j++)
                                 {
-                                    variableNames.Add(splitName[0] + "-" + j.ToString() + "-" + splitName[1]);
+//                                    variableNames.Add(splitName[0] + "-" + j.ToString() + "-" + splitName[1]);
+                                    variableNames.Add("[Resources].GrazeFoodStore."+splitName[0] + ".Pool(" + j.ToString() + ")." + splitName[1] + " as " + splitName[0] + "" + j.ToString() + "" + splitName[1]);
                                 }
                                 if (splitName[1] == "Amount")
                                 {
                                     // add amounts
-                                    variableNames.Add("[Resources].GrazeFoodStore." + splitName[0] + ".Amount as Total amount");
-                                    variableNames.Add("[Resources].GrazeFoodStore." + splitName[0] + ".KilogramsPerHa as Total kgPerHa");
+                                    variableNames.Add("[Resources].GrazeFoodStore." + splitName[0] + ".Amount as TotalAmount");
+                                    variableNames.Add("[Resources].GrazeFoodStore." + splitName[0] + ".KilogramsPerHa as TotalkgPerHa");
                                 }
                             }
                             else

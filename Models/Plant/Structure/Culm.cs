@@ -19,31 +19,54 @@ namespace Models.PMF.Struct
 		//Birch, Hammer bell shaped curve parameters
 
 		private double largestLeafPlateau;
-
-		private double finalLeafNo;
 		private double dltLeafNo;
-		private double currentLeafNo;
+
 		//private double finalLeafCorrection;
-		private double vertAdjValue;
-		private double proportion;
 
 		/// <summary>
-		/// Changes each day.
+		/// Vertical leaf adjustment.
 		/// </summary>
-		private double leafArea;
-
-		/// <summary>
-		/// Accumulated lai for this culm.
-		/// </summary>
-		private double totalLAI;
+		public double VertAdjValue { get; set; }
 
 		//double noEmergence;
 		//double initialTPLA;
 		//double tplaInflectionRatio,tplaProductionCoef;
 		// leaf appearance
-		private int culmNo;
 
 		private CulmParams parameters;
+
+		/// <summary>
+		/// Culm number.
+		/// </summary>
+		public int CulmNo { get; set; }
+
+		/// <summary>
+		/// Leaf proportion?
+		/// </summary>
+		public double Proportion { get; set; }
+
+		/// <summary>
+		/// Final leaf number.
+		/// </summary>
+		public double FinalLeafNo { get; private set; }
+
+		/// <summary>
+		/// Current leaf number.
+		/// </summary>
+		public double CurrentLeafNo { get; set; }
+
+		/// <summary>
+		/// Leaf area.
+		/// </summary>
+		/// <remarks>
+		/// Changes each day.
+		/// </remarks>
+		public double LeafArea { get; private set; }
+
+		/// <summary>
+		/// Accumulated lai for this culm.
+		/// </summary>
+		public double TotalLAI { get; private set; }
 
 		/// <summary>
 		/// 
@@ -72,14 +95,14 @@ namespace Models.PMF.Struct
 		public virtual void Initialize()
 		{
 			// leaf number
-			finalLeafNo = 0.0;
+			FinalLeafNo = 0.0;
 			dltLeafNo = 0.0;
 			largestLeafPlateau = 0; //value less than 1 means ignore it
-			currentLeafNo = parameters.LeafNoAtEmergence.Value();
-			vertAdjValue = 0.0;
-			proportion = 1.0;
-			totalLAI = 0.0;
-			culmNo = 0;
+			CurrentLeafNo = parameters.LeafNoAtEmergence.Value();
+			VertAdjValue = 0.0;
+			Proportion = 1.0;
+			TotalLAI = 0.0;
+			CulmNo = 0;
 			LeafSizes = new List<double>();
 			//readParams();
 		}
@@ -134,32 +157,7 @@ namespace Models.PMF.Struct
 			double maxLeafNo = parameters.MaxLeafNo.Value();
 			double ttFi = parameters.TTEmergToFI.Value();
 
-			finalLeafNo = MathUtilities.Bound(MathUtilities.Divide(ttFi, initRate, 0) + noSeed, minLeafNo, maxLeafNo);
-		}
-
-		/// <summary>
-		/// Fixme - use public property.
-		/// </summary>
-		public double getCurrentLeafNo()
-		{
-			return currentLeafNo;
-		}
-
-		/// <summary>
-		/// Fixme - use public property.
-		/// </summary>
-		public void setCurrentLeafNo(double val)
-		{
-			currentLeafNo = val;
-		}
-
-		/// <summary>
-		/// Fixme - use public property.
-		/// </summary>
-		/// <returns></returns>
-		public double getFinalLeafNo()
-		{
-			return finalLeafNo;
+			FinalLeafNo = MathUtilities.Bound(MathUtilities.Divide(ttFi, initRate, 0) + noSeed, minLeafNo, maxLeafNo);
 		}
 
 		/// <summary>
@@ -168,7 +166,7 @@ namespace Models.PMF.Struct
 		public double calcLeafAppearance()
 		{
 			dltLeafNo = 0.0;
-			double remainingLeaves = finalLeafNo - leafNoAtAppearance - currentLeafNo;//nLeaves is used in partitionDM, so need to retain it in Leaf
+			double remainingLeaves = FinalLeafNo - leafNoAtAppearance - CurrentLeafNo;//nLeaves is used in partitionDM, so need to retain it in Leaf
 			if (remainingLeaves <= 0.0)
 			{
 				return 0.0;
@@ -189,7 +187,7 @@ namespace Models.PMF.Struct
 			// leaves is calculated from thermal time for the day.
 			dltLeafNo = MathUtilities.Bound(MathUtilities.Divide(parameters.DltTT.Value(), leafAppRate, 0), 0.0, remainingLeaves);
 
-			currentLeafNo = currentLeafNo + dltLeafNo;
+			CurrentLeafNo = CurrentLeafNo + dltLeafNo;
 			return dltLeafNo;
 		}
 
@@ -212,13 +210,13 @@ namespace Models.PMF.Struct
 		public double calcPotentialLeafArea()
 		{
 			//once leaf no is calculated leaf area of largest expanding leaf is determined
-			double leafNoEffective = Math.Min(currentLeafNo + parameters.LeafNoCorrection.Value(), finalLeafNo - leafNoAtAppearance);
-			leafArea = calcIndividualLeafSize(leafNoEffective);
+			double leafNoEffective = Math.Min(CurrentLeafNo + parameters.LeafNoCorrection.Value(), FinalLeafNo - leafNoAtAppearance);
+			LeafArea = calcIndividualLeafSize(leafNoEffective);
 			//leafArea = getAreaOfCurrentLeaf(leafNoEffective);		HACK
 			//leafArea *= proportion; //proportion is 1 unless this tiller is a fraction ie: Fertile Tiller Number is 2.2, then 1 tiller is 0.2
-			leafArea = leafArea * smm2sm * parameters.Density * dltLeafNo; // in dltLai
-			totalLAI += leafArea;
-			return (leafArea * proportion);
+			LeafArea = LeafArea * smm2sm * parameters.Density * dltLeafNo; // in dltLai
+			TotalLAI += LeafArea;
+			return (LeafArea * Proportion);
 		}
 
 		/// <summary>
@@ -231,7 +229,7 @@ namespace Models.PMF.Struct
 			// Eqn 5 from Improved methods for predicting individual leaf area and leaf senescence in maize
 			// (Zea mays) C.J. Birch, G.L. Hammer and K.G. Ricket. Aust. J Agric. Res., 1998, 49, 249-62
 			//
-			double correctedFinalLeafNo = finalLeafNo;// - leafNoAtAppearance;
+			double correctedFinalLeafNo = FinalLeafNo;// - leafNoAtAppearance;
 			double largestLeafPos = parameters.AX0.Value() * correctedFinalLeafNo; //aX0 = position of the final leaf
 																//double leafPlateauStart = 24;
 																//adding new code to handle varieties that grow very high number of leaves
@@ -276,39 +274,14 @@ namespace Models.PMF.Struct
 			//Calculation then changed to use the relationship as described in the Carberry paper in Table 2
 			//The actual intercept and slope will be determined by the cultivar, and read from the config file (sorghum.xml)
 			//aMaxS = 19.5; //not 100% sure what this number should be - tried a range and this provided the best fit forthe test data
-			double largestLeafSize = parameters.AMaxS.Value() * finalLeafNo + parameters.AMaxI.Value(); //aMaxI is the intercept
+			double largestLeafSize = parameters.AMaxS.Value() * FinalLeafNo + parameters.AMaxI.Value(); //aMaxI is the intercept
 
 			//a vertical adjustment is applied to each tiller - this was discussed in a meeting on 22/08/12 and derived 
 			//from a set of graphs that I cant find that compared the curves of each tiller
 			//the effect is to decrease the size of the largest leaf by 10% 
-			largestLeafSize *= (1 - vertAdjValue);
+			largestLeafSize *= (1 - VertAdjValue);
 			double leafSize = largestLeafSize * Math.Exp(a * Math.Pow((leafNo - largestLeafPos), 2) + b * Math.Pow((leafNo - largestLeafPos), 3)) * 100;
 			return leafSize;
-		}
-
-		/// <summary>
-		/// Fixme - use public property.
-		/// </summary>
-		public void setVertLeafAdj(double adj)
-		{
-			vertAdjValue = adj;
-		}
-
-		/// <summary>
-		/// Fixme - use public property.
-		/// </summary>
-		public void setProportion(double val)
-		{
-			proportion = val;
-		}
-
-		/// <summary>
-		/// Fixme - use public property.
-		/// </summary>
-		/// <returns></returns>
-		public double getLeafArea()
-		{
-			return leafArea;
 		}
 
 		/// <summary>
@@ -321,15 +294,6 @@ namespace Models.PMF.Struct
 		}
 
 		/// <summary>
-		/// Fixme - use public property.
-		/// </summary>
-		/// <returns></returns>
-		public double getProportion()
-		{
-			return proportion;
-		}
-
-		/// <summary>
 		/// Calculate leaf sizes.
 		/// </summary>
 		public void calculateLeafSizes()
@@ -337,13 +301,13 @@ namespace Models.PMF.Struct
 			// calculate the leaf sizes for this culm
 			LeafSizes.Clear();
 			List<double> sizes = new List<double>();
-			for (int i = 1; i < Math.Ceiling(finalLeafNo) + 1; i++)
+			for (int i = 1; i < Math.Ceiling(FinalLeafNo) + 1; i++)
 				sizes.Add(calcIndividualLeafSize(i));
 			// offset for less leaves
 			int offset = 0;
-			if (culmNo > 0)
-				offset = 3 + culmNo;
-			for (int i = 0; i < Math.Ceiling(finalLeafNo - (offset)); i++)
+			if (CulmNo > 0)
+				offset = 3 + CulmNo;
+			for (int i = 0; i < Math.Ceiling(FinalLeafNo - (offset)); i++)
 				LeafSizes.Add(sizes[i + offset]);
 		}
 
@@ -353,7 +317,7 @@ namespace Models.PMF.Struct
 		public void CalcLeafSizes()
 		{
 			LeafSizes.Clear();
-			for (int i = 0; i < finalLeafNo; i++)
+			for (int i = 0; i < FinalLeafNo; i++)
 				LeafSizes.Add(calcIndividualLeafSize2(i + 1));
 		}
 
@@ -377,12 +341,12 @@ namespace Models.PMF.Struct
 			double aMaxB = parameters.AMaxB.Value();
 			double aMaxC = parameters.AMaxC.Value();
 
-			double a = a0 - Math.Exp(a1 * finalLeafNo);                      // Eqn 18
-			double b = b0 - Math.Exp(b1 * finalLeafNo);                      // Eqn 19
+			double a = a0 - Math.Exp(a1 * FinalLeafNo);                      // Eqn 18
+			double b = b0 - Math.Exp(b1 * FinalLeafNo);                      // Eqn 19
 
-			double aMax = aMaxA * Math.Exp(aMaxB + aMaxC * finalLeafNo);         // Eqn 13
+			double aMax = aMaxA * Math.Exp(aMaxB + aMaxC * FinalLeafNo);         // Eqn 13
 
-			double x0 = parameters.AX0.Value() * finalLeafNo;                                          // Eqn 14
+			double x0 = parameters.AX0.Value() * FinalLeafNo;                                          // Eqn 14
 
 			return aMax * Math.Exp(a * Math.Pow((leafNo - x0), 2) + b * Math.Pow((leafNo - x0), 3)) * 100;  // Eqn 5
 		}
@@ -394,17 +358,9 @@ namespace Models.PMF.Struct
 		public double LeafAreaPotBellShapeCurve(double[] leafNo)
 		{
 			//once leaf no is calculated leaf area of largest expanding leaf is determined
-			double leafNoEffective = Math.Min(leafNo.Sum() + parameters.LeafNoCorrection.Value(), finalLeafNo);
+			double leafNoEffective = Math.Min(leafNo.Sum() + parameters.LeafNoCorrection.Value(), FinalLeafNo);
 
 			return dltLeafNo * calcIndividualLeafSize2(leafNoEffective) * smm2sm * parameters.Density;
-		}
-
-		/// <summary>
-		/// Fixme - use public property.
-		/// </summary>
-		public void setCulmNo(int _culmNo)
-		{
-			culmNo = _culmNo;
 		}
 
 		/// <summary>
@@ -424,14 +380,6 @@ namespace Models.PMF.Struct
 				double size = LeafSizes[leafIndx] + (LeafSizes[leafIndx + 1] - LeafSizes[leafIndx]) * leafPart;
 				return size;
 			}
-		}
-
-		/// <summary>
-		/// Fixme - use public property.
-		/// </summary>
-		public double getTotalLAI()
-		{
-			return totalLAI;
 		}
 	}
 }

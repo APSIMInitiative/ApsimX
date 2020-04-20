@@ -74,6 +74,10 @@ namespace Models.CLEM.Activities
         {
             get
             {
+                if (Clock is null)
+                {
+                    return true;
+                }
                 bool inrange = IsMonthInRange(Clock.Today);
                 if(inrange)
                 {
