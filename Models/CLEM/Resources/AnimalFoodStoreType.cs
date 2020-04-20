@@ -159,10 +159,10 @@ namespace Models.CLEM.Resources
             request.Provided = amountRemoved;
 
             // send to market if needed
-            if (request.MarketTransactionMultiplier > 0 && equivalentMarketStore != null)
+            if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
             {
                 additionalDetails.Amount = amountRemoved * request.MarketTransactionMultiplier;
-                (equivalentMarketStore as AnimalFoodStoreType).Add(additionalDetails, request.ActivityModel, "Farm sales");
+                (EquivalentMarketStore as AnimalFoodStoreType).Add(additionalDetails, request.ActivityModel, "Farm sales");
             }
 
             ResourceTransaction details = new ResourceTransaction
