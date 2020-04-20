@@ -304,6 +304,7 @@
     <Compile Include="Plant\Arbitrator\Methods\RetranslocationMethod.cs" />
     <Compile Include="Plant\Arbitrator\Methods\SendPotentialDMAllocationsMethod.cs" />
     <Compile Include="Plant\Arbitrator\Methods\UpdateLeafAreaMethod.cs" />
+    <Compile Include="Plant\Arbitrator\QPriorityThenRelativeAllocation.cs" />
     <Compile Include="Plant\Arbitrator\RetranslocateAvailableN.cs" />
     <Compile Include="Factorial\CompositeFactor.cs" />
     <Compile Include="Plant\Arbitrator\Methods\WaterUptakeMethods.cs" />
