@@ -272,7 +272,7 @@ namespace Models.PMF
 
                     myZone.AvailableSW[layer] *= proportion;
                     myZone.PotentialAvailableSW[layer] *= proportion;
-                    myZone.Supply[layer] = Math.Max(myZone.AvailableSW[layer] * kl[layer] * proportion, 0.0);
+                    myZone.Supply[layer] = Math.Max(myZone.AvailableSW[layer] * kl[layer], 0.0);
                 }
                 var totalAvail = myZone.AvailableSW.Sum();
                 var totalAvailPot = myZone.PotentialAvailableSW.Sum();

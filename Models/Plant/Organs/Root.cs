@@ -813,13 +813,11 @@
                 return new double[myZone.soil.Thickness.Length]; //With Weirdo, water extraction is not done through the arbitrator because the time step is different.
             else
             {
-                var currentLayer = PlantZone.soil.LayerIndexOfDepth(Depth);
                 var soilCrop = myZone.soil.Crop(parentPlant.Name);
 
                 double[] KL = soilCrop.KL;
                 double[] LL = soilCrop.LL;
 
-                double[] available = new double[myZone.soil.Thickness.Length];
                 double[] supply = new double[myZone.soil.Thickness.Length];
 
                 LayerMidPointDepth = myZone.soil.DepthMidPoints;
@@ -828,9 +826,8 @@
                 {
                     if (layer <= myZone.soil.LayerIndexOfDepth(myZone.Depth))
                     {
-                        available[layer] = Math.Max(zone.Water[layer] - LL[layer] * myZone.soil.Thickness[layer], 0.0);
-                        supply[layer] = Math.Max(0.0, KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) * available[layer] * 
-                            RootProportionInLayer(layer, myZone));
+                        double available = Math.Max(zone.Water[layer] - LL[layer] * myZone.soil.Thickness[layer], 0.0) * RootProportionInLayer(layer, myZone);
+                        supply[layer] = Math.Max(0.0, KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) * available);
                     }
                 }
                 return supply;
@@ -1107,8 +1104,10 @@
             for (int layer = 0; layer < LL.Length; layer++)
             {
                 if (layer <= PlantZone.soil.LayerIndexOfDepth(Depth))
-                    supply += Math.Max(0.0, KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) * (SWmm[layer] - LL[layer] * DZ[layer]) *
-                        RootProportionInLayer(layer, PlantZone));
+                {
+                    double available = Math.Max(SWmm[layer] - LL[layer] * DZ[layer], 0.0) * RootProportionInLayer(layer, PlantZone);
+                    supply += Math.Max(0.0, KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) * available);
+                }
             }
             return supply;
         }
@@ -1124,17 +1123,14 @@
             double[] KL = soilCrop.KL;
             double[] SWmm = PlantZone.soil.Water;
             double[] DZ = PlantZone.soil.Thickness;
-            double[] available = new double[PlantZone.soil.Thickness.Length];
             double[] supply = new double[PlantZone.soil.Thickness.Length];
 
             double supplyTotal = 0;
             for (int layer = 0; layer <= currentLayer; layer++)
             {
-                available[layer] = Math.Max(0.0, SWmm[layer] - LL[layer] * DZ[layer]);
+                double available = Math.Max(0.0, SWmm[layer] - LL[layer] * DZ[layer]) * RootProportionInLayer(layer, PlantZone);
 
-                supply[layer] = Math.Max(0.0, available[layer] * KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
-                    RootProportionInLayer(layer, PlantZone));
-
+                supply[layer] = Math.Max(0.0, available * KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer));
                 supplyTotal += supply[layer];
             }
             return supplyTotal;
