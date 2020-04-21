@@ -199,6 +199,10 @@
         [Units("/d")]
         private IFunction maintenanceRespirationFunction = null;
 
+        /// <summary>The proportion of biomass respired each day</summary> 
+        [Link(Type = LinkType.Child, ByName = true)]
+        private RootShape rootShape = null;
+
         /// <summary>Do we need to recalculate (expensive operation) live and dead</summary>
         private bool needToRecalculateLiveDead = true;
 
@@ -860,7 +864,7 @@
                             available[layer] *= layerproportion;
                         }
 
-                        var proportionThroughLayer = rootProportionInLayer(layer, myZone);
+                        var proportionThroughLayer = RootProportionInLayer(layer, myZone);
                         var klMod = klModifier.Value(layer);
                         supply[layer] = Math.Max(0.0, kl[layer] * klMod * KLModiferDueToDamage(layer) * available[layer] * proportionThroughLayer);
                     }
@@ -879,7 +883,7 @@
                         if (layer <= myZone.soil.LayerIndexOfDepth(myZone.Depth))
                         {
                             supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
-                            (zone.Water[layer] - ll[layer] * myZone.soil.Thickness[layer]) * rootProportionInLayer(layer, myZone));
+                            (zone.Water[layer] - ll[layer] * myZone.soil.Thickness[layer]) * RootProportionInLayer(layer, myZone));
                         }
                     }
                     return supply;
@@ -890,44 +894,25 @@
         /// <summary>Calculate the proportion of root in a layer within a zone.</summary>
         /// <param name="layer">The zone.</param>
         /// <param name="zone">The zone.</param>
-        public double rootProportionInLayer(int layer, ZoneState zone)
+        public double RootProportionInLayer(int layer, ZoneState zone)
         {
-            if (RootFrontCalcSwitch?.Value() >= 1.0)
-            {
-                /* Row Spacing and configuration (skip) are used to calculate semicircular root front to give
-                    proportion of the layer occupied by the roots. */
-                double top;
+            double prop = 0;
+            double top = layer == 0 ? 0 : MathUtilities.Sum(zone.soil.Thickness, 0, layer - 1);
+            double bottom = top + zone.soil.Thickness[layer];
 
-                top = layer == 0 ? 0 : MathUtilities.Sum(zone.soil.Thickness, 0, layer - 1);
+            if (zone.Depth < top)
+                return prop;
 
-                if (top > zone.Depth)
-                    return 0;
+            double rootArea = rootShape.CalcRootArea(zone, layer, top, bottom, zone.RightDist);    // Right side
+            rootArea += rootShape.CalcRootArea(zone, layer, top, bottom, zone.LeftDist);    // Left Side
 
-                double bottom = top + zone.soil.Thickness[layer];
-
-                double rootArea;
-                IFunction calcType = Apsim.Child(this, "RootAreaCalcType") as IFunction;
-                if (calcType != null && MathUtilities.FloatsAreEqual(calcType.Value(), 1))
-                {
-                    rootArea = GetRootArea(top, bottom, zone.RootFront, zone.RightDist);
-                    rootArea += GetRootArea(top, bottom, zone.RootFront, zone.LeftDist);
-                }
-                else
-                {
-                    rootArea = calcRootArea(zone, top, bottom, zone.RightDist);    // Right side
-                    rootArea += calcRootArea(zone, top, bottom, zone.LeftDist);          // Left Side
-                }
-
-                double soilArea = (zone.RightDist + zone.LeftDist) * (bottom - top);
-
-                return Math.Max(0.0, MathUtilities.Divide(rootArea, soilArea, 0.0));
-            }
-                
-            return zone.soil.ProportionThroughLayer(layer, zone.Depth);
+            double soilArea = (zone.RightDist + zone.LeftDist) * (bottom - top);
+            prop = Math.Max(0.0, MathUtilities.Divide(rootArea, soilArea, 0.0));
+            return prop;
         }
 
         //------------------------------------------------------------------------------------------------
-        //sorghum specific variables
+        // sorghum specific variables
         /// <summary>Gets the RootFront</summary>
         public double RootAngle { get; set; } = 45;
 
@@ -953,76 +938,6 @@
 
         /// <summary>The kgha2gsm</summary>
         protected const double kgha2gsm = 0.1;
-
-        double DegToRad(double degs)
-        {
-            return degs * Math.PI / 180.0;
-        }
-
-        double RadToDeg(double rads)
-        {
-            return rads * 180.0 / Math.PI;
-        }
-
-        double calcRootArea(ZoneState zone, double top, double bottom, double hDist)
-        {
-            if (zone.RootFront == 0.0)
-            {
-                return 0.0;
-            }
-
-            double depth, depthInLayer;
-
-            zone.RootSpread = zone.RootFront * Math.Tan(DegToRad(RootAngle));   //Semi minor axis
-
-            if (zone.RootFront >= bottom)
-            {
-                depth = (bottom - top) / 2.0 + top;
-                depthInLayer = bottom - top;
-            }
-            else
-            {
-                depth = (zone.RootFront - top) / 2.0 + top;
-                depthInLayer = zone.RootFront - top;
-            }
-            double xDist = zone.RootSpread * Math.Sqrt(1 - (Math.Pow(depth, 2) / Math.Pow(zone.RootFront, 2)));
-
-            return Math.Min(depthInLayer * xDist, depthInLayer * hDist);
-        }
-
-        double GetRootArea(double top, double bottom, double rootLength, double hDist)
-        {
-            // get the area occupied by roots in a semi-circular section between top and bottom
-            double SDepth, rootArea;
-
-            // intersection of roots and Section
-            if (rootLength <= hDist)
-                SDepth = 0.0;
-            else
-                SDepth = Math.Sqrt(Math.Pow(rootLength, 2) - Math.Pow(hDist, 2));
-
-            // Rectangle - SDepth past bottom of this area
-            if (SDepth >= bottom)
-                rootArea = (bottom - top) * hDist;
-            else               // roots Past top
-            {
-                double Theta = 2 * Math.Acos(MathUtilities.Divide(Math.Max(top, SDepth), rootLength, 0));
-                double topArea = (Math.Pow(rootLength, 2) / 2.0 * (Theta - Math.Sin(Theta))) / 2.0;
-
-                // bottom down
-                double bottomArea = 0;
-                if (rootLength > bottom)
-                {
-                    Theta = 2 * Math.Acos(bottom / rootLength);
-                    bottomArea = (Math.Pow(rootLength, 2) / 2.0 * (Theta - Math.Sin(Theta))) / 2.0;
-                }
-                // rectangle
-                if (SDepth > top)
-                    topArea = topArea + (SDepth - top) * hDist;
-                rootArea = topArea - bottomArea;
-            }
-            return rootArea;
-        }
 
         /// <summary>Removes biomass from root layers when harvest, graze or cut events are called.</summary>
         /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
@@ -1126,7 +1041,7 @@
             {
                 if (layer <= PlantZone.soil.LayerIndexOfDepth(Depth))
                     supply += Math.Max(0.0, KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) * (SWmm[layer] - LL[layer] * DZ[layer]) *
-                        rootProportionInLayer(layer, PlantZone));
+                        RootProportionInLayer(layer, PlantZone));
             }
             return supply;
         }
@@ -1163,12 +1078,12 @@
             {
                 if (layer <= currentLayer)
                 {
-                    var propoortion = rootProportionInLayer(layer, PlantZone);
+                    var propoortion = RootProportionInLayer(layer, PlantZone);
                     var kl = KL[layer];
                     var klmod = klModifier.Value(layer);
 
                     supply[layer] = Math.Max(0.0, available[layer] * KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
-                        rootProportionInLayer(layer, PlantZone));
+                        RootProportionInLayer(layer, PlantZone));
 
                     supplyTotal += supply[layer];
                 }
