@@ -1972,6 +1972,7 @@
 
         /// <summary>
         /// In SimpleGrazin, Turn "Fraction of defoliated N leaving the system" into a fraction of defoliated N going to soil.
+        /// Add RootShape to all simulations.
         /// </summary>
         /// <param name="root">Root node.</param>
         /// <param name="fileName">Path to the .apsimx file.</param>
@@ -1990,6 +1991,22 @@
                     var fractionExcretedNToDung = simpleGrazing["FractionExcretedNToDung"] as JArray;
                     if (fractionExcretedNToDung.Count > 0)
                         simpleGrazing["CNRatioDung"] = "NaN";
+                }
+            }
+
+            foreach (JObject Root in JsonUtilities.ChildrenRecursively(root, "Root"))
+            {
+                if (JsonUtilities.ChildrenRecursively(Root, "RootShape").Count == 0)
+                {
+                    JArray rootChildren = Root["Children"] as JArray;
+                    if (rootChildren != null && rootChildren.Count > 0)
+                    {
+                        JObject rootShape = new JObject();
+                        rootShape["$type"] = "Models.Functions.RootShape, Models";
+                        rootShape["Type"] = 0;
+                        rootShape["RootAngle"] = 45;
+                        rootChildren.Add(rootShape);
+                    }
                 }
             }
         }
