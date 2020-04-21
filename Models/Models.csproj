@@ -264,6 +264,7 @@
     <Compile Include="Core\Run\SimulationDescription.cs" />
     <Compile Include="Factorial\Permutation.cs" />
     <Compile Include="Functions\AccumulateResetAtStage.cs" />
+    <Compile Include="Functions\RootShape.cs" />
     <Compile Include="Functions\DecumulateFunction.cs" />
     <Compile Include="Functions\EndOfDayFunction.cs" />
     <Compile Include="Functions\CSharpExpressionFunction.cs" />

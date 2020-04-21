@@ -194,6 +194,10 @@
         [Units("/d")]
         private IFunction maintenanceRespirationFunction = null;
 
+        /// <summary>The cost for remobilisation</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        private RootShape rootShape = null;
+
         /// <summary>Do we need to recalculate (expensive operation) live and dead</summary>
         private bool needToRecalculateLiveDead = true;
 
@@ -839,37 +843,19 @@
         /// <param name="zone">The zone.</param>
         public double RootProportionInLayer(int layer, ZoneState zone)
         {
-            if (RootFrontCalcSwitch?.Value() >= 1.0)
+            double prop = 0;
+            double top = layer == 0 ? 0 : MathUtilities.Sum(zone.soil.Thickness, 0, layer - 1);
+            double bottom = top + zone.soil.Thickness[layer];
+
+            if (zone.Depth >= top && zone.Depth <= bottom)
             {
-                /* Row Spacing and configuration (skip) are used to calculate semicircular root front to give
-                    proportion of the layer occupied by the roots. */
-                double top;
-
-                top = layer == 0 ? 0 : MathUtilities.Sum(zone.soil.Thickness, 0, layer - 1);
-                double bottom = top + zone.soil.Thickness[layer];
-
-                if (zone.Depth < top || zone.Depth > bottom)
-                    return 0;
-
-                double rootArea;
-                IFunction calcType = Apsim.Child(this, "RootAreaCalcType") as IFunction;
-                if (calcType != null && MathUtilities.FloatsAreEqual(calcType.Value(), 1))
-                {
-                    rootArea = GetRootArea(top, bottom, zone.RootFront, zone.RightDist);
-                    rootArea += GetRootArea(top, bottom, zone.RootFront, zone.LeftDist);
-                }
-                else
-                {
-                    rootArea = CalcRootAreaSemiCircle(zone, top, bottom, zone.RightDist);    // Right side
-                    rootArea += CalcRootAreaSemiCircle(zone, top, bottom, zone.LeftDist);    // Left Side
-                }
+                double rootArea = rootShape.CalcRootArea(zone, layer, top, bottom, zone.RightDist);    // Right side
+                rootArea += rootShape.CalcRootArea(zone, layer, top, bottom, zone.LeftDist);    // Left Side
 
                 double soilArea = (zone.RightDist + zone.LeftDist) * (bottom - top);
-
-                return Math.Max(0.0, MathUtilities.Divide(rootArea, soilArea, 0.0));
+                prop = Math.Max(0.0, MathUtilities.Divide(rootArea, soilArea, 0.0));
             }
-                
-            return zone.soil.ProportionThroughLayer(layer, zone.Depth);
+            return prop;
         }
 
         //------------------------------------------------------------------------------------------------
@@ -899,109 +885,6 @@
 
         /// <summary>The kgha2gsm</summary>
         protected const double kgha2gsm = 0.1;
-
-        double DegToRad(double degs)
-        {
-            return degs * Math.PI / 180.0;
-        }
-
-        double RadToDeg(double rads)
-        {
-            return rads * 180.0 / Math.PI;
-        }
-
-        double CalcRootAreaSemiEllipse(ZoneState zone, double top, double bottom, double hDist)
-        {
-            if (zone.RootFront == 0.0)
-            {
-                return 0.0;
-            }
-
-            double depth, depthInLayer;
-
-            zone.RootSpread = zone.RootFront * Math.Tan(DegToRad(RootAngle));   // Semi minor axis
-
-            if (zone.RootFront >= bottom)
-            {
-                depth = (bottom - top) / 2.0 + top;
-                depthInLayer = bottom - top;
-            }
-            else
-            {
-                depth = (zone.RootFront - top) / 2.0 + top;
-                depthInLayer = zone.RootFront - top;
-            }
-
-            double a = Math.Pow(depth - 0.5 * zone.RootFront, 2) / Math.Pow(0.5 * zone.RootFront, 2);
-            double xDist = Math.Min(hDist, Math.Sqrt(Math.Pow(zone.RootSpread, 2) * (1 - a)));
-            double areaLayer = depthInLayer * xDist;
-
-            return areaLayer;
-        }
-
-        double CalcRootAreaSemiCircle(ZoneState zone, double top, double bottom, double hDist)
-        {
-            if (zone.RootFront == 0.0)
-            {
-                return 0.0;
-            }
-
-            double depth, depthInLayer;
-
-            zone.RootSpread = zone.RootFront * Math.Tan(DegToRad(RootAngle));   // Semi minor axis
-
-            if (zone.RootFront >= bottom)
-            {
-                depth = (bottom - top) / 2.0 + top;
-                depthInLayer = bottom - top;
-            }
-            else
-            {
-                depth = (zone.RootFront - top) / 2.0 + top;
-                depthInLayer = zone.RootFront - top;
-            }
-
-            // Ben (2020.04.19): The first line does not take into account the coordinate of the centre of the circl, which is (0, 0.5*zone.RootFront).
-            // double xDist = Math.Min(hDist, zone.RootSpread * Math.Sqrt(1 - (Math.Pow(depth, 2) / Math.Pow(zone.RootFront, 2))));
-            double xDist = Math.Min(hDist, zone.RootSpread * Math.Sqrt(1 - (Math.Pow(depth - 0.5 * zone.RootFront, 2) / Math.Pow(0.5 * zone.RootFront, 2))));
-            double areaLayer = depthInLayer * xDist;
-
-            return areaLayer;
-        }
-
-        double GetRootArea(double top, double bottom, double rootLength, double hDist)
-        {
-            // get the area occupied by roots in a semi-circular section between top and bottom
-            double SDepth, rootArea;
-
-            // intersection of roots and Section
-            if (rootLength <= hDist)
-                SDepth = 0.0;
-            else
-                SDepth = Math.Sqrt(Math.Pow(rootLength, 2) - Math.Pow(hDist, 2));
-
-            // Rectangle - SDepth past bottom of this area
-            if (SDepth >= bottom)
-                rootArea = (bottom - top) * hDist;
-            else               // roots Past top
-            {
-                double Theta = 2 * Math.Acos(MathUtilities.Divide(Math.Max(top, SDepth), rootLength, 0));
-                double topArea = (Math.Pow(rootLength, 2) / 2.0 * (Theta - Math.Sin(Theta))) / 2.0;
-
-                // bottom down
-                double bottomArea = 0;
-                if (rootLength > bottom)
-                {
-                    Theta = 2 * Math.Acos(bottom / rootLength);
-                    bottomArea = (Math.Pow(rootLength, 2) / 2.0 * (Theta - Math.Sin(Theta))) / 2.0;
-                }
-                // rectangle
-                if (SDepth > top)
-                    topArea = topArea + (SDepth - top) * hDist;
-                rootArea = topArea - bottomArea;
-            }
-            return rootArea;
-        }
 
         /// <summary>Removes biomass from root layers when harvest, graze or cut events are called.</summary>
         /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
