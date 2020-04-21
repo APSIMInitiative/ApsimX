@@ -37,6 +37,9 @@
         /// <summary>Returns the organs dry matter demand</summary>
         BiomassPoolType DMDemand { get; }
 
+        /// <summary>Returns the organs dry matter demand</summary>
+        BiomassPoolType DMDemandPriorityFactor { get; }
+
         /// <summary>Returns the organs dry matter supply</summary>
         BiomassSupplyType DMSupply { get; }
 
