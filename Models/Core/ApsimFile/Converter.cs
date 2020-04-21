@@ -2001,10 +2001,26 @@
                     JArray rootChildren = Root["Children"] as JArray;
                     if (rootChildren != null && rootChildren.Count > 0)
                     {
-                        JObject rootShape = new JObject();
-                        rootShape["$type"] = "Models.Functions.RootShape, Models";
-                        rootShape["Type"] = 0;
-                        rootShape["RootAngle"] = 45;
+                        JArray rootShapeChildren = new JArray();
+                        JObject newObj = new JObject
+                        {
+                            ["$type"] = "Models.Functions.Constant, Models",
+                            ["Name"] = "RootAngle",
+                            ["FixedValue"] = 45
+                        };
+                        rootShapeChildren.Add(newObj);
+                        JObject newObj2 = new JObject
+                        {
+                            ["$type"] = "Models.Functions.Constant, Models",
+                            ["Name"] = "Shape",
+                            ["FixedValue"] = 0
+                        };
+                        rootShapeChildren.Add(newObj2);
+                        JObject rootShape = new JObject
+                        {
+                            ["$type"] = "Models.Functions.RootShape, Models",
+                            ["Children"] = rootShapeChildren
+                        };
                         rootChildren.Add(rootShape);
                     }
                 }

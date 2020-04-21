@@ -5,60 +5,69 @@ using Models.Core;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using Models.PMF.Organs;
+using Models.Soils;
 
 namespace Models.Functions
 {
     /// <summary>
-    /// This Function calculates a mean daily VPD from Max and Min weighted toward Max according to the specified MaximumVPDWeight factor.  
-    /// This is then passed into the XY matrix as the x property and the function returns the y value
+    /// This model calculates the proportion of each soil layer occupided by roots.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class RootShape : Model, IFunction, ICustomDocumentation
+    public class RootShape : Model, ICustomDocumentation
     {
-        #region Class Data Members
-
-        /// <summary>The maximum temperature weighting</summary>
-        [Description("The shape of root system (0: cylindre, 1: semi-ellipse, 2: semi-circle (RootAngle=45), 3: semi-circle (Sorghum and Maize)")]
-        public int Type { get; set; } = 0;
-
-        /// <summary>The maximum temperature weighting</summary>
-        [Description("Root angle")]
+        /// <summary>The Maximum Root Depth</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("Degree")]
-        public double RootAngle { get; set; } = 45;
+        private readonly IFunction RootAngle = null;
 
-        #endregion
-
-        /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        public double Value(int arrayIndex = -1)
-        {
-            return arrayIndex;
-        }
+        /// <summary>The function used to calculate root system shape (0,1,2,3)</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        private readonly IFunction Shape = null;
 
         /// <summary>Calculates the root area for a layer of soil</summary>
-        public double CalcRootArea(ZoneState zone, int layer, double top, double bottom, double hDist)
+        public void CalcRootProportionInLayers(ZoneState zone)
         {
-            if (Type == 0)
+            for (int layer = 0; layer < zone.soil.Thickness.Length; layer++)
             {
-                return zone.soil.ProportionThroughLayer(layer, zone.Depth) * hDist * (bottom - top);
-            }
-            else if (Type == 1)
-            {
-                return CalcRootAreaSemiEllipse(zone, top, bottom, hDist);
-            }
-            else if (Type == 2)
-            {
-                return CalcRootAreaSemiCircle(zone, top, bottom, hDist);
-            }
-            else if (Type == 3)
-            {
-                return CalcRootAreaSemiCircleMaize(zone, top, bottom, hDist);
-            }
-            else
-            {
-                throw new Exception("The root shape is not specified!");
+                double prop;
+                double top = layer == 0 ? 0 : MathUtilities.Sum(zone.soil.Thickness, 0, layer - 1);
+                double bottom = top + zone.soil.Thickness[layer];
+                double rootArea = 0;
+
+                if (zone.Depth < top)
+                {
+                    prop = 0;
+                } 
+                else
+                {
+                    // The shape of root system (0: cylindre, 1: semi-ellipse, 2: semi-circle (RootAngle=45), 3: semi-circle (Sorghum and Maize)
+                    if (Shape.Value() == 0)
+                    {
+                        rootArea = zone.soil.ProportionThroughLayer(layer, zone.Depth) * zone.RightDist * (bottom - top);    // Right side
+                        rootArea += zone.soil.ProportionThroughLayer(layer, zone.Depth) * zone.LeftDist * (bottom - top);    // Left Side
+                    }
+                    else if (Shape.Value() == 1)
+                    {
+                        rootArea = CalcRootAreaSemiEllipse(zone, top, bottom, zone.RightDist);   // Right side
+                        rootArea += CalcRootAreaSemiEllipse(zone, top, bottom, zone.LeftDist);   // Left Side
+                    }
+                    else if (Shape.Value() == 2)
+                    {
+                        rootArea = CalcRootAreaSemiCircle(zone, top, bottom, zone.RightDist);    // Right side
+                        rootArea += CalcRootAreaSemiCircle(zone, top, bottom, zone.LeftDist);    // Left Side
+                    }
+                    else if (Shape.Value() == 3)
+                    {
+                        rootArea = CalcRootAreaSemiCircleMaize(zone, top, bottom, zone.RightDist);    // Right side
+                        rootArea += CalcRootAreaSemiCircleMaize(zone, top, bottom, zone.LeftDist);    // Left Side
+                    }
+
+                    double soilArea = (zone.RightDist + zone.LeftDist) * (bottom - top);
+                    prop = Math.Max(0.0, MathUtilities.Divide(rootArea, soilArea, 0.0));
+                }
+                zone.RootProportions[layer] = prop;
             }
         }
 
@@ -76,7 +85,7 @@ namespace Models.Functions
 
             double depth, depthInLayer;
 
-            zone.RootSpread = zone.RootFront * Math.Tan(DegToRad(RootAngle));   // Semi minor axis
+            zone.RootSpread = zone.RootFront * Math.Tan(DegToRad(RootAngle.Value()));   // Semi minor axis
 
             if (zone.RootFront >= bottom)
             {
@@ -118,8 +127,8 @@ namespace Models.Functions
                 depthInLayer = zone.RootFront - top;
             }
 
-            // Ben (2020.04.19): The first line does not take into account the coordinate of the centre of the circl, which is (0, 0.5*zone.RootFront).
-            // double xDist = Math.Min(hDist, zone.RootSpread * Math.Sqrt(1 - (Math.Pow(depth, 2) / Math.Pow(zone.RootFront, 2))));
+            // Ben (2020.04.19): The first line does not take into account the coordinate of the centre of the circl, which is (0, 0.5*RootFront).
+            // double xDist = Math.Min(hDist, RootSpread * Math.Sqrt(1 - (Math.Pow(depth, 2) / Math.Pow(RootFront, 2))));
             double xDist = Math.Min(hDist, zone.RootSpread * Math.Sqrt(1 - (Math.Pow(depth - 0.5 * zone.RootFront, 2) / Math.Pow(0.5 * zone.RootFront, 2))));
             double areaLayer = depthInLayer * xDist;
 

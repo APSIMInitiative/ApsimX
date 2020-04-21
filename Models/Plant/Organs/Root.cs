@@ -76,6 +76,10 @@
         [Link]
         public ISurfaceOrganicMatter SurfaceOrganicMatter = null;
 
+        /// <summary>The proportion of biomass respired each day</summary> 
+        [Link(Type = LinkType.Child, ByName = true)]
+        public RootShape RootShape = null;
+
         /// <summary>Link to biomass removal model</summary>
         [Link(Type = LinkType.Child)]
         private BiomassRemoval biomassRemovalModel = null;
@@ -198,10 +202,6 @@
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
         private IFunction maintenanceRespirationFunction = null;
-
-        /// <summary>The proportion of biomass respired each day</summary> 
-        [Link(Type = LinkType.Child, ByName = true)]
-        private RootShape rootShape = null;
 
         /// <summary>Do we need to recalculate (expensive operation) live and dead</summary>
         private bool needToRecalculateLiveDead = true;
@@ -864,7 +864,7 @@
                             available[layer] *= layerproportion;
                         }
 
-                        var proportionThroughLayer = RootProportionInLayer(layer, myZone);
+                        var proportionThroughLayer = myZone.RootProportions[layer];
                         var klMod = klModifier.Value(layer);
                         supply[layer] = Math.Max(0.0, kl[layer] * klMod * KLModiferDueToDamage(layer) * available[layer] * proportionThroughLayer);
                     }
@@ -883,32 +883,12 @@
                         if (layer <= myZone.soil.LayerIndexOfDepth(myZone.Depth))
                         {
                             supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
-                            (zone.Water[layer] - ll[layer] * myZone.soil.Thickness[layer]) * RootProportionInLayer(layer, myZone));
+                            (zone.Water[layer] - ll[layer] * myZone.soil.Thickness[layer]) * myZone.RootProportions[layer]);
                         }
                     }
                     return supply;
                 }
             }            
-        }
-
-        /// <summary>Calculate the proportion of root in a layer within a zone.</summary>
-        /// <param name="layer">The zone.</param>
-        /// <param name="zone">The zone.</param>
-        public double RootProportionInLayer(int layer, ZoneState zone)
-        {
-            double prop = 0;
-            double top = layer == 0 ? 0 : MathUtilities.Sum(zone.soil.Thickness, 0, layer - 1);
-            double bottom = top + zone.soil.Thickness[layer];
-
-            if (zone.Depth < top)
-                return prop;
-
-            double rootArea = rootShape.CalcRootArea(zone, layer, top, bottom, zone.RightDist);    // Right side
-            rootArea += rootShape.CalcRootArea(zone, layer, top, bottom, zone.LeftDist);    // Left Side
-
-            double soilArea = (zone.RightDist + zone.LeftDist) * (bottom - top);
-            prop = Math.Max(0.0, MathUtilities.Divide(rootArea, soilArea, 0.0));
-            return prop;
         }
 
         //------------------------------------------------------------------------------------------------
@@ -1038,7 +1018,7 @@
             {
                 if (layer <= PlantZone.soil.LayerIndexOfDepth(Depth))
                     supply += Math.Max(0.0, KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) * (SWmm[layer] - LL[layer] * DZ[layer]) *
-                        RootProportionInLayer(layer, PlantZone));
+                        PlantZone.RootProportions[layer]);
             }
             return supply;
         }
@@ -1075,12 +1055,12 @@
             {
                 if (layer <= currentLayer)
                 {
-                    var propoortion = RootProportionInLayer(layer, PlantZone);
+                    var propoortion = PlantZone.RootProportions[layer];
                     var kl = KL[layer];
                     var klmod = klModifier.Value(layer);
 
                     supply[layer] = Math.Max(0.0, available[layer] * KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
-                        RootProportionInLayer(layer, PlantZone));
+                        PlantZone.RootProportions[layer]);
 
                     supplyTotal += supply[layer];
                 }

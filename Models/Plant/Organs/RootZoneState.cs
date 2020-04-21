@@ -97,6 +97,9 @@ namespace Models.PMF.Organs
         /// <summary>Gets the RootFront</summary>
         public double RightDist { get; set; }
 
+        /// <summary>Gets the RootProportions</summary>
+        public double[] RootProportions { get; set; }
+
         /// <summary>Gets or sets AvailableSW during SW Uptake
         /// Old Sorghum does actual uptake at end of day
         /// PMF does actual uptake before N uptake</summary>
@@ -184,6 +187,7 @@ namespace Models.PMF.Organs
             NitUptake = null;
             DeltaNO3 = new double[soil.Thickness.Length];
             DeltaNH4 = new double[soil.Thickness.Length];
+            RootProportions = new double[soil.Thickness.Length];
 
             Depth = 0.0;
 
@@ -257,6 +261,8 @@ namespace Models.PMF.Organs
                 dltRootFront = Math.Min(dltRootFront, maxFront - RootFront);
                 RootFront = RootFront + dltRootFront;
             }
+
+            root.RootShape.CalcRootProportionInLayers(this);
         }
         /// <summary>
         /// Calculate Root Activity Values for water and nitrogen
