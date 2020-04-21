@@ -848,7 +848,7 @@
                 top = layer == 0 ? 0 : MathUtilities.Sum(zone.soil.Thickness, 0, layer - 1);
                 double bottom = top + zone.soil.Thickness[layer];
 
-                if (zone.Depth < top || zone.Depth > bottom)
+                if (zone.Depth < top)
                     return 0;
 
                 double rootArea;
@@ -865,7 +865,6 @@
                 }
 
                 double soilArea = (zone.RightDist + zone.LeftDist) * (bottom - top);
-
                 return Math.Max(0.0, MathUtilities.Divide(rootArea, soilArea, 0.0));
             }
                 
