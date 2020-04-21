@@ -207,7 +207,7 @@ namespace Models.PMF.Arbitrator
 
                 myZone.Diffusion[layer] = Math.Min(no3Diffusion, zone.NO3N[layer] * kgha2gsm);
 
-                var proportion = plant.Root.RootProportionInLayer(currentLayer, myZone);
+                var proportion = plant.Root.RootProportionInLayer(layer, myZone);
                 myZone.Diffusion[layer] *= proportion;
 
                 //NH4Supply[layer] = no3massFlow;

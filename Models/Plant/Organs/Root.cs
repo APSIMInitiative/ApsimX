@@ -695,7 +695,7 @@
                         //old sorghum stores N03 in g/ms not kg/ha
                         var no3Diffusion = MathUtilities.Bound(swAvailFrac, 0.0, 1.0) * (zone.NO3N[layer] * kgha2gsm);
 
-                        var proportion = RootProportionInLayer(currentLayer, myZone);
+                        var proportion = RootProportionInLayer(layer, myZone);
                         no3Diffusion *= proportion;
 
                         myZone.Diffusion[layer] = no3Diffusion;
