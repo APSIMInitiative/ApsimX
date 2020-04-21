@@ -19,7 +19,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 93; } }
+        public static int LatestVersion { get { return 94; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1972,7 +1972,6 @@
 
         /// <summary>
         /// In SimpleGrazin, Turn "Fraction of defoliated N leaving the system" into a fraction of defoliated N going to soil.
-        /// Add RootShape to all simulations.
         /// </summary>
         /// <param name="root">Root node.</param>
         /// <param name="fileName">Path to the .apsimx file.</param>
@@ -1993,39 +1992,67 @@
                         simpleGrazing["CNRatioDung"] = "NaN";
                 }
             }
+        }
 
-            foreach (JObject Root in JsonUtilities.ChildrenRecursively(root, "Root"))
+        /// <summary>
+        /// Add RootShape to all simulations.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion94(JObject root, string fileName)
+        {
+            foreach (JObject thisRoot in JsonUtilities.ChildrenRecursively(root, "Root"))
             {
-                if (JsonUtilities.ChildrenRecursively(Root, "RootShape").Count == 0)
+                if (JsonUtilities.ChildrenRecursively(thisRoot, "RootShape").Count == 0)
                 {
-                    JArray rootChildren = Root["Children"] as JArray;
+                    JArray rootChildren = thisRoot["Children"] as JArray;
                     if (rootChildren != null && rootChildren.Count > 0)
                     {
+                        JToken thisPlant = JsonUtilities.Parent(thisRoot);
+
                         JArray rootShapeChildren = new JArray();
-                        JObject newObj = new JObject
+                        string type;
+                        JObject newObj;
+
+                        if (thisPlant["CropType"].ToString() == "Sorghum")
                         {
-                            ["$type"] = "Models.Functions.Constant, Models",
-                            ["Name"] = "RootAngle",
-                            ["FixedValue"] = 45
-                        };
-                        rootShapeChildren.Add(newObj);
-                        JObject newObj2 = new JObject
+                            type = "Models.Functions.RootShapeSemiCircle, Models";
+                            newObj = new JObject
+                            {
+                                ["$type"] = "Models.Functions.Constant, Models",
+                                ["Name"] = "RootAngle",
+                                ["FixedValue"] = 45
+                            };
+                            rootShapeChildren.Add(newObj);
+                        }
+                        else if (thisPlant["CropType"].ToString() == "Maize")
                         {
-                            ["$type"] = "Models.Functions.Constant, Models",
-                            ["Name"] = "Shape",
-                            ["FixedValue"] = 0
-                        };
-                        rootShapeChildren.Add(newObj2);
+                            type = "Models.Functions.RootShapeSemiCircle, Models";
+                            newObj = new JObject
+                            {
+                                ["$type"] = "Models.Functions.Constant, Models",
+                                ["Name"] = "RootAngle",
+                                ["FixedValue"] = 45
+                            };
+                            rootShapeChildren.Add(newObj);
+                        }
+                        else
+                        {
+                            type = "Models.Functions.RootShapeCylindre, Models";
+                        }
+
                         JObject rootShape = new JObject
                         {
-                            ["$type"] = "Models.Functions.RootShape, Models",
+                            ["$type"] = type,
+                            ["Name"] = "RootShape",
                             ["Children"] = rootShapeChildren
                         };
-                        rootChildren.Add(rootShape);
+                        rootChildren.AddFirst(rootShape);
                     }
                 }
             }
         }
+
 
         /// <summary>
         /// Add progeny destination phase and mortality function.

@@ -264,7 +264,9 @@
     <Compile Include="Core\Run\SimulationDescription.cs" />
     <Compile Include="Factorial\Permutation.cs" />
     <Compile Include="Functions\AccumulateResetAtStage.cs" />
-    <Compile Include="Functions\RootShape.cs" />
+    <Compile Include="Functions\RootShape\RootShapeSemiEllipse.cs" />
+    <Compile Include="Functions\RootShape\RootShapeSemiCircle.cs" />
+    <Compile Include="Functions\RootShape\RootShapeCylindre.cs" />
     <Compile Include="Functions\DecumulateFunction.cs" />
     <Compile Include="Functions\EndOfDayFunction.cs" />
     <Compile Include="Functions\CSharpExpressionFunction.cs" />
@@ -290,6 +292,8 @@
     <Compile Include="Lifecycle\PlantMortality.cs" />
     <Compile Include="Interfaces\ILeaf.cs" />
     <Compile Include="Plant\Arbitrator\BiomassTypeArbitrator.cs" />
+    <Compile Include="Interfaces\IRootShape.cs" />
+    <Compile Include="Plant\Arbitrator\IArbitrationMethod.cs" />
     <Compile Include="Plant\Arbitrator\IUptakeMethod.cs" />
     <Compile Include="Plant\Arbitrator\Methods\AllocateFixationMethod.cs" />
     <Compile Include="Plant\Arbitrator\Methods\AllocateUptakesMethod.cs" />
@@ -422,7 +426,6 @@
     <Compile Include="MicroClimate\MicroClimateCanopy.cs" />
     <Compile Include="MicroClimate\MicroClimateZone.cs" />
     <Compile Include="Plant\Arbitrator\BiomassArbitrationType.cs" />
-    <Compile Include="Plant\Arbitrator\IArbitrationMethod.cs" />
     <Compile Include="Plant\Arbitrator\PriorityThenRelativeAllocation.cs" />
     <Compile Include="Plant\Arbitrator\PriorityAllocation.cs" />
     <Compile Include="Plant\Arbitrator\RelativeAllocationSinglePass.cs" />

@@ -76,9 +76,9 @@
         [Link]
         public ISurfaceOrganicMatter SurfaceOrganicMatter = null;
 
-        /// <summary>The proportion of biomass respired each day</summary> 
-        [Link(Type = LinkType.Child, ByName = true)]
-        public RootShape RootShape = null;
+        /// <summary>The RootShape model</summary> 
+        [Link(Type = LinkType.Child, ByName = false)]
+        public IRootShape RootShape = null;
 
         /// <summary>Link to biomass removal model</summary>
         [Link(Type = LinkType.Child)]
