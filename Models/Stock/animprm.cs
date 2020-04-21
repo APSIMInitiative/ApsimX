@@ -93,8 +93,14 @@ namespace Models.GrazPlan
             public double fPropn;
         }
 
-        private double FBreedSRW;
-        private double FPotFleeceWt;
+        /// <summary>
+        /// 
+        /// </summary>
+        public double FBreedSRW { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public double FPotFleeceWt { get; set; }
 
         /// <summary>
         /// 
@@ -112,7 +118,10 @@ namespace Models.GrazPlan
         /// </summary>
         [Description("Dairy intake shape (c-idy-2)")]
         public double FDairyIntakeShape { get; set; }
-        private bool FUseDairyCurve;
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool FUseDairyCurve { get; set; }
 
         /// <summary>
         /// 

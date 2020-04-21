@@ -128,8 +128,8 @@
     /// ---
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.StockView")]
-    [PresenterName("UserInterface.Presenters.StockPresenter")]
+    [ViewName("UserInterface.Views.HTMLView")]
+    [PresenterName("UserInterface.Presenters.GenericPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     public class Stock : Model
     {
@@ -157,11 +157,6 @@
         /// True if at the first step of the run
         /// </summary>
         private bool isFirstStep;
-
-        /// <summary>
-        /// The list of specified genotypes
-        /// </summary>
-        private SingleGenotypeInits[] genotypeInits = new SingleGenotypeInits[0];
 
         /// <summary>
         /// The init values for the animal
@@ -244,7 +239,6 @@
             this.randFactory = new MyRandom(this.randSeed);       // random number generator
             this.stockModel = new StockList(this);
 
-            Array.Resize(ref this.genotypeInits, 0);
             Array.Resize(ref this.animalInits, 0);
             this.suppFed = new FoodSupplement();
             this.excretionInfo = new ExcretionInfo();
@@ -264,27 +258,6 @@
         {
             get { return this.randSeed; }
             set { this.randSeed = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the information about each animal genotype
-        /// </summary>
-        [Description("Information about each animal genotype")]
-        [Units("")]
-        public SingleGenotypeInits[] Genotypes
-        {
-            get
-            {
-                return this.genotypeInits;
-            }
-
-            set
-            {
-                if (value != null)
-                {
-                    this.genotypeInits = value;
-                }
-            }
         }
 
         /// <summary>
@@ -4101,7 +4074,6 @@
                 }
             }
 
-            this.stockModel.AddGenotypes(this.genotypeInits);
             for (int idx = 0; idx <= this.animalInits.Length - 1; idx++)                // Only create the initial animal groups 
                 this.stockModel.Add(this.animalInits[idx]);                             // after the paddocks have been identified                          
 
@@ -4710,100 +4682,5 @@
 
         #endregion
 
-        #region Public functions ============================================
-
-        /// <summary>
-        /// Get the parameters for this genotype
-        /// </summary>
-        /// <param name="mainParams">The base parameter set</param>
-        /// <param name="genoInits">The list of genotypes</param>
-        /// <param name="genoIdx">The index of the item in the list to use</param>
-        /// <returns>The animal parameter set for this genotype</returns>
-        public AnimalParamSet ParamsFromGenotypeInits(AnimalParamSet mainParams, SingleGenotypeInits[] genoInits, int genoIdx)
-        {
-            /*SingleGenotypeInits[] genotypeInits = new SingleGenotypeInits[genoInits.Length];
-            for (int idx = 0; idx < genoInits.Length; idx++)
-            {
-                genotypeInits[idx] = new SingleGenotypeInits();
-                this.stockModel.Value2GenotypeInits(genoInits[idx], ref genotypeInits[idx]);
-            }*/
-            return this.stockModel.ParamsFromGenotypeInits(mainParams, genoInits, genoIdx);
-        }
-
-        /// <summary>
-        /// Get a list of genotype names for the animal type from the current parameter set
-        /// </summary>
-        /// <param name="animal">The animal type (sheep/cattle)</param>
-        /// <returns>Array of genotype names</returns>
-        public string[] GenotypeNames(GrazType.AnimalType animal)
-        {
-            AnimalParamSet paramSet = stockModel.BaseParams;   
-
-            int count = paramSet.BreedCount(animal);
-            string[] namesArray = new string[count];
-            for (int i = 0; i < count; i++)
-            {
-                namesArray[i] = paramSet.BreedName(animal, i);
-            }
-
-            return namesArray;
-        }
-
-        /// <summary>
-        /// Get the combined list of genotype names that are defined for this instance
-        /// of the stock component.
-        /// </summary>
-        /// <param name="animal">The animal type (sheep/cattle)</param>
-        /// <returns>Array of genotype names</returns>
-        public string[] GenotypeNamesDefined(GrazType.AnimalType animal)
-        {
-            AnimalParamSet paramSet = stockModel.BaseParams;   
-            string[] genoParams = GenotypeNames(animal);
-            foreach (SingleGenotypeInits geno in Genotypes)
-            {
-                if (!genoParams.Contains(geno.GenotypeName))
-                {
-                    // check that the user defined genotype is of animal type
-                    AnimalParamSet parameters = paramSet.Match(geno.GenotypeName);
-                    if (parameters.Animal == animal)
-                    {
-                        Array.Resize(ref genoParams, genoParams.Length + 1);
-                        genoParams[genoParams.Length - 1] = geno.GenotypeName;
-                    }
-                }
-            }
-
-            Array.Sort(genoParams, StringComparer.InvariantCulture);
-            return genoParams;
-        }
-
-        /// <summary>
-        /// Returns the combined list of all animal types and user defined types.
-        /// </summary>
-        /// <returns>Genotype names</returns>
-        public string[] GenotypeNamesAll()
-        {
-            string[] allGenoNames = new string[0];
-            foreach (GrazType.AnimalType animal in Enum.GetValues(typeof(GrazType.AnimalType)))
-            {
-                string[] genoParams = GenotypeNames(animal);
-                
-                Array.Resize(ref allGenoNames, allGenoNames.Length + genoParams.Length);
-                genoParams.CopyTo(allGenoNames, allGenoNames.Length - genoParams.Length);
-            }
-
-            foreach (SingleGenotypeInits geno in Genotypes)
-            {
-                if (!allGenoNames.Contains(geno.GenotypeName))
-                {
-                    Array.Resize(ref allGenoNames, allGenoNames.Length + 1);
-                    allGenoNames[allGenoNames.Length - 1] = geno.GenotypeName;
-                }
-            }
-            Array.Sort(allGenoNames, StringComparer.InvariantCulture);
-
-            return allGenoNames;
-        }
-        #endregion
     }
 }

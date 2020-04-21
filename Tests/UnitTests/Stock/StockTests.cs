@@ -1,9 +1,11 @@
 ﻿namespace UnitTests.Stock
 {
+    using Models.Core;
     using Models.Core.ApsimFile;
     using Models.GrazPlan;
     using Models.PMF;
     using NUnit.Framework;
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
 
@@ -81,6 +83,94 @@
             var allGenotypes = genotypes.GetGenotypes();
             foreach (var genotypeName in allGenotypes.Select(genotype => genotype.Name))
                 Assert.IsFalse(genotypeName.Contains("."));
+        }
+
+        /// <summary>Ensure we can get a list of all animal types represented in the genotypes.</summary>
+        [Test]
+        public void GetAllAnimalTypes()
+        {
+            // Get a friesian genotype.
+            var genotypes = new Genotypes();
+            var animalTypes = genotypes.GetAnimalTypes();
+
+            Assert.AreEqual(animalTypes.ToArray(), new string[] { "Sheep", "Cattle" });
+        }
+
+        /// <summary>Ensure we can get a list of all genotype names for an animal type.</summary>
+        [Test]
+        public void GetGenotypeNamesForAnimalType()
+        {
+            // Get a friesian genotype.
+            var genotypes = new Genotypes();
+            var animalTypes = genotypes.GetGenotypeNamesForAnimalType("Cattle");
+
+            Assert.AreEqual(animalTypes.ToArray(), new string[] { "cattle", "beef breeds", "british beef", "Hereford", "Angus",
+                                                                  "Beef Shorthorn", "South Devon", "Ujimqin Cattle", "Ujimqin x Angus (1st cross)",                                                                  "Ujimqin x Angus (2nd cross)", "indicus", "Brahman", "european",
+                                                                  "Charolais", "Simmental", "Limousin", "Chianina", "British x Brahman",
+                                                                  "British x Charolais", "Ujimqin x Charolais (1st cross)",
+                                                                  "Ujimqin x Charolais (2nd cross)", "british-friesian crosses",
+                                                                  "British x Friesian", "British x Holstein", "charolais-friesian crosses",
+                                                                  "Charolais x Friesian", "Charolais x Holstein", "dairy breeds", "Jersey",
+                                                                  "Ayrshire", "Guernsey", "Dairy Shorthorn", "Brown Swiss", "Friesian",
+                                                                  "Holstein"});
+
+        }
+
+        /// <summary>Ensure we can create an animal cross genotype.</summary>
+        [Test]
+        public void CreateAnimalCross()
+        {
+            // Get a friesian genotype.
+            var genotypes = new Genotypes();
+            var animalParamSet = genotypes.CreateGenotypeCross("NewGenotype", "Friesian", 0.5, "Jersey", 0.5);
+
+            // Make sure we can retrieve the new genotype.
+            Assert.IsNotNull(genotypes.GetGenotype("NewGenotype"));
+
+            Assert.AreEqual("Andrew Moore", animalParamSet.sEditor);
+            Assert.AreEqual("30 Jan 2013", animalParamSet.sEditDate);
+            Assert.AreEqual("NewGenotype", animalParamSet.Name);
+            Assert.IsTrue(animalParamSet.bDairyBreed);
+            Assert.AreEqual(new double[] { 1.2, 1.4 }, animalParamSet.SRWScalars);
+            Assert.AreEqual(new double[] { 0, 0.025, 1.7, 0.22, 60, 0.02, 25, 22, 81, 0.7, 0.6, 0.05, 0.15, 0.005, 0.002, 0.5, 1.0, 0.01, 20, 3, 1.5 }, animalParamSet.IntakeC);
+            Assert.AreEqual(new double[] { 0, 285, 2.2, 1.77, 0.33, 1.8, 2.42, 1.16, 4.11, 343.5, 0.0164, 0.134, 6.22, 0.747 }, animalParamSet.PregC);
+        }
+
+        /// <summary>Ensure we can create and initialise an animal cross as user would in GUI.</summary>
+        [Test]
+        public void CreateAnimalCrossFromGUI()
+        {
+            // Get a friesian genotype.
+            var stock = new Stock();
+            var genotypeCross = new GenotypeCross()
+            {
+                Name = "NZFriesianCross",
+                DamBreed = "Friesian",
+                SireBreed = "Jersey",
+                MatureDeathRate = 0.2,
+                SRW = 550,
+                PeakMilk = 35,
+                FleeceYield = 1,        // a dairy cow that has a fleece! :)
+                Conception = new double[] { 100, 0, 0, 0 }
+            };
+            Utilities.InjectLink(genotypeCross, "stock", stock);
+
+            // Invoke start of simulation event. This should create a genotype cross.
+            Utilities.CallEvent(genotypeCross, "StartOfSimulation");
+
+            // Get the cross.
+            var animalParamSet = stock.AllGenotypes.GetGenotype("NZFriesianCross");
+
+            Assert.AreEqual("NZFriesianCross", animalParamSet.Name);
+            Assert.IsTrue(animalParamSet.bDairyBreed);
+            Assert.AreEqual(550, animalParamSet.BreedSRW);
+            Assert.AreEqual(35, animalParamSet.PeakMilk);
+            Assert.AreEqual(new double[] { 0, 0 }, animalParamSet.ConceiveSigs[0]);
+            Assert.AreEqual(new double[] { 10, 5.89 }, animalParamSet.ConceiveSigs[1]);
+            Assert.AreEqual(new double[] { 10, 5.89 }, animalParamSet.ConceiveSigs[2]);
+            Assert.AreEqual(new double[] { 0, 0 }, animalParamSet.ConceiveSigs[3]);
+            Assert.AreEqual(1, animalParamSet.FleeceYield);
+            Assert.AreEqual(new double[] { 0, 0.00061074716558540132, 5.53E-05 }, animalParamSet.MortRate);
         }
     }
 }

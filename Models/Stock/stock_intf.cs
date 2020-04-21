@@ -304,88 +304,6 @@
     }
 
     /// <summary>
-    /// Used to bundle animal genotype information so it can be passed to TStockList.Create.                                                           
-    /// The animal type (sheep or cattle) is implicit in the genotype fields.
-    /// It is permitted to set both DamBreed and SireBreed to an empty string. 
-    /// In this case the GenotypeName field must be a valid breed name.
-    /// </summary>
-    [Serializable]
-    public class SingleGenotypeInits
-    {
-        /// <summary>
-        /// Gets or sets the death rates
-        /// [0] = Base rate of mortality in mature animals. Default is 0.0.
-        /// [1] = Base rate of mortality in weaners.Default is 0.0.
-        /// </summary>
-        [Units("/yr")]
-        public double[] DeathRate = new double[2];
-
-        /// <summary>
-        /// Expected rates of conception with 1, 2 and 3 young for mature ewes or cows in average body condition,
-        /// over a mating period lasting 2.5 oestrus cycles.Only the first two elements are meaningful for cattle.
-        /// </summary>
-        public double[] Conceptions = new double[4];    // array[1..3]
-
-        /// <summary>
-        /// Gets or sets the genotype name
-        /// Name used to refer to the genotype in management events
-        /// </summary>
-        public string GenotypeName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the dam breed name
-        /// </summary>
-        public string DamBreed { get; set; }
-
-        /// <summary>
-        /// Gets or sets the sire breed name
-        /// </summary>
-        public string SireBreed { get; set; }
-
-        /// <summary>
-        /// Gets or sets the generation
-        /// Number of generations of crossing: 0 denotes the pure-bred maternal genotype (in which case SireBreed is
-        /// not used), 1 a first cross, 2 a second cross(75% sire:25% dam), etc.
-        /// </summary>
-        public int Generation { get; set; }
-
-        /// <summary>
-        /// Gets or sets the standard reference weight
-        /// Breed standard reference weight. The default value depends on DamBreed and SireBreed.
-        /// </summary>
-        [Units("kg")]
-        public double SRW { get; set; }
-
-        /// <summary>
-        /// Gets or sets the potential fleece weight
-        /// Breed reference fleece weight in sheep. The default value depends on DamBreed and SireBreed.
-        /// </summary>
-        [Units("kg")]
-        public double PotFleeceWt { get; set; }
-
-        /// <summary>
-        /// Gets or sets the maximum wool fibre diameter
-        /// Maximum average wool fibre diameter in sheep. The default depends on DamBreed and SireBreed.
-        /// </summary>
-        [Units("u")]
-        public double MaxFibreDiam { get; set; }
-
-        /// <summary>
-        /// Gets or sets the fleece yield
-        /// Clean fleece weight as a proportion of greasy fleece weight in sheep. Default is 0.70.
-        /// </summary>
-        [Units("kg/kg")]
-        public double FleeceYield { get; set; }
-
-        /// <summary>
-        /// Gets or sets the peak milk production
-        /// Potential maximum milk yield per head, in 4% fat-corrected milk equivalents, in cattle. Default is 20.0.
-        /// </summary>
-        [Units("kg")]
-        public double PeakMilk { get; set; }
-    }
-
-    /// <summary>
     /// The container for stock
     /// </summary>
     [Serializable]
@@ -1443,20 +1361,6 @@
             this.forageProviders = new ForageProviders();
             this.enterpriseList = new EnterpriseList();
             this.grazingList = new GrazingList();
-        }
-
-        /// <summary>
-        /// Add more genotypes
-        /// </summary>
-        /// <param name="breedInits">Breed init values</param>
-        public void AddGenotypes(SingleGenotypeInits[] breedInits)
-        {
-            int idx, jdx;
-
-            idx = this.genotypeParams.Length;
-            Array.Resize(ref this.genotypeParams, idx + breedInits.Length);
-            for (jdx = 0; jdx <= breedInits.Length - 1; jdx++)
-                this.genotypeParams[idx + jdx] = this.ParamsFromGenotypeInits(this.baseParams, breedInits, jdx);
         }
 
         /// <summary>
@@ -3348,68 +3252,6 @@
         }
 
         /// <summary>
-        /// Convert the Stock geno object to SingleGenotypeInits
-        /// </summary>
-        /// <param name="genoValue">A genotype value</param>
-        /// <param name="genoInits">Genotype initial value</param>
-        public void Value2GenotypeInits(StockGeno genoValue, ref SingleGenotypeInits genoInits)
-        {
-            genoInits.GenotypeName = genoValue.Name;
-            genoInits.DamBreed = genoValue.DamBreed;
-            genoInits.SireBreed = genoValue.SireBreed;
-            genoInits.Generation = genoValue.Generation;
-            genoInits.SRW = genoValue.SRW;
-            genoInits.PotFleeceWt = genoValue.RefFleeceWt;
-            genoInits.MaxFibreDiam = genoValue.MaxFibreDiam;
-            genoInits.FleeceYield = genoValue.FleeceYield;
-            genoInits.PeakMilk = genoValue.PeakMilk;
-            genoInits.DeathRate[FALSE] = genoValue.DeathRate;
-            genoInits.DeathRate[TRUE] = genoValue.WnrDeathRate;
-
-            // Catch weaner death rates that are missing from v1.3 input data...
-            if (genoInits.DeathRate[TRUE] == 0.0)
-                genoInits.DeathRate[TRUE] = genoInits.DeathRate[FALSE];
-
-            int i;
-            for (i = 0; i < genoInits.Conceptions.Length; i++)
-                genoInits.Conceptions[i] = 0.0;
-            if (genoValue.Conception != null)
-            {
-                for (i = 0; i < genoValue.Conception.Length; i++)
-                    genoInits.Conceptions[i] = genoValue.Conception[i]; // Conceptions[1..
-            }
-        }
-
-        /// <summary>
-        /// Convert the inits into a StockGeno array
-        /// </summary>
-        /// <param name="genoInits">The array of genotype inits</param>
-        /// <param name="genoValues">The returned array of StockGeno</param>
-        public void GenotypeInits2Value(SingleGenotypeInits[] genoInits, ref StockGeno[] genoValues)
-        {
-            genoValues = new StockGeno[genoInits.Length];
-            for (int idx = 0; idx < genoInits.Length; idx++)
-            {
-                genoValues[idx] = new StockGeno();
-                genoValues[idx].Name = genoInits[idx].GenotypeName;
-                genoValues[idx].DamBreed = genoInits[idx].DamBreed;
-                genoValues[idx].SireBreed = genoInits[idx].SireBreed;
-                genoValues[idx].Generation = genoInits[idx].Generation;
-                genoValues[idx].SRW = genoInits[idx].SRW;
-                genoValues[idx].RefFleeceWt = genoInits[idx].PotFleeceWt;
-                genoValues[idx].MaxFibreDiam = genoInits[idx].MaxFibreDiam;
-                genoValues[idx].FleeceYield = genoInits[idx].FleeceYield;
-                genoValues[idx].PeakMilk = genoInits[idx].PeakMilk;
-                genoValues[idx].DeathRate = genoInits[idx].DeathRate[FALSE];
-                genoValues[idx].WnrDeathRate = genoInits[idx].DeathRate[TRUE];
-
-                // genoValues[idx].Conception = new double[4];
-                for (int i = 0; i < genoInits[idx].Conceptions.Length; i++)
-                    genoValues[idx].Conception[i] = genoInits[idx].Conceptions[i]; // Conceptions[1..
-            }
-        }
-
-        /// <summary>
         /// The reproduction record
         /// </summary>
         private struct ReproRecord
@@ -3536,29 +3378,6 @@
         private const int MAX_CRITERIA = 1;
         private const int DRAFT_MOVE = 0;
         private string[] CRITERIA = new string[MAX_CRITERIA] { "draft" };   // used in radiogroup on dialog
-
-        /// <summary>
-        /// Initialises a SingleGenotypeInits so that most parameters revert to their         
-        /// defaults.  Can't be done as a constant because MISSING is a typed value      
-        /// </summary>
-        /// <param name="genotype">Returns the empty genotype</param>
-        public void MakeEmptyGenotype(ref SingleGenotypeInits genotype)
-        {
-            genotype.GenotypeName = "Medium Merino";
-            genotype.DamBreed = string.Empty;
-            genotype.SireBreed = string.Empty;
-            genotype.Generation = 0;
-            genotype.SRW = StdMath.DMISSING;
-            genotype.PotFleeceWt = StdMath.DMISSING;
-            genotype.MaxFibreDiam = StdMath.DMISSING;
-            genotype.FleeceYield = StdMath.DMISSING;
-            genotype.PeakMilk = StdMath.DMISSING;
-            genotype.DeathRate[FALSE] = StdMath.DMISSING;
-            genotype.DeathRate[TRUE] = StdMath.DMISSING;
-            genotype.Conceptions[1] = StdMath.DMISSING;
-            genotype.Conceptions[2] = 0.0;
-            genotype.Conceptions[3] = 0.0;
-        }
 
         /// <summary>
         /// Utility routines for manipulating the DM_Pool type.  AddDMPool adds the   
@@ -3688,68 +3507,6 @@
                     this.Add(animalList.At(idx), paddInfo, tagNo, priority);
                     animalList.SetAt(idx, null);                           // Detach the animal group from the TAnimalList                              
                 }
-        }
-
-        /// <summary>
-        /// Find the genotype
-        /// </summary>
-        /// <param name="mainParams">The animal parameters</param>
-        /// <param name="genoInits">Genotype inits</param>
-        /// <param name="searchName">The name to search</param>
-        /// <param name="searchBefore"></param>
-        /// <returns>The animal parametes</returns>
-        private AnimalParamSet FindGenotype(AnimalParamSet mainParams, SingleGenotypeInits[] genoInits, string searchName, int searchBefore)
-        {
-            var genotype = parentStockModel.AllGenotypes.GetGenotype(searchName);
-            genotype.EnglishName = genotype.Name;
-            genotype.DeriveParams();
-            genotype.Initialise();
-            return genotype;
-        }
-
-        /// <summary>
-        /// Always makes a copy
-        /// </summary>
-        /// <param name="mainParams">The animal parameters</param>
-        /// <param name="genoInits">Genotype inits</param>
-        /// <param name="genoIdx">The genoptype index</param>
-        /// <returns>The animal parametes</returns>
-        public AnimalParamSet ParamsFromGenotypeInits(AnimalParamSet mainParams, SingleGenotypeInits[] genoInits, int genoIdx)
-        {
-            AnimalParamSet result;
-
-            if (genoInits[genoIdx].DamBreed == string.Empty)
-                result = this.FindGenotype(mainParams, genoInits, genoInits[genoIdx].GenotypeName, 0);
-            else if (genoInits[genoIdx].Generation == 0)
-                result = this.FindGenotype(mainParams, genoInits, genoInits[genoIdx].DamBreed, 0);
-            else
-                result = AnimalParamSet.CreateFactory(
-                                                    genoInits[genoIdx].GenotypeName,
-                                                    this.FindGenotype(mainParams, genoInits, genoInits[genoIdx].DamBreed, genoIdx),
-                                                    this.FindGenotype(mainParams, genoInits, genoInits[genoIdx].SireBreed, genoIdx));
-
-            result.Name = genoInits[genoIdx].GenotypeName;
-
-            if (this.IsGiven(genoInits[genoIdx].SRW))
-                result.BreedSRW = genoInits[genoIdx].SRW;
-            if (this.IsGiven(genoInits[genoIdx].PotFleeceWt))
-                result.PotentialGFW = genoInits[genoIdx].PotFleeceWt;
-            if (this.IsGiven(genoInits[genoIdx].MaxFibreDiam))
-                result.MaxMicrons = genoInits[genoIdx].MaxFibreDiam;
-            if (this.IsGiven(genoInits[genoIdx].FleeceYield))
-                result.FleeceYield = genoInits[genoIdx].FleeceYield;
-            if (this.IsGiven(genoInits[genoIdx].PeakMilk))
-                result.PotMilkYield = genoInits[genoIdx].PeakMilk;
-            for (int weanerIdx = 0; weanerIdx <= 1; weanerIdx++)
-            {
-                // A zero death rate is permissible      
-                if (genoInits[genoIdx].DeathRate[weanerIdx] != StdMath.DMISSING)
-                    result.SetAnnualDeaths(weanerIdx == 1, genoInits[genoIdx].DeathRate[weanerIdx]);
-            }
-            if (this.IsGiven(genoInits[genoIdx].Conceptions[1]))
-                genoInits[genoIdx].Conceptions.CopyTo(result.Conceptions, 0);
-
-            return result;
         }
         
         /// <summary>
