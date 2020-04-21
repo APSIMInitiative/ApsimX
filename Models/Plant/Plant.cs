@@ -376,29 +376,27 @@
                 // No skip row
                 SowingData.SkipPlant = 1;
                 SowingData.SkipRow = 0;
-                SowingData.SkipDensityScale = 1;
             }
             if (rowConfig == 1)
             {
                 // Alternate rows (plant 1 – skip 1)
                 SowingData.SkipPlant = 1;
                 SowingData.SkipRow = 1;
-                SowingData.SkipDensityScale = 2;
             }
             if (rowConfig == 2)
             {
                 // Planting two rows and skipping one row (plant 2 – skip 1)
                 SowingData.SkipPlant = 2;
                 SowingData.SkipRow = 1;
-                SowingData.SkipDensityScale = 1.5;
             }
             if (rowConfig == 3)
             {
                 // Alternate pairs of rows (plant 2 – skip 2)
                 SowingData.SkipPlant = 2;
                 SowingData.SkipRow = 2;
-                SowingData.SkipDensityScale = 2;
             }
+
+            // Adjusting number of plant per meter in each row
             SowingData.SkipDensityScale = 1 + SowingData.SkipRow / SowingData.SkipPlant;
 
             IsAlive = true;
