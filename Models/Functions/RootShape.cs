@@ -105,7 +105,7 @@ namespace Models.Functions
 
             double depth, depthInLayer;
 
-            zone.RootSpread = zone.RootFront * Math.Tan(DegToRad(RootAngle));   // Semi minor axis
+            zone.RootSpread = zone.RootFront * Math.Tan(DegToRad(45));   // Semi minor axis
 
             if (zone.RootFront >= bottom)
             {
