@@ -913,9 +913,6 @@
 
         //------------------------------------------------------------------------------------------------
         // sorghum specific variables
-        /// <summary>Gets the RootFront</summary>
-        public double RootAngle { get; set; } = 45;
-
         /// <summary>Link to the KNO3 link</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         public IFunction RootDepthStressFactor = null;
