@@ -8,6 +8,30 @@ using System.Xml.Serialization;
 namespace Models.PMF.Phen
 {
     /// <summary>
+    /// Vernalisation rate parameter set for specific cultivar
+    /// </summary>
+    [Serializable]
+    [Description("")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(CAMP))]
+    public class FinalLeafNumberSet : Model
+    {
+        /// <summary>Final Leaf Number when fully vernalised before HS1.1 and then grown in >16h Pp</summary>
+        [Description("Final Leaf Number when fully vernalised before HS1.1 and then grown in >16h Pp</summary")]
+        public double LongPpFullVern { get; set; }
+        /// <summary>Final Leaf Number when fully vernalised before HS1.1 and then grown in >16h Pp</summary>
+        [Description("Final Leaf Number when fully vernalised before HS1.1 and then grown in >16h Pp")]
+        public double ShortPpFullVern { get; set; }
+        /// <summary>Final Leaf Number when grown at >20oC in >16h Pp</summary>
+        [Description("Final Leaf Number when grown at >20oC in >16h Pp")]
+        public double LongPpNilVern { get; set; }
+        /// <summary>Final Leaf Number when grown at > 20oC in 8h Pp</summary>
+        [Description("Final Leaf Number when grown at > 20oC in 8h Pp")]
+        public double ShortPpNilVern { get; set; }
+    }
+
+    /// <summary>
     /// Development Gene Expression
     /// </summary>
     [Serializable]
@@ -33,18 +57,12 @@ namespace Models.PMF.Phen
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction basePhyllochron = null;
 
+        [Link(Type = LinkType.Child, ByName = true)]
+        CalcCAMPVrnRates calcCAMPVrnRates = null;
+
         // Cultivar specific Phenology parameters
         [Link(Type = LinkType.Child, ByName = true)]
-        IFunction BaseDVrn1 = null;
-
-        [Link(Type = LinkType.Child, ByName = true)]
-        IFunction MaxDVrn1 = null;
-
-        [Link(Type = LinkType.Child, ByName = true)]
-        IFunction MaxDVrn2 = null;
-
-        [Link(Type = LinkType.Child, ByName = true)]
-        IFunction BaseDVrn3 = null;
+        FinalLeafNumberSet FLNparams = null;
 
         /// <summary>
         /// Calculate delta of upregulation for photo period (Pp) sensitive genes
@@ -201,6 +219,8 @@ namespace Models.PMF.Phen
 
         private double Vrn1atVS { get; set; }
 
+        private CultivarRateParams Params = null;
+
 
         [EventSubscribe("PrePhenology")]
         private void OnPrePhenology(object sender, EventArgs e)
@@ -214,8 +234,6 @@ namespace Models.PMF.Phen
                 else
                     dHS = dhs.Value();
 
-
-
                 if ((hs.Value() >= CompetenceHS) && (isCompetent == false))
                     isCompetent = true;
 
@@ -224,8 +242,8 @@ namespace Models.PMF.Phen
                 {    // If methalated Vrn1 expression is less that Vrn1Target do Vrn1 upregulation
                     if (MethVrn1 < Vrn1Target)
                     {
-                        dBaseVrn1 = CalcBaseUpRegVrn1(tt.Value(), dHS, BaseDVrn1.Value());
-                        dColdVrn1 = CalcColdUpRegVrn1(tt.Value(), dHS, MaxDVrn1.Value(), k);
+                        dBaseVrn1 = CalcBaseUpRegVrn1(tt.Value(), dHS, Params.BaseDVrn1);
+                        dColdVrn1 = CalcColdUpRegVrn1(tt.Value(), dHS, Params.MaxDVrn1, k);
                     }
                     // If Vrn1(base + cold) equals Vrn1Target methalate coldVrn1.  BaseVrn1 is all methalated every day
                     if (isMethalating ==true)
@@ -239,7 +257,7 @@ namespace Models.PMF.Phen
 
                 // Then work out Vrn2 expression 
                 if ((isVernalised == false) && (isCompetent == true))
-                    dVrn2 = CalcdPPVrn(pp.Value(), baseDVrn2, MaxDVrn2.Value(), dHS);
+                    dVrn2 = CalcdPPVrn(pp.Value(), baseDVrn2, Params.MaxDVrn2, dHS);
                 Vrn2 += dVrn2;
                 Vrn1Target = 1.0 + Vrn2;
 
@@ -264,7 +282,7 @@ namespace Models.PMF.Phen
 
                 // Then work out Vrn3 expression
                 if ((isVernalised == true) && (isCompetent == true) && (isReproductive == false))
-                    dVrn3 = CalcdPPVrn(pp.Value(), BaseDVrn3.Value(), maxDVrn3, dHS);
+                    dVrn3 = CalcdPPVrn(pp.Value(), Params.BaseDVrn3, maxDVrn3, dHS);
                 Vrn3 = Math.Min(1.0, Vrn3 + dVrn3);
 
                 // Then add Vrn3 expression effects to Vrn1 upregulation
@@ -286,7 +304,6 @@ namespace Models.PMF.Phen
                 //Finally work out if Flag leaf has appeared.
                 if (hs.Value() >= FLN)
                     isAtFlagLeaf = true;
-
             }
         }
 
@@ -307,6 +324,7 @@ namespace Models.PMF.Phen
         private void OnPlantSowing(object sender, SowPlant2Type data)
         {
             Reset();
+            Params = calcCAMPVrnRates.CalcCultivarParams(FLNparams, 90, 90, 1);
         }
 
         /// <summary>Resets the phase.</summary>

@@ -12,7 +12,7 @@ namespace Models.PMF.Phen
     /// Vernalisation rate parameter set for specific cultivar
     /// </summary>
     [Serializable]
-    public class CultivarVernRateParameters
+    public class CultivarRateParams
     {
         /// <summary>Base delta for Upregulation of Vrn1 >20oC</summary>
         public double BaseDVrn1 { get; set; }
@@ -41,20 +41,17 @@ namespace Models.PMF.Phen
         /// <summary>
         /// works through calculation scheme and assigns values to each parameter
         /// </summary>
-        /// <param name="FLN16hFull">Final Leaf Number under 16h fully vernalised conditions</param>
-        /// <param name="FLN16hNil">Final Leaf Number under 16h un-vernalised conditions</param>
-        /// <param name="FLN8hFull">Final Leaf Number under 8h fully vernalised conditions</param>
-        /// <param name="FLN8hNil">Final Leaf Number under 8h un-vernalised conditions</param>
+        /// <param name="FLNset">Final leaf number set observations (or estimations) for cultivar</param>
         /// <param name="TreatmentTtDuration">Thermal time duration of vernalisation treatment</param>
         /// <param name="TtEmerge">Thermal time from imbibing to emergence</param>
         /// <param name="Tt">Temperature during vernalisatin treatment</param>
         /// <returns></returns>
-        public CultivarVernRateParameters CalcCultivarVrnCoeffs(
-            double FLN16hFull, double FLN16hNil, double FLN8hFull, double FLN8hNil,
+        public CultivarRateParams CalcCultivarParams(
+            FinalLeafNumberSet FLNset,
             double TreatmentTtDuration, double TtEmerge, double Tt)
 
         {
-            CultivarVernRateParameters Params = new CultivarVernRateParameters();
+            CultivarRateParams Params = new CultivarRateParams();
 
             //Haun stage duration of vernalisation treatment period
             double VernTreatHS = TreatmentTtDuration / (camp.BasePhyllochron * 0.75);
@@ -64,10 +61,10 @@ namespace Models.PMF.Phen
             double LDVsTsHS = 3.0;
 
             // Calculate TSHS for each envronment set from FLNData
-            double TSHS16hFull = camp.calcTSHS(FLN16hFull);
-            double TSHS16hNil = camp.calcTSHS(FLN16hNil);
-            double TSHS8hFull = camp.calcTSHS(FLN8hFull);
-            double TSHS8hNil = camp.calcTSHS(FLN8hNil);
+            double TSHS16hFull = camp.calcTSHS(FLNset.LongPpFullVern);
+            double TSHS16hNil = camp.calcTSHS(FLNset.LongPpNilVern);
+            double TSHS8hFull = camp.calcTSHS(FLNset.ShortPpFullVern);
+            double TSHS8hNil = camp.calcTSHS(FLNset.ShortPpNilVern);
 
             // Photoperiod sensitivity (PPS)
             // the difference between TSHS at 8 and 16 h pp under 
