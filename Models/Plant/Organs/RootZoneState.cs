@@ -259,8 +259,8 @@ namespace Models.PMF.Organs
 
                 double maxFront = Math.Sqrt(Math.Pow(Depth, 2) + Math.Pow(LeftDist, 2));
                 dltRootFront = Math.Min(dltRootFront, maxFront - RootFront);
-                RootFront = RootFront + dltRootFront;
-            }
+                RootFront += dltRootFront;
+            }                      
 
             root.RootShape.CalcRootProportionInLayers(this);
         }

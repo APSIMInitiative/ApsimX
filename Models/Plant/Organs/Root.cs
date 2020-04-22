@@ -1055,10 +1055,6 @@
             {
                 if (layer <= currentLayer)
                 {
-                    var propoortion = PlantZone.RootProportions[layer];
-                    var kl = KL[layer];
-                    var klmod = klModifier.Value(layer);
-
                     supply[layer] = Math.Max(0.0, available[layer] * KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
                         PlantZone.RootProportions[layer]);
 

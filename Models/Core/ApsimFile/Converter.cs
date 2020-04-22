@@ -2016,7 +2016,7 @@
 
                         if (thisPlant["CropType"].ToString() == "Sorghum")
                         {
-                            type = "Models.Functions.RootShapeSemiCircle, Models";
+                            type = "Models.Functions.RootShapeSemiEllipse, Models";
                             newObj = new JObject
                             {
                                 ["$type"] = "Models.Functions.Constant, Models",
@@ -2028,13 +2028,6 @@
                         else if (thisPlant["CropType"].ToString() == "C4Maize")
                         {
                             type = "Models.Functions.RootShapeSemiCircle, Models";
-                            newObj = new JObject
-                            {
-                                ["$type"] = "Models.Functions.Constant, Models",
-                                ["Name"] = "RootAngle",
-                                ["FixedValue"] = 45
-                            };
-                            rootShapeChildren.Add(newObj);
                         }
                         else
                         {
