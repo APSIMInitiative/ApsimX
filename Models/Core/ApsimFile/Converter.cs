@@ -2025,7 +2025,7 @@
                             };
                             rootShapeChildren.Add(newObj);
                         }
-                        else if (thisPlant["CropType"].ToString() == "Maize")
+                        else if (thisPlant["CropType"].ToString() == "C4Maize")
                         {
                             type = "Models.Functions.RootShapeSemiCircle, Models";
                             newObj = new JObject
