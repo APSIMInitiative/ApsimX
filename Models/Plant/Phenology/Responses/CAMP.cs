@@ -31,7 +31,7 @@ namespace Models.PMF.Phen
         IFunction dhs = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
-        IFunction phyllochron = null;
+        IFunction basePhyllochron = null;
 
         // Cultivar specific Phenology parameters
         [Link(Type = LinkType.Child, ByName = true)]
@@ -103,26 +103,29 @@ namespace Models.PMF.Phen
         /// </summary>
         /// <param name="FLN">Final leaf number observed</param>
         /// <returns></returns>
-        private double calcTSHS(double FLN)
+        public double calcTSHS(double FLN)
         {
             return (FLN - 2.85) / 1.1;
         }
 
         // Class constants, assumed the same for all cultivars
         /// <summary>Temperature response coefficient for vernalisation</summary>
-        private double k { get; set; } = -0.19;
+        public double k { get { return -0.19; } }
         /// <summary>Base delta upregulation of Vrn2 at short Pp</summary>
-        private double baseDVrn2 { get; set; } = 0;
+        private double baseDVrn2 { get { return 0; } }
         /// <summary>Maximum delta upregulation of Vrn3 at Long Pp</summary>
-        private double maxDVrn3 { get; set; } = 0.33;
+        private double maxDVrn3 { get { return 0.33; } }
+        /// <summary>The haun stage at which the crop is able to detect and acto upon photoperiod stimuli, needed for vernalisation to occur</summary>
+        public double CompetenceHS { get { return 1.1; } }
 
         // Development state variables
         /// <summary>IsImbibed True if seed is sown and moisture in soil sufficient to start germination</summary>
         private bool isImbibed { get; set; } = false;
         /// <summary>IsMethalating True if Vrn1 expression equals TargetVrn1, the cold response will start methalating</summary>
         private bool isMethalating { get; set; }
-        /// <summary>IsCompetent True when HS>1.1, the plant is large enough to sense and respond to Pp stimulus</summary>
+        /// <summary>IsEmerged is True if seed has emerged</summary>
         private bool isEmerged { get; set; } = false;
+        /// <summary>IsCompetent True when HS>1.1, the plant is large enough to sense and respond to Pp stimulus</summary>
         private bool isCompetent { get; set; }
         /// <summary>isVernalisaed True when Methalated Vrn1 reaches Vrn1Target, enables occurance of floral initiation and terminal spikelet</summary>
         private bool isVernalised { get; set; }
@@ -135,6 +138,8 @@ namespace Models.PMF.Phen
 
         /// <summary></summary>
         [JsonIgnore] public bool IsVernalised { get { return isVernalised; }}
+        /// <summary></summary>
+        [JsonIgnore] public double BasePhyllochron { get { return basePhyllochron.Value(); } }
 
         /// Vrn gene expression state variables
         /// <summary>The current expression of Vrn1 upregulated at base rate.  
@@ -205,13 +210,13 @@ namespace Models.PMF.Phen
                 ZeroDeltas();
 
                 if (isEmerged == false)
-                    dHS = tt.Value() / phyllochron.Value(); //dhs from phenology is incorrect here because photoperiod will be zero.
+                    dHS = tt.Value() / basePhyllochron.Value() * 0.75; //dhs from phenology is incorrect here because photoperiod will be zero.
                 else
                     dHS = dhs.Value();
 
 
 
-                if ((hs.Value() >= 1.1) && (isCompetent == false))
+                if ((hs.Value() >= CompetenceHS) && (isCompetent == false))
                     isCompetent = true;
 
                 // Work out base, cold induced Vrn1 expression and methalyation until vernalisation is complete
