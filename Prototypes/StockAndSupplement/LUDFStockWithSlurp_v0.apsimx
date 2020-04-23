@@ -249,10 +249,7 @@
                       "FParentage": [],
                       "FBreedSRW": 550.0,
                       "FPotFleeceWt": 0.0,
-                      "FDairyIntakePeak": 0.85,
-                      "FDairyIntakeTime": 81.0,
-                      "FDairyIntakeShape": 0.7,
-                      "FUseDairyCurve": true,
+                      "FDairyIntakePeak": 0.0,
                       "sEditor": "Andrew Moore",
                       "sEditDate": "30 Jan 2013",
                       "Animal": 1,
@@ -264,7 +261,7 @@
                       "FleeceRatio": 0.0,
                       "MaxFleeceDiam": 0.0,
                       "bDairyBreed": true,
-                      "PeakMilk": 0.0,
+                      "PeakMilk": 27.5,
                       "MortRate": [
                         0.0,
                         5.53E-05,
@@ -295,7 +292,7 @@
                         25.0,
                         22.0,
                         81.0,
-                        0.7,
+                        1.7,
                         0.6,
                         0.05,
                         0.15,
@@ -306,13 +303,14 @@
                         0.01,
                         20.0,
                         3.0,
-                        1.5
+                        1.5,
+                        0.7
                       ],
                       "IntakeLactC": [
-                        0.34,
+                        0.0,
+                        0.85,
                         0.577,
-                        0.9,
-                        0.0
+                        0.9
                       ],
                       "GrazeC": [
                         0.0,
@@ -620,7 +618,7 @@
                       "PotentialGFW": 0.0,
                       "MaxMicrons": 0.0,
                       "FleeceYield": 0.0,
-                      "PotMilkYield": 0.0,
+                      "PotMilkYield": 27.5,
                       "Conceptions": [
                         0.0,
                         0.0,
@@ -1036,53 +1034,11 @@
                                   "FCount": 0,
                                   "FParamCount": 1,
                                   "FDefined": false
-                                }
-                              ],
-                              "FCount": 20,
-                              "FParamCount": 20,
-                              "FDefined": false
-                            }
-                          ],
-                          "FCount": 1,
-                          "FParamCount": 20,
-                          "FDefined": false
-                        },
-                        {
-                          "$type": "Models.GrazPlan.ParameterDefinition, Models",
-                          "FName": "c-",
-                          "FNamePart": "c",
-                          "FType": "System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
-                          "FItems": [
-                            {
-                              "$type": "Models.GrazPlan.ParameterDefinition, Models",
-                              "FName": "c-idy-",
-                              "FNamePart": "idy",
-                              "FType": "System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
-                              "FItems": [
-                                {
-                                  "$type": "Models.GrazPlan.ParameterDefinition, Models",
-                                  "FName": "c-idy-1",
-                                  "FNamePart": "1",
-                                  "FType": "System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
-                                  "FItems": [],
-                                  "FCount": 0,
-                                  "FParamCount": 1,
-                                  "FDefined": false
                                 },
                                 {
                                   "$type": "Models.GrazPlan.ParameterDefinition, Models",
-                                  "FName": "c-idy-2",
-                                  "FNamePart": "2",
-                                  "FType": "System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
-                                  "FItems": [],
-                                  "FCount": 0,
-                                  "FParamCount": 1,
-                                  "FDefined": false
-                                },
-                                {
-                                  "$type": "Models.GrazPlan.ParameterDefinition, Models",
-                                  "FName": "c-idy-3",
-                                  "FNamePart": "3",
+                                  "FName": "c-i-21",
+                                  "FNamePart": "21",
                                   "FType": "System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
                                   "FItems": [],
                                   "FCount": 0,
@@ -1090,13 +1046,13 @@
                                   "FDefined": false
                                 }
                               ],
-                              "FCount": 3,
-                              "FParamCount": 3,
+                              "FCount": 21,
+                              "FParamCount": 21,
                               "FDefined": false
                             }
                           ],
                           "FCount": 1,
-                          "FParamCount": 3,
+                          "FParamCount": 21,
                           "FDefined": false
                         },
                         {
@@ -1111,6 +1067,16 @@
                               "FNamePart": "imx",
                               "FType": "System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
                               "FItems": [
+                                {
+                                  "$type": "Models.GrazPlan.ParameterDefinition, Models",
+                                  "FName": "c-imx-0",
+                                  "FNamePart": "0",
+                                  "FType": "System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
+                                  "FItems": [],
+                                  "FCount": 0,
+                                  "FParamCount": 1,
+                                  "FDefined": false
+                                },
                                 {
                                   "$type": "Models.GrazPlan.ParameterDefinition, Models",
                                   "FName": "c-imx-1",
@@ -1142,13 +1108,13 @@
                                   "FDefined": false
                                 }
                               ],
-                              "FCount": 3,
-                              "FParamCount": 3,
+                              "FCount": 4,
+                              "FParamCount": 4,
                               "FDefined": false
                             }
                           ],
                           "FCount": 1,
-                          "FParamCount": 3,
+                          "FParamCount": 4,
                           "FDefined": false
                         },
                         {
@@ -3883,31 +3849,6 @@
                       "CurrLocale": null,
                       "FileSource": null,
                       "Name": "Friesian",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.GrazPlan.GenotypeCross, Models",
-                      "MatureDeathRate": 0.0,
-                      "WeanerDeathRate": 0.0,
-                      "Conception": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
-                      ],
-                      "AnimalType": "Cattle",
-                      "DamBreed": "Friesian",
-                      "SireBreed": "Jersey",
-                      "Generation": 1,
-                      "SRW": 550.0,
-                      "PotFleeceWt": "NaN",
-                      "MaxFibreDiam": "NaN",
-                      "FleeceYield": "NaN",
-                      "PeakMilk": 35.0,
-                      "Name": "NZFriesianCross",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,

@@ -848,7 +848,7 @@ namespace Models.GrazPlan
         /// C(I)
         /// </summary>
         [Description("Intake C c-i-")]
-        public double[] IntakeC = new double[22];                                             
+        public double[] IntakeC { get; set; } = new double[22];                                             
         /// <summary>
         /// C(I,15)
         /// </summary>

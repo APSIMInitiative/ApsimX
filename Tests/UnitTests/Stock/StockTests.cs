@@ -39,7 +39,7 @@
             Assert.AreEqual("30 Jan 2013", animalParamSet.sEditDate);
             Assert.IsFalse(animalParamSet.bDairyBreed);
             Assert.AreEqual(new double[] { 1.2, 1.4 }, animalParamSet.SRWScalars);
-            Assert.AreEqual(new double[] { 0, 0, 1.7, 0, 0, 0, 25.0, 22.0, 0, 0, 0, 0, 0.15, 0, 0.002, 0.5, 1.0, 0.01, 20, 3, 1.5 }, animalParamSet.IntakeC);
+            Assert.AreEqual(new double[] { 0, 0, 1.7, 0, 0, 0, 25.0, 22.0, 0, 0, 0, 0, 0.15, 0, 0.002, 0.5, 1.0, 0.01, 20, 3, 1.5, 0 }, animalParamSet.IntakeC);
             Assert.AreEqual(new double[] { 0.999, 1.1, 0.004, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, animalParamSet.WoolC);
         }
 
@@ -52,7 +52,7 @@
             Assert.AreEqual(550,  friesian.BreedSRW, 550);
             Assert.AreEqual(0.05, friesian.SelfWeanPropn);
             Assert.IsTrue(friesian.bDairyBreed);
-            Assert.AreEqual(new double[] { 0.0, 0.577, 0.9, 0.0 },        friesian.IntakeLactC);
+            Assert.AreEqual(new double[] { 0.0, 0.85, 0.577, 0.9 },        friesian.IntakeLactC);
             Assert.AreEqual(new double[] { 0.0, 0.0115, 0.27, 0.4, 1.1 }, friesian.GrowthC);
         }
 
@@ -133,7 +133,7 @@
             Assert.AreEqual("NewGenotype", animalParamSet.Name);
             Assert.IsTrue(animalParamSet.bDairyBreed);
             Assert.AreEqual(new double[] { 1.2, 1.4 }, animalParamSet.SRWScalars);
-            Assert.AreEqual(new double[] { 0, 0.025, 1.7, 0.22, 60, 0.02, 25, 22, 81, 0.7, 0.6, 0.05, 0.15, 0.005, 0.002, 0.5, 1.0, 0.01, 20, 3, 1.5 }, animalParamSet.IntakeC);
+            Assert.AreEqual(new double[] { 0, 0.025, 1.7, 0.22, 60, 0.02, 25, 22, 81, 1.7, 0.6, 0.05, 0.15, 0.005, 0.002, 0.5, 1.0, 0.01, 20, 3, 1.5, 0.7 }, animalParamSet.IntakeC);
             Assert.AreEqual(new double[] { 0, 285, 2.2, 1.77, 0.33, 1.8, 2.42, 1.16, 4.11, 343.5, 0.0164, 0.134, 6.22, 0.747 }, animalParamSet.PregC);
         }
 

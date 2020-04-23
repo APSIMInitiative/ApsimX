@@ -244,7 +244,7 @@
             ConvertArrayToCommands(parameterNode, "c-srs-", "SRWScalars", commands, 2);
             ConvertScalarToCommand(parameterNode, "c-swn", "SelfWeanPropn", commands);
             ConvertArrayToCommands(parameterNode, "c-n-", "GrowthC", commands, 5);
-            ConvertArrayToCommands(parameterNode, "c-i-", "IntakeC", commands, 21);
+            ConvertArrayToCommands(parameterNode, "c-i-", "IntakeC", commands, 22);
             ConvertArrayToScalars(parameterNode,  "c-idy-", new string[] { "FDairyIntakePeak", "FDairyIntakeTime", "FDairyIntakeShape" }, commands);
             ConvertArrayToCommands(parameterNode, "c-imx-", "IntakeLactC", commands, 4);
             ConvertArrayToCommands(parameterNode, "c-r-", "GrazeC", commands, 21);
