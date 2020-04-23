@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 93,
+  "Version": 94,
   "Name": "Simulations",
   "Children": [
     {
@@ -3486,6 +3486,11 @@
           "SWAvailabilityRatio": 0.0,
           "Name": "FineRoot",
           "Children": [
+            {
+              "$type": "Models.Functions.RootShapeCylindre, Models",
+              "Name": "RootShape",
+              "Children": []
+            },
             {
               "$type": "Models.Memo, Models",
               "Text": "For many of the parameters in this organ, see comments for similar parameters in the leaf organ.  \r\n\r\n",

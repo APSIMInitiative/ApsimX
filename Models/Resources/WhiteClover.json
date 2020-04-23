@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 93,
+  "Version": 94,
   "Name": "Simulations",
   "Children": [
     {
@@ -7406,6 +7406,11 @@
           "SWAvailabilityRatio": 0.0,
           "Name": "Root",
           "Children": [
+            {
+              "$type": "Models.Functions.RootShapeCylindre, Models",
+              "Name": "RootShape",
+              "Children": []
+            },
             {
               "$type": "Models.Memo, Models",
               "Text": "Note that this organs is parameterised to represents all the fine roots of the plant.  The root organ is reponsible for uptake but can also supply both N and DM from its non-structural biomass, although this typically represents only a small contribution to plant growth and only happen upon senescence.  The taproot organ is used for simulating biomass storage and remobilisation.  The root depth increases through time, as described below, but currently it does not retreat in case of root depth, something that will have to be revisited in the future.  \r\n",
