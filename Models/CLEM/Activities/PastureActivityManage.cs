@@ -80,13 +80,13 @@ namespace Models.CLEM.Activities
         /// Current land condition index
         /// </summary>
         [XmlIgnore]
-        public Relationship LandConditionIndex { get; set; }
+        public RelationshipTracker LandConditionIndex { get; set; }
 
         /// <summary>
         /// Grass basal area
         /// </summary>
         [XmlIgnore]
-        public Relationship GrassBasalArea { get; set; }
+        public RelationshipTracker GrassBasalArea { get; set; }
 
         /// <summary>
         /// Area requested
@@ -163,8 +163,8 @@ namespace Models.CLEM.Activities
 
             // locate Land Type resource for this forage.
             LinkedLandItem = Resources.GetResourceItem(this, LandTypeNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as LandType;
-            LandConditionIndex = Apsim.Children(this, typeof(Relationship)).Where(a => a.Name == "LandConditionIndex").FirstOrDefault() as Relationship;
-            GrassBasalArea = Apsim.Children(this, typeof(Relationship)).Where(a => a.Name == "GrassBasalArea").FirstOrDefault() as Relationship;
+            LandConditionIndex = Apsim.Children(this, typeof(RelationshipTracker)).Where(a => a.Name == "LandConditionIndex").FirstOrDefault() as RelationshipTracker;
+            GrassBasalArea = Apsim.Children(this, typeof(RelationshipTracker)).Where(a => a.Name == "GrassBasalArea").FirstOrDefault() as RelationshipTracker;
             FileGRASP = Apsim.ChildrenRecursively(ZoneCLEM.Parent).Where(a => a.Name == ModelNameFileGRASP).FirstOrDefault() as IFileGRASP;
 
             if (UseAreaAvailable)
