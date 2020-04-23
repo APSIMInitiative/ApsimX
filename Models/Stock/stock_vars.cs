@@ -507,7 +507,7 @@
                 initValue[jdx].Genotype = animalGroup.Genotype.Name;
                 initValue[jdx].Number = animalGroup.NoAnimals;
                 initValue[jdx].Sex = animalGroup.ReproState;
-                initValue[jdx].AgeDays = animalGroup.AgeDays;
+                initValue[jdx].AgeDays = animalGroup.MeanAge;
                 initValue[jdx].Weight = animalGroup.LiveWeight;
                 initValue[jdx].MaxPrevWt = animalGroup.MaxPrevWeight;
                 initValue[jdx].Pregnant = animalGroup.Pregnancy;
@@ -746,9 +746,9 @@
                             int s = (int)GrazType.TOMElement.s;
                             switch (varCode)
                             {
-                                case StockProps.prpAGE: value = animalGroup.AgeDays;
+                                case StockProps.prpAGE: value = animalGroup.MeanAge;
                                     break;
-                                case StockProps.prpAGE_MONTHS: value = animalGroup.AgeDays / MONTH2DAY;
+                                case StockProps.prpAGE_MONTHS: value = animalGroup.MeanAge / MONTH2DAY;
                                     break;
                                 case StockProps.prpLIVE_WT: value = animalGroup.LiveWeight;
                                     break;

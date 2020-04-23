@@ -1,5 +1,7 @@
 namespace Models.GrazPlan
 {
+    using Models.Core;
+    using Newtonsoft.Json;
     using StdUnits;
     using System;
     using System.Collections.Generic;
@@ -920,8 +922,14 @@ namespace Models.GrazPlan
     /// AnimalGroup class
     /// </summary>
     [Serializable]
-    public class AnimalGroup
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(Stock))]
+    public class AnimalGroup : Model
     {
+        [Link]
+        Stock stock = null;
+
         /// <summary>
         /// AnimalsDynamicGlb differentiates between the "static" version of the      
         /// model used in GrazFeed and the "dynamic" version used elsewhere           
@@ -957,12 +965,7 @@ namespace Models.GrazPlan
         /// Distribution of ages
         /// </summary>
         protected AgeList Ages;
-        
-        /// <summary>
-        /// Mean age of all animals (days)
-        /// </summary>
-        protected int MeanAge;
-        
+       
         /// <summary>
         /// Number of male animals in the group 
         /// </summary>
@@ -997,11 +1000,6 @@ namespace Models.GrazPlan
         /// Diameter of new wool (microns)           
         /// </summary>
         protected double DeltaWoolMicron;
-        
-        /// <summary>
-        /// Reproduction status
-        /// </summary>
-        protected GrazType.ReproType ReproStatus;
         
         /// <summary>
         /// Lactation status
@@ -2596,17 +2594,22 @@ namespace Models.GrazPlan
         /// <summary>
         /// ptr to the hosts random number factory
         /// </summary>
+        [JsonIgnore]
         public MyRandom RandFactory;
-        
+
         /// <summary>
         /// Pointers to the young of lactating animals, or the mothers of suckling ones
         /// </summary>
+        [JsonIgnore]
         public AnimalGroup Young;
         
         /// <summary>
         /// Animal output
         /// </summary>
         public AnimalOutput AnimalState = new AnimalOutput();
+
+        /// <summary>Default constructor.</summary>
+        public AnimalGroup() { }
 
         /// <summary>
         /// Animal group constructor
@@ -2692,7 +2695,7 @@ namespace Models.GrazPlan
                 WoolMicron = AParams.MaxFleeceDiam;                                   // Calculation of FleeceCutWeight depends   
                 FleeceCutWeight = GFW;                                                // on the values of NormalWt & WoolMicron 
 
-                fWoolAgeFactor = AParams.WoolC[5] + (1.0 - AParams.WoolC[5]) * (1.0 - Math.Exp(-AParams.WoolC[12] * AgeDays));
+                fWoolAgeFactor = AParams.WoolC[5] + (1.0 - AParams.WoolC[5]) * (1.0 - Math.Exp(-AParams.WoolC[12] * MeanAge));
                 DeltaWoolWt = AParams.FleeceRatio * StdRefWt * fWoolAgeFactor / 365.0;
             }
 
@@ -3021,28 +3024,220 @@ namespace Models.GrazPlan
             return Result;
         }
 
-        // Initialisation properties .....................................
-        /// <summary>
-        /// The animals genotype
-        /// </summary>
+        /// <summary>The animals genotype</summary>
+        [JsonIgnore]
         public AnimalParamSet Genotype
         {
             get { return AParams; }
             set { setGenotype(value); }
         }
 
-        /// <summary>
-        /// Number of animals in the group
-        /// </summary>
+        /// <summary>Number of animals in the group.</summary>
+        [JsonIgnore]
         public int NoAnimals
         {
             get { return GetNoAnimals(); }
             set { SetNoAnimals(value); }
         }
 
+        // User parameters .....................................
+
+        /// <summary>Initialise this group from parameters.</summary>
+        public void InitialiseFromParameters()
+        {
+            Genotype = stock.AllGenotypes.GetGenotype(GenotypeName);
+
+            if (!string.IsNullOrEmpty(MatedToGenotypeName))
+                MatedTo = stock.AllGenotypes.GetGenotype(MatedToGenotypeName);
+
+            if (ReproStatus == GrazType.ReproType.Male || ReproStatus == GrazType.ReproType.Castrated)
+                NoMales = InitialNumberOfAnimals;
+            else
+            {
+                ReproStatus = GrazType.ReproType.Empty;
+                NoFemales = InitialNumberOfAnimals;
+            }
+
+            ComputeSRW();
+            ImplantEffect = 1.0;
+            FIntakeModifier = 1.0;
+
+            Ages = new AgeList(RandFactory);
+            Ages.Input(MeanAge, NoMales, NoFemales);
+
+            TheRation = new SupplementRation();
+            FIntakeSupp = new FoodSupplement();
+
+            MateCycle = -1;                                                          // Not recently mated                       
+
+            LiveWeight = InitialLiveWeight;
+            BirthWt = Math.Min(AParams.StdBirthWt(1), BaseWeight);
+            Calc_Weights();
+
+            if (Animal == GrazType.AnimalType.Sheep)
+            {
+                WoolMicron = AParams.MaxFleeceDiam;                                   // Calculation of FleeceCutWeight depends   
+
+                var fWoolAgeFactor = AParams.WoolC[5] + (1.0 - AParams.WoolC[5]) * (1.0 - Math.Exp(-AParams.WoolC[12] * MeanAge));
+                DeltaWoolWt = AParams.FleeceRatio * StdRefWt * fWoolAgeFactor / 365.0;
+            }
+
+            Calc_CoatDepth();
+            TotalWeight = BaseWeight + WoolWt;
+
+            if (AgeClass == GrazType.AgeType.Mature)                                  // This will re-calculate size and condition
+                SetMaxPrevWt(Math.Max(StdRefWt, BaseWeight));
+            else
+                SetMaxPrevWt(BaseWeight);
+
+            ConditionAtBirthing = Condition;                                         // These terms affect the calculation of  
+            PropnOfMaxMilk = 1.0;                                                    // potential intake                     
+            LactAdjust = 1.0;
+
+            if (!double.IsNaN(InitialMaxPrevWeight))
+                MaxPrevWeight = InitialMaxPrevWeight;
+
+            BasePhos = BaseWeight * AParams.PhosC[9];
+            BaseSulf = BaseWeight * AParams.GainC[12] / GrazType.N2Protein * AParams.SulfC[1];
+
+            if ((ReproState == GrazType.ReproType.Empty) && (InitialPregnancy > 0))
+            {
+                Pregnancy = InitialPregnancy;
+                NoFoetuses = InitialNumberOfFoetuses;
+            }
+
+            if ((ReproState == GrazType.ReproType.Empty || ReproState == GrazType.ReproType.EarlyPreg || ReproState == GrazType.ReproType.LatePreg) && Lactation > 0)
+            {
+                Lactation = InitialLactation;
+                if (InitialNumberOfOffspring > 0)
+                    NoOffspring = InitialNumberOfOffspring;
+                else if (Animal == GrazType.AnimalType.Cattle && InitialNumberOfOffspring == 0)
+                    Young = null;
+                if (!double.IsNaN(BirthCS))
+                    BirthCondition = AnimalParamSet.CondScore2Condition(BirthCS, AnimalParamSet.Cond_System.csSYSTEM1_5);
+            }
+
+            if (Young != null)
+            {
+                if (!double.IsNaN(YoungWt))
+                    Young.LiveWeight = YoungWt;
+                if (!double.IsNaN(YoungGFW))
+                    Young.FleeceCutWeight = YoungGFW;
+            }
+        }
+
+        /// <summary>The animal type.</summary>
+        [Description("Animal type")]
+        [Display(Values = "GetAnimalTypes")]
+        public string AnimalType { get; set; }
+
+        /// <summary>The animals genotype</summary>
+        [Description("The animals genotype")]
+        [Display(Values = "GetGenotypeNames")]
+        public string GenotypeName { get; set; }
+
+        /// <summary>Get the names of all genotypes for the current animal type.</summary>
+        public IEnumerable<string> GetAnimalTypes()
+        {
+            return stock.AllGenotypes.GetAnimalTypes();
+        }
+
+        /// <summary>Get the names of all genotypes for the current animal type.</summary>
+        public IEnumerable<string> GetGenotypeNames()
+        {
+            return stock.AllGenotypes.GetGenotypeNamesForAnimalType(AnimalType);
+        }
+
+        /// <summary>Number of animals in the group.</summary>
+        [Description("The number of animals")]
+        public int InitialNumberOfAnimals { get; set; }
+
+        /// <summary>Reproduction status</summary>
+        [Description("Reproduction status")] 
+        public GrazType.ReproType ReproStatus { get; set; }
+
+        /// <summary>The mean age of the group</summary>
+        [Description("Mean age of the group (days)")]
+        public int MeanAge { get; set; }
+
+        /// <summary>The live weight of the group</summary>
+        [Description("The live weight of the group (kg)")]
+        public double InitialLiveWeight { get; set; }
+
+        /// <summary>The maximum previous weight (kg)</summary>
+        [Description("The maximum previous weight (kg)")]
+        public double InitialMaxPrevWeight { get; set; }
+
+        /// <summary>The cut weight of fleece</summary>
+        [Description("The cut weight of fleece (kg)")]
+        public double InitialFleeceCutWeight { get; set; }
+
+        /// <summary>The wool fibre diameter</summary>
+        [Description("The wool fibre diameter")]
+        public double FibreDiam
+        {
+            get { return WoolMicron; }
+            set { WoolMicron = value; }
+        }
+
+        /// <summary>
+        /// Genotype name of the bulls/rams to 
+        /// which pregnant or lactating animals were mated. 
+        /// Must match the name field of an element of the Genotypes property.
+        /// </summary>
+        [Description("Genotype of the bulls/rams to which pregnant or lactating animals were mated")]
+        public string MatedToGenotypeName { get; set; }
+
+        /// <summary>Days pregnant. Zero denotes not pregnant; 1 or more denotes the time since conception</summary>
+        [Description("Days pregnant. Zero denotes not pregnant; 1 or more denotes the time since conception")]
+        public int InitialPregnancy { get; set; }
+
+        /// <summary>The number of days since parturition.</summary>
+        [Description("The number of days since parturition")]
+        public int InitialLactation { get; set; }
+
+        /// <summary>The number of foetuses</summary>
+        [Description("Number of foetuses or suckling lambs")]
+        public int InitialNumberOfFoetuses { get; set; }
+
+        /// <summary>The number of offspring.</summary>
+        [Description("Number of suckling young. Only meaningful for cows with Lactating > 0")]
+        public int InitialNumberOfOffspring { get; set; }
+
+        /// <summary>
+        /// Greasy fleece weight of suckling lambs. Only meaningful for ewes with Lactating > 0.
+        /// </summary>
+        [Description("Greasy fleece weight of suckling lambs")]
+        [Units("kg")]
+        public double YoungGFW { get; set; } = double.NaN;
+
+        /// <summary>
+        /// Unfasted live weight of suckling calves/lambs. Only meaningful for cows/ewes with lactating > 0.
+        /// </summary>
+        [Description("Unfasted live weight of suckling calves/lambs")]
+        [Units("kg")]
+        public double YoungWt { get; set; } = double.NaN;
+
+        /// <summary>Birth Condition score</summary>
+        [Description("Birth Condition score")]
+        public double BirthCS { get; set; } = double.NaN;
+
+        /// <summary>Paddock occupied by the animals.</summary>
+        [Description("Paddock occupied by the animals")]
+        public string PaddockName { get; set; }
+
+        /// <summary>Initial tag value for the animal group.</summary>
+        [Description("Initial tag value for the animal group")]
+        public int Tag { get; set; }
+
+        /// <summary>Priority accorded the animals in the Draft event</summary>
+        [Description("Priority accorded the animals in the Draft event")]
+        public int Priority { get; set; }
+
         /// <summary>
         /// Gets or sets the number of males
         /// </summary>
+        [JsonIgnore]
         public int MaleNo
         {
             get { return NoMales; }
@@ -3052,6 +3247,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the number of females
         /// </summary>
+        [JsonIgnore]
         public int FemaleNo
         {
             get { return NoFemales; }
@@ -3059,17 +3255,9 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Gets or sets the mean age of the group
-        /// </summary>
-        public int AgeDays
-        {
-            get { return MeanAge; }
-            set { MeanAge = value; }
-        }
-
-        /// <summary>
         /// Gets or sets the live weight of the group
         /// </summary>
+        [JsonIgnore]
         public double LiveWeight
         {
             get { return TotalWeight; }
@@ -3079,6 +3267,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the animal base weight
         /// </summary>
+        [JsonIgnore]
         public double BaseWeight
         {
             get { return BasalWeight; }
@@ -3088,6 +3277,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the fleece-free, conceptus-free weight, but including the wool stubble        
         /// </summary>
+        [JsonIgnore]
         public double EmptyShornWeight
         {
             get { return BaseWeight + CoatDepth2Wool(STUBBLE_MM); }
@@ -3101,6 +3291,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the cut weight of fleece
         /// </summary>
+        [JsonIgnore]
         public double FleeceCutWeight
         {
             get { return GetFleeceCutWt(); }
@@ -3110,6 +3301,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the wool weight
         /// </summary>
+        [JsonIgnore]
         public double WoolWeight
         {
             get { return WoolWt; }
@@ -3119,78 +3311,77 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the depth of coat
         /// </summary>
+        [JsonIgnore]
         public double CoatDepth
         {
             get { return FCoatDepth; }
             set { SetCoatDepth(value); }
         }
-        
+
         /// <summary>
         /// Gets or sets the maximum previous weight
         /// </summary>
+        [JsonIgnore]
         public double MaxPrevWeight
         {
             get { return MaxPrevWt; }
             set { SetMaxPrevWt(value); }
         }
-        
-        /// <summary>
-        /// Gets or sets the wool fibre diameter
-        /// </summary>
-        public double FibreDiam
-        {
-            get { return WoolMicron; }
-            set { WoolMicron = value; }
-        }
-        
+
         /// <summary>
         /// Gets or sets the animal parameters for the animal mated to
         /// </summary>
+        [JsonIgnore]
         public AnimalParamSet MatedTo
         {
             get { return FMatedTo; }
             set { setMatedTo(value); }
         }
-        
+
         /// <summary>
         /// Gets or sets the stage of pregnancy
         /// </summary>
+        [JsonIgnore]
         public int Pregnancy
         {
             get { return FoetalAge; }
             set { SetPregnancy(value); }
         }
-        
+
         /// <summary>
         /// Gets or sets the days lactating
         /// </summary>
+        [JsonIgnore]
         public int Lactation
         {
             get { return DaysLactating; }
             set { SetLactation(value); }
         }
-        
+
         /// <summary>
         /// Gets or sets the number of foetuses
         /// </summary>
+        [JsonIgnore]
         public int NoFoetuses
         {
             get { return FNoFoetuses; }
             set { SetNoFoetuses(value); }
         }
-        
+
         /// <summary>
         /// Gets or sets the number of offspring
         /// </summary>
+        [JsonIgnore]
         public int NoOffspring
         {
             get { return FNoOffspring; }
             set { SetNoOffspring(value); }
         }
-        
+
         /// <summary>
         /// Gets or sets the condition at birth
         /// </summary>
+        [JsonIgnore]
         public double BirthCondition
         {
             get { return ConditionAtBirthing; }
@@ -3200,6 +3391,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the daily deaths
         /// </summary>
+        [JsonIgnore]
         public int Deaths
         {
             get { return FDeaths; }
@@ -4198,7 +4390,7 @@ namespace Models.GrazPlan
                     diamPower = this.AParams.WoolC[14];
                 this.DeltaWoolMicron = this.AParams.MaxFleeceDiam * Math.Pow(this.AnimalState.ProteinUse.Wool / potCleanGain, diamPower);
                 if (BaseWeight <= 0)
-                    throw new Exception("Base weight is zero or less for " + this.NoAnimals.ToString() + " " + this.Breed + " animals aged " + this.AgeDays.ToString() + " days");
+                    throw new Exception("Base weight is zero or less for " + this.NoAnimals.ToString() + " " + this.Breed + " animals aged " + this.MeanAge.ToString() + " days");
                 if (this.DeltaWoolMicron > 0.0)
                     gain_Length = 100.0 * 4.0 / Math.PI * this.AnimalState.ProteinUse.Wool /              // Computation of fibre diameter assumes    
                                            (this.AParams.WoolC[10] * this.AParams.WoolC[11] *             // that the day's growth is cylindrical   

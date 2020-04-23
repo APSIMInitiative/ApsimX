@@ -1067,7 +1067,7 @@
                         // if mate this group and this group belongs to this ent
                         if ((tagNo == this.GetTag(g)) && (curEnt.ContainsTag(this.GetTag(g))))    
                         {
-                            if (this.At(g).AgeDays >= (365 * curEnt.MateYears))
+                            if (this.At(g).MeanAge >= (365 * curEnt.MateYears))
                             {
                                 this.Join(g, curEnt.MateWith, 42);
                                 this.SetTag(g, curEnt.JoinedTag);                        // retag the ewes that are mated into a ewe tag group
@@ -1513,6 +1513,19 @@
             return this.Add(newGroup, paddock, animalInits.Tag, animalInits.Priority);
         }
 
+        /// <summary>Add a group of animals to the list.</summary>
+        /// <param name="newGroup">New animal group.</param>
+        /// <returns>The index of the new group in the stock array. 0 based.</returns>
+        public int Add(AnimalGroup newGroup)
+        {
+            newGroup.InitialiseFromParameters();
+            var paddock = this.paddockList.ByName(newGroup.PaddockName.ToLower());
+            if (paddock == null)
+                paddock = this.paddockList.ByIndex(0);
+
+            return this.Add(newGroup, paddock, newGroup.Tag, newGroup.Priority);
+        }
+
         /// <summary>
         ///  * N.B. posn is 1-offset; stock list is effectively also a 1-offset array        
         /// </summary>
@@ -1582,6 +1595,11 @@
         {
             return this.GetAt(posn);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<AnimalGroup> Animals {  get { return Animals; } }
 
         /// <summary>
         /// posIdx is 1-offset; so is stock                                              
@@ -1978,7 +1996,7 @@
                     result = maleNames[(int)theGroup.Animal, (int)theGroup.ReproState];
                 else if (theGroup.Animal == GrazType.AnimalType.Sheep)
                     result = "ewe";
-                else if (theGroup.AgeDays < 2 * 365)
+                else if (theGroup.MeanAge < 2 * 365)
                     result = "heifer";
                 else
                     result = "cow";

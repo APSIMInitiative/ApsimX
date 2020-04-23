@@ -1,5 +1,6 @@
 ﻿namespace UnitTests.Stock
 {
+    using Models;
     using Models.Core;
     using Models.Core.ApsimFile;
     using Models.GrazPlan;
@@ -171,6 +172,82 @@
             Assert.AreEqual(new double[] { 0, 0 }, animalParamSet.ConceiveSigs[3]);
             Assert.AreEqual(1, animalParamSet.FleeceYield);
             Assert.AreEqual(new double[] { 0, 0.00061074716558540132, 5.53E-05 }, animalParamSet.MortRate);
+        }
+
+        /// <summary>Ensure we can add an animal group to STOCK.</summary>
+        [Test]
+        public void AddAnimalGroupToStock()
+        {
+            // Get a friesian genotype.
+            var stock = new Stock
+            {
+                Children = new List<Model>()
+                {
+                    new Clock(),
+                    new Weather(),
+                    new MockSummary(),
+                    new Zone()
+                    {
+                        Name = "Field1",
+                        Area = 100
+                    },
+                    new AnimalGroup()
+                    {
+                        MeanAge = 100,
+                        GenotypeName = "Jersey",
+                        InitialMaxPrevWeight = 300,
+                        InitialNumberOfAnimals = 50,
+                        PaddockName = "Field1",
+                        ReproStatus = GrazType.ReproType.Empty,
+                        InitialLiveWeight = 290,
+                        MatedToGenotypeName = "Friesian"
+                    }
+                }
+            };
+            Utilities.ResolveLinks(stock);
+
+            // Invoke start of simulation event. This should add the animal group to stock.
+            Utilities.CallEvent(stock, "StartOfSimulation");
+
+            // Get the animal group
+            var animalGroup = stock.AnimalList.At(1);
+
+            Assert.AreEqual(100, animalGroup.MeanAge);
+            Assert.AreEqual(GrazType.AgeType.Weaner ,animalGroup.AgeClass);
+            Assert.AreEqual(GrazType.AnimalType.Cattle, animalGroup.Animal);
+            Assert.AreEqual(0, animalGroup.AnimalsPerHa);  // I would not expect zero here.
+            Assert.AreEqual(2.791845743237555, animalGroup.BirthCondition);
+            Assert.AreEqual(290, animalGroup.BaseWeight);
+            Assert.AreEqual(2.791845743237555, animalGroup.BodyCondition);
+            Assert.AreEqual("Jersey", animalGroup.Breed);
+            Assert.AreEqual(0, animalGroup.ConceptusWeight);
+            Assert.AreEqual(0, animalGroup.DrySheepEquivs);
+            Assert.AreEqual(50, animalGroup.FemaleNo);
+            Assert.AreEqual(290, animalGroup.FemaleWeight);
+            Assert.AreEqual("Jersey", animalGroup.Genotype.Name);
+            Assert.AreEqual(1, animalGroup.IntakeModifier);
+            Assert.AreEqual(0, animalGroup.Lactation);
+            Assert.AreEqual(290, animalGroup.LiveWeight);
+            Assert.AreEqual(0, animalGroup.MaleNo);
+            Assert.AreEqual(0, animalGroup.MaleWeight);
+            Assert.AreEqual("Friesian", animalGroup.MatedTo.Name);
+            Assert.AreEqual(0, animalGroup.MaxMilkYield);
+            Assert.AreEqual(300, animalGroup.MaxPrevWeight);
+            Assert.IsNull(animalGroup.MotherGroup);
+            Assert.AreEqual(50, animalGroup.NoAnimals);
+            Assert.AreEqual(0, animalGroup.NoFoetuses);
+            Assert.AreEqual(0, animalGroup.NoOffspring);
+            Assert.AreEqual(0, animalGroup.PaddSteep);
+            Assert.AreEqual(-26.97964272287771, animalGroup.PotIntake);
+            Assert.AreEqual(0.25968483457802222, animalGroup.RelativeSize);
+            Assert.AreEqual(GrazType.ReproType.Empty, animalGroup.ReproState);
+            Assert.AreEqual(400, animalGroup.StdReferenceWt);
+            Assert.AreEqual(0, animalGroup.SupptFW_Intake);
+            Assert.IsFalse(animalGroup.UreaWarning);
+            Assert.AreEqual(0, animalGroup.WaterLogging);
+            Assert.IsNotNull(animalGroup.Weather);
+            Assert.AreEqual(0, animalGroup.WeightChange);
+            Assert.IsNull(animalGroup.Young);
         }
     }
 }

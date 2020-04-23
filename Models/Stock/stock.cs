@@ -217,12 +217,6 @@
         [Link(IsOptional = true)]
         private Supplement suppFeed = null;
 
-        /// <summary>
-        /// The simulation host
-        /// </summary>
-        [Link]
-        private Simulation sim = null;
-
         /// <summary>Link to APSIM summary (logs the messages raised during model run).</summary>
         [Link]
         private ISummary outputSummary = null;
@@ -281,6 +275,11 @@
                 this.animalInits = value;
             }
         }
+
+        /// <summary>
+        /// Gives access to the list of animals. Needed for unit testing.
+        /// </summary>
+        public StockList AnimalList { get { return stockModel; } }
 
         /// <summary>
         /// Gets or sets the manually-specified structure of paddocks and forages 
@@ -4054,7 +4053,7 @@
             if (!this.paddocksGiven)
             {
                 // get the paddock areas from the simulation
-                foreach (Zone zone in Apsim.FindAll(this.sim, typeof(Zone)))
+                foreach (Zone zone in Apsim.FindAll(this, typeof(Zone)))
                 {
                     this.stockModel.Paddocks.Add(zone, zone.Name);                          // Add to the Paddocks list
                     this.stockModel.Paddocks.ByObj(zone).Area = zone.Area;
@@ -4074,8 +4073,9 @@
                 }
             }
 
-            for (int idx = 0; idx <= this.animalInits.Length - 1; idx++)                // Only create the initial animal groups 
-                this.stockModel.Add(this.animalInits[idx]);                             // after the paddocks have been identified                          
+            // Add all child animal groups to stock.
+            foreach (AnimalGroup animalGroup in Apsim.FindAll(this, typeof(AnimalGroup)))
+                this.stockModel.Add(animalGroup);                  // after the paddocks have been identified
 
             this.currentTime = this.systemClock.Today;
             int currentDay = this.currentTime.Day + (this.currentTime.Month * 0x100) + (this.currentTime.Year * 0x10000);
@@ -4136,7 +4136,7 @@
             if (!this.paddocksGiven)
             {
                 // update the paddock area as this can change during the simulation
-                foreach (Zone zone in Apsim.FindAll(this.sim, typeof(Zone)))
+                foreach (Zone zone in Apsim.FindAll(this, typeof(Zone)))
                 {
                     this.stockModel.Paddocks.ByObj(zone).Area = zone.Area;
                     this.stockModel.Paddocks.ByObj(zone).Slope = zone.Slope;

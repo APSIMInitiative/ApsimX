@@ -5,7 +5,8 @@
     using System.Collections.Generic;
 
     /// <summary>
-    /// Encapsulates a blend of genotypes that is itself a genotype.
+    /// An instance of this class creates a genotype cross and adds it to the list of 
+    /// available crosses.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
