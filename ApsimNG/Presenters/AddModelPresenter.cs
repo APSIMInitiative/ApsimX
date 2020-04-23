@@ -142,11 +142,7 @@
                     IModel child = (IModel)Activator.CreateInstance(selectedModelType.ModelType, true);
                     child.Name = selectedModelType.ModelName;
                     if (child is ModelCollectionFromResource resource)
-                    {
                         resource.ResourceName = selectedModelType.ModelName;
-                        if (child is Models.PMF.Plant plant)
-                            plant.CropType = selectedModelType.ModelName;
-                    }
 
                     var command = new AddModelCommand(Apsim.FullPath(this.model), child, explorerPresenter);
                     explorerPresenter.CommandHistory.Add(command, true);
