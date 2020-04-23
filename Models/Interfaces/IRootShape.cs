@@ -4,7 +4,7 @@ using Models.PMF.Organs;
 namespace Models.Interfaces
 {
     /// <summary>
-    /// Interface for arbitration methods
+    /// Interface for root shape functions
     /// </summary>
     public interface IRootShape
     {
