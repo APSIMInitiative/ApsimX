@@ -19,16 +19,16 @@ namespace Models.PMF.Phen
     {
         /// <summary>Final Leaf Number when fully vernalised before HS1.1 and then grown in >16h Pp</summary>
         [Description("Final Leaf Number when fully vernalised before HS1.1 and then grown in >16h Pp</summary")]
-        public double LongPpFullVern { get; set; }
+        public double LV { get; set; }
         /// <summary>Final Leaf Number when fully vernalised before HS1.1 and then grown in >16h Pp</summary>
         [Description("Final Leaf Number when fully vernalised before HS1.1 and then grown in >16h Pp")]
-        public double ShortPpFullVern { get; set; }
+        public double SV { get; set; }
         /// <summary>Final Leaf Number when grown at >20oC in >16h Pp</summary>
         [Description("Final Leaf Number when grown at >20oC in >16h Pp")]
-        public double LongPpNilVern { get; set; }
+        public double LN { get; set; }
         /// <summary>Final Leaf Number when grown at > 20oC in 8h Pp</summary>
         [Description("Final Leaf Number when grown at > 20oC in 8h Pp")]
-        public double ShortPpNilVern { get; set; }
+        public double SN { get; set; }
     }
 
     /// <summary>
