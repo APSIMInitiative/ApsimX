@@ -840,51 +840,23 @@
             {
                 var currentLayer = PlantZone.soil.LayerIndexOfDepth(Depth);
                 var soilCrop = myZone.soil.Crop(parentPlant.Name);
-                if (RootFrontCalcSwitch?.Value() >= 1.0)
+                double[] supply = new double[myZone.soil.Thickness.Length];
+
+                LayerMidPointDepth = myZone.soil.DepthMidPoints;
+                for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
                 {
-                    double[] kl = soilCrop.KL;
-                    double[] ll = soilCrop.LL;
-
-                    double[] lldep = new double[myZone.soil.Thickness.Length];
-                    double[] available = new double[myZone.soil.Thickness.Length];
-
-                    double[] supply = new double[myZone.soil.Thickness.Length];
-                    LayerMidPointDepth = myZone.soil.DepthMidPoints;
-                    for (int layer = 0; layer <= currentLayer; layer++)
+                    if (layer <= currentLayer)
                     {
-                        lldep[layer] = ll[layer] * myZone.soil.Thickness[layer];
-                        available[layer] = Math.Max(zone.Water[layer] - lldep[layer], 0.0);
-                        if (currentLayer == layer)
-                        {
-                            var layerproportion = myZone.soil.ProportionThroughLayer(layer, myZone.Depth);
-                            available[layer] *= layerproportion;
-                        }
-
-                        var proportionThroughLayer = rootProportionInLayer(layer, myZone);
-                        var klMod = klModifier.Value(layer);
-                        supply[layer] = Math.Max(0.0, kl[layer] * klMod * KLModiferDueToDamage(layer) * available[layer] * proportionThroughLayer);
+                        supply[layer] = Math.Max(0.0, soilCrop.KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
+                        (zone.Water[layer] - soilCrop.LL[layer] * myZone.soil.Thickness[layer]) * rootProportionInLayer(layer, myZone));
                     }
-
-                    return supply;
-                }
-                else
-                {
-                    double[] kl = soilCrop.KL;
-                    double[] ll = soilCrop.LL;
-
-                    double[] supply = new double[myZone.soil.Thickness.Length];
-                    LayerMidPointDepth = myZone.soil.DepthMidPoints;
-                    for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
+                    else
                     {
-                        if (layer <= myZone.soil.LayerIndexOfDepth(myZone.Depth))
-                        {
-                            supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
-                            (zone.Water[layer] - ll[layer] * myZone.soil.Thickness[layer]) * rootProportionInLayer(layer, myZone));
-                        }
+                        supply[layer] = 0;
                     }
-                    return supply;
                 }
-            }            
+                return supply;
+            }
         }
 
         /// <summary>Calculate the proportion of root in a layer within a zone.</summary>
