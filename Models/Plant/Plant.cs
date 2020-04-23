@@ -357,7 +357,7 @@
         /// <param name="maxCover">The maximum cover.</param>
         /// <param name="budNumber">The bud number.</param>
         /// <param name="rowConfig">SkipRow configuration.</param>
-        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1)
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 0)
         {
             SowingDate = Clock.Today;
 
@@ -369,7 +369,36 @@
             SowingData.MaxCover = maxCover;
             SowingData.BudNumber = budNumber;
             SowingData.RowSpacing = rowSpacing;
-            SowingData.SkipRow = rowConfig;
+            SowingData.SkipType = rowConfig;
+
+            if (rowConfig == 0)
+            {
+                // No skip row
+                SowingData.SkipPlant = 1.0;
+                SowingData.SkipRow = 0.0;
+            }
+            if (rowConfig == 1)
+            {
+                // Alternate rows (plant 1 – skip 1)
+                SowingData.SkipPlant = 1.0;
+                SowingData.SkipRow = 1.0;
+            }
+            if (rowConfig == 2)
+            {
+                // Planting two rows and skipping one row (plant 2 – skip 1)
+                SowingData.SkipPlant = 2.0;
+                SowingData.SkipRow = 1.0;
+            }
+            if (rowConfig == 3)
+            {
+                // Alternate pairs of rows (plant 2 – skip 2)
+                SowingData.SkipPlant = 2.0;
+                SowingData.SkipRow = 2.0;
+            }
+
+            // Adjusting number of plant per meter in each row
+            SowingData.SkipDensityScale = 1.0 + SowingData.SkipRow / SowingData.SkipPlant;
+
             IsAlive = true;
 
             this.Population = population;
