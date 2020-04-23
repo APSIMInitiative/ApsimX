@@ -158,15 +158,12 @@
             newGenotype.Animal = damBreed.Animal;
             newGenotype.bDairyBreed = damBreed.bDairyBreed;
             newGenotype.MaxYoung = damBreed.MaxYoung;
-            newGenotype.FUseDairyCurve = damBreed.FUseDairyCurve;
             newGenotype.OvulationPeriod = damBreed.OvulationPeriod;
             newGenotype.Puberty = damBreed.Puberty;
 
             newGenotype.FBreedSRW = damProportion * damBreed.FBreedSRW + sireProportion * sireBreed.FBreedSRW;
             newGenotype.FPotFleeceWt = damProportion * damBreed.FPotFleeceWt + sireProportion * sireBreed.FPotFleeceWt;
             newGenotype.FDairyIntakePeak = damProportion * damBreed.FDairyIntakePeak + sireProportion * sireBreed.FDairyIntakePeak;
-            newGenotype.FDairyIntakeTime = damProportion * damBreed.FDairyIntakeTime + sireProportion * sireBreed.FDairyIntakeTime;
-            newGenotype.FDairyIntakeShape = damProportion * damBreed.FDairyIntakeShape + sireProportion * sireBreed.FDairyIntakeShape;
             newGenotype.FleeceRatio = damProportion * damBreed.FleeceRatio + sireProportion * sireBreed.FleeceRatio;
             newGenotype.MaxFleeceDiam = damProportion * damBreed.MaxFleeceDiam + sireProportion * sireBreed.MaxFleeceDiam;
             newGenotype.PeakMilk = damProportion * damBreed.PeakMilk + sireProportion * sireBreed.PeakMilk;

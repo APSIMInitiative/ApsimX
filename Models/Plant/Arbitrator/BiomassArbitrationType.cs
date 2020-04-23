@@ -118,6 +118,9 @@ namespace Models.PMF
         /// <summary>Gets or sets the total allocation.</summary>
         /// <value>The actual biomass allocation to each organ, structural, non-structural and metabolic</value>
         public double[] TotalAllocation { get; set; }
+        /// <summary>Gets or sets the total biomass already allocated within the plant.</summary>
+        /// <value>crop biomass already allocated</value>
+        public double TotalPlantAllocation { get { return TotalStructuralAllocation + TotalMetabolicAllocation + TotalStorageAllocation; } }
         /// <summary>Gets or sets the total allocated.</summary>
         /// <value>The amount of biomass allocated to the whole crop</value>
         public double Allocated { get; set; }
@@ -143,6 +146,12 @@ namespace Models.PMF
         /// <summary>the type of biomass being arbitrated</summary>
         /// <value>The balance error.</value>
         public string BiomassType { get; set; }
+        /// <summary>Priority coefficients for structural biomass for each organ.  Only relevent it QPriorityThenRelativeAllocation method used</summary>
+        public double[] QStructural { get; set; }
+        /// <summary>Priority coefficients for Metabolic biomass for each organ.  Only relevent it QPriorityThenRelativeAllocation method used</summary>
+        public double[] QMetabolic { get; set; }
+        /// <summary>Priority coefficients for storage biomass for each organ.  Only relevent it QPriorityThenRelativeAllocation method used</summary>
+        public double[] QStorage { get; set; }
 
         //Constructor for Array variables
         /// <summary>Initializes a new instance of the <see cref="BiomassArbitrationType"/> class.</summary>
@@ -155,6 +164,9 @@ namespace Models.PMF
             StructuralDemand = new double[organs.Length];
             MetabolicDemand = new double[organs.Length];
             StorageDemand = new double[organs.Length];
+            QStructural = new double[organs.Length];
+            QMetabolic = new double[organs.Length];
+            QStorage = new double[organs.Length];
             ReallocationSupply = new double[organs.Length];
             UptakeSupply = new double[organs.Length];
             FixationSupply = new double[organs.Length];
@@ -190,7 +202,8 @@ namespace Models.PMF
 
         /// <summary>Setup all demands</summary>
         /// <param name="demandsForEachOrgan">The organs demands</param>
-        public void GetDemands(BiomassPoolType[] demandsForEachOrgan)
+        /// <param name="prioritiesForEachOrgan">the priority q factors</param>
+        public void GetDemands(BiomassPoolType[] demandsForEachOrgan, BiomassPoolType[] prioritiesForEachOrgan = null)
         {
 
             for (int i = 0; i < demandsForEachOrgan.Length; i++)
@@ -211,6 +224,12 @@ namespace Models.PMF
                 StructuralAllocation[i] = 0;
                 MetabolicAllocation[i] = 0;
                 StorageAllocation[i] = 0;
+                if (prioritiesForEachOrgan != null)
+                {
+                    QStructural[i] = prioritiesForEachOrgan[i].Structural;
+                    QMetabolic[i] = prioritiesForEachOrgan[i].Metabolic;
+                    QStorage[i] = prioritiesForEachOrgan[i].Storage;
+                }
             }
 
             Allocated = 0;

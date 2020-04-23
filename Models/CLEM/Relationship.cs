@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Activities;
+using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace Models.CLEM.Activities
+namespace Models.CLEM
 {
     /// <summary>
     /// This determines a relationship
@@ -16,14 +17,13 @@ namespace Models.CLEM.Activities
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(PastureActivityManage))]
     [ValidParent(ParentType = typeof(RuminantActivityTrade))]
     [Description("This model component specifies a relationship to be used by supplying a series of x and y values.")]
     [Version(1, 0, 3, "Graph of relationship displayed in Summary")]
     [Version(1, 0, 2, "Added RelationshipCalculationMethod to allow user to define fixed or linear solver")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"content/features/Relationships/Relationship.htm")]
-    public class Relationship: CLEMModel, IValidatableObject
+    public class Relationship : CLEMModel, IValidatableObject
     {
         /// <summary>
         /// Current value
@@ -65,27 +65,6 @@ namespace Models.CLEM.Activities
         public string NameOfYVariable { get; set; }
 
         /// <summary>
-        /// Initial value of Running value that can be modified by this relationship Modify() during the simulation
-        /// </summary>
-        [Description("Initial running value")]
-        [Required]
-        public double StartingValue { get; set; }
-
-        /// <summary>
-        /// Minimum value possible
-        /// </summary>
-        [Description("Minimum running value possible")]
-        [Required]
-        public double Minimum { get; set; }
-
-        /// <summary>
-        /// Maximum value possible
-        /// </summary>
-        [Description("Maximum running value possible")]
-        //[Required, GreaterThan("Minimum", ErrorMessage = "Maximum value must be greater than minimum value")]
-        public double Maximum { get; set; }
-
-        /// <summary>
         /// Solve equation for y given x
         /// </summary>
         /// <param name="xValue">x value to solve y</param>
@@ -97,7 +76,7 @@ namespace Models.CLEM.Activities
                 return YValues[0];
             }
 
-            if (xValue >= XValues[XValues.Length-1])
+            if (xValue >= XValues[XValues.Length - 1])
             {
                 return YValues[YValues.Length - 1];
             }
@@ -112,36 +91,14 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            if(CalculationMethod == RelationshipCalculationMethod.Interpolation)
+            if (CalculationMethod == RelationshipCalculationMethod.Interpolation)
             {
-                return YValues[k] + (YValues[k + 1] - YValues[k]) * (xValue - XValues[k])/(XValues[k + 1] - XValues[k]);
+                return YValues[k] + (YValues[k + 1] - YValues[k]) * (xValue - XValues[k]) / (XValues[k + 1] - XValues[k]);
             }
             else
             {
                 return YValues[k + 1];
             }
-        }
-
-        /// <summary>
-        /// Modify the current value by Y calculated from x
-        /// </summary>
-        /// <param name="x">x value</param>
-        public void Modify(double x)
-        {
-            Value += SolveY(x);
-            Value = Math.Min(Value, Maximum);
-            Value = Math.Max(Value, Minimum);
-        }
-
-        /// <summary>
-        /// Calculate new value using Y calculated from x
-        /// </summary>
-        /// <param name="x">x value</param>
-        public void Calculate(double x)
-        {
-            Value = SolveY(x);
-            Value = Math.Min(Value, Maximum);
-            Value = Math.Max(Value, Minimum);
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -150,7 +107,6 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            Value = StartingValue;
         }
 
         /// <summary>
@@ -161,11 +117,6 @@ namespace Models.CLEM.Activities
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            if(Maximum < Minimum)
-            {
-                string[] memberNames = new string[] { "Maximum" };
-                results.Add(new ValidationResult("The maximum running value must be greater than the Minimum value", memberNames));
-            }
             if (XValues == null)
             {
                 string[] memberNames = new string[] { "XValues" };

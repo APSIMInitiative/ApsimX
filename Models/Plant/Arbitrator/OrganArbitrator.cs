@@ -291,7 +291,8 @@ namespace Models.PMF
             // Setup DM demands for each organ  
             SetDMDemand?.Invoke(this, new EventArgs());
             BiomassPoolType[] demands = Organs.Select(organ => organ.DMDemand).ToArray();
-            DM.GetDemands(demands);
+            BiomassPoolType[] Qpriorities = Organs.Select(organ => organ.DMDemandPriorityFactor).ToArray();
+            DM.GetDemands(demands,Qpriorities);
         }
 
         /// <summary>Calculate all of the Organ N Supplies </summary>
