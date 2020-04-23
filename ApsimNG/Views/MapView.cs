@@ -72,11 +72,12 @@
 <html>
 <meta charset=""UTF-8"">
 <head>
-  <link rel=""stylesheet"" href=""https://unpkg.com/leaflet@1.3.1/dist/leaflet.css""
-            integrity=""sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==""
-            crossorigin=""""/>
-  <script type=""text/javascript"" src=""https://unpkg.com/leaflet@1.3.1/dist/leaflet.js""
-         integrity=""sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw==""
+   <link rel=""stylesheet"" href=""https://unpkg.com/leaflet@1.6.0/dist/leaflet.css""
+            integrity=""sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==""
+            crossorigin=""""/>  
+   <!-- Make sure you put this AFTER Leaflet's CSS -->
+   <script type=""text/javascript"" src=""https://unpkg.com/leaflet@1.6.0/dist/leaflet.js""
+         integrity=""sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==""
          crossorigin=""""></script>
 </head>
 <body>
@@ -107,12 +108,14 @@
            html += @"
 
     mymap.zoomDelta = 0.1;
-    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZXJpY3p1cmNoZXIiLCJhIjoiY2pmYzFxcnJ5MXZidjN1bXprdXRtZjd2aCJ9.BSxI0r_GNzUAZnbvmuHpHA', {
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZXJpY3p1cmNoZXIiLCJhIjoiY2s5YzE2d3liMDBkMDNmbnN2cXhxOHQ2dCJ9.qN8AvphLYMMFSVHKbi7EAg', {
         maxZoom: 18,
         attribution: 'Map data &copy; <a href=""http://openstreetmap.org"">OpenStreetMap</a> contributors, ' +
         '<a href=""http://creativecommons.org/licenses/by-sa/2.0/"">CC-BY-SA</a>, ' +
         'Imagery © <a href=""http://mapbox.com"">Mapbox</a>',
-        id: 'mapbox.emerald'
+        tileSize: 512,
+        zoomOffset: -1,
+        id: 'mapbox/outdoors-v11'
     }).addTo(mymap);
 
     L.control.scale({metric: true, imperial: false, updateWhenIdle: true}).addTo(mymap);
