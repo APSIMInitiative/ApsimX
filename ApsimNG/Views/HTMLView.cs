@@ -1076,17 +1076,6 @@ namespace UserInterface.Views
                 if (ProcessUtilities.CurrentOS.IsWindows)
                 {
                     browser = CreateIEBrowser(vbox2);
-
-                    /// UGH! Once the browser control gets keyboard focus, it doesn't relinquish it to 
-                    /// other controls. It's actually a COM object, I guess, and running
-                    /// with a different message loop, and probably in a different thread. 
-                    /// 
-                    /// Well, this hack works, more or less.
-                    if (vbox2.Toplevel is Window)
-                        (vbox2.Toplevel as Window).SetFocus += MainWindow_SetFocus;
-                    frame1.Unrealized += Frame1_Unrealized;
-                    if (this is MapView) // If we're only displaying a map, remove the unneeded scrollbar
-                       (browser as TWWebBrowserIE).Browser.ScrollBarsEnabled = false;
                 }
                 else if (ProcessUtilities.CurrentOS.IsMac)
                 {
@@ -1111,6 +1100,17 @@ namespace UserInterface.Views
                 keyPressObject = ieBrowser.Browser.Document.ActiveElement;
                 if (keyPressObject != null)
                     (keyPressObject as HtmlElement).KeyPress += OnKeyPress;
+
+                /// UGH! Once the browser control gets keyboard focus, it doesn't relinquish it to 
+                /// other controls. It's actually a COM object, I guess, and running
+                /// with a different message loop, and probably in a different thread. 
+                /// 
+                /// Well, this hack works, more or less.
+                if (vbox2.Toplevel is Window)
+                    (vbox2.Toplevel as Window).SetFocus += MainWindow_SetFocus;
+                frame1.Unrealized += Frame1_Unrealized;
+                if (this is MapView) // If we're only displaying a map, remove the unneeded scrollbar
+                    ieBrowser.Browser.ScrollBarsEnabled = false;
             }
 
             browser.BackgroundColour = Utility.Colour.FromGtk(MainWidget.Style.Background(StateType.Normal));
