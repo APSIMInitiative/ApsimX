@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
 using Models.Functions;
 using Newtonsoft.Json;
 using System;
@@ -113,7 +114,7 @@ namespace Models.PMF.Phen
             // Occurs under long day conditions
             // LDVrnTargetInc is divided by the HS duration of Vrn2 expression 
             // which goes from CompetenceHS to VS.
-            Params.MaxDVrn2 = Math.Max(0.0, L_Vrn1TargetInc / (VSHS_LN - camp.CompetenceHS));
+            Params.MaxDVrn2 = Math.Max(0.0, MathUtilities.Divide(L_Vrn1TargetInc,(VSHS_LN - camp.CompetenceHS),0));
 
             // Vernalistion Saturation Haun Stage under 8h Full vern conditions (VSHS8hFull)
             // Assuming VSHS occurs 3 HS pluss the HS delay from short Pp prior
@@ -151,12 +152,12 @@ namespace Models.PMF.Phen
             // so ColdUpRegVrn1 at transition will be:
             // 1.0 - BaseVern1@Meth + MethColdVrn1@Trans.
             // divide by treatment HS duration to give rate
-            double DVrn1AtTt = (1.0 - BaseVern1AtMeth + MethColdVrn1AtTrans) / VernTreatHS;
+            double DVrn1AtTt = MathUtilities.Divide((1.0 - BaseVern1AtMeth + MethColdVrn1AtTrans), VernTreatHS,0);
 
             // Maximum upregulation delta Vrn1 (MUdVrn1)
             // The rate of dVrn1/HS at 0oC.  Calculate by rearanging UdVrn1 equation
             // UdVrn1 = MUdVrn1 * np.exp(k*Tt) as UdVrn1@Tt is known 
-            Params.MaxDVrn1 = DVrn1AtTt / Math.Exp(camp.k * Tt);
+            Params.MaxDVrn1 = MathUtilities.Divide(DVrn1AtTt,Math.Exp(camp.k * Tt),0);
 
             return Params;
         }
