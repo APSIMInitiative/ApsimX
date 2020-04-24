@@ -260,23 +260,15 @@ namespace Models.PMF
                     myZone.Depth += 0; // wtf??
 
                 var currentLayer = myZone.soil.LayerIndexOfDepth(myZone.Depth);
-                var currentLayerProportion = myZone.soil.ProportionThroughLayer(currentLayer, myZone.Depth);
                 for (int layer = 0; layer <= currentLayer; ++layer)
                 {
                     myZone.StartWater[layer] = myZone.soil.Water[layer];
 
-                    myZone.AvailableSW[layer] = Math.Max(myZone.soil.Water[layer] - llDep[layer], 0);
-                    myZone.PotentialAvailableSW[layer] = myZone.soil.DULmm[layer] - llDep[layer];
-
-                    if (layer == currentLayer)
-                    {
-                        myZone.AvailableSW[layer] *= currentLayerProportion;
-                        myZone.PotentialAvailableSW[layer] *= currentLayerProportion;
-                    }
-
-                    var proportion = myZone.RootProportions[layer];
-                    myZone.Supply[layer] = Math.Max(myZone.AvailableSW[layer] * kl[layer] * proportion, 0.0);
+                    myZone.AvailableSW[layer] = Math.Max(myZone.soil.Water[layer] - llDep[layer], 0) * myZone.RootProportions[layer];
+                    myZone.PotentialAvailableSW[layer] = myZone.soil.DULmm[layer] - llDep[layer] * myZone.RootProportions[layer];
+                    myZone.Supply[layer] = Math.Max(myZone.AvailableSW[layer] * kl[layer] * myZone.RootProportions[layer], 0.0);
                 }
+
                 var totalAvail = myZone.AvailableSW.Sum();
                 var totalAvailPot = myZone.PotentialAvailableSW.Sum();
                 var totalSupply = myZone.Supply.Sum();
@@ -470,13 +462,7 @@ namespace Models.PMF
                 //old sorghum stores N03 in g/ms not kg/ha
                 var no3Diffusion = MathUtilities.Bound(swAvailFrac, 0.0, 1.0) * (zone.NO3N[layer] * kgha2gsm);
 
-                myZone.Diffusion[layer] = Math.Min(no3Diffusion, zone.NO3N[layer] * kgha2gsm);
-
-                if (layer == currentLayer)
-                {
-                    var proportion = myZone.soil.ProportionThroughLayer(currentLayer, myZone.Depth);
-                    myZone.Diffusion[layer] *= proportion;
-                }
+                myZone.Diffusion[layer] = Math.Min(no3Diffusion, zone.NO3N[layer] * kgha2gsm) * myZone.RootProportions[layer];
 
                 //NH4Supply[layer] = no3massFlow;
                 //onyl 2 fields passed in for returning data. 

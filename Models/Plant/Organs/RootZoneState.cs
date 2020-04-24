@@ -292,9 +292,8 @@ namespace Models.PMF.Organs
                 if (layer <= soil.LayerIndexOfDepth(Depth))
                     if (LayerLive[layer].Wt > 0)
                     {
-                        RAw[layer] = - WaterUptake[layer] / LayerLive[layer].Wt
-                                   * soil.Thickness[layer]
-                                   * soil.ProportionThroughLayer(layer, Depth);
+                        RAw[layer] = -WaterUptake[layer] / LayerLive[layer].Wt
+                                   * soil.Thickness[layer];
                         RAw[layer] = Math.Max(RAw[layer], 1e-20);  // Make sure small numbers to avoid lack of info for partitioning
                     }
                     else if (layer > 0)

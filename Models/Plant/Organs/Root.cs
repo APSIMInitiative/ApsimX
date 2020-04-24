@@ -719,15 +719,8 @@
                         //diffusion
                         var swAvailFrac = RWC[layer] = (water[layer] - ll15mm[layer]) / (dulmm[layer] - ll15mm[layer]);
                         //old sorghum stores N03 in g/ms not kg/ha
-                        var no3Diffusion = MathUtilities.Bound(swAvailFrac, 0.0, 1.0) * (zone.NO3N[layer] * kgha2gsm); 
-
-                        if (layer == currentLayer)
-                        {
-                            var proportion = myZone.soil.ProportionThroughLayer(currentLayer, myZone.Depth);
-                            no3Diffusion *= proportion;
-                        }
-
-                        myZone.Diffusion[layer] = no3Diffusion;
+                        var no3Diffusion = MathUtilities.Bound(swAvailFrac, 0.0, 1.0) * (zone.NO3N[layer] * kgha2gsm);
+                        myZone.Diffusion[layer] = no3Diffusion * myZone.RootProportions[layer];
 
                         //NH4Supply[layer] = no3massFlow;
                         //onyl 2 fields passed in for returning data. 
@@ -850,23 +843,14 @@
                     double[] ll = soilCrop.LL;
 
                     double[] lldep = new double[myZone.soil.Thickness.Length];
-                    double[] available = new double[myZone.soil.Thickness.Length];
-
                     double[] supply = new double[myZone.soil.Thickness.Length];
+
                     LayerMidPointDepth = myZone.soil.DepthMidPoints;
                     for (int layer = 0; layer <= currentLayer; layer++)
                     {
                         lldep[layer] = ll[layer] * myZone.soil.Thickness[layer];
-                        available[layer] = Math.Max(zone.Water[layer] - lldep[layer], 0.0);
-                        if (currentLayer == layer)
-                        {
-                            var layerproportion = myZone.soil.ProportionThroughLayer(layer, myZone.Depth);
-                            available[layer] *= layerproportion;
-                        }
-
-                        var proportionThroughLayer = myZone.RootProportions[layer];
-                        var klMod = klModifier.Value(layer);
-                        supply[layer] = Math.Max(0.0, kl[layer] * klMod * KLModiferDueToDamage(layer) * available[layer] * proportionThroughLayer);
+                        supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
+                            Math.Max(zone.Water[layer] - lldep[layer], 0.0) * myZone.RootProportions[layer]);
                     }
 
                     return supply;
