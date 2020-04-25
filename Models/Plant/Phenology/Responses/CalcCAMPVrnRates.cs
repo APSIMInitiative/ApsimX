@@ -13,7 +13,7 @@ namespace Models.PMF.Phen
     /// Vernalisation rate parameter set for specific cultivar
     /// </summary>
     [Serializable]
-    public class CultivarRateParams
+    public class CultivarRateParams : Model
     {
         /// <summary>Base delta for Upregulation of Vrn1 >20oC</summary>
         public double BaseDVrn1 { get; set; }

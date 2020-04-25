@@ -219,8 +219,8 @@ namespace Models.PMF.Phen
 
         private double Vrn1atVS { get; set; }
 
-        private CultivarRateParams Params = null;
-
+        /// <summary>Vernalisation rate parameters for current cultivar</summary>
+        [JsonIgnore] public CultivarRateParams Params { get; set; }
 
         [EventSubscribe("PrePhenology")]
         private void OnPrePhenology(object sender, EventArgs e)
@@ -230,7 +230,7 @@ namespace Models.PMF.Phen
                 ZeroDeltas();
 
                 if (isEmerged == false)
-                    dHS = tt.Value() / basePhyllochron.Value() * 0.75; //dhs from phenology is incorrect here because photoperiod will be zero.
+                    dHS = tt.Value() / (basePhyllochron.Value() * 0.75); //dhs from phenology is incorrect here because photoperiod will be zero.
                 else
                     dHS = dhs.Value();
 
@@ -320,8 +320,8 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>Called when crop is ending</summary>
-        [EventSubscribe("PlantSowing")]
-        private void OnPlantSowing(object sender, SowPlant2Type data)
+        [EventSubscribe("Sowing")]
+        private void OnSowing(object sender, EventArgs e)
         {
             Reset();
             Params = calcCAMPVrnRates.CalcCultivarParams(FLNparams, 90, 90, 1);
