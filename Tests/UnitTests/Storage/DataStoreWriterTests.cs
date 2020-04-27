@@ -13,7 +13,6 @@
     public class DataStoreWriterTests
     {
         private IDatabaseConnection database;
-        private string savedDirectoryName;
 
         /// <summary>Find and return the file name of SQLite runtime .dll</summary>
         public static string FindSqlite3DLL()
@@ -45,14 +44,7 @@
             database.OpenDatabase(":memory:", readOnly: false);
 
             string sqliteSourceFileName = FindSqlite3DLL();
-            savedDirectoryName = Directory.GetCurrentDirectory();
             Directory.SetCurrentDirectory(Path.GetDirectoryName(sqliteSourceFileName));
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            Directory.SetCurrentDirectory(savedDirectoryName);
         }
 
         /// <summary>Write data for 2 simulations into one table. Ensure data was written correctly.</summary>
