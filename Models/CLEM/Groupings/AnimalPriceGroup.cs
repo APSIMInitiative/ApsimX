@@ -63,21 +63,19 @@ namespace Models.CLEM.Groupings
         /// Create a copy of the current instance
         /// </summary>
         /// <returns></returns>
-        public AnimalPriceGroup Clone()
+        override public object Clone
         {
-            AnimalPriceGroup clone = new AnimalPriceGroup()
+            get
             {
-                PricingStyle = this.PricingStyle,
-                PurchaseOrSale = this.PurchaseOrSale,
-                Value = this.Value
-            };
-
-            foreach (RuminantFilter item in this.Children.OfType<RuminantFilter>())
-            {
-                clone.Children.Add(item.Clone());
+                AnimalPriceGroup clone = new AnimalPriceGroup()
+                {
+                    PricingStyle = this.PricingStyle,
+                    PurchaseOrSale = this.PurchaseOrSale,
+                    Value = this.Value
+                };
+                clone.Children.AddRange(this.CloneChildren);
+                return clone;
             }
-
-            return clone;
         }
 
         /// <summary>

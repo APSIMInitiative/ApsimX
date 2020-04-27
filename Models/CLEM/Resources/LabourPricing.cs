@@ -34,15 +34,14 @@ namespace Models.CLEM.Resources
         /// Create a copy of the current instance
         /// </summary>
         /// <returns></returns>
-        public LabourPricing Clone()
+        override public object Clone
         {
-            LabourPricing clone = new LabourPricing();
-
-            foreach (LabourPriceGroup item in this.Children.OfType<LabourPriceGroup>())
+            get
             {
-                clone.Children.Add(item.Clone());
+                LabourPricing clone = new LabourPricing();
+                clone.Children.AddRange(this.CloneChildren);
+                return clone;
             }
-            return clone;
         }
 
         /// <summary>

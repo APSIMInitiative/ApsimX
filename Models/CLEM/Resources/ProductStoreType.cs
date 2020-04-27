@@ -55,6 +55,23 @@ namespace Models.CLEM.Resources
             }
         }
 
+        /// <summary>
+        /// Clone this resource type
+        /// </summary>
+        override public object Clone
+        {
+            get
+            {
+                ProductStoreType cloned = new ProductStoreType
+                {
+                    Name = this.Name,
+                    Units = this.Units,
+                };
+                this.Children.AddRange(this.CloneChildren);
+                return cloned;
+            }
+        }
+
         #region transactions
 
         /// <summary>

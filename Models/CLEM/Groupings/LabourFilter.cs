@@ -131,15 +131,18 @@ namespace Models.CLEM.Groupings
         /// Create a copy of the current instance
         /// </summary>
         /// <returns></returns>
-        public LabourFilter Clone()
+        override public object Clone
         {
-            LabourFilter clone = new LabourFilter()
+            get
             {
-                Parameter = this.Parameter,
-                Operator = this.Operator,
-                Value = this.Value
-            };
-            return clone;
+                LabourFilter clone = new LabourFilter()
+                {
+                    Parameter = this.Parameter,
+                    Operator = this.Operator,
+                    Value = this.Value
+                };
+                return clone;
+            }
         }
 
         /// <summary>

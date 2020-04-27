@@ -143,15 +143,18 @@ namespace Models.CLEM.Groupings
         /// Create a copy of the current instance
         /// </summary>
         /// <returns></returns>
-        public RuminantFilter Clone()
+        override public object Clone
         {
-            RuminantFilter clone = new RuminantFilter()
+            get
             {
-                Parameter = this.Parameter,
-                Operator = this.Operator,
-                Value = this.Value
-            };
-            return clone;
+                RuminantFilter clone = new RuminantFilter()
+                {
+                    Parameter = this.Parameter,
+                    Operator = this.Operator,
+                    Value = this.Value
+                };
+                return clone;
+            }
         }
 
         /// <summary>

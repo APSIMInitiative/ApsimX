@@ -782,7 +782,19 @@ namespace Models.CLEM.Activities
             foreach (var item in resourceRequestList.Where(a => a.Required > a.Available))
             {
                 ResourceRequestEventArgs rrEventArgs = new ResourceRequestEventArgs() { Request = item };
-                OnShortfallOccurred(rrEventArgs);
+
+                if (Apsim.Parent(item.Resource as Model, typeof(Market)) != null)
+                {
+                    ActivitiesHolder marketActivities = Apsim.Children(Resources.FindMarket, typeof(ActivitiesHolder)).FirstOrDefault() as ActivitiesHolder;
+                    if(marketActivities != null)
+                    {
+                        marketActivities.ActivitiesHolder_ResourceShortfallOccurred(this, rrEventArgs);
+                    }
+                }
+                else
+                {
+                    OnShortfallOccurred(rrEventArgs);
+                }
                 Status = ActivityStatus.Partial;
                 deficitFound = true;
             }

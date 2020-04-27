@@ -41,6 +41,23 @@ namespace Models.CLEM
         public double AmountPerUnitPurchase { get; set; }
 
         /// <summary>
+        /// Create a copy of the current instance
+        /// </summary>
+        /// <returns></returns>
+        override public object Clone
+        {
+            get
+            {
+                Transmutation clone = new Transmutation()
+                {
+                    AmountPerUnitPurchase = this.AmountPerUnitPurchase
+                };
+                clone.Children.AddRange(this.CloneChildren);
+                return clone;
+            }
+        }
+
+        /// <summary>
         /// Validate this object
         /// </summary>
         /// <param name="validationContext"></param>
@@ -121,7 +138,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(Transmutation))]
     [Description("This Transmutation cost specifies how much of a given resource (e.g. money) is needed to convert to the needed resource. Any number of these can be supplied under a Transmutation such that you may need money and labour to purchase supplements.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/transmutation/transmutationcost.htm")]
+    [HelpUri(@"Content/Features/Transmutation/TransmutationCost.htm")]
     public class TransmutationCost : CLEMModel, IValidatableObject, ITransmutationCost
     {
         [XmlIgnore]
@@ -157,6 +174,24 @@ namespace Models.CLEM
         }
 
         /// <summary>
+        /// Create a copy of the current instance
+        /// </summary>
+        /// <returns></returns>
+        override public object Clone
+        {
+            get
+            {
+                TransmutationCost clone = new TransmutationCost()
+                {
+                    ResourceTypeName = this.ResourceTypeName,
+                    ResourceType = this.ResourceType
+                };
+                clone.Children.AddRange(this.CloneChildren);
+                return clone;
+            }
+        }
+
+        /// <summary>
         /// Validate this object
         /// </summary>
         /// <param name="validationContext"></param>
@@ -186,7 +221,6 @@ namespace Models.CLEM
 
         // This was in commencing, but I don't think there is any reason it has to be
         // could be a problem in future, thus this message.
-
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -255,7 +289,7 @@ namespace Models.CLEM
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Transmutation))]
     [Description("This Transmutation cost specifies how much of a given resource (e.g. money) is needed to convert to the needed resource. Any number of these can be supplied under a Transmutation such that you may need money and labour to purchase supplements.")]
-    [HelpUri(@"content/features/transmutation/transmutationcostlabour.htm")]
+    [HelpUri(@"Content/Features/Transmutation/TransmutationCostLabour.htm")]
     public class TransmutationCostLabour : CLEMModel, IValidatableObject, ITransmutationCost
     {
         /// <summary>
@@ -282,6 +316,25 @@ namespace Models.CLEM
         public TransmutationCostLabour()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
+        }
+
+        /// <summary>
+        /// Create a copy of the current instance
+        /// </summary>
+        /// <returns></returns>
+        override public object Clone
+        {
+            get
+            {
+                TransmutationCostLabour clone = new TransmutationCostLabour()
+                {
+                    ResourceTypeName = this.ResourceTypeName,
+                    ResourceType = this.ResourceType,
+                    CostPerUnit = this.CostPerUnit
+                };
+                clone.Children.AddRange(this.CloneChildren);
+                return clone;
+            }
         }
 
         /// <summary>
@@ -358,7 +411,7 @@ namespace Models.CLEM
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Transmutation))]
     [Description("This Transmutation cost uses the pricing drfined for the given resource.")]
-    [HelpUri(@"content/features/transmutation/transmutationcostusepricing.htm")]
+    [HelpUri(@"Content/Features/Transmutation/TransmutationCostUsePricing.htm")]
     public class TransmutationCostUsePricing : CLEMModel, IValidatableObject, ITransmutationCost
     {
         private ResourcePricing pricing;
@@ -397,6 +450,24 @@ namespace Models.CLEM
             set
             {
 
+            }
+        }
+
+        /// <summary>
+        /// Create a copy of the current instance
+        /// </summary>
+        /// <returns></returns>
+        override public object Clone
+        {
+            get
+            {
+                TransmutationCostUsePricing clone = new TransmutationCostUsePricing()
+                {
+                    ResourceTypeName = this.ResourceTypeName,
+                    ResourceType = this.ResourceType
+                };
+                clone.Children.AddRange(this.CloneChildren);
+                return clone;
             }
         }
 
@@ -462,11 +533,11 @@ namespace Models.CLEM
             var w = Apsim.Parent(this, typeof(CLEMResourceTypeBase)) as IResourceType;
             bool multiPrice = Apsim.Children(w as IModel, typeof(ResourcePricing)).Count() > 1;
             ResourcePricing price = w.Price(PurchaseOrSalePricingStyleType.Purchase);
-            if (price!=null)
+            if (price != null)
             {
                 html += "<div class=\"activityentry\">Use ";
                 html += (ResourceTypeName != null && ResourceTypeName != "") ? "<span class=\"resourcelink\">" + ResourceTypeName + "</span>" : "<span class=\"errorlink\">Account not set</span>";
-                html += " based upon the " + (multiPrice ? "most suitable":"<span class=\"resourcelink\"> "+price.Name+"</span>") + " packet size and price for this resource</div>";
+                html += " based upon the " + (multiPrice ? "most suitable" : "<span class=\"resourcelink\"> " + price.Name + "</span>") + " packet size and price for this resource</div>";
             }
             else
             {

@@ -38,15 +38,14 @@ namespace Models.CLEM.Resources
         /// Create a copy of the current instance
         /// </summary>
         /// <returns></returns>
-        public AnimalPricing Clone()
+        override public object Clone
         {
-            AnimalPricing clone = new AnimalPricing();
-
-            foreach (AnimalPriceGroup item in this.Children.OfType<AnimalPriceGroup>())
+            get
             {
-                clone.Children.Add(item.Clone());
+                AnimalPricing clone = new AnimalPricing();
+                clone.Children.AddRange(this.CloneChildren);
+                return clone;
             }
-            return clone;
         }
 
         /// <summary>

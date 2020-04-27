@@ -17,7 +17,7 @@ namespace Models.CLEM
     ///</summary> 
     [Serializable]
     [Description("This is the Base CLEM model and should not be used directly.")]
-    public abstract class CLEMModel: Model, ICLEMUI
+    public abstract class CLEMModel : Model, ICLEMUI
     {
         /// <summary>
         /// Link to summary
@@ -90,10 +90,34 @@ namespace Models.CLEM
                         catch (Exception ex)
                         {
                             Summary.WriteWarning(this, ex.Message);
-                            //eat it... Or maybe Debug.Writeline(ex);
                         }
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Clone this resource type
+        /// </summary>
+        public virtual object Clone { get; }
+
+        /// <summary>
+        /// Clone the child components of this resource type
+        /// </summary>
+        public List<Model> CloneChildren
+        {
+            get
+            {
+                List<Model> clonedList = new List<Model>();
+                foreach (CLEMModel model in Apsim.Children(this, typeof(CLEMModel)))
+                {
+                    Model cloned = model.Clone as Model;
+                    if (cloned != null)
+                    {
+                        clonedList.Add(cloned);
+                    }
+                }
+                return clonedList;
             }
         }
 
@@ -110,16 +134,6 @@ namespace Models.CLEM
         {
             var parents = ReflectionUtilities.GetAttributes(this.GetType(), typeof(ValidParentAttribute), false).Cast<ValidParentAttribute>().ToList();
             return (parents.Where(a => a.ParentType.Name == this.Parent.GetType().Name).Count() > 0);
-        }
-
-        /// <summary>
-        /// Finds a shared marketplace
-        /// </summary>
-        /// <returns>Market</returns>
-        public Market FindMarket()
-        {
-            IModel parentSim = Apsim.Parent(this, typeof(Simulation));
-            return Apsim.Children(parentSim, typeof(Market)).Where(a => a.Enabled).FirstOrDefault() as Market;
         }
 
         /// <summary>
@@ -206,10 +220,6 @@ namespace Models.CLEM
                 {
                     this.ModelSummaryStyle = HTMLSummaryStyle.Activity;
                 }
-                //else if (this.GetType().IsSubclassOf(typeof(CLEMModel)))
-                //{
-                //    this.ModelSummaryStyle = HTMLSummaryStyle.Activity;
-                //}
             }
 
             switch (ModelSummaryStyle)

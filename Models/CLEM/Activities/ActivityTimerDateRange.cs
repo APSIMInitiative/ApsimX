@@ -67,6 +67,25 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
+        /// Create a copy of the current instance
+        /// </summary>
+        /// <returns></returns>
+        override public object Clone
+        {
+            get
+            {
+                ActivityTimerDateRange clone = new ActivityTimerDateRange()
+                {
+                    StartDate = this.StartDate,
+                    EndDate = this.EndDate,
+                    Invert = this.Invert
+                };
+                clone.Children.AddRange(this.CloneChildren);
+                return clone;
+            }
+        }
+
+        /// <summary>
         /// Method to determine whether the activity is due
         /// </summary>
         /// <returns>Whether the activity is due in the current month</returns>

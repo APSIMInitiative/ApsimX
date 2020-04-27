@@ -70,6 +70,12 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Finds a shared marketplace
+        /// </summary>
+        /// <returns>Market</returns>
+        public Market FindMarket { get; private set; }
+
+        /// <summary>
         /// Determines whether resource items of the specified group type exist 
         /// </summary>
         /// <param name="resourceGroupType"></param>
@@ -313,11 +319,13 @@ namespace Models.CLEM.Resources
         /// This functionality allows resources not in the market at the start of the simulation to be traded.
         /// </summary>
         /// <param name="resourceType">The resource type to trade</param>
-        /// <param name="linkToResourceType">A link to the associated resource type</param>
         /// <returns>Whether the search was successful</returns>
-        public bool ResourceTypeExists(CLEMResourceTypeBase resourceType, out object linkToResourceType)
+        public IResourceWithTransactionType LinkToMarketResourceType(CLEMResourceTypeBase resourceType)
         {
-            linkToResourceType = null;
+            if(!this.Parent.GetType().Name.Contains("Market"))
+            {
+                throw new ApsimXException(this, "ooops");
+            }
 
             // find parent group type
             ResourceBaseWithTransactions parent = (resourceType as Model).Parent as ResourceBaseWithTransactions;
@@ -327,7 +335,7 @@ namespace Models.CLEM.Resources
                 // add warning the market is not currently trading in this resource
                 string zoneName = Apsim.Parent(this, typeof(Zone)).Name;
                 Warnings.Add($"[{zoneName}] is currently not accepting resources of type [r={parent.GetType().ToString()}]\nOnly resources groups provided in the [r=ResourceHolder] in the simulation tree will be traded.");
-                return false;
+                return null;
             }
 
             // TODO: do some group checks. land units, currency
@@ -335,18 +343,26 @@ namespace Models.CLEM.Resources
             // TODO: if market and looking for finance only return or create "Bank"
 
             // find resource type in group
-            var resType = resGroup.GetByName((resourceType as IModel).Name);
-            if( resType is null)
+            object resType = resGroup.GetByName((resourceType as IModel).Name) as IResourceWithTransactionType;
+            if (resType is null)
             {
                 // clone resource
-                resType = resourceType.Clone as CLEMResourceTypeBase;
-                (resType as IModel).Parent = resGroup;
-
-                // wire up events
-                resGroup.AddChildEvents(resType as IResourceWithTransactionType);
+                resType = resourceType.Clone as IResourceWithTransactionType;
+                if (resType is null)
+                {
+                    // add warning the market does not have the resource
+                    string zoneName = Apsim.Parent(this, typeof(Zone)).Name;
+                    Warnings.Add($"The resource [r={resourceType.Name}] does not exist in the market and the resource of type [r={resourceType.GetType().ToString()}] cannot be cloned\nAdd resource and associated components to the market.");
+                    return null;
+                }
+                else
+                {
+                    (resType as IModel).Parent = resGroup;
+                    // add new resource type
+                    resGroup.AddNewResourceType(resType as IResourceWithTransactionType);
+                }
             }
-            linkToResourceType = resType;
-            return true;
+            return resType as IResourceWithTransactionType;
         }
 
         /// <summary>
@@ -445,6 +461,12 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
+            // if this isn't a marketplace try find a shared market
+            if(this.Parent.GetType() != typeof(Market))
+            {
+                IModel parentSim = Apsim.Parent(this, typeof(Simulation));
+                FindMarket = Apsim.Children(parentSim, typeof(Market)).Where(a => a.Enabled).FirstOrDefault() as Market;
+            }
             InitialiseResourceGroupList();
         }
 
@@ -503,7 +525,6 @@ namespace Models.CLEM.Resources
                                 IResourceType transResource = null;
                                 if (transcost.ResourceType.Name != "Labour")
                                 {
-//                                    transResource = this.GetResourceItem(request.ActivityModel, transcost.ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
                                     transResource = resHolder.GetResourceItem(request.ActivityModel, transcost.ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
                                 }
 

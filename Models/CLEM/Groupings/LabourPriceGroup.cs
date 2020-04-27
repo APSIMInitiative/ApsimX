@@ -48,19 +48,17 @@ namespace Models.CLEM.Groupings
         /// Create a copy of the current instance
         /// </summary>
         /// <returns></returns>
-        public LabourPriceGroup Clone()
+        override public object Clone
         {
-            LabourPriceGroup clone = new LabourPriceGroup()
+            get
             {
-                Value = this.Value
-            };
-
-            foreach (LabourFilter item in this.Children.OfType<LabourFilter>())
-            {
-                clone.Children.Add(item.Clone());
+                LabourPriceGroup clone = new LabourPriceGroup()
+                {
+                    Value = this.Value
+                };
+                clone.Children.AddRange(clone.CloneChildren);
+                return clone;
             }
-
-            return clone;
         }
 
         /// <summary>
