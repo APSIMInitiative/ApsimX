@@ -36,15 +36,19 @@
             throw new Exception("Cannot find sqlite3 dll directory");
         }
 
+        [OneTimeSetUp]
+        public void OneTimeInit()
+        {
+            string sqliteSourceFileName = FindSqlite3DLL();
+            Directory.SetCurrentDirectory(Path.GetDirectoryName(sqliteSourceFileName));
+        }
+
         /// <summary>Initialisation code for all unit tests in this class</summary>
         [SetUp]
         public void Initialise()
         {
             database = new SQLite();
             database.OpenDatabase(":memory:", readOnly: false);
-
-            string sqliteSourceFileName = FindSqlite3DLL();
-            Directory.SetCurrentDirectory(Path.GetDirectoryName(sqliteSourceFileName));
         }
 
         /// <summary>Write data for 2 simulations into one table. Ensure data was written correctly.</summary>
