@@ -537,7 +537,7 @@ namespace Models.GrazPlan
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the description.
+        /// Gets or sets the amount of supplement.
         /// </summary>
         /// <value>
         /// The description.
