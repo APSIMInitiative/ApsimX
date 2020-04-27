@@ -783,7 +783,7 @@ namespace Models.CLEM.Activities
             {
                 ResourceRequestEventArgs rrEventArgs = new ResourceRequestEventArgs() { Request = item };
 
-                if (Apsim.Parent(item.Resource as Model, typeof(Market)) != null)
+                if (item.Resource != null && Apsim.Parent(item.Resource as Model, typeof(Market)) != null)
                 {
                     ActivitiesHolder marketActivities = Apsim.Children(Resources.FindMarket, typeof(ActivitiesHolder)).FirstOrDefault() as ActivitiesHolder;
                     if(marketActivities != null)

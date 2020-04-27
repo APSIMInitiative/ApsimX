@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 90,
+  "Version": 93,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -108,6 +108,7 @@
                 },
                 {
                   "$type": "Models.CLEM.Resources.ResourcesHolder, Models",
+                  "FindMarket": null,
                   "Name": "Resources",
                   "Children": [
                     {
@@ -1445,6 +1446,7 @@
                 },
                 {
                   "$type": "Models.CLEM.Resources.ResourcesHolder, Models",
+                  "FindMarket": null,
                   "Name": "Resources",
                   "Children": [
                     {
