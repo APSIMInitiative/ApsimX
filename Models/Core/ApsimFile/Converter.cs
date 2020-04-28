@@ -2008,7 +2008,8 @@
                 {
                     string initName = org == "GenericOrgan" ? "InitialWtFunction" : "InitialDM";
                     JObject InitialWt = JsonUtilities.CreateNewChildModel(O, "InitialWt", "Models.PMF.Interfaces.BiomassPoolType");
-                    JObject Structural = JsonUtilities.ChildWithName(O, initName);
+                    JObject Structural = JsonUtilities.ChildWithName(O, initName).DeepClone() as JObject;
+                    JsonUtilities.RemoveChild(O, initName);
                     Structural["Name"] = "Structural";
                     JArray ChildFunctions = new JArray();
                     ChildFunctions.Add(Structural);
