@@ -19,7 +19,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 93; } }
+        public static int LatestVersion { get { return 94; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1990,6 +1990,60 @@
                     var fractionExcretedNToDung = simpleGrazing["FractionExcretedNToDung"] as JArray;
                     if (fractionExcretedNToDung.Count > 0)
                         simpleGrazing["CNRatioDung"] = "NaN";
+                }
+            }
+        }
+
+        /// <summary>
+        /// Change initialDM on Generic organ and root from a single value to a BiomassPoolType so each type can be sepcified
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion94(JObject root, string fileName)
+        {
+            // Remove initalDM model and replace with initialBiomass object
+            foreach (string org in new List<string>() { "GenericOrgan", "Root" })
+            {
+                foreach (JObject O in JsonUtilities.ChildrenRecursively(root, org))
+                {
+                    string initName = org == "GenericOrgan" ? "InitialWtFunction" : "InitialDM";
+                    JObject InitialWt = JsonUtilities.CreateNewChildModel(O, "InitialWt", "Models.PMF.Interfaces.BiomassPoolType");
+                    JObject Structural = JsonUtilities.ChildWithName(O, initName);
+                    Structural["Name"] = "Structural";
+                    JArray ChildFunctions = new JArray();
+                    ChildFunctions.Add(Structural);
+                    InitialWt["Children"] = ChildFunctions;
+                    JsonUtilities.AddConstantFunctionIfNotExists(InitialWt, "Metabolic", "0.0");
+                    JsonUtilities.AddConstantFunctionIfNotExists(InitialWt, "Storage", "0.0");
+                    JsonUtilities.RemoveChild(O, initName);
+                }
+            }
+            // Altermanager code where initial root wt is being set.
+            foreach (var manager in JsonUtilities.ChildrenOfType(root,"Manager"))
+            {
+                string code = manager["Code"].ToString();
+                string[] lines = code.Split('\n');
+                bool ContainsZoneInitalDM = false;
+                for (int i = 0; i < lines.Count(); i++)
+                {
+                    if (lines[i].Contains("Root.ZoneInitialDM.Add("))
+                    {
+                        ContainsZoneInitalDM = true;
+                        string InitialDM = lines[i].Split('(')[1].Replace(";", "").Replace(")", "").Replace("\r","").Replace("\n", "");
+                        string NewCode = "BiomassPoolType InitDM = new BiomassPoolType();\r\nInitDM.Structural = " +
+                                          InitialDM + ";\r\n" + lines[i].Split('(')[0] + "(InitDM);";
+                        lines[i] = NewCode;
+                    }
+                }
+
+                if (ContainsZoneInitalDM)
+                {
+                    string newCode = "using Models.PMF.Interfaces;\r\n";
+                    foreach(string line in lines)
+                    {
+                        newCode += line + "\n";
+                    }
+                    manager["Code"] = newCode;
                 }
             }
         }
