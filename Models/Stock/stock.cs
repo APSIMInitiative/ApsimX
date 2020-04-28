@@ -257,7 +257,7 @@
         /// <summary>
         /// An instance that contains all stock genotypes.
         /// </summary>
-        public Genotypes AllGenotypes { get; set; } = new Genotypes();
+        public Genotypes Genotypes { get; } = new Genotypes();
 
         /// <summary>
         /// Gets or sets the initial state of each animal group
@@ -4048,7 +4048,7 @@
         {
             var childGenotypes = Apsim.Children(this, typeof(AnimalParamSet)).Cast<AnimalParamSet>().ToList();
             if (childGenotypes != null)
-                AllGenotypes.SetUserGenotypes(childGenotypes);
+                childGenotypes.ForEach(animalParamSet => Genotypes.Add(animalParamSet));
 
             if (!this.paddocksGiven)
             {
@@ -4074,8 +4074,8 @@
             }
 
             // Add all child animal groups to stock.
-            foreach (AnimalGroup animalGroup in Apsim.FindAll(this, typeof(AnimalGroup)))
-                this.stockModel.Add(animalGroup);                  // after the paddocks have been identified
+            for (int idx = 0; idx <= this.animalInits.Length - 1; idx++)                // Only create the initial animal groups 
+                this.stockModel.Add(this.animalInits[idx]);                             // after the paddocks have been identified                          
 
             this.currentTime = this.systemClock.Today;
             int currentDay = this.currentTime.Day + (this.currentTime.Month * 0x100) + (this.currentTime.Year * 0x10000);

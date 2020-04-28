@@ -19,7 +19,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 93; } }
+        public static int LatestVersion { get { return 94; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1993,6 +1993,68 @@
                 }
             }
         }
+
+        /// <summary>
+        /// Convert stock genotypes array into GenotypeCross child models.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion94(JObject root, string fileName)
+        {
+            foreach (JObject stock in JsonUtilities.ChildrenRecursively(root, "Stock"))
+            {
+                var oldGenotypes = stock["Genotypes"] as JArray;
+                if (oldGenotypes != null)
+                {
+                    var newGenotypes = new JArray();
+                    foreach (var oldgenotype in oldGenotypes)
+                    {
+                        var genotypeCross = new JObject();
+                        genotypeCross["$type"] = "Models.GrazPlan.GenotypeCross, Models";
+                        genotypeCross["Name"] = oldgenotype["GenotypeName"];
+                        var oldgenotypeDeathRates = oldgenotype["DeathRate"] as JArray;
+                        if (oldgenotypeDeathRates != null && oldgenotypeDeathRates.Count == 2)
+                        {
+                            genotypeCross["MatureDeathRate"] = oldgenotypeDeathRates[0];
+                            genotypeCross["WeanerDeathRate"] = oldgenotypeDeathRates[1];
+                        }
+                        genotypeCross["Conception"] = oldgenotype["Conceptions"];
+                        genotypeCross["DamBreed"] = oldgenotype["DamBreed"];
+                        genotypeCross["SireBreed"] = oldgenotype["SireBreed"];
+                        genotypeCross["Generation"] = oldgenotype["Generation"];
+                        genotypeCross["SRW"] = oldgenotype["SRW"];
+                        genotypeCross["PotFleeceWt"] = oldgenotype["PotFleeceWt"];
+                        genotypeCross["MaxFibreDiam"] = oldgenotype["MaxFibreDiam"];
+                        genotypeCross["FleeceYield"] = oldgenotype["FleeceYield"];
+                        genotypeCross["PeakMilk"] = oldgenotype["PeakMilk"];
+                        newGenotypes.Add(genotypeCross);
+                    }
+                    stock.Remove("Genotypes");
+                    if (newGenotypes.Count > 0)
+                        stock["Children"] = newGenotypes;
+                }
+            }
+            Tuple<string, string>[] changes =
+            {
+                new Tuple<string, string>(".GenotypeNamesAll()",  ".Genotypes.Names.ToArray()")
+            };
+            if (JsonUtilities.RenameVariables(root,  changes))
+            {
+                // The replacement is in a manager. Need to make sure that LINQ is added as a using
+                // because the .ToArray() depends on it.
+                foreach (var manager in JsonUtilities.ChildManagers(root))
+                {
+                    var usings = manager.GetUsingStatements().ToList();
+                    if (usings.Find(u => u.Contains("System.Linq")) == null)
+                    {
+                        usings.Add("System.Linq");
+                        manager.SetUsingStatements(usings);
+                        manager.Save();
+                    }
+                }
+            }
+        }
+
 
         /// <summary>
         /// Add progeny destination phase and mortality function.

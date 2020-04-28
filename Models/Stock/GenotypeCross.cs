@@ -2,6 +2,7 @@
 {
     using Models.Core;
     using System;
+    using System.Linq;
     using System.Collections.Generic;
 
     /// <summary>
@@ -19,16 +20,12 @@
         [Link]
         private Stock stock = null;
 
-        /// <summary>Base rate of mortality in mature animals. Default is 0.0.
-        /// [1] = Base rate of mortality in weaners.Default is 0.0.
-        /// </summary>
+        /// <summary>Base rate of mortality in mature animals. Default is 0.0.</summary>
         [Description("Base rate of mortality in mature animals")]
         [Units("/yr")]
         public double MatureDeathRate { get; set; } = double.NaN;
         
-        /// <summary>Base rate of mortality in mature animals. Default is 0.0.
-        /// [1] = Base rate of mortality in weaners.Default is 0.0.
-        /// </summary>
+        /// <summary>Base rate of mortality in weaners. Default is 0.0.</summary>
         [Description("Base rate of mortality in weaners")]
         [Units("/yr")]
         public double WeanerDeathRate { get; set; } = double.NaN;
@@ -113,14 +110,15 @@
         /// <returns></returns>
         public IEnumerable<string> GetAnimalTypes()
         {
-            return stock.AllGenotypes.GetAnimalTypes();
+            return stock.Genotypes.All.Select(genotype => genotype.AnimalType);
         }
 
         /// <summary>Get the names of all genotypes for the current animal type.</summary>
         /// <returns></returns>
         public IEnumerable<string> GetGenotypeNames()
         {
-            return stock.AllGenotypes.GetGenotypeNamesForAnimalType(AnimalType);
+            return stock.Genotypes.All.Where(genotype => genotype.AnimalType == AnimalType)
+                                      .Select(genotype => genotype.Name);
         }
 
         /// <summary>
@@ -133,7 +131,7 @@
         {
             var damProportion = Math.Pow(0.5, Generation);
             var sireProportion = 1 - damProportion;
-            var newGenotype = stock.AllGenotypes.CreateGenotypeCross(Name, DamBreed, damProportion, SireBreed, sireProportion);
+            var newGenotype = stock.Genotypes.CreateGenotypeCross(Name, DamBreed, damProportion, SireBreed, sireProportion);
             if (!double.IsNaN(SRW))
                 newGenotype.BreedSRW = SRW;
             if (!double.IsNaN(PotFleeceWt))
