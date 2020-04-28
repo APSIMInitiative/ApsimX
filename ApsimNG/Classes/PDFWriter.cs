@@ -87,8 +87,7 @@
             document.DefaultPageSetup.LeftMargin = MigraDoc.DocumentObjectModel.Unit.FromCentimeter(1);
             document.DefaultPageSetup.TopMargin = MigraDoc.DocumentObjectModel.Unit.FromCentimeter(1);
             document.DefaultPageSetup.BottomMargin = MigraDoc.DocumentObjectModel.Unit.FromCentimeter(1);
-            if (!portrait)
-                document.DefaultPageSetup.Orientation = Orientation.Landscape;
+            document.DefaultPageSetup.Orientation = portrait ? Orientation.Portrait : Orientation.Landscape;
 
             // Create a MigraDoc section.
             Section section = document.AddSection();

@@ -833,7 +833,7 @@ namespace Models.PMF.Struct
 			if (calculatedTillers > tillersAdded)
 			{
 				// calculate linear LAI
-				double pltsPerMetre = plant.SowingData.Population * plant.SowingData.RowSpacing / 1000.0 * plant.SowingData.SkipRow;
+				double pltsPerMetre = plant.SowingData.Population * plant.SowingData.RowSpacing / 1000.0 * plant.SowingData.SkipDensityScale;
 				linearLAI = pltsPerMetre * tpla / 10000.0;
 
 				double laiToday = leaf.calcLAI();
