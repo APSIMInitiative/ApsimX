@@ -179,7 +179,7 @@
         {
             if (topLevelModel != null)
             {
-                IModel replacements = Apsim.Child(topLevelModel, "Replacements");
+                IModel replacements = Apsim.Child(topLevelModel, typeof(Replacements));
                 if (replacements != null)
                 {
                     foreach (IModel replacement in replacements.Children)

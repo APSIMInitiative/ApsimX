@@ -222,6 +222,7 @@
                         LoadReportSyntaxMode();
                     textEditor.Document.MimeType = "text/x-apsimreport";
                 }
+                textEditor.Document.SetNotDirtyState();
             }
         }
 

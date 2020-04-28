@@ -72,7 +72,7 @@
     /// </remarks>
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
     [Serializable]
-    public class AggregatedReportColumn : IReportColumn
+    public class ReportColumn : IReportColumn
     {
         /// <summary>An instance of a locator service.</summary>
         private readonly ILocator locator;
@@ -124,31 +124,10 @@
         /// <param name="locator">An instance of a locator service</param>
         /// <param name="events">An instance of an events service</param>
         /// <param name="groupByVariableName">Group by variable name.</param>
-        /// <returns>The newly created ReportColumn</returns>
-        public AggregatedReportColumn(string reportLine, 
-                                      IClock clock, ILocator locator, IEvent events,
-                                      string groupByVariableName)
-        {
-            this.clock = clock;
-            this.locator = locator;
-            this.events = events;
-            if (!string.IsNullOrEmpty(groupByVariableName)) 
-                this.groupByName = groupByVariableName;
-            ParseReportLine(reportLine);
-        }
-
-        /// <summary>
-        /// Constructor for an aggregated column.
-        /// </summary>
-        /// <param name="reportLine">The entire line directory from report.</param>
-        /// <param name="clock">An instance of a clock model</param>
-        /// <param name="locator">An instance of a locator service</param>
-        /// <param name="events">An instance of an events service</param>
-        /// <param name="groupByVariableName">Group by variable name.</param>
         /// <param name="from">From clause to use.</param>
         /// <param name="to">To clause to use.</param>
         /// <returns>The newly created ReportColumn</returns>
-        public AggregatedReportColumn(string reportLine,
+        public ReportColumn(string reportLine,
                                       IClock clock, ILocator locator, IEvent events,
                                       string groupByVariableName,
                                       string from, string to)
@@ -158,10 +137,23 @@
             this.events = events;
             if (!string.IsNullOrEmpty(groupByVariableName))
                 this.groupByName = groupByVariableName;
+            
+            var match = ParseReportLine(reportLine);
 
-            Name = StringUtilities.SplitOffAfterDelimiter(ref reportLine, " as ");
-            variableName = reportLine;
-            Initialise("value", variableName, Name, from, to);
+            var fromString = match.Groups["from"].Value;
+            var toString = match.Groups["to"].Value;
+            if (string.IsNullOrEmpty(fromString))
+            {
+                fromString = from;
+                toString = to;
+            }
+
+            Initialise(aggFunction: match.Groups["agg"].Value,
+                       varName: match.Groups["var"].Value,
+                       on: match.Groups["on"].Value,
+                       alias: match.Groups["alias"]?.Value,
+                       from: fromString,
+                       to: toString);
         }
 
         /// <summary>
@@ -185,6 +177,13 @@
         {
             if (groupNumber >= groups.Count)
                 groups.Add(new VariableGroup(locator, null, variableName, aggregationFunction));
+
+            if (string.IsNullOrEmpty(aggregationFunction) && string.IsNullOrEmpty(groupByName))
+            {
+                // This instance is NOT a temporarily aggregated variable and so hasn't 
+                // collected a value yet. Do it now.
+                groups[groupNumber].StoreValue();
+            }
 
             return groups[groupNumber].GetValue();
         }
@@ -250,23 +249,21 @@
         /// -    This is optional.  If omitted then the units will appear are ‘()’
         /// </remarks>
         /// <param name="descriptor">A column descriptor</param>
-        /// <returns>The newly created ReportColumn</returns>
-        private void ParseReportLine(string descriptor)
+        /// <returns>The successful RegEx match instance.</returns>
+        private Match ParseReportLine(string descriptor)
         {
-            var pattern = @"(?<agg>.+)\Wof\W(?<var>.+)\Wfrom\W(?<from>.+)\Wto\W(?<to>.+)\Was\W(?<alias>.+)";
+            var pattern = @"((?<agg>sum|Sum|mean|Mean|min|Min|max|Max|first|First|last|Last|" + // aggregation
+                          @"diff|Diff|stddev|Stddev|prod|Prod)\s+of\s+)?" +                     // more aggregation
+                          $@"(?<var>((?!\s+from\s+|\s+as\s+|\s+on\s+).)+)" +                    // APSIM variable or expression
+                          $@"(\s+on\s+(?<on>((?!\s+from\s+|\s+as\s+).)+))?" +                   // on keyword
+                          $@"(\s+from\s+(?<from>\S+)\s+to\s+(?<to>((?!\s+as)\S)+))?" +          // from and to keywords
+                          @"(\s+as\s+(?<alias>[\w.]+))?";                                       // alias
+
             var regEx = new Regex(pattern);
             var match = regEx.Match(descriptor);
             if (!match.Success)
-                throw new Exception($"Invalid format for report agregation variable {descriptor}");
-
-            var fromString = match.Groups["from"].Value;
-            var toString = match.Groups["to"].Value;
-
-            Initialise(aggFunction: match.Groups["agg"].Value,
-                       varName: match.Groups["var"].Value,
-                       alias: match.Groups["alias"]?.Value,
-                       from: match.Groups["from"].Value,
-                       to: match.Groups["to"].Value);
+                throw new Exception($"Invalid format for report aggregation variable {descriptor}");
+            return match;
         }
 
         /// <summary>
@@ -274,10 +271,11 @@
         /// </summary>
         /// <param name="aggFunction">The aggregation function.</param>
         /// <param name="varName">The name of the variable to get from APSIM.</param>
+        /// <param name="on">The collection event.</param>
         /// <param name="alias">The alias.</param>
         /// <param name="from">The from variable.</param>
         /// <param name="to">The to variable.</param>
-        private void Initialise(string aggFunction, string varName, string alias,
+        private void Initialise(string aggFunction, string varName, string on, string alias,
                                 string from, string to)
         {
             aggregationFunction = aggFunction;
@@ -318,46 +316,58 @@
             {
             }
 
-            events.Subscribe("[Clock].DoReportCalculations", OnDoReportCalculations);
-            events.Subscribe("[Clock].DoDailyInitialisation", OnStartOfDay);
-
-            fromVariable = Apsim.GetVariableObject(clock as IModel, fromString);
-            toVariable = Apsim.GetVariableObject(clock as IModel, toString);
-            if (fromVariable != null)
-            {
-                // A from variable name  was specified.
-            }
-            else if (DateTime.TryParse(fromString, out DateTime date))
-            {
-                // The from date is a static, hardcoded date string. ie 1-Jan, 1/1/2012, etc.
-                fromVariable = new VariableObject(date);
-
-                // If the date string does not contain a year (ie 1-Jan), we ignore year and
-                fromHasNoYear = !fromString.Contains(date.Year.ToString());
-            }
-            else
-            {
-                // Assume the string is an event name.
-                events.Subscribe(fromString, OnFromEvent);
+            if (string.IsNullOrEmpty(fromString))
                 inCaptureWindow = true;
-            }
-
-            if (toVariable != null)
-            {
-                // A to variable name  was specified.
-            }
-            else if (DateTime.TryParse(toString, out DateTime date))
-            {
-                // The from date is a static, hardcoded date string. ie 1-Jan, 1/1/2012, etc.
-                toVariable = new VariableObject(date);
-
-                // If the date string does not contain a year (ie 1-Jan), we ignore year and
-                toHasNoYear = !toString.Contains(date.Year.ToString());
-            }
             else
             {
-                // Assume the string is an event name.
-                events.Subscribe(toString, OnToEvent);
+                // temporarly aggregated variable
+                // subscribe to the capture event
+                var collectionEventName = "[Clock].DoReportCalculations";
+                if (!string.IsNullOrEmpty(on))
+                    collectionEventName = on;
+                events.Subscribe(collectionEventName, OnDoReportCalculations);
+
+                // subscribe to the start of day event so that we can determine if we're in the capture window.
+                events.Subscribe("[Clock].DoDailyInitialisation", OnStartOfDay);
+
+                fromVariable = Apsim.GetVariableObject(clock as IModel, fromString);
+                toVariable = Apsim.GetVariableObject(clock as IModel, toString);
+                if (fromVariable != null)
+                {
+                    // A from variable name  was specified.
+                }
+                else if (DateTime.TryParse(fromString, out DateTime date))
+                {
+                    // The from date is a static, hardcoded date string. ie 1-Jan, 1/1/2012, etc.
+                    fromVariable = new VariableObject(date);
+
+                    // If the date string does not contain a year (ie 1-Jan), we ignore year and
+                    fromHasNoYear = !fromString.Contains(date.Year.ToString());
+                }
+                else
+                {
+                    // Assume the string is an event name.
+                    events.Subscribe(fromString, OnFromEvent);
+                    inCaptureWindow = true;
+                }
+
+                if (toVariable != null)
+                {
+                    // A to variable name  was specified.
+                }
+                else if (DateTime.TryParse(toString, out DateTime date))
+                {
+                    // The from date is a static, hardcoded date string. ie 1-Jan, 1/1/2012, etc.
+                    toVariable = new VariableObject(date);
+
+                    // If the date string does not contain a year (ie 1-Jan), we ignore year and
+                    toHasNoYear = !toString.Contains(date.Year.ToString());
+                }
+                else
+                {
+                    // Assume the string is an event name.
+                    events.Subscribe(toString, OnToEvent);
+                }
             }
         }
 

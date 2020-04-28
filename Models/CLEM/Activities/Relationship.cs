@@ -82,7 +82,7 @@ namespace Models.CLEM.Activities
         /// Maximum value possible
         /// </summary>
         [Description("Maximum running value possible")]
-        [Required, GreaterThan("Minimum", ErrorMessage = "Maximum value must be greater than minimum value")]
+        //[Required, GreaterThan("Minimum", ErrorMessage = "Maximum value must be greater than minimum value")]
         public double Maximum { get; set; }
 
         /// <summary>
@@ -161,6 +161,11 @@ namespace Models.CLEM.Activities
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
+            if(Maximum < Minimum)
+            {
+                string[] memberNames = new string[] { "Maximum" };
+                results.Add(new ValidationResult("The maximum running value must be greater than the Minimum value", memberNames));
+            }
             if (XValues == null)
             {
                 string[] memberNames = new string[] { "XValues" };

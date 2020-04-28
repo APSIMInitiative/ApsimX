@@ -105,7 +105,7 @@
                             IsProperty = true,
                             IsEvent = false,
                             IsWriteable = !var.IsReadOnly,
-                            TypeName = var.DataType.Name,
+                            TypeName = GetTypeName(var.DataType),
                             Descr = GetDescription(property),
                             Units = var.Units
                         };
@@ -429,6 +429,18 @@
                 squareBracketIndex = -1;
             }
              return node;
+        }
+
+        private static string GetTypeName(Type type)
+        {
+            if (type.IsGenericType)
+            {
+                string name = type.Name;
+                if (name.Contains("`"))
+                    name = name.Substring(0, name.IndexOf('`'));
+                return $"{name}<{string.Join(", ", type.GenericTypeArguments.Select(t => GetTypeName(t)))}>";
+            }
+            return type.Name;
         }
 
         /// <summary>

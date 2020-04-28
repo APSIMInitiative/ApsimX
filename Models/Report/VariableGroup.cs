@@ -49,8 +49,6 @@
         public void StoreValue()
         {
             object value = locator.Get(variableName);
-            if (value == null)
-                throw new Exception($"Unable to locate report variable: {variableName}");
             if (value is IFunction function)
                 value = function.Value();
             else if (value != null && (value.GetType().IsArray || value.GetType().IsClass))
@@ -71,12 +69,12 @@
         /// <summary>Retrieve the current value to be stored in the report.</summary>
         public object GetValue()
         {
-            if (aggregationFunction != null)
+            if (!string.IsNullOrEmpty(aggregationFunction))
                 return ApplyAggregation();
             else if (valuesToAggregate.Count == 0)
                 throw new Exception($"In report, cannot find a value to return for variable {variableName}");
             else
-                return valuesToAggregate[0];
+                return valuesToAggregate.Last();
         }        
         
         /// <summary>Clear the values.</summary>
