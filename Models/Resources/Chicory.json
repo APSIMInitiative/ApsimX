@@ -2044,6 +2044,16 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": "g/m^2",
+              "Name": "InitialWtFunction",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
               "FixedValue": 0.007,
               "Units": "gN/gDM",
               "Name": "MinimumNConc",
@@ -3194,28 +3204,9 @@
             {
               "$type": "Models.PMF.Interfaces.BiomassPoolType, Models",
               "Name": "InitialWt",
-              "Children": [
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "g/m^2",
-                  "Name": "Structural",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "Metabolic",
-                  "FixedValue": "0.0"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "Storage",
-                  "FixedValue": "0.0"
-                }
-              ]
+              "Structural": 0.0,
+              "Metabolic": "0",
+              "Storage": "0"
             }
           ],
           "IncludeInDocumentation": true,
@@ -3246,6 +3237,16 @@
               "FixedValue": 0.0,
               "Units": null,
               "Name": "RemobilisationCost",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": "g/m^2",
+              "Name": "InitialWtFunction",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -4242,28 +4243,9 @@
             {
               "$type": "Models.PMF.Interfaces.BiomassPoolType, Models",
               "Name": "InitialWt",
-              "Children": [
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "g/m^2",
-                  "Name": "Structural",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "Metabolic",
-                  "FixedValue": "0.0"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "Storage",
-                  "FixedValue": "0.0"
-                }
-              ]
+              "Structural": 0.0,
+              "Metabolic": "0",
+              "Storage": "0"
             }
           ],
           "IncludeInDocumentation": true,
@@ -4294,6 +4276,17 @@
               "FixedValue": 0.0,
               "Units": null,
               "Name": "RemobilisationCost",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": "g/m^2",
+              "Name": "InitialWtFunction",
+              "IsAboveGround": false,
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -5217,29 +5210,9 @@
             {
               "$type": "Models.PMF.Interfaces.BiomassPoolType, Models",
               "Name": "InitialWt",
-              "Children": [
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "g/m^2",
-                  "Name": "Structural",
-                  "IsAboveGround": false,
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "Metabolic",
-                  "FixedValue": "0.0"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "Storage",
-                  "FixedValue": "0.0"
-                }
-              ]
+              "Structural": 0.0,
+              "Metabolic": "0",
+              "Storage": "0"
             }
           ],
           "IncludeInDocumentation": true,
@@ -5274,6 +5247,26 @@
               "Units": null,
               "Name": "RemobilisationCost",
               "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.001,
+              "Units": "g/plant",
+              "Name": "InitialDM",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "The model assumes that 2/3 of the seed biomass is converted to root biomass by the time of emergence.  The weight of chicory seeds varies From 1.4 to 1.7 g/1000 seeds ([HareEtAl_1990]; [ReedEtAl_2008]). ",
+                  "Name": "Description",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -6287,38 +6280,9 @@
             {
               "$type": "Models.PMF.Interfaces.BiomassPoolType, Models",
               "Name": "InitialWt",
-              "Children": [
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.001,
-                  "Units": "g/plant",
-                  "Name": "Structural",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "The model assumes that 2/3 of the seed biomass is converted to root biomass by the time of emergence.  The weight of chicory seeds varies From 1.4 to 1.7 g/1000 seeds ([HareEtAl_1990]; [ReedEtAl_2008]). ",
-                      "Name": "Description",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "Metabolic",
-                  "FixedValue": "0.0"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "Storage",
-                  "FixedValue": "0.0"
-                }
-              ]
+              "Structural": 0.001,
+              "Metabolic": "0",
+              "Storage": "0"
             }
           ],
           "IncludeInDocumentation": true,

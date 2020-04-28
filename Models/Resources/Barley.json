@@ -3881,6 +3881,16 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.005,
+              "Units": "g/plant",
+              "Name": "InitialDM",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
               "FixedValue": 105.0,
               "Units": "m/g",
               "Name": "SpecificRootLength",
@@ -4615,28 +4625,9 @@
             {
               "$type": "Models.PMF.Interfaces.BiomassPoolType, Models",
               "Name": "InitialWt",
-              "Children": [
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.005,
-                  "Units": "g/plant",
-                  "Name": "Structural",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "Metabolic",
-                  "FixedValue": "0.0"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "Storage",
-                  "FixedValue": "0.0"
-                }
-              ]
+              "Structural": 0.005,
+              "Metabolic": "0",
+              "Storage": "0"
             }
           ],
           "IncludeInDocumentation": false,
@@ -8478,6 +8469,16 @@
             {
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 0.0,
+              "Units": "g/m^2",
+              "Name": "InitialWtFunction",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
               "Units": "/d",
               "Name": "DetachmentRateFunction",
               "Children": [],
@@ -8831,28 +8832,9 @@
             {
               "$type": "Models.PMF.Interfaces.BiomassPoolType, Models",
               "Name": "InitialWt",
-              "Children": [
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "g/m^2",
-                  "Name": "Structural",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "Metabolic",
-                  "FixedValue": "0.0"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "Storage",
-                  "FixedValue": "0.0"
-                }
-              ]
+              "Structural": 0.0,
+              "Metabolic": "0",
+              "Storage": "0"
             }
           ],
           "IncludeInDocumentation": false,
@@ -9141,6 +9123,16 @@
                   "ReadOnly": false
                 }
               ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": "g/m^2",
+              "Name": "InitialWtFunction",
+              "Children": [],
               "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
@@ -9539,28 +9531,9 @@
             {
               "$type": "Models.PMF.Interfaces.BiomassPoolType, Models",
               "Name": "InitialWt",
-              "Children": [
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "g/m^2",
-                  "Name": "Structural",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "Metabolic",
-                  "FixedValue": "0.0"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "Storage",
-                  "FixedValue": "0.0"
-                }
-              ]
+              "Structural": 0.0,
+              "Metabolic": "0",
+              "Storage": "0"
             }
           ],
           "IncludeInDocumentation": false,

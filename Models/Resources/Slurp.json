@@ -405,6 +405,16 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.005,
+              "Units": "g/plant",
+              "Name": "InitialDM",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
               "FixedValue": 0.0,
               "Units": "/d",
               "Name": "SenescenceRate",
@@ -816,28 +826,9 @@
             {
               "$type": "Models.PMF.Interfaces.BiomassPoolType, Models",
               "Name": "InitialWt",
-              "Children": [
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.005,
-                  "Units": "g/plant",
-                  "Name": "Structural",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "Metabolic",
-                  "FixedValue": "0.0"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "Storage",
-                  "FixedValue": "0.0"
-                }
-              ]
+              "Structural": 0.005,
+              "Metabolic": "0",
+              "Storage": "0"
             }
           ],
           "IncludeInDocumentation": true,
