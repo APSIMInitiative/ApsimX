@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 92,
+  "Version": 93,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -2163,6 +2163,7 @@
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "DMSupply": null,
               "NSupply": null,
@@ -4415,6 +4416,7 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "GrowthRespiration": 0.0,
@@ -5946,6 +5948,7 @@
               "DltSenescedLaiFrost": 0.0,
               "DltSenescedLaiAge": 0.0,
               "DMSupply": null,
+              "DMDemandPriorityFactor": null,
               "NSupply": null,
               "DMDemand": null,
               "NDemand": null,
@@ -8472,6 +8475,7 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "IsAboveGround": true,
@@ -9629,6 +9633,7 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "IsAboveGround": true,
@@ -15214,7 +15219,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "CropType": "Maize",
                           "ResourceName": "Maize",
                           "Name": "C4Maize",
                           "IncludeInDocumentation": true,
@@ -22400,7 +22404,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "CropType": "Maize",
                           "ResourceName": "Maize",
                           "Name": "C4Maize",
                           "IncludeInDocumentation": true,
@@ -23256,7 +23259,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "CropType": "Maize",
                           "ResourceName": "Maize",
                           "Name": "C4Maize",
                           "IncludeInDocumentation": true,
@@ -24106,7 +24108,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "CropType": "Maize",
                           "ResourceName": "Maize",
                           "Name": "C4Maize",
                           "IncludeInDocumentation": true,
@@ -24936,7 +24937,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "CropType": "Maize",
                           "ResourceName": "Maize",
                           "Name": "C4Maize",
                           "IncludeInDocumentation": true,
@@ -25895,7 +25895,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "CropType": "Maize",
                           "ResourceName": "Maize",
                           "Name": "C4Maize",
                           "IncludeInDocumentation": true,
@@ -26900,7 +26899,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "CropType": "Maize",
                           "ResourceName": "Maize",
                           "Name": "C4Maize",
                           "IncludeInDocumentation": true,
@@ -41321,7 +41319,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "CropType": "Maize",
                           "ResourceName": "Maize",
                           "Name": "C4Maize",
                           "IncludeInDocumentation": true,
@@ -51238,7 +51235,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "CropType": "Maize",
                           "ResourceName": "Maize",
                           "Name": "C4Maize",
                           "IncludeInDocumentation": true,
@@ -52052,7 +52048,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "CropType": "Maize",
                           "ResourceName": "Maize",
                           "Name": "C4Maize",
                           "IncludeInDocumentation": true,
@@ -53999,7 +53994,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "CropType": "Maize",
                           "ResourceName": "Maize",
                           "Name": "C4Maize",
                           "IncludeInDocumentation": true,
@@ -54955,7 +54949,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Maize",
                       "ResourceName": "Maize",
                       "Name": "C4Maize",
                       "IncludeInDocumentation": true,
@@ -55917,7 +55910,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Maize",
                       "ResourceName": "Maize",
                       "Name": "C4Maize",
                       "IncludeInDocumentation": true,
@@ -56909,7 +56901,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Maize",
                       "ResourceName": "Maize",
                       "Name": "C4Maize",
                       "IncludeInDocumentation": true,
@@ -57895,7 +57886,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Maize",
                       "ResourceName": "Maize",
                       "Name": "C4Maize",
                       "IncludeInDocumentation": true,
@@ -58617,7 +58607,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "CropType": "Maize",
                           "ResourceName": "Maize",
                           "Name": "C4Maize",
                           "IncludeInDocumentation": true,
@@ -61458,7 +61447,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "CropType": "Maize",
                           "ResourceName": "Maize",
                           "Name": "C4Maize",
                           "IncludeInDocumentation": true,
@@ -62411,7 +62399,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "CropType": "Maize",
                           "ResourceName": "Maize",
                           "Name": "C4Maize",
                           "IncludeInDocumentation": true,
@@ -63130,7 +63117,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Maize",
                       "ResourceName": "Maize",
                       "Name": "C4Maize",
                       "IncludeInDocumentation": true,
