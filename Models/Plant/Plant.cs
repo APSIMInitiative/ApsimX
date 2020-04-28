@@ -537,30 +537,33 @@
             var preRemovalBiomass = AboveGround.Wt*10;
             foreach (var organ in Organs.Cast<IOrganDamage>())
             {
-                // These calculations convert organ live weight from g/m2 to kg/ha
-                var amountLiveToRemove = organ.Live.Wt * 10 / preRemovalBiomass * amountToRemove;
-                var amountDeadToRemove = organ.Dead.Wt * 10 / preRemovalBiomass * amountToRemove;
-                var fractionLiveToRemove = MathUtilities.Divide(amountLiveToRemove, (organ.Live.Wt * 10), 0);
-                var fractionDeadToRemove = MathUtilities.Divide(amountDeadToRemove, (organ.Dead.Wt * 10), 0);
-                var defoliatedDigestibility = organ.Live.DMDOfStructural * fractionLiveToRemove
-                                            + organ.Dead.DMDOfStructural * fractionDeadToRemove;
-                var defoliatedDM = amountLiveToRemove + amountDeadToRemove;
-                var defoliatedN = organ.Live.N * 10 * fractionLiveToRemove + organ.Dead.N * 10 * fractionDeadToRemove;
-                if (defoliatedDM > 0)
+                if (organ.IsAboveGround)
                 {
-                    RemoveBiomass(organ.Name, "Graze",
-                                  new OrganBiomassRemovalType()
-                                  {
-                                      FractionLiveToRemove = fractionLiveToRemove,
-                                      FractionDeadToRemove = fractionDeadToRemove
-                                  });
-
-                    defoliatedBiomass += new Biomass()
+                    // These calculations convert organ live weight from g/m2 to kg/ha
+                    var amountLiveToRemove = organ.Live.Wt * 10 / preRemovalBiomass * amountToRemove;
+                    var amountDeadToRemove = organ.Dead.Wt * 10 / preRemovalBiomass * amountToRemove;
+                    var fractionLiveToRemove = MathUtilities.Divide(amountLiveToRemove, (organ.Live.Wt * 10), 0);
+                    var fractionDeadToRemove = MathUtilities.Divide(amountDeadToRemove, (organ.Dead.Wt * 10), 0);
+                    var defoliatedDigestibility = organ.Live.DMDOfStructural * fractionLiveToRemove
+                                                + organ.Dead.DMDOfStructural * fractionDeadToRemove;
+                    var defoliatedDM = amountLiveToRemove + amountDeadToRemove;
+                    var defoliatedN = organ.Live.N * 10 * fractionLiveToRemove + organ.Dead.N * 10 * fractionDeadToRemove;
+                    if (defoliatedDM > 0)
                     {
-                        StructuralWt = defoliatedDM,
-                        StructuralN = defoliatedN,
-                        DMDOfStructural = defoliatedDigestibility
-                    };
+                        RemoveBiomass(organ.Name, "Graze",
+                                      new OrganBiomassRemovalType()
+                                      {
+                                          FractionLiveToRemove = fractionLiveToRemove,
+                                          FractionDeadToRemove = fractionDeadToRemove
+                                      });
+
+                        defoliatedBiomass += new Biomass()
+                        {
+                            StructuralWt = defoliatedDM,
+                            StructuralN = defoliatedN,
+                            DMDOfStructural = defoliatedDigestibility
+                        };
+                    }
                 }
             }
             return defoliatedBiomass;
