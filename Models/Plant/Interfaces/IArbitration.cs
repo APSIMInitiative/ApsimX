@@ -1,5 +1,6 @@
 ﻿namespace Models.PMF.Interfaces
 {
+    using Models.Core;
     using System;
 
     /// <summary> Inerface for arbitrators </summary>
@@ -87,7 +88,7 @@
     /// 
     /// </summary>
     [Serializable]
-    public class BiomassPoolType
+    public class BiomassPoolType : Model
     {
         /// <summary>Gets or sets the structural.</summary>
         /// <value>The structural.</value>

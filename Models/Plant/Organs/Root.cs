@@ -102,10 +102,9 @@
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction nUptakeSWFactor = null;
 
-        /// <summary>Gets or sets the initial biomass dry matter weight</summary>
+        /// <summary>Initial wt</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        [Units("g/plant")]
-        private IFunction initialDM = null;
+        public BiomassPoolType InitialWt { get; set; }
 
         /// <summary>Gets or sets the specific root length</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -244,7 +243,7 @@
             Zones = new List<ZoneState>();
             ZoneNamesToGrowRootsIn = new List<string>();
             ZoneRootDepths = new List<double>();
-            ZoneInitialDM = new List<double>();
+            ZoneInitialDM = new List<BiomassPoolType>();
         }
 
         /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
@@ -260,7 +259,7 @@
 
         /// <summary>The live weights for each addition zone.</summary>
         [XmlIgnore]
-        public List<double> ZoneInitialDM { get; set; }
+        public List<BiomassPoolType> ZoneInitialDM { get; set; }
 
         /// <summary>A list of all zones to grow roots in</summary>
         [XmlIgnore]
@@ -1276,7 +1275,7 @@
             if (soil.Weirdo == null && soil.Crop(parentPlant.Name) == null)
                 throw new Exception("Cannot find a soil crop parameterisation for " + parentPlant.Name);
 
-            PlantZone = new ZoneState(parentPlant, this, soil, 0, initialDM.Value(), parentPlant.Population, maximumNConc.Value(),
+            PlantZone = new ZoneState(parentPlant, this, soil, 0, InitialWt, parentPlant.Population, maximumNConc.Value(),
                                       rootFrontVelocity, maximumRootDepth, remobilisationCost);
             Zones = new List<ZoneState>();
             DMDemand = new BiomassPoolType();
@@ -1310,7 +1309,7 @@
             if (data.Plant == parentPlant)
             {
                 //sorghum calcs
-                PlantZone.Initialise(parentPlant.SowingData.Depth, initialDM.Value(), parentPlant.Population, maximumNConc.Value());
+                PlantZone.Initialise(parentPlant.SowingData.Depth, InitialWt, parentPlant.Population, maximumNConc.Value());
                 InitialiseZones();
 
                 needToRecalculateLiveDead = true;
