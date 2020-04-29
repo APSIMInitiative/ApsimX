@@ -66,25 +66,6 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Create a copy of the current instance
-        /// </summary>
-        /// <returns></returns>
-        override public object Clone
-        {
-            get
-            {
-                ActivityTimerInterval clone = new ActivityTimerInterval()
-                {
-                    Interval = this.Interval,
-                    MonthDue = this.MonthDue,
-                    NextDueDate = this.NextDueDate
-                };
-                clone.Children.AddRange(this.CloneChildren);
-                return clone;
-            }
-        }
-
-        /// <summary>
         /// Method to determine whether the activity is due
         /// </summary>
         /// <returns>Whether the activity is due in the current month</returns>

@@ -52,24 +52,6 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Create a copy of the current instance
-        /// </summary>
-        /// <returns></returns>
-        override public object Clone
-        {
-            get
-            {
-                ResourceUnitsConverter clone = new ResourceUnitsConverter()
-                {
-                    Factor = this.Factor,
-                    Units = this.Units
-                };
-                clone.Children.AddRange(this.CloneChildren);
-                return clone;
-            }
-        }
-
-        /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
         /// <param name="formatForParentControl">Use full verbose description</param>

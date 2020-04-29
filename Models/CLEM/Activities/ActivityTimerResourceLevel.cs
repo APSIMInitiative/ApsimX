@@ -71,26 +71,6 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Create a copy of the current instance
-        /// </summary>
-        /// <returns></returns>
-        override public object Clone
-        {
-            get
-            {
-                ActivityTimerResourceLevel clone = new ActivityTimerResourceLevel()
-                {
-                    ResourceTypeName = this.ResourceTypeName,
-                    ResourceTypeModel = this.ResourceTypeModel,
-                    Operator = this.Operator,
-                    Amount = this.Amount
-                };
-                clone.Children.AddRange(this.CloneChildren);
-                return clone;
-            }
-        }
-
-        /// <summary>
         /// Validate model
         /// </summary>
         /// <param name="validationContext"></param>

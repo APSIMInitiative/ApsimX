@@ -28,6 +28,7 @@ namespace Models.CLEM.Activities
     {
         [XmlIgnore]
         [Link]
+        [NonSerialized]
         Clock Clock = null;
 
         /// <summary>
@@ -64,25 +65,6 @@ namespace Models.CLEM.Activities
         public ActivityTimerDateRange()
         {
             this.SetDefaults();
-        }
-
-        /// <summary>
-        /// Create a copy of the current instance
-        /// </summary>
-        /// <returns></returns>
-        override public object Clone
-        {
-            get
-            {
-                ActivityTimerDateRange clone = new ActivityTimerDateRange()
-                {
-                    StartDate = this.StartDate,
-                    EndDate = this.EndDate,
-                    Invert = this.Invert
-                };
-                clone.Children.AddRange(this.CloneChildren);
-                return clone;
-            }
         }
 
         /// <summary>

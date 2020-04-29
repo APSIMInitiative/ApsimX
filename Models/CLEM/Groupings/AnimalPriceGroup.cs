@@ -60,25 +60,6 @@ namespace Models.CLEM.Groupings
         }
 
         /// <summary>
-        /// Create a copy of the current instance
-        /// </summary>
-        /// <returns></returns>
-        override public object Clone
-        {
-            get
-            {
-                AnimalPriceGroup clone = new AnimalPriceGroup()
-                {
-                    PricingStyle = this.PricingStyle,
-                    PurchaseOrSale = this.PurchaseOrSale,
-                    Value = this.Value
-                };
-                clone.Children.AddRange(this.CloneChildren);
-                return clone;
-            }
-        }
-
-        /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
         /// <param name="formatForParentControl">Use full verbose description</param>

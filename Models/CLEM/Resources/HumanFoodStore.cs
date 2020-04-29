@@ -76,6 +76,7 @@ namespace Models.CLEM.Resources
         /// <param name="child"></param>
         public override void AddNewResourceType(IResourceWithTransactionType child)
         {
+            (child as HumanFoodStoreType).Pools.Clear();
             child.TransactionOccurred += Resource_TransactionOccurred;
             this.Children.Add(child as Model);
         }

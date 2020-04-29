@@ -71,26 +71,6 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Create a copy of the current instance
-        /// </summary>
-        /// <returns></returns>
-        override public object Clone
-        {
-            get
-            {
-                ActivityTimerPastureLevel clone = new ActivityTimerPastureLevel()
-                {
-                    GrazeFoodStoreTypeName = this.GrazeFoodStoreTypeName,
-                    GrazeFoodStoreModel = this.GrazeFoodStoreModel,
-                    MinimumPastureLevel = this.MinimumPastureLevel,
-                    MaximumPastureLevel = this.MaximumPastureLevel
-                };
-                clone.Children.AddRange(this.CloneChildren);
-                return clone;
-            }
-        }
-
-        /// <summary>
         /// Validate model
         /// </summary>
         /// <param name="validationContext"></param>

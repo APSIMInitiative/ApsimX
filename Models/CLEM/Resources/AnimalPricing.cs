@@ -35,20 +35,6 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Create a copy of the current instance
-        /// </summary>
-        /// <returns></returns>
-        override public object Clone
-        {
-            get
-            {
-                AnimalPricing clone = new AnimalPricing();
-                clone.Children.AddRange(this.CloneChildren);
-                return clone;
-            }
-        }
-
-        /// <summary>
         /// Validate model
         /// </summary>
         /// <param name="validationContext"></param>

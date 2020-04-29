@@ -45,23 +45,6 @@ namespace Models.CLEM.Groupings
         }
 
         /// <summary>
-        /// Create a copy of the current instance
-        /// </summary>
-        /// <returns></returns>
-        override public object Clone
-        {
-            get
-            {
-                LabourPriceGroup clone = new LabourPriceGroup()
-                {
-                    Value = this.Value
-                };
-                clone.Children.AddRange(clone.CloneChildren);
-                return clone;
-            }
-        }
-
-        /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
         /// <param name="formatForParentControl">Use full verbose description</param>

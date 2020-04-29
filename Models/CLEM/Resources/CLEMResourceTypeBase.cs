@@ -21,12 +21,14 @@ namespace Models.CLEM.Resources
     public class CLEMResourceTypeBase : CLEMModel
     {
         [Link]
+        [NonSerialized]
         Clock Clock = null;
 
         /// <summary>
         /// A link to the equivalent market store for trading.
         /// </summary>
         [XmlIgnore]
+        [field: NonSerialized]
         public CLEMResourceTypeBase EquivalentMarketStore { get; set; }
 
         /// <summary>

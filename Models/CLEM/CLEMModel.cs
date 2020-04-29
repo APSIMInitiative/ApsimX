@@ -23,6 +23,7 @@ namespace Models.CLEM
         /// Link to summary
         /// </summary>
         [Link]
+        [NonSerialized]
         public ISummary Summary = null;
 
         private Guid id = Guid.NewGuid();
@@ -93,31 +94,6 @@ namespace Models.CLEM
                         }
                     }
                 }
-            }
-        }
-
-        /// <summary>
-        /// Clone this resource type
-        /// </summary>
-        public virtual object Clone { get; }
-
-        /// <summary>
-        /// Clone the child components of this resource type
-        /// </summary>
-        public List<Model> CloneChildren
-        {
-            get
-            {
-                List<Model> clonedList = new List<Model>();
-                foreach (CLEMModel model in Apsim.Children(this, typeof(CLEMModel)))
-                {
-                    Model cloned = model.Clone as Model;
-                    if (cloned != null)
-                    {
-                        clonedList.Add(cloned);
-                    }
-                }
-                return clonedList;
             }
         }
 

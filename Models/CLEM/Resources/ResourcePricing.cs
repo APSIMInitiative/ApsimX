@@ -77,26 +77,6 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Create a copy of the current instance
-        /// </summary>
-        /// <returns></returns>
-        override public object Clone
-        {
-            get
-            {
-                ResourcePricing clone = new ResourcePricing()
-                {
-                    PacketSize = this.PacketSize,
-                    UseWholePackets = this.UseWholePackets,
-                    PricePerPacket = this.PricePerPacket,
-                    PurchaseOrSale = this.PurchaseOrSale
-                };
-                clone.Children.AddRange(this.CloneChildren);
-                return clone;
-            }
-        }
-
-        /// <summary>
         /// Constructor
         /// </summary>
         public ResourcePricing()

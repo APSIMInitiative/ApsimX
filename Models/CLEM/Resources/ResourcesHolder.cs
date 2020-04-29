@@ -10,6 +10,7 @@ using Models.CLEM.Activities;
 using Models.CLEM.Groupings;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
+using APSIM.Shared.Utilities;
 
 namespace Models.CLEM.Resources
 {
@@ -347,7 +348,8 @@ namespace Models.CLEM.Resources
             if (resType is null)
             {
                 // clone resource
-                resType = resourceType.Clone as IResourceWithTransactionType;
+                resType = Apsim.Clone(resourceType);
+
                 if (resType is null)
                 {
                     // add warning the market does not have the resource

@@ -41,23 +41,6 @@ namespace Models.CLEM
         public double AmountPerUnitPurchase { get; set; }
 
         /// <summary>
-        /// Create a copy of the current instance
-        /// </summary>
-        /// <returns></returns>
-        override public object Clone
-        {
-            get
-            {
-                Transmutation clone = new Transmutation()
-                {
-                    AmountPerUnitPurchase = this.AmountPerUnitPurchase
-                };
-                clone.Children.AddRange(this.CloneChildren);
-                return clone;
-            }
-        }
-
-        /// <summary>
         /// Validate this object
         /// </summary>
         /// <param name="validationContext"></param>
@@ -171,24 +154,6 @@ namespace Models.CLEM
         public TransmutationCost()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
-        }
-
-        /// <summary>
-        /// Create a copy of the current instance
-        /// </summary>
-        /// <returns></returns>
-        override public object Clone
-        {
-            get
-            {
-                TransmutationCost clone = new TransmutationCost()
-                {
-                    ResourceTypeName = this.ResourceTypeName,
-                    ResourceType = this.ResourceType
-                };
-                clone.Children.AddRange(this.CloneChildren);
-                return clone;
-            }
         }
 
         /// <summary>
@@ -319,25 +284,6 @@ namespace Models.CLEM
         }
 
         /// <summary>
-        /// Create a copy of the current instance
-        /// </summary>
-        /// <returns></returns>
-        override public object Clone
-        {
-            get
-            {
-                TransmutationCostLabour clone = new TransmutationCostLabour()
-                {
-                    ResourceTypeName = this.ResourceTypeName,
-                    ResourceType = this.ResourceType,
-                    CostPerUnit = this.CostPerUnit
-                };
-                clone.Children.AddRange(this.CloneChildren);
-                return clone;
-            }
-        }
-
-        /// <summary>
         /// Validate this object
         /// </summary>
         /// <param name="validationContext"></param>
@@ -450,24 +396,6 @@ namespace Models.CLEM
             set
             {
 
-            }
-        }
-
-        /// <summary>
-        /// Create a copy of the current instance
-        /// </summary>
-        /// <returns></returns>
-        override public object Clone
-        {
-            get
-            {
-                TransmutationCostUsePricing clone = new TransmutationCostUsePricing()
-                {
-                    ResourceTypeName = this.ResourceTypeName,
-                    ResourceType = this.ResourceType
-                };
-                clone.Children.AddRange(this.CloneChildren);
-                return clone;
             }
         }
 

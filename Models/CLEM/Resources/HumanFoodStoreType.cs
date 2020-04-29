@@ -213,26 +213,6 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Clone this resource type
-        /// </summary>
-        override public object Clone 
-        {
-            get 
-            {
-                HumanFoodStoreType cloned = new HumanFoodStoreType
-                {
-                    EdibleProportion = this.EdibleProportion,
-                    Name = this.Name,
-                    Units = this.Units,
-                    UseByAge = this.UseByAge,
-                    ConvertToKg = 1,
-                };
-                cloned.Children.AddRange(this.CloneChildren);
-                return cloned;
-            }
-        }
-
-        /// <summary>
         /// Cleans up pools
         /// </summary>
         [EventSubscribe("Completed")]
@@ -282,6 +262,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Back account transaction occured
         /// </summary>
+        [field: NonSerialized]
         public event EventHandler TransactionOccurred;
 
         /// <summary>
@@ -297,6 +278,7 @@ namespace Models.CLEM.Resources
         /// Last transaction received
         /// </summary>
         [XmlIgnore]
+        [field: NonSerialized]
         public ResourceTransaction LastTransaction { get; set; }
 
         #endregion

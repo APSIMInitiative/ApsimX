@@ -40,6 +40,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         public double Amount { get { return amount; } }
         double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
+        [NonSerialized]
         private double roundedAmount;
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -52,23 +53,6 @@ namespace Models.CLEM.Resources
             if (StartingAmount > 0)
             {
                 Add(StartingAmount, this, "Starting value");
-            }
-        }
-
-        /// <summary>
-        /// Clone this resource type
-        /// </summary>
-        override public object Clone
-        {
-            get
-            {
-                ProductStoreType cloned = new ProductStoreType
-                {
-                    Name = this.Name,
-                    Units = this.Units,
-                };
-                this.Children.AddRange(this.CloneChildren);
-                return cloned;
             }
         }
 

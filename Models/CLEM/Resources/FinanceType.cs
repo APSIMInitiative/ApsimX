@@ -248,17 +248,6 @@ namespace Models.CLEM.Resources
             amount = Math.Round(newAmount, 2, MidpointRounding.ToEven);
         }
 
-        /// <summary>
-        /// Clone this resource type
-        /// </summary>
-        public new object Clone 
-        { 
-            get 
-            {
-                return null;
-            }
-        }
-
         #endregion
 
         /// <summary>
