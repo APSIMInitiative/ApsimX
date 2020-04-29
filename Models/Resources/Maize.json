@@ -1679,7 +1679,7 @@
           "Name": "Root",
           "Children": [
             {
-              "$type": "Models.Functions.RootShapeCylindre, Models",
+              "$type": "Models.Functions.RootShape.RootShapeCylindre, Models",
               "Name": "RootShape",
               "Children": []
             },
