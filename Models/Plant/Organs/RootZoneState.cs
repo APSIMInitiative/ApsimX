@@ -181,7 +181,9 @@ namespace Models.PMF.Organs
             {
                 LayerLive[layer].StructuralWt = toMass[layer] * population;
                 LayerLive[layer].StructuralN = LayerLive[layer].StructuralWt * maxNConc;
+                LLModifier[layer] = 1;
             }
+
             if (plant.SowingData != null)
             {
                 if (plant.SowingData.SkipType == 0)
@@ -215,6 +217,7 @@ namespace Models.PMF.Organs
             DeltaNO3 = new double[soil.Thickness.Length];
             DeltaNH4 = new double[soil.Thickness.Length];
             RootProportions = new double[soil.Thickness.Length];
+            LLModifier = new double[soil.Thickness.Length];
 
             Depth = 0.0;
 

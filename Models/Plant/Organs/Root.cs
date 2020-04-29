@@ -856,9 +856,10 @@
                     LayerMidPointDepth = myZone.soil.DepthMidPoints;
                     for (int layer = 0; layer <= currentLayer; layer++)
                     {
-                        lldep[layer] = ll[layer] * myZone.soil.Thickness[layer];
+                        double available = zone.Water[layer] - ll[layer] * myZone.soil.Thickness[layer] * myZone.LLModifier[layer];
+
                         supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
-                            Math.Max(zone.Water[layer] - lldep[layer], 0.0) * myZone.RootProportions[layer]);
+                            available * myZone.RootProportions[layer]);
                     }
 
                     return supply;
@@ -874,8 +875,10 @@
                     {
                         if (layer <= myZone.soil.LayerIndexOfDepth(myZone.Depth))
                         {
+                            double available = zone.Water[layer] - ll[layer] * myZone.soil.Thickness[layer] * myZone.LLModifier[layer];
+
                             supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
-                            (zone.Water[layer] - ll[layer] * myZone.soil.Thickness[layer]) * myZone.RootProportions[layer]);
+                            available * myZone.RootProportions[layer]);
                         }
                     }
                     return supply;
@@ -1009,8 +1012,12 @@
             for (int layer = 0; layer < LL.Length; layer++)
             {
                 if (layer <= PlantZone.soil.LayerIndexOfDepth(Depth))
-                    supply += Math.Max(0.0, KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) * (SWmm[layer] - LL[layer] * DZ[layer]) *
-                        PlantZone.RootProportions[layer]);
+                {
+                    double available = SWmm[layer] - LL[layer] * DZ[layer] * PlantZone.LLModifier[layer];
+
+                    supply += Math.Max(0.0, KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
+                            available * PlantZone.RootProportions[layer]);
+                }
             }
             return supply;
         }
@@ -1037,7 +1044,7 @@
             {
                 if (layer <= currentLayer)
                 {
-                    available[layer] = Math.Max(0.0, SWmm[layer] - LL[layer] * DZ[layer]);
+                    available[layer] = Math.Max(0.0, SWmm[layer] - LL[layer] * DZ[layer] * PlantZone.LLModifier[layer]);
                 }
             }
             available[currentLayer] *= layerProportion;

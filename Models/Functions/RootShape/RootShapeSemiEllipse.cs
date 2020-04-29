@@ -22,6 +22,11 @@ namespace Models.Functions.RootShape
         [Units("Degree")]
         private readonly IFunction RootAngle = null;
 
+        /// <summary>The Root Angle foe which soil LL values were estimated</summary>
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        [Units("Degree")]
+        private readonly IFunction RootAngleBase = null;
+
         /// <summary>Calculates the root area for a layer of soil</summary>
         public void CalcRootProportionInLayers(ZoneState zone)
         {
@@ -31,20 +36,26 @@ namespace Models.Functions.RootShape
                 double prop;
                 double top = layer == 0 ? 0 : MathUtilities.Sum(zone.soil.Thickness, 0, layer - 1);
                 double bottom = top + zone.soil.Thickness[layer];
-                double rootArea;
+                double rootArea, rootAreaBaseUnlimited, rootAreaUnlimited, rootAngleBase, llModifer;
 
-                if (zone.Depth < top)
-                {
-                    prop = 0;
-                }
+                if (RootAngleBase == null)
+                    rootAngleBase = 45.0;
                 else
-                {
-                    rootArea = CalcRootAreaSemiEllipse(zone, top, bottom, zone.RightDist);   // Right side
-                    rootArea += CalcRootAreaSemiEllipse(zone, top, bottom, zone.LeftDist);   // Left Side
+                    rootAngleBase = RootAngleBase.Value();
 
-                    double soilArea = (zone.RightDist + zone.LeftDist) * (bottom - top);
-                    prop = Math.Max(0.0, MathUtilities.Divide(rootArea, soilArea, 0.0));
+                if (rootAngleBase != RootAngle.Value())
+                {
+                    // Root area for the base and current root angle when not limited by adjacent rows
+                    rootAreaBaseUnlimited = CalcRootAreaSemiEllipse(zone, rootAngleBase, top, bottom, 10000);   // Right side
+                    rootAreaBaseUnlimited += CalcRootAreaSemiEllipse(zone, rootAngleBase, top, bottom, 10000);   // Left Side
+                    rootAreaUnlimited = CalcRootAreaSemiEllipse(zone, RootAngle.Value(), top, bottom, 10000);   // Right side
+                    rootAreaUnlimited += CalcRootAreaSemiEllipse(zone, RootAngle.Value(), top, bottom, 10000);   // Left Side
+                    llModifer = MathUtilities.Divide(rootAreaUnlimited, rootAreaBaseUnlimited, 1);
+                } else
+                {
+                    llModifer = 1;
                 }
+
                 rootArea = CalcRootAreaSemiEllipse(zone, RootAngle.Value(), top, bottom, zone.RightDist);   // Right side
                 rootArea += CalcRootAreaSemiEllipse(zone, RootAngle.Value(), top, bottom, zone.LeftDist);   // Left Side
                 zone.RootArea += rootArea / 1e6;
@@ -53,6 +64,7 @@ namespace Models.Functions.RootShape
                 prop = Math.Max(0.0, MathUtilities.Divide(rootArea, soilArea, 0.0));
 
                 zone.RootProportions[layer] = prop;
+                zone.LLModifier[layer] = llModifer;
             }
         }
 
