@@ -218,7 +218,6 @@
     <Compile Include="Core\Attributes\CategoryAttribute.cs" />
     <Compile Include="Core\Attributes\TooltipAttribute.cs" />
     <Compile Include="Core\Attributes\VersionAttribute.cs" />
-    <Compile Include="Core\Checkpoints.cs" />
     <Compile Include="CLEM\Activities\BlankActivity.cs" />
     <Compile Include="CLEM\FileSQLiteGRASP.cs" />
     <Compile Include="CLEM\Groupings\RuminantDestockGroup.cs" />
@@ -333,6 +332,10 @@
     <Compile Include="Soils\Standardiser\SoilDefaults.cs" />
     <Compile Include="Soils\Standardiser\SoilUnits.cs" />
     <Compile Include="Soils\Standardiser\SoilStandardiser.cs" />
+    <Compile Include="Stock\AnimalInits.cs" />
+    <Compile Include="Stock\Genotype.cs" />
+    <Compile Include="Stock\GenotypeCross.cs" />
+    <Compile Include="Stock\Genotypes.cs" />
     <Compile Include="Storage\Checkpoint.cs" />
     <Compile Include="Storage\WriteTableCommand.cs" />
     <Compile Include="Storage\DatabaseTableDetails.cs" />
