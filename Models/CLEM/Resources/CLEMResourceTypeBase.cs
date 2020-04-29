@@ -28,7 +28,6 @@ namespace Models.CLEM.Resources
         /// A link to the equivalent market store for trading.
         /// </summary>
         [XmlIgnore]
-        [field: NonSerialized]
         public CLEMResourceTypeBase EquivalentMarketStore { get; set; }
 
         /// <summary>

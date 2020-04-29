@@ -262,7 +262,6 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Back account transaction occured
         /// </summary>
-        [field: NonSerialized]
         public event EventHandler TransactionOccurred;
 
         /// <summary>
@@ -278,7 +277,6 @@ namespace Models.CLEM.Resources
         /// Last transaction received
         /// </summary>
         [XmlIgnore]
-        [field: NonSerialized]
         public ResourceTransaction LastTransaction { get; set; }
 
         #endregion
