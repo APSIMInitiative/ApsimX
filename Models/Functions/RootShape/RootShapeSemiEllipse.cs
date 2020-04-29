@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Models.Core;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
+using Models.PMF;
 using Models.PMF.Organs;
-using Models.Soils;
 
-namespace Models.Functions
+namespace Models.Functions.RootShape
 {
     /// <summary>
     /// This model calculates the proportion of each soil layer occupided by roots.
@@ -15,6 +14,7 @@ namespace Models.Functions
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(Root))]
     public class RootShapeSemiEllipse : Model, IRootShape, ICustomDocumentation
     {
         /// <summary>The Root Angle</summary>
@@ -25,6 +25,7 @@ namespace Models.Functions
         /// <summary>Calculates the root area for a layer of soil</summary>
         public void CalcRootProportionInLayers(ZoneState zone)
         {
+            zone.RootArea = 0;
             for (int layer = 0; layer < zone.soil.Thickness.Length; layer++)
             {
                 double prop;
@@ -44,6 +45,13 @@ namespace Models.Functions
                     double soilArea = (zone.RightDist + zone.LeftDist) * (bottom - top);
                     prop = Math.Max(0.0, MathUtilities.Divide(rootArea, soilArea, 0.0));
                 }
+                rootArea = CalcRootAreaSemiEllipse(zone, RootAngle.Value(), top, bottom, zone.RightDist);   // Right side
+                rootArea += CalcRootAreaSemiEllipse(zone, RootAngle.Value(), top, bottom, zone.LeftDist);   // Left Side
+                zone.RootArea += rootArea / 1e6;
+
+                double soilArea = (zone.RightDist + zone.LeftDist) * (bottom - top);
+                prop = Math.Max(0.0, MathUtilities.Divide(rootArea, soilArea, 0.0));
+
                 zone.RootProportions[layer] = prop;
             }
         }
@@ -53,33 +61,29 @@ namespace Models.Functions
             return degs * Math.PI / 180.0;
         }
 
-        private double CalcRootAreaSemiEllipse(ZoneState zone, double top, double bottom, double hDist)
+        private double CalcRootAreaSemiEllipse(ZoneState zone, double rootAngle, double top, double bottom, double hDist)
         {
-            if (zone.RootFront == 0.0)
+            if (zone.RootFront == 0.0 || zone.RootFront <= top)
             {
                 return 0.0;
             }
 
-            double depth, depthInLayer;
+            double meanDepth, layerThick, rootLength, sowDepth, layerArea, a;
 
-            zone.RootSpread = zone.RootFront * Math.Tan(DegToRad(RootAngle.Value()));   // Semi minor axis
+            sowDepth = zone.plant.SowingData.Depth;
+            bottom = Math.Min(bottom, zone.RootFront);
+            top = Math.Max(top, sowDepth);
 
-            if (zone.RootFront >= bottom)
-            {
-                depth = (bottom - top) / 2.0 + top;
-                depthInLayer = bottom - top;
-            }
-            else
-            {
-                depth = (zone.RootFront - top) / 2.0 + top;
-                depthInLayer = zone.RootFront - top;
-            }
+            zone.RootSpread = zone.RootLength * Math.Tan(DegToRad(rootAngle));   // Semi minor axis
 
-            double a = Math.Pow(depth - 0.5 * zone.RootFront, 2) / Math.Pow(0.5 * zone.RootFront, 2);
-            double xDist = Math.Min(hDist, Math.Sqrt(Math.Pow(zone.RootSpread, 2) * (1 - a)));
-            double areaLayer = depthInLayer * xDist;
+            meanDepth = Math.Max(0.5 * (bottom + top) - sowDepth, 1); // 1mm is added to assure germination occurs.
+            layerThick = Math.Max(bottom - top, 1);
+            rootLength = Math.Max(zone.RootLength, 1);
 
-            return areaLayer;
+            a = Math.Pow(meanDepth - 0.5 * rootLength, 2) / Math.Pow(0.5 * rootLength, 2);
+            hDist = Math.Min(hDist, Math.Sqrt(MathUtilities.Bound(Math.Pow(zone.RootSpread, 2) * (1 - a), 0, 100000)));
+            layerArea = layerThick * hDist;
+            return layerArea;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
