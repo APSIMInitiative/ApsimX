@@ -2070,7 +2070,9 @@
         {
             foreach (JObject thisRoot in JsonUtilities.ChildrenRecursively(root, "Root"))
             {
-                if (JsonUtilities.ChildrenRecursively(thisRoot, "RootShape").Count == 0)
+                if (JsonUtilities.ChildrenRecursively(thisRoot, "RootShapeCylindre").Count == 0 &&
+                    JsonUtilities.ChildrenRecursively(thisRoot, "RootShapeSemiCircle").Count == 0 &&
+                    JsonUtilities.ChildrenRecursively(thisRoot, "RootShapeSemiEllipse").Count == 0)
                 {
                     JArray rootChildren = thisRoot["Children"] as JArray;
                     if (rootChildren != null && rootChildren.Count > 0)
