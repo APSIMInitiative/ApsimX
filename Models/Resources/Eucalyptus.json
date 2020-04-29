@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 94,
+  "Version": 93,
   "Name": "Simulations",
   "Children": [
     {
@@ -2376,13 +2376,6 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Interfaces.BiomassPoolType, Models",
-              "Name": "InitialWt",
-              "Structural": 0.0,
-              "Metabolic": "0",
-              "Storage": "0"
             }
           ],
           "IncludeInDocumentation": false,
@@ -2990,13 +2983,6 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Interfaces.BiomassPoolType, Models",
-              "Name": "InitialWt",
-              "Structural": 0.0,
-              "Metabolic": "0",
-              "Storage": "0"
             }
           ],
           "IncludeInDocumentation": false,
@@ -3481,13 +3467,6 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Interfaces.BiomassPoolType, Models",
-              "Name": "InitialWt",
-              "Structural": 0.0,
-              "Metabolic": "0",
-              "Storage": "0"
             }
           ],
           "IncludeInDocumentation": false,
@@ -4013,13 +3992,6 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Interfaces.BiomassPoolType, Models",
-              "Name": "InitialWt",
-              "Structural": 0.2,
-              "Metabolic": "0",
-              "Storage": "0"
             }
           ],
           "IncludeInDocumentation": false,
