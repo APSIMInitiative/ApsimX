@@ -170,7 +170,7 @@
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            AnimalParamSet newGenotype;
+            AnimalParameterSet newGenotype;
             if (!string.IsNullOrEmpty(PureBredBreed))
             {
                 newGenotype = stock.Genotypes.Get(PureBredBreed).Parameters;
@@ -197,7 +197,7 @@
             if (!double.IsNaN(PeakMilk))
                 newGenotype.PotMilkYield = PeakMilk;
             if (Conception != null && Conception.Length == 4 && !double.IsNaN(Conception[0]))
-            newGenotype.Conceptions = Conception;
+                newGenotype.Conceptions = Conception;
             if (!double.IsNaN(MatureDeathRate))
             {
                 if (1.0 - MatureDeathRate < 0)

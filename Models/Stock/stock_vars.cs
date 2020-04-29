@@ -427,7 +427,7 @@
         /// <param name="genoValues">The genotypes returned</param>
         public static void MakeGenotypesValue(StockList model, ref StockGeno[] genoValues)
         {
-            AnimalParamSet parameters;
+            AnimalParameterSet parameters;
             string damBreed = string.Empty;
             string sireBreed = string.Empty;
             int generation = 0;
@@ -754,7 +754,7 @@
                                     break;
                                 case StockProps.prpBASE_WT: value = animalGroup.BaseWeight;
                                     break;
-                                case StockProps.prpCOND_SCORE: value = animalGroup.fConditionScore(AnimalParamSet.Cond_System.csSYSTEM1_5);
+                                case StockProps.prpCOND_SCORE: value = animalGroup.fConditionScore(AnimalParameterSet.Cond_System.csSYSTEM1_5);
                                     break;
                                 case StockProps.prpMAX_PREV_WT: value = animalGroup.MaxPrevWeight;
                                     break;

@@ -4046,7 +4046,7 @@
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            var childGenotypes = Apsim.Children(this, typeof(AnimalParamSet)).Cast<AnimalParamSet>().ToList();
+            var childGenotypes = Apsim.Children(this, typeof(AnimalParameterSet)).Cast<AnimalParameterSet>().ToList();
             if (childGenotypes != null)
                 childGenotypes.ForEach(animalParamSet => Genotypes.Add(animalParamSet));
 

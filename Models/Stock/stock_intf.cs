@@ -441,12 +441,12 @@
         /// <summary>
         /// Base parameters
         /// </summary>
-        private AnimalParamSet baseParams = null;
+        private AnimalParameterSet baseParams = null;
 
         /// <summary>
         /// Set of genotype parameters
         /// </summary>
-        private AnimalParamSet[] genotypeParams = new AnimalParamSet[0];
+        private AnimalParameterSet[] genotypeParams = new AnimalParameterSet[0];
 
         /// <summary>
         /// stock[0] is kept for use as temporary storage         
@@ -482,7 +482,7 @@
         /// Gets the base parameter set for this instance
         /// specified by the ParamFile
         /// </summary>
-        public AnimalParamSet BaseParams
+        public AnimalParameterSet BaseParams
         {
             get { return baseParams; }
         }
@@ -527,23 +527,6 @@
             {
                 this.SetWeather(value);
             }
-        }
-
-        /// <summary>
-        /// Makes a copy of TAnimalParamsGlb and modifies it according to sConstFile     
-        /// </summary>
-        /// <param name="constFileName">The name of the parameter file</param>
-        /// <returns>The animal parameter set</returns>
-        public static AnimalParamSet MakeParamSet(string constFileName)
-        {
-            AnimalParamSet result = new AnimalParamSet((AnimalParamSet)null);
-            GlobalAnimalParams animalParams = new GlobalAnimalParams();
-            result.CopyAll(animalParams.AnimalParamsGlb());
-            if (constFileName != string.Empty)
-                GlobalParameterFactory.ParamXMLFactory().ReadFromFile(constFileName, result, true);
-            result.CurrLocale = GrazLocale.DefaultLocale();
-
-            return result;
         }
 
         /// <summary>
@@ -1377,7 +1360,7 @@
         /// </summary>
         /// <param name="idx">Genotype index</param>
         /// <returns>The genotype</returns>
-        public AnimalParamSet GetGenotype(int idx)
+        public AnimalParameterSet GetGenotype(int idx)
         {
             return this.genotypeParams[idx];
         }
@@ -1388,12 +1371,12 @@
         /// </summary>
         /// <param name="genoName">The genotype name</param>
         /// <returns>The genotype</returns>
-        public AnimalParamSet GetGenotype(string genoName)
+        public AnimalParameterSet GetGenotype(string genoName)
         {
             int idx;
-            AnimalParamSet srcParamSet;
+            AnimalParameterSet srcParamSet;
 
-            AnimalParamSet result = null;
+            AnimalParameterSet result = null;
             if ((genoName == string.Empty) && (this.genotypeParams.Length >= 1))                           // Null string is a special case         
                 result = this.genotypeParams[0];
             else
@@ -1407,13 +1390,12 @@
                 else
                 {
                     srcParamSet = parentStockModel.Genotypes.Get(genoName).Parameters;
-                    srcParamSet.EnglishName = genoName;
                     srcParamSet.DeriveParams();
                     //srcParamSet.Initialise();
 
                     if (srcParamSet != null)
                     {
-                        result = new AnimalParamSet(null, srcParamSet);
+                        result = new AnimalParameterSet(srcParamSet);
                         idx = this.genotypeParams.Length;
                         Array.Resize(ref this.genotypeParams, idx + 1);
                         this.genotypeParams[idx] = result;
@@ -1495,7 +1477,7 @@
                     newGroup.Young = null;
                 }
                 if (this.IsGiven(animalInits.BirthCS))
-                    newGroup.BirthCondition = AnimalParamSet.CondScore2Condition(animalInits.BirthCS, AnimalParamSet.Cond_System.csSYSTEM1_5);
+                    newGroup.BirthCondition = AnimalParameterSet.CondScore2Condition(animalInits.BirthCS, AnimalParameterSet.Cond_System.csSYSTEM1_5);
             }
 
             if (newGroup.Young != null)
@@ -2013,7 +1995,7 @@
         /// <param name="ageDays">Age in days</param>
         /// <param name="parameters">Breed parameter set</param>
         /// <returns>The maximum normal weight kg</returns>
-        private double MaxNormWtFunc(double srw, double bw, int ageDays, AnimalParamSet parameters)
+        private double MaxNormWtFunc(double srw, double bw, int ageDays, AnimalParameterSet parameters)
         {
             double growthRate;
 
@@ -2028,7 +2010,7 @@
         /// <param name="reprodStatus">Reproductive status</param>
         /// <param name="parameters">Animal parameter set</param>
         /// <returns>The normal weight kg</returns>
-        public double GrowthCurve(int ageDays, GrazType.ReproType reprodStatus, AnimalParamSet parameters)
+        public double GrowthCurve(int ageDays, GrazType.ReproType reprodStatus, AnimalParameterSet parameters)
         {
             double stdRefWt;
 
@@ -2049,7 +2031,7 @@
         /// <param name="condition">Animal condition</param>
         /// <param name="chill">Chill index</param>
         /// <returns>The reproduction rate</returns>
-        private double GetReproRate(CohortsInfo cohortsInfo, AnimalParamSet mainGenotype, AgeInfo[] ageInfo, double latitude, int mateDOY, double condition, double chill)
+        private double GetReproRate(CohortsInfo cohortsInfo, AnimalParameterSet mainGenotype, AgeInfo[] ageInfo, double latitude, int mateDOY, double condition, double chill)
         {
             double result = 0.0;
             double[] pregRate = new double[4];
@@ -2133,7 +2115,7 @@
         /// <param name="newGroups">List of new animal groups</param>
         public void AddCohorts(CohortsInfo cohortsInfo, int dayOfYear, double latitude, List<int> newGroups)
         {
-            AnimalParamSet mainGenotype;
+            AnimalParameterSet mainGenotype;
             AgeInfo[] ageInfoList;
 
             AnimalInits animalInits;
@@ -2198,7 +2180,7 @@
                     ageInfoList[cohortIdx].NormalBaseWt = this.GrowthCurve(ageInfoList[cohortIdx].AgeDays, cohortsInfo.ReproClass, mainGenotype);
 
                     // Estimate a default fleece weight based on time since shearing
-                    ageInfoList[cohortIdx].FleeceWt = AnimalParamSet.fDefaultFleece(
+                    ageInfoList[cohortIdx].FleeceWt = AnimalParameterSet.fDefaultFleece(
                                                                                     mainGenotype,
                                                                                     ageInfoList[cohortIdx].AgeDays,
                                                                                     cohortsInfo.ReproClass,
@@ -2224,7 +2206,7 @@
                 if (this.IsGiven(cohortsInfo.MeanLiveWt))
                     baseWtScalar = (cohortsInfo.MeanLiveWt - cohortsInfo.MeanGFW) / meanNormalWt;
                 else if (this.IsGiven(cohortsInfo.CondScore))
-                    baseWtScalar = AnimalParamSet.CondScore2Condition(cohortsInfo.CondScore);
+                    baseWtScalar = AnimalParameterSet.CondScore2Condition(cohortsInfo.CondScore);
                 else
                     baseWtScalar = 1.0;
 
@@ -2434,7 +2416,7 @@
                                 animalInits.Weight = ageInfoList[cohortIdx].BaseWeight + ageInfoList[cohortIdx].FleeceWt;
                                 animalInits.MaxPrevWt = StdMath.DMISSING; // compute from cond_score
                                 animalInits.FleeceWt = ageInfoList[cohortIdx].FleeceWt;
-                                animalInits.FibreDiam = AnimalParamSet.fDefaultMicron(
+                                animalInits.FibreDiam = AnimalParameterSet.fDefaultMicron(
                                                                                      mainGenotype,
                                                                                      animalInits.AgeDays,
                                                                                      animalInits.Sex,
@@ -2486,7 +2468,7 @@
         /// <returns>The index of the new group</returns>
         protected int Buy(PurchaseInfo animalInfo)
         {
-            AnimalParamSet agenotype;
+            AnimalParameterSet agenotype;
             AnimalGroup newGroup;
             double bodyCondition;
             double liveWeight;
@@ -2507,7 +2489,7 @@
                 {
                     liveWeight = this.GrowthCurve(animalInfo.AgeDays, animalInfo.Repro, agenotype);
                     if (animalInfo.CondScore > 0.0)
-                        liveWeight = liveWeight * AnimalParamSet.CondScore2Condition(animalInfo.CondScore);
+                        liveWeight = liveWeight * AnimalParameterSet.CondScore2Condition(animalInfo.CondScore);
                     if (agenotype.Animal == GrazType.AnimalType.Sheep)
                         liveWeight = liveWeight + animalInfo.GFW;
                 }
@@ -2525,7 +2507,7 @@
                 // Adjust the condition score if it has been given
                 if ((animalInfo.CondScore > 0.0) && (animalInfo.LiveWt > 0.0))        
                 {                                                                                                
-                    bodyCondition = AnimalParamSet.CondScore2Condition(animalInfo.CondScore);
+                    bodyCondition = AnimalParameterSet.CondScore2Condition(animalInfo.CondScore);
                     newGroup.WeightRangeForCond(
                                                 animalInfo.Repro, 
                                                 animalInfo.AgeDays,
@@ -3451,7 +3433,7 @@
         /// <param name="condition">Animal condition</param>
         /// <param name="chillIndex">The chill index</param>
         /// <returns>Offspring rates</returns>
-        private double[] GetOffspringRates(AnimalParamSet parameters, double latitude, int mateDOY, int ageDays, double matingSize, double condition, double chillIndex = 0.0)
+        private double[] GetOffspringRates(AnimalParameterSet parameters, double latitude, int mateDOY, int ageDays, double matingSize, double condition, double chillIndex = 0.0)
         {
             const double NO_CYCLES = 2.5;
             const double STD_LATITUDE = -35.0;             // Latitude (in degrees) for which the DayLengthConst[] parameters are set    

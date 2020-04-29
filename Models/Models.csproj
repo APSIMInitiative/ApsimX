@@ -526,10 +526,8 @@
     <Compile Include="Soils\SoilNitrogen\SoilNitrogen.cs" />
     <Compile Include="Soils\SoilNitrogen\SoilNitrogen.Variables.cs" />
     <Compile Include="Stock\animgrp.cs" />
-    <Compile Include="Stock\animprm.cs" />
+    <Compile Include="Stock\AnimalParameterSet.cs" />
     <Compile Include="Stock\grazenv.cs" />
-    <Compile Include="Stock\grazparam.cs" />
-    <Compile Include="Stock\grazprmread.cs" />
     <Compile Include="Stock\graztype.cs" />
     <Compile Include="Stock\stddate.cs" />
     <Compile Include="Stock\stdmath.cs" />

@@ -19,7 +19,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 94; } }
+        public static int LatestVersion { get { return 95; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -2061,6 +2061,19 @@
             }
         }
 
+
+        /// <summary>
+        /// Convert stock animalparamset
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion95(JObject root, string fileName)
+        {
+            foreach (JObject paramSet in JsonUtilities.ChildrenRecursively(root, "AnimalParamSet"))
+            {
+                paramSet["$type"] = "Models.GrazPlan.AnimalParameterSet, Models";
+            }
+        }
 
         /// <summary>
         /// Add progeny destination phase and mortality function.

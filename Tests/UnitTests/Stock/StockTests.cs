@@ -60,7 +60,7 @@
             var friesian = genotypes.Get("Friesian").Parameters;
 
             // Clone the genotype and change it.
-            friesian = Apsim.Clone(friesian) as AnimalParamSet;
+            friesian = Apsim.Clone(friesian) as AnimalParameterSet;
             friesian.BreedSRW = 1;
 
             // Give it to the genotypes instance as a user genotype.

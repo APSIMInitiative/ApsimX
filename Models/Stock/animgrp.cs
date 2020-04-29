@@ -946,12 +946,12 @@ namespace Models.GrazPlan
         /// <summary>
         /// This animal's parameters
         /// </summary>
-        protected AnimalParamSet AParams;
+        protected AnimalParameterSet AParams;
         
         /// <summary>
         /// Paramters of the animal mated to
         /// </summary>
-        protected AnimalParamSet FMatedTo;
+        protected AnimalParameterSet FMatedTo;
         
         /// <summary>
         /// Distribution of ages
@@ -1576,7 +1576,7 @@ namespace Models.GrazPlan
         /// <returns>Maximum normal weight</returns>
         public static double MaxNormWtFunc(double SRW, double BW,
                                 int ageDays,
-                                AnimalParamSet parameters)
+                                AnimalParameterSet parameters)
         {
             double GrowthRate;
 
@@ -1731,22 +1731,14 @@ namespace Models.GrazPlan
         /// or calves that are about to be born/created.                              
         /// </summary>
         /// <returns></returns>
-        protected AnimalParamSet constructOffspringParams()
+        protected AnimalParameterSet constructOffspringParams()
         {
-            AnimalParamBlend[] mateBlend = new AnimalParamBlend[1];
-
             if (FMatedTo != null)
             {
-                Array.Resize(ref mateBlend, 2);
-                mateBlend[0].Breed = this.AParams;
-                mateBlend[0].fPropn = 0.5;
-                mateBlend[1].Breed = FMatedTo;
-                mateBlend[1].fPropn = 0.5;
-
-                return AnimalParamSet.CreateFactory(string.Empty, mateBlend);
+                return AnimalParameterSet.BlendParameterSets(null, AParams, FMatedTo, 0.5, 0.5);
             }
             else
-                return new AnimalParamSet(null, AParams);
+                return new AnimalParameterSet( AParams);
         }
 
         /// <summary>
@@ -2029,9 +2021,9 @@ namespace Models.GrazPlan
         /// Set the genotype
         /// </summary>
         /// <param name="value"></param>
-        protected void setGenotype(AnimalParamSet value)
+        protected void setGenotype(AnimalParameterSet value)
         {
-            this.AParams = new AnimalParamSet(null, value);
+            this.AParams = new AnimalParameterSet(value);
         }
 
         /// <summary>
@@ -2135,13 +2127,13 @@ namespace Models.GrazPlan
         /// Set the animal to be mated to
         /// </summary>
         /// <param name="value"></param>
-        protected void setMatedTo(AnimalParamSet value)
+        protected void setMatedTo(AnimalParameterSet value)
         {
             FMatedTo = null;
             if (value == null)
                 FMatedTo = null;
             else
-                FMatedTo = new AnimalParamSet(value);
+                FMatedTo = value;
         }
 
         /// <summary>
@@ -2202,7 +2194,7 @@ namespace Models.GrazPlan
         /// <param name="reprdType"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public static double GrowthCurve(int ageDays, GrazType.ReproType reprdType, AnimalParamSet parameters)
+        public static double GrowthCurve(int ageDays, GrazType.ReproType reprdType, AnimalParameterSet parameters)
         {
             double SRW;
 
@@ -2619,7 +2611,7 @@ namespace Models.GrazPlan
         /// <param name="GFW"></param>
         /// <param name="RandomFactory"></param>
         /// <param name="bTakeParams"></param>
-        public AnimalGroup(AnimalParamSet Params,
+        public AnimalGroup(AnimalParameterSet Params,
                                  GrazType.ReproType Repro,
                                  int Number,
                                  int AgeD,
@@ -2642,7 +2634,7 @@ namespace Models.GrazPlan
         /// <param name="GFW"></param>
         /// <param name="RandomFactory"></param>
         /// <param name="bTakeParams"></param>
-        public void Construct(AnimalParamSet Params,
+        public void Construct(AnimalParameterSet Params,
                                  GrazType.ReproType Repro,
                                  int Number,
                                  int AgeD,
@@ -2658,7 +2650,7 @@ namespace Models.GrazPlan
             if (bTakeParams)
                 AParams = Params;
             else
-                AParams = new AnimalParamSet(null, Params);
+                AParams = new AnimalParameterSet(Params);
 
             if ((Repro == GrazType.ReproType.Male) || (Repro == GrazType.ReproType.Castrated))
             {
@@ -2722,14 +2714,14 @@ namespace Models.GrazPlan
         {
             int Number, iAgeDays;
             double YoungWoolWt;
-            AnimalParamSet youngParams;
+            AnimalParameterSet youngParams;
 
             RandFactory = Parents.RandFactory;
             youngParams = Parents.constructOffspringParams();
             Number = Parents.NoOffspring * Parents.FemaleNo;
             iAgeDays = Parents.DaysLactating;
-            YoungWoolWt = 0.5 * (AnimalParamSet.fDefaultFleece(Parents.AParams, iAgeDays, GrazType.ReproType.Male, iAgeDays)
-                                  + AnimalParamSet.fDefaultFleece(Parents.AParams, iAgeDays, GrazType.ReproType.Empty, iAgeDays));
+            YoungWoolWt = 0.5 * (AnimalParameterSet.fDefaultFleece(Parents.AParams, iAgeDays, GrazType.ReproType.Male, iAgeDays)
+                                  + AnimalParameterSet.fDefaultFleece(Parents.AParams, iAgeDays, GrazType.ReproType.Empty, iAgeDays));
 
             Construct(youngParams, GrazType.ReproType.Male, Number, iAgeDays, LiveWt, YoungWoolWt, RandFactory, true);
 
@@ -3025,7 +3017,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// The animals genotype
         /// </summary>
-        public AnimalParamSet Genotype
+        public AnimalParameterSet Genotype
         {
             get { return AParams; }
             set { setGenotype(value); }
@@ -3146,7 +3138,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the animal parameters for the animal mated to
         /// </summary>
-        public AnimalParamSet MatedTo
+        public AnimalParameterSet MatedTo
         {
             get { return FMatedTo; }
             set { setMatedTo(value); }
@@ -3211,16 +3203,16 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="System"></param>
         /// <returns></returns>
-        public double fConditionScore(AnimalParamSet.Cond_System System) { return AnimalParamSet.Condition2CondScore(Condition, System); }
+        public double fConditionScore(AnimalParameterSet.Cond_System System) { return AnimalParameterSet.Condition2CondScore(Condition, System); }
         
         /// <summary>
         /// Set the condition score
         /// </summary>
         /// <param name="fValue"></param>
         /// <param name="System"></param>
-        public void setConditionScore(double fValue, AnimalParamSet.Cond_System System)
+        public void setConditionScore(double fValue, AnimalParameterSet.Cond_System System)
         {
-            BaseWeight = NormalWt * AnimalParamSet.CondScore2Condition(fValue, System);
+            BaseWeight = NormalWt * AnimalParameterSet.CondScore2Condition(fValue, System);
             Calc_Weights();
         }
 
@@ -4726,14 +4718,14 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="maleParams"></param>
         /// <param name="matingPeriod"></param>
-        public void Join(AnimalParamSet maleParams, int matingPeriod)
+        public void Join(AnimalParameterSet maleParams, int matingPeriod)
         {
             if ((this.ReproStatus == GrazType.ReproType.Empty) && (this.MeanAge > this.AParams.Puberty[0]))
             {
                 if (maleParams.Animal != this.AParams.Animal)
                     throw new Exception("Attempt to mate female " + GrazType.AnimalText[(int)this.AParams.Animal].ToLower() + " with male " + GrazType.AnimalText[(int)maleParams.Animal].ToLower());
 
-                this.FMatedTo = new AnimalParamSet(null, maleParams);
+                this.FMatedTo = new AnimalParameterSet(maleParams);
                 this.DaysToMate = matingPeriod;
                 if (this.DaysToMate > 0)
                     this.MateCycle = this.AParams.OvulationPeriod / 2;
@@ -5082,12 +5074,12 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="condSystem"></param>
         /// <returns>Condition score change</returns>
-        public double ConditionScoreChange(AnimalParamSet.Cond_System condSystem = AnimalParamSet.Cond_System.csSYSTEM1_5)
+        public double ConditionScoreChange(AnimalParameterSet.Cond_System condSystem = AnimalParameterSet.Cond_System.csSYSTEM1_5)
         {
             double newCondition;
 
             newCondition = this.BaseWeight / this.NormalWeightFunc(this.MeanAge + 1, Math.Max(this.BaseWeight, this.MaxPrevWt), this.AParams.GrowthC[3]);
-            return AnimalParamSet.Condition2CondScore(newCondition, condSystem) - AnimalParamSet.Condition2CondScore(this.Condition, condSystem);
+            return AnimalParameterSet.Condition2CondScore(newCondition, condSystem) - AnimalParameterSet.Condition2CondScore(this.Condition, condSystem);
         }
 
         /// <summary>
@@ -5688,7 +5680,7 @@ namespace Models.GrazPlan
         public void WeightRangeForCond(GrazType.ReproType reprod,
                                       int ageDays,
                                       double bodyCond,
-                                      AnimalParamSet paramSet,
+                                      AnimalParameterSet paramSet,
                                       ref double lowBaseWt,
                                       ref double highBaseWt)
         {

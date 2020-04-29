@@ -17,7 +17,7 @@
     {
         private List<string> parameterXmlSections = new List<string>();
 
-        private AnimalParamSet parameters;
+        private AnimalParameterSet parameters;
 
         /// <summary>Constructor for a genotype from ruminant.prm.</summary>
         /// <param name="parameterNode">The ruminant.prm xml node where this genotype is defined.</param>
@@ -43,7 +43,7 @@
 
         /// <summary>Constructor</summary>
         /// <param name="animalParameterSet"></param>
-        public Genotype(AnimalParamSet animalParameterSet)
+        public Genotype(AnimalParameterSet animalParameterSet)
         {
             parameters = animalParameterSet;
             Name = animalParameterSet.Name;
@@ -57,7 +57,7 @@
         public string Name { get; }
 
         /// <summary>Gets genotype parameters.</summary>
-        public AnimalParamSet Parameters
+        public AnimalParameterSet Parameters
         {
             get
             {
@@ -73,7 +73,7 @@
         /// Get an animal parameter set for the given genotype name. Will throw if cannot find genotype.
         /// </summary>
         /// <param name="parameterXmlSections">The xml node sections to read from.</param>
-        private AnimalParamSet ReadParametersFromPRM(List<string> parameterXmlSections)
+        private AnimalParameterSet ReadParametersFromPRM(List<string> parameterXmlSections)
         {
             // Parse the xml
             var overrides = new List<PropertyReplacement>();
@@ -92,7 +92,7 @@
             overrides.Reverse();
 
             // Convert the overrides into an AnimalParamSet by applying all overrides from general to specific.
-            parameters = new AnimalParamSet();
+            parameters = new AnimalParameterSet();
             parameters.Name = Name;
             if (AnimalType == "cattle")
                 parameters.Animal = GrazType.AnimalType.Cattle;
