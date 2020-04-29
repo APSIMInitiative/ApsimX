@@ -64,7 +64,8 @@ namespace Models.Functions.RootShape
                 prop = Math.Max(0.0, MathUtilities.Divide(rootArea, soilArea, 0.0));
 
                 zone.RootProportions[layer] = prop;
-                zone.LLModifier[layer] = llModifer;
+                //zone.LLModifier[layer] = llModifer;
+                zone.LLModifier[layer] = 1;
             }
         }
 
