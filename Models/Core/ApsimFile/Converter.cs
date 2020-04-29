@@ -2073,16 +2073,19 @@
             {
                 foreach (JObject O in JsonUtilities.ChildrenRecursively(root, org))
                 {
-                    string initName = org == "GenericOrgan" ? "InitialWtFunction" : "InitialDM";
-                    JObject InitialWt = JsonUtilities.CreateNewChildModel(O, "InitialWt", "Models.PMF.BiomassDemand");
-                    JObject Structural = JsonUtilities.ChildWithName(O, initName).DeepClone() as JObject;
-                    Structural["Name"] = "Structural";
-                    JArray ChildFunctions = new JArray();
-                    ChildFunctions.Add(Structural);
-                    InitialWt["Children"] = ChildFunctions;
-                    JsonUtilities.AddConstantFunctionIfNotExists(InitialWt, "Metabolic", "0.0");
-                    JsonUtilities.AddConstantFunctionIfNotExists(InitialWt, "Storage", "0.0");
-                    JsonUtilities.RemoveChild(O, initName);
+                    if (O["Enabled"].ToString() == "True")
+                    {
+                        string initName = org == "GenericOrgan" ? "InitialWtFunction" : "InitialDM";
+                        JObject InitialWt = JsonUtilities.CreateNewChildModel(O, "InitialWt", "Models.PMF.BiomassDemand");
+                        JObject Structural = JsonUtilities.ChildWithName(O, initName).DeepClone() as JObject;
+                        Structural["Name"] = "Structural";
+                        JArray ChildFunctions = new JArray();
+                        ChildFunctions.Add(Structural);
+                        InitialWt["Children"] = ChildFunctions;
+                        JsonUtilities.AddConstantFunctionIfNotExists(InitialWt, "Metabolic", "0.0");
+                        JsonUtilities.AddConstantFunctionIfNotExists(InitialWt, "Storage", "0.0");
+                        JsonUtilities.RemoveChild(O, initName);
+                    }
                 }
             }
             // Altermanager code where initial root wt is being set.
