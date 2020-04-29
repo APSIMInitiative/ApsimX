@@ -131,7 +131,7 @@ namespace Models.PMF.Organs
         /// <param name="mrd">Maximum root depth</param>
         /// <param name="remobCost">Remobilisation cost</param>
         public ZoneState(Plant Plant, Root Root, Soil soil, double depth,
-                         BiomassPoolType initialDM, double population, double maxNConc,
+                         BiomassDemand initialDM, double population, double maxNConc,
                          IFunction rfv, IFunction mrd, IFunction remobCost)
         {
             this.soil = soil;
@@ -156,17 +156,17 @@ namespace Models.PMF.Organs
         /// <param name="initialDM">Initial dry matter</param>
         /// <param name="population">plant population</param>
         /// <param name="maxNConc">maximum n concentration</param>
-        public void Initialise(double depth, BiomassPoolType initialDM, double population, double maxNConc)
+        public void Initialise(double depth, BiomassDemand initialDM, double population, double maxNConc)
         {
             Depth = depth;
             RootFront = depth;
             //distribute root biomass evenly through root depth
             double[] fromLayer = new double[1] { depth };
-            double[] fromStructural = new double[1] { initialDM.Structural };
+            double[] fromStructural = new double[1] { initialDM.Structural.Value() };
             double[] toStructural = Layers.MapMass(fromStructural, fromLayer, soil.Thickness);
-            double[] fromMetabolic = new double[1] { initialDM.Metabolic };
+            double[] fromMetabolic = new double[1] { initialDM.Metabolic.Value() };
             double[] toMetabolic = Layers.MapMass(fromMetabolic, fromLayer, soil.Thickness);
-            double[] fromStorage = new double[1] { initialDM.Storage };
+            double[] fromStorage = new double[1] { initialDM.Storage.Value() };
             double[] toStorage = Layers.MapMass(fromStorage, fromLayer, soil.Thickness);
 
             for (int layer = 0; layer < soil.Thickness.Length; layer++)

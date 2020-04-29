@@ -87,7 +87,7 @@
         /// <summary>Wt in each pool when plant is initialised</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/plant")]
-        public BiomassPoolType InitialWt { get; set; }
+        public BiomassDemand InitialWt = null;
 
         /// <summary>The initial N Concentration</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
@@ -490,9 +490,9 @@
             {
                 Clear();
                 ClearBiomassFlows();
-                Live.StructuralWt = InitialWt.Structural;
-                Live.MetabolicWt = InitialWt.Metabolic;
-                Live.StorageWt = InitialWt.Storage;
+                Live.StructuralWt = InitialWt.Structural.Value();
+                Live.MetabolicWt = InitialWt.Metabolic.Value();
+                Live.StorageWt = InitialWt.Storage.Value();
                 if(initialNConcFunction != null)
                 {
                     Live.StructuralN = Live.StructuralWt * initialNConcFunction.Value();

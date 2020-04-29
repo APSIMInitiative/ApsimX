@@ -2007,8 +2007,8 @@
                 foreach (JObject O in JsonUtilities.ChildrenRecursively(root, org))
                 {
                     string initName = org == "GenericOrgan" ? "InitialWtFunction" : "InitialDM";
-                    JObject InitialWt = JsonUtilities.CreateNewChildModel(O, "InitialWt", "Models.PMF.Interfaces.BiomassPoolType");
-                    JObject Structural = JsonUtilities.ChildWithName(O, initName);
+                    JObject InitialWt = JsonUtilities.CreateNewChildModel(O, "InitialWt", "Models.PMF.BiomassDemand");
+                    JObject Structural = JsonUtilities.ChildWithName(O, initName).DeepClone() as JObject;
                     Structural["Name"] = "Structural";
                     JArray ChildFunctions = new JArray();
                     ChildFunctions.Add(Structural);
@@ -2030,16 +2030,25 @@
                     {
                         ContainsZoneInitalDM = true;
                         string InitialDM = lines[i].Split('(')[1].Replace(";", "").Replace(")", "").Replace("\r","").Replace("\n", "");
-                        string NewCode = "BiomassPoolType InitDM = new BiomassPoolType();\r\nInitDM.Structural = " +
-                                          InitialDM + ";\r\n" + lines[i].Split('(')[0] + "(InitDM);";
+                        string NewCode = "BiomassDemand InitialDM = new BiomassDemand();\r\n" +
+                                         "Constant InitStruct = new Constant();\r\n" +
+                                         "InitStruct.FixedValue = " + InitialDM + ";\r\n" +
+                                         "InitialDM.Structural = InitStruct;\r\n" +
+                                         "Constant InitMetab = new Constant();\r\n" +
+                                         "InitMetab.FixedValue = 0;\r\n" +
+                                         "InitialDM.Metabolic = InitMetab;\r\n" +
+                                         "Constant InitStor = new Constant();\r\n" +
+                                         "InitStor.FixedValue = 0;\r\n" +
+                                         "InitialDM.Storage = InitStor;\r\n" +
+                                         lines[i].Split('(')[0] + "(InitialDM);\r\n";
                         lines[i] = NewCode;
                     }
                 }
 
                 if (ContainsZoneInitalDM)
                 {
-                    string newCode = "using Models.PMF.Interfaces;\r\n";
-                    foreach(string line in lines)
+                    string newCode = "using Models.Functions;\r\n";
+                    foreach (string line in lines)
                     {
                         newCode += line + "\n";
                     }
