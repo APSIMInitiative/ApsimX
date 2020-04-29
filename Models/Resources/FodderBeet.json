@@ -3448,11 +3448,6 @@
               "Children": []
             },
             {
-              "$type": "Models.Functions.RootShape.RootShapeCylindre, Models",
-              "Name": "RootShape",
-              "Children": []
-            },
-            {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
               "Name": "KLModifier",
               "Children": [

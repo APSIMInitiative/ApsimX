@@ -3492,11 +3492,6 @@
               "Children": []
             },
             {
-              "$type": "Models.Functions.RootShape.RootShapeCylindre, Models",
-              "Name": "RootShape",
-              "Children": []
-            },
-            {
               "$type": "Models.Memo, Models",
               "Text": "For many of the parameters in this organ, see comments for similar parameters in the leaf organ.  \r\n\r\n",
               "Name": "Memo",

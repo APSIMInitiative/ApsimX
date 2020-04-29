@@ -233,16 +233,6 @@
           "Name": "Root",
           "Children": [
             {
-              "$type": "Models.Functions.RootShape.RootShapeCylindre, Models",
-              "Name": "RootShape",
-              "Children": []
-            },
-            {
-              "$type": "Models.Functions.RootShape.RootShapeCylindre, Models",
-              "Name": "RootShape",
-              "Children": []
-            },
-            {
               "$type": "Models.Functions.MultiplyFunction, Models",
               "Name": "RootFrontVelocity",
               "Children": [

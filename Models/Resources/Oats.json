@@ -10039,11 +10039,6 @@
               "Children": []
             },
             {
-              "$type": "Models.Functions.RootShape.RootShapeCylindre, Models",
-              "Name": "RootShape",
-              "Children": []
-            },
-            {
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 1.0,
               "Units": null,
