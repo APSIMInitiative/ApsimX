@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 94,
+  "Version": 95,
   "Name": "Simulations",
   "Children": [
     {
@@ -7406,6 +7406,11 @@
           "SWAvailabilityRatio": 0.0,
           "Name": "Root",
           "Children": [
+            {
+              "$type": "Models.Functions.RootShape.RootShapeCylindre, Models",
+              "Name": "RootShape",
+              "Children": []
+            },
             {
               "$type": "Models.Functions.RootShape.RootShapeCylindre, Models",
               "Name": "RootShape",
