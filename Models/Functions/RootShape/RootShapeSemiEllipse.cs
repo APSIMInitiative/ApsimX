@@ -22,7 +22,7 @@ namespace Models.Functions.RootShape
         [Units("Degree")]
         private readonly IFunction RootAngle = null;
 
-        /// <summary>The Root Angle foe which soil LL values were estimated</summary>
+        /// <summary>The Root Angle for which soil LL values were estimated</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         [Units("Degree")]
         private readonly IFunction RootAngleBase = null;
@@ -36,18 +36,13 @@ namespace Models.Functions.RootShape
                 double prop;
                 double top = layer == 0 ? 0 : MathUtilities.Sum(zone.soil.Thickness, 0, layer - 1);
                 double bottom = top + zone.soil.Thickness[layer];
-                double rootArea, rootAreaBaseUnlimited, rootAreaUnlimited, rootAngleBase, llModifer;
+                double rootArea, rootAreaBaseUnlimited, rootAreaUnlimited, llModifer;
 
-                if (RootAngleBase == null)
-                    rootAngleBase = 45.0;
-                else
-                    rootAngleBase = RootAngleBase.Value();
-
-                if (rootAngleBase != RootAngle.Value())
+                if (RootAngleBase != null && RootAngleBase.Value() != RootAngle.Value())
                 {
                     // Root area for the base and current root angle when not limited by adjacent rows
-                    rootAreaBaseUnlimited = CalcRootAreaSemiEllipse(zone, rootAngleBase, top, bottom, 10000);   // Right side
-                    rootAreaBaseUnlimited += CalcRootAreaSemiEllipse(zone, rootAngleBase, top, bottom, 10000);   // Left Side
+                    rootAreaBaseUnlimited = CalcRootAreaSemiEllipse(zone, RootAngleBase.Value(), top, bottom, 10000);   // Right side
+                    rootAreaBaseUnlimited += CalcRootAreaSemiEllipse(zone, RootAngleBase.Value(), top, bottom, 10000);   // Left Side
                     rootAreaUnlimited = CalcRootAreaSemiEllipse(zone, RootAngle.Value(), top, bottom, 10000);   // Right side
                     rootAreaUnlimited += CalcRootAreaSemiEllipse(zone, RootAngle.Value(), top, bottom, 10000);   // Left Side
                     llModifer = MathUtilities.Divide(rootAreaUnlimited, rootAreaBaseUnlimited, 1);
@@ -64,8 +59,7 @@ namespace Models.Functions.RootShape
                 prop = Math.Max(0.0, MathUtilities.Divide(rootArea, soilArea, 0.0));
 
                 zone.RootProportions[layer] = prop;
-                //zone.LLModifier[layer] = llModifer;
-                zone.LLModifier[layer] = 1;
+                zone.LLModifier[layer] = llModifer;
             }
         }
 
@@ -84,20 +78,20 @@ namespace Models.Functions.RootShape
             double meanDepth, layerThick, rootLength, sowDepth, layerArea, a;
 
             sowDepth = zone.plant.SowingData.Depth * 0;
-            bottom = Math.Min(bottom, zone.RootFront);
-            top = Math.Max(top, sowDepth);
+            double bottomNew = Math.Min(bottom, zone.RootFront);
+            double topNew = Math.Max(top, sowDepth);
 
             //zone.RootSpread = zone.RootLength * Math.Tan(DegToRad(rootAngle));   // Semi minor axis
             zone.RootSpread = zone.RootFront * Math.Tan(DegToRad(rootAngle));   // Semi minor axis
 
-            meanDepth = Math.Max(0.5 * (bottom + top) - sowDepth, 1); // 1mm is added to assure germination occurs.
-            layerThick = Math.Max(bottom - top, 1);
+            meanDepth = Math.Max(0.5 * (bottomNew + topNew) - sowDepth, 1); // 1mm is added to assure germination occurs.
+            layerThick = Math.Max(bottomNew - topNew, 1);
             rootLength = Math.Max(zone.RootFront, 1);
             //rootLength = Math.Max(zone.RootLength, 1);
 
             a = Math.Pow(meanDepth - 0.5 * rootLength, 2) / Math.Pow(0.5 * rootLength, 2);
-            hDist = Math.Min(hDist, Math.Sqrt(MathUtilities.Bound(Math.Pow(zone.RootSpread, 2) * (1 - a), 0, 100000)));
-            layerArea = layerThick * hDist;
+            double hDistNew = Math.Min(hDist, Math.Sqrt(MathUtilities.Bound(Math.Pow(zone.RootSpread, 2) * (1 - a), 0, 100000)));
+            layerArea = layerThick * hDistNew;
             return layerArea;
         }
 
