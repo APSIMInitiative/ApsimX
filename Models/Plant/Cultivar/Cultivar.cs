@@ -22,6 +22,7 @@
     [ViewName("UserInterface.Views.EditorView")]
     [PresenterName("UserInterface.Presenters.CultivarPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
+    [ValidParent(ParentType = typeof(GrazPlan.Stock))]
     [ValidParent(ParentType = typeof(CultivarFolder))]
     public class Cultivar : Model, ICustomDocumentation
     {

@@ -260,18 +260,18 @@ namespace Models.GrazPlan
 
             if (!paramDefinition.ValueIsDefined())
                 result = false;
-            else if ((subSet.Parent == null) || (!subSet.Parent.IsDefined(paramDefinition.FullName)))
+            else if ((subSet.ParentParameterSet == null) || (!subSet.ParentParameterSet.IsDefined(paramDefinition.FullName)))
                 result = true;
             else
             {
                 if (paramDefinition.ParamType == TYPEREAL)
-                    result = subSet.ParamReal(paramDefinition.FullName) != subSet.Parent.ParamReal(paramDefinition.FullName);
+                    result = subSet.ParamReal(paramDefinition.FullName) != subSet.ParentParameterSet.ParamReal(paramDefinition.FullName);
                 else if (paramDefinition.ParamType == TYPEINT)
-                    result = subSet.ParamInt(paramDefinition.FullName) != subSet.Parent.ParamInt(paramDefinition.FullName);
+                    result = subSet.ParamInt(paramDefinition.FullName) != subSet.ParentParameterSet.ParamInt(paramDefinition.FullName);
                 else if (paramDefinition.ParamType == TYPEBOOL)
-                    result = subSet.ParamBool(paramDefinition.FullName) != subSet.Parent.ParamBool(paramDefinition.FullName);
+                    result = subSet.ParamBool(paramDefinition.FullName) != subSet.ParentParameterSet.ParamBool(paramDefinition.FullName);
                 else if (paramDefinition.ParamType == TYPETEXT)
-                    result = subSet.ParamStr(paramDefinition.FullName) != subSet.Parent.ParamStr(paramDefinition.FullName);
+                    result = subSet.ParamStr(paramDefinition.FullName) != subSet.ParentParameterSet.ParamStr(paramDefinition.FullName);
                 else
                     result = false;
             }

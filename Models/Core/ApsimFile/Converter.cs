@@ -1995,67 +1995,72 @@
         }
 
         /// <summary>
-        /// Change initialDM on Generic organ and root from a single value to a BiomassPoolType so each type can be sepcified
+        /// Convert stock genotypes array into GenotypeCross child models.
         /// </summary>
         /// <param name="root">Root node.</param>
         /// <param name="fileName">Path to the .apsimx file.</param>
         private static void UpgradeToVersion94(JObject root, string fileName)
         {
-            // Remove initalDM model and replace with initialBiomass object
-            foreach (string org in new List<string>() { "GenericOrgan", "Root" })
+            foreach (JObject stock in JsonUtilities.ChildrenRecursively(root, "Stock"))
             {
-                foreach (JObject O in JsonUtilities.ChildrenRecursively(root, org))
+                var oldGenotypes = stock["Genotypes"] as JArray;
+                if (oldGenotypes != null)
                 {
-                    string initName = org == "GenericOrgan" ? "InitialWtFunction" : "InitialDM";
-                    JObject InitialWt = JsonUtilities.CreateNewChildModel(O, "InitialWt", "Models.PMF.BiomassDemand");
-                    JObject Structural = JsonUtilities.ChildWithName(O, initName).DeepClone() as JObject;
-                    Structural["Name"] = "Structural";
-                    JArray ChildFunctions = new JArray();
-                    ChildFunctions.Add(Structural);
-                    InitialWt["Children"] = ChildFunctions;
-                    JsonUtilities.AddConstantFunctionIfNotExists(InitialWt, "Metabolic", "0.0");
-                    JsonUtilities.AddConstantFunctionIfNotExists(InitialWt, "Storage", "0.0");
-                    JsonUtilities.RemoveChild(O, initName);
+                    var newGenotypes = new JArray();
+                    foreach (var oldgenotype in oldGenotypes)
+                    {
+                        var genotypeCross = new JObject();
+                        genotypeCross["$type"] = "Models.GrazPlan.GenotypeCross, Models";
+                        genotypeCross["Name"] = oldgenotype["GenotypeName"];
+                        var oldgenotypeDeathRates = oldgenotype["DeathRate"] as JArray;
+                        if (oldgenotypeDeathRates != null && oldgenotypeDeathRates.Count == 2)
+                        {
+                            genotypeCross["MatureDeathRate"] = oldgenotypeDeathRates[0];
+                            genotypeCross["WeanerDeathRate"] = oldgenotypeDeathRates[1];
+                        }
+                        genotypeCross["Conception"] = oldgenotype["Conceptions"];
+
+                        if (string.IsNullOrEmpty(oldgenotype["DamBreed"].ToString()))
+                            genotypeCross["PureBredBreed"] = oldgenotype["GenotypeName"];
+                        else if (string.IsNullOrEmpty(oldgenotype["SireBreed"].ToString()))
+                            genotypeCross["PureBredBreed"] = oldgenotype["DamBreed"];
+                        else
+                            genotypeCross["DamBreed"] = oldgenotype["DamBreed"];
+                        genotypeCross["SireBreed"] = oldgenotype["SireBreed"];
+                        genotypeCross["Generation"] = oldgenotype["Generation"];
+                        genotypeCross["SRW"] = oldgenotype["SRW"];
+                        genotypeCross["PotFleeceWt"] = oldgenotype["PotFleeceWt"];
+                        genotypeCross["MaxFibreDiam"] = oldgenotype["MaxFibreDiam"];
+                        genotypeCross["FleeceYield"] = oldgenotype["FleeceYield"];
+                        genotypeCross["PeakMilk"] = oldgenotype["PeakMilk"];
+                        newGenotypes.Add(genotypeCross);
+                    }
+                    stock.Remove("Genotypes");
+                    if (newGenotypes.Count > 0)
+                        stock["Children"] = newGenotypes;
                 }
             }
-            // Altermanager code where initial root wt is being set.
-            foreach (var manager in JsonUtilities.ChildrenOfType(root,"Manager"))
+            Tuple<string, string>[] changes =
             {
-                string code = manager["Code"].ToString();
-                string[] lines = code.Split('\n');
-                bool ContainsZoneInitalDM = false;
-                for (int i = 0; i < lines.Count(); i++)
+                new Tuple<string, string>(".GenotypeNamesAll()",  ".Genotypes.Names.ToArray()")
+            };
+            if (JsonUtilities.RenameVariables(root,  changes))
+            {
+                // The replacement is in a manager. Need to make sure that LINQ is added as a using
+                // because the .ToArray() depends on it.
+                foreach (var manager in JsonUtilities.ChildManagers(root))
                 {
-                    if (lines[i].Contains("Root.ZoneInitialDM.Add("))
+                    var usings = manager.GetUsingStatements().ToList();
+                    if (usings.Find(u => u.Contains("System.Linq")) == null)
                     {
-                        ContainsZoneInitalDM = true;
-                        string InitialDM = lines[i].Split('(')[1].Replace(";", "").Replace(")", "").Replace("\r","").Replace("\n", "");
-                        string NewCode = "BiomassDemand InitialDM = new BiomassDemand();\r\n" +
-                                         "Constant InitStruct = new Constant();\r\n" +
-                                         "InitStruct.FixedValue = " + InitialDM + ";\r\n" +
-                                         "InitialDM.Structural = InitStruct;\r\n" +
-                                         "Constant InitMetab = new Constant();\r\n" +
-                                         "InitMetab.FixedValue = 0;\r\n" +
-                                         "InitialDM.Metabolic = InitMetab;\r\n" +
-                                         "Constant InitStor = new Constant();\r\n" +
-                                         "InitStor.FixedValue = 0;\r\n" +
-                                         "InitialDM.Storage = InitStor;\r\n" +
-                                         lines[i].Split('(')[0] + "(InitialDM);\r\n";
-                        lines[i] = NewCode;
+                        usings.Add("System.Linq");
+                        manager.SetUsingStatements(usings);
+                        manager.Save();
                     }
-                }
-
-                if (ContainsZoneInitalDM)
-                {
-                    string newCode = "using Models.Functions;\r\n";
-                    foreach (string line in lines)
-                    {
-                        newCode += line + "\n";
-                    }
-                    manager["Code"] = newCode;
                 }
             }
         }
+
 
         /// <summary>
         /// Add progeny destination phase and mortality function.

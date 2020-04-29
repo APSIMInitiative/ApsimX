@@ -1,5 +1,6 @@
 namespace Models.GrazPlan
 {
+    using Models.Core;
     using System;
     using System.Globalization;
 
@@ -13,13 +14,28 @@ namespace Models.GrazPlan
     [Serializable]
     public class ParameterDefinition
     {
-        private string FName;
-        private string FNamePart;
-        private Type FType;
-        private ParameterDefinition[] FItems;
-        private int FCount;
-        private int FParamCount;
-        private bool FDefined;
+        /// <summary></summary>
+        public string FName;
+        /// <summary></summary>
+        public string FNamePart;
+        /// <summary></summary>
+        public Type FType;
+        /// <summary></summary>
+        public ParameterDefinition[] FItems;
+        /// <summary></summary>
+        public int FCount;
+        /// <summary></summary>
+        public int FParamCount;
+        /// <summary></summary>
+        public bool FDefined;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public ParameterDefinition()
+        {
+
+        }
 
         /// <summary>
         /// Each element of a "definition string" array may take one of two forms:       
@@ -348,7 +364,7 @@ namespace Models.GrazPlan
     /// Parameter set class
     /// </summary>
     [Serializable]
-    public class ParameterSet
+    public class ParameterSet : Model
     {
         /// <summary>
         /// Real-single type
@@ -371,14 +387,19 @@ namespace Models.GrazPlan
         protected static readonly Type TYPETEXT = typeof(string);
 
         private string FVersion;
-        private string FName;
         private string FEnglishName;
         private string[] FLocales = new string[0];
         private Translation[] FTranslations = new Translation[0];
         private ParameterSet FParent;
-        private ParameterSet[] FChildren;
+        /// <summary>
+        /// 
+        /// </summary>
+        public ParameterSet[] FChildren { get; set; }
 
-        private ParameterDefinition[] FDefinitions = new ParameterDefinition[0];
+        /// <summary>
+        /// 
+        /// </summary>
+        public ParameterDefinition[] FDefinitions { get; set; } = new ParameterDefinition[0];
 
         private string FCurrLocale;
         private string FFileSource;
@@ -406,8 +427,8 @@ namespace Models.GrazPlan
             ancestor = this;
             if (ancestor != null)
             {
-                while (ancestor.Parent != null)
-                    ancestor = ancestor.Parent;
+                while (ancestor.ParentParameterSet != null)
+                    ancestor = ancestor.ParentParameterSet;
 
                 for (idx = 0; idx <= ancestor.NodeCount() - 1; idx++)
                     ancestor.GetNode(idx).FCurrLocale = localeName;
@@ -426,7 +447,9 @@ namespace Models.GrazPlan
 
             this.Tokenise(tagDefinition, ref defn, "-");
             kdx = this.FDefinitions.Length;
-            Array.Resize(ref this.FDefinitions, kdx + 1);
+            var defs = FDefinitions;
+            Array.Resize(ref defs, kdx + 1);
+            FDefinitions = defs;
             this.FDefinitions[kdx] = new ParameterDefinition(defn, baseType);
         }
 
@@ -502,7 +525,7 @@ namespace Models.GrazPlan
             if (srcSet != null)
             {
                 this.FVersion = srcSet.FVersion;
-                this.FName = srcSet.FName;
+                this.Name = srcSet.Name;
                 this.FEnglishName = srcSet.FEnglishName;
 
                 Array.Resize(ref this.FLocales, srcSet.FLocales.Length);
@@ -705,15 +728,6 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Gets or sets the parameter set name
-        /// </summary>
-        public string Name
-        {
-            get { return this.FName; }
-            set { this.FName = value; }
-        }
-
-        /// <summary>
         /// Gets or sets the parameter set english name
         /// </summary>
         public string EnglishName
@@ -911,7 +925,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets the parent parameter set
         /// </summary>
-        public ParameterSet Parent
+        public ParameterSet ParentParameterSet
         {
             get { return this.FParent; }
         }
@@ -967,7 +981,9 @@ namespace Models.GrazPlan
             ParameterSet result = this.MakeChild();
             if (this.FChildren == null)
                 this.FChildren = new ParameterSet[0];
-            Array.Resize(ref this.FChildren, this.FChildren.Length + 1);
+            var children = FChildren;
+            Array.Resize(ref children, this.FChildren.Length + 1);
+            FChildren = children;
             this.FChildren[this.FChildren.Length - 1] = result;
             return this.FChildren[this.FChildren.Length - 1];
         }
@@ -984,7 +1000,9 @@ namespace Models.GrazPlan
             {
                 this.FChildren[jdx - 1] = this.FChildren[jdx];
             }
-            Array.Resize(ref this.FChildren, this.FChildren.Length - 1);
+            var children = FChildren;
+            Array.Resize(ref children, this.FChildren.Length - 1);
+            FChildren = children;
         }
 
         /// <summary>
@@ -993,7 +1011,7 @@ namespace Models.GrazPlan
         /// <returns>True if this is the root</returns>
         public bool NodeIsRoot()
         {
-            return this.Parent == null;
+            return this.ParentParameterSet == null;
         }
 
         /// <summary>
@@ -1002,7 +1020,7 @@ namespace Models.GrazPlan
         /// <returns>True if no child nodes</returns>
         public bool NodeIsLeaf()
         {
-            return (this.Parent != null) && ((this.FChildren == null) || (this.FChildren.Length == 0));
+            return (this.ParentParameterSet != null) && ((this.FChildren == null) || (this.FChildren.Length == 0));
         }
 
         /// <summary>
@@ -1522,9 +1540,9 @@ namespace Models.GrazPlan
             ancestor = this;
             if (ancestor != null)
             {
-                while (ancestor.Parent != null)
+                while (ancestor.ParentParameterSet != null)
                 {
-                    ancestor = ancestor.Parent;
+                    ancestor = ancestor.ParentParameterSet;
                 }
 
                 for (idx = 0; idx <= ancestor.NodeCount() - 1; idx++)
