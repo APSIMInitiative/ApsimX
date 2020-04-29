@@ -2019,7 +2019,13 @@
                             genotypeCross["WeanerDeathRate"] = oldgenotypeDeathRates[1];
                         }
                         genotypeCross["Conception"] = oldgenotype["Conceptions"];
-                        genotypeCross["DamBreed"] = oldgenotype["DamBreed"];
+
+                        if (string.IsNullOrEmpty(oldgenotype["DamBreed"].ToString()))
+                            genotypeCross["PureBredBreed"] = oldgenotype["GenotypeName"];
+                        else if (string.IsNullOrEmpty(oldgenotype["SireBreed"].ToString()))
+                            genotypeCross["PureBredBreed"] = oldgenotype["DamBreed"];
+                        else
+                            genotypeCross["DamBreed"] = oldgenotype["DamBreed"];
                         genotypeCross["SireBreed"] = oldgenotype["SireBreed"];
                         genotypeCross["Generation"] = oldgenotype["Generation"];
                         genotypeCross["SRW"] = oldgenotype["SRW"];

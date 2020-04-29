@@ -59,7 +59,7 @@
         /// <param name="genotypeName"></param>
         public Genotype Get(string genotypeName)
         {
-            var foundGenotype = All.Where(genotype => genotype.Name == genotypeName);
+            var foundGenotype = All.Where(genotype => genotype.Name.Equals(genotypeName, StringComparison.InvariantCultureIgnoreCase));
             if (foundGenotype.Count() == 0)
                 throw new Exception($"Cannot find stock genotype {genotypeName}");
             return foundGenotype.First();

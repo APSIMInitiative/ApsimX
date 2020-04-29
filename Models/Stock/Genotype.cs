@@ -15,8 +15,7 @@
     [Serializable]
     public class Genotype
     {
-        [NonSerialized]
-        private XmlNode parameterNode;
+        private List<string> parameterXmlSections = new List<string>();
 
         private AnimalParamSet parameters;
 
@@ -24,7 +23,14 @@
         /// <param name="parameterNode">The ruminant.prm xml node where this genotype is defined.</param>
         public Genotype(XmlNode parameterNode)
         {
-            this.parameterNode = parameterNode;
+            parameterXmlSections.Add(parameterNode.OuterXml);
+            var parent = parameterNode.ParentNode;
+            while (!(parent is XmlDocument))
+            {
+                parameterXmlSections.Add(parent.OuterXml);
+                parent = parent.ParentNode;
+            }
+
             Name = XmlUtilities.Attribute(parameterNode, "name").Replace(".", "");
             AnimalType = XmlUtilities.Value(parameterNode, "animal");
             var parentNode = parameterNode.ParentNode;
@@ -57,8 +63,8 @@
             {
                 if (parameters != null)
                     return parameters;
-                if (parameterNode != null)
-                    return ReadParametersFromPRM(parameterNode);
+                if (parameterXmlSections.Count > 0)
+                    return ReadParametersFromPRM(parameterXmlSections);
                 throw new Exception($"Cannot find any stock parameters for genotype {Name}");
             }
         }
@@ -66,14 +72,19 @@
         /// <summary>
         /// Get an animal parameter set for the given genotype name. Will throw if cannot find genotype.
         /// </summary>
-        /// <param name="parameterNode">The xml node to read from.</param>
-        private AnimalParamSet ReadParametersFromPRM(XmlNode parameterNode)
+        /// <param name="parameterXmlSections">The xml node sections to read from.</param>
+        private AnimalParamSet ReadParametersFromPRM(List<string> parameterXmlSections)
         {
-            // Read prm section and then all parent prm sections.
-            var overrides = ReadPRMSection(parameterNode);
-            while (parameterNode.ParentNode != null)
+            // Parse the xml
+            var overrides = new List<PropertyReplacement>();
+            foreach (var parameterXml in parameterXmlSections)
             {
-                parameterNode = parameterNode.ParentNode;
+                // Load XML
+                var doc = new XmlDocument();
+                doc.LoadXml(parameterXml);
+                var parameterNode = doc.DocumentElement as XmlNode;
+
+                // Read prm section from XML and add to our overrides list.
                 overrides.AddRange(ReadPRMSection(parameterNode));
             }
 

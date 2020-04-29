@@ -45,17 +45,24 @@
         public string AnimalType { get; set; }
 
         /// <summary>
+        /// Gets or sets the pure bred breed name
+        /// </summary>
+        [Description("Purebred breed name")]
+        [Display(Values = "GetGenotypeNames", EnabledCallback = "PurebredEnabled")]
+        public string PureBredBreed { get; set; }
+        
+        /// <summary>
         /// Gets or sets the dam breed name
         /// </summary>
-        [Description("Dam breed name")]
-        [Display(Values = "GetGenotypeNames")]
+        [Description("Dam breed name for crosses")]
+        [Display(Values = "GetGenotypeNames", EnabledCallback = "CrossEnabled")]
         public string DamBreed { get; set; }
 
         /// <summary>
         /// Gets or sets the sire breed name
         /// </summary>
-        [Description("Sire breed name")]
-        [Display(Values = "GetGenotypeNames")]
+        [Description("Sire breed name for crosses")]
+        [Display(Values = "GetGenotypeNames", EnabledCallback = "CrossEnabled")]
         public string SireBreed { get; set; }
 
         /// <summary>
@@ -106,19 +113,53 @@
         [Units("kg")]
         public double PeakMilk { get; set; } = double.NaN;
 
+        /// <summary>Is the pure bred drop down enabled?</summary>
+        public bool PurebredEnabled
+        {
+            get
+            {
+                return string.IsNullOrEmpty(DamBreed) && string.IsNullOrEmpty(SireBreed);
+            }
+        }
+
+        /// <summary>Are the cross drop downs enabled?</summary>
+        public bool CrossEnabled
+        {
+            get
+            {
+                return string.IsNullOrEmpty(PureBredBreed);
+            }
+        }
+
         /// <summary>Get the names of all genotypes for the current animal type.</summary>
-        /// <returns></returns>
         public IEnumerable<string> GetAnimalTypes()
         {
+            if (AnimalType == null)
+                DetermineAnimalType();
             return stock.Genotypes.All.Select(genotype => genotype.AnimalType);
         }
 
         /// <summary>Get the names of all genotypes for the current animal type.</summary>
-        /// <returns></returns>
         public IEnumerable<string> GetGenotypeNames()
         {
+            if (AnimalType == null)
+                DetermineAnimalType();
             return stock.Genotypes.All.Where(genotype => genotype.AnimalType == AnimalType)
                                       .Select(genotype => genotype.Name);
+        }
+
+        /// <summary>the animal type from the breed names.</summary>
+        private void DetermineAnimalType()
+        {
+            var genotypeName = PureBredBreed;
+            if (string.IsNullOrEmpty(genotypeName))
+                genotypeName = DamBreed;
+            if (!string.IsNullOrEmpty(genotypeName))
+            {
+                var genotype = stock.Genotypes.All.FirstOrDefault(g => g.Name == genotypeName);
+                if (genotype != null)
+                    AnimalType = genotype.AnimalType;
+            }
         }
 
         /// <summary>
@@ -129,9 +170,22 @@
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            var damProportion = Math.Pow(0.5, Generation);
-            var sireProportion = 1 - damProportion;
-            var newGenotype = stock.Genotypes.CreateGenotypeCross(Name, DamBreed, damProportion, SireBreed, sireProportion);
+            AnimalParamSet newGenotype;
+            if (!string.IsNullOrEmpty(PureBredBreed))
+            {
+                newGenotype = stock.Genotypes.Get(PureBredBreed).Parameters;
+                newGenotype.Name = Name;
+                stock.Genotypes.Add(newGenotype);
+            }
+            else if (string.IsNullOrEmpty(DamBreed) || string.IsNullOrEmpty(SireBreed))
+                throw new Exception("You must specify a either a pure bred breed name or a dam and sire breed name when creating genotype crosses.");
+            else
+            {
+                var damProportion = Math.Pow(0.5, Generation);
+                var sireProportion = 1 - damProportion;
+                newGenotype = stock.Genotypes.CreateGenotypeCross(Name, DamBreed, damProportion, SireBreed, sireProportion);
+            }
+
             if (!double.IsNaN(SRW))
                 newGenotype.BreedSRW = SRW;
             if (!double.IsNaN(PotFleeceWt))
