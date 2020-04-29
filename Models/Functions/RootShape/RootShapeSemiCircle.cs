@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Models.Core;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using Models.PMF.Organs;
-using Models.Soils;
 
-namespace Models.Functions
+namespace Models.Functions.RootShape
 {
     /// <summary>
     /// This model calculates the proportion of each soil layer occupided by roots.
@@ -15,11 +13,13 @@ namespace Models.Functions
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(Root))]
     public class RootShapeSemiCircle : Model, IRootShape, ICustomDocumentation
     {
         /// <summary>Calculates the root area for a layer of soil</summary>
         public void CalcRootProportionInLayers(ZoneState zone)
         {
+            zone.RootArea = 0;
             for (int layer = 0; layer < zone.soil.Thickness.Length; layer++)
             {
                 double prop;
@@ -35,6 +35,7 @@ namespace Models.Functions
                 {
                     rootArea = CalcRootAreaSemiCircleMaize(zone, top, bottom, zone.RightDist);    // Right side
                     rootArea += CalcRootAreaSemiCircleMaize(zone, top, bottom, zone.LeftDist);    // Left Side
+                    zone.RootArea += rootArea / 1e6;
 
                     double soilArea = (zone.RightDist + zone.LeftDist) * (bottom - top);
                     prop = Math.Max(0.0, MathUtilities.Divide(rootArea, soilArea, 0.0));
@@ -57,7 +58,7 @@ namespace Models.Functions
             if (zone.RootFront <= hDist)
                 SDepth = 0.0;
             else
-                SDepth = Math.Sqrt(Math.Pow(zone.RootFront, 2) - Math.Pow(hDist, 2));
+                SDepth = Math.Sqrt(MathUtilities.Bound(Math.Pow(zone.RootFront, 2) - Math.Pow(hDist, 2), 0, 1000000));
 
             // Rectangle - SDepth past bottom of this area
             if (SDepth >= bottom)

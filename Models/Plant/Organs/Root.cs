@@ -329,6 +329,14 @@
         [XmlIgnore]
         public double Depth { get { return PlantZone.Depth; } }
 
+        /// <summary>Root length.</summary>
+        [XmlIgnore]
+        public double Length { get { return PlantZone.RootLength; } }
+
+        /// <summary>Root area.</summary>
+        [XmlIgnore]
+        public double Area { get { return PlantZone.RootArea; } }
+
         /// <summary>Layer live</summary>
         [XmlIgnore]
         public Biomass[] LayerLive { get { return PlantZone.LayerLive; } }

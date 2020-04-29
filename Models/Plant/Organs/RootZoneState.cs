@@ -23,10 +23,10 @@ namespace Models.PMF.Organs
         public ISolute NH4 = null;
 
         /// <summary>The parent plant</summary>
-        private Plant plant = null;
+        public Plant plant = null;
 
         /// <summary>The root organ</summary>
-        private  Root root = null;
+        public Root root = null;
 
         /// <summary>The root front velocity function</summary>
         private IFunction rootFrontVelocity;
@@ -89,6 +89,9 @@ namespace Models.PMF.Organs
         public double Depth { get; set; }
 
         /// <summary>Gets the RootFront</summary>
+        public double RootLength { get { return Depth - plant.SowingData.Depth; } }
+
+        /// <summary>Gets the RootFront</summary>
         public double RootFront { get; set; }
         /// <summary>Gets the RootFront</summary>
         public double RootSpread { get; set; }
@@ -99,6 +102,13 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the RootProportions</summary>
         public double[] RootProportions { get; set; }
+
+        /// <summary>Gets the LLModifier for leaf angles != RootAngleBase</summary>
+        public double[] LLModifier { get; set; }
+
+        /// <summary>Soil area occipied by roots</summary>
+        [Units("m2")]
+        public double RootArea { get; set; }
 
         /// <summary>Gets or sets AvailableSW during SW Uptake
         /// Old Sorghum does actual uptake at end of day

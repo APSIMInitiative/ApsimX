@@ -1,5 +1,4 @@
-﻿using Models.PMF.Interfaces;
-using Models.PMF.Organs;
+﻿using Models.PMF.Organs;
 
 namespace Models.Interfaces
 {
@@ -8,7 +7,7 @@ namespace Models.Interfaces
     /// </summary>
     public interface IRootShape
     {
-        /// <summary>Relatives the allocation.</summary>
+        /// <summary>Calculates proportion of soil occupied by root in each layer</summary>
         /// <param name="zone">The ZoneState.</param>
         void CalcRootProportionInLayers(ZoneState zone);
 

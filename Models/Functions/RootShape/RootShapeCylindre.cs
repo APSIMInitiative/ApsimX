@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Models.Core;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using Models.PMF.Organs;
-using Models.Soils;
 
-namespace Models.Functions
+namespace Models.Functions.RootShape
 {
     /// <summary>
     /// This model calculates the proportion of each soil layer occupided by roots.
@@ -15,11 +13,13 @@ namespace Models.Functions
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(Root))]
     public class RootShapeCylindre : Model, IRootShape, ICustomDocumentation
     {
         /// <summary>Calculates the root area for a layer of soil</summary>
         public void CalcRootProportionInLayers(ZoneState zone)
         {
+            zone.RootArea = (zone.RightDist + zone.LeftDist) * zone.Depth / 1e6;
             for (int layer = 0; layer < zone.soil.Thickness.Length; layer++)
             {
                 double prop;
