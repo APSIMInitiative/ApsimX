@@ -82,7 +82,7 @@ namespace Models.Functions.RootShape
 
             double meanDepth, layerThick, rootLength, sowDepth, layerArea, a;
 
-            sowDepth = zone.plant.SowingData.Depth;
+            sowDepth = zone.plant.SowingData.Depth * 0;
             bottom = Math.Min(bottom, zone.RootFront);
             top = Math.Max(top, sowDepth);
 
