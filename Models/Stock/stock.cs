@@ -3,10 +3,12 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.IO;
     using System.Linq;
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Interfaces;
+    using Models.PMF;
     using Models.PMF.Interfaces;
     using Models.Soils;
     using Models.Surface;
@@ -126,8 +128,8 @@
     /// ---
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.StockView")]
-    [PresenterName("UserInterface.Presenters.StockPresenter")]
+    [ViewName("UserInterface.Views.HTMLView")]
+    [PresenterName("UserInterface.Presenters.GenericPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     public class Stock : Model
     {
@@ -157,11 +159,6 @@
         private bool isFirstStep;
 
         /// <summary>
-        /// The list of specified genotypes
-        /// </summary>
-        private SingleGenotypeInits[] genotypeInits = new SingleGenotypeInits[0];
-
-        /// <summary>
         /// The init values for the animal
         /// </summary>
         private AnimalInits[] animalInits;
@@ -179,7 +176,7 @@
         /// <summary>
         /// The random number host
         /// </summary>
-        private MyRandom randFactory;
+        public MyRandom randFactory;
 
         /// <summary>
         /// The supplement used
@@ -220,12 +217,6 @@
         [Link(IsOptional = true)]
         private Supplement suppFeed = null;
 
-        /// <summary>
-        /// The simulation host
-        /// </summary>
-        [Link]
-        private Simulation sim = null;
-
         /// <summary>Link to APSIM summary (logs the messages raised during model run).</summary>
         [Link]
         private ISummary outputSummary = null;
@@ -240,9 +231,8 @@
             this.userForages = new List<string>();
             this.userPaddocks = new List<string>();
             this.randFactory = new MyRandom(this.randSeed);       // random number generator
-            this.stockModel = new StockList(this.randFactory);
+            this.stockModel = new StockList(this);
 
-            Array.Resize(ref this.genotypeInits, 0);
             Array.Resize(ref this.animalInits, 0);
             this.suppFed = new FoodSupplement();
             this.excretionInfo = new ExcretionInfo();
@@ -252,24 +242,6 @@
         }
 
         #region Initialisation properties ====================================================
-
-        /// <summary>
-        /// Gets or sets the parameter filename for the stock model
-        /// </summary>
-        [Description("Name of an XML file containing genotypic parameters. If an empty string is specified, a default parameter set that is compiled into APSIM is used. " +
-                     "If a file name is used, the parameters in the file modify (rather than replacing) the default parameter set")]
-        [Units("")]
-        [Summary]
-        public string ParamFile
-        {
-            get { return stockModel.ParamFile; }
-            set 
-            {
-                if (value != string.Empty)
-                    this.outputSummary.WriteMessage(this, "Using animal parameters from " + value);
-                stockModel.ParamFile = value; 
-            }
-        }
         
         /// <summary>
         /// Gets or sets the Seed for the random number generator. Used when computing numbers of animals dying and conceiving from the equations for mortality and conception rates
@@ -283,25 +255,9 @@
         }
 
         /// <summary>
-        /// Gets or sets the information about each animal genotype
+        /// An instance that contains all stock genotypes.
         /// </summary>
-        [Description("Information about each animal genotype")]
-        [Units("")]
-        public SingleGenotypeInits[] Genotypes
-        {
-            get
-            {
-                return this.genotypeInits;
-            }
-
-            set
-            {
-                if (value != null)
-                {
-                    this.genotypeInits = value;
-                }
-            }
-        }
+        public Genotypes Genotypes { get; } = new Genotypes();
 
         /// <summary>
         /// Gets or sets the initial state of each animal group
@@ -319,6 +275,11 @@
                 this.animalInits = value;
             }
         }
+
+        /// <summary>
+        /// Gives access to the list of animals. Needed for unit testing.
+        /// </summary>
+        public StockList AnimalList { get { return stockModel; } }
 
         /// <summary>
         /// Gets or sets the manually-specified structure of paddocks and forages 
@@ -4085,10 +4046,14 @@
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
+            var childGenotypes = Apsim.Children(this, typeof(AnimalParamSet)).Cast<AnimalParamSet>().ToList();
+            if (childGenotypes != null)
+                childGenotypes.ForEach(animalParamSet => Genotypes.Add(animalParamSet));
+
             if (!this.paddocksGiven)
             {
                 // get the paddock areas from the simulation
-                foreach (Zone zone in Apsim.FindAll(this.sim, typeof(Zone)))
+                foreach (Zone zone in Apsim.FindAll(this, typeof(Zone)))
                 {
                     this.stockModel.Paddocks.Add(zone, zone.Name);                          // Add to the Paddocks list
                     this.stockModel.Paddocks.ByObj(zone).Area = zone.Area;
@@ -4108,7 +4073,7 @@
                 }
             }
 
-            this.stockModel.AddGenotypes(this.genotypeInits);
+            // Add all child animal groups to stock.
             for (int idx = 0; idx <= this.animalInits.Length - 1; idx++)                // Only create the initial animal groups 
                 this.stockModel.Add(this.animalInits[idx]);                             // after the paddocks have been identified                          
 
@@ -4171,7 +4136,7 @@
             if (!this.paddocksGiven)
             {
                 // update the paddock area as this can change during the simulation
-                foreach (Zone zone in Apsim.FindAll(this.sim, typeof(Zone)))
+                foreach (Zone zone in Apsim.FindAll(this, typeof(Zone)))
                 {
                     this.stockModel.Paddocks.ByObj(zone).Area = zone.Area;
                     this.stockModel.Paddocks.ByObj(zone).Slope = zone.Slope;
@@ -4717,100 +4682,5 @@
 
         #endregion
 
-        #region Public functions ============================================
-
-        /// <summary>
-        /// Get the parameters for this genotype
-        /// </summary>
-        /// <param name="mainParams">The base parameter set</param>
-        /// <param name="genoInits">The list of genotypes</param>
-        /// <param name="genoIdx">The index of the item in the list to use</param>
-        /// <returns>The animal parameter set for this genotype</returns>
-        public AnimalParamSet ParamsFromGenotypeInits(AnimalParamSet mainParams, SingleGenotypeInits[] genoInits, int genoIdx)
-        {
-            /*SingleGenotypeInits[] genotypeInits = new SingleGenotypeInits[genoInits.Length];
-            for (int idx = 0; idx < genoInits.Length; idx++)
-            {
-                genotypeInits[idx] = new SingleGenotypeInits();
-                this.stockModel.Value2GenotypeInits(genoInits[idx], ref genotypeInits[idx]);
-            }*/
-            return this.stockModel.ParamsFromGenotypeInits(mainParams, genoInits, genoIdx);
-        }
-
-        /// <summary>
-        /// Get a list of genotype names for the animal type from the current parameter set
-        /// </summary>
-        /// <param name="animal">The animal type (sheep/cattle)</param>
-        /// <returns>Array of genotype names</returns>
-        public string[] GenotypeNames(GrazType.AnimalType animal)
-        {
-            AnimalParamSet paramSet = stockModel.BaseParams;   
-
-            int count = paramSet.BreedCount(animal);
-            string[] namesArray = new string[count];
-            for (int i = 0; i < count; i++)
-            {
-                namesArray[i] = paramSet.BreedName(animal, i);
-            }
-
-            return namesArray;
-        }
-
-        /// <summary>
-        /// Get the combined list of genotype names that are defined for this instance
-        /// of the stock component.
-        /// </summary>
-        /// <param name="animal">The animal type (sheep/cattle)</param>
-        /// <returns>Array of genotype names</returns>
-        public string[] GenotypeNamesDefined(GrazType.AnimalType animal)
-        {
-            AnimalParamSet paramSet = stockModel.BaseParams;   
-            string[] genoParams = GenotypeNames(animal);
-            foreach (SingleGenotypeInits geno in Genotypes)
-            {
-                if (!genoParams.Contains(geno.GenotypeName))
-                {
-                    // check that the user defined genotype is of animal type
-                    AnimalParamSet parameters = paramSet.Match(geno.GenotypeName);
-                    if (parameters.Animal == animal)
-                    {
-                        Array.Resize(ref genoParams, genoParams.Length + 1);
-                        genoParams[genoParams.Length - 1] = geno.GenotypeName;
-                    }
-                }
-            }
-
-            Array.Sort(genoParams, StringComparer.InvariantCulture);
-            return genoParams;
-        }
-
-        /// <summary>
-        /// Returns the combined list of all animal types and user defined types.
-        /// </summary>
-        /// <returns>Genotype names</returns>
-        public string[] GenotypeNamesAll()
-        {
-            string[] allGenoNames = new string[0];
-            foreach (GrazType.AnimalType animal in Enum.GetValues(typeof(GrazType.AnimalType)))
-            {
-                string[] genoParams = GenotypeNames(animal);
-                
-                Array.Resize(ref allGenoNames, allGenoNames.Length + genoParams.Length);
-                genoParams.CopyTo(allGenoNames, allGenoNames.Length - genoParams.Length);
-            }
-
-            foreach (SingleGenotypeInits geno in Genotypes)
-            {
-                if (!allGenoNames.Contains(geno.GenotypeName))
-                {
-                    Array.Resize(ref allGenoNames, allGenoNames.Length + 1);
-                    allGenoNames[allGenoNames.Length - 1] = geno.GenotypeName;
-                }
-            }
-            Array.Sort(allGenoNames, StringComparer.InvariantCulture);
-
-            return allGenoNames;
-        }
-        #endregion
     }
 }
