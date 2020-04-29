@@ -2009,9 +2009,13 @@
                     string initName = org == "GenericOrgan" ? "InitialWtFunction" : "InitialDM";
                     JObject InitialWt = JsonUtilities.CreateNewChildModel(O, "InitialWt", "Models.PMF.Interfaces.BiomassPoolType");
                     JObject Structural = JsonUtilities.ChildWithName(O, initName);
-                    InitialWt["Structural"] = Structural["FixedValue"];
-                    InitialWt["Metabolic"] = "0";
-                    InitialWt["Storage"] = "0";
+                    Structural["Name"] = "Structural";
+                    JArray ChildFunctions = new JArray();
+                    ChildFunctions.Add(Structural);
+                    InitialWt["Children"] = ChildFunctions;
+                    JsonUtilities.AddConstantFunctionIfNotExists(InitialWt, "Metabolic", "0.0");
+                    JsonUtilities.AddConstantFunctionIfNotExists(InitialWt, "Storage", "0.0");
+                    JsonUtilities.RemoveChild(O, initName);
                 }
             }
             // Altermanager code where initial root wt is being set.
