@@ -2093,7 +2093,7 @@
                 bool ContainsZoneInitalDM = false;
                 for (int i = 0; i < lines.Count(); i++)
                 {
-                    if (lines[i].Contains("Root.ZoneInitialDM.Add("))
+                    if (lines[i].Contains("Root.ZoneInitialDM.Add(") && (ContainsZoneInitalDM==false))
                     {
                         ContainsZoneInitalDM = true;
                         string InitialDM = lines[i].Split('(')[1].Replace(";", "").Replace(")", "").Replace("\r", "").Replace("\n", "");
@@ -2109,6 +2109,12 @@
                                          "InitialDM.Storage = InitStor;\r\n" +
                                          lines[i].Split('(')[0] + "(InitialDM);\r\n";
                         lines[i] = NewCode;
+                    }
+                    else if (lines[i].Contains("Root.ZoneInitialDM.Add("))
+                    {
+                        string InitialDM = lines[i].Split('(')[1].Replace(";", "").Replace(")", "").Replace("\r", "").Replace("\n", "");
+                        lines[i] = "InitStruct.FixedValue = " + InitialDM + ";\r\n" +
+                                    lines[i].Split('(')[0] + "(InitialDM);\r\n";
                     }
                 }
 
