@@ -19,7 +19,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 95; } }
+        public static int LatestVersion { get { return 96; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -2062,11 +2062,83 @@
         }
 
         /// <summary>
-        /// Add RootShape to all simulations.
+        /// Change initialDM on Generic organ and root from a single value to a BiomassPoolType so each type can be sepcified
         /// </summary>
         /// <param name="root">Root node.</param>
         /// <param name="fileName">Path to the .apsimx file.</param>
         private static void UpgradeToVersion95(JObject root, string fileName)
+        {
+            // Remove initalDM model and replace with initialBiomass object
+            foreach (string org in new List<string>() { "GenericOrgan", "Root" })
+            {
+                foreach (JObject O in JsonUtilities.ChildrenRecursively(root, org))
+                {
+                    if (O["Enabled"].ToString() == "True")
+                    {
+                        string initName = org == "GenericOrgan" ? "InitialWtFunction" : "InitialDM";
+                        JObject InitialWt = JsonUtilities.CreateNewChildModel(O, "InitialWt", "Models.PMF.BiomassDemand");
+                        JObject Structural = JsonUtilities.ChildWithName(O, initName).DeepClone() as JObject;
+                        Structural["Name"] = "Structural";
+                        JArray ChildFunctions = new JArray();
+                        ChildFunctions.Add(Structural);
+                        InitialWt["Children"] = ChildFunctions;
+                        JsonUtilities.AddConstantFunctionIfNotExists(InitialWt, "Metabolic", "0.0");
+                        JsonUtilities.AddConstantFunctionIfNotExists(InitialWt, "Storage", "0.0");
+                        JsonUtilities.RemoveChild(O, initName);
+                    }
+                }
+            }
+            // Altermanager code where initial root wt is being set.
+            foreach (var manager in JsonUtilities.ChildrenOfType(root, "Manager"))
+            {
+                string code = manager["Code"].ToString();
+                string[] lines = code.Split('\n');
+                bool ContainsZoneInitalDM = false;
+                for (int i = 0; i < lines.Count(); i++)
+                {
+                    if (lines[i].Contains("Root.ZoneInitialDM.Add(") && (ContainsZoneInitalDM == false))
+                    {
+                        ContainsZoneInitalDM = true;
+                        string InitialDM = lines[i].Split('(')[1].Replace(";", "").Replace(")", "").Replace("\r", "").Replace("\n", "");
+                        string NewCode = "BiomassDemand InitialDM = new BiomassDemand();\r\n" +
+                                         "Constant InitStruct = new Constant();\r\n" +
+                                         "InitStruct.FixedValue = " + InitialDM + ";\r\n" +
+                                         "InitialDM.Structural = InitStruct;\r\n" +
+                                         "Constant InitMetab = new Constant();\r\n" +
+                                         "InitMetab.FixedValue = 0;\r\n" +
+                                         "InitialDM.Metabolic = InitMetab;\r\n" +
+                                         "Constant InitStor = new Constant();\r\n" +
+                                         "InitStor.FixedValue = 0;\r\n" +
+                                         "InitialDM.Storage = InitStor;\r\n" +
+                                         lines[i].Split('(')[0] + "(InitialDM);\r\n";
+                        lines[i] = NewCode;
+                    }
+                    else if (lines[i].Contains("Root.ZoneInitialDM.Add("))
+                    {
+                        string InitialDM = lines[i].Split('(')[1].Replace(";", "").Replace(")", "").Replace("\r", "").Replace("\n", "");
+                        lines[i] = "InitStruct.FixedValue = " + InitialDM + ";\r\n" +
+                                    lines[i].Split('(')[0] + "(InitialDM);\r\n";
+                    }
+                }
+
+                if (ContainsZoneInitalDM)
+                {
+                    string newCode = "using Models.Functions;\r\n";
+                    foreach (string line in lines)
+                    {
+                        newCode += line + "\n";
+                    }
+                    manager["Code"] = newCode;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Add RootShape to all simulations.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion96(JObject root, string fileName)
         {
             foreach (JObject thisRoot in JsonUtilities.ChildrenRecursively(root, "Root"))
             {
@@ -2102,7 +2174,6 @@
                         {
                             type = "Models.Functions.RootShape.RootShapeCylindre, Models";
                         }
-
                         JObject rootShape = new JObject
                         {
                             ["$type"] = type,
@@ -2114,6 +2185,7 @@
                 }
             }
         }
+
         /// <summary>
         /// Add progeny destination phase and mortality function.
         /// </summary>
