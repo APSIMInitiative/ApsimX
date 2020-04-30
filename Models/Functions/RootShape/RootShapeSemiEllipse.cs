@@ -77,17 +77,15 @@ namespace Models.Functions.RootShape
 
             double meanDepth, layerThick, rootLength, sowDepth, layerArea, a;
 
-            sowDepth = zone.plant.SowingData.Depth * 0;
+            sowDepth = zone.plant.SowingData.Depth;
             double bottomNew = Math.Min(bottom, zone.RootFront);
             double topNew = Math.Max(top, sowDepth);
 
-            //zone.RootSpread = zone.RootLength * Math.Tan(DegToRad(rootAngle));   // Semi minor axis
-            zone.RootSpread = zone.RootFront * Math.Tan(DegToRad(rootAngle));   // Semi minor axis
+            zone.RootSpread = zone.RootLength * Math.Tan(DegToRad(rootAngle));   // Semi minor axis
 
             meanDepth = Math.Max(0.5 * (bottomNew + topNew) - sowDepth, 1); // 1mm is added to assure germination occurs.
             layerThick = Math.Max(bottomNew - topNew, 1);
-            rootLength = Math.Max(zone.RootFront, 1);
-            //rootLength = Math.Max(zone.RootLength, 1);
+            rootLength = Math.Max(zone.RootLength, 1);
 
             a = Math.Pow(meanDepth - 0.5 * rootLength, 2) / Math.Pow(0.5 * rootLength, 2);
             double hDistNew = Math.Min(hDist, Math.Sqrt(MathUtilities.Bound(Math.Pow(zone.RootSpread, 2) * (1 - a), 0, 100000)));
