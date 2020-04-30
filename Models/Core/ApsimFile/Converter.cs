@@ -2153,18 +2153,10 @@
 
                         JArray rootShapeChildren = new JArray();
                         string type;
-                        JObject newObj;
 
                         if (thisPlant["CropType"].ToString() == "Sorghum")
                         {
-                            type = "Models.Functions.RootShape.RootShapeSemiEllipse, Models";
-                            newObj = new JObject
-                            {
-                                ["$type"] = "Models.Functions.Constant, Models",
-                                ["Name"] = "RootAngle",
-                                ["FixedValue"] = 45
-                            };
-                            rootShapeChildren.Add(newObj);
+                            type = "Models.Functions.RootShape.RootShapeSemiCircleSorghum, Models";
                         }
                         else if (thisPlant["CropType"].ToString() == "C4Maize")
                         {
@@ -2174,6 +2166,7 @@
                         {
                             type = "Models.Functions.RootShape.RootShapeCylindre, Models";
                         }
+
                         JObject rootShape = new JObject
                         {
                             ["$type"] = type,
