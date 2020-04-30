@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 95,
+  "Version": 96,
   "Name": "Simulations",
   "Children": [
     {
@@ -5259,6 +5259,11 @@
           "SWAvailabilityRatio": 0.0,
           "Name": "Root",
           "Children": [
+            {
+              "$type": "Models.Functions.RootShape.RootShapeCylindre, Models",
+              "Name": "RootShape",
+              "Children": []
+            },
             {
               "$type": "Models.Memo, Models",
               "Text": "__Note:__  this represents all the fine roots of the plant.  \n      There is no distinction of age, but root biomass is allocated separately for each soil layer within the root zone.   The depth of the root zone can change over time as root grows.  ",
