@@ -1013,7 +1013,7 @@
             {
                 if (layer <= PlantZone.soil.LayerIndexOfDepth(Depth))
                 {
-                    double available = SWmm[layer] - LL[layer] * DZ[layer] * PlantZone.LLModifier[layer];
+                    double available = Math.Max(SWmm[layer] - LL[layer] * DZ[layer] * PlantZone.LLModifier[layer], 0);
 
                     supply += Math.Max(0.0, KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
                             available * PlantZone.RootProportions[layer]);

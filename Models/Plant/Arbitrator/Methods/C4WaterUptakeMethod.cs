@@ -173,8 +173,8 @@ namespace Models.PMF.Arbitrator
                 {
                     myZone.StartWater[layer] = myZone.soil.Water[layer];
 
-                    myZone.AvailableSW[layer] = Math.Max(myZone.soil.Water[layer] - llDep[layer], 0) * myZone.RootProportions[layer];
-                    myZone.PotentialAvailableSW[layer] = myZone.soil.DULmm[layer] - llDep[layer] * myZone.RootProportions[layer];
+                    myZone.AvailableSW[layer] = Math.Max(myZone.soil.Water[layer] - llDep[layer] * myZone.LLModifier[layer], 0) * myZone.RootProportions[layer];
+                    myZone.PotentialAvailableSW[layer] = Math.Max(myZone.soil.DULmm[layer] - llDep[layer] * myZone.LLModifier[layer], 0) * myZone.RootProportions[layer];
 
                     var proportion = myZone.RootProportions[layer];
                     myZone.Supply[layer] = Math.Max(myZone.AvailableSW[layer] * kl[layer] * proportion, 0.0);
