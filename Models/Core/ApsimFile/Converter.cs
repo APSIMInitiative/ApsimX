@@ -2144,6 +2144,7 @@
             {
                 if (JsonUtilities.ChildrenRecursively(thisRoot, "RootShapeCylindre").Count == 0 &&
                     JsonUtilities.ChildrenRecursively(thisRoot, "RootShapeSemiCircle").Count == 0 &&
+                    JsonUtilities.ChildrenRecursively(thisRoot, "RootShapeSemiCircleSorghum").Count == 0 &&
                     JsonUtilities.ChildrenRecursively(thisRoot, "RootShapeSemiEllipse").Count == 0)
                 {
                     JArray rootChildren = thisRoot["Children"] as JArray;
