@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 281,
-  "Version": 93,
+  "Version": 95,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -2618,16 +2618,6 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": "g/m^2",
-                  "Name": "InitialWtFunction",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
                   "Units": "1/d",
                   "Name": "DetachmentRateFunction",
                   "Children": [],
@@ -3025,6 +3015,45 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "InitialWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": "g/m^2",
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -3043,16 +3072,6 @@
               "IsAboveGround": true,
               "Name": "Cordon",
               "Children": [
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 96.9,
-                  "Units": "g/m^2",
-                  "Name": "InitialWtFunction",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.2,
@@ -3561,6 +3580,45 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "InitialWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 77.5,
+                      "Units": "g/m^2",
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 19.0,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -3579,16 +3637,6 @@
               "IsAboveGround": true,
               "Name": "Trunk",
               "Children": [
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 349.0,
-                  "Units": "g/m^2",
-                  "Name": "InitialWtFunction",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.83,
@@ -3886,7 +3934,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 1.0,
                   "Units": null,
                   "Name": "DMReallocationFactor",
                   "Children": [],
@@ -4066,6 +4114,45 @@
                     {
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 0.2,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "InitialWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 280.0,
+                      "Units": "g/m^2",
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 70.0,
                       "Units": null,
                       "Name": "Storage",
                       "Children": [],
@@ -6302,16 +6389,6 @@
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 2500.0,
-                  "Units": "g/plant",
-                  "Name": "InitialDM",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.1,
                   "Units": null,
                   "Name": "DMRetranslocationFactor",
@@ -6729,7 +6806,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].Live.Wt",
+                          "VariableName": "[Root].Live.StructuralWt",
                           "Name": "wt",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -6738,7 +6815,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.3,
+                          "FixedValue": 0.2,
                           "Units": null,
                           "Name": "FibrousRootFraction",
                           "Children": [],
@@ -6748,50 +6825,10 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.003,
+                          "FixedValue": 0.0,
                           "Units": "gDMgDM-1d-1",
                           "Name": "GrowthRate",
                           "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.ExponentialFunction, Models",
-                          "A": 0.0,
-                          "B": 1.0,
-                          "C": 0.069,
-                          "Name": "ExponentialFunction",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.SubtractFunction, Models",
-                              "Name": "SubtractFunction",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Weather].MeanT",
-                                  "Name": "Ta",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 20.0,
-                                  "Units": null,
-                                  "Name": "RefT",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -6887,7 +6924,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.001,
+                      "FixedValue": 0.1,
                       "Units": null,
                       "Name": "Structural",
                       "Children": [],
@@ -6897,7 +6934,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.001,
+                      "FixedValue": 0.1,
                       "Units": null,
                       "Name": "Metabolic",
                       "Children": [],
@@ -6907,7 +6944,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.01,
+                      "FixedValue": 0.1,
                       "Units": null,
                       "Name": "Storage",
                       "Children": [],
@@ -6926,6 +6963,45 @@
                   "Units": null,
                   "Name": "SenescenceRate",
                   "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "InitialWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 2500.0,
+                      "Units": "g/plant",
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 550.0,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -11183,7 +11259,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Grapevine.Root.ZoneNamesToGrowRootsIn.Add(\"Alley\");\r\n            Grapevine.Root.ZoneRootDepths.Add(2600);\r\n            Grapevine.Root.ZoneInitialDM.Add(10);\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                          "Code": "using Models.Functions;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Grapevine.Root.ZoneNamesToGrowRootsIn.Add(\"Alley\");\r\n            Grapevine.Root.ZoneRootDepths.Add(2600);\r\nBiomassDemand InitialDM = new BiomassDemand();\r\nConstant InitStruct = new Constant();\r\nInitStruct.FixedValue = 10;\r\nInitialDM.Structural = InitStruct;\r\nConstant InitMetab = new Constant();\r\nInitMetab.FixedValue = 0;\r\nInitialDM.Metabolic = InitMetab;\r\nConstant InitStor = new Constant();\r\nInitStor.FixedValue = 0;\r\nInitialDM.Storage = InitStor;\r\n            Grapevine.Root.ZoneInitialDM.Add(InitialDM);\r\n\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n\n",
                           "Parameters": [
                             {
                               "Key": "UseExtraZone",
@@ -11474,7 +11550,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Slurp.Root.ZoneNamesToGrowRootsIn.Add(\"Row\");\r\n            Slurp.Root.ZoneRootDepths.Add(600);\r\n            Slurp.Root.ZoneInitialDM.Add(10);\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                          "Code": "using Models.Functions;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Slurp.Root.ZoneNamesToGrowRootsIn.Add(\"Row\");\r\n            Slurp.Root.ZoneRootDepths.Add(600);\r\nBiomassDemand InitialDM = new BiomassDemand();\r\nConstant InitStruct = new Constant();\r\nInitStruct.FixedValue = 10;\r\nInitialDM.Structural = InitStruct;\r\nConstant InitMetab = new Constant();\r\nInitMetab.FixedValue = 0;\r\nInitialDM.Metabolic = InitMetab;\r\nConstant InitStor = new Constant();\r\nInitStor.FixedValue = 0;\r\nInitialDM.Storage = InitStor;\r\n            Slurp.Root.ZoneInitialDM.Add(InitialDM);\r\n\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n\n",
                           "Parameters": [
                             {
                               "Key": "UseExtraZone",
@@ -14240,7 +14316,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Grapevine.Root.ZoneNamesToGrowRootsIn.Add(\"Alley\");\r\n            Grapevine.Root.ZoneRootDepths.Add(2600);\r\n            Grapevine.Root.ZoneInitialDM.Add(10);\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                          "Code": "using Models.Functions;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Grapevine.Root.ZoneNamesToGrowRootsIn.Add(\"Alley\");\r\n            Grapevine.Root.ZoneRootDepths.Add(2600);\r\nBiomassDemand InitialDM = new BiomassDemand();\r\nConstant InitStruct = new Constant();\r\nInitStruct.FixedValue = 10;\r\nInitialDM.Structural = InitStruct;\r\nConstant InitMetab = new Constant();\r\nInitMetab.FixedValue = 0;\r\nInitialDM.Metabolic = InitMetab;\r\nConstant InitStor = new Constant();\r\nInitStor.FixedValue = 0;\r\nInitialDM.Storage = InitStor;\r\n            Grapevine.Root.ZoneInitialDM.Add(InitialDM);\r\n\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n\n",
                           "Parameters": [
                             {
                               "Key": "UseExtraZone",
@@ -14531,7 +14607,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Slurp.Root.ZoneNamesToGrowRootsIn.Add(\"Row\");\r\n            Slurp.Root.ZoneRootDepths.Add(600);\r\n            Slurp.Root.ZoneInitialDM.Add(10);\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                          "Code": "using Models.Functions;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Slurp.Root.ZoneNamesToGrowRootsIn.Add(\"Row\");\r\n            Slurp.Root.ZoneRootDepths.Add(600);\r\nBiomassDemand InitialDM = new BiomassDemand();\r\nConstant InitStruct = new Constant();\r\nInitStruct.FixedValue = 10;\r\nInitialDM.Structural = InitStruct;\r\nConstant InitMetab = new Constant();\r\nInitMetab.FixedValue = 0;\r\nInitialDM.Metabolic = InitMetab;\r\nConstant InitStor = new Constant();\r\nInitStor.FixedValue = 0;\r\nInitialDM.Storage = InitStor;\r\n            Slurp.Root.ZoneInitialDM.Add(InitialDM);\r\n\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n\n",
                           "Parameters": [
                             {
                               "Key": "UseExtraZone",
@@ -18183,7 +18259,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using Models.Zones;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [Description(\"Vine distance(m)\")]\r\n        public double VineDistance { get; set; }\r\n        //number of buds lay down in cane and spur. there is a function inside to calculate the number of buds per vine based on bud burst and from cane head\r\n        [Description(\"Bud number(#)\")]\r\n        public double BudNumber { get; set; }\r\n        //cordon or spur biomass\r\n        [Description(\"Cordon number(#)\")]\r\n        public double CordonNumber { get; set; }\r\n      \r\n        [Description(\"Cordon diameter(mm)\")]\r\n        public double CordonDiameter { get; set; }\r\n\r\n        [Description(\"Cordon length(m)\")]\r\n        public double CordonLength { get; set; }\r\n        //trunk information\r\n        [Description(\"Trunk diameter(mm)\")]\r\n        public double TrunkDiameter { get; set; }\r\n\r\n        [Description(\"Trunk height(m)\")]\r\n        public double TrunkHeight { get; set; }\r\n        //root dry matter\r\n        [Description(\"Root dry matter(g/vine)\")]\r\n        public double RootDM { get; set; }\r\n\r\n        //total nonstructural fraction in dry matter \r\n        [Description(\"Root nonstructural carbon fraction\")]\r\n        public double RootNSC { get; set; }\r\n\r\n        [Description(\"Trunk nonstructural carbon fraction\")]\r\n        public double TrunkNSC { get; set; }\r\n\r\n        [Description(\"Cordon nonstructural carbon fraction\")]\r\n        public double CordonNSC { get; set; }\r\n\r\n        private RectangularZone RowZone {get; set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n                RowZone = Apsim.Find(this.Parent.Parent.Parent,\"Row\") as RectangularZone;\r\n                double pop = 1/RowZone.Width/VineDistance;  \r\n                //sowing method\r\n                Grapevine.Sow(cultivar: CultivarName,population: pop, \r\n                depth: 2000, rowSpacing: RowZone.Width, budNumber:BudNumber);\r\n\r\n                //cordon biomass\r\n\t            //calculate the biomass by length 1 meter time number of cordons time wood density (0.5 g/mm2/m) * pop to covert the biomass into g/m2\r\n\t            double cordonBiomass = 3.1415926*(CordonDiameter/2)*(CordonDiameter/2)*CordonLength*CordonNumber*0.5 * pop; \r\n\t            double cordonNSC = cordonBiomass * CordonNSC;\r\n\r\n\t            zone.Set(\"[Grapevine].Cordon.Live.StorageWt\", cordonNSC); \t           \r\n\t            zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", cordonBiomass - cordonNSC); \t           \r\n\r\n                //trunk biomass\r\n                double trunkBiomass = 3.1415926*(TrunkDiameter/2)*(TrunkDiameter/2)*TrunkHeight*0.5 * pop; \r\n                double trunkNSC = trunkBiomass * TrunkNSC;\r\n               \r\n                zone.Set(\"[Grapevine].Trunk.Live.StorageWt\", trunkNSC); \r\n                zone.Set(\"[Grapevine].Trunk.Live.StructuralWt\", trunkBiomass - trunkNSC);              \r\n\t            \r\n\r\n                //Root biomass is  per plant\r\n                double rootNSC = RootDM * RootNSC; \r\n                 zone.Set(\"[Grapevine].Root.Live.StorageWt\",    rootNSC ); //rootNSC*pop\r\n                 zone.Set(\"[Grapevine].Root.Live.StructuralWt\", RootDM - rootNSC); \r\n               \r\n            }\r\n        }\r\n    }\r\n}            \r\n",
+                          "Code": "using Models.Zones;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [Description(\"Vine distance(m)\")]\r\n        public double VineDistance { get; set; }\r\n        //number of buds lay down in cane and spur. there is a function inside to calculate the number of buds per vine based on bud burst and from cane head\r\n        [Description(\"Bud number(#)\")]\r\n        public double BudNumber { get; set; }\r\n        //cordon or spur biomass\r\n        [Description(\"Cordon number(#)\")]\r\n        public double CordonNumber { get; set; }\r\n      \r\n        [Description(\"Cordon diameter(mm)\")]\r\n        public double CordonDiameter { get; set; }\r\n\r\n        [Description(\"Cordon length(m)\")]\r\n        public double CordonLength { get; set; }\r\n        //trunk information\r\n        [Description(\"Trunk diameter(mm)\")]\r\n        public double TrunkDiameter { get; set; }\r\n\r\n        [Description(\"Trunk height(m)\")]\r\n        public double TrunkHeight { get; set; }\r\n    //    //root dry matter\r\n    //    [Description(\"Root dry matter(g/vine)\")]\r\n    //    public double RootDM { get; set; }\r\n\t//\r\n    //    //total nonstructural fraction in dry matter \r\n    //    [Description(\"Root nonstructural carbon fraction\")]\r\n    //    public double RootNSC { get; set; }\r\n\r\n        [Description(\"Trunk nonstructural carbon fraction\")]\r\n        public double TrunkNSC { get; set; }\r\n\r\n        [Description(\"Cordon nonstructural carbon fraction\")]\r\n        public double CordonNSC { get; set; }\r\n\r\n        private RectangularZone RowZone {get; set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n                RowZone = Apsim.Find(this.Parent.Parent.Parent,\"Row\") as RectangularZone;\r\n                double pop = 1/RowZone.Width/VineDistance;  \r\n                //sowing method\r\n                Grapevine.Sow(cultivar: CultivarName,population: pop, \r\n                depth: 2000, rowSpacing: RowZone.Width, budNumber:BudNumber);\r\n\r\n                //cordon biomass\r\n\t            //calculate the biomass by length 1 meter time number of cordons time wood density (0.5 g/mm2/m) * pop to covert the biomass into g/m2\r\n\t            double cordonBiomass = 3.1415926*(CordonDiameter/2)*(CordonDiameter/2)*CordonLength*CordonNumber*0.5 * pop; \r\n\t            double cordonNSC = cordonBiomass * CordonNSC;\r\n\r\n\t            zone.Set(\"[Grapevine].Cordon.Live.StorageWt\", cordonNSC); \t           \r\n\t            zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", cordonBiomass - cordonNSC); \t           \r\n\r\n                //trunk biomass\r\n                double trunkBiomass = 3.1415926*(TrunkDiameter/2)*(TrunkDiameter/2)*TrunkHeight*0.5 * pop; \r\n                double trunkNSC = trunkBiomass * TrunkNSC;\r\n               \r\n                zone.Set(\"[Grapevine].Trunk.Live.StorageWt\", trunkNSC); \r\n                zone.Set(\"[Grapevine].Trunk.Live.StructuralWt\", trunkBiomass - trunkNSC);              \r\n\t            \r\n               \r\n            }\r\n        }\r\n    }\r\n}            \r\n",
                           "Parameters": [
                             {
                               "Key": "CultivarName",
@@ -18220,14 +18296,6 @@
                             {
                               "Key": "TrunkHeight",
                               "Value": "0.9"
-                            },
-                            {
-                              "Key": "RootDM",
-                              "Value": "2500"
-                            },
-                            {
-                              "Key": "RootNSC",
-                              "Value": "0.22"
                             },
                             {
                               "Key": "TrunkNSC",
@@ -18803,7 +18871,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Grapevine.Root.ZoneNamesToGrowRootsIn.Add(\"Alley\");\r\n            Grapevine.Root.ZoneRootDepths.Add(2600);\r\n            Grapevine.Root.ZoneInitialDM.Add(10);\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                          "Code": "using Models.Functions;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Grapevine.Root.ZoneNamesToGrowRootsIn.Add(\"Alley\");\r\n            Grapevine.Root.ZoneRootDepths.Add(2600);\r\nBiomassDemand InitialDM = new BiomassDemand();\r\nConstant InitStruct = new Constant();\r\nInitStruct.FixedValue = 500;\r\nInitialDM.Structural = InitStruct;\r\nConstant InitMetab = new Constant();\r\nInitMetab.FixedValue = 0;\r\nInitialDM.Metabolic = InitMetab;\r\nConstant InitStor = new Constant();\r\nInitStor.FixedValue = 100;\r\nInitialDM.Storage = InitStor;\r\n            Grapevine.Root.ZoneInitialDM.Add(InitialDM);\r\n\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n\n",
                           "Parameters": [
                             {
                               "Key": "UseExtraZone",
@@ -18888,7 +18956,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n       \r\n        [Description(\"SummerPruning_DAWS\")]         \r\n        public int LeafPluckingDAWS { get; set; }  //day\r\n\r\n        [Description(\"Harvest_DAWS\")]\r\n        public int HarvestDAWS { get; set; }\r\n\r\n        [Description(\"Pruning_DAWS\")]         \r\n        public int PruningDAWS { get; set; }  //day\r\n\r\n        [Description(\"Frost Date 1\")]\r\n        public DateTime FrostDate1 { get; set; }\r\n        [Description(\"Frost Date 2\")]\r\n        public DateTime FrostDate2 { get; set; }\r\n\r\n\r\n        [XmlIgnore] private RemovalFractions Remove_1 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_2 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_3 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_4 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_5 { get; set; }\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove_1 = new RemovalFractions();\r\n            Remove_2 = new RemovalFractions();\r\n            Remove_3 = new RemovalFractions();\r\n            Remove_4 = new RemovalFractions();\r\n            Remove_5 = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n    \t     //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n    \t     //PruneDate = DateTime.Parse(PruneDateString);\r\n    \t     if (weather.DaysSinceWinterSolstice == LeafPluckingDAWS && Grapevine.Phenology.Stage >= 3)\r\n    \t     {\r\n    \t            \r\n    \t        //int LeafTipsAppeared = (int)Grapevine.Structure.LeafTipsAppeared;\r\n    \t        //int NodesToRemove = (int)Math.Max(LeafTipsAppeared - TargetLeafRank, 1); \r\n    \t        double FractionToRemove = 0.3; //1- TargetLeafRank/LeafTipsAppeared;\r\n\t\t\t\r\n    \t        Remove_1.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n    \t        Remove_1.SetFractionToRemove(\"Shoot\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Cordon\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Trunk\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Root\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Berry\", 0);\r\n\t\t\t\r\n    \t        Remove_1.SetFractionToResidue(\"Leaf\", FractionToRemove, \"live\");\r\n    \t        Remove_1.SetFractionToResidue(\"Shoot\", FractionToRemove);\r\n    \t        Remove_1.SetFractionToResidue(\"Cordon\", 0);\r\n    \t        Remove_1.SetFractionToResidue(\"Trunk\", 0);\r\n    \t        Remove_1.SetFractionToResidue(\"Root\", 0);\r\n    \t        Remove_1.SetFractionToResidue(\"Berry\", 0);\r\n\t\t\t\r\n    \t       // Remove_1.NodesToRemove = NodesToRemove;\r\n    \t        Grapevine.RemoveBiomass(\"LeafPluck\", Remove_1);\r\n\t\t\r\n    \t     }\r\n\r\n           if (weather.DaysSinceWinterSolstice == HarvestDAWS && Grapevine.Phenology.Stage >= 3)\r\n           {\r\n           \t\r\n               Remove_2.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n               Remove_2.SetFractionToRemove(\"Shoot\",  0);\r\n               Remove_2.SetFractionToRemove(\"Cordon\", 0);\r\n               Remove_2.SetFractionToRemove(\"Trunk\",  0);\r\n               Remove_2.SetFractionToRemove(\"Root\",   0);\r\n               Remove_2.SetFractionToRemove(\"Berry\",  1);\r\n\t\t \r\n               Remove_2.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n               Remove_2.SetFractionToResidue(\"Shoot\",  0);\r\n               Remove_2.SetFractionToResidue(\"Cordon\", 0);\r\n               Remove_2.SetFractionToResidue(\"Trunk\",  0);\r\n               Remove_2.SetFractionToResidue(\"Root\",   0);\r\n               Remove_2.SetFractionToResidue(\"Berry\",  0);\r\n\t\t \r\n               Grapevine.RemoveBiomass(\"LeafPluck\", Remove_2);\r\n           }\r\n                                   \r\n            if (weather.DaysSinceWinterSolstice == PruningDAWS&& Grapevine.Phenology.Stage >= 3)\r\n            {\r\n                Remove_3.SetPhenologyStage = 1;\r\n\r\n                Remove_3.SetFractionToRemove(\"Leaf\",   0, \"live\");\r\n                Remove_3.SetFractionToRemove(\"Shoot\",  0);\r\n                Remove_3.SetFractionToRemove(\"Cordon\", 0);\r\n                Remove_3.SetFractionToRemove(\"Trunk\",  0);\r\n                Remove_3.SetFractionToRemove(\"Root\",   0);\r\n                Remove_3.SetFractionToRemove(\"Berry\",  0);\r\n\r\n                Remove_3.SetFractionToResidue(\"Leaf\",   1, \"live\");\r\n                Remove_3.SetFractionToResidue(\"Shoot\",  1);\r\n                Remove_3.SetFractionToResidue(\"Cordon\", 1);\r\n                Remove_3.SetFractionToResidue(\"Trunk\",  0);\r\n                Remove_3.SetFractionToResidue(\"Root\",   0);\r\n                Remove_3.SetFractionToResidue(\"Berry\",  0);\r\n\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove_3);\r\n\r\n                double cordonBiomass = 96.9; //g/m2 reset the cordon biomass to the original value \r\n\t            double cordonNSC = cordonBiomass * 0.18;\r\n\r\n\t            zone.Set(\"[Grapevine].Cordon.Live.StorageWt\", cordonNSC); \t           \r\n\t            zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", cordonBiomass - cordonNSC); \r\n\r\n\t            zone.Set(\"[Grapevine].Trunk.Live.StructuralWt\", 280); \t\r\n\t            zone.Set(\"[Grapevine].Trunk.Live.StorageWt\", 70); \t\r\n\r\n\t            zone.Set(\"[Grapevine].Root.Live.StructuralWt\", 1531); \t\r\n\t            zone.Set(\"[Grapevine].Root.Live.StorageWt\",  349); \t\r\n\r\n            }\r\n           if (Clock.Today.Date == FrostDate1)      \r\n           {\r\n              Remove_4.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n              Remove_4.SetFractionToRemove(\"Shoot\",  0);\r\n              Remove_4.SetFractionToRemove(\"Cordon\", 0);\r\n              Remove_4.SetFractionToRemove(\"Trunk\",  0);\r\n              Remove_4.SetFractionToRemove(\"Root\",   0);\r\n              Remove_4.SetFractionToRemove(\"Berry\",  0);\r\n\t\t   //\r\n              Remove_4.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n              Remove_4.SetFractionToResidue(\"Shoot\",  0);\r\n              Remove_4.SetFractionToResidue(\"Cordon\", 0);\r\n              Remove_4.SetFractionToResidue(\"Trunk\",  0);\r\n              Remove_4.SetFractionToResidue(\"Root\",   0);\r\n              Remove_4.SetFractionToResidue(\"Berry\",  0);\r\n\t\t   //\r\n              Grapevine.RemoveBiomass(\"LeafPluck\", Remove_4);\r\n              zone.Set(\"[Grapevine].Structure.FinalLeafNumber.FixedValue\", 28); \r\n\t\t   //\r\n           }  \r\n\r\n           if (Clock.Today.Date == FrostDate2)      \r\n           {\r\n              Remove_5.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n              Remove_5.SetFractionToRemove(\"Shoot\",  0);\r\n              Remove_5.SetFractionToRemove(\"Cordon\", 0);\r\n              Remove_5.SetFractionToRemove(\"Trunk\",  0);\r\n              Remove_5.SetFractionToRemove(\"Root\",   0);\r\n              Remove_5.SetFractionToRemove(\"Berry\",  0);\r\n\t\t   //\r\n              Remove_5.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n              Remove_5.SetFractionToResidue(\"Shoot\",  0);\r\n              Remove_5.SetFractionToResidue(\"Cordon\", 0);\r\n              Remove_5.SetFractionToResidue(\"Trunk\",  0);\r\n              Remove_5.SetFractionToResidue(\"Root\",   0);\r\n              Remove_5.SetFractionToResidue(\"Berry\",  0);\r\n\t\t   //\r\n              Grapevine.RemoveBiomass(\"LeafPluck\", Remove_5);\r\n\t\t   //\r\n           }  \r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
+                          "Code": "using System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n       \r\n        [Description(\"SummerPruning_DAWS\")]         \r\n        public int LeafPluckingDAWS { get; set; }  //day\r\n\r\n        [Description(\"Harvest_DAWS\")]\r\n        public int HarvestDAWS { get; set; }\r\n\r\n        [Description(\"Pruning_DAWS\")]         \r\n        public int PruningDAWS { get; set; }  //day\r\n\r\n        [Description(\"Frost Date 1\")]\r\n        public DateTime FrostDate1 { get; set; }\r\n        [Description(\"Frost Date 2\")]\r\n        public DateTime FrostDate2 { get; set; }\r\n\r\n\r\n        [XmlIgnore] private RemovalFractions Remove_1 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_2 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_3 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_4 { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove_5 { get; set; }\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove_1 = new RemovalFractions();\r\n            Remove_2 = new RemovalFractions();\r\n            Remove_3 = new RemovalFractions();\r\n            Remove_4 = new RemovalFractions();\r\n            Remove_5 = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n    \t     //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n    \t     //PruneDate = DateTime.Parse(PruneDateString);\r\n    \t     if (weather.DaysSinceWinterSolstice == LeafPluckingDAWS && Grapevine.Phenology.Stage >= 3)\r\n    \t     {\r\n    \t            \r\n    \t        //int LeafTipsAppeared = (int)Grapevine.Structure.LeafTipsAppeared;\r\n    \t        //int NodesToRemove = (int)Math.Max(LeafTipsAppeared - TargetLeafRank, 1); \r\n    \t        double FractionToRemove = 0.3; //1- TargetLeafRank/LeafTipsAppeared;\r\n\t\t\t\r\n    \t        Remove_1.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n    \t        Remove_1.SetFractionToRemove(\"Shoot\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Cordon\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Trunk\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Root\", 0);\r\n    \t        Remove_1.SetFractionToRemove(\"Berry\", 0);\r\n\t\t\t\r\n    \t        Remove_1.SetFractionToResidue(\"Leaf\", FractionToRemove, \"live\");\r\n    \t        Remove_1.SetFractionToResidue(\"Shoot\", FractionToRemove);\r\n    \t        Remove_1.SetFractionToResidue(\"Cordon\", 0);\r\n    \t        Remove_1.SetFractionToResidue(\"Trunk\", 0);\r\n    \t        Remove_1.SetFractionToResidue(\"Root\", 0);\r\n    \t        Remove_1.SetFractionToResidue(\"Berry\", 0);\r\n\t\t\t\r\n    \t       // Remove_1.NodesToRemove = NodesToRemove;\r\n    \t        Grapevine.RemoveBiomass(\"LeafPluck\", Remove_1);\r\n\t\t\r\n    \t     }\r\n\r\n           if (weather.DaysSinceWinterSolstice == HarvestDAWS && Grapevine.Phenology.Stage >= 3)\r\n           {\r\n           \t\r\n               Remove_2.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n               Remove_2.SetFractionToRemove(\"Shoot\",  0);\r\n               Remove_2.SetFractionToRemove(\"Cordon\", 0);\r\n               Remove_2.SetFractionToRemove(\"Trunk\",  0);\r\n               Remove_2.SetFractionToRemove(\"Root\",   0);\r\n               Remove_2.SetFractionToRemove(\"Berry\",  1);\r\n\t\t \r\n               Remove_2.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n               Remove_2.SetFractionToResidue(\"Shoot\",  0);\r\n               Remove_2.SetFractionToResidue(\"Cordon\", 0);\r\n               Remove_2.SetFractionToResidue(\"Trunk\",  0);\r\n               Remove_2.SetFractionToResidue(\"Root\",   0);\r\n               Remove_2.SetFractionToResidue(\"Berry\",  0);\r\n\t\t \r\n               Grapevine.RemoveBiomass(\"LeafPluck\", Remove_2);\r\n           }\r\n                                   \r\n            if (weather.DaysSinceWinterSolstice == PruningDAWS&& Grapevine.Phenology.Stage >= 3)\r\n            {\r\n                Remove_3.SetPhenologyStage = 1;\r\n\r\n                Remove_3.SetFractionToRemove(\"Leaf\",   0, \"live\");\r\n                Remove_3.SetFractionToRemove(\"Shoot\",  0);\r\n                Remove_3.SetFractionToRemove(\"Cordon\", 0);\r\n                Remove_3.SetFractionToRemove(\"Trunk\",  0);\r\n                Remove_3.SetFractionToRemove(\"Root\",   0);\r\n                Remove_3.SetFractionToRemove(\"Berry\",  0);\r\n\r\n                Remove_3.SetFractionToResidue(\"Leaf\",   1, \"live\");\r\n                Remove_3.SetFractionToResidue(\"Shoot\",  1);\r\n                Remove_3.SetFractionToResidue(\"Cordon\", 1);\r\n                Remove_3.SetFractionToResidue(\"Trunk\",  0);\r\n                Remove_3.SetFractionToResidue(\"Root\",   0);\r\n                Remove_3.SetFractionToResidue(\"Berry\",  0);\r\n\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove_3);\r\n\r\n                double cordonBiomass = 96.9; //g/m2 reset the cordon biomass to the original value \r\n\t            double cordonNSC = cordonBiomass * 0.18;\r\n\t            zone.Set(\"[Grapevine].Cordon.Live.StorageWt\", cordonNSC); \t           \r\n\t            zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", cordonBiomass - cordonNSC); \t   \r\n\r\n            }\r\n           if (Clock.Today.Date == FrostDate1)      \r\n           {\r\n              Remove_4.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n              Remove_4.SetFractionToRemove(\"Shoot\",  0);\r\n              Remove_4.SetFractionToRemove(\"Cordon\", 0);\r\n              Remove_4.SetFractionToRemove(\"Trunk\",  0);\r\n              Remove_4.SetFractionToRemove(\"Root\",   0);\r\n              Remove_4.SetFractionToRemove(\"Berry\",  0);\r\n\t\t   //\r\n              Remove_4.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n              Remove_4.SetFractionToResidue(\"Shoot\",  0);\r\n              Remove_4.SetFractionToResidue(\"Cordon\", 0);\r\n              Remove_4.SetFractionToResidue(\"Trunk\",  0);\r\n              Remove_4.SetFractionToResidue(\"Root\",   0);\r\n              Remove_4.SetFractionToResidue(\"Berry\",  0);\r\n\t\t   //\r\n              Grapevine.RemoveBiomass(\"LeafPluck\", Remove_4);\r\n              zone.Set(\"[Grapevine].Structure.FinalLeafNumber.FixedValue\", 28); \r\n\t\t   //\r\n           }  \r\n\r\n           if (Clock.Today.Date == FrostDate2)      \r\n           {\r\n              Remove_5.SetFractionToRemove(\"Leaf\", 0, \"live\");\r\n              Remove_5.SetFractionToRemove(\"Shoot\",  0);\r\n              Remove_5.SetFractionToRemove(\"Cordon\", 0);\r\n              Remove_5.SetFractionToRemove(\"Trunk\",  0);\r\n              Remove_5.SetFractionToRemove(\"Root\",   0);\r\n              Remove_5.SetFractionToRemove(\"Berry\",  0);\r\n\t\t   //\r\n              Remove_5.SetFractionToResidue(\"Leaf\",   0.2, \"live\");\r\n              Remove_5.SetFractionToResidue(\"Shoot\",  0);\r\n              Remove_5.SetFractionToResidue(\"Cordon\", 0);\r\n              Remove_5.SetFractionToResidue(\"Trunk\",  0);\r\n              Remove_5.SetFractionToResidue(\"Root\",   0);\r\n              Remove_5.SetFractionToResidue(\"Berry\",  0);\r\n\t\t   //\r\n              Grapevine.RemoveBiomass(\"LeafPluck\", Remove_5);\r\n\t\t   //\r\n           }  \r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
                           "Parameters": [
                             {
                               "Key": "LeafPluckingDAWS",
@@ -19108,7 +19176,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Slurp.Root.ZoneNamesToGrowRootsIn.Add(\"Row\");\r\n            Slurp.Root.ZoneRootDepths.Add(600);\r\n            Slurp.Root.ZoneInitialDM.Add(10);\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                          "Code": "using Models.Functions;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Slurp.Root.ZoneNamesToGrowRootsIn.Add(\"Row\");\r\n            Slurp.Root.ZoneRootDepths.Add(600);\r\nBiomassDemand InitialDM = new BiomassDemand();\r\nConstant InitStruct = new Constant();\r\nInitStruct.FixedValue = 10;\r\nInitialDM.Structural = InitStruct;\r\nConstant InitMetab = new Constant();\r\nInitMetab.FixedValue = 0;\r\nInitialDM.Metabolic = InitMetab;\r\nConstant InitStor = new Constant();\r\nInitStor.FixedValue = 0;\r\nInitialDM.Storage = InitStor;\r\n            Slurp.Root.ZoneInitialDM.Add(InitialDM);\r\n\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n\n",
                           "Parameters": [
                             {
                               "Key": "UseExtraZone",
@@ -26167,7 +26235,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Grapevine.Root.ZoneNamesToGrowRootsIn.Add(\"Alley\");\r\n            Grapevine.Root.ZoneRootDepths.Add(2600);\r\n            Grapevine.Root.ZoneInitialDM.Add(10);\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                          "Code": "using Models.Functions;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Grapevine.Root.ZoneNamesToGrowRootsIn.Add(\"Alley\");\r\n            Grapevine.Root.ZoneRootDepths.Add(2600);\r\nBiomassDemand InitialDM = new BiomassDemand();\r\nConstant InitStruct = new Constant();\r\nInitStruct.FixedValue = 10;\r\nInitialDM.Structural = InitStruct;\r\nConstant InitMetab = new Constant();\r\nInitMetab.FixedValue = 0;\r\nInitialDM.Metabolic = InitMetab;\r\nConstant InitStor = new Constant();\r\nInitStor.FixedValue = 0;\r\nInitialDM.Storage = InitStor;\r\n            Grapevine.Root.ZoneInitialDM.Add(InitialDM);\r\n\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n\n",
                           "Parameters": [
                             {
                               "Key": "UseExtraZone",
@@ -26979,7 +27047,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Slurp.Root.ZoneNamesToGrowRootsIn.Add(\"Row\");\r\n            Slurp.Root.ZoneRootDepths.Add(600);\r\n            Slurp.Root.ZoneInitialDM.Add(10);\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                          "Code": "using Models.Functions;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Slurp.Root.ZoneNamesToGrowRootsIn.Add(\"Row\");\r\n            Slurp.Root.ZoneRootDepths.Add(600);\r\nBiomassDemand InitialDM = new BiomassDemand();\r\nConstant InitStruct = new Constant();\r\nInitStruct.FixedValue = 10;\r\nInitialDM.Structural = InitStruct;\r\nConstant InitMetab = new Constant();\r\nInitMetab.FixedValue = 0;\r\nInitialDM.Metabolic = InitMetab;\r\nConstant InitStor = new Constant();\r\nInitStor.FixedValue = 0;\r\nInitialDM.Storage = InitStor;\r\n            Slurp.Root.ZoneInitialDM.Add(InitialDM);\r\n\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n\n",
                           "Parameters": [
                             {
                               "Key": "UseExtraZone",
@@ -30993,7 +31061,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Grapevine.Root.ZoneNamesToGrowRootsIn.Add(\"Alley\");\r\n            Grapevine.Root.ZoneRootDepths.Add(2600);\r\n            Grapevine.Root.ZoneInitialDM.Add(10);\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                          "Code": "using Models.Functions;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Grapevine.Root.ZoneNamesToGrowRootsIn.Add(\"Alley\");\r\n            Grapevine.Root.ZoneRootDepths.Add(2600);\r\nBiomassDemand InitialDM = new BiomassDemand();\r\nConstant InitStruct = new Constant();\r\nInitStruct.FixedValue = 10;\r\nInitialDM.Structural = InitStruct;\r\nConstant InitMetab = new Constant();\r\nInitMetab.FixedValue = 0;\r\nInitialDM.Metabolic = InitMetab;\r\nConstant InitStor = new Constant();\r\nInitStor.FixedValue = 0;\r\nInitialDM.Storage = InitStor;\r\n            Grapevine.Root.ZoneInitialDM.Add(InitialDM);\r\n\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n\n",
                           "Parameters": [
                             {
                               "Key": "UseExtraZone",
@@ -31298,7 +31366,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Slurp.Root.ZoneNamesToGrowRootsIn.Add(\"Row\");\r\n            Slurp.Root.ZoneRootDepths.Add(600);\r\n            Slurp.Root.ZoneInitialDM.Add(10);\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                          "Code": "using Models.Functions;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Slurp.Root.ZoneNamesToGrowRootsIn.Add(\"Row\");\r\n            Slurp.Root.ZoneRootDepths.Add(600);\r\nBiomassDemand InitialDM = new BiomassDemand();\r\nConstant InitStruct = new Constant();\r\nInitStruct.FixedValue = 10;\r\nInitialDM.Structural = InitStruct;\r\nConstant InitMetab = new Constant();\r\nInitMetab.FixedValue = 0;\r\nInitialDM.Metabolic = InitMetab;\r\nConstant InitStor = new Constant();\r\nInitStor.FixedValue = 0;\r\nInitialDM.Storage = InitStor;\r\n            Slurp.Root.ZoneInitialDM.Add(InitialDM);\r\n\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n\n",
                           "Parameters": [
                             {
                               "Key": "UseExtraZone",
@@ -34280,7 +34348,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
-              "Name": "Grape_Seaview_2Cane",
+              "Name": "Seaview_2Cane",
               "Children": [
                 {
                   "$type": "Models.Clock, Models",
@@ -34550,7 +34618,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Grapevine.Root.ZoneNamesToGrowRootsIn.Add(\"Alley\");\r\n            Grapevine.Root.ZoneRootDepths.Add(2600);\r\n            Grapevine.Root.ZoneInitialDM.Add(10);\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                      "Code": "using Models.Functions;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Grapevine.Root.ZoneNamesToGrowRootsIn.Add(\"Alley\");\r\n            Grapevine.Root.ZoneRootDepths.Add(2600);\r\nBiomassDemand InitialDM = new BiomassDemand();\r\nConstant InitStruct = new Constant();\r\nInitStruct.FixedValue = 10;\r\nInitialDM.Structural = InitStruct;\r\nConstant InitMetab = new Constant();\r\nInitMetab.FixedValue = 0;\r\nInitialDM.Metabolic = InitMetab;\r\nConstant InitStor = new Constant();\r\nInitStor.FixedValue = 0;\r\nInitialDM.Storage = InitStor;\r\n            Grapevine.Root.ZoneInitialDM.Add(InitialDM);\r\n\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n\n",
                       "Parameters": [
                         {
                           "Key": "UseExtraZone",
@@ -34866,7 +34934,7 @@
                               "LLMetadata": null,
                               "KLMetadata": null,
                               "XFMetadata": null,
-                              "Name": "SimpleFruitTreeSoil",
+                              "Name": "GrapevineSoil",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -35366,7 +35434,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Slurp.Root.ZoneNamesToGrowRootsIn.Add(\"Row\");\r\n            Slurp.Root.ZoneRootDepths.Add(600);\r\n            Slurp.Root.ZoneInitialDM.Add(10);\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                      "Code": "using Models.Functions;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Slurp.Root.ZoneNamesToGrowRootsIn.Add(\"Row\");\r\n            Slurp.Root.ZoneRootDepths.Add(600);\r\nBiomassDemand InitialDM = new BiomassDemand();\r\nConstant InitStruct = new Constant();\r\nInitStruct.FixedValue = 10;\r\nInitialDM.Structural = InitStruct;\r\nConstant InitMetab = new Constant();\r\nInitMetab.FixedValue = 0;\r\nInitialDM.Metabolic = InitMetab;\r\nConstant InitStor = new Constant();\r\nInitStor.FixedValue = 0;\r\nInitialDM.Storage = InitStor;\r\n            Slurp.Root.ZoneInitialDM.Add(InitialDM);\r\n\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n\n",
                       "Parameters": [
                         {
                           "Key": "UseExtraZone",
@@ -35899,7 +35967,7 @@
                               "LLMetadata": null,
                               "KLMetadata": null,
                               "XFMetadata": null,
-                              "Name": "SimpleFruitTreeSoil",
+                              "Name": "GrapevineSoil",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -37106,7 +37174,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
-              "Name": "Grape_Seaview_4Cane",
+              "Name": "Seaview_4Cane",
               "Children": [
                 {
                   "$type": "Models.Clock, Models",
@@ -37376,7 +37444,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Grapevine.Root.ZoneNamesToGrowRootsIn.Add(\"Alley\");\r\n            Grapevine.Root.ZoneRootDepths.Add(2600);\r\n            Grapevine.Root.ZoneInitialDM.Add(10);\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                      "Code": "using Models.Functions;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Grapevine.Root.ZoneNamesToGrowRootsIn.Add(\"Alley\");\r\n            Grapevine.Root.ZoneRootDepths.Add(2600);\r\nBiomassDemand InitialDM = new BiomassDemand();\r\nConstant InitStruct = new Constant();\r\nInitStruct.FixedValue = 10;\r\nInitialDM.Structural = InitStruct;\r\nConstant InitMetab = new Constant();\r\nInitMetab.FixedValue = 0;\r\nInitialDM.Metabolic = InitMetab;\r\nConstant InitStor = new Constant();\r\nInitStor.FixedValue = 0;\r\nInitialDM.Storage = InitStor;\r\n            Grapevine.Root.ZoneInitialDM.Add(InitialDM);\r\n\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n\n",
                       "Parameters": [
                         {
                           "Key": "UseExtraZone",
@@ -37692,7 +37760,7 @@
                               "LLMetadata": null,
                               "KLMetadata": null,
                               "XFMetadata": null,
-                              "Name": "SimpleFruitTreeSoil",
+                              "Name": "GrapevineSoil",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -38192,7 +38260,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Slurp.Root.ZoneNamesToGrowRootsIn.Add(\"Row\");\r\n            Slurp.Root.ZoneRootDepths.Add(600);\r\n            Slurp.Root.ZoneInitialDM.Add(10);\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                      "Code": "using Models.Functions;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Slurp.Root.ZoneNamesToGrowRootsIn.Add(\"Row\");\r\n            Slurp.Root.ZoneRootDepths.Add(600);\r\nBiomassDemand InitialDM = new BiomassDemand();\r\nConstant InitStruct = new Constant();\r\nInitStruct.FixedValue = 10;\r\nInitialDM.Structural = InitStruct;\r\nConstant InitMetab = new Constant();\r\nInitMetab.FixedValue = 0;\r\nInitialDM.Metabolic = InitMetab;\r\nConstant InitStor = new Constant();\r\nInitStor.FixedValue = 0;\r\nInitialDM.Storage = InitStor;\r\n            Slurp.Root.ZoneInitialDM.Add(InitialDM);\r\n\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n\n",
                       "Parameters": [
                         {
                           "Key": "UseExtraZone",
@@ -38725,7 +38793,7 @@
                               "LLMetadata": null,
                               "KLMetadata": null,
                               "XFMetadata": null,
-                              "Name": "SimpleFruitTreeSoil",
+                              "Name": "GrapevineSoil",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -39932,7 +40000,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
-              "Name": "Grape_Seaview_08",
+              "Name": "Seaview_4Cane08",
               "Children": [
                 {
                   "$type": "Models.Clock, Models",
@@ -40202,7 +40270,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Grapevine.Root.ZoneNamesToGrowRootsIn.Add(\"Alley\");\r\n            Grapevine.Root.ZoneRootDepths.Add(2600);\r\n            Grapevine.Root.ZoneInitialDM.Add(10);\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                      "Code": "using Models.Functions;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Grapevine.Root.ZoneNamesToGrowRootsIn.Add(\"Alley\");\r\n            Grapevine.Root.ZoneRootDepths.Add(2600);\r\nBiomassDemand InitialDM = new BiomassDemand();\r\nConstant InitStruct = new Constant();\r\nInitStruct.FixedValue = 10;\r\nInitialDM.Structural = InitStruct;\r\nConstant InitMetab = new Constant();\r\nInitMetab.FixedValue = 0;\r\nInitialDM.Metabolic = InitMetab;\r\nConstant InitStor = new Constant();\r\nInitStor.FixedValue = 0;\r\nInitialDM.Storage = InitStor;\r\n            Grapevine.Root.ZoneInitialDM.Add(InitialDM);\r\n\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n\n",
                       "Parameters": [
                         {
                           "Key": "UseExtraZone",
@@ -40518,7 +40586,7 @@
                               "LLMetadata": null,
                               "KLMetadata": null,
                               "XFMetadata": null,
-                              "Name": "SimpleFruitTreeSoil",
+                              "Name": "GrapevineSoil",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -41018,7 +41086,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Slurp.Root.ZoneNamesToGrowRootsIn.Add(\"Row\");\r\n            Slurp.Root.ZoneRootDepths.Add(600);\r\n            Slurp.Root.ZoneInitialDM.Add(10);\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                      "Code": "using Models.Functions;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Slurp.Root.ZoneNamesToGrowRootsIn.Add(\"Row\");\r\n            Slurp.Root.ZoneRootDepths.Add(600);\r\nBiomassDemand InitialDM = new BiomassDemand();\r\nConstant InitStruct = new Constant();\r\nInitStruct.FixedValue = 10;\r\nInitialDM.Structural = InitStruct;\r\nConstant InitMetab = new Constant();\r\nInitMetab.FixedValue = 0;\r\nInitialDM.Metabolic = InitMetab;\r\nConstant InitStor = new Constant();\r\nInitStor.FixedValue = 0;\r\nInitialDM.Storage = InitStor;\r\n            Slurp.Root.ZoneInitialDM.Add(InitialDM);\r\n\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n\n",
                       "Parameters": [
                         {
                           "Key": "UseExtraZone",
@@ -41551,7 +41619,7 @@
                               "LLMetadata": null,
                               "KLMetadata": null,
                               "XFMetadata": null,
-                              "Name": "SimpleFruitTreeSoil",
+                              "Name": "GrapevineSoil",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
