@@ -20,7 +20,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(PastureActivityManage))]
     [Description("This model component specifies a relationship where the y value related to a change in running value as a function of x. This component tracks a value through time as modified by the specificed relationship.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/Relationships/RelationshipTracker.htm")]
+    [HelpUri(@"Content/Features/Relationships/RelationshipTracker.htm")]
     public class RelationshipTracker : Relationship, IValidatableObject
     {
         /// <summary>

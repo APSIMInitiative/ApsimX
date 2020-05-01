@@ -91,8 +91,6 @@ namespace Models.CLEM.Activities
             people = Resources.Labour();
             food = Resources.HumanFoodStore();
             bankAccount = Resources.GetResourceItem(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as FinanceType;
-
-            Market = FindMarket();
         }
 
         /// <summary>
@@ -114,8 +112,7 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            Market market = Apsim.Children(Apsim.Parent(this, typeof(Simulation)), typeof(Market)).FirstOrDefault() as Market;
-            if(market != null & bankAccount is null)
+            if(Resources.FindMarket != null & bankAccount is null)
             {
                 string[] memberNames = new string[] { "AccountName" };
                 results.Add(new ValidationResult($"A valid bank account must be supplied for purchases of food from the market used by [a="+this.Name+"].", memberNames));
@@ -224,9 +221,7 @@ namespace Models.CLEM.Activities
 
             // for each market
             List<HumanFoodParcel> marketFoodParcels = new List<HumanFoodParcel>();
-            foreach (Market market in Apsim.Children(Apsim.Parent(this, typeof(Simulation)), typeof(Market)).Cast<Market>().ToList())
-            {
-                ResourcesHolder resources = Apsim.Child(market, typeof(ResourcesHolder)) as ResourcesHolder;
+                ResourcesHolder resources = Resources.FindMarket.Resources;
                 if (resources != null)
                 {
                     HumanFoodStore food = resources.HumanFoodStore();
@@ -246,7 +241,6 @@ namespace Models.CLEM.Activities
                         }
                     }
                 }
-            }
             foodParcels.AddRange(marketFoodParcels.OrderBy(a => a.FoodStore.Price(PurchaseOrSalePricingStyleType.Purchase).PricePerPacket));
 
             double fundsAvailable = double.PositiveInfinity;
@@ -635,14 +629,22 @@ namespace Models.CLEM.Activities
                                 Required = units * priceToUse.PacketSize,
                                 AllowTransmutation = false,
                                 Reason = "Sell excess",
-                                MarketTransactionMultiplier = 1
+                                MarketTransactionMultiplier = this.FarmMultiplier
                             };
                             foodStore.Remove(purchaseRequest);
 
                             // transfer money earned
                             if (bankAccount != null)
                             {
-                                bankAccount.Add(units * priceToUse.PricePerPacket, this, $"Sales {foodStore.Name}");
+                                ResourceRequest purchaseFinance = new ResourceRequest
+                                {
+                                    ActivityModel = this,
+                                    Required = units * priceToUse.PacketSize,
+                                    AllowTransmutation = false,
+                                    Reason = $"Sales {foodStore.Name}",
+                                    MarketTransactionMultiplier = this.FarmMultiplier
+                                };
+                                bankAccount.Add(purchaseFinance, this, $"Sales {foodStore.Name}");
                             }
                         } 
                     }
@@ -718,15 +720,18 @@ namespace Models.CLEM.Activities
             html += "Hired labour <span class=\"setvalue\">" + ((IncludeHiredLabour) ? "is" : "is not") + "</span> included";
             html += "</div>";
 
-
-            Market marketPlace = FindMarket();
-            if (marketPlace != null)
+            // find a market place if present
+            Simulation sim = Apsim.Parent(this, typeof(Simulation)) as Simulation;
+            if (sim != null)
             {
-                html += "<div class=\"activityentry\">";
-                html += "Food with be bought and sold through the market <span class=\"setvalue\">"+marketPlace.Name+"</span>";
-                html += "</div>";
+                Market marketPlace = Apsim.Child(sim, typeof(Market)) as Market;
+                if (marketPlace != null)
+                {
+                    html += "<div class=\"activityentry\">";
+                    html += "Food with be bought and sold through the market <span class=\"setvalue\">" + marketPlace.Name + "</span>";
+                    html += "</div>";
+                }
             }
-
             return html;
         }
 

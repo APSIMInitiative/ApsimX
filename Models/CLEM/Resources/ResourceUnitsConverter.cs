@@ -59,17 +59,6 @@ namespace Models.CLEM.Resources
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            //html += "\n<div class=\"activityentry\">Converts <span class=\"resourcelink\">" + this.Parent.Name+"</span> by a factor of ";
-            //if (Factor <= 0)
-            //{
-            //    html += "<span class=\"errorlink\">[VALUE NOT SET]</span>";
-            //}
-            //else
-            //{
-            //    html += "<span class=\"setvalue\">" + Factor.ToString("0.#####") + "</span>";
-            //}
-            //html += "</div>";
-
             html += "\n<div class=\"activityentry\">1 ";
             if ((Parent as IResourceType).Units != null)
             {
