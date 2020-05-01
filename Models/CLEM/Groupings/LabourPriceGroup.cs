@@ -45,25 +45,6 @@ namespace Models.CLEM.Groupings
         }
 
         /// <summary>
-        /// Create a copy of the current instance
-        /// </summary>
-        /// <returns></returns>
-        public LabourPriceGroup Clone()
-        {
-            LabourPriceGroup clone = new LabourPriceGroup()
-            {
-                Value = this.Value
-            };
-
-            foreach (LabourFilter item in this.Children.OfType<LabourFilter>())
-            {
-                clone.Children.Add(item.Clone());
-            }
-
-            return clone;
-        }
-
-        /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
         /// <param name="formatForParentControl">Use full verbose description</param>

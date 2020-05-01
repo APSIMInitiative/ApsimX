@@ -31,21 +31,6 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Create a copy of the current instance
-        /// </summary>
-        /// <returns></returns>
-        public LabourPricing Clone()
-        {
-            LabourPricing clone = new LabourPricing();
-
-            foreach (LabourPriceGroup item in this.Children.OfType<LabourPriceGroup>())
-            {
-                clone.Children.Add(item.Clone());
-            }
-            return clone;
-        }
-
-        /// <summary>
         /// Validate model
         /// </summary>
         /// <param name="validationContext"></param>
