@@ -23,23 +23,15 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/Human food store/HumanFoodStore.htm")]
     public class HumanFoodStore: ResourceBaseWithTransactions
     {
-        /// <summary>
-        /// Current state of this resource.
-        /// </summary>
-        [XmlIgnore]
-        public List<HumanFoodStoreType> Items;
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Items = new List<HumanFoodStoreType>();
             foreach (HumanFoodStoreType childModel in Apsim.Children(this, typeof(HumanFoodStoreType)))
             {
                 childModel.TransactionOccurred += Resource_TransactionOccurred;
-                Items.Add(childModel);
             }
         }
 
@@ -53,11 +45,6 @@ namespace Models.CLEM.Resources
             {
                 childModel.TransactionOccurred -= Resource_TransactionOccurred;
             }
-            if (Items != null)
-            {
-                Items.Clear();
-            }
-            Items = null;
         }
 
         #region Transactions
@@ -81,6 +68,17 @@ namespace Models.CLEM.Resources
         {
             LastTransaction = (e as TransactionEventArgs).Transaction;
             OnTransactionOccurred(e);
+        }
+
+        /// <summary>
+        /// Add all events when a new child is added to this resource in run time
+        /// </summary>
+        /// <param name="child"></param>
+        public override void AddNewResourceType(IResourceWithTransactionType child)
+        {
+            (child as HumanFoodStoreType).Pools.Clear();
+            child.TransactionOccurred += Resource_TransactionOccurred;
+            this.Children.Add(child as Model);
         }
 
         #endregion

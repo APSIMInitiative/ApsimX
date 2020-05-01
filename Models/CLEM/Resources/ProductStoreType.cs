@@ -40,6 +40,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         public double Amount { get { return amount; } }
         double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
+        [NonSerialized]
         private double roundedAmount;
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

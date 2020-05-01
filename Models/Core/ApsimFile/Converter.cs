@@ -19,7 +19,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 95; } }
+        public static int LatestVersion { get { return 96; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -225,7 +225,7 @@
                 JsonUtilities.AddConstantFunctionIfNotExists(model, "StomatalConductanceCO2Modifier", "1.0");
             }
         }
-        
+
         /// <summary>
         /// </summary>
         /// <param name="root">The root JSON token.</param>
@@ -602,7 +602,7 @@
 
                     var storedAsPPM = sample["NO3Units"]?.ToString() == "0" ||
                                       sample["NO3Units"]?.ToString() == "ppm" ||
-                                      sample["NO3Units"] == null; 
+                                      sample["NO3Units"] == null;
 
                     nitrogenValue["Values"] = array;
                     nitrogenValue["StoredAsPPM"] = storedAsPPM;
@@ -1396,7 +1396,7 @@
                     genotypes[i]["$type"] = "Models.GrazPlan.SingleGenotypeInits, Models";
                     double dr = Convert.ToDouble(genotypes[i]["DeathRate"]);
                     double drw = Convert.ToDouble(genotypes[i]["WnrDeathRate"]);
-                    genotypes[i]["DeathRate"] = new JArray(new double[] {dr , drw });
+                    genotypes[i]["DeathRate"] = new JArray(new double[] { dr, drw });
                     genotypes[i]["PotFleeceWt"] = genotypes[i]["RefFleeceWt"];
                     genotypes[i]["Conceptions"] = genotypes[i]["Conception"];
                     genotypes[i]["GenotypeName"] = genotypes[i]["Name"];
@@ -1437,7 +1437,7 @@
 
             foreach (var graph in JsonUtilities.ChildrenOfType(root, "Series"))
             {
-                if(graph["XFieldName"] != null)
+                if (graph["XFieldName"] != null)
                     graph["XFieldName"] = graph["XFieldName"].ToString().Replace(".Value()", "");
                 if (graph["X2FieldName"] != null)
                     graph["X2FieldName"] = graph["X2FieldName"].ToString().Replace(".Value()", "");
@@ -1495,7 +1495,7 @@
             {
                 TreeProxy["ShadeModifiers"] = TreeProxy["TreeLeafAreas"];
                 // ShadeModifiers is sometimes null (not sure why) so fill it with 1s using Heights to get array length
-                var SM = TreeProxy["Heights"].Values<double>().ToArray();  
+                var SM = TreeProxy["Heights"].Values<double>().ToArray();
                 for (int i = 0; i < SM.Count(); i++)
                     SM[i] = 1.0;
                 TreeProxy["ShadeModifiers"] = new JArray(SM);
@@ -1619,7 +1619,7 @@
                 {
                     LSP["$type"] = "Models.LifeCycle.LifeStageMortality, Models";
                 }
-                
+
             }
 
             foreach (JObject LSRP in JsonUtilities.ChildrenRecursively(root, "LifeStageReproductionProcess"))
@@ -1651,7 +1651,7 @@
                     VariableReference varRef = new VariableReference();
                     varRef.Name = "CriticalNConc";
                     varRef.VariableName = "[Root].MinimumNConc";
-                    JsonUtilities.AddModel(r, varRef);                    
+                    JsonUtilities.AddModel(r, varRef);
                 }
             }
         }
@@ -1833,7 +1833,7 @@
                 manager.Save();
             }
         }
-		
+
         /// <summary>
         /// Replace SoilWater model with WaterBalance model.
         /// </summary>
@@ -1948,7 +1948,7 @@
             };
             JsonUtilities.RenameVariables(root, changes);
         }
-		
+
         /// <summary>
         /// Change names of a couple of parameters in SimpleGrazing.
         /// </summary>
@@ -2044,7 +2044,7 @@
             {
                 new Tuple<string, string>(".GenotypeNamesAll()",  ".Genotypes.Names.ToArray()")
             };
-            if (JsonUtilities.RenameVariables(root,  changes))
+            if (JsonUtilities.RenameVariables(root, changes))
             {
                 // The replacement is in a manager. Need to make sure that LINQ is added as a using
                 // because the .ToArray() depends on it.
@@ -2096,7 +2096,7 @@
                 bool ContainsZoneInitalDM = false;
                 for (int i = 0; i < lines.Count(); i++)
                 {
-                    if (lines[i].Contains("Root.ZoneInitialDM.Add(") && (ContainsZoneInitalDM==false))
+                    if (lines[i].Contains("Root.ZoneInitialDM.Add(") && (ContainsZoneInitalDM == false))
                     {
                         ContainsZoneInitalDM = true;
                         string InitialDM = lines[i].Split('(')[1].Replace(";", "").Replace(")", "").Replace("\r", "").Replace("\n", "");
@@ -2133,6 +2133,52 @@
             }
         }
 
+        /// <summary>
+        /// Add RootShape to all simulations.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion96(JObject root, string fileName)
+        {
+            foreach (JObject thisRoot in JsonUtilities.ChildrenRecursively(root, "Root"))
+            {
+                if (JsonUtilities.ChildrenRecursively(thisRoot, "RootShapeCylindre").Count == 0 &&
+                    JsonUtilities.ChildrenRecursively(thisRoot, "RootShapeSemiCircle").Count == 0 &&
+                    JsonUtilities.ChildrenRecursively(thisRoot, "RootShapeSemiCircleSorghum").Count == 0 &&
+                    JsonUtilities.ChildrenRecursively(thisRoot, "RootShapeSemiEllipse").Count == 0)
+                {
+                    JArray rootChildren = thisRoot["Children"] as JArray;
+                    if (rootChildren != null && rootChildren.Count > 0)
+                    {
+                        JToken thisPlant = JsonUtilities.Parent(thisRoot);
+
+                        JArray rootShapeChildren = new JArray();
+                        string type;
+
+                        if (thisPlant["CropType"].ToString() == "Sorghum")
+                        {
+                            type = "Models.Functions.RootShape.RootShapeSemiCircleSorghum, Models";
+                        }
+                        else if (thisPlant["CropType"].ToString() == "C4Maize")
+                        {
+                            type = "Models.Functions.RootShape.RootShapeSemiCircle, Models";
+                        }
+                        else
+                        {
+                            type = "Models.Functions.RootShape.RootShapeCylindre, Models";
+                        }
+
+                        JObject rootShape = new JObject
+                        {
+                            ["$type"] = type,
+                            ["Name"] = "RootShape",
+                            ["Children"] = rootShapeChildren
+                        };
+                        rootChildren.AddFirst(rootShape);
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Add progeny destination phase and mortality function.
@@ -2385,7 +2431,7 @@
 
                 if (manager.Replace("Soil.SoilNitrogen.dlt_n_min_res", "SurfaceResidueDecomposition.MineralisedN"))
                     manager.AddDeclaration("CarbonFlow", "SurfaceResidueDecomposition", new string[] { "[LinkByPath(Path=\"[Nutrient].SurfaceResidue.Decomposition\")]" });
-                
+
                 manager.Replace("SoilNitrogen.MineralisedN", "Nutrient.MineralisedN");
 
                 manager.Replace("SoilNitrogen.TotalN", "Nutrient.TotalN");

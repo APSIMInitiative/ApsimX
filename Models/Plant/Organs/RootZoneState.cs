@@ -24,10 +24,10 @@ namespace Models.PMF.Organs
         public ISolute NH4 = null;
 
         /// <summary>The parent plant</summary>
-        private Plant plant = null;
+        public Plant plant = null;
 
         /// <summary>The root organ</summary>
-        private  Root root = null;
+        public Root root = null;
 
         /// <summary>The root front velocity function</summary>
         private IFunction rootFrontVelocity;
@@ -90,6 +90,9 @@ namespace Models.PMF.Organs
         public double Depth { get; set; }
 
         /// <summary>Gets the RootFront</summary>
+        public double RootLength { get { return Depth - plant.SowingData.Depth; } }
+
+        /// <summary>Gets the RootFront</summary>
         public double RootFront { get; set; }
         /// <summary>Gets the RootFront</summary>
         public double RootSpread { get; set; }
@@ -97,6 +100,16 @@ namespace Models.PMF.Organs
         public double LeftDist { get; set; }
         /// <summary>Gets the RootFront</summary>
         public double RightDist { get; set; }
+
+        /// <summary>Gets the RootProportions</summary>
+        public double[] RootProportions { get; set; }
+
+        /// <summary>Gets the LLModifier for leaf angles != RootAngleBase</summary>
+        public double[] LLModifier { get; set; }
+
+        /// <summary>Soil area occipied by roots</summary>
+        [Units("m2")]
+        public double RootArea { get; set; }
 
         /// <summary>Gets or sets AvailableSW during SW Uptake
         /// Old Sorghum does actual uptake at end of day
@@ -175,6 +188,7 @@ namespace Models.PMF.Organs
                 LayerLive[layer].MetabolicWt = toMetabolic[layer] * population;
                 LayerLive[layer].StorageWt = toStorage[layer] * population;
                 LayerLive[layer].StructuralN = LayerLive[layer].StructuralWt * maxNConc;
+                LLModifier[layer] = 1;
             }
 
             if (plant.SowingData != null)
@@ -209,6 +223,8 @@ namespace Models.PMF.Organs
             NitUptake = null;
             DeltaNO3 = new double[soil.Thickness.Length];
             DeltaNH4 = new double[soil.Thickness.Length];
+            RootProportions = new double[soil.Thickness.Length];
+            LLModifier = new double[soil.Thickness.Length];
 
             Depth = 0.0;
 
@@ -274,14 +290,19 @@ namespace Models.PMF.Organs
             Depth = Math.Min(Depth, MaxDepth);
 
             //RootFront - needed by sorghum
-            if(root.RootFrontCalcSwitch?.Value() == 1)
+            if (root.RootFrontCalcSwitch?.Value() == 1)
             {
                 var dltRootFront = rootFrontVelocity.Value(RootLayer) * rootDepthWaterStress * xf[RootLayer];
 
                 double maxFront = Math.Sqrt(Math.Pow(Depth, 2) + Math.Pow(LeftDist, 2));
                 dltRootFront = Math.Min(dltRootFront, maxFront - RootFront);
-                RootFront = RootFront + dltRootFront;
+                RootFront += dltRootFront;
             }
+            else
+            {
+                RootFront = Depth;
+            }
+            root.RootShape.CalcRootProportionInLayers(this);
         }
         /// <summary>
         /// Calculate Root Activity Values for water and nitrogen
@@ -294,7 +315,7 @@ namespace Models.PMF.Organs
                 if (layer <= soil.LayerIndexOfDepth(Depth))
                     if (LayerLive[layer].Wt > 0)
                     {
-                        RAw[layer] = - WaterUptake[layer] / LayerLive[layer].Wt
+                        RAw[layer] = -WaterUptake[layer] / LayerLive[layer].Wt
                                    * soil.Thickness[layer]
                                    * soil.ProportionThroughLayer(layer, Depth);
                         RAw[layer] = Math.Max(RAw[layer], 1e-20);  // Make sure small numbers to avoid lack of info for partitioning

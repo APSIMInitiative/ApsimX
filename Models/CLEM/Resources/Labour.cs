@@ -167,7 +167,7 @@ namespace Models.CLEM.Resources
             // clone pricelist so model can modify if needed and not affect initial parameterisation
             if (Apsim.Children(this, typeof(LabourPricing)).Count() > 0)
             {
-                PayList = (Apsim.Children(this, typeof(LabourPricing)).FirstOrDefault() as LabourPricing).Clone();
+                PayList = Apsim.Clone(Apsim.Children(this, typeof(LabourPricing)).FirstOrDefault()) as LabourPricing;
             }
         }
 
