@@ -92,15 +92,7 @@
             overrides.Reverse();
 
             // Convert the overrides into an AnimalParamSet by applying all overrides from general to specific.
-            parameters = new AnimalParameterSet();
-            parameters.Name = Name;
-            if (AnimalType == "cattle")
-                parameters.Animal = GrazType.AnimalType.Cattle;
-            else if (AnimalType == "sheep")
-                parameters.Animal = GrazType.AnimalType.Sheep;
-            overrides.ForEach(genotype => genotype.Replace(parameters));
-
-            return parameters;
+            return new AnimalParameterSet(Name, AnimalType, overrides);
         }
 
         /// <summary>

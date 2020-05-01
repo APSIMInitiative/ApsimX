@@ -67,41 +67,6 @@
 
 
         /// <summary>
-        /// Create a genotype cross.                                      
-        /// </summary>
-        /// <param name="nameOfNewGenotype">Name of new genotype. Can be null.</param>
-        /// <param name="damBreedName">Dam breed name.</param>
-        /// <param name="damProportion">Proportion dam.</param>
-        /// <param name="sireBreedName">Sire breed name.</param>
-        /// <param name="sireProportion">Proportion sire.</param>
-        public AnimalParameterSet CreateGenotypeCross(string nameOfNewGenotype,
-                                                  string damBreedName, double damProportion,
-                                                  string sireBreedName, double sireProportion)
-        {
-            if (damProportion + sireProportion != 1)
-                throw new Exception("When creating a cross breed the total proportions must be equal to one.");
-
-            var damBreedGenotype = Get(damBreedName);
-            if (damBreedGenotype == null)
-                throw new Exception($"Cannot find a stock genotype named {damBreedName}");
-            var damBreed = damBreedGenotype.Parameters;
-            damBreed.DeriveParams();
-            damBreed.Initialise();
-
-            var sireBreedGenotype = Get(sireBreedName);
-            var sireBreed = damBreedGenotype.Parameters;
-            sireBreed.DeriveParams();
-            sireBreed.Initialise();
-
-            AnimalParameterSet newGenotype = AnimalParameterSet.BlendParameterSets(nameOfNewGenotype, damBreed, sireBreed, damProportion, sireProportion);
-
-            // Add the new genotype into our list.
-            Add(new Genotype(newGenotype));
-
-            return newGenotype;
-        }
-
-        /// <summary>
         /// Read a parameter set and append to the json array.
         /// </summary>
         /// <param name="parameterNode">The XML parameter node to convert.</param>

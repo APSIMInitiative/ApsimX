@@ -61,7 +61,7 @@
 
             // Clone the genotype and change it.
             friesian = Apsim.Clone(friesian) as AnimalParameterSet;
-            friesian.BreedSRW = 1;
+            friesian.InitialiseWithParams(srw: 1);
 
             // Give it to the genotypes instance as a user genotype.
             genotypes.Add(friesian);
@@ -117,12 +117,26 @@
         [Test]
         public void CreateAnimalCross()
         {
+            var stock = new Stock();
+            var genotypeCross = new GenotypeCross()
+            { 
+                Name = "NewGenotype",
+                DamBreed = "Friesian",
+                Generation = 1,
+                SireBreed = "Jersey",
+            };
+
+            // Inject the stock link into genotype cross.
+            Utilities.InjectLink(genotypeCross, "stock", stock);
+
+            // Call the StartOfSimulation event in genotype cross.
+            Utilities.CallEvent(genotypeCross, "StartOfSimulation");
+
             // Get a friesian genotype.
-            var genotypes = new Genotypes();
-            var animalParamSet = genotypes.CreateGenotypeCross("NewGenotype", "Friesian", 0.5, "Jersey", 0.5);
+            var animalParamSet = stock.Genotypes.Get("NewGenotype").Parameters;
 
             // Make sure we can retrieve the new genotype.
-            Assert.IsNotNull(genotypes.Get("NewGenotype"));
+            Assert.IsNotNull(animalParamSet);
 
             Assert.AreEqual("Andrew Moore", animalParamSet.sEditor);
             Assert.AreEqual("30 Jan 2013", animalParamSet.sEditDate);

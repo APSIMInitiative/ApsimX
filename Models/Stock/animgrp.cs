@@ -1735,7 +1735,7 @@ namespace Models.GrazPlan
         {
             if (FMatedTo != null)
             {
-                return AnimalParameterSet.BlendParameterSets(null, AParams, FMatedTo, 0.5, 0.5);
+                return new AnimalParameterSet(null, AParams, FMatedTo, 0.5, 0.5);
             }
             else
                 return new AnimalParameterSet( AParams);
@@ -2720,8 +2720,8 @@ namespace Models.GrazPlan
             youngParams = Parents.constructOffspringParams();
             Number = Parents.NoOffspring * Parents.FemaleNo;
             iAgeDays = Parents.DaysLactating;
-            YoungWoolWt = 0.5 * (AnimalParameterSet.fDefaultFleece(Parents.AParams, iAgeDays, GrazType.ReproType.Male, iAgeDays)
-                                  + AnimalParameterSet.fDefaultFleece(Parents.AParams, iAgeDays, GrazType.ReproType.Empty, iAgeDays));
+            YoungWoolWt = 0.5 * (StockUtilities.DefaultFleece(Parents.AParams, iAgeDays, GrazType.ReproType.Male, iAgeDays)
+                                  + StockUtilities.DefaultFleece(Parents.AParams, iAgeDays, GrazType.ReproType.Empty, iAgeDays));
 
             Construct(youngParams, GrazType.ReproType.Male, Number, iAgeDays, LiveWt, YoungWoolWt, RandFactory, true);
 
@@ -3203,16 +3203,16 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="System"></param>
         /// <returns></returns>
-        public double fConditionScore(AnimalParameterSet.Cond_System System) { return AnimalParameterSet.Condition2CondScore(Condition, System); }
+        public double fConditionScore(StockUtilities.Cond_System System) { return StockUtilities.Condition2CondScore(Condition, System); }
         
         /// <summary>
         /// Set the condition score
         /// </summary>
         /// <param name="fValue"></param>
         /// <param name="System"></param>
-        public void setConditionScore(double fValue, AnimalParameterSet.Cond_System System)
+        public void setConditionScore(double fValue, StockUtilities.Cond_System System)
         {
-            BaseWeight = NormalWt * AnimalParameterSet.CondScore2Condition(fValue, System);
+            BaseWeight = NormalWt * StockUtilities.CondScore2Condition(fValue, System);
             Calc_Weights();
         }
 
@@ -5074,12 +5074,12 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="condSystem"></param>
         /// <returns>Condition score change</returns>
-        public double ConditionScoreChange(AnimalParameterSet.Cond_System condSystem = AnimalParameterSet.Cond_System.csSYSTEM1_5)
+        public double ConditionScoreChange(StockUtilities.Cond_System condSystem = StockUtilities.Cond_System.csSYSTEM1_5)
         {
             double newCondition;
 
             newCondition = this.BaseWeight / this.NormalWeightFunc(this.MeanAge + 1, Math.Max(this.BaseWeight, this.MaxPrevWt), this.AParams.GrowthC[3]);
-            return AnimalParameterSet.Condition2CondScore(newCondition, condSystem) - AnimalParameterSet.Condition2CondScore(this.Condition, condSystem);
+            return StockUtilities.Condition2CondScore(newCondition, condSystem) - StockUtilities.Condition2CondScore(this.Condition, condSystem);
         }
 
         /// <summary>

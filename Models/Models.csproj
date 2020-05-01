@@ -331,6 +331,7 @@
     <Compile Include="Stock\Genotype.cs" />
     <Compile Include="Stock\GenotypeCross.cs" />
     <Compile Include="Stock\Genotypes.cs" />
+    <Compile Include="Stock\StockUtilities.cs" />
     <Compile Include="Storage\Checkpoint.cs" />
     <Compile Include="Storage\WriteTableCommand.cs" />
     <Compile Include="Storage\DatabaseTableDetails.cs" />
@@ -538,7 +539,6 @@
     <Compile Include="Stock\stock_manage.cs" />
     <Compile Include="Stock\stock_padd.cs" />
     <Compile Include="Stock\stock_vars.cs" />
-    <Compile Include="Stock\xmlpsr.cs" />
     <Compile Include="Storage\DataStoreWriter.cs" />
     <Compile Include="Storage\InsertQuery.cs" />
     <Compile Include="Storage\Row.cs" />

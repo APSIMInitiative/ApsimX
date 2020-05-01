@@ -1477,7 +1477,7 @@
                     newGroup.Young = null;
                 }
                 if (this.IsGiven(animalInits.BirthCS))
-                    newGroup.BirthCondition = AnimalParameterSet.CondScore2Condition(animalInits.BirthCS, AnimalParameterSet.Cond_System.csSYSTEM1_5);
+                    newGroup.BirthCondition = StockUtilities.CondScore2Condition(animalInits.BirthCS, StockUtilities.Cond_System.csSYSTEM1_5);
             }
 
             if (newGroup.Young != null)
@@ -2162,7 +2162,7 @@
                 if (mainGenotype.Animal == GrazType.AnimalType.Cattle)
                     daysSinceShearing = 0;
                 else if (this.IsGiven(cohortsInfo.MeanGFW) && (cohortsInfo.FleeceDays == 0))
-                    daysSinceShearing = Convert.ToInt32(Math.Truncate(365.25 * cohortsInfo.MeanGFW / mainGenotype.PotentialGFW), CultureInfo.InvariantCulture);
+                    daysSinceShearing = Convert.ToInt32(Math.Truncate(365.25 * cohortsInfo.MeanGFW / mainGenotype.PotFleeceWt), CultureInfo.InvariantCulture);
                 else
                     daysSinceShearing = cohortsInfo.FleeceDays;
 
@@ -2180,7 +2180,7 @@
                     ageInfoList[cohortIdx].NormalBaseWt = this.GrowthCurve(ageInfoList[cohortIdx].AgeDays, cohortsInfo.ReproClass, mainGenotype);
 
                     // Estimate a default fleece weight based on time since shearing
-                    ageInfoList[cohortIdx].FleeceWt = AnimalParameterSet.fDefaultFleece(
+                    ageInfoList[cohortIdx].FleeceWt = StockUtilities.DefaultFleece(
                                                                                     mainGenotype,
                                                                                     ageInfoList[cohortIdx].AgeDays,
                                                                                     cohortsInfo.ReproClass,
@@ -2206,7 +2206,7 @@
                 if (this.IsGiven(cohortsInfo.MeanLiveWt))
                     baseWtScalar = (cohortsInfo.MeanLiveWt - cohortsInfo.MeanGFW) / meanNormalWt;
                 else if (this.IsGiven(cohortsInfo.CondScore))
-                    baseWtScalar = AnimalParameterSet.CondScore2Condition(cohortsInfo.CondScore);
+                    baseWtScalar = StockUtilities.CondScore2Condition(cohortsInfo.CondScore);
                 else
                     baseWtScalar = 1.0;
 
@@ -2243,7 +2243,7 @@
                             ageInfoList[cohortIdx].SizeAtMating = this.GrowthCurve(
                                                                                     ageInfoList[cohortIdx].AgeAtMating,
                                                                                     cohortsInfo.ReproClass,
-                                                                                    mainGenotype) / mainGenotype.fSexStdRefWt(cohortsInfo.ReproClass);
+                                                                                    mainGenotype) / mainGenotype.SexStdRefWt(cohortsInfo.ReproClass);
                         }
 
                         // binary search for the body condition at mating that yields the desired pregnancy rate
@@ -2309,7 +2309,7 @@
                             ageInfoList[cohortIdx].SizeAtMating = this.GrowthCurve(
                                                                                 ageInfoList[cohortIdx].AgeAtMating,
                                                                                 cohortsInfo.ReproClass,
-                                                                                mainGenotype) / mainGenotype.fSexStdRefWt(cohortsInfo.ReproClass);
+                                                                                mainGenotype) / mainGenotype.SexStdRefWt(cohortsInfo.ReproClass);
                         }
 
                         if (mainGenotype.Animal == GrazType.AnimalType.Sheep)
@@ -2416,7 +2416,7 @@
                                 animalInits.Weight = ageInfoList[cohortIdx].BaseWeight + ageInfoList[cohortIdx].FleeceWt;
                                 animalInits.MaxPrevWt = StdMath.DMISSING; // compute from cond_score
                                 animalInits.FleeceWt = ageInfoList[cohortIdx].FleeceWt;
-                                animalInits.FibreDiam = AnimalParameterSet.fDefaultMicron(
+                                animalInits.FibreDiam = StockUtilities.DefaultMicron(
                                                                                      mainGenotype,
                                                                                      animalInits.AgeDays,
                                                                                      animalInits.Sex,
@@ -2489,7 +2489,7 @@
                 {
                     liveWeight = this.GrowthCurve(animalInfo.AgeDays, animalInfo.Repro, agenotype);
                     if (animalInfo.CondScore > 0.0)
-                        liveWeight = liveWeight * AnimalParameterSet.CondScore2Condition(animalInfo.CondScore);
+                        liveWeight = liveWeight * StockUtilities.CondScore2Condition(animalInfo.CondScore);
                     if (agenotype.Animal == GrazType.AnimalType.Sheep)
                         liveWeight = liveWeight + animalInfo.GFW;
                 }
@@ -2507,7 +2507,7 @@
                 // Adjust the condition score if it has been given
                 if ((animalInfo.CondScore > 0.0) && (animalInfo.LiveWt > 0.0))        
                 {                                                                                                
-                    bodyCondition = AnimalParameterSet.CondScore2Condition(animalInfo.CondScore);
+                    bodyCondition = StockUtilities.CondScore2Condition(animalInfo.CondScore);
                     newGroup.WeightRangeForCond(
                                                 animalInfo.Repro, 
                                                 animalInfo.AgeDays,

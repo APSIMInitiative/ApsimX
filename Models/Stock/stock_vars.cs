@@ -471,10 +471,10 @@
                 genoValues[idx].SRW = parameters.BreedSRW;
                 genoValues[idx].DeathRate = parameters.AnnualDeaths(false);
                 genoValues[idx].WnrDeathRate = parameters.AnnualDeaths(true);
-                genoValues[idx].RefFleeceWt = parameters.PotentialGFW;
-                genoValues[idx].MaxFibreDiam = parameters.MaxMicrons;
+                genoValues[idx].RefFleeceWt = parameters.PotFleeceWt;
+                genoValues[idx].MaxFibreDiam = parameters.MaxFleeceDiam;
                 genoValues[idx].FleeceYield = parameters.FleeceYield;
-                genoValues[idx].PeakMilk = parameters.PotMilkYield;
+                genoValues[idx].PeakMilk = parameters.PeakMilk;
 
                 if (parameters.Animal == GrazType.AnimalType.Sheep)
                     Array.Resize(ref genoValues[idx].Conception, 3);
@@ -754,7 +754,7 @@
                                     break;
                                 case StockProps.prpBASE_WT: value = animalGroup.BaseWeight;
                                     break;
-                                case StockProps.prpCOND_SCORE: value = animalGroup.fConditionScore(AnimalParameterSet.Cond_System.csSYSTEM1_5);
+                                case StockProps.prpCOND_SCORE: value = animalGroup.fConditionScore(StockUtilities.Cond_System.csSYSTEM1_5);
                                     break;
                                 case StockProps.prpMAX_PREV_WT: value = animalGroup.MaxPrevWeight;
                                     break;
