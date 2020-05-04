@@ -205,13 +205,7 @@ namespace Models.PMF.Arbitrator
                 //old sorghum stores N03 in g/ms not kg/ha
                 var no3Diffusion = MathUtilities.Bound(swAvailFrac, 0.0, 1.0) * (zone.NO3N[layer] * kgha2gsm);
 
-                myZone.Diffusion[layer] = Math.Min(no3Diffusion, zone.NO3N[layer] * kgha2gsm);
-
-                if (layer == currentLayer)
-                {
-                    var proportion = myZone.soil.ProportionThroughLayer(currentLayer, myZone.Depth);
-                    myZone.Diffusion[layer] *= proportion;
-                }
+                myZone.Diffusion[layer] = Math.Min(no3Diffusion, zone.NO3N[layer] * kgha2gsm) * myZone.RootProportions[layer];
 
                 //NH4Supply[layer] = no3massFlow;
                 //onyl 2 fields passed in for returning data. 

@@ -248,7 +248,7 @@ namespace UserInterface.Presenters
         /// <param name="o">Object whose members will be retrieved.</param>
         private List<MemberInfo> GetMembers(object o)
         {
-            var members = o.GetType().GetMembers(BindingFlags.Instance | BindingFlags.Public).ToList();
+            var members = o.GetType().GetMembers(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly).ToList();
             members.RemoveAll(m => !Attribute.IsDefined(m, typeof(DescriptionAttribute)));
             var orderedMembers = members.OrderBy(m => ((DescriptionAttribute)m.GetCustomAttribute(typeof(DescriptionAttribute), true)).LineNumber).ToList();
             return orderedMembers;
