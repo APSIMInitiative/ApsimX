@@ -139,6 +139,7 @@ namespace Models.CLEM.Activities
                     saleValue += ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Sale);
                     saleWeight += ind.Weight;
                     ruminantHerd.RemoveRuminant(ind, this);
+                    head++;
                 }
             }
             else
@@ -214,7 +215,7 @@ namespace Models.CLEM.Activities
                             expenseRequest.Required = saleValue * item.Amount;
                             break;
                         default:
-                            throw new Exception(String.Format("PaymentStyle ({0}) is not supported for ({1}) in ({2})", item.PaymentStyle, item.Name, this.Name));
+                            throw new Exception(String.Format("PaymentStyle [{0}] is not supported for [{1}] in [{2}]", item.PaymentStyle, item.Name, this.Name));
                     }
                     expenseRequest.Reason = item.Name;
                     // uses bank account specified in the RuminantActivityFee

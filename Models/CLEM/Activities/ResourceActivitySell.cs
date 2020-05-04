@@ -66,7 +66,6 @@ namespace Models.CLEM.Activities
 
         private ResourcePricing price;
         private double unitsAvailable;
-        private FinanceType marketBank;
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -79,12 +78,11 @@ namespace Models.CLEM.Activities
             // get resource type to sell
             resourceToSell = Resources.GetResourceItem(this, ResourceTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
             // find market if present
-            Market market = FindMarket();
+            Market market = Resources.FindMarket;
             // find a suitable store to place resource
             if(market != null)
             {
-                marketBank = market.BankAccount;
-                resourceToPlace = market.Resources.GetResourceItem(this, ResourceTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
+                resourceToPlace = market.Resources.LinkToMarketResourceType(resourceToSell as CLEMResourceTypeBase) as IResourceType;
             }
             if(resourceToPlace != null)
             {

@@ -84,10 +84,10 @@
         [Units("g/m2/d")]
         private BiomassDemand nDemands = null;
 
-        /// <summary>The initial biomass dry matter weight</summary>
+        /// <summary>Wt in each pool when plant is initialised</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        [Units("g/m2")]
-        private IFunction initialWtFunction = null;
+        [Units("g/plant")]
+        public BiomassDemand InitialWt = null;
 
         /// <summary>The initial N Concentration</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
@@ -490,8 +490,9 @@
             {
                 Clear();
                 ClearBiomassFlows();
-                Live.StructuralWt = initialWtFunction.Value();
-                Live.StorageWt = 0.0;
+                Live.StructuralWt = InitialWt.Structural.Value();
+                Live.MetabolicWt = InitialWt.Metabolic.Value();
+                Live.StorageWt = InitialWt.Storage.Value();
                 if(initialNConcFunction != null)
                 {
                     Live.StructuralN = Live.StructuralWt * initialNConcFunction.Value();
@@ -499,7 +500,7 @@
                 else
                 {
                     Live.StructuralN = Live.StructuralWt * minimumNConc.Value();
-                    Live.StorageN = (initialWtFunction.Value() * maximumNConc.Value()) - Live.StructuralN;
+                    Live.StorageN = (Live.Wt * maximumNConc.Value()) - Live.StructuralN;
                 }
             }
         }

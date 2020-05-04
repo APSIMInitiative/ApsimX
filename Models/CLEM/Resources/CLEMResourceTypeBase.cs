@@ -21,6 +21,7 @@ namespace Models.CLEM.Resources
     public class CLEMResourceTypeBase : CLEMModel
     {
         [Link]
+        [NonSerialized]
         Clock Clock = null;
 
         /// <summary>
@@ -37,7 +38,7 @@ namespace Models.CLEM.Resources
         { 
             get 
             { 
-                if(!equivalentMarketStoreDetermined)
+                if(!EquivalentMarketStoreDetermined)
                 {
                     FindEquivalentMarketStore();
                 }
@@ -48,7 +49,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Detemrines if an equivalent resource has been found in the market
         /// </summary>
-        protected bool equivalentMarketStoreDetermined { get; set; }
+        protected bool EquivalentMarketStoreDetermined { get; set; }
 
         /// <summary>
         /// Determine whether transmutation has been defined for this foodtype
@@ -88,13 +89,13 @@ namespace Models.CLEM.Resources
                 if (financesPresent)
                 { 
                     string warn = "No pricing is available for [r=" + this.Parent.Name + "." + this.Name + "]";
-                    if (Apsim.Children(this, typeof(ResourcePricing)).Count > 0)
+                    if (Clock != null & Apsim.Children(this, typeof(ResourcePricing)).Count > 0)
                     {
                         warn += " in month [" + Clock.Today.ToString("MM yyyy") + "]";
                     }
                     warn += "\nAdd [r=ResourcePricing] component to [r=" + this.Parent.Name + "." + this.Name + "] to include financial transactions for purchases and sales.";
 
-                    if (!Warnings.Exists(warn))
+                    if (!Warnings.Exists(warn) & Summary != null)
                     {
                         Summary.WriteWarning(this, warn);
                         Warnings.Add(warn);
@@ -204,10 +205,10 @@ namespace Models.CLEM.Resources
             {
                 case "FinanceType":
                 case "HumanFoodStoreType":
-                case "WaterType":
-                case "AnimalFoodType":
-                case "EquipmentType":
-                case "GreenhousGasesType":
+                //case "WaterType":
+                //case "AnimalFoodType":
+                //case "EquipmentType":
+                //case "GreenhousGasesType":
                 case "ProductStoreType":
                     break;
                 default:
@@ -215,30 +216,23 @@ namespace Models.CLEM.Resources
             }
 
             // if not already checked
-            if(!equivalentMarketStoreDetermined)
+            if(!EquivalentMarketStoreDetermined)
             {
-                // havent already found a market store
+                // haven't already found a market store
                 if(EquivalentMarketStore is null)
                 {
+                    ResourcesHolder holder = Apsim.Parent(this, typeof(ResourcesHolder)) as ResourcesHolder;
                     // is there a market
-                    Market market = FindMarket();
-                    if(market != null)
+                    if (holder != null && holder.FindMarket != null)
                     {
-                        // get the resources
-                        ResourcesHolder holder = Apsim.Child(market, typeof(ResourcesHolder)) as ResourcesHolder;
-                        if(holder != null)
+                        IResourceWithTransactionType store = holder.FindMarket.Resources.LinkToMarketResourceType(this);
+                        if (store != null)
                         {
-                            object store = null;
-                            holder.ResourceTypeExists(this, out store);
-                            if (store != null)
-                            {
-                                EquivalentMarketStore = store as CLEMResourceTypeBase;
-                            }
+                            EquivalentMarketStore = store as CLEMResourceTypeBase;
                         }
-
                     }
                 }
-                equivalentMarketStoreDetermined = true;
+                EquivalentMarketStoreDetermined = true;
             }
         }
 
@@ -270,11 +264,6 @@ namespace Models.CLEM.Resources
         {
             throw new NotImplementedException();
         }
-
-        /// <summary>
-        /// Clone this resource type
-        /// </summary>
-        public object Clone { get { throw new NotImplementedException(); } }
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
