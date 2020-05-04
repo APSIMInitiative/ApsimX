@@ -20,6 +20,26 @@
         [Link]
         private Stock stock = null;
 
+        /// <summary>Gets or sets the animal type.</summary>
+        [Description("Animal type")]
+        [Display(Values = "GetAnimalTypes")]
+        public string AnimalType { get; set; }
+
+        /// <summary>The pure bred breed name.</summary>
+        [Description("Purebred breed name")]
+        [Display(Values = "GetGenotypeNames", EnabledCallback = "PurebredEnabled")]
+        public string PureBredBreed { get; set; }
+
+        /// <summary>The dam breed name.</summary>
+        [Description("Dam breed name for crosses")]
+        [Display(Values = "GetGenotypeNames", EnabledCallback = "CrossEnabled")]
+        public string DamBreed { get; set; }
+
+        /// <summary>The sire breed name.</summary>
+        [Description("Sire breed name for crosses")]
+        [Display(Values = "GetGenotypeNames", EnabledCallback = "CrossEnabled")]
+        public string SireBreed { get; set; }
+
         /// <summary>Base rate of mortality in mature animals. Default is 0.0.</summary>
         [Description("Base rate of mortality in mature animals")]
         [Units("/yr")]
@@ -36,34 +56,6 @@
         /// </summary>
         [Description("Peak Conception rates (1, 2, 3 young) for mature ewes or cows in average body condition. Only 2 values for cattle.")]
         public double[] Conception { get; set; } = new double[4];
-
-        /// <summary>
-        /// Gets or sets the animal type.
-        /// </summary>
-        [Description("Animal type")]
-        [Display(Values = "GetAnimalTypes")]
-        public string AnimalType { get; set; }
-
-        /// <summary>
-        /// Gets or sets the pure bred breed name
-        /// </summary>
-        [Description("Purebred breed name")]
-        [Display(Values = "GetGenotypeNames", EnabledCallback = "PurebredEnabled")]
-        public string PureBredBreed { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the dam breed name
-        /// </summary>
-        [Description("Dam breed name for crosses")]
-        [Display(Values = "GetGenotypeNames", EnabledCallback = "CrossEnabled")]
-        public string DamBreed { get; set; }
-
-        /// <summary>
-        /// Gets or sets the sire breed name
-        /// </summary>
-        [Description("Sire breed name for crosses")]
-        [Display(Values = "GetGenotypeNames", EnabledCallback = "CrossEnabled")]
-        public string SireBreed { get; set; }
 
         /// <summary>
         /// Gets or sets the generation
@@ -136,7 +128,7 @@
         {
             if (AnimalType == null)
                 DetermineAnimalType();
-            return stock.Genotypes.All.Select(genotype => genotype.AnimalType);
+            return stock.Genotypes.All.Select(genotype => genotype.AnimalType).Distinct();
         }
 
         /// <summary>Get the names of all genotypes for the current animal type.</summary>
@@ -145,7 +137,7 @@
             if (AnimalType == null)
                 DetermineAnimalType();
             return stock.Genotypes.All.Where(genotype => genotype.AnimalType == AnimalType)
-                                      .Select(genotype => genotype.Name);
+                                      .Select(genotype => genotype.Name);                                      
         }
 
         /// <summary>the animal type from the breed names.</summary>

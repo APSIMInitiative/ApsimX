@@ -1,799 +1,10 @@
 namespace Models.GrazPlan
 {
+    using Models.Interfaces;
     using StdUnits;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
-
-    /// <summary>
-    /// Record containing the different sources from which an animal acquires energy, protein etc                                
-    /// </summary>
-    [Serializable]
-    public struct DietRecord
-    {
-        /// <summary>
-        /// Herbage value
-        /// </summary>
-        public double Herbage;
-        
-        /// <summary>
-        /// Supplement value
-        /// </summary>
-        public double Supp;
-        
-        /// <summary>
-        /// Milk value
-        /// </summary>
-        public double Milk;
-        
-        /// <summary>
-        /// "Solid" is herbage and supplement taken together
-        /// </summary>
-        public double Solid;
-        
-        /// <summary>
-        /// Total value
-        /// </summary>
-        public double Total;
-    }
-
-    /// <summary>
-    /// Allocation of energy, protein etc for:
-    /// </summary>
-    [Serializable]
-    public struct PhysiolRecord
-    {
-        /// <summary>
-        /// Basal metab.+movement+digestion+cold
-        /// </summary>
-        public double Maint;
-        
-        /// <summary>
-        /// Pregnancy
-        /// </summary>
-        public double Preg;
-        
-        /// <summary>
-        /// Lactation
-        /// </summary>
-        public double Lact;
-        
-        /// <summary>
-        /// Wool growth (sheep only)
-        /// </summary>
-        public double Wool;
-        
-        /// <summary>
-        /// Weight gain (after efficiency losses)
-        /// </summary>
-        public double Gain;
-        
-        /// <summary>
-        /// Basal metabolism
-        /// </summary>
-        public double Metab;
-        
-        /// <summary>
-        /// Heat production in the cold
-        /// </summary>
-        public double Cold;
-        
-        /// <summary>
-        /// Total value
-        /// </summary>
-        public double Total;
-    }
-
-    /// <summary>
-    /// The Animal outputs object
-    /// </summary>
-    [Serializable]
-    public class AnimalOutput
-    {
-        /// <summary>
-        /// Potential intake, after correction for legume content of the diet
-        /// </summary>
-        public double IntakeLimitLegume;
-        
-        /// <summary>
-        /// Intakes for interface with pasture model
-        /// </summary>
-        public GrazType.GrazingOutputs IntakePerHead = new GrazType.GrazingOutputs();
-        
-        // ...... Intake-related values - exclude grain that passes the gut undamaged. ......
-        /// <summary>
-        /// Intakes summarised for use in the nutrition model
-        /// </summary>
-        public GrazType.IntakeRecord PaddockIntake = new GrazType.IntakeRecord();
-        
-        /// <summary>
-        /// Intakes summarised for use in the nutrition model
-        /// </summary>
-        public GrazType.IntakeRecord SuppIntake = new GrazType.IntakeRecord();
-        
-        /// <summary>
-        /// Daily dry matter intake (kg) - not milk
-        /// </summary>
-        public DietRecord DM_Intake = new DietRecord();
-        
-        /// <summary>
-        /// Daily crude protein intake (kg)
-        /// </summary>
-        public DietRecord CP_Intake = new DietRecord();
-        
-        /// <summary>
-        /// Daily phosphorus intake (kg)
-        /// </summary>
-        public DietRecord Phos_Intake = new DietRecord();
-        
-        /// <summary>
-        /// Daily sulphur intake (kg)
-        /// </summary>
-        public DietRecord Sulf_Intake = new DietRecord();
-        
-        /// <summary>
-        /// Metabolizable energy intake (MJ)
-        /// </summary>
-        public DietRecord ME_Intake = new DietRecord();
-        
-        /// <summary>
-        /// Digestibility of diet components (0-1)
-        /// </summary>
-        public DietRecord Digestibility = new DietRecord();
-        
-        /// <summary>
-        /// Crude protein concentrations (0-1)
-        /// </summary>
-        public DietRecord ProteinConc = new DietRecord();
-        
-        /// <summary>
-        /// ME:dry matter ratios (MJ/kg)
-        /// </summary>
-        public DietRecord ME_2_DM = new DietRecord();
-        
-        /// <summary>
-        /// Proportion of each component in the diet 
-        /// </summary>
-        public DietRecord DietPropn = new DietRecord();
-        
-        /// <summary>
-        /// Degradability of protein in diet (0-1), corrected 
-        /// </summary>
-        public DietRecord CorrDgProt = new DietRecord();
-        
-        // ..................................................................
-        /// <summary>
-        /// Microbial crude protein (kg)
-        /// </summary>
-        public double MicrobialCP;
-        
-        /// <summary>
-        /// Digestible protein leaving the stomach (kg): total
-        /// </summary>
-        public double DPLS;
-        
-        /// <summary>
-        /// Digestible protein leaving the stomach (kg): from milk
-        /// </summary>
-        public double DPLS_Milk;
-        
-        /// <summary>
-        /// Digestible protein leaving the stomach (kg): from MCP
-        /// </summary>
-        public double DPLS_MCP;
-        
-        /// <summary>
-        /// DPLS available for wool growth (kg)
-        /// </summary>
-        public double DPLS_Avail_Wool;
-        
-        /// <summary>
-        /// Intake of undegradable protein (kg)
-        /// </summary>
-        public double UDP_Intake;
-
-        /// <summary>
-        /// Digestibility of UDP (0-1)
-        /// </summary>
-        public double UDP_Dig;
-        
-        /// <summary>
-        /// Requirement for UDP (kg)
-        /// </summary>
-        public double UDP_Reqd;
-        
-        /// <summary>
-        /// Daily intake for RDP (kg)
-        /// </summary>
-        public double RDP_Intake;
-        
-        /// <summary>
-        /// Daily requirement for RDP (kg)
-        /// </summary>
-        public double RDP_Reqd;
-        
-        //// Allocation of energy and protein to various uses.                          
-        /// <summary>
-        /// Allocation of energy
-        /// </summary>
-        public PhysiolRecord EnergyUse = new PhysiolRecord();
-        
-        /// <summary>
-        /// Allocation of protein
-        /// </summary>
-        public PhysiolRecord ProteinUse = new PhysiolRecord();
-        
-        /// <summary>
-        /// Physiology record
-        /// </summary>
-        public PhysiolRecord Phos_Use = new PhysiolRecord();
-        
-        /// <summary>
-        /// Sulphur use
-        /// </summary>
-        public PhysiolRecord Sulf_Use = new PhysiolRecord();
-        
-        /// <summary>
-        /// Efficiencies of ME use (0-1)
-        /// </summary>
-        public PhysiolRecord Efficiency = new PhysiolRecord();
-
-        /// <summary>
-        /// Endogenous faecal losses      (N,S,P)
-        /// </summary>
-        public GrazType.DM_Pool EndoFaeces = new GrazType.DM_Pool();
-        
-        /// <summary>
-        /// Total organic faecal losses   (DM,N,S,P)
-        /// </summary>
-        public GrazType.DM_Pool OrgFaeces = new GrazType.DM_Pool();
-        
-        /// <summary>
-        /// Total inorganic faecal losses (N,S,P)
-        /// </summary>
-        public GrazType.DM_Pool InOrgFaeces = new GrazType.DM_Pool();
-        
-        /// <summary>
-        /// Total urinary losses of       (N,S,P)
-        /// </summary>
-        public GrazType.DM_Pool Urine = new GrazType.DM_Pool();
-        
-        /// <summary>
-        /// N in dermal losses (kg)
-        /// </summary>
-        public double DermalNLoss;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public double GainEContent;
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        public double GainPContent;
-        
-        /// <summary>
-        /// Increase in conceptus weight (kg/d)
-        /// </summary>
-        public double ConceptusGrowth;
-        
-        /// <summary>
-        /// Net energy retained in wool (MJ)
-        /// </summary>
-        public double TotalWoolEnergy;
-        
-        /// <summary>
-        /// Thermoneutral heat production (MJ)
-        /// </summary>
-        public double Therm0HeatProdn;
-        
-        /// <summary>
-        /// Lower critical temperature from the chilling submodel (oC)      
-        /// </summary>
-        public double LowerCritTemp;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public double RDP_IntakeEffect;
-
-        /// <summary>
-        /// Copy a AnimalOutput object
-        /// </summary>
-        /// <returns>The clone of an animal output</returns>
-        public AnimalOutput Copy()
-        {
-            return ObjectCopier.Clone(this);
-        }
-    }
-
-    /// <summary>
-    /// An age list item
-    /// </summary>
-    [Serializable]
-    public struct AgeListElement
-    {
-        /// <summary>
-        /// Age in days
-        /// </summary>
-        public int AgeDays;
-        
-        /// <summary>
-        /// Number of males
-        /// </summary>
-        public int NumMales;
-        
-        /// <summary>
-        /// Number of females
-        /// </summary>
-        public int NumFemales;
-    }
-
-    #region AgeList
-    
-    /// <summary>
-    /// An agelist
-    /// </summary>
-    [Serializable]
-    public class AgeList
-    {
-        /// <summary>
-        /// Array of agelist objects  
-        /// </summary>
-        private AgeListElement[] FData;
-
-        /// <summary>
-        /// Set the count of age lists
-        /// </summary>
-        /// <param name="value">The count</param>
-        private void SetCount(int value)
-        {
-            Array.Resize(ref this.FData, value);
-        }
-
-        /// <summary>
-        /// Gets rid of empty elements of a AgeList                                  
-        /// </summary>
-        public void Pack()
-        {
-            int idx, jdx;
-
-            idx = 0;
-            while (idx < this.Count)
-            {
-                if ((this.FData[idx].NumMales > 0) || (this.FData[idx].NumFemales > 0))
-                    idx++;
-                else
-                {
-                    for (jdx = idx + 1; jdx <= this.Count - 1; jdx++)
-                        this.FData[jdx - 1] = this.FData[jdx];
-                    this.SetCount(this.Count - 1);
-                }
-            }
-        }
-        
-        /// <summary>
-        /// Random number factory instance
-        /// </summary>
-        public MyRandom RandFactory;
-        
-        /// <summary>
-        /// AgeList constructor
-        /// </summary>
-        /// <param name="randomFactory">An instance of a random number object</param>
-        public AgeList(MyRandom randomFactory)
-        {
-            this.RandFactory = randomFactory;
-            this.SetCount(0);
-        }
-        
-        /// <summary>
-        /// Create a copy
-        /// </summary>
-        /// <param name="srcList">The source agelist</param>
-        /// <param name="randomFactory">The random number object</param>
-        public AgeList(AgeList srcList, MyRandom randomFactory)
-        {
-            int idx;
-
-            this.RandFactory = randomFactory;
-            this.SetCount(srcList.Count);
-            for (idx = 0; idx <= srcList.Count - 1; idx++)
-                this.FData[idx] = srcList.FData[idx];
-        }
-
-        /* constructor Load(  Stream    : TStream;
-                           bUseSmall : Boolean;
-                           RandomFactory: MyRandom );
-        procedure   Store( Stream    : TStream  ); */
-
-        /// <summary>
-        /// Gets the count of items in the age list
-        /// </summary>
-        public int Count
-        {
-            get { return this.FData.Length; }
-        }
-        
-        /// <summary>
-        /// Used instead of Add or Insert to add data to the age list.  The Input     
-        /// method ensures that there are no duplicate ages in the list and that it   
-        /// is maintained in increasing order of age                                  
-        /// </summary>
-        /// <param name="ageDays">Age in days</param>
-        /// <param name="numMales">Number of males</param>
-        /// <param name="numFemales">Number of females</param>
-        public void Input(int ageDays, int numMales, int numFemales)
-        {
-            int posIdx, idx;
-
-            posIdx = 0;
-            while ((posIdx < this.Count) && (this.FData[posIdx].AgeDays < ageDays))
-                posIdx++;
-            if ((posIdx < this.Count) && (this.FData[posIdx].AgeDays == ageDays)) 
-            {
-                // If we find A already in the list, then increment the corresponding numbers of animals 
-                this.FData[posIdx].NumMales += numMales;                                                      
-                this.FData[posIdx].NumFemales += numFemales;
-            }
-            else                                                           
-            {
-                // Otherwise insert a new element in the correct place
-                this.SetCount(this.Count + 1);
-                for (idx = this.Count - 1; idx >= posIdx + 1; idx--)
-                    this.FData[idx] = this.FData[idx - 1];
-                this.FData[posIdx].AgeDays = ageDays;
-                this.FData[posIdx].NumMales = numMales;
-                this.FData[posIdx].NumFemales = numFemales;
-            }
-        }
-        
-        /// <summary>
-        /// Change the numbers of male and female animals to new values.              
-        /// </summary>
-        /// <param name="numMales">New total number of male animals to place in the list</param>
-        /// <param name="numFemales">New total number of female animals to place in the list</param>
-        public void Resize(int numMales, int numFemales)
-        {
-            int CurrM = 0;
-            int CurrF = 0;
-            int MLeft;
-            int FLeft;
-            int idx;
-
-            this.Pack();                                                                // Ensure there are no empty list members   
-
-            if (this.Count == 0)                                                        // Hard to do anything with no age info     
-                Input(365 * 3, numMales, numFemales);
-            else if (this.Count == 1)
-            {
-                this.FData[0].NumMales = numMales;
-                this.FData[0].NumFemales = numFemales;
-            }
-            else
-            {
-                this.GetOlder(-1, ref CurrM, ref CurrF);                                // Work out number of animals currently in the list 
-                MLeft = numMales;                                                                                      
-                FLeft = numFemales;
-                for (idx = 0; idx <= this.Count - 1; idx++)
-                {
-                    if ((numMales == 0) || (CurrM > 0))
-                        this.FData[idx].NumMales = Convert.ToInt32(Math.Truncate(numMales * StdMath.XDiv(this.FData[idx].NumMales, CurrM)), CultureInfo.InvariantCulture);
-                    else
-                        this.FData[idx].NumMales = Convert.ToInt32(Math.Truncate(numMales * StdMath.XDiv(this.FData[idx].NumFemales, CurrF)), CultureInfo.InvariantCulture);
-                    if ((numFemales == 0) || (CurrF > 0))
-                        this.FData[idx].NumFemales = Convert.ToInt32(Math.Truncate(numFemales * StdMath.XDiv(this.FData[idx].NumFemales, CurrF)), CultureInfo.InvariantCulture);
-                    else
-                        this.FData[idx].NumFemales = Convert.ToInt32(Math.Truncate(numFemales * StdMath.XDiv(this.FData[idx].NumMales, CurrM)), CultureInfo.InvariantCulture);
-                    MLeft -= this.FData[idx].NumMales;
-                    FLeft -= this.FData[idx].NumFemales;
-                }
-
-                idx = this.Count - 1;                                                   // Add the "odd" animals into the oldest groups as evenly as possible   
-                while ((MLeft > 0) || (FLeft > 0))                                                      
-                {
-                    if (MLeft > 0)
-                    {
-                        this.FData[idx].NumMales++;
-                        MLeft--;
-                    }
-                    if (FLeft > 0)
-                    {
-                        this.FData[idx].NumFemales++;
-                        FLeft--;
-                    }
-
-                    idx--;
-                    if (idx < 0)
-                        idx = this.Count - 1;
-                }
-            }
-            this.Pack();
-        }
-        
-        /// <summary>
-        /// Set the count of items to 0
-        /// </summary>
-        public void Clear()
-        {
-            this.SetCount(0);
-        }
-        
-        /// <summary>
-        /// Add all elements of OtherAges into the object.  Unlike AnimalGroup.Merge,
-        /// AgeList.Merge does not free otherAges.                                   
-        /// </summary>
-        /// <param name="otherAges">The other agelist</param>
-        public void Merge(AgeList otherAges)
-        {
-            int idx;
-
-            for (idx = 0; idx <= otherAges.Count - 1; idx++)
-            {
-                Input(otherAges.FData[idx].AgeDays,
-                       otherAges.FData[idx].NumMales,
-                       otherAges.FData[idx].NumFemales);
-            }
-        }
-        
-        /// <summary>
-        /// Split the age group by age. If ByAge=TRUE, oldest animals are placed in the result.
-        /// If ByAge=FALSE, the age structures are made the same as far as possible.
-        /// </summary>
-        /// <param name="numMale">Number of male</param>
-        /// <param name="numFemale">Number of female</param>
-        /// <param name="ByAge">Split by age</param>
-        /// <returns></returns>
-        public AgeList Split(int numMale, int numFemale, bool ByAge)
-        {
-            int[,] TransferNo;                                          // 0,x =male, 1,x =female                         
-            int[] TotalNo = new int[2];
-            int[] TransfersReqd = new int[2];
-            int[] TransfersDone = new int[2];
-            double[] TransferPropn = new double[2];
-            int iAnimal, iFirst, iLast;
-            int idx, jdx;
-
-            AgeList result = new AgeList(RandFactory);                  // Create a list with the same age          
-            for (idx = 0; idx <= this.Count - 1; idx++)                 // structure but no animals               
-                result.Input(this.FData[idx].AgeDays, 0, 0);
-
-            TransfersReqd[0] = numMale;
-            TransfersReqd[1] = numFemale;
-            TransferNo = new int[2, this.Count];                        // Assume that this zeros TransferNo        
-
-            for (jdx = 0; jdx <= 1; jdx++)
-                TransfersDone[jdx] = 0;
-
-            if (ByAge)                                                  
-            {
-                // If ByAge=TRUE, oldest animals are placed in Result
-                for (idx = this.Count - 1; idx >= 0; idx--)
-                {
-                    TransferNo[0, idx] = Math.Min(TransfersReqd[0] - TransfersDone[0], this.FData[idx].NumMales);
-                    TransferNo[1, idx] = Math.Min(TransfersReqd[1] - TransfersDone[1], this.FData[idx].NumFemales);
-                    for (jdx = 0; jdx <= 1; jdx++)
-                        TransfersDone[jdx] += TransferNo[jdx, idx];
-                }
-            }
-            else                                                                      
-            {
-                // If ByAge=FALSE, the age structures are made the same as far as possible
-                this.GetOlder(-1, ref TotalNo[0], ref TotalNo[1]);
-
-                for (jdx = 0; jdx <= 1; jdx++)
-                {
-                    TransfersReqd[jdx] = Math.Min(TransfersReqd[jdx], TotalNo[jdx]);
-                    TransferPropn[jdx] = StdMath.XDiv(TransfersReqd[jdx], TotalNo[jdx]);
-                }
-
-                for (idx = 0; idx <= this.Count - 1; idx++)
-                {
-                    TransferNo[0, idx] = Convert.ToInt32(Math.Round(TransferPropn[0] * this.FData[idx].NumMales), CultureInfo.InvariantCulture);
-                    TransferNo[1, idx] = Convert.ToInt32(Math.Round(TransferPropn[1] * this.FData[idx].NumFemales), CultureInfo.InvariantCulture);
-                    for (jdx = 0; jdx <= 1; jdx++)
-                        TransfersDone[jdx] += TransferNo[jdx, idx];
-                }
-
-                for (jdx = 0; jdx <= 1; jdx++)                                                  
-                {
-                    // Randomly allocate roundoff errors
-                    while (TransfersDone[jdx] < TransfersReqd[jdx])                     // Too few transfers                        
-                    {
-                        iAnimal = Convert.ToInt32(Math.Min(Math.Truncate(this.RandFactory.RandomValue() * (TotalNo[jdx] - TransfersDone[jdx])),
-                                        (TotalNo[jdx] - TransfersDone[jdx]) - 1), CultureInfo.InvariantCulture);
-                        idx = -1;
-                        iLast = 0;
-                        do
-                        {
-                            idx++;
-                            iFirst = iLast;
-                            if (jdx == 0)
-                                iLast = iFirst + (this.FData[idx].NumMales - TransferNo[jdx, idx]);
-                            else
-                                iLast = iFirst + (this.FData[idx].NumFemales - TransferNo[jdx, idx]);
-                            //// until (Idx = Count-1) or ((iAnimal >= iFirst) and (iAnimal < iLast));
-                        }
-                        while ((idx != this.Count - 1) && ((iAnimal < iFirst) || (iAnimal >= iLast)));
-
-                        TransferNo[jdx, idx]++;
-                        TransfersDone[jdx]++;
-                    }
-
-                    while (TransfersDone[jdx] > TransfersReqd[jdx])                                  
-                    {
-                        // Too many transfers
-                        iAnimal = Convert.ToInt32(Math.Min(Math.Truncate(this.RandFactory.RandomValue() * TransfersDone[jdx]),
-                                        TransfersDone[jdx] - 1), CultureInfo.InvariantCulture);
-                        idx = -1;
-                        iLast = 0;
-                        do
-                        {
-                            idx++;
-                            iFirst = iLast;
-                            iLast = iFirst + TransferNo[jdx, idx];
-                            //// until (Idx = Count-1) or ((iAnimal >= iFirst) and (iAnimal < iLast));
-                        }
-                        while ((idx != this.Count - 1) && ((iAnimal < iFirst) || (iAnimal >= iLast)));
-
-                        TransferNo[jdx, idx]--;
-                        TransfersDone[jdx]--;
-                    }
-                }
-            }
-
-            for (idx = 0; idx <= this.Count - 1; idx++)                                                // Carry out transfers                      
-            {
-                this.FData[idx].NumMales -= TransferNo[0, idx];
-                result.FData[idx].NumMales += TransferNo[0, idx];
-                this.FData[idx].NumFemales -= TransferNo[1, idx];
-                result.FData[idx].NumFemales += TransferNo[1, idx];
-            }
-
-            this.Pack();                                                                // Clear away empty entries in both lists   
-            result.Pack();
-
-            return result;
-        }
-
-        /// <summary>
-        /// Increase all ages by the same amount (NoDays)                             
-        /// </summary>
-        /// <param name="NoDays"></param>
-        public void AgeBy(int NoDays)
-        {
-            for (int idx = 0; idx <= this.Count - 1; idx++)
-                this.FData[idx].AgeDays += NoDays;
-        }
-
-        /// <summary>
-        /// Compute the mean age of all animals in the list                           
-        /// </summary>
-        /// <returns>The mean age</returns>
-        public int MeanAge()
-        {
-            double AxN, N;
-            double dN;
-            int idx;
-            int result;
-
-            if (this.Count == 1)
-                result = this.FData[0].AgeDays;
-            else if (this.Count == 0)
-                result = 0;
-            else
-            {
-                AxN = 0;
-                N = 0;
-                for (idx = 0; idx <= this.Count - 1; idx++)
-                {
-                    dN = this.FData[idx].NumMales + this.FData[idx].NumFemales;
-                    AxN = AxN + dN * this.FData[idx].AgeDays;
-                    N = N + dN;
-                }
-                if (N > 0.0)
-                    result = Convert.ToInt32(Math.Round(AxN / N), CultureInfo.InvariantCulture);
-                else
-                    result = 0;
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Returns the number of male and female animals      
-        /// which are aged greater than ageDays days                                        
-        /// </summary>
-        /// <param name="ageDays">Age in days</param>
-        /// <param name="numMale">Number of male</param>
-        /// <param name="numFemale">Number of female</param>
-        public void GetOlder(int ageDays, ref int numMale, ref int numFemale)
-        {
-            int idx;
-
-            numMale = 0;
-            numFemale = 0;
-            for (idx = 0; idx <= Count - 1; idx++)
-            {
-                if (this.FData[idx].AgeDays > ageDays)
-                {
-                    numMale += this.FData[idx].NumMales;
-                    numFemale += this.FData[idx].NumFemales;
-                }
-            }
-        }
-    }
-    #endregion AgeList
-
-    /// <summary>
-    /// Set of differences between two sub-groups of animals.  Used in the Split  
-    /// method of AnimalGroup                                                     
-    /// </summary>
-    [Serializable]
-    public struct DifferenceRecord
-    {
-        /// <summary>
-        /// Standard reference weight
-        /// </summary>
-        public double StdRefWt;
-        
-        /// <summary>
-        /// Base weight
-        /// </summary>
-        public double BaseWeight;
-        
-        /// <summary>
-        /// Fleece weight
-        /// </summary>
-        public double FleeceWt;
-    }
-
-    /// <summary>
-    /// Climatic inputs to the animal model                                       
-    /// </summary>
-    [Serializable]
-    public struct AnimalWeather
-    {
-        /// <summary>
-        /// Latitude (degrees, +ve=north)
-        /// </summary>
-        public double Latitude;
-        
-        /// <summary>
-        /// Date at which environment prevails
-        /// </summary>
-        public int TheDay;
-        
-        /// <summary>
-        /// Maximum air temperature (deg C)
-        /// </summary>
-        public double MaxTemp;
-        
-        /// <summary>
-        /// Minimum air temperature (deg C)
-        /// </summary>
-        public double MinTemp;
-        
-        /// <summary>
-        /// Mean of MaxTemp and MinTemp
-        /// </summary>
-        public double MeanTemp;
-        
-        /// <summary>
-        /// Precipitation (mm)
-        /// </summary>
-        public double Precipitation;
-        
-        /// <summary>
-        /// Average daily windspeed (m/s)
-        /// </summary>
-        public double WindSpeed;
-        
-        /// <summary>
-        /// Daylength including civil twilight (hr)
-        /// </summary>
-        public double DayLength;
-    }
 
     /// <summary>
     /// AnimalStateInfo type. Information required to reset the state in the case of RDP insufficiency                                                                
@@ -1208,11 +419,14 @@ namespace Models.GrazPlan
         /// </summary>
         protected GrazType.GrazingInputs Inputs = new GrazType.GrazingInputs();
         
-        /// <summary>
-        /// The animal's environment
-        /// </summary>
-        protected AnimalWeather TheEnv;
-        
+        /// <summary>The weather model.</summary>
+        [NonSerialized]
+        protected IWeather weather;
+
+        /// <summary>The clock model.</summary>
+        [NonSerialized]
+        protected Clock clock;
+
         /// <summary>
         /// 
         /// </summary>
@@ -1448,23 +662,19 @@ namespace Models.GrazPlan
         /// <summary>
         /// Compute RDP intake and requirement for a given MEI and feeding level      
         /// </summary>
-        /// <param name="latitude">The latitude</param>
-        /// <param name="Day">Day</param>
         /// <param name="IntakeScale"></param>
         /// <param name="FL"></param>
         /// <param name="CorrDg"></param>
         /// <param name="RDPI"></param>
         /// <param name="RDPR"></param>
         /// <param name="UDPIs"></param>
-        protected void ComputeRDP(double latitude,
-                                     int Day,
-                                     double IntakeScale,            // Assumed scaling factor for intake        
-                                     double FL,                     // Assumed feeding level                    
-                                     ref DietRecord CorrDg,
-                                     ref double RDPI, ref double RDPR,
-                                     ref DietRecord UDPIs)
+        protected void ComputeRDP(double IntakeScale,            // Assumed scaling factor for intake        
+                                  double FL,                     // Assumed feeding level                    
+                                  ref Diet CorrDg,
+                                  ref double RDPI, ref double RDPR,
+                                  ref Diet UDPIs)
         {
-            DietRecord RDPIs;
+            Diet RDPIs;
             double suppFME_Intake;                                                                      // Fermentable ME intake of supplement      
             int idx;
 
@@ -1492,8 +702,8 @@ namespace Models.GrazPlan
 
             RDPR = (this.AParams.DgProtC[4] + this.AParams.DgProtC[5] * (1.0 - Math.Exp(-this.AParams.DgProtC[6] * (FL + 1.0))))       // RDP requirement                          
                     * (IntakeScale * this.AnimalState.ME_Intake.Herbage
-                        * (1.0 + AParams.DgProtC[7] * (latitude / 40.0)
-                                            * Math.Sin(GrazEnv.DAY2RAD * StdDate.DOY(Day, true))) + suppFME_Intake);
+                        * (1.0 + AParams.DgProtC[7] * (weather.Latitude / 40.0)
+                                            * Math.Sin(GrazEnv.DAY2RAD * clock.Today.DayOfYear)) + suppFME_Intake);
         }
         
         /// <summary>
@@ -1667,9 +877,9 @@ namespace Models.GrazPlan
 
             double[] result = new double[4];        // TConceptionArray
 
-            iDOY = StdDate.DOY(TheEnv.TheDay, true);
+            iDOY = clock.Today.DayOfYear;
             fDLFactor = (1.0 - Math.Sin(GrazEnv.DAY2RAD * (iDOY + 10)))
-                         * Math.Sin(GrazEnv.DEG2RAD * TheEnv.Latitude) / Math.Sin(GrazEnv.DEG2RAD * STD_LATITUDE);
+                         * Math.Sin(GrazEnv.DEG2RAD * weather.Latitude) / Math.Sin(GrazEnv.DEG2RAD * STD_LATITUDE);
             for (N = 1; N <= AParams.MaxYoung; N++)                              // First we calculate the proportion of   
             {                                                                    // females with at least N young          
                 if (AParams.ConceiveSigs[N][0] < 5.0)
@@ -1700,7 +910,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="conceptionRate">Conception rates</param>
         /// <param name="newGroups">The new animal groups</param>
-        protected void makePregnantAnimals(double[] conceptionRate, ref AnimalList newGroups)
+        protected void makePregnantAnimals(double[] conceptionRate, ref List<AnimalGroup> newGroups)
         {
             int initialNumber;
             DifferenceRecord fertileDiff;
@@ -1745,7 +955,7 @@ namespace Models.GrazPlan
         ///  Carry out one cycle's worth of conceptions                                
         /// </summary>
         /// <param name="newGroups"></param>
-        private void Conceive(ref AnimalList newGroups)
+        private void Conceive(ref List<AnimalGroup> newGroups)
         {
             if ((ReproStatus == GrazType.ReproType.Empty)
                && (!((this.AParams.Animal == GrazType.AnimalType.Sheep) && (LactStatus == GrazType.LactType.Lactating)))
@@ -1795,7 +1005,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="chill"></param>
         /// <param name="newGroups"></param>
-        protected void Kill(double chill, ref AnimalList newGroups)
+        protected void Kill(double chill, ref List<AnimalGroup> newGroups)
         {
             double deathRate;
             DifferenceRecord Diffs;
@@ -1896,7 +1106,7 @@ namespace Models.GrazPlan
         /// Pregnancy toxaemia and dystokia                                           
         /// </summary>
         /// <param name="newGroups">The new groups</param>
-        protected void KillEndPreg(ref AnimalList newGroups)
+        protected void KillEndPreg(ref List<AnimalGroup> newGroups)
         {
             double DystokiaRate;
             double ToxaemiaRate;
@@ -2240,7 +1450,8 @@ namespace Models.GrazPlan
                     Young = null;
                     //MyClass = this;                                                         //TODO: not 100% sure this is right
                     Young = new AnimalGroup(this, 0.5 * (GrowthCurve(L, GrazType.ReproType.Male, AParams)
-                                                        + GrowthCurve(L, GrazType.ReproType.Empty, AParams)));
+                                                        + GrowthCurve(L, GrazType.ReproType.Empty, AParams)),
+                                            clock, weather);
                 }
                 Milk_MJProdn = 0.0;
                 Milk_ProtProdn = 0.0;
@@ -2593,7 +1804,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Pointers to the young of lactating animals, or the mothers of suckling ones
         /// </summary>
-        public AnimalGroup Young;
+        public AnimalGroup Young { get; set;  }
         
         /// <summary>
         /// Animal output
@@ -2610,6 +1821,8 @@ namespace Models.GrazPlan
         /// <param name="LiveWt"></param>
         /// <param name="GFW"></param>
         /// <param name="RandomFactory"></param>
+        /// <param name="clockModel">The clock model.</param>
+        /// <param name="weatherModel">The weather model.</param>
         /// <param name="bTakeParams"></param>
         public AnimalGroup(AnimalParameterSet Params,
                                  GrazType.ReproType Repro,
@@ -2618,8 +1831,12 @@ namespace Models.GrazPlan
                                  double LiveWt,
                                  double GFW,                   // NB this is a *fleece* weight             
                                  MyRandom RandomFactory,
+                                 Clock clockModel,
+                                 IWeather weatherModel,
                                  bool bTakeParams = false)
         {
+            clock = clockModel;
+            weather = weatherModel;
             Construct(Params, Repro, Number, AgeD, LiveWt, GFW, RandomFactory, bTakeParams);
         }
 
@@ -2710,8 +1927,14 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="Parents"></param>
         /// <param name="LiveWt"></param>
-        public AnimalGroup(AnimalGroup Parents, double LiveWt)
+        /// <param name="clockModel">The clock model.</param>
+        /// <param name="weatherModel">The weather model.</param>
+        public AnimalGroup(AnimalGroup Parents, double LiveWt, 
+                           Clock clockModel,
+                           IWeather weatherModel)
         {
+            clock = clockModel;
+            weather = weatherModel;
             int Number, iAgeDays;
             double YoungWoolWt;
             AnimalParameterSet youngParams;
@@ -2747,6 +1970,13 @@ namespace Models.GrazPlan
         public AnimalGroup Copy()
         {
             AnimalGroup theCopy = ObjectCopier.Clone(this);
+            theCopy.weather = weather;
+            theCopy.clock = clock;
+            if (theCopy.Young != null)
+            {
+                theCopy.Young.clock = clock;
+                theCopy.Young.weather = weather;
+            }
             theCopy.RandFactory = this.RandFactory;
             if (this.Ages != null)
                 theCopy.Ages.RandFactory = this.RandFactory;
@@ -2855,7 +2085,10 @@ namespace Models.GrazPlan
             AverageField(Total1, Total2, ref LactAdjust, otherGrp.LactAdjust);
 
             if (Young != null)
-                Young.Merge(ref otherGrp.Young);
+            {
+                var y = otherGrp.Young;
+                Young.Merge(ref y);
+            }
             otherGrp = null;
         }
 
@@ -2926,7 +2159,7 @@ namespace Models.GrazPlan
         /// <param name="NF"></param>
         /// <param name="NYM"></param>
         /// <param name="NYF"></param>
-        private void SplitNumbers(ref AnimalList NewGroups, int NF, int NYM, int NYF)
+        private void SplitNumbers(ref List<AnimalGroup> NewGroups, int NF, int NYM, int NYF)
         {
             AnimalGroup TempYoung;
             AnimalGroup SplitGroup;
@@ -2962,7 +2195,7 @@ namespace Models.GrazPlan
         /// Split young
         /// </summary>
         /// <param name="newGroups">New animal groups</param>
-        public void SplitYoung(ref AnimalList newGroups)
+        public void SplitYoung(ref List<AnimalGroup> newGroups)
         {
             int numToSplit;
 
@@ -3324,15 +2557,6 @@ namespace Models.GrazPlan
         }
         
         /// <summary>
-        /// Gets or sets the animals environment
-        /// </summary>
-        public AnimalWeather Weather
-        {
-            get { return TheEnv; }
-            set { TheEnv = value; }
-        }
-        
-        /// <summary>
         /// Gets or sets the herbage being eaten
         /// </summary>
         public GrazType.GrazingInputs Herbage
@@ -3409,7 +2633,7 @@ namespace Models.GrazPlan
         /// <param name="amimalGrp"></param>
         /// <param name="numDays"></param>
         /// <param name="newGroups"></param>
-        private void AdvanceAge(AnimalGroup amimalGrp, int numDays, ref AnimalList newGroups)
+        private void AdvanceAge(AnimalGroup amimalGrp, int numDays, ref List<AnimalGroup> newGroups)
         {
             amimalGrp.MeanAge += numDays;
             amimalGrp.Ages.AgeBy(numDays);
@@ -3426,14 +2650,14 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="numDays"></param>
         /// <param name="newGroups"></param>
-        public void Age(int numDays, ref AnimalList newGroups)
+        public void Age(int numDays, ref List<AnimalGroup> newGroups)
         {
             int newOffset, i;
 
             if (ChillIndex == StdMath.DMISSING)
-                ChillIndex = ChillFunc(TheEnv.MeanTemp, TheEnv.WindSpeed, TheEnv.Precipitation);
+                ChillIndex = ChillFunc(weather.MeanT, weather.Wind, weather.Rain);
             else
-                ChillIndex = 16.0 / 17.0 * ChillIndex + 1.0 / 17.0 * ChillFunc(TheEnv.MeanTemp, TheEnv.WindSpeed, TheEnv.Precipitation);
+                ChillIndex = 16.0 / 17.0 * ChillIndex + 1.0 / 17.0 * ChillFunc(weather.MeanT, weather.Wind, weather.Rain);
 
             if (newGroups != null)
                 newOffset = newGroups.Count;
@@ -3448,7 +2672,7 @@ namespace Models.GrazPlan
             AdvanceAge(this, numDays, ref newGroups);
             if (newGroups != null)
                 for (i = newOffset; i <= newGroups.Count - 1; i++)
-                    AdvanceAge(newGroups.At(i), numDays, ref newGroups);
+                    AdvanceAge(newGroups[i], numDays, ref newGroups);
 
             switch (ReproStatus)
             {
@@ -3548,20 +2772,20 @@ namespace Models.GrazPlan
             else
                 youngFactor = 1.0;
 
-            if (this.TheEnv.MinTemp < this.AnimalState.LowerCritTemp)                                
+            if (this.weather.MinT < this.AnimalState.LowerCritTemp)                                
             {
                 // Integrate sinusoidal temperature function over the part below LCT       
-                tempDiff = this.TheEnv.MeanTemp - this.AnimalState.LowerCritTemp;
-                tempAmpl = 0.5 * (this.TheEnv.MaxTemp - this.TheEnv.MinTemp);
+                tempDiff = this.weather.MeanT - this.AnimalState.LowerCritTemp;
+                tempAmpl = 0.5 * (this.weather.MaxT - this.weather.MinT);
                 X = Math.Acos(Math.Max(-1.0, Math.Min(1.0, tempDiff / tempAmpl)));
                 belowLCT = (-tempDiff * X + tempAmpl * Math.Sin(X)) / Math.PI;
-                heatFactor = 1.0 + this.AParams.IntakeC[17] * belowLCT * StdMath.DIM(1.0, this.TheEnv.Precipitation / this.AParams.IntakeC[18]);
+                heatFactor = 1.0 + this.AParams.IntakeC[17] * belowLCT * StdMath.DIM(1.0, this.weather.Rain / this.AParams.IntakeC[18]);
             }
             else
                 heatFactor = 1.0;
 
-            if (this.TheEnv.MinTemp >= this.AParams.IntakeC[7])                                 // High temperatures depress intake         
-                heatFactor = heatFactor * (1.0 - this.AParams.IntakeC[5] * StdMath.DIM(this.TheEnv.MeanTemp, this.AParams.IntakeC[6]));
+            if (this.weather.MinT >= this.AParams.IntakeC[7])                                 // High temperatures depress intake         
+                heatFactor = heatFactor * (1.0 - this.AParams.IntakeC[5] * StdMath.DIM(this.weather.MeanT, this.AParams.IntakeC[6]));
             if (this.LactStatus != GrazType.LactType.Lactating)
                 this.LactAdjust = 1.0;
 #pragma warning disable 162 // unreachable code
@@ -3701,7 +2925,7 @@ namespace Models.GrazPlan
         /// <param name="suppFullDay"></param>
         /// <param name="full">The full diet</param>
         /// <param name="TS">The extra diet</param>
-        private void UpdateDietRecord(double timeStep, bool suppFullDay, ref DietRecord full, DietRecord TS)
+        private void UpdateDietRecord(double timeStep, bool suppFullDay, ref Diet full, Diet TS)
         {
             full.Herbage = full.Herbage + timeStep * TS.Herbage;
             if (suppFullDay)
@@ -3722,7 +2946,7 @@ namespace Models.GrazPlan
         /// <param name="TSDenom"></param>
         /// <param name="HerbDT"></param>
         /// <param name="SuppDT"></param>
-        private void UpdateDietAve(ref DietRecord full, DietRecord FullDenom, DietRecord TS, DietRecord TSDenom, double HerbDT, double SuppDT)
+        private void UpdateDietAve(ref Diet full, Diet FullDenom, Diet TS, Diet TSDenom, double HerbDT, double SuppDT)
         {
             this.UpdateAve(ref full.Herbage, FullDenom.Herbage, TS.Herbage, TSDenom.Herbage, HerbDT);
             this.UpdateAve(ref full.Supp, FullDenom.Supp, TS.Supp, TSDenom.Supp, SuppDT);
@@ -3876,7 +3100,7 @@ namespace Models.GrazPlan
 
             herbageEfficiency = this.AParams.EfficC[13]
                                  * (1.0 + this.AParams.EfficC[14] * this.Inputs.LegumePropn)
-                                 * (1.0 + this.AParams.EfficC[15] * (this.TheEnv.Latitude / 40.0) * Math.Sin(GrazEnv.DAY2RAD * StdDate.DOY(this.TheEnv.TheDay, true)))
+                                 * (1.0 + this.AParams.EfficC[15] * (weather.Latitude / 40.0) * Math.Sin(GrazEnv.DAY2RAD * clock.Today.DayOfYear))
                                  * this.AnimalState.ME_2_DM.Herbage;
             suppEfficiency = this.AParams.EfficC[16] * this.AnimalState.ME_2_DM.Supp;
             this.AnimalState.Efficiency.Gain = this.AnimalState.DietPropn.Herbage * herbageEfficiency
@@ -3966,12 +3190,12 @@ namespace Models.GrazPlan
         /// </summary>
         private void Compute_DPLS()
         {
-            DietRecord UDPIntakes = new DietRecord();
-            DietRecord DUDP = new DietRecord();
+            Diet UDPIntakes = new Diet();
+            Diet DUDP = new Diet();
             double dgCorrect;
             int idx;
 
-            this.ComputeRDP(this.TheEnv.Latitude, this.TheEnv.TheDay, 1.0, this.FeedingLevel,
+            this.ComputeRDP(1.0, this.FeedingLevel,
                         ref this.AnimalState.CorrDgProt, ref this.AnimalState.RDP_Intake, ref this.AnimalState.RDP_Reqd, ref UDPIntakes);
             this.AnimalState.UDP_Intake = UDPIntakes.Solid + UDPIntakes.Milk;
             dgCorrect = StdMath.XDiv(this.AnimalState.CorrDgProt.Supp, this.AnimalState.SuppIntake.Degradability);
@@ -4156,7 +3380,7 @@ namespace Models.GrazPlan
             double DayCFWGain;
 
             AgeFactor = this.AParams.WoolC[5] + (1.0 - this.AParams.WoolC[5]) * (1.0 - Math.Exp(-this.AParams.WoolC[12] * this.MeanAge));
-            DayLenFactor = 1.0 + this.AParams.WoolC[6] * (TheEnv.DayLength - 12);
+            DayLenFactor = 1.0 + this.AParams.WoolC[6] * (weather.CalculateDayLength(-6.0) - 12);
             DPLS_To_CFW = this.AParams.WoolC[7] * this.AParams.FleeceRatio * AgeFactor * DayLenFactor;
             ME_To_CFW = this.AParams.WoolC[8] * this.AParams.FleeceRatio * AgeFactor * DayLenFactor;
             this.AnimalState.DPLS_Avail_Wool = StdMath.DIM(this.AnimalState.DPLS + DPLS_Adjust,
@@ -4258,11 +3482,11 @@ namespace Models.GrazPlan
 
 
             // Means and amplitudes for temperature and windrun     
-            AveTemp = 0.5 * (TheEnv.MaxTemp + TheEnv.MinTemp);                                                          
-            TempRange = (TheEnv.MaxTemp - TheEnv.MinTemp) / 2.0;
-            AveWind = 0.4 * TheEnv.WindSpeed;                                               // 0.4 corrects wind to animal height       
+            AveTemp = 0.5 * (weather.MaxT + weather.MinT);                                                          
+            TempRange = (weather.MaxT - weather.MinT) / 2.0;
+            AveWind = 0.4 * weather.Wind;                                               // 0.4 corrects wind to animal height       
             WindRange = 0.35 * AveWind;
-            PropnClearSky = 0.7 * Math.Exp(-0.25 * TheEnv.Precipitation);                   // Equation J.4                             
+            PropnClearSky = 0.7 * Math.Exp(-0.25 * weather.Rain);                   // Equation J.4                             
 
 
             TissueInsulation = AParams.ChillC[3] * Math.Min(1.0, 0.4 + 0.02 * MeanAge) *    // Reduce tissue insulation for animals under 1 month old
@@ -4271,7 +3495,7 @@ namespace Models.GrazPlan
             Factor1 = BodyRadius / (BodyRadius + CoatDepth);                                // These factors are used in equation J.8   
             Factor2 = BodyRadius * Math.Log(1.0 / Factor1);
             WetFactor = this.AParams.ChillC[5] + (1.0 - this.AParams.ChillC[5]) *
-                                            Math.Exp(-this.AParams.ChillC[6] * TheEnv.Precipitation / CoatDepth);
+                                            Math.Exp(-this.AParams.ChillC[6] * weather.Rain / CoatDepth);
             HeatPerArea = this.AnimalState.Therm0HeatProdn / SurfaceArea;                   // These factors are used in equation J.10  
             LCT_Base = this.AParams.ChillC[11] - HeatPerArea * TissueInsulation;
             Factor3 = HeatPerArea / (HeatPerArea - this.AParams.ChillC[12]);
@@ -4544,8 +3768,8 @@ namespace Models.GrazPlan
         /// <returns></returns>
         public double RDP_IntakeFactor()
         {
-            DietRecord tempCorrDg = new DietRecord();
-            DietRecord tempUDP = new DietRecord();
+            Diet tempCorrDg = new Diet();
+            Diet tempUDP = new Diet();
             double tempRDPI = 0.0;
             double tempRDPR = 0.0;
             double tempFL;
@@ -4567,7 +3791,7 @@ namespace Models.GrazPlan
                 {
                     oldResult = result;
                     tempFL = (oldResult * this.AnimalState.ME_Intake.Total) / this.AnimalState.EnergyUse.Maint - 1.0;
-                    this.ComputeRDP(this.TheEnv.Latitude, this.TheEnv.TheDay, oldResult, tempFL,
+                    this.ComputeRDP(oldResult, tempFL,
                                 ref tempCorrDg, ref tempRDPI, ref tempRDPR, ref tempUDP);
                     tempResult = StdMath.XDiv(tempRDPI, tempRDPR);
                     if ((this.AParams.IntakeC[16] > 0.0) && (this.AParams.IntakeC[16] < 1.0))
@@ -4741,10 +3965,10 @@ namespace Models.GrazPlan
         /// 
         /// </summary>
         /// <param name="animalList"></param>
-        private void CheckAnimList(ref AnimalList animalList)
+        private void CheckAnimList(ref List<AnimalGroup> animalList)
         {
             if (animalList == null)
-                animalList = new AnimalList();
+                animalList = new List<AnimalGroup>();
         }
         
         /// <summary>
@@ -4752,7 +3976,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="weanedGroup"></param>
         /// <param name="weanedOff"></param>
-        private void ExportWeaners(ref AnimalGroup weanedGroup, ref AnimalList weanedOff)
+        private void ExportWeaners(ref AnimalGroup weanedGroup, ref List<AnimalGroup> weanedOff)
         {
             if (weanedGroup != null)
             {
@@ -4771,7 +3995,7 @@ namespace Models.GrazPlan
         /// <param name="YoungGroup"></param>
         /// <param name="NYoung"></param>
         /// <param name="NewGroups"></param>
-        private void ExportWithYoung(ref AnimalGroup MotherGroup, ref AnimalGroup YoungGroup, int NYoung, ref AnimalList NewGroups)
+        private void ExportWithYoung(ref AnimalGroup MotherGroup, ref AnimalGroup YoungGroup, int NYoung, ref List<AnimalGroup> NewGroups)
         {
             MotherGroup.Young = YoungGroup;
             MotherGroup.FNoOffspring = NYoung;
@@ -4804,7 +4028,7 @@ namespace Models.GrazPlan
         /// <param name="iTotalYoung"></param>
         /// <param name="GroupPropn"></param>
         /// <param name="NewGroups"></param>
-        protected void SplitMothers(ref AnimalGroup YoungGroup, int iTotalYoung, double GroupPropn, ref AnimalList NewGroups)
+        protected void SplitMothers(ref AnimalGroup YoungGroup, int iTotalYoung, double GroupPropn, ref List<AnimalGroup> NewGroups)
         {
             // becoming : single twin triplet
 
@@ -4870,7 +4094,7 @@ namespace Models.GrazPlan
         /// <param name="weanMales"></param>
         /// <param name="newGroups"></param>
         /// <param name="weanedOff"></param>
-        public void Wean(bool weanFemales, bool weanMales, ref AnimalList newGroups, ref AnimalList weanedOff)
+        public void Wean(bool weanFemales, bool weanMales, ref List<AnimalGroup> newGroups, ref List<AnimalGroup> weanedOff)
         {
             int totalYoung;
             int malePropn;
@@ -5708,172 +4932,4 @@ namespace Models.GrazPlan
         }
     }
     #endregion AnimalGroup
-
-    #region AnimalList
-    /// <summary>
-    /// The animal list of animal groups
-    /// </summary>
-    public class AnimalList : List<AnimalGroup>
-    {
-        /// <summary>
-        /// Days of weight gain
-        /// </summary>
-        public const int GAINDAYCOUNT = 28;       // for the AnimalList
-        
-        /// <summary>
-        /// Keep count of how many valid entries have been made
-        /// </summary>
-        private int FValidGainsCount;
-
-        /// <summary>
-        /// Weight gain information
-        /// </summary>
-        private double[] FGains = new double[GAINDAYCOUNT - 1];
-
-        /// <summary>
-        /// Get the animal group at an index
-        /// </summary>
-        /// <param name="posn">Position index</param>
-        /// <returns>The Animal group</returns>
-        private AnimalGroup GetAt(int posn)
-        {
-            return base[posn];
-        }
-        
-        /// <summary>
-        /// Random number container
-        /// </summary>
-        public MyRandom RandFactory;
-        
-        /// <summary>
-        /// Copy an AnimalList
-        /// </summary>
-        /// <returns></returns>
-        public AnimalList Copy()
-        {
-            int I;
-
-            AnimalList Result = new AnimalList();
-            for (I = 0; I <= Count - 1; I++)
-                Result.Add(At(I).Copy());
-            return Result;
-        }
-        
-        /// <summary>
-        /// Remove all animals
-        /// </summary>
-        public void ClearOut()
-        {
-            int i;
-
-            for (i = 0; i <= Count - 1; i++)
-            {
-                SetAt(i, null);
-            }
-            Clear();
-            for (i = 0; i <= GAINDAYCOUNT - 1; i++)
-                FGains[i] = StdMath.DMISSING;
-            FValidGainsCount = 0; //reset
-        }
-
-        /// <summary>
-        /// Remove empty AnimalGroups and unite similar ones
-        /// </summary>
-        public void Merge()
-        {
-            AnimalGroup AG;
-            int i, j;
-
-            for (i = 0; i <= Count - 1; i++)                                                  // Remove empty groups                      
-            {
-                if ((At(i) != null) && (At(i).NoAnimals == 0))
-                {
-                    SetAt(i, null);
-                }
-                else
-                {
-                    for (j = i + 1; j <= Count - 1; j++)
-                        if ((At(i) != null) && (At(j) != null) && At(i).Similar(At(j)))     // Merge similar groups                     
-                        {
-                            AG = At(j);
-                            this[j] = null;
-                            At(i).Merge(ref AG);
-                        }
-                }
-            }
-            throw new Exception("Pack() not implemented int AnimalList.Merge() yet!");
-        }
-
-        /// <summary>
-        /// Get the animal group at this position
-        /// </summary>
-        /// <param name="posn">Position index</param>
-        /// <returns>The Animal group</returns>
-        public AnimalGroup At(int posn)
-        {
-            return this.GetAt(posn);
-        }
-
-        /// <summary>
-        /// Set the animal group at this position
-        /// </summary>
-        /// <param name="posn">Position index</param>
-        /// <param name="animalGrp">The Animal group</param>
-        public void SetAt(int posn, AnimalGroup animalGrp)
-        {
-            base[posn] = animalGrp;
-        }
-
-        /// <summary>
-        /// Gets the days of weight gain
-        /// </summary>
-        public int ValidGainDays
-        {
-            get { return this.FValidGainsCount; }
-        }
-
-        /// <summary>
-        /// Add a daily weight gain value in kg. Uses an array as a cheap fifo queue.
-        /// Use gain = MISSING when a value is unavailable.
-        /// </summary>
-        /// <param name="gain"></param>
-        public void AddWtGain(double gain)
-        {
-            // shuffle values down and drop the last one off
-            for (int i = GAINDAYCOUNT - 1; i >= 1; i--)
-                this.FGains[i] = this.FGains[i - 1];
-            this.FGains[0] = gain;                   // most recent is at [0]
-            if (gain == StdMath.DMISSING)
-                this.FValidGainsCount = 0;           // reset
-            else
-                this.FValidGainsCount++;
-        }
-
-        /// <summary>
-        /// Calc the average weight gain over the last number of days.
-        /// </summary>
-        /// <param name="days">Number days</param>
-        /// <returns>Average weight gain</returns>
-        public double AvGainOver(int days)
-        {
-            int i;
-            double sum;
-            int count;
-
-            sum = 0;
-            if (days > GAINDAYCOUNT)
-                days = GAINDAYCOUNT;
-            count = 0;                         // keep iCount in case there are less days available
-            for (i = 0; i <= days - 1; i++)
-            {
-                if (FGains[i] != StdMath.DMISSING)
-                {
-                    sum = sum + FGains[i];
-                    count++;
-                }
-            }
-            return sum / count;
-        }
-    }
-    #endregion AnimalList
 }

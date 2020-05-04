@@ -791,7 +791,7 @@
     <EmbeddedResource Include="Presenters\CLEM\Chart.min.js" />
     <EmbeddedResource Include="Resources\TreeViewImages\AccumulateCohortExpression.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\AnimalParameterSet.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\AnimalGroup.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\AnimalGroupInitialisation.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />

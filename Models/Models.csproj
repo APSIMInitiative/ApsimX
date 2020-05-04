@@ -333,10 +333,15 @@
     <Compile Include="Soils\Standardiser\SoilDefaults.cs" />
     <Compile Include="Soils\Standardiser\SoilUnits.cs" />
     <Compile Include="Soils\Standardiser\SoilStandardiser.cs" />
-    <Compile Include="Stock\AnimalInits.cs" />
+    <Compile Include="Stock\AnimalGroupInitialisation.cs" />
+    <Compile Include="Stock\AnimalOutput.cs" />
+    <Compile Include="Stock\AgeList.cs" />
+    <Compile Include="Stock\StateDifference.cs" />
+    <Compile Include="Stock\Diet.cs" />
     <Compile Include="Stock\Genotype.cs" />
     <Compile Include="Stock\GenotypeCross.cs" />
     <Compile Include="Stock\Genotypes.cs" />
+    <Compile Include="Stock\PhysiologicalState.cs" />
     <Compile Include="Stock\StockUtilities.cs" />
     <Compile Include="Storage\Checkpoint.cs" />
     <Compile Include="Storage\WriteTableCommand.cs" />

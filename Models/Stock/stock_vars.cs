@@ -490,7 +490,7 @@
         /// </summary>
         /// <param name="model"></param>
         /// <param name="initValue"></param>
-        public static void MakeAnimalValue(StockList model, ref AnimalInits[] initValue)
+        public static void MakeAnimalValue(StockList model, ref AnimalGroupInitialisation[] initValue)
         {
             AnimalGroup animalGroup;
             int idx, jdx;
@@ -502,7 +502,7 @@
             {
                 animalGroup = model.At(idx);
 
-                initValue[jdx] = new AnimalInits();
+                initValue[jdx] = new AnimalGroupInitialisation();
 
                 initValue[jdx].Genotype = animalGroup.Genotype.Name;
                 initValue[jdx].Number = animalGroup.NoAnimals;
