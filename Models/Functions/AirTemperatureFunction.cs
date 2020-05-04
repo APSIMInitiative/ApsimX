@@ -23,7 +23,7 @@ namespace Models.Functions
         /// <summary>Gets or sets the xy pairs.</summary>
         /// <value>The xy pairs.</value>
         [Link(Type = LinkType.Child, ByName = true)]
-        private XYPairs XYPairs = null;   // Temperature effect on Growth Interpolation Set
+        private IIndexedFunction TemperatureResponse= null;   // Temperature effect on Growth Interpolation Set
 
         /// <summary>Temp_3hrs the specified tmax.</summary>
         public double[] temp_3hr = null;
@@ -60,10 +60,10 @@ namespace Models.Functions
             // are then averaged to obtain the daily value.
             // --------------------------------------------------------------------------
             double tot = 0;
-            
-            foreach(double t in temp_3hr)
+
+            foreach (double t in temp_3hr)
             {
-                tot += XYPairs.ValueIndexed(t);
+                tot += (double)TemperatureResponse?.ValueIndexed(t);
             }
 
             return tot / (double)num3hr;
@@ -119,10 +119,10 @@ namespace Models.Functions
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 // add graph and table.
-                if (XYPairs != null)
+                if (TemperatureResponse != null)
                 {
                     tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + "</i> is calculated from the mean of 3-hourly estimates of air temperature based on daily max and min temperatures.", indent));
-                    tags.Add(new AutoDocumentation.GraphAndTable(XYPairs, string.Empty, "MeanAirTemperature", Name, indent));
+                    //tags.Add(new AutoDocumentation.GraphAndTable(TemperatureResponse, string.Empty, "MeanAirTemperature", Name, indent));
                 }
             }
         }

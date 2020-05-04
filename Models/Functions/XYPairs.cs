@@ -14,7 +14,7 @@ namespace Models.Functions
     [ViewName("UserInterface.Views.XYPairsView")]
     [PresenterName("UserInterface.Presenters.XYPairsPresenter")]
     [Description("Returns a y value from the specified xy maxrix corresponding to the current value of the Xproperty")]
-    public class XYPairs : Model, IFunction
+    public class XYPairs : Model, IFunction, IIndexedFunction
     {
         /// <summary>Gets or sets the x.</summary>
         /// <value>The x.</value>
