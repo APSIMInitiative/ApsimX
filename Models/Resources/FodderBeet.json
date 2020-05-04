@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 96,
+  "Version": 97,
   "Name": "Simulations",
   "Children": [
     {
@@ -167,16 +167,16 @@
                       "End": "Germination",
                       "Name": "SoilTemperature",
                       "Children": [
-                         {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 15.0,
-                      "Units": null,
-                      "Name": "ThermalTime",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 15.0,
+                          "Units": null,
+                          "Name": "ThermalTime",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
                         {
                           "$type": "Models.Memo, Models",
                           "Text": "The effect of soil temperature can go beyond germination as has been demonstrated in previous studies \r\n([Stone_etal_1998]).\r\n",
@@ -215,7 +215,7 @@
                                 25.0,
                                 0.0
                               ],
-                              "Name": "XYPairs",
+                              "Name": "TemperatureResponse",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
