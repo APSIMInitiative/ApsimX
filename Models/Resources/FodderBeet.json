@@ -167,37 +167,16 @@
                       "End": "Germination",
                       "Name": "SoilTemperature",
                       "Children": [
-                        {
-                          "$type": "Models.Functions.SoilTemperatureFunction, Models",
-                          "maxt_soil_surface": 20.0,
-                          "mint_soil_surface": 10.0,
-                          "Name": "ThermalTime",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                0.0,
-                                25.0,
-                                30.0,
-                                45.0
-                              ],
-                              "Y": [
-                                0.0,
-                                25.0,
-                                25.0,
-                                0.0
-                              ],
-                              "Name": "XYPairs",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
+                         {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "ThermalTime",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
                         {
                           "$type": "Models.Memo, Models",
                           "Text": "The effect of soil temperature can go beyond germination as has been demonstrated in previous studies \r\n([Stone_etal_1998]).\r\n",
