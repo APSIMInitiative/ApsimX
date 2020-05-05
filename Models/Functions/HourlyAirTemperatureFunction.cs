@@ -32,7 +32,7 @@ namespace Models.Functions
         private const int num1hr = 24;           // 
 
         /// <summary> hourly temp </summary>
-        private double[] temp = null;
+        private double temp;
         /// <summary> maximum temperature of the previous day </summary>
         private double MaxTB;
         /// <summary> minimum temperature of the next day </summary>
@@ -52,7 +52,6 @@ namespace Models.Functions
                                             double MinTA, double DayLength, double HOUR)
        //(MaxTB, MinT, MaxT, MinTA, DayLength, HOUR, P=1.5)
         {
-            double TEMP1;
             double TC=4.0; //nocturnal time coefficient for the exponential decrease is approximately 4 hours
             double P = 1.5; //time delay between solar noon and maximum temperature
 
@@ -67,7 +66,7 @@ namespace Models.Functions
              {
                 //  Hour between midnight and sunrise
                 //  PERIOD A MaxTB is max. temperature, before day considered
-                TEMP1 = (MinT - TSUNST * Math.Exp(-NIGHTL / TC) +
+                temp = (MinT - TSUNST * Math.Exp(-NIGHTL / TC) +
                         (TSUNST - MinT) * Math.Exp(-(HOUR + 24 - SUNSET) / TC)) /
                         (1 - Math.Exp(-NIGHTL / TC));
              }
@@ -75,7 +74,7 @@ namespace Models.Functions
             if(HOUR > SUNRIS & HOUR <= 12 + P)
             {
                 // PERIOD B Hour between sunrise and normal time of MaxT
-                TEMP1 = MinT + (MaxT - MinT) * 
+                temp = MinT + (MaxT - MinT) * 
                         Math.Sin(Math.PI * (HOUR - SUNRIS) / (DayLength + 2 * P));
             }
             if(HOUR >12 + P & HOUR <= SUNSET)
@@ -83,7 +82,7 @@ namespace Models.Functions
                 // PERIOD C Hour between normal time of MaxT and sunset
                 //  MinTA is min. temperature, after day considered
 
-                TEMP1 = MinTA + (MaxT - MinTA) * 
+                temp = MinTA + (MaxT - MinTA) * 
                     Math.Sin(Math.PI * (HOUR - SUNRIS) / (DayLength + 2 * P));
             }
   
@@ -92,13 +91,13 @@ namespace Models.Functions
                 // PERIOD D Hour between sunset and midnight
                 TSUNST = MinTA + (MaxT - MinTA) * Math.Sin(Math.PI * (DayLength / (DayLength + 2 * P)));
 
-                TEMP1 = (MinTA - TSUNST * Math.Exp(-NIGHTL / TC) +
+                temp = (MinTA - TSUNST * Math.Exp(-NIGHTL / TC) +
                         (TSUNST - MinTA) * Math.Exp(-(HOUR - SUNSET) / TC)) /
                         (1 - Math.Exp(-NIGHTL / TC));
             }
 
 
-            return TEMP1;
+            return temp;
 
             }
 
