@@ -77,10 +77,21 @@
 
         private static void AddTreeNodeIfDoesntExist(Apsim.ModelDescription modelThatCanBeAdded, TreeViewNode parent)
         {
-            var namespaceWords = modelThatCanBeAdded.ModelType.Namespace.Split(".".ToCharArray()).ToList();
+            List<string> namespaceWords;
 
             // Remove the first namespace word ('Models')
-            namespaceWords.Remove(namespaceWords.First());
+            if (modelThatCanBeAdded.ResourceString != null && modelThatCanBeAdded.ResourceString != "Models.Resources")
+            {
+                var path = modelThatCanBeAdded.ResourceString.Replace("Models.Resources.", "");
+                namespaceWords = path.Split(".".ToCharArray()).ToList();
+                namespaceWords.Remove(namespaceWords.Last());  // remove the "json" word at the end.
+                namespaceWords.Remove(namespaceWords.Last());  // remove the model name at the end.
+            }
+            else
+            {
+                namespaceWords = modelThatCanBeAdded.ModelType.Namespace.Split(".".ToCharArray()).ToList();
+                namespaceWords.Remove(namespaceWords.First());
+            }
 
             foreach (var namespaceWord in namespaceWords.Where(word => word != "Models"))
             {

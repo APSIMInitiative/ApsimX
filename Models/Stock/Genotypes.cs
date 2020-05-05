@@ -4,6 +4,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using System.Xml;
 
     /// <summary>
@@ -21,12 +22,12 @@
         /// <summary>Constructor.</summary>
         public Genotypes()
         {
-            var xmlString = ReflectionUtilities.GetResourceAsString("Models.Resources.ruminant.prm");
-            var xml = new XmlDocument();
-            xml.LoadXml(xmlString);
-            var parameters = xml.DocumentElement;
-
-            ReadPRM(parameters);
+            var resourceNames = Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList()
+                                        .Where(r => r.StartsWith("Models.Resources.Stock.Genotypes."));
+            foreach (var resourceName in resourceNames)
+            {
+                genotypes.Add(new Genotype(resourceName));
+            }
         }
 
         /// <summary>Get a list of all genotypes.</summary>
@@ -64,7 +65,6 @@
                 throw new Exception($"Cannot find stock genotype {genotypeName}");
             return foundGenotype.First();
         }
-
 
         /// <summary>
         /// Read a parameter set and append to the json array.
