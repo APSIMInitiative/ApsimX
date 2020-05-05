@@ -2203,6 +2203,7 @@
         {
             foreach (JObject AirTempFunc in JsonUtilities.ChildrenOfType(root, "AirTemperatureFunction"))
             {
+                AirTempFunc["agregationMethod"] = "0";
                 JsonUtilities.AddModel(AirTempFunc, typeof(ThreeHourSin), "InterpolationMethod");
             }
         }
