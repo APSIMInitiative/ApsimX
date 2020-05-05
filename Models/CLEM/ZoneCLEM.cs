@@ -261,6 +261,11 @@ namespace Models.CLEM
             var validationContext = new ValidationContext(model, null, null);
             var validationResults = new List<ValidationResult>();
             Validator.TryValidateObject(model, validationContext, validationResults, true);
+            if(model.Name.EndsWith(" "))
+            {
+                validationResults.Add(new ValidationResult("Component name cannot end with a space character", new string[] {"Name"}));
+            }
+
             if (validationResults.Count > 0)
             {
                 valid = false;
