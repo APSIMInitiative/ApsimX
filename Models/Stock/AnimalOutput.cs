@@ -1,5 +1,6 @@
 ﻿namespace Models.GrazPlan
 {
+    using APSIM.Shared.Utilities;
     using System;
 
     /// <summary>
@@ -222,7 +223,7 @@
         /// <returns>The clone of an animal output</returns>
         public AnimalOutput Copy()
         {
-            return ObjectCopier.Clone(this);
+            return ReflectionUtilities.Clone(this) as AnimalOutput;
         }
     }
 }

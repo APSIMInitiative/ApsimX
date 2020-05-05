@@ -460,11 +460,6 @@
         private PaddockList paddockList;
 
         /// <summary>
-        /// The list of enterprises to manage
-        /// </summary>
-        private EnterpriseList enterpriseList;
-
-        /// <summary>
         /// The list of grazing periods
         /// </summary>
         private GrazingList grazingList;
@@ -490,10 +485,7 @@
         /// <summary>
         /// Gets the enterprise list
         /// </summary>
-        public EnterpriseList Enterprises
-        {
-            get { return this.enterpriseList; }
-        }
+        public List<EnterpriseInfo> Enterprises { get; }
 
         /// <summary>
         /// Gets the grazing periods
@@ -661,9 +653,9 @@
         /// <param name="posIdx">Index in stock list</param>
         private void StoreInitialState(int posIdx)
         {
-            this.At(posIdx).storeStateInfo(ref this.stock[posIdx].InitState[0]);
+            this.At(posIdx).StoreStateInfo(ref this.stock[posIdx].InitState[0]);
             if (this.At(posIdx).Young != null)
-                this.At(posIdx).Young.storeStateInfo(ref this.stock[posIdx].InitState[1]);
+                this.At(posIdx).Young.StoreStateInfo(ref this.stock[posIdx].InitState[1]);
         }
 
         /// <summary>
@@ -675,12 +667,12 @@
         /// <param name="posIdx">Index in stock list</param>
         private void RevertInitialState(int posIdx)
         {
-            this.At(posIdx).revertStateInfo(this.stock[posIdx].InitState[0]);
+            this.At(posIdx).RevertStateInfo(this.stock[posIdx].InitState[0]);
             this.At(posIdx).PotIntake = this.At(posIdx).PotIntake * this.stock[posIdx].RDPFactor[0];
 
             if (this.At(posIdx).Young != null)
             {
-                this.At(posIdx).Young.revertStateInfo(this.stock[posIdx].InitState[1]);
+                this.At(posIdx).Young.RevertStateInfo(this.stock[posIdx].InitState[1]);
                 this.At(posIdx).Young.PotIntake = this.At(posIdx).Young.PotIntake * this.stock[posIdx].RDPFactor[1];
             }
         }
@@ -816,9 +808,9 @@
         /// <param name="group">Animal group</param>
         public void ComputeIntakeLimit(AnimalGroup group)
         {
-            group.Calc_IntakeLimit();
+            group.CalculateIntakeLimit();
             if (group.Young != null)
-                group.Young.Calc_IntakeLimit();
+                group.Young.CalculateIntakeLimit();
         }
 
         /// <summary>
@@ -913,12 +905,12 @@
         private void ComputeNutrition(int posIdx, ref double availRDP)
         {
             this.At(posIdx).Nutrition();
-            this.stock[posIdx].RDPFactor[0] = this.At(posIdx).RDP_IntakeFactor();
+            this.stock[posIdx].RDPFactor[0] = this.At(posIdx).RDPIntakeFactor();
             availRDP = Math.Min(availRDP, this.stock[posIdx].RDPFactor[0]);
             if (this.At(posIdx).Young != null)
             {
                 this.At(posIdx).Young.Nutrition();
-                this.stock[posIdx].RDPFactor[1] = this.At(posIdx).Young.RDP_IntakeFactor();
+                this.stock[posIdx].RDPFactor[1] = this.At(posIdx).Young.RDPIntakeFactor();
                 availRDP = Math.Min(availRDP, this.stock[posIdx].RDPFactor[1]);
             }
         }
@@ -929,9 +921,9 @@
         /// <param name="posIdx">Index in the stock list</param>
         private void CompleteGrowth(int posIdx)
         {
-            this.At(posIdx).completeGrowth(this.stock[posIdx].RDPFactor[0]);
+            this.At(posIdx).CompleteGrowth(this.stock[posIdx].RDPFactor[0]);
             if (this.At(posIdx).Young != null)
-                this.At(posIdx).Young.completeGrowth(this.stock[posIdx].RDPFactor[1]);
+                this.At(posIdx).Young.CompleteGrowth(this.stock[posIdx].RDPFactor[1]);
         }
 
         /// <summary>
@@ -1310,7 +1302,7 @@
             this.paddockList.Add(-1, string.Empty);                                      // The "null" paddock is added here      
             //  FForages  := TForageList.Create( TRUE );
             this.forageProviders = new ForageProviders();
-            this.enterpriseList = new EnterpriseList();
+            this.Enterprises = new List<EnterpriseInfo>();
             this.grazingList = new GrazingList();
             clock = clockModel;
             weather = weatherModel;
@@ -1392,7 +1384,7 @@
         {
             int idx;
 
-            animalGroup.Calc_IntakeLimit();
+            animalGroup.CalculateIntakeLimit();
 
             idx = this.stock.Length;
             Array.Resize(ref this.stock, idx + 1);
@@ -1664,7 +1656,7 @@
             {
                 this.StoreInitialState(idx);                                                     
                 this.ComputeIntakeLimit(this.At(idx));
-                this.At(idx).Reset_Grazing();
+                this.At(idx).ResetGrazing();
             }
 
             // Compute the total potential intake (used to distribute supplement between groups of animals)         
@@ -2486,7 +2478,7 @@
                                                 ref highBaseWeight);
 
                     if ((newGroup.BaseWeight >= lowBaseWeight) && (newGroup.BaseWeight <= highBaseWeight))
-                        newGroup.setConditionAtWeight(bodyCondition);
+                        newGroup.SetConditionAtWeight(bodyCondition);
                     else
                     {
                         newGroup = null;
@@ -2878,7 +2870,7 @@
 
                         diffRatio = numAnimals / (numAnimals - numToRemove) * (removeLW / liveWt - 1.0);
                         diffs.BaseWeight = diffRatio * srcGroup.BaseWeight;
-                        diffs.StdRefWt = diffRatio * srcGroup.StdReferenceWt;               // Weight diffs within a group are       
+                        diffs.StdRefWt = diffRatio * srcGroup.standardReferenceWeight;      // Weight diffs within a group are       
                         diffs.FleeceWt = diffRatio * srcGroup.FleeceCutWeight;              // assumed genetic!                    
                     }                       
 
@@ -3147,7 +3139,7 @@
             // for each enterprise
             for (i = 0; i <= this.Enterprises.Count - 1; i++)   
             {
-                curEnt = this.Enterprises.byIndex(i);
+                curEnt = this.Enterprises[i];
  
                 if (curEnt.ManageGrazing)
                     this.ManageGrazing(currentDay, currentDay, curEnt);
@@ -3169,7 +3161,7 @@
             // for each enterprise
             for (i = 0; i <= this.Enterprises.Count - 1; i++)    
             {
-                curEnt = this.Enterprises.byIndex(i);
+                curEnt = this.Enterprises[i];
                 this.ManageDailyTasks(currentDay, curEnt);       // correct order?
 
                 if (curEnt.ManageGrazing)

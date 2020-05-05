@@ -336,6 +336,8 @@
     <Compile Include="Stock\AnimalGroupInitialisation.cs" />
     <Compile Include="Stock\AnimalOutput.cs" />
     <Compile Include="Stock\AgeList.cs" />
+    <Compile Include="Stock\AnimalStateInfo.cs" />
+    <Compile Include="Stock\ExcretionInfo.cs" />
     <Compile Include="Stock\StateDifference.cs" />
     <Compile Include="Stock\Diet.cs" />
     <Compile Include="Stock\Genotype.cs" />
@@ -536,7 +538,7 @@
     <Compile Include="Soils\SoilNitrogen\SoilNitrogen.CNPatchHandlers.cs" />
     <Compile Include="Soils\SoilNitrogen\SoilNitrogen.cs" />
     <Compile Include="Soils\SoilNitrogen\SoilNitrogen.Variables.cs" />
-    <Compile Include="Stock\animgrp.cs" />
+    <Compile Include="Stock\AnimalGroup.cs" />
     <Compile Include="Stock\AnimalParameterSet.cs" />
     <Compile Include="Stock\grazenv.cs" />
     <Compile Include="Stock\graztype.cs" />
