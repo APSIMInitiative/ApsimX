@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 96,
+  "Version": 97,
   "Name": "Simulations",
   "Children": [
     {
@@ -215,7 +215,7 @@
                     30.0,
                     0.0
                   ],
-                  "Name": "XYPairs",
+                  "Name": "TemperatureResponse",
                   "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
@@ -313,7 +313,7 @@
                         0.0,
                         -0.5
                       ],
-                      "Name": "XYPairs",
+                      "Name": "TemperatureResponse",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,

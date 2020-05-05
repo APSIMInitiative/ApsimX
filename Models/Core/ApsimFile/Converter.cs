@@ -19,7 +19,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 96; } }
+        public static int LatestVersion { get { return 97; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -2177,6 +2177,20 @@
                         rootChildren.AddFirst(rootShape);
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Add RootShape to all simulations.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion97(JObject root, string fileName)
+        {
+            foreach (JObject AirTempFunc in JsonUtilities.ChildrenOfType(root, "AirTemperatureFunction"))
+            {
+                JObject tempResponse = JsonUtilities.ChildWithName(AirTempFunc, "XYPairs");
+                tempResponse["Name"] = "TemperatureResponse";
             }
         }
 
