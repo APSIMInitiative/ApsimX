@@ -4,6 +4,7 @@ using System.Linq;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
+using Models.PMF;
 
 namespace Models.Functions
 {
@@ -21,6 +22,9 @@ namespace Models.Functions
         /// <summary>The met data</summary>
         [Link]
         protected IWeather MetData = null;
+
+        [Link]
+        private Plant plant = null;
 
         /// <summary> Method for interpolating Max and Min temperature to sub daily values </summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -42,7 +46,10 @@ namespace Models.Functions
         /// <summary>Daily average temperature calculated from sub daily temperature interpolations</summary>
         public double Value(int arrayIndex = -1)
         {
-            return MathUtilities.Average(SubDailyResponse);
+            if (SubDailyResponse != null)
+                return MathUtilities.Average(SubDailyResponse);
+            else
+                return 0.0;
         }
 
         /// <summary> Set the sub daily temperature range factor values at sowing</summary>
@@ -57,23 +64,26 @@ namespace Models.Functions
         /// <summary> Set the sub dialy temperature values for the day then call temperature response function and set value for each sub daily period</summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        [EventSubscribe("PreparingNewWeatherData")]
-        private void OnNewMet(object sender, EventArgs e)
+        [EventSubscribe("PrePhenology")]
+        private void OnPrePhenology(object sender, EventArgs e)
         {
-            if (InterpolationMethod.GetType().Name== "HourlySinPpAdjusted")
-                TempRangeFactors = InterpolationMethod.t_range_fract();
-
-            SubDailyTemperatures = new List<Double>();
-            double diurnal_range = MetData.MaxT - MetData.MinT;
-            foreach (double trf in TempRangeFactors)
+            if (plant.IsAlive)
             {
-                SubDailyTemperatures.Add(MetData.MinT + trf * diurnal_range);
-            }
+                if (InterpolationMethod.GetType().Name == "HourlySinPpAdjusted")
+                    TempRangeFactors = InterpolationMethod.t_range_fract();
 
-            SubDailyResponse = new List<double>();
-            foreach (double sdt in SubDailyTemperatures)
-            {
-                SubDailyTemperatures.Add(TemperatureResponse.ValueIndexed(sdt));
+                SubDailyTemperatures = new List<Double>();
+                double diurnal_range = MetData.MaxT - MetData.MinT;
+                foreach (double trf in TempRangeFactors)
+                {
+                    SubDailyTemperatures.Add(MetData.MinT + trf * diurnal_range);
+                }
+
+                SubDailyResponse = new List<double>();
+                foreach (double sdt in SubDailyTemperatures)
+                {
+                    SubDailyResponse.Add(TemperatureResponse.ValueIndexed(sdt));
+                }
             }
         }
 
@@ -110,15 +120,17 @@ namespace Models.Functions
         public List<double> t_range_fract()
         {
             List<int> periods = Enumerable.Range(1, 8).ToList();
-            List<double> trfs = new List<double>(periods.Count);
+            List<double> trfs = new List<double>();
             // pre calculate t_range_fract for speed reasons
             foreach (int period in periods)
             {
-                trfs[period - 1] = 0.92105
-                                     + 0.1140 * period
-                                     - 0.0703 * Math.Pow(period, 2)
-                                     + 0.0053 * Math.Pow(period, 3);
+                trfs.Add(0.92105
+                        + 0.1140 * period
+                        - 0.0703 * Math.Pow(period, 2)
+                        + 0.0053 * Math.Pow(period, 3));
             }
+            if (trfs.Count != 8)
+                throw new Exception("Incorrect number of subdaily temperature estimations in " + this.Name + " temperature interpolation");
             return trfs;
         }
     }
