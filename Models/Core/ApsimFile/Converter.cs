@@ -19,7 +19,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 97; } }
+        public static int LatestVersion { get { return 98; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -2181,7 +2181,7 @@
         }
 
         /// <summary>
-        /// Add RootShape to all simulations.
+        /// Rename XYPairs to temp response on AirTempFunction.
         /// </summary>
         /// <param name="root">Root node.</param>
         /// <param name="fileName">Path to the .apsimx file.</param>
@@ -2193,6 +2193,20 @@
                 tempResponse["Name"] = "TemperatureResponse";
             }
         }
+
+        /// <summary>
+        /// Add InterpolationMethod to AirTemperature Function.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion98(JObject root, string fileName)
+        {
+            foreach (JObject AirTempFunc in JsonUtilities.ChildrenOfType(root, "AirTemperatureFunction"))
+            {
+                JsonUtilities.AddModel(AirTempFunc, typeof(ThreeHourSin), "InterpolationMethod");
+            }
+        }
+
 
         /// <summary>
         /// Add progeny destination phase and mortality function.
