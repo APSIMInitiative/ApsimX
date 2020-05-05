@@ -12,10 +12,9 @@ namespace Models.Functions
     /// A value is calculated from the mean of 3-hourly estimates of air temperature based on daily max and min temperatures.  
     /// </summary>
     [Serializable]
-    [Description("A value is calculated from the mean of 3-hourly estimates of air temperature based on daily max and min temperatures\n\n" +
-        "Eight interpolations of the air temperature are calculated using a three-hour correction factor." +
-        "For each air three-hour air temperature, a value is calculated.  The eight three-hour estimates" +
-        "are then averaged to obtain the daily value.")]
+    [Description("Interoplates Daily Min and Max temperatures out to sub daily values using the Interpolation Method, applyes a temperature response function and returns a daily agrigate")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class AirTemperatureFunction : Model, IFunction, ICustomDocumentation
     {
 
@@ -34,6 +33,19 @@ namespace Models.Functions
         [Link(Type = LinkType.Child, ByName = true)]
         private IIndexedFunction TemperatureResponse = null;
 
+        /// <summary>Method used to agreagate sub daily values</summary>
+        [Description("Method used to agregate sub daily temperature function")]
+        public AgregationMethod agregationMethod { get; set; }
+
+        /// <summary>Method used to agreagate sub daily values</summary>
+        public enum AgregationMethod
+        {
+            /// <summary>Return average of sub daily values</summary>
+            Average,
+            /// <summary>Return sum of sub daily values</summary>
+            Sum
+        }
+
         /// <summary>Factors used to multiply daily range to give diurnal pattern of temperatures between Tmax and Tmin</summary>
         public List<double> TempRangeFactors = null;
 
@@ -47,7 +59,14 @@ namespace Models.Functions
         public double Value(int arrayIndex = -1)
         {
             if (SubDailyResponse != null)
-                return MathUtilities.Average(SubDailyResponse);
+            {
+                if (agregationMethod == AgregationMethod.Average)
+                    return SubDailyResponse.Average();
+                if (agregationMethod == AgregationMethod.Sum)
+                    return SubDailyResponse.Sum();
+                else
+                    throw new Exception("invalid agregation method selected in " + this.Name + "temperature interpolation");
+            }
             else
                 return 0.0;
         }
