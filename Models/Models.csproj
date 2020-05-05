@@ -601,7 +601,6 @@
     <Compile Include="Functions\PowerFunction.cs" />
     <Compile Include="Functions\SigmoidFunction.cs" />
     <Compile Include="Functions\SoilTemperatureDepthFunction.cs" />
-    <Compile Include="Functions\SoilTemperatureFunction.cs" />
     <Compile Include="Functions\SoilTemperatureWeightedFunction.cs" />
     <Compile Include="Functions\SplineInterpolationFunction.cs" />
     <Compile Include="Functions\StageBasedInterpolation.cs" />
