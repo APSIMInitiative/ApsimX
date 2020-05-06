@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 98,
+  "Version": 97,
   "Name": "Simulations",
   "Children": [
     {
@@ -262,20 +262,11 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.ThreeHourSin, Models",
-                  "Name": "InterpolationMethod",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
               "Enabled": true,
-              "ReadOnly": false,
-              "agregationMethod": "0"
+              "ReadOnly": false
             },
             {
               "$type": "Models.Functions.MultiplyFunction, Models",
@@ -360,20 +351,11 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.ThreeHourSin, Models",
-                      "Name": "InterpolationMethod",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false,
-                  "agregationMethod": "0"
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
