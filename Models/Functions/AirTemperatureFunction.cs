@@ -74,8 +74,8 @@ namespace Models.Functions
         /// <summary> Set the sub daily temperature range factor values at sowing</summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        [EventSubscribe("PlantSowing")]
-        private void OnPlantSowing(object sender, EventArgs e)
+        [EventSubscribe("Sowing")]
+        private void OnSowing(object sender, EventArgs e)
         {
             TempRangeFactors = InterpolationMethod.t_range_fract();
         }
