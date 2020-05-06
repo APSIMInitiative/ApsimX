@@ -22,9 +22,6 @@ namespace Models.Functions
         [Link]
         protected IWeather MetData = null;
 
-        [Link]
-        private IPlant plant = null;
-
         /// <summary> Method for interpolating Max and Min temperature to sub daily values </summary>
         [Link(Type = LinkType.Child, ByName = true)]
         public IInterpolationMethod InterpolationMethod = null;
@@ -45,9 +42,6 @@ namespace Models.Functions
             /// <summary>Return sum of sub daily values</summary>
             Sum
         }
-
-        /// <summary>Factors used to multiply daily range to give diurnal pattern of temperatures between Tmax and Tmin</summary>
-        public List<double> TempRangeFactors = null;
 
         /// <summary>Temperatures interpolated to sub daily values from Tmin and Tmax</summary>
         public List<double> SubDailyTemperatures = null;
@@ -71,39 +65,19 @@ namespace Models.Functions
                 return 0.0;
         }
 
-        /// <summary> Set the sub daily temperature range factor values at sowing</summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        [EventSubscribe("Sowing")]
-        private void OnSowing(object sender, EventArgs e)
-        {
-            TempRangeFactors = InterpolationMethod.t_range_fract();
-        }
-
         /// <summary> Set the sub dialy temperature values for the day then call temperature response function and set value for each sub daily period</summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        [EventSubscribe("PrePhenology")]
-        private void OnPrePhenology(object sender, EventArgs e)
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDailyInitialisation(object sender, EventArgs e)
         {
-            if (plant.IsAlive)
+            SubDailyTemperatures = InterpolationMethod.SubDailyTemperatures();
+            SubDailyResponse = new List<double>();
+            foreach (double sdt in SubDailyTemperatures)
             {
-                if (InterpolationMethod.GetType().Name == "HourlySinPpAdjusted")
-                    TempRangeFactors = InterpolationMethod.t_range_fract();
-
-                SubDailyTemperatures = new List<Double>();
-                double diurnal_range = MetData.MaxT - MetData.MinT;
-                foreach (double trf in TempRangeFactors)
-                {
-                    SubDailyTemperatures.Add(MetData.MinT + trf * diurnal_range);
-                }
-
-                SubDailyResponse = new List<double>();
-                foreach (double sdt in SubDailyTemperatures)
-                {
-                    SubDailyResponse.Add(TemperatureResponse.ValueIndexed(sdt));
-                }
+                SubDailyResponse.Add(TemperatureResponse.ValueIndexed(sdt));
             }
+
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
@@ -135,6 +109,37 @@ namespace Models.Functions
         "are then averaged to obtain the daily value.")]
     public class ThreeHourSin : Model, IInterpolationMethod
     {
+        /// <summary>The met data</summary>
+        [Link]
+        protected IWeather MetData = null;
+
+        /// <summary>Factors used to multiply daily range to give diurnal pattern of temperatures between Tmax and Tmin</summary>
+        public List<double> TempRangeFactors = null;
+        
+        /// <summary>
+        /// Calculate temperatures at 3 hourly intervals from min and max using sin curve
+        /// </summary>
+        /// <returns>list of 8 temperature estimates for 3 hourly periods</returns>
+        public List<double> SubDailyTemperatures()
+        {
+            List<double> sdts = new List<Double>();
+            double diurnal_range = MetData.MaxT - MetData.MinT;
+            foreach (double trf in TempRangeFactors)
+            {
+                sdts.Add(MetData.MinT + trf * diurnal_range);
+            }
+            return sdts;
+        }
+
+        /// <summary> Set the sub daily temperature range factor values at sowing</summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [EventSubscribe("Commencing")]
+        private void OnCommencing(object sender, EventArgs e)
+        {
+            TempRangeFactors = t_range_fract();
+        }
+
         /// <summary>Fraction_of of day's range_of for this 3 hr period</summary>
         public List<double> t_range_fract()
         {
@@ -171,7 +176,7 @@ namespace Models.Functions
 
         /// <summary>Creates a list of temperature range factors used to estimate daily temperature from Min and Max temp</summary>
         /// <returns></returns>
-        public List<double> t_range_fract()
+        public List<double> SubDailyTemperatures()
         {
             Photoperiod = MetData.CalculateDayLength(-6);
             List<double> trfs = new List<double>();
@@ -190,7 +195,7 @@ namespace Models.Functions
     public interface IInterpolationMethod
     {
         /// <summary>Calculate temperature at specified periods during the day.</summary>
-        List<double> t_range_fract();
+        List<double> SubDailyTemperatures();
     }
 
 }
