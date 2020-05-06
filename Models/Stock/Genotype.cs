@@ -1,6 +1,8 @@
 ﻿namespace Models.GrazPlan
 {
     using APSIM.Shared.Utilities;
+    using Models.Core;
+    using Models.Core.ApsimFile;
     using Models.Core.Run;
     using System;
     using System.Collections.Generic;
@@ -16,8 +18,8 @@
     public class Genotype
     {
         private List<string> parameterXmlSections = new List<string>();
-
-        private AnimalParamSet parameters;
+        private AnimalParameterSet parameters;
+        private string nameOfStockResource;
 
         /// <summary>Constructor for a genotype from ruminant.prm.</summary>
         /// <param name="parameterNode">The ruminant.prm xml node where this genotype is defined.</param>
@@ -43,11 +45,23 @@
 
         /// <summary>Constructor</summary>
         /// <param name="animalParameterSet"></param>
-        public Genotype(AnimalParamSet animalParameterSet)
+        public Genotype(AnimalParameterSet animalParameterSet)
         {
             parameters = animalParameterSet;
             Name = animalParameterSet.Name;
             AnimalType = animalParameterSet.Animal.ToString();
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="resourceName">Name of stock resource.</param>
+        public Genotype(string resourceName)
+        {
+            nameOfStockResource = resourceName;
+            var words = nameOfStockResource.Split(".".ToCharArray());
+            Name = words[words.Length-2];  // second last word - last word is "json"
+            AnimalType = words[4];
         }
 
         /// <summary>Animal type</summary>
@@ -57,12 +71,14 @@
         public string Name { get; }
 
         /// <summary>Gets genotype parameters.</summary>
-        public AnimalParamSet Parameters
+        public AnimalParameterSet Parameters
         {
             get
             {
                 if (parameters != null)
                     return parameters;
+                if (!string.IsNullOrEmpty(nameOfStockResource))
+                    return ReadParametersFromResource();
                 if (parameterXmlSections.Count > 0)
                     return ReadParametersFromPRM(parameterXmlSections);
                 throw new Exception($"Cannot find any stock parameters for genotype {Name}");
@@ -70,10 +86,24 @@
         }
 
         /// <summary>
+        /// Read parameters from json resource.
+        /// </summary>
+        private AnimalParameterSet ReadParametersFromResource()
+        {
+            List<Exception> exceptions;
+            var simulations = FileFormat.ReadFromString<Simulations>(ReflectionUtilities.GetResourceAsString(nameOfStockResource),
+                                                                     out exceptions);
+            if (exceptions.Count > 0)
+                throw new Exception($"Invalid stock resource found. Name of resource: {nameOfStockResource}");
+            parameters = simulations.Children[0] as AnimalParameterSet;
+            return parameters;
+        }
+
+        /// <summary>
         /// Get an animal parameter set for the given genotype name. Will throw if cannot find genotype.
         /// </summary>
         /// <param name="parameterXmlSections">The xml node sections to read from.</param>
-        private AnimalParamSet ReadParametersFromPRM(List<string> parameterXmlSections)
+        private AnimalParameterSet ReadParametersFromPRM(List<string> parameterXmlSections)
         {
             // Parse the xml
             var overrides = new List<PropertyReplacement>();
@@ -92,15 +122,7 @@
             overrides.Reverse();
 
             // Convert the overrides into an AnimalParamSet by applying all overrides from general to specific.
-            parameters = new AnimalParamSet();
-            parameters.Name = Name;
-            if (AnimalType == "cattle")
-                parameters.Animal = GrazType.AnimalType.Cattle;
-            else if (AnimalType == "sheep")
-                parameters.Animal = GrazType.AnimalType.Sheep;
-            overrides.ForEach(genotype => genotype.Replace(parameters));
-
-            return parameters;
+            return new AnimalParameterSet(Name, AnimalType, overrides);
         }
 
         /// <summary>

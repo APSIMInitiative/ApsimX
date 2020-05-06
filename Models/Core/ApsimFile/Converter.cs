@@ -2181,7 +2181,7 @@
         }
 
         /// <summary>
-        /// Rename XYPairs to temp response on AirTempFunction.
+        /// Add RootShape to all simulations.
         /// </summary>
         /// <param name="root">Root node.</param>
         /// <param name="fileName">Path to the .apsimx file.</param>
@@ -2195,19 +2195,17 @@
         }
 
         /// <summary>
-        /// Add InterpolationMethod to AirTemperature Function.
+        /// Convert stock animalparamset
         /// </summary>
         /// <param name="root">Root node.</param>
         /// <param name="fileName">Path to the .apsimx file.</param>
         private static void UpgradeToVersion98(JObject root, string fileName)
         {
-            foreach (JObject AirTempFunc in JsonUtilities.ChildrenOfType(root, "AirTemperatureFunction"))
+            foreach (JObject paramSet in JsonUtilities.ChildrenRecursively(root, "AnimalParamSet"))
             {
-                AirTempFunc["agregationMethod"] = "0";
-                JsonUtilities.AddModel(AirTempFunc, typeof(ThreeHourSin), "InterpolationMethod");
+                paramSet["$type"] = "Models.GrazPlan.AnimalParameterSet, Models";
             }
-        }
-
+        }		
 
         /// <summary>
         /// Add progeny destination phase and mortality function.

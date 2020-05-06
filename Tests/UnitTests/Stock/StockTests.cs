@@ -60,8 +60,8 @@
             var friesian = genotypes.Get("Friesian").Parameters;
 
             // Clone the genotype and change it.
-            friesian = Apsim.Clone(friesian) as AnimalParamSet;
-            friesian.BreedSRW = 1;
+            friesian = Apsim.Clone(friesian) as AnimalParameterSet;
+            friesian.InitialiseWithParams(srw: 1);
 
             // Give it to the genotypes instance as a user genotype.
             genotypes.Add(friesian);
@@ -89,7 +89,7 @@
             var genotypes = new Genotypes();
             var animalTypes = genotypes.All.Select(genotype=>genotype.AnimalType).Distinct();
 
-            Assert.AreEqual(animalTypes.ToArray(), new string[] { "", "sheep", "cattle" });
+            Assert.AreEqual(animalTypes.ToArray(), new string[] { "Cattle", "Goats", "Sheep" });
         }
 
         /// <summary>Ensure we can get a list of all genotype names for an animal type.</summary>
@@ -98,18 +98,16 @@
         {
             // Get a friesian genotype.
             var genotypes = new Genotypes();
-            var genotypeNames = genotypes.All.Where(genotype => genotype.AnimalType == "cattle")
+            var genotypeNames = genotypes.All.Where(genotype => genotype.AnimalType == "Cattle")
                                              .Select(genotype => genotype.Name);
 
-            Assert.AreEqual(genotypeNames.ToArray(), new string[] { "cattle", "beef breeds", "british beef", "Hereford", "Angus",
-                                                                  "Beef Shorthorn", "South Devon", "Ujimqin Cattle", "Ujimqin x Angus (1st cross)",                                                                  "Ujimqin x Angus (2nd cross)", "indicus", "Brahman", "european",
-                                                                  "Charolais", "Simmental", "Limousin", "Chianina", "British x Brahman",
-                                                                  "British x Charolais", "Ujimqin x Charolais (1st cross)",
-                                                                  "Ujimqin x Charolais (2nd cross)", "british-friesian crosses",
-                                                                  "British x Friesian", "British x Holstein", "charolais-friesian crosses",
-                                                                  "Charolais x Friesian", "Charolais x Holstein", "dairy breeds", "Jersey",
-                                                                  "Ayrshire", "Guernsey", "Dairy Shorthorn", "Brown Swiss", "Friesian",
-                                                                  "Holstein"});
+            Assert.AreEqual(genotypeNames.ToArray(), new string[] { "Angus", "Beef Shorthorn", "Hereford", "South Devon", "Ayrshire", "Brown Swiss",
+                                                                    "Dairy Shorthorn", "Friesian", "Guernsey", "Holstein",  "Jersey",
+                                                                    "British x Brahman", "British x Charolais", "British x Friesian", "British x Holstein",
+                                                                    "Charolais x Friesian", "Charolais x Holstein", "Charolais", "Chianina",
+                                                                    "Limousin", "Simmental", "Brahman", "Ujimqin Cattle",
+                                                                    "Ujimqin x Angus (1st cross)", "Ujimqin x Angus (2nd cross)",
+                                                                    "Ujimqin x Charolais (1st cross)", "Ujimqin x Charolais (2nd cross)"});
 
         }
 
@@ -117,12 +115,26 @@
         [Test]
         public void CreateAnimalCross()
         {
+            var stock = new Stock();
+            var genotypeCross = new GenotypeCross()
+            { 
+                Name = "NewGenotype",
+                DamBreed = "Friesian",
+                Generation = 1,
+                SireBreed = "Jersey",
+            };
+
+            // Inject the stock link into genotype cross.
+            Utilities.InjectLink(genotypeCross, "stock", stock);
+
+            // Call the StartOfSimulation event in genotype cross.
+            Utilities.CallEvent(genotypeCross, "StartOfSimulation");
+
             // Get a friesian genotype.
-            var genotypes = new Genotypes();
-            var animalParamSet = genotypes.CreateGenotypeCross("NewGenotype", "Friesian", 0.5, "Jersey", 0.5);
+            var animalParamSet = stock.Genotypes.Get("NewGenotype").Parameters;
 
             // Make sure we can retrieve the new genotype.
-            Assert.IsNotNull(genotypes.Get("NewGenotype"));
+            Assert.IsNotNull(animalParamSet);
 
             Assert.AreEqual("Andrew Moore", animalParamSet.sEditor);
             Assert.AreEqual("30 Jan 2013", animalParamSet.sEditDate);
