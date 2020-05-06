@@ -56,7 +56,7 @@
         /// <param name="Repr"></param>
         /// <param name="iFleeceDays"></param>
         /// <returns></returns>
-        static public double DefaultFleece(AnimalParameterSet Params,
+        static public double DefaultFleece(Genotype Params,
                                      int iAgeDays,
                                      GrazType.ReproType Repr,
                                      int iFleeceDays)
@@ -87,7 +87,7 @@
         /// <param name="iFleeceDays"></param>
         /// <param name="fGFW"></param>
         /// <returns></returns>
-        static public double DefaultMicron(AnimalParameterSet Params, int iAgeDays, GrazType.ReproType Repr, int iFleeceDays, double fGFW)
+        static public double DefaultMicron(Genotype Params, int iAgeDays, GrazType.ReproType Repr, int iFleeceDays, double fGFW)
         {
             double fPotFleece;
 

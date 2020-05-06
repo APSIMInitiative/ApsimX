@@ -4042,7 +4042,7 @@
         {
             this.stockModel = new StockList(this, systemClock, locWtr);
 
-            var childGenotypes = Apsim.Children(this, typeof(AnimalParameterSet)).Cast<AnimalParameterSet>().ToList();
+            var childGenotypes = Apsim.Children(this, typeof(Genotype)).Cast<Genotype>().ToList();
             if (childGenotypes != null)
                 childGenotypes.ForEach(animalParamSet => Genotypes.Add(animalParamSet));
 

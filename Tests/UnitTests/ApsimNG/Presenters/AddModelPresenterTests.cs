@@ -90,8 +90,8 @@ namespace UnitTests.ApsimNG.Presenters
             // Let's make sure we can add stock genotype resource - e.g. Angus.
             ActivateNode(addModelsTree, ".Models.GrazPlan.Genotypes.Cattle.Beef.Angus");
             Assert.AreEqual(1, stock.Children.Count);
-            Assert.AreEqual(typeof(AnimalParameterSet), stock.Children[0].GetType());
-            var genotype = stock.Children[0] as AnimalParameterSet;
+            Assert.AreEqual(typeof(Genotype), stock.Children[0].GetType());
+            var genotype = stock.Children[0] as Genotype;
             Assert.AreEqual("Angus", genotype.Name);
             Assert.AreEqual(500, genotype.BreedSRW);
         }
