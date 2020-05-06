@@ -2203,7 +2203,7 @@
         {
             foreach (JObject paramSet in JsonUtilities.ChildrenRecursively(root, "AnimalParamSet"))
             {
-                paramSet["$type"] = "Models.GrazPlan.AnimalParameterSet, Models";
+                paramSet["$type"] = "Models.GrazPlan.Genotype, Models";
             }
         }
 

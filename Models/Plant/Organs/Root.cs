@@ -679,7 +679,7 @@
                 throw new Exception("Error trying to partition root biomass");
 
             foreach (ZoneState Z in Zones)
-                Z.PartitionRootMass(TotalRAw, Allocated.Wt);
+                Z.PartitionRootMass(TotalRAw, Allocated);
             needToRecalculateLiveDead = true;
         }
 

@@ -162,7 +162,7 @@
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            AnimalParameterSet newGenotype;
+            Genotype newGenotype;
             if (!string.IsNullOrEmpty(PureBredBreed))
             {
                 newGenotype = stock.Genotypes.Get(PureBredBreed).Parameters;
@@ -188,7 +188,7 @@
         /// <param name="damProportion">Proportion dam.</param>
         /// <param name="sireBreedName">Sire breed name.</param>
         /// <param name="sireProportion">Proportion sire.</param>
-        private AnimalParameterSet CreateGenotypeCross(string nameOfNewGenotype,
+        private Genotype CreateGenotypeCross(string nameOfNewGenotype,
                                                        string damBreedName, double damProportion,
                                                        string sireBreedName, double sireProportion)
         {
@@ -207,7 +207,7 @@
             sireBreed.DeriveParams();
             sireBreed.Initialise();
 
-            AnimalParameterSet newGenotype = new AnimalParameterSet(nameOfNewGenotype, damBreed, sireBreed, damProportion, sireProportion);
+            Genotype newGenotype = new Genotype(nameOfNewGenotype, damBreed, sireBreed, damProportion, sireProportion);
 
             // Add the new genotype into our list.
             stock.Genotypes.Add(newGenotype);

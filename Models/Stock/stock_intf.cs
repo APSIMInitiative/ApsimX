@@ -447,7 +447,7 @@
         /// <summary>
         /// Set of genotype parameters
         /// </summary>
-        private AnimalParameterSet[] genotypeParams = new AnimalParameterSet[0];
+        private Genotype[] genotypeParams = new Genotype[0];
 
         /// <summary>
         /// stock[0] is kept for use as temporary storage         
@@ -1322,7 +1322,7 @@
         /// </summary>
         /// <param name="idx">Genotype index</param>
         /// <returns>The genotype</returns>
-        public AnimalParameterSet GetGenotype(int idx)
+        public Genotype GetGenotype(int idx)
         {
             return this.genotypeParams[idx];
         }
@@ -1333,12 +1333,12 @@
         /// </summary>
         /// <param name="genoName">The genotype name</param>
         /// <returns>The genotype</returns>
-        public AnimalParameterSet GetGenotype(string genoName)
+        public Genotype GetGenotype(string genoName)
         {
             int idx;
-            AnimalParameterSet srcParamSet;
+            Genotype srcParamSet;
 
-            AnimalParameterSet result = null;
+            Genotype result = null;
             if ((genoName == string.Empty) && (this.genotypeParams.Length >= 1))                           // Null string is a special case         
                 result = this.genotypeParams[0];
             else
@@ -1357,7 +1357,7 @@
 
                     if (srcParamSet != null)
                     {
-                        result = new AnimalParameterSet(srcParamSet);
+                        result = new Genotype(srcParamSet);
                         idx = this.genotypeParams.Length;
                         Array.Resize(ref this.genotypeParams, idx + 1);
                         this.genotypeParams[idx] = result;
@@ -1955,7 +1955,7 @@
         /// <param name="ageDays">Age in days</param>
         /// <param name="parameters">Breed parameter set</param>
         /// <returns>The maximum normal weight kg</returns>
-        private double MaxNormWtFunc(double srw, double bw, int ageDays, AnimalParameterSet parameters)
+        private double MaxNormWtFunc(double srw, double bw, int ageDays, Genotype parameters)
         {
             double growthRate;
 
@@ -1970,7 +1970,7 @@
         /// <param name="reprodStatus">Reproductive status</param>
         /// <param name="parameters">Animal parameter set</param>
         /// <returns>The normal weight kg</returns>
-        public double GrowthCurve(int ageDays, GrazType.ReproType reprodStatus, AnimalParameterSet parameters)
+        public double GrowthCurve(int ageDays, GrazType.ReproType reprodStatus, Genotype parameters)
         {
             double stdRefWt;
 
@@ -1991,7 +1991,7 @@
         /// <param name="condition">Animal condition</param>
         /// <param name="chill">Chill index</param>
         /// <returns>The reproduction rate</returns>
-        private double GetReproRate(CohortsInfo cohortsInfo, AnimalParameterSet mainGenotype, AgeInfo[] ageInfo, double latitude, int mateDOY, double condition, double chill)
+        private double GetReproRate(CohortsInfo cohortsInfo, Genotype mainGenotype, AgeInfo[] ageInfo, double latitude, int mateDOY, double condition, double chill)
         {
             double result = 0.0;
             double[] pregRate = new double[4];
@@ -2075,7 +2075,7 @@
         /// <param name="newGroups">List of new animal groups</param>
         public void AddCohorts(CohortsInfo cohortsInfo, int dayOfYear, double latitude, List<int> newGroups)
         {
-            AnimalParameterSet mainGenotype;
+            Genotype mainGenotype;
             AgeInfo[] ageInfoList;
 
             var animalInits = new Animals();
@@ -2428,7 +2428,7 @@
         /// <returns>The index of the new group</returns>
         protected int Buy(PurchaseInfo animalInfo)
         {
-            AnimalParameterSet agenotype;
+            Genotype agenotype;
             AnimalGroup newGroup;
             double bodyCondition;
             double liveWeight;
@@ -3409,7 +3409,7 @@
         /// <param name="condition">Animal condition</param>
         /// <param name="chillIndex">The chill index</param>
         /// <returns>Offspring rates</returns>
-        private double[] GetOffspringRates(AnimalParameterSet parameters, double latitude, int mateDOY, int ageDays, double matingSize, double condition, double chillIndex = 0.0)
+        private double[] GetOffspringRates(Genotype parameters, double latitude, int mateDOY, int ageDays, double matingSize, double condition, double chillIndex = 0.0)
         {
             const double NO_CYCLES = 2.5;
             const double STD_LATITUDE = -35.0;             // Latitude (in degrees) for which the DayLengthConst[] parameters are set    

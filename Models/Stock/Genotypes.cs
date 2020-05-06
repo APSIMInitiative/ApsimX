@@ -17,7 +17,7 @@
         /// <summary>
         /// User supplied genotypes. These are searched first when looking for genotypes.
         /// </summary>
-        private List<Genotype> genotypes = new List<Genotype>();
+        private List<GenotypeWrapper> genotypes = new List<GenotypeWrapper>();
 
         /// <summary>Constructor.</summary>
         public Genotypes()
@@ -26,12 +26,12 @@
                                         .Where(r => r.StartsWith("Models.Resources.GrazPlan.Genotypes."));
             foreach (var resourceName in resourceNames)
             {
-                genotypes.Add(new Genotype(resourceName));
+                genotypes.Add(new GenotypeWrapper(resourceName));
             }
         }
 
         /// <summary>Get a list of all genotypes.</summary>
-        public IEnumerable<Genotype> All { get { return genotypes; } }
+        public IEnumerable<GenotypeWrapper> All { get { return genotypes; } }
 
         /// <summary>Get a list of genotype names.</summary>
         public IEnumerable<string> Names { get { return All.Select(genotype => genotype.Name); } }
@@ -51,14 +51,14 @@
 
         /// <summary>Set the user specified genotypes.</summary>
         /// <param name="animalParameterSet">The user specified animal parameter set.</param>
-        public void Add(AnimalParameterSet animalParameterSet)
+        public void Add(Genotype animalParameterSet)
         {
-            Add(new Genotype(animalParameterSet));
+            Add(new GenotypeWrapper(animalParameterSet));
         }
 
         /// <summary>Get a genotype. Throws if not found.</summary>
         /// <param name="genotypeName"></param>
-        public Genotype Get(string genotypeName)
+        public GenotypeWrapper Get(string genotypeName)
         {
             var foundGenotype = All.Where(genotype => genotype.Name.Equals(genotypeName, StringComparison.InvariantCultureIgnoreCase));
             if (foundGenotype.Count() == 0)
@@ -72,7 +72,7 @@
         /// <param name="parameterNode">The XML parameter node to convert.</param>
         private void ReadPRM(XmlNode parameterNode)
         {
-            Add(new Genotype(parameterNode));
+            Add(new GenotypeWrapper(parameterNode));
 
             // recurse through child parameter sets.
             foreach (var child in XmlUtilities.ChildNodes(parameterNode, "set"))
@@ -81,7 +81,7 @@
 
         /// <summary>Add a genotype into the list of genotypes.</summary>
         /// <param name="genotypeToAdd">The genotype to add.</param>
-        private void Add(Genotype genotypeToAdd)
+        private void Add(GenotypeWrapper genotypeToAdd)
         {
             var foundGenotype = genotypes.Find(genotype => genotype.Name == genotypeToAdd.Name);
             if (foundGenotype != null)

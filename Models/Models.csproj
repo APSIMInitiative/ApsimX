@@ -341,7 +341,7 @@
     <Compile Include="Stock\ExcretionInfo.cs" />
     <Compile Include="Stock\StateDifference.cs" />
     <Compile Include="Stock\Diet.cs" />
-    <Compile Include="Stock\Genotype.cs" />
+    <Compile Include="Stock\GenotypeWrapper.cs" />
     <Compile Include="Stock\GenotypeCross.cs" />
     <Compile Include="Stock\Genotypes.cs" />
     <Compile Include="Stock\PhysiologicalState.cs" />
@@ -540,7 +540,7 @@
     <Compile Include="Soils\SoilNitrogen\SoilNitrogen.cs" />
     <Compile Include="Soils\SoilNitrogen\SoilNitrogen.Variables.cs" />
     <Compile Include="Stock\AnimalGroup.cs" />
-    <Compile Include="Stock\AnimalParameterSet.cs" />
+    <Compile Include="Stock\Genotype.cs" />
     <Compile Include="Stock\grazenv.cs" />
     <Compile Include="Stock\graztype.cs" />
     <Compile Include="Stock\stddate.cs" />
