@@ -381,7 +381,18 @@ namespace Models.CLEM
 
                     if (this.reader.Headings == null)
                     {
-                        throw new Exception("@error:Invalid format of datafile [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]\nExpecting Header row followed by units row in brackets.\nHeading1      Heading2      Heading3\n( )         ( )        ( )");
+                        string fileType = "Text file";
+                        string extra = "\nExpecting Header row followed by units row in brackets.\nHeading1      Heading2      Heading3\n( )         ( )        ( )";
+                        if(reader.IsCSVFile)
+                        {
+                            fileType = "Comma delimited text file (csv)";
+                        }
+                        if (reader.IsExcelFile)
+                        {
+                            fileType = "Excel file";
+                            extra = "";
+                        }
+                        throw new Exception($"@error:Invalid {fileType} format of datafile [x={this.FullFileName.Replace("\\", "\\&shy;")}]{extra}");
                     }
 
                     this.soilNumIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, SoilTypeColumnName);
@@ -395,7 +406,7 @@ namespace Models.CLEM
                     {
                         if (this.reader == null || this.reader.Constant(SoilTypeColumnName) == null)
                         {
-                            throw new Exception($"@error:Cannot find Land Id column [o={SoilTypeColumnName??"Empty"}] in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]"+ $" for [x={this.Name}]");
+                            throw new Exception($"@error:Cannot find Land Id column [o={SoilTypeColumnName??"Empty"}] in crop file [x={this.FullFileName.Replace("\\", "\\&shy;")}] for [x={this.Name}]");
                         }
                     }
 

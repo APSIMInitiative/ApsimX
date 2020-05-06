@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 93,
+  "Version": 96,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -2025,7 +2025,7 @@
                                 {
                                   "$type": "Models.CLEM.Activities.CropActivityTask, Models",
                                   "OnPartialResourcesAvailableAction": 2,
-                                  "Name": "Spray weeds sorghum ",
+                                  "Name": "Spray weeds sorghum",
                                   "Children": [
                                     {
                                       "$type": "Models.CLEM.Activities.ActivityTimerCropHarvest, Models",
@@ -2082,7 +2082,7 @@
                                 {
                                   "$type": "Models.CLEM.Activities.CropActivityTask, Models",
                                   "OnPartialResourcesAvailableAction": 2,
-                                  "Name": "Harvest sorghum ",
+                                  "Name": "Harvest sorghum",
                                   "Children": [
                                     {
                                       "$type": "Models.CLEM.Activities.ActivityTimerCropHarvest, Models",
