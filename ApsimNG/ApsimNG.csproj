@@ -793,7 +793,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\SimpleGrazing.png" />
     <EmbeddedResource Include="Presenters\CLEM\Chart.min.js" />
     <EmbeddedResource Include="Resources\TreeViewImages\AccumulateCohortExpression.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\AnimalParameterSet.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Genotype.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Animals.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
