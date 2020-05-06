@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 98,
+  "Version": 99,
   "Name": "Simulations",
   "Children": [
     {
@@ -55,11 +55,20 @@
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.ThreeHourSin, Models",
+                  "Name": "InterpolationMethod",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": false,
               "Enabled": true,
-              "ReadOnly": false
+              "ReadOnly": false,
+              "agregationMethod": "0"
             },
             {
               "$type": "Models.PMF.Phen.GenericPhase, Models",
@@ -1080,11 +1089,20 @@
                                           "IncludeInDocumentation": false,
                                           "Enabled": true,
                                           "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.ThreeHourSin, Models",
+                                          "Name": "InterpolationMethod",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
                                         }
                                       ],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
-                                      "ReadOnly": false
+                                      "ReadOnly": false,
+                                      "agregationMethod": "0"
                                     }
                                   ],
                                   "IncludeInDocumentation": false,
