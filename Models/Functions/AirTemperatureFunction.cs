@@ -172,24 +172,64 @@ namespace Models.Functions
         [Link]
         protected IWeather MetData = null;
 
-        private double Photoperiod = 0;
+        private const double p = 1.5;
+
+        private const double tc = 4.0;
+
+        /// <summary>
+        /// Temperature at the most recent sunset
+        /// </summary>
+        public double Tsset { get; set; }
+
+        /// <summary> Set the sub daily temperature range factor values at sowing</summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [EventSubscribe("Commencing")]
+        private void OnCommencing(object sender, EventArgs e)
+        {
+            Tsset = MetData.MinT + (MetData.MaxT - MetData.MinT) * 0.6;  //To start things off assum SunSet temperature on first day
+        }
 
         /// <summary>Creates a list of temperature range factors used to estimate daily temperature from Min and Max temp</summary>
         /// <returns></returns>
         public List<double> SubDailyTemperatures()
         {
-            Photoperiod = MetData.CalculateDayLength(-6);
-            List<double> trfs = new List<double>();
-            // pre calculate t_range_fract for speed reasons
-            for (int period = 1; period <= 24; period++)
+            double d = MetData.CalculateDayLength(-6);
+            double Tmin = MetData.MinT;
+            double Tmax = MetData.MaxT;
+            int Hsrise = (int)Math.Round(MetData.CalculateSunRise());
+            int Hsset = (int)Math.Round(MetData.CalculateSunSet());
+
+            List<double> sdts = new List<double>();
+            for (int Th = 0; Th <= 23; Th++)
             {
-                trfs.Add(1.0); // replace 1.0 with a calculation for the factor that determins where current temp is between Min (trf = 0) and Max (trf = 1) temp  
+                double Ta = 1.0;
+                if ((Th <= Hsrise) || (Th > Hsset))
+                {//Use Nocturnal temperature function
+                    double n = 24 - d;
+                    double numerator = Tmin
+                                      - Tsset * Math.Exp(-n / tc)
+                                      + (Tsset - Tmin) * Math.Exp(-(Th - Hsset)/tc);
+                    Ta =  numerator
+                         /(1 - Math.Exp(-n / tc));
+                }
+                else
+                {//Use Sin curve for daylight hours
+                     Ta =   Tmin
+                          + (Tmax - Tmin) 
+                          * Math.Sin(Math.PI * (Th - 12 + d / 2) 
+                                                  / (d + 2 * p));
+                    
+                    if (Th == MetData.CalculateSunSet())
+                    {//Record sun set temperature for the upcomming nocturnal period
+                        Tsset = Ta;
+                    }
+                }
+                sdts.Add(Ta);
             }
-            return trfs;
+            return sdts;
         }
     }
-
-
 
     /// <summary>An interface that defines what needs to be implemented by an organthat has a water demand.</summary>
     public interface IInterpolationMethod
