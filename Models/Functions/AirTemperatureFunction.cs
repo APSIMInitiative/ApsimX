@@ -23,7 +23,7 @@ namespace Models.Functions
         protected IWeather MetData = null;
 
         [Link]
-        private Plant plant = null;
+        private IPlant plant = null;
 
         /// <summary> Method for interpolating Max and Min temperature to sub daily values </summary>
         [Link(Type = LinkType.Child, ByName = true)]
