@@ -169,7 +169,7 @@ namespace Models.Functions
     /// (Tsset).
     /// </summary>
     [Serializable]
-    [Description("provide a description")]
+    [Description("calculating the hourly temperature based on Tmax, Tmin and daylength")]
     [ValidParent(ParentType = typeof(IFunction))]
     public class HourlySinPpAdjusted : Model, IInterpolationMethod
     {
