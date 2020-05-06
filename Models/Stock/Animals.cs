@@ -14,7 +14,7 @@
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Stock))]
-    public class AnimalGroupInitialisation : Model
+    public class Animals : Model
     {
         [Link]
         private Stock stock = null;

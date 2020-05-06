@@ -1403,7 +1403,7 @@
         /// </summary>
         /// <param name="animalInits">The animal data</param>
         /// <returns>The index of the new animal group</returns>
-        public int Add(AnimalGroupInitialisation animalInits)
+        public int Add(Animals animalInits)
         {
             AnimalGroup newGroup;
             PaddockInfo paddock;
@@ -2078,7 +2078,7 @@
             AnimalParameterSet mainGenotype;
             AgeInfo[] ageInfoList;
 
-            AnimalGroupInitialisation animalInits = new AnimalGroupInitialisation();
+            var animalInits = new Animals();
             int numCohorts;
             double survival;
             int daysSinceShearing;

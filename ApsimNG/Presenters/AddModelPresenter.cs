@@ -1,5 +1,6 @@
 ﻿namespace UserInterface.Presenters
 {
+    using APSIM.Shared.Utilities;
     using global::UserInterface.Commands;
     using Interfaces;
     using Models.Core;
@@ -80,8 +81,15 @@
             List<string> namespaceWords;
 
             // Remove the first namespace word ('Models')
-            if (modelThatCanBeAdded.ResourceString != null && modelThatCanBeAdded.ResourceString != "Models.Resources")
+            bool resourceIsInSubDirectory = false;
+            if (modelThatCanBeAdded.ResourceString != null)
             {
+                // Need to determine if the resource name is in a sub directory of Models.Resources e.g. Models.Resources.GrazPlan.Cattle.Angus.json
+                var subDirectory = modelThatCanBeAdded.ResourceString.Replace("Models.Resources.", "").Replace(".json", "");
+                resourceIsInSubDirectory = subDirectory.Contains('.');
+            }
+            if (resourceIsInSubDirectory)
+            { 
                 var path = modelThatCanBeAdded.ResourceString.Replace("Models.Resources.", "");
                 namespaceWords = path.Split(".".ToCharArray()).ToList();
                 namespaceWords.Remove(namespaceWords.Last());  // remove the "json" word at the end.
@@ -91,6 +99,7 @@
             {
                 namespaceWords = modelThatCanBeAdded.ModelType.Namespace.Split(".".ToCharArray()).ToList();
                 namespaceWords.Remove(namespaceWords.First());
+                modelThatCanBeAdded.ResourceString = modelThatCanBeAdded.ModelName;
             }
 
             foreach (var namespaceWord in namespaceWords.Where(word => word != "Models"))
@@ -150,10 +159,26 @@
                 if (selectedModelType != null)
                 {
                     this.explorerPresenter.MainPresenter.ShowWaitCursor(true);
-                    IModel child = (IModel)Activator.CreateInstance(selectedModelType.ModelType, true);
-                    child.Name = selectedModelType.ModelName;
-                    if (child is ModelCollectionFromResource resource)
-                        resource.ResourceName = selectedModelType.ModelName;
+
+                    IModel child;
+                    if (!(selectedModelType.ModelType == typeof(ModelCollectionFromResource)) && 
+                        selectedModelType.ResourceString != null &&
+                        selectedModelType.ResourceString.Contains('.'))
+                    {
+                        List<Exception> exceptions;
+                        var contents = ReflectionUtilities.GetResourceAsString(explorerPresenter.ApsimXFile.GetType().Assembly,
+                                                                               selectedModelType.ResourceString);
+                        child = FileFormat.ReadFromString<Model>(contents, out exceptions);
+                        if (child.Children.Count == 1)
+                            child = child.Children[0];
+                    }
+                    else
+                    { 
+                        child = (IModel)Activator.CreateInstance(selectedModelType.ModelType, true);
+                        child.Name = selectedModelType.ModelName;
+                        if (child is ModelCollectionFromResource resource)
+                            resource.ResourceName = selectedModelType.ResourceString;
+                    }
 
                     var command = new AddModelCommand(Apsim.FullPath(this.model), child, explorerPresenter);
                     explorerPresenter.CommandHistory.Add(command, true);

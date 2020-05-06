@@ -156,7 +156,7 @@
         /// <summary>
         /// The init values for the animal
         /// </summary>
-        private AnimalGroupInitialisation[] animalInits;
+        private Animals[] animalInits;
 
         /// <summary>
         /// If the paddocks are specified by the user
@@ -256,7 +256,7 @@
         /// <summary>
         /// Gets or sets the initial state of each animal group
         /// </summary>
-        public AnimalGroupInitialisation[] Animals
+        public Animals[] Animals
         {
             get
             {

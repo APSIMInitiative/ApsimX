@@ -23,7 +23,7 @@
         public Genotypes()
         {
             var resourceNames = Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList()
-                                        .Where(r => r.StartsWith("Models.Resources.Stock.Genotypes."));
+                                        .Where(r => r.StartsWith("Models.Resources.GrazPlan.Genotypes."));
             foreach (var resourceName in resourceNames)
             {
                 genotypes.Add(new Genotype(resourceName));
