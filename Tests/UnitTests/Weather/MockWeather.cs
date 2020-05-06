@@ -43,5 +43,13 @@
         {
             throw new NotImplementedException();
         }
+        public double CalculateSunRise()
+        {
+            throw new NotImplementedException();
+        }
+        public double CalculateSunSet()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
