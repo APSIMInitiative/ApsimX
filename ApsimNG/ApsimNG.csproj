@@ -473,6 +473,8 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\HourlySinPpAdjusted.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\ThreeHourSin.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\GenotypeCross.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RelationshipTracker.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\MigrantDestinationPhase.png" />
