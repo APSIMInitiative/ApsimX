@@ -1289,12 +1289,12 @@ namespace Models.GrazPlan
         /// <summary>
         /// Computes a weighted average supplement composition
         /// </summary>
-        /// <param name="aveSupp">receives the average supplement composition</param>
-        public void AverageSuppt(out FoodSupplement aveSupp)
+        public FoodSupplement AverageSuppt()
         {
-            aveSupp = new FoodSupplement();
+            var aveSupp = new FoodSupplement();
             if (TotalAmount > 0.0)
                 aveSupp.MixMany(SuppArray);
+            return aveSupp;
         }
 
         /// <summary>
