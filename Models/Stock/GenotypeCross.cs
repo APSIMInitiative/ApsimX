@@ -20,6 +20,26 @@
         [Link]
         private Stock stock = null;
 
+        /// <summary>Gets or sets the animal type.</summary>
+        [Description("Animal type")]
+        [Display(Values = "GetAnimalTypes")]
+        public string AnimalType { get; set; }
+
+        /// <summary>The pure bred breed name.</summary>
+        [Description("Purebred breed name")]
+        [Display(Values = "GetGenotypeNames", EnabledCallback = "PurebredEnabled")]
+        public string PureBredBreed { get; set; }
+
+        /// <summary>The dam breed name.</summary>
+        [Description("Dam breed name for crosses")]
+        [Display(Values = "GetGenotypeNames", EnabledCallback = "CrossEnabled")]
+        public string DamBreed { get; set; }
+
+        /// <summary>The sire breed name.</summary>
+        [Description("Sire breed name for crosses")]
+        [Display(Values = "GetGenotypeNames", EnabledCallback = "CrossEnabled")]
+        public string SireBreed { get; set; }
+
         /// <summary>Base rate of mortality in mature animals. Default is 0.0.</summary>
         [Description("Base rate of mortality in mature animals")]
         [Units("/yr")]
@@ -36,34 +56,6 @@
         /// </summary>
         [Description("Peak Conception rates (1, 2, 3 young) for mature ewes or cows in average body condition. Only 2 values for cattle.")]
         public double[] Conception { get; set; } = new double[4];
-
-        /// <summary>
-        /// Gets or sets the animal type.
-        /// </summary>
-        [Description("Animal type")]
-        [Display(Values = "GetAnimalTypes")]
-        public string AnimalType { get; set; }
-
-        /// <summary>
-        /// Gets or sets the pure bred breed name
-        /// </summary>
-        [Description("Purebred breed name")]
-        [Display(Values = "GetGenotypeNames", EnabledCallback = "PurebredEnabled")]
-        public string PureBredBreed { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the dam breed name
-        /// </summary>
-        [Description("Dam breed name for crosses")]
-        [Display(Values = "GetGenotypeNames", EnabledCallback = "CrossEnabled")]
-        public string DamBreed { get; set; }
-
-        /// <summary>
-        /// Gets or sets the sire breed name
-        /// </summary>
-        [Description("Sire breed name for crosses")]
-        [Display(Values = "GetGenotypeNames", EnabledCallback = "CrossEnabled")]
-        public string SireBreed { get; set; }
 
         /// <summary>
         /// Gets or sets the generation
@@ -136,7 +128,7 @@
         {
             if (AnimalType == null)
                 DetermineAnimalType();
-            return stock.Genotypes.All.Select(genotype => genotype.AnimalType);
+            return stock.Genotypes.All.Select(genotype => genotype.AnimalType).Distinct();
         }
 
         /// <summary>Get the names of all genotypes for the current animal type.</summary>
@@ -145,7 +137,7 @@
             if (AnimalType == null)
                 DetermineAnimalType();
             return stock.Genotypes.All.Where(genotype => genotype.AnimalType == AnimalType)
-                                      .Select(genotype => genotype.Name);
+                                      .Select(genotype => genotype.Name);                                      
         }
 
         /// <summary>the animal type from the breed names.</summary>
@@ -170,7 +162,7 @@
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            AnimalParamSet newGenotype;
+            AnimalParameterSet newGenotype;
             if (!string.IsNullOrEmpty(PureBredBreed))
             {
                 newGenotype = stock.Genotypes.Get(PureBredBreed).Parameters;
@@ -183,35 +175,44 @@
             {
                 var damProportion = Math.Pow(0.5, Generation);
                 var sireProportion = 1 - damProportion;
-                newGenotype = stock.Genotypes.CreateGenotypeCross(Name, DamBreed, damProportion, SireBreed, sireProportion);
+                newGenotype = CreateGenotypeCross(Name, DamBreed, damProportion, SireBreed, sireProportion);
             }
+            newGenotype.InitialiseWithParams(SRW, PotFleeceWt, MaxFibreDiam, FleeceYield, PeakMilk, Conception, MatureDeathRate, WeanerDeathRate);
+        }
 
-            if (!double.IsNaN(SRW))
-                newGenotype.BreedSRW = SRW;
-            if (!double.IsNaN(PotFleeceWt))
-                newGenotype.PotentialGFW = PotFleeceWt;
-            if (!double.IsNaN(MaxFibreDiam))
-                newGenotype.MaxMicrons = MaxFibreDiam;
-            if (!double.IsNaN(FleeceYield))
-                newGenotype.FleeceYield = FleeceYield;
-            if (!double.IsNaN(PeakMilk))
-                newGenotype.PotMilkYield = PeakMilk;
-            if (Conception != null && Conception.Length == 4 && !double.IsNaN(Conception[0]))
-            newGenotype.Conceptions = Conception;
-            if (!double.IsNaN(MatureDeathRate))
-            {
-                if (1.0 - MatureDeathRate < 0)
-                    throw new Exception("Power of negative number attempted in setting mature death rate.");
+        /// <summary>
+        /// Create a genotype cross.                                      
+        /// </summary>
+        /// <param name="nameOfNewGenotype">Name of new genotype. Can be null.</param>
+        /// <param name="damBreedName">Dam breed name.</param>
+        /// <param name="damProportion">Proportion dam.</param>
+        /// <param name="sireBreedName">Sire breed name.</param>
+        /// <param name="sireProportion">Proportion sire.</param>
+        private AnimalParameterSet CreateGenotypeCross(string nameOfNewGenotype,
+                                                       string damBreedName, double damProportion,
+                                                       string sireBreedName, double sireProportion)
+        {
+            if (damProportion + sireProportion != 1)
+                throw new Exception("When creating a cross breed the total proportions must be equal to one.");
 
-                newGenotype.MortRate[1] = 1.0 - Math.Pow(1.0 - MatureDeathRate, 1.0 / DAYSPERYR);
-            }
-            if (!double.IsNaN(WeanerDeathRate))
-            {
-                if (1.0 - WeanerDeathRate < 0)
-                    throw new Exception("Power of negative number attempted in setting weaner death rate.");
+            var damBreedGenotype = stock.Genotypes.Get(damBreedName);
+            if (damBreedGenotype == null)
+                throw new Exception($"Cannot find a stock genotype named {damBreedName}");
+            var damBreed = damBreedGenotype.Parameters;
+            damBreed.DeriveParams();
+            damBreed.Initialise();
 
-                newGenotype.MortRate[2] = 1.0 - Math.Pow(1.0 - WeanerDeathRate, 1.0 / DAYSPERYR);
-            }
+            var sireBreedGenotype = stock.Genotypes.Get(sireBreedName);
+            var sireBreed = damBreedGenotype.Parameters;
+            sireBreed.DeriveParams();
+            sireBreed.Initialise();
+
+            AnimalParameterSet newGenotype = new AnimalParameterSet(nameOfNewGenotype, damBreed, sireBreed, damProportion, sireProportion);
+
+            // Add the new genotype into our list.
+            stock.Genotypes.Add(newGenotype);
+
+            return newGenotype;
         }
     }
 }

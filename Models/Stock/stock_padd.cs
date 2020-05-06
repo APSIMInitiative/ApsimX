@@ -208,11 +208,6 @@ namespace Models.GrazPlan
         public PaddockInfo InPaddock { get; set; }
 
         /// <summary>
-        /// Gets or sets the herbage info
-        /// </summary>
-        public GrazType.PopulationHerbageData HerbageData { get; set; }
-
-        /// <summary>
         /// Gets or sets the amount of this forage removed (output)
         /// </summary>
         public GrazType.GrazingOutputs RemovalKG { get; set; }
