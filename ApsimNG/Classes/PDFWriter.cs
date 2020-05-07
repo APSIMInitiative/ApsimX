@@ -372,7 +372,11 @@
                     PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(modelView.model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
                     if (viewName != null && presenterName != null)
                     {
-                        ViewBase view = Assembly.GetExecutingAssembly().CreateInstance(viewName.ToString(), false, BindingFlags.Default, null, new object[] { ViewBase.MasterView }, null, null) as ViewBase;
+                        ViewBase owner = ViewBase.MasterView as ViewBase;
+                        if (viewName.ToString() == "UserInterface.Views.MapView")
+                            owner = null;
+
+                        ViewBase view = Assembly.GetExecutingAssembly().CreateInstance(viewName.ToString(), false, BindingFlags.Default, null, new object[] { owner }, null, null) as ViewBase;
                         IPresenter presenter = Assembly.GetExecutingAssembly().CreateInstance(presenterName.ToString()) as IPresenter;
 
                         if (view != null && presenter != null)
@@ -392,6 +396,12 @@
                                 popupWin.SetSizeRequest(800, 800);
                                 popupWin.Add(view.MainWidget);
                             }
+                            if (view is IMapView map)
+                            {
+                                map.EnsureMarkersAreVisible();
+                                map.HideZoomControls();
+                            }
+
                             popupWin.ShowAll();
                             while (Gtk.Application.EventsPending())
                                 Gtk.Application.RunIteration();
