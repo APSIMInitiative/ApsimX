@@ -235,6 +235,10 @@ namespace Models.GrazPlan
         {
             clock = clockModel;
             weather = weatherModel;
+
+            for (int i = 0; i < 2; i++)
+                this.PastIntakeRate[i] = new GrazType.GrazingOutputs();
+
             Construct(Params, Repro, Number, AgeD, LiveWt, GFW, RandomFactory, bTakeParams);
         }
 
@@ -274,6 +278,9 @@ namespace Models.GrazPlan
             lactStatus = GrazType.LactType.Suckling;
             numberOffspring = Parents.NoOffspring;
             mothers = Parents;
+
+            for (int i = 0; i < 2; i++)
+                this.PastIntakeRate[i] = new GrazType.GrazingOutputs();
 
             ComputeSRW();                                                              // Must do this after assigning a value to Mothers  
             CalculateWeights();
@@ -500,6 +507,56 @@ namespace Models.GrazPlan
         {
             get { return this.GetExcretion(); }
         }
+
+        /// <summary>
+        /// Gets or sets the paddock occupied
+        /// </summary>
+        public PaddockInfo PaddOccupied { get; set; }
+
+        /// <summary>
+        /// Gets or sets the tag number
+        /// </summary>
+        public int Tag { get; set; }
+
+        /// <summary>
+        /// Gets or sets the priority level
+        /// </summary>
+        public int Priority { get; set; }
+
+        /// <summary>
+        /// 0=mothers, 1=suckling young
+        /// </summary>
+        public AnimalStateInfo[] InitState = new AnimalStateInfo[2];
+
+        /// <summary>
+        /// RDF factor
+        /// </summary>
+        public double[] RDPFactor = new double[2];      // [0..1] 
+
+        /// <summary>
+        /// Index is to forage-within-paddock
+        /// </summary>
+        public GrazType.GrazingInputs[] InitForageInputs;
+
+        /// <summary>
+        /// Forage inputs
+        /// </summary>
+        public GrazType.GrazingInputs[] StepForageInputs;
+
+        /// <summary>
+        /// Paddock grazing inputs
+        /// </summary>
+        public GrazType.GrazingInputs PaddockInputs;
+
+        /// <summary>
+        /// Pasture intake
+        /// </summary>
+        public GrazType.GrazingOutputs[] PastIntakeRate = new GrazType.GrazingOutputs[2];
+
+        /// <summary>
+        /// Supplement intake
+        /// </summary>
+        public double[] SuppIntakeRate = new double[2];
 
         // Management events .............................................
 
@@ -835,6 +892,13 @@ namespace Models.GrazPlan
             AnimalGroup theCopy = ReflectionUtilities.Clone(this) as AnimalGroup;
             theCopy.weather = weather;
             theCopy.clock = clock;
+            if (PaddOccupied != null)
+            {
+                theCopy.PaddOccupied.PaddObj = PaddOccupied.PaddObj;
+                theCopy.PaddOccupied.AddFaecesObj = PaddOccupied.AddFaecesObj;
+                theCopy.PaddOccupied.AddUrineObj = PaddOccupied.AddUrineObj;
+                theCopy.PaddOccupied.Soil = PaddOccupied.Soil;
+            }
             if (theCopy.Young != null)
             {
                 theCopy.Young.clock = clock;

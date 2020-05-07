@@ -337,7 +337,9 @@
     <Compile Include="Stock\AnimalOutput.cs" />
     <Compile Include="Stock\AgeList.cs" />
     <Compile Include="Stock\AnimalStateInfo.cs" />
+    <Compile Include="Stock\CohortsInfo.cs" />
     <Compile Include="Stock\ExcretionInfo.cs" />
+    <Compile Include="Stock\PurchaseInfo.cs" />
     <Compile Include="Stock\StateDifference.cs" />
     <Compile Include="Stock\Diet.cs" />
     <Compile Include="Stock\GenotypeWrapper.cs" />
@@ -547,7 +549,7 @@
     <Compile Include="Stock\stdstrng.cs" />
     <Compile Include="Stock\stock.cs" />
     <Compile Include="Stock\stock_ent.cs" />
-    <Compile Include="Stock\stock_intf.cs" />
+    <Compile Include="Stock\StockList.cs" />
     <Compile Include="Stock\stock_manage.cs" />
     <Compile Include="Stock\stock_padd.cs" />
     <Compile Include="Stock\stock_vars.cs" />

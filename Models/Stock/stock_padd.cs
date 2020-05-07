@@ -1170,7 +1170,8 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the paddock object
         /// </summary>
-        public object PaddObj { get; set; }
+        [NonSerialized]
+        public Zone PaddObj;
 
         /// <summary>
         /// Gets or sets the excretion destination
@@ -1185,17 +1186,20 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the faeces destination
         /// </summary>
-        public object AddFaecesObj { get; set; }
+        [NonSerialized]
+        public object AddFaecesObj;
 
         /// <summary>
         /// Gets or sets the urine destination
         /// </summary>
-        public object AddUrineObj { get; set; }
+        [NonSerialized]
+        public object AddUrineObj;
 
         /// <summary>
         /// Gets or sets the soil of the paddock
         /// </summary>
-        public ISoil Soil { get; set; }
+        [NonSerialized]
+        public ISoil Soil;
 
         /// <summary>
         /// Gets or sets the paddock area (ha)
@@ -1405,7 +1409,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="paddObj">The paddock object</param>
         /// <param name="paddName">The name of the paddock</param>
-        public void Add(object paddObj, string paddName)
+        public void Add(Zone paddObj, string paddName)
         {
             PaddockInfo newPadd;
 

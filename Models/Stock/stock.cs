@@ -154,19 +154,9 @@
         private bool isFirstStep;
 
         /// <summary>
-        /// The init values for the animal
-        /// </summary>
-        private Animals[] animalInits;
-
-        /// <summary>
         /// If the paddocks are specified by the user
         /// </summary>
         private bool paddocksGiven;
-
-        /// <summary>
-        /// The random seed for the mortality model
-        /// </summary>
-        private int randSeed = 0;
 
         /// <summary>
         /// The random number host
@@ -225,50 +215,26 @@
         {
             this.userForages = new List<string>();
             this.userPaddocks = new List<string>();
-            this.randFactory = new MyRandom(this.randSeed);       // random number generator
+            this.randFactory = new MyRandom(this.RandSeed);       // random number generator
 
-            Array.Resize(ref this.animalInits, 0);
             this.suppFed = new FoodSupplement();
             this.excretionInfo = new ExcretionInfo();
             this.paddocksGiven = false;
             this.isFirstStep = true;
-            this.randSeed = 0;
+            this.RandSeed = 0;
         }
 
         #region Initialisation properties ====================================================
-        
+
         /// <summary>
-        /// Gets or sets the Seed for the random number generator. Used when computing numbers of animals dying and conceiving from the equations for mortality and conception rates
+        /// The seed for the random number generator. Used when computing numbers of animals dying and conceiving from the equations for mortality and conception rates.
         /// </summary>
-        [Description("Random number seed for mortality and conception rates")]
-        [Units("")]
-        public int RandSeed
-        {
-            get { return this.randSeed; }
-            set { this.randSeed = value; }
-        }
+        public int RandSeed { get; set; } = 0;
 
         /// <summary>
         /// An instance that contains all stock genotypes.
         /// </summary>
         public Genotypes Genotypes { get; } = new Genotypes();
-
-        /// <summary>
-        /// Gets or sets the initial state of each animal group
-        /// </summary>
-        public Animals[] Animals
-        {
-            get
-            {
-                //AnimalInits[] animal = new AnimalInits[1];
-                //StockVars.MakeAnimalValue(this.stockModel, ref animal);
-                return this.animalInits;
-            }
-            set
-            {
-                this.animalInits = value;
-            }
-        }
 
         /// <summary>
         /// Gives access to the list of animals. Needed for unit testing.
@@ -375,10 +341,7 @@
         #endregion
 
         #region Readable properties ====================================================
-        /// <summary>
-        /// Gets the mass of grazers per unit area
-        /// </summary>
-        [Description("Mass of grazers per unit area. The value returned depends on the requesting component")]
+        /// <summary>Mass of grazers per unit area</summary>
         [Units("kg/ha")]
         public double Trampling
         {
@@ -4068,10 +4031,6 @@
                     thePadd.AddUrineObj = (ISolute)Apsim.Find(zone, "Urea");
                 }
             }
-
-            // Add all child animal groups to stock.
-            for (int idx = 0; idx <= this.animalInits.Length - 1; idx++)                // Only create the initial animal groups 
-                this.stockModel.Add(this.animalInits[idx]);                             // after the paddocks have been identified                          
 
             this.currentTime = this.systemClock.Today;
             int currentDay = this.currentTime.Day + (this.currentTime.Month * 0x100) + (this.currentTime.Year * 0x10000);

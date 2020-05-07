@@ -1,378 +1,12 @@
 ﻿namespace Models.GrazPlan
 {
+    using Models.Interfaces;
+    using StdUnits;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
-    using System.IO;
     using System.Linq;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using Models.Interfaces;
-    using Models.PMF;
-    using Newtonsoft.Json.Linq;
-    using StdUnits;
 
-    /// <summary>
-    /// Information required to initialise a single animal group
-    /// The YoungWt and YoungGFW fields may be set to MISSING, in which case    
-    /// TStockList will estimate defaults.                                       
-    /// </summary>
-    [Serializable]
-    public struct AnimalInits
-    {
-        /// <summary>
-        /// Genotype of this group of animals. Must match the GenotypeName field of an element of the Genotypes property.
-        /// </summary>
-        public string Genotype;
-
-        /// <summary>
-        /// Number of animals
-        /// </summary>
-        public int Number;
-
-        /// <summary>
-        /// Sex of animals
-        /// Castrated, Male, Empty, EarlyPreg, LatePreg
-        /// </summary>
-        public GrazType.ReproType Sex;
-
-        /// <summary>
-        /// Age in days
-        /// </summary>
-        [Units("d")]
-        public int AgeDays;
-
-        /// <summary>
-        /// Unfasted live weight of the animals.
-        /// </summary>
-        [Units("kg")]
-        public double Weight;
-
-        /// <summary>
-        /// Highest weight recorded to date.
-        /// </summary>
-        [Units("kg")]
-        public double MaxPrevWt;
-
-        /// <summary>
-        /// Greasy fleece weight of the animals.
-        /// </summary>
-        [Units("kg")]
-        public double FleeceWt;
-
-        /// <summary>
-        /// Average wool fibre diameter of the animals.
-        /// </summary>
-        [Units("u")]
-        public double FibreDiam;
-
-        /// <summary>
-        /// Genotype of the bulls/rams to 
-        /// which pregnant or lactating animals were mated. 
-        /// Must match the name field of an element of the Genotypes property.
-        /// </summary>
-        public string MatedTo;
-
-        /// <summary>
-        /// Days pregnant
-        /// Zero denotes not pregnant; 1 or more denotes the time since conception. 
-        /// Only meaningful for cows/ewes.
-        /// </summary>
-        [Units("d")]
-        public int Pregnant;
-
-        /// <summary>
-        /// Days lactating
-        /// Zero denotes not lactating; 1 or more denotes the time since parturition. 
-        /// Only meaningful for cows/ewes.
-        /// </summary>
-        [Units("d")]
-        public int Lactating;
-
-        /// <summary>
-        /// Number of foetuses or suckling lambs. Only meaningful for females with Pregnant > 0.
-        /// </summary>
-        public int NumFoetuses;
-
-        /// <summary>
-        /// Number of suckling young. Only meaningful for cows with Lactating > 0.
-        /// </summary>
-        public int NumSuckling;
-
-        /// <summary>
-        /// Greasy fleece weight of suckling lambs. Only meaningful for ewes with Lactating > 0.
-        /// </summary>
-        [Units("kg")]
-        public double YoungGFW;
-
-        /// <summary>
-        /// Unfasted live weight of suckling calves/lambs. Only meaningful for cows/ewes with lactating > 0.
-        /// </summary>
-        [Units("kg")]
-        public double YoungWt;
-
-        /// <summary>
-        /// Birth Condition score
-        /// </summary>
-        public double BirthCS;
-
-        /// <summary>
-        /// Paddock occupied by the animals.
-        /// </summary>
-        public string Paddock;
-
-        /// <summary>
-        /// Initial tag value for the animal group.
-        /// </summary>
-        public int Tag;
-
-        /// <summary>
-        /// Priority accorded the animals in the Draft event
-        /// </summary>
-        public int Priority;
-    }
-    /// <summary>
-    ///  Abbreviated animal initialisation set, used in TStockList.Buy                
-    /// </summary>
-    [Serializable]
-    public struct PurchaseInfo
-    {
-        /// <summary>
-        /// Genotype name
-        /// </summary>
-        public string Genotype;
-
-        /// <summary>
-        /// Number of animals
-        /// </summary>
-        public int Number;
-
-        /// <summary>
-        /// Live weight
-        /// </summary>
-        public double LiveWt;
-
-        /// <summary>
-        /// Greasy fleece weight
-        /// </summary>
-        public double GFW;
-
-        /// <summary>
-        /// Age in days
-        /// </summary>
-        public int AgeDays;
-
-        /// <summary>
-        /// Condition score
-        /// </summary>
-        public double CondScore;
-
-        /// <summary>
-        /// Reproduction status
-        /// </summary>
-        public GrazType.ReproType Repro;
-
-        /// <summary>
-        /// Mated to animal
-        /// </summary>
-        public string MatedTo;
-
-        /// <summary>
-        /// Pregnant days
-        /// </summary>
-        public int Preg;
-
-        /// <summary>
-        /// Lactation days
-        /// </summary>
-        public int Lact;
-
-        /// <summary>
-        /// Number of young
-        /// </summary>
-        public int NYoung;
-
-        /// <summary>
-        /// Weight of young
-        /// </summary>
-        public double YoungWt;
-
-        /// <summary>
-        /// Greasy fleece weight of young
-        /// </summary>
-        public double YoungGFW;
-    }
-
-    /// <summary>
-    /// Attributes of a set of livstock cohorts, used in TStockList.AddStock         
-    /// </summary>
-    [Serializable]
-    public struct CohortsInfo
-    {
-        /// <summary>
-        /// Genotype name
-        /// </summary>
-        public string Genotype;
-
-        /// <summary>
-        /// Total number of animals to enter the simulation. 
-        /// The animals will be distributed across the age cohorts, 
-        /// taking the genotype-specific death rate into account
-        /// </summary>
-        public int Number;
-
-        /// <summary>
-        /// Reproduction status
-        /// </summary>
-        public GrazType.ReproType ReproClass;
-
-        /// <summary>
-        /// Minimum years of the youngest cohort
-        /// </summary>
-        public int MinYears;
-
-        /// <summary>
-        /// Maximum years of the oldest cohort
-        /// </summary>
-        public int MaxYears;
-
-        /// <summary>
-        /// Age offset
-        /// </summary>
-        public int AgeOffsetDays;
-
-        /// <summary>
-        /// Average unfasted live weight of the animals across all age cohorts
-        /// </summary>
-        public double MeanLiveWt;
-
-        /// <summary>
-        /// Average condition score of the animals 
-        /// </summary>
-        public double CondScore;
-
-        /// <summary>
-        /// Average greasy fleece weight of the animals across all age cohorts
-        /// </summary>
-        public double MeanGFW;
-
-        /// <summary>
-        /// Days since shearing
-        /// </summary>
-        public int FleeceDays;
-
-        /// <summary>
-        /// Genotype of the rams or bulls with which the animals were mated prior to entry
-        /// </summary>
-        public string MatedTo;
-
-        /// <summary>
-        /// Days pregnant
-        /// </summary>
-        public int DaysPreg;
-
-        /// <summary>
-        /// Average number of foetuses per animal (including barren animals) across all age classes
-        /// </summary>
-        public double Foetuses;
-
-        /// <summary>
-        /// The time since parturition in those animals that are lactating
-        /// </summary>
-        public int DaysLact;
-
-        /// <summary>
-        /// Average number of suckling offspring per animal (including dry animals) across all age classes
-        /// </summary>
-        public double Offspring;
-
-        /// <summary>
-        /// Average unfasted live weight of any suckling lambs or calves
-        /// </summary>
-        public double OffspringWt;
-
-        /// <summary>
-        /// Average body condition score of any suckling lambs or calves
-        /// </summary>
-        public double OffspringCS;
-
-        /// <summary>
-        /// Average greasy fleece weight of any suckling lambs
-        /// </summary>
-        public double LambGFW;
-    }
-
-    /// <summary>
-    /// The container for stock
-    /// </summary>
-    [Serializable]
-    public class StockContainer
-    {
-        /// <summary>
-        /// Gets or sets the animal group
-        /// </summary>
-        public AnimalGroup Animals { get; set; }
-
-        /// <summary>
-        /// Gets or sets the paddock occupied
-        /// </summary>
-        public PaddockInfo PaddOccupied { get; set; }
-
-        /// <summary>
-        /// Gets or sets the tag number
-        /// </summary>
-        public int Tag { get; set; }
-
-        /// <summary>
-        /// Gets or sets the priority level
-        /// </summary>
-        public int Priority { get; set; }
-
-        /// <summary>
-        /// 0=mothers, 1=suckling young
-        /// </summary>
-        public AnimalStateInfo[] InitState = new AnimalStateInfo[2];             
-        
-        /// <summary>
-        /// RDF factor
-        /// </summary>
-        public double[] RDPFactor = new double[2];      // [0..1] 
-        
-        /// <summary>
-        /// Index is to forage-within-paddock
-        /// </summary>
-        public GrazType.GrazingInputs[] InitForageInputs;              
-        
-        /// <summary>
-        /// Forage inputs
-        /// </summary>
-        public GrazType.GrazingInputs[] StepForageInputs;
-
-        /// <summary>
-        /// Paddock grazing inputs
-        /// </summary>
-        public GrazType.GrazingInputs PaddockInputs;
-
-        /// <summary>
-        /// Pasture intake
-        /// </summary>
-        public GrazType.GrazingOutputs[] PastIntakeRate = new GrazType.GrazingOutputs[2];
-        
-        /// <summary>
-        /// Supplement intake
-        /// </summary>
-        public double[] SuppIntakeRate = new double[2];
-
-        /// <summary>
-        /// Create a stock container
-        /// </summary>
-        public StockContainer()
-        {
-            for (int i = 0; i < 2; i++)
-                this.PastIntakeRate[i] = new GrazType.GrazingOutputs();
-        }
-    }
 
     /// <summary>
     /// StockList is primarily a list of AnimalGroups. Each animal group has a     
@@ -415,16 +49,6 @@
         private readonly IWeather weather;
 
         /// <summary>
-        /// False flag
-        /// </summary>
-        private const int FALSE = 0;
-
-        /// <summary>
-        /// True flag
-        /// </summary>
-        private const int TRUE = 1;
-        
-        /// <summary>
         /// Conversion factor for months to days
         /// </summary>
         private const double MONTH2DAY = 365.25 / 12;
@@ -435,16 +59,6 @@
         private const double WEIGHT2DSE = 0.02;
 
         /// <summary>
-        /// [AnimalType] Limits to breed SRW's                 
-        /// </summary>
-        private double[] MINSRW = { 30.0, 300.0 };
-
-        /// <summary>
-        /// [AnimalType] Limits to breed SRW's                 
-        /// </summary>          
-        private double[] MAXSRW = { 120.0, 1000.0 };
-
-        /// <summary>
         /// Set of genotype parameters
         /// </summary>
         private Genotype[] genotypeParams = new Genotype[0];
@@ -452,35 +66,15 @@
         /// <summary>
         /// stock[0] is kept for use as temporary storage         
         /// </summary>
-        private StockContainer[] stock = new StockContainer[0]; 
-        
-        /// <summary>
-        /// The paddock list
-        /// </summary>
-        private PaddockList paddockList;
+        private AnimalGroup[] stock = new AnimalGroup[0];
 
-        /// <summary>
-        /// The list of grazing periods
-        /// </summary>
-        private GrazingList grazingList;
-
-        /// <summary>
-        /// List of forage providers/components
-        /// </summary>
-        private ForageProviders forageProviders;
-
-        /// <summary>
-        /// Gets or sets the start of the simulation
-        /// </summary>
-        public int StartRun { get; set; }
+        /// <summary>Gets an enumeration of all animal groups.</summary>
+        public IEnumerable<AnimalGroup> Animals { get { return stock; } }
 
         /// <summary>
         /// Gets the list of paddocks
         /// </summary>
-        public PaddockList Paddocks
-        {
-            get { return this.paddockList; }
-        }
+        public PaddockList Paddocks { get; }
 
         /// <summary>
         /// Gets the enterprise list
@@ -490,41 +84,12 @@
         /// <summary>
         /// Gets the grazing periods
         /// </summary>
-        public GrazingList GrazingPeriods
-        {
-            get { return this.grazingList; }
-        }
+        public GrazingList GrazingPeriods { get; }
 
         /// <summary>
         /// Gets all the forage providers
         /// </summary>
-        public ForageProviders ForagesAll
-        {
-            get { return this.forageProviders; }
-        }
-
-        /// <summary>
-        /// posIdx is 1-offset; so is stock
-        /// </summary>
-        /// <param name="posIdx">The index in the stock list</param>
-        /// <returns>Return the animal group</returns>
-        private AnimalGroup GetAt(int posIdx)
-        {
-            return this.stock[posIdx].Animals;
-        }
-
-        /// <summary>
-        /// Set the animal group at the index position
-        /// </summary>
-        /// <param name="posIdx">Index in the stock list</param>
-        /// <param name="animalGroup">The animal group value</param>
-        private void SetAt(int posIdx, AnimalGroup animalGroup)
-        {
-            if ((posIdx == this.Count() + 1) && (animalGroup != null))
-                this.Add(animalGroup, this.Paddocks.ByIndex(0), 0, 0);
-            else
-                this.stock[posIdx].Animals = animalGroup;
-        }
+        public ForageProviders ForagesAll { get; }
 
         /// <summary>
         /// posIdx is 1-offset; so is stock                                              
@@ -590,20 +155,6 @@
         }
 
         /// <summary>
-        /// These values are paddock-specific and are stored in the FPaddocks list.        
-        /// </summary>
-        /// <param name="paddIdx">The paddock index</param>
-        /// <param name="value">Water logging value</param>
-        private void SetWaterLog(int paddIdx, double value)
-        {
-            PaddockInfo paddInfo;
-
-            paddInfo = this.paddockList.ByID(paddIdx);
-            if (paddInfo != null)
-                paddInfo.Waterlog = value;
-        }
-        
-        /// <summary>
         /// Combine sufficiently-similar groups of animals and delete empty ones         
         /// </summary>
         private void Merge()
@@ -616,7 +167,7 @@
             {
                 if ((this.At(idx) != null) && (this.At(idx).NoAnimals == 0))
                 {
-                    this.SetAt(idx, null);
+                    stock[idx] = null;
                 }
             }
 
@@ -632,7 +183,7 @@
                        && (this.GetPriority(idx) == this.GetPriority(jdx)))
                     {
                         animalGroup = this.At(jdx);
-                        this.SetAt(jdx, null);
+                        stock[jdx] = null;
                         this.At(idx).Merge(ref animalGroup);
                     }
                 }
@@ -1296,14 +847,13 @@
         public StockList(Stock stockModel, Clock clockModel, IWeather weatherModel)
         {
             this.parentStockModel = stockModel;
-            this.StartRun = 0;
             Array.Resize(ref this.stock, 1);                                          // Set aside temporary storage           
-            this.paddockList = new PaddockList();
-            this.paddockList.Add(-1, string.Empty);                                      // The "null" paddock is added here      
+            this.Paddocks = new PaddockList();
+            this.Paddocks.Add(-1, string.Empty);                                      // The "null" paddock is added here      
             //  FForages  := TForageList.Create( TRUE );
-            this.forageProviders = new ForageProviders();
+            this.ForagesAll = new ForageProviders();
             this.Enterprises = new List<EnterpriseInfo>();
-            this.grazingList = new GrazingList();
+            this.GrazingPeriods = new GrazingList();
             clock = clockModel;
             weather = weatherModel;
         }
@@ -1388,8 +938,7 @@
 
             idx = this.stock.Length;
             Array.Resize(ref this.stock, idx + 1);
-            this.stock[idx] = new StockContainer();
-            this.stock[idx].Animals = animalGroup.Copy();
+            this.stock[idx] = animalGroup.Copy();
             this.stock[idx].PaddOccupied = paddInfo;
             this.stock[idx].Tag = tagNo;
             this.stock[idx].Priority = priority;
@@ -1450,9 +999,9 @@
                     newGroup.Young.FleeceCutWeight = animalInits.YoungGFW;
             }
 
-            paddock = this.paddockList.ByName(animalInits.Paddock.ToLower());
+            paddock = this.Paddocks.ByName(animalInits.Paddock.ToLower());
             if (paddock == null)
-                paddock = this.paddockList.ByIndex(0);
+                paddock = this.Paddocks.ByIndex(0);
 
             return this.Add(newGroup, paddock, animalInits.Tag, animalInits.Priority);
         }
@@ -1482,9 +1031,7 @@
             count = this.Count();
             if ((posn >= 1) && (posn <= count))
             {
-                this.stock[posn].Animals = null;
-                this.stock[posn].InitForageInputs = null;
-                this.stock[posn].StepForageInputs = null;
+                this.stock[posn] = null;
 
                 for (idx = posn + 1; idx <= count; idx++)
                     this.stock[idx - 1] = this.stock[idx];
@@ -1512,7 +1059,7 @@
             {
                 if ((this.At(idx) != null) && (this.At(idx).NoAnimals == 0))
                 {
-                    this.SetAt(idx, null);
+                    stock[idx] = null;
                 }
             }
 
@@ -1537,13 +1084,8 @@
         /// <returns>The animal group at the index position</returns>
         public AnimalGroup At(int posn)
         {
-            return this.GetAt(posn);
+            return stock[posn];
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public List<AnimalGroup> Animals {  get { return Animals; } }
 
         /// <summary>
         /// posIdx is 1-offset; so is stock                                              
@@ -1755,7 +1297,7 @@
             if (provider != null)
                 thePadd = provider.OwningPaddock;
             else
-                thePadd = this.paddockList.ByID(paddID);
+                thePadd = this.Paddocks.ByID(paddID);
 
             massKGHA = 0.0;
             if (thePadd != null)
@@ -1882,17 +1424,17 @@
             double area;
             int idx;
 
-            thePadd = this.paddockList.ByID(paddID);
+            thePadd = this.Paddocks.ByID(paddID);
 
             if (thePadd != null)
                 area = thePadd.Area;
-            else if (this.paddockList.Count() == 0)
+            else if (this.Paddocks.Count() == 0)
                 area = 1.0;
             else
             {
                 area = 0.0;
-                for (idx = 0; idx <= this.paddockList.Count() - 1; idx++)
-                    area = area + this.paddockList.ByIndex(idx).Area;
+                for (idx = 0; idx <= this.Paddocks.Count() - 1; idx++)
+                    area = area + this.Paddocks.ByIndex(idx).Area;
             }
 
             excretion = new ExcretionInfo();
@@ -2781,7 +2323,7 @@
             AnimalGroup srcGroup;
             int numToSplit;
 
-            srcGroup = this.GetAt(groupIdx);
+            srcGroup = stock[groupIdx];
             if (srcGroup != null)
             {
                 numToSplit = Math.Max(0, srcGroup.NoAnimals - Math.Max(numToKeep, 0));
@@ -2801,7 +2343,7 @@
             int numMales = 0;
             int numFemales = 0;
 
-            srcGroup = this.GetAt(groupIdx);
+            srcGroup = stock[groupIdx];
             if (srcGroup != null)
             {
                 srcGroup.GetOlder(ageDays, ref numMales, ref numFemales);
@@ -2836,7 +2378,7 @@
             double diffRatio;
             int idx;
 
-            srcGroup = this.GetAt(groupIdx);
+            srcGroup = stock[groupIdx];
             if (srcGroup != null)
             {
                 numAnimals = srcGroup.NoAnimals;
@@ -2892,7 +2434,7 @@
             AnimalGroup srcGroup;
             List<AnimalGroup> newGroups;
 
-            srcGroup = this.GetAt(groupIdx);
+            srcGroup = stock[groupIdx];
             if (srcGroup != null)
             {
                 newGroups = null;
