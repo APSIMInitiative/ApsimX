@@ -107,6 +107,7 @@ namespace Models.Functions
         "Eight interpolations of the air temperature are calculated using a three-hour correction factor." +
         "For each air three-hour air temperature, a value is calculated.  The eight three-hour estimates" +
         "are then averaged to obtain the daily value.")]
+    [ValidParent(ParentType = typeof(IFunction))]
     public class ThreeHourSin : Model, IInterpolationMethod
     {
         /// <summary>The met data</summary>
