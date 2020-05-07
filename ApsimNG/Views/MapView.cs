@@ -36,6 +36,16 @@
         /// Store current position and zoom settings
         /// </summary>
         void StoreSettings();
+
+        /// <summary>
+        /// Decrease zoom level enough that all markers are visible.
+        /// </summary>
+        void EnsureMarkersAreVisible();
+
+        /// <summary>
+        /// Hide zoom controls.
+        /// </summary>
+        void HideZoomControls();
     }
 
     /// It would be good if we could retrieve the current center and zoom values for a map,
@@ -125,7 +135,7 @@
     {
         L.marker(locations[i]).addTo(mymap).bindPopup('<b>' + locations[i][2] + '</b><br>Latitude: ' + locations[i][0] + '<br>Longitude: ' + locations[i][1]);
     }
-
+    AutoZoom();
     function SetTitle()
     {
         window.document.title = mymap.getZoom().toString() + ', (' + mymap.getCenter().lat.toString() + ', ' + mymap.getCenter().lng.toString() + ')';
@@ -138,6 +148,19 @@
     {
         var center = new L.LatLng(lat, long);
         mymap.panTo(center);
+    }
+
+    function AutoZoom()
+    {
+    	var markers = [];
+    	for (i = 0; i < locations.length; i++)
+    		markers.push(L.marker(locations[i]));
+    	mymap.fitBounds(new L.featureGroup(markers).getBounds());
+    }
+
+    function HideZoomControls()
+    {
+        mymap.zoomControl = false;
     }
 
     mymap.on('zoomend', SetTitle);
@@ -250,6 +273,19 @@
         public void StoreSettings()
         {
             NewTitle(browser.GetTitle());
+        }
+
+        /// <summary>
+        /// Decrease zoom level enough that all markers are visible.
+        /// </summary>
+        public void EnsureMarkersAreVisible()
+        {
+            browser.ExecJavaScript("AutoZoom", new object[0]);
+        }
+
+        public void HideZoomControls()
+        {
+            browser.ExecJavaScript("HideZoomControls", new object[0]);
         }
 
         protected override void NewTitle(string title)
