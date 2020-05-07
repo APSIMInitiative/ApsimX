@@ -360,18 +360,22 @@ namespace Models.GrazPlan
         // ------------------ Outputs / States ------------------
 
         /// <summary>Maximum young</summary>
+        [Description("Maximum young")]
         public int MaxYoung { get; set; }
 
         /// <summary>Breed standard reference weight (kg)</summary>
+        [Description("Breed standard reference weight (kg)")]
         public double BreedSRW { get; set; }
 
         /// <summary>Potential fleece weight (kg)</summary>
+        [Description("Potential fleece weight (kg)")]
         public double PotFleeceWt { get; set; }
 
         /// <summary>Potential greasy fleece weight:SRW</summary>
         public double FleeceRatio { get; set; }
 
-        /// <summary>WM(peak)</summary>
+        /// <summary>Peak milk</summary>
+        [Description("Peak milk")]
         public double PeakMilk { get; set; }
 
         /// <summary>ConceiveSigs</summary>
