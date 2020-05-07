@@ -107,6 +107,7 @@ namespace Models.Functions
         "Eight interpolations of the air temperature are calculated using a three-hour correction factor." +
         "For each air three-hour air temperature, a value is calculated.  The eight three-hour estimates" +
         "are then averaged to obtain the daily value.")]
+    [ValidParent(ParentType = typeof(IFunction))]
     public class ThreeHourSin : Model, IInterpolationMethod
     {
         /// <summary>The met data</summary>
@@ -160,10 +161,16 @@ namespace Models.Functions
     }
 
     /// <summary>
-    /// Junqi, write a summary here
+    /// calculating the hourly temperature based on Tmax, Tmin and daylength
+    /// At sunrise (th = 12 − d/2), the air temperature equals Tmin. The maximum temperature 
+    /// is reached when th equals 12 + p h solar time.The default value for p is 1.5 h.
+    /// The sinusoidal curve is followed until sunset.Then a transition takes place to an
+    /// exponential decrease, proceeding to the minimum temperature of the next day.To
+    /// plot this curve correctly, we first need the starting point, the temperature at sunset
+    /// (Tsset).
     /// </summary>
     [Serializable]
-    [Description("provide a description")]
+    [Description("calculating the hourly temperature based on Tmax, Tmin and daylength")]
     [ValidParent(ParentType = typeof(IFunction))]
     public class HourlySinPpAdjusted : Model, IInterpolationMethod
     {
@@ -172,9 +179,9 @@ namespace Models.Functions
         [Link]
         protected IWeather MetData = null;
 
-        private const double p = 1.5;
+        private const double P = 1.5;
 
-        private const double tc = 4.0;
+        private const double TC = 4.0;
 
         /// <summary>
         /// Temperature at the most recent sunset
@@ -187,7 +194,7 @@ namespace Models.Functions
         [EventSubscribe("Commencing")]
         private void OnCommencing(object sender, EventArgs e)
         {
-            Tsset = MetData.MinT + (MetData.MaxT - MetData.MinT) * 0.6;  //To start things off assum SunSet temperature on first day
+            
         }
 
         /// <summary>Creates a list of temperature range factors used to estimate daily temperature from Min and Max temp</summary>
@@ -197,33 +204,53 @@ namespace Models.Functions
             double d = MetData.CalculateDayLength(-6);
             double Tmin = MetData.MinT;
             double Tmax = MetData.MaxT;
-            int Hsrise = (int)Math.Round(MetData.CalculateSunRise());
-            int Hsset = (int)Math.Round(MetData.CalculateSunSet());
+            double TmaxB = MetData.MaxT;
+            double TminA = MetData.MinT;
+            double Hsrise = MetData.CalculateSunRise();
+            double Hsset =  MetData.CalculateSunSet();
+            
 
             List<double> sdts = new List<double>();
+            
             for (int Th = 0; Th <= 23; Th++)
             {
                 double Ta = 1.0;
-                if ((Th <= Hsrise) || (Th > Hsset))
-                {//Use Nocturnal temperature function
+                if (Th < Hsrise)
+                {
+                    //  Hour between midnight and sunrise
+                    //  PERIOD A MaxTB is max. temperature, before day considered
+
+                    //this is the sunset temperature of based on the previous day
                     double n = 24 - d;
-                    double numerator = Tmin
-                                      - Tsset * Math.Exp(-n / tc)
-                                      + (Tsset - Tmin) * Math.Exp(-(Th - Hsset)/tc);
-                    Ta =  numerator
-                         /(1 - Math.Exp(-n / tc));
+                    Tsset = Tmin + (TmaxB - Tmin) *
+                                    Math.Sin(Math.PI * (d / (d + 2 * P)));
+
+                    Ta = (Tmin - Tsset * Math.Exp(-n / TC) +
+                            (Tsset - Tmin) * Math.Exp(-(Th + 24 - Hsset) / TC)) /
+                            (1 - Math.Exp(-n / TC));
+                }
+                else if (Th >= Hsrise & Th < 12 + P)
+                {
+                    // PERIOD B Hour between sunrise and normal time of MaxT
+                    Ta = Tmin + (Tmax - Tmin) *
+                            Math.Sin(Math.PI * (Th - Hsrise) / (d + 2 * P));
+                }
+                else if (Th >= 12 + P & Th < Hsset)
+                {
+                    // PERIOD C Hour between normal time of MaxT and sunset
+                    //  MinTA is min. temperature, after day considered
+
+                    Ta = TminA + (Tmax - TminA) *
+                        Math.Sin(Math.PI * (Th - Hsrise) / (d + 2 * P));
                 }
                 else
-                {//Use Sin curve for daylight hours
-                     Ta =   Tmin
-                          + (Tmax - Tmin) 
-                          * Math.Sin(Math.PI * (Th - 12 + d / 2) 
-                                                  / (d + 2 * p));
-                    
-                    if (Th == MetData.CalculateSunSet())
-                    {//Record sun set temperature for the upcomming nocturnal period
-                        Tsset = Ta;
-                    }
+                {
+                    // PERIOD D Hour between sunset and midnight
+                    Tsset = TminA + (Tmax - TminA) * Math.Sin(Math.PI * (d / (d + 2 * P)));
+                    double n = 24 - d;
+                    Ta = (TminA - Tsset * Math.Exp(-n / TC) +
+                            (Tsset - TminA) * Math.Exp(-(Th - Hsset) / TC)) /
+                            (1 - Math.Exp(-n / TC));
                 }
                 sdts.Add(Ta);
             }
