@@ -19,7 +19,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 99; } }
+        public static int LatestVersion { get { return 100; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -2218,6 +2218,21 @@
             {
                 AirTempFunc["agregationMethod"] = "0";
                 JsonUtilities.AddModel(AirTempFunc, typeof(ThreeHourSin), "InterpolationMethod");
+            }
+        }
+
+        /// <summary>
+        /// Change SimpleGrazing.FractionDefoliatedNToSoil from a scalar to an array.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion100(JObject root, string fileName)
+        {
+            foreach (var simpleGrazing in JsonUtilities.ChildrenOfType(root, "SimpleGrazing"))
+            {
+                var arr = new JArray();
+                arr.Add(simpleGrazing["FractionDefoliatedNToSoil"]);
+                simpleGrazing["FractionDefoliatedNToSoil"] = arr;
             }
         }
 
