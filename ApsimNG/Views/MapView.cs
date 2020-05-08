@@ -6,6 +6,7 @@
     using System.Diagnostics;
     using System.Drawing;
     using APSIM.Shared.Utilities;
+    using System.Globalization;
 
     /// <summary>
     /// Describes an interface for an axis view.
@@ -101,15 +102,15 @@
 
             for (int i = 0; i < coordinates.Count; i++)
             {
-                html += "[" + coordinates[i].Latitude.ToString() + ", " + coordinates[i].Longitude.ToString() + ", '" + locNames[i] + "']";
+                html += "[" + coordinates[i].Latitude.ToString(CultureInfo.InvariantCulture) + ", " + coordinates[i].Longitude.ToString(CultureInfo.InvariantCulture) + ", '" + locNames[i] + "']";
                 if (i < coordinates.Count - 1)
                     html += ',';
             }
             html += "];" + Environment.NewLine;
 
             html += "    var mymap = L.map('mapid', {";
-            html += "center: new L.LatLng(" + center.Latitude.ToString() + ", " + center.Longitude.ToString() + ")";
-            html += ", zoom: " + zoom.ToString();
+            html += "center: new L.LatLng(" + center.Latitude.ToString(CultureInfo.InvariantCulture) + ", " + center.Longitude.ToString(CultureInfo.InvariantCulture) + ")";
+            html += ", zoom: " + zoom.ToString(CultureInfo.InvariantCulture);
             if (popupWindow != null) // Exporting to a report, so leave off the zoom control
                 html += ", zoomControl: false";
             html += "});";
@@ -155,7 +156,8 @@
     	var markers = [];
     	for (i = 0; i < locations.length; i++)
     		markers.push(L.marker(locations[i]));
-    	mymap.fitBounds(new L.featureGroup(markers).getBounds());
+        if (markers.length > 0)
+    	    mymap.fitBounds(new L.featureGroup(markers).getBounds());
     }
 
     function HideZoomControls()
