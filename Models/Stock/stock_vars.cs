@@ -606,20 +606,20 @@
             uint idx;
 
             count = 0;
-            for (paddIdx = 0; paddIdx <= model.Paddocks.Count() - 1; paddIdx++)
+            for (paddIdx = 0; paddIdx <= model.Paddocks.Count - 1; paddIdx++)
             {
-                if (model.Paddocks.ByIndex(paddIdx).SuppRemovalKG > 0.0)
+                if (model.Paddocks[paddIdx].SuppRemovalKG > 0.0)
                     count++;
             }
             
             suppValues = new SupplementEaten[count];
             idx = 0;
-            for (paddIdx = 0; paddIdx <= model.Paddocks.Count() - 1; paddIdx++)
-                if (model.Paddocks.ByIndex(paddIdx).SuppRemovalKG > 0.0)
+            for (paddIdx = 0; paddIdx <= model.Paddocks.Count - 1; paddIdx++)
+                if (model.Paddocks[paddIdx].SuppRemovalKG > 0.0)
                 {
                     suppValues[idx] = new SupplementEaten();
-                    suppValues[idx].Paddock = model.Paddocks.ByIndex(paddIdx).Name;
-                    suppValues[idx].Eaten = model.Paddocks.ByIndex(paddIdx).SuppRemovalKG;
+                    suppValues[idx].Paddock = model.Paddocks[paddIdx].Name;
+                    suppValues[idx].Eaten = model.Paddocks[paddIdx].SuppRemovalKG;
                     idx++;
                 }
         }

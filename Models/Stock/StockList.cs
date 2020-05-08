@@ -1,6 +1,9 @@
 ﻿namespace Models.GrazPlan
 {
+    using Models.Core;
     using Models.Interfaces;
+    using Models.PMF.Interfaces;
+    using Models.Surface;
     using StdUnits;
     using System;
     using System.Collections.Generic;
@@ -74,7 +77,7 @@
         /// <summary>
         /// Gets the list of paddocks
         /// </summary>
-        public PaddockList Paddocks { get; }
+        public List<PaddockInfo> Paddocks { get; }
 
         /// <summary>
         /// Gets the enterprise list
@@ -112,22 +115,6 @@
                 return this.stock[posIdx].PaddOccupied.Name;
             else
                 return string.Empty;
-        }
-
-        /// <summary>
-        /// posIdx is 1-offset; so is stock
-        /// </summary>
-        /// <param name="posIdx">Index in stock list</param>
-        /// <param name="value">Paddock name</param>
-        public void SetInPadd(int posIdx, string value)
-        {
-            PaddockInfo paddock;
-
-            paddock = this.Paddocks.ByName(value);
-            if (paddock == null)
-                throw new Exception("Stock: attempt to place animals in non-existent paddock: " + value);
-            else
-                this.stock[posIdx].PaddOccupied = paddock;
         }
 
         /// <summary>
@@ -686,8 +673,9 @@
                                 if (curEnt.ContainsTag(atag))
                                 {
                                     stockedIdx = this.PaddockIndexStockedByTagNo(atag);
-                                    if (paddock != stockedIdx)
-                                        this.MoveTagToPaddock(atag, paddock);
+                                    if (paddock != stockedIdx) 
+                                        foreach (var animalGroup in stock.Skip(1).Where(group => group.Tag == atag))
+                                            animalGroup.PaddOccupied = Paddocks[paddock];
                                 }
                             }
                         }
@@ -721,7 +709,7 @@
                                             paddockIter++;
                                         }
                                         if (!found)
-                                            exclPaddocks.Add(this.Paddocks.ByIndex(index).Name);           // add to the exclude list
+                                            exclPaddocks.Add(this.Paddocks[index].Name);           // add to the exclude list
                                     }
                                     tagNo = this.GrazingPeriods.GetTag(p, tagIter);
                                     this.Draft(tagNo, exclPaddocks); // now do the draft only for this tagno
@@ -787,7 +775,7 @@
                     i = 1;
                     while (!found && (i < this.Paddocks.Count()))
                     {
-                        if (this.Paddocks.ByIndex(i).Name == this.stock[posIdx].PaddOccupied.Name)
+                        if (this.Paddocks[i].Name == this.stock[posIdx].PaddOccupied.Name)
                         {
                             result = i;
                             found = true;
@@ -798,28 +786,6 @@
             }  // next animal index
 
             return result;
-        }
-
-        /// <summary>
-        /// Move a tagged group of animals to a paddock by index.
-        /// </summary>
-        /// <param name="tagNo">The tag number</param>
-        /// <param name="paddockIdx">The paddock index</param>
-        protected void MoveTagToPaddock(int tagNo, int paddockIdx)
-        {
-            int g, groups;
-
-            g = 1;
-            groups = this.Count();
-            while (g <= groups)                                             
-            {
-                // if this group belongs to this enterprise
-                if (tagNo == this.GetTag(g))                                     
-                {
-                    this.SetInPadd(g, this.Paddocks.ByIndex(paddockIdx).Name);  // move them to this paddock
-                }
-                g++;
-            }
         }
 
         /// <summary>
@@ -844,18 +810,42 @@
         /// <param name="stockModel">The parent stock model.</param>
         /// <param name="clockModel">The clock model.</param>
         /// <param name="weatherModel">The weather model.</param>
-        public StockList(Stock stockModel, Clock clockModel, IWeather weatherModel)
+        /// <param name="paddocksInSimulation">The paddocks in the simulation.</param>
+        public StockList(Stock stockModel, Clock clockModel, IWeather weatherModel, List<Zone> paddocksInSimulation)
         {
-            this.parentStockModel = stockModel;
-            Array.Resize(ref this.stock, 1);                                          // Set aside temporary storage           
-            this.Paddocks = new PaddockList();
-            this.Paddocks.Add(-1, string.Empty);                                      // The "null" paddock is added here      
-            //  FForages  := TForageList.Create( TRUE );
-            this.ForagesAll = new ForageProviders();
-            this.Enterprises = new List<EnterpriseInfo>();
-            this.GrazingPeriods = new GrazingList();
+            parentStockModel = stockModel;
+            ForagesAll = new ForageProviders();
+            Enterprises = new List<EnterpriseInfo>();
+            GrazingPeriods = new GrazingList();
             clock = clockModel;
             weather = weatherModel;
+
+            Array.Resize(ref this.stock, 1);                                          // Set aside temporary storage           
+            Paddocks = new List<PaddockInfo>();
+
+            var newPadd = new PaddockInfo();
+            newPadd.PaddID = -1;
+            newPadd.Name = string.Empty;
+            Paddocks.Add(newPadd);
+
+            // get the paddock areas from the simulation
+            foreach (var zone in paddocksInSimulation)
+            {
+                newPadd = new PaddockInfo();
+                newPadd.PaddID = Paddocks.Count() + 1; // ID is 1 based here
+                newPadd.PaddObj = zone;
+                newPadd.Name = zone.Name.ToLower();
+                Paddocks.Add(newPadd);
+
+                // find all the child crop, pasture components that have removable biomass
+                foreach (IPlantDamage crop in Apsim.FindAll(zone, typeof(IPlantDamage)))
+                    ForagesAll.AddProvider(newPadd, zone.Name, zone.Name + "." + crop.Name, 0, 0, crop);
+
+                // locate surfaceOM and soil nutrient model
+                newPadd.AddFaecesObj = (SurfaceOrganicMatter)Apsim.Find(zone, typeof(SurfaceOrganicMatter));
+                newPadd.Soil = (ISoil)Apsim.Find(zone, typeof(ISoil));
+                newPadd.AddUrineObj = (ISolute)Apsim.Find(zone, "Urea");
+            }
         }
 
         /// <summary>
@@ -999,9 +989,9 @@
                     newGroup.Young.FleeceCutWeight = animalInits.YoungGFW;
             }
 
-            paddock = this.Paddocks.ByName(animalInits.Paddock.ToLower());
+            paddock = this.Paddocks.Find(p => p.Name == animalInits.Paddock.ToLower());
             if (paddock == null)
-                paddock = this.Paddocks.ByIndex(0);
+                paddock = this.Paddocks[0];
 
             return this.Add(newGroup, paddock, animalInits.Tag, animalInits.Priority);
         }
@@ -1136,7 +1126,7 @@
         {
             PaddockInfo thePadd;
 
-            thePadd = this.Paddocks.ByName(paddName);
+            thePadd = this.Paddocks.Find(p => p.Name.Equals(paddName, StringComparison.InvariantCultureIgnoreCase));
             if (thePadd == null)
                 throw new Exception("Stock: attempt to feed supplement into non-existent paddock");
             else
@@ -1144,14 +1134,6 @@
         }
 
         // Model execution routines ................................................
-
-        /// <summary>
-        /// Initiate the time step for the paddocks
-        /// </summary>
-        public void BeginTimeStep()
-        {
-            this.Paddocks.BeginTimeStep();
-        }
 
         /// <summary>
         /// Advance the list by one time step.  All the input properties should be set first                                                                        
@@ -1172,7 +1154,7 @@
 
             for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)
             {
-                thePaddock = this.Paddocks.ByIndex(paddIdx);
+                thePaddock = this.Paddocks[paddIdx];
                 thePaddock.ComputeTotals();
             }
 
@@ -1204,7 +1186,7 @@
             // Compute the total potential intake (used to distribute supplement between groups of animals)         
             for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)              
             {                                                                               
-                thePaddock = this.Paddocks.ByIndex(paddIdx);                                  
+                thePaddock = this.Paddocks[paddIdx];
                 totPotIntake = 0.0;
 
                 for (idx = 1; idx <= this.Count(); idx++)
@@ -1220,7 +1202,7 @@
             // We loop over paddocks and then over animal groups within a paddock so that we can take account of herbage 
             for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)                       
             {                                                                               
-                thePaddock = this.Paddocks.ByIndex(paddIdx);
+                thePaddock = this.Paddocks[paddIdx];
                                                    
                 // removal & its effect on intake      
                 iterator = 1;                                                                  // This loop handles RDP insufficiency   
@@ -1297,7 +1279,7 @@
             if (provider != null)
                 thePadd = provider.OwningPaddock;
             else
-                thePadd = this.Paddocks.ByID(paddID);
+                thePadd = this.Paddocks.Find(p => p.PaddID == paddID);
 
             massKGHA = 0.0;
             if (thePadd != null)
@@ -1424,7 +1406,7 @@
             double area;
             int idx;
 
-            thePadd = this.Paddocks.ByID(paddID);
+            thePadd = this.Paddocks.Find(p => p.PaddID == paddID);
 
             if (thePadd != null)
                 area = thePadd.Area;
@@ -1434,7 +1416,7 @@
             {
                 area = 0.0;
                 for (idx = 0; idx <= this.Paddocks.Count() - 1; idx++)
-                    area = area + this.Paddocks.ByIndex(idx).Area;
+                    area = area + this.Paddocks[idx].Area;
             }
 
             excretion = new ExcretionInfo();
@@ -2078,11 +2060,11 @@
                 } // if (ReproState = Empty) 
 
                 paddNo = 0;                                                                          // Newly bought animals have tag # zero and go in the first named paddock.  
-                while ((paddNo < this.Paddocks.Count()) && (this.Paddocks.ByIndex(paddNo).Name == string.Empty))   
+                while ((paddNo < this.Paddocks.Count()) && (this.Paddocks[paddNo].Name == string.Empty))   
                     paddNo++;
                 if (paddNo >= this.Paddocks.Count())
                     paddNo = 0;
-                result = this.Add(newGroup, this.Paddocks.ByIndex(paddNo), 0, 0);
+                result = this.Add(newGroup, this.Paddocks[paddNo], 0, 0);
             } // if AnimalInfo.Number > 0 
             return result;
         }
@@ -2488,14 +2470,14 @@
 
                 // Only draft into pasture paddocks     
                 for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)                       
-                    available[paddIdx] = this.Paddocks.ByIndex(paddIdx).Forages.Count() > 0;
+                    available[paddIdx] = this.Paddocks[paddIdx].Forages.Count() > 0;
 
                 // Paddocks occupied by groups that are not to be drafted                   
                 for (idx = 1; idx <= this.Count(); idx++)                                           
                 {
                     if (this.GetPriority(idx) <= 0)                                                      
                     {
-                        paddIdx = this.Paddocks.IndexOf(this.GetInPadd(idx));
+                        paddIdx = this.Paddocks.FindIndex(p => p.Name.Equals(GetInPadd(idx), StringComparison.InvariantCultureIgnoreCase));
                         if (paddIdx >= 0)
                             available[paddIdx] = false;
                     }
@@ -2504,7 +2486,7 @@
                 // Paddocks closed by the manager        
                 for (idx = 0; idx <= closedList.Count() - 1; idx++)                                 
                 {
-                    paddIdx = this.Paddocks.IndexOf(closedList[idx]);
+                    paddIdx = this.Paddocks.FindIndex(p => p.Name.Equals(closedList[idx], StringComparison.InvariantCultureIgnoreCase));
                     if (paddIdx >= 0)
                         available[paddIdx] = false;
                 }
@@ -2514,14 +2496,14 @@
                 for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)                 
                 {
                     if (available[paddIdx])
-                        paddockRank[paddIdx] = this.GetPaddockRank(this.Paddocks.ByIndex(paddIdx), tempAnimals);
+                        paddockRank[paddIdx] = this.GetPaddockRank(this.Paddocks[paddIdx], tempAnimals);
                     else
                         paddockRank[paddIdx] = 0.0;
                 }
                 tempAnimals = null;
 
                 prevPadd = 0;                                                                       // Fallback paddock if none available    
-                while ((prevPadd < this.Paddocks.Count() - 1) && (this.Paddocks.ByIndex(prevPadd).Name == string.Empty))
+                while ((prevPadd < this.Paddocks.Count() - 1) && (this.Paddocks[prevPadd].Name == string.Empty))
                     prevPadd++;
 
                 prevPriority = 0;
@@ -2553,7 +2535,7 @@
                     for (idx = 1; idx <= this.Count(); idx++)                                       
                     {
                         if (this.GetPriority(idx) == bestPriority)
-                            this.SetInPadd(idx, this.Paddocks.ByIndex(bestPadd).Name);
+                            stock[idx].PaddOccupied = Paddocks[bestPadd];
                     }
                     available[bestPadd] = false;
 
@@ -2588,14 +2570,14 @@
 
                 // Only draft into pasture paddocks      
                 for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)                
-                    available[paddIdx] = (this.Paddocks.ByIndex(paddIdx).Forages.Count() > 0);
+                    available[paddIdx] = (this.Paddocks[paddIdx].Forages.Count() > 0);
 
                 // Paddocks occupied by groups that are not to be drafted                   
                 for (idx = 1; idx <= this.Count(); idx++)                                   
                 {
                     if (this.GetPriority(idx) <= 0)                                              
                     {
-                        paddIdx = this.Paddocks.IndexOf(this.GetInPadd(idx));
+                        paddIdx = this.Paddocks.FindIndex(p => p.Name.Equals(GetInPadd(idx), StringComparison.InvariantCultureIgnoreCase));
                         if (paddIdx >= 0)
                             available[paddIdx] = false;
                     }
@@ -2604,7 +2586,7 @@
                 // Paddocks closed by the manager       
                 for (idx = 0; idx <= closedPaddocks.Count() - 1; idx++)                             
                 {
-                    paddIdx = this.Paddocks.IndexOf(closedPaddocks[idx]);
+                    paddIdx = this.Paddocks.FindIndex(p => p.Name.Equals(closedPaddocks[idx], StringComparison.InvariantCultureIgnoreCase));
                     if (paddIdx >= 0)
                         available[paddIdx] = false;
                 }
@@ -2615,14 +2597,14 @@
                 for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)                            
                 {
                     if (available[paddIdx])                                                  // paddocks                            
-                        paddockRank[paddIdx] = this.GetPaddockRank(this.Paddocks.ByIndex(paddIdx), tempAnimals);
+                        paddockRank[paddIdx] = this.GetPaddockRank(this.Paddocks[paddIdx], tempAnimals);
                     else
                         paddockRank[paddIdx] = 0.0;
                 }
                 tempAnimals = null;
 
                 prevPadd = 0;                                                              // Fallback paddock if none available    
-                while ((prevPadd < this.Paddocks.Count() - 1) && (this.Paddocks.ByIndex(prevPadd).Name == string.Empty))
+                while ((prevPadd < this.Paddocks.Count() - 1) && (this.Paddocks[prevPadd].Name == string.Empty))
                     prevPadd++;
 
                 prevPriority = 0;
@@ -2652,7 +2634,7 @@
                     for (idx = 1; idx <= this.Count(); idx++)                               
                     {
                         if ((this.GetTag(idx) == tagNo) && (this.GetPriority(idx) == bestPriority))
-                            this.SetInPadd(idx, this.Paddocks.ByIndex(bestPadd).Name);
+                            stock[idx].PaddOccupied = Paddocks[bestPadd];
                     }
 
                     available[bestPadd] = false;
@@ -2733,7 +2715,7 @@
             else
                 tempAnimals = new AnimalGroup(this.GetGenotype("Medium Merino"), GrazType.ReproType.Empty, 1, 365 * 4, 50.0, 0.0, parentStockModel.randFactory, clock, weather);
             for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)
-                paddockRank[paddIdx] = this.GetPaddockRank(this.Paddocks.ByIndex(paddIdx), tempAnimals);
+                paddockRank[paddIdx] = this.GetPaddockRank(this.Paddocks[paddIdx], tempAnimals);
 
             paddockList.Clear();
             for (idx = 0; idx <= this.Paddocks.Count() - 1; idx++)
@@ -2748,7 +2730,7 @@
                         bestRank = paddockRank[paddIdx];
                     }
                 }
-                paddockList.Add(this.Paddocks.ByIndex(bestPadd).Name);
+                paddockList.Add(this.Paddocks[bestPadd].Name);
                 paddockRank[bestPadd] = -999.9;
             }
         }
@@ -3126,7 +3108,13 @@
                     StockMove stockInfo = (StockMove)stockEvent;
                     param1 = stockInfo.Group;
                     if ((param1 >= 1) && (param1 <= model.Count()))
-                        model.SetInPadd(param1, stockInfo.Paddock);
+                    {
+                        var paddockToMoveTo = this.Paddocks.Find(p => p.Name.Equals(stockInfo.Paddock, StringComparison.InvariantCultureIgnoreCase));
+                        if (paddockToMoveTo == null)
+                            throw new Exception("Stock: attempt to place animals in non-existent paddock: " + stockInfo.Paddock);
+
+                        stock[param1].PaddOccupied = paddockToMoveTo;
+                    }
                     else
                         throw new Exception("Invalid group number in MOVE event");
                 }

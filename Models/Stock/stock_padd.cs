@@ -1122,11 +1122,6 @@ namespace Models.GrazPlan
         private double slope;  
                                             
         /// <summary>
-        /// Steepness code (1-2)
-        /// </summary>
-        private double steepness;   
-                                          
-        /// <summary>
         /// CAREFUL - FForages does not own its members
         /// </summary>
         private ForageList forages;  
@@ -1148,8 +1143,6 @@ namespace Models.GrazPlan
         {
             this.forages = new ForageList(false);
             this.suppInPadd = new SupplementRation();
-            this.Area = 1.0;
-            this.slope = 0.0;
         }
 
         /// <summary>
@@ -1204,7 +1197,16 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the paddock area (ha)
         /// </summary>
-        public double Area { get; set; }
+        public double Area
+        {
+            get
+            {
+                if (PaddObj == null)
+                    return 1;
+                else
+                    return PaddObj.Area;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the waterlogging index (0-1)
@@ -1226,16 +1228,20 @@ namespace Models.GrazPlan
         /// </summary>
         public double Slope
         {
-            get { return this.slope; }
-            set { this.SetSlope(value); }
+            get
+            {
+                if (PaddObj == null)
+                    return 0;
+                else
+                    return PaddObj.Slope;
+            }
         }
-
         /// <summary>
         /// Gets the steepness code (1-2)
         /// </summary>
         public double Steepness
         {
-            get { return this.steepness; }
+            get { return 1.0 + Math.Min(1.0, Math.Sqrt(Math.Sin(this.slope * Math.PI / 180) / Math.Cos(this.slope * Math.PI / 180))); }
         }
 
         /// <summary>
@@ -1269,7 +1275,6 @@ namespace Models.GrazPlan
         private void SetSlope(double slopeValue)
         {
             this.slope = slopeValue;
-            this.steepness = 1.0 + Math.Min(1.0, Math.Sqrt(Math.Sin(this.slope * Math.PI / 180) / Math.Cos(this.slope * Math.PI / 180)));
         }
 
         /// <summary>
@@ -1347,176 +1352,6 @@ namespace Models.GrazPlan
         public void ClearSupplement()
         {
             this.SuppInPadd.Clear();
-        }
-    }
-
-    /// <summary>
-    /// The PaddockList class
-    /// </summary>
-    [Serializable]
-    public class PaddockList
-    {
-        /// <summary>
-        /// List of paddock info objects
-        /// </summary>
-        private PaddockInfo[] items;
-
-        /// <summary>
-        /// Create the PaddockList
-        /// </summary>
-        public PaddockList()
-        {
-            Array.Resize(ref this.items, 0);
-        }
-
-        /// <summary>
-        /// Get the count of paddocks
-        /// </summary>
-        /// <returns>The count of paddocks</returns>
-        public int Count()
-        {
-            return this.items.Length;
-        }
-
-        /// <summary>
-        /// Add a paddock
-        /// </summary>
-        /// <param name="paddInfo">The paddock info</param>
-        public void Add(PaddockInfo paddInfo)
-        {
-            int idx = this.items.Length;
-            Array.Resize(ref this.items, idx + 1);
-            this.items[idx] = paddInfo;
-        }
-
-        /// <summary>
-        /// Add a new paddock using ID and name
-        /// </summary>
-        /// <param name="paddockID">Paddock ID</param>
-        /// <param name="paddName">The name of the paddock</param>
-        public void Add(int paddockID, string paddName)
-        {
-            PaddockInfo newPadd;
-
-            newPadd = new PaddockInfo();
-            newPadd.PaddID = paddockID;
-            newPadd.Name = paddName.ToLower();
-            this.Add(newPadd);
-        }
-
-        /// <summary>
-        /// Add a new paddock object using reference and name
-        /// </summary>
-        /// <param name="paddObj">The paddock object</param>
-        /// <param name="paddName">The name of the paddock</param>
-        public void Add(Zone paddObj, string paddName)
-        {
-            PaddockInfo newPadd;
-
-            newPadd = new PaddockInfo();
-            newPadd.PaddID = this.Count() + 1; // ID is 1 based here
-            newPadd.PaddObj = paddObj;
-            newPadd.Name = paddName.ToLower();
-            this.Add(newPadd);
-        }
-
-        /// <summary>
-        /// Delete the paddock at the index
-        /// </summary>
-        /// <param name="indexValue">Paddock index</param>
-        public void Delete(int indexValue)
-        {
-            this.items[indexValue] = null;
-            for (int idx = indexValue + 1; idx <= this.items.Length - 1; idx++)
-                this.items[idx - 1] = this.items[idx];
-            Array.Resize(ref this.items, this.items.Length - 1);
-        }
-
-        /// <summary>
-        /// Get the paddock info at the index
-        /// </summary>
-        /// <param name="indexValue">The paddock index. 0-n</param>
-        /// <returns>The paddock info</returns>
-        public PaddockInfo ByIndex(int indexValue)
-        {
-            return this.items[indexValue];
-        }
-
-        /// <summary>
-        /// Get the paddock index by ID
-        /// </summary>
-        /// <param name="idValue">The paddock ID</param>
-        /// <returns>The paddock index</returns>
-        public PaddockInfo ByID(int idValue)
-        {
-            PaddockInfo result = null;
-            int idx = 0;
-            while ((idx < this.Count()) && (result == null))
-            {
-                if (this.ByIndex(idx).PaddID == idValue)
-                    result = this.ByIndex(idx);
-                else
-                    idx++;
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Get the paddock by object
-        /// </summary>
-        /// <param name="paddObj">The paddock object</param>
-        /// <returns>The paddock info</returns>
-        public PaddockInfo ByObj(object paddObj)
-        {
-            PaddockInfo result = null;
-            int idx = 0;
-            while ((idx < this.Count()) && (result == null))
-            {
-                if (this.ByIndex(idx).PaddObj == paddObj)
-                    result = this.ByIndex(idx);
-                else
-                    idx++;
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Get the paddock by name
-        /// </summary>
-        /// <param name="paddName">Paddock name</param>
-        /// <returns>The PaddockInfo object</returns>
-        public PaddockInfo ByName(string paddName)
-        {
-            int idx = this.IndexOf(paddName);
-            if (idx >= 0)
-                return this.ByIndex(idx);
-            else
-                return null;
-        }
-
-        /// <summary>
-        /// Get the index of the paddock by name
-        /// </summary>
-        /// <param name="paddName">The paddock name. Case insensitive test.</param>
-        /// <returns>The index. 0->n</returns>
-        public int IndexOf(string paddName)
-        {
-            int result = this.Count() - 1;
-            while ((result >= 0) && (this.ByIndex(result).Name != paddName.ToLower()))
-                result--;
-            return result;
-        }
-
-        /// <summary>
-        /// Initialise at the first timestep
-        /// </summary>
-        public void BeginTimeStep()
-        {
-            for (int paddIdx = 0; paddIdx <= this.Count() - 1; paddIdx++)
-            {
-                this.ByIndex(paddIdx).ClearSupplement();
-                this.ByIndex(paddIdx).ZeroRemoval();
-            }
         }
     }
 }

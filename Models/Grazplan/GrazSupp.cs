@@ -8,6 +8,7 @@ namespace Models.GrazPlan
     using System.Collections.Generic;
     using System.Linq;
     using APSIM.Shared.Utilities;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// Class containing some common routine for dealing with parameter sets
@@ -512,6 +513,7 @@ namespace Models.GrazPlan
         /// </value>
         /// <param name="attr">attibute to be retrieved or set</param>
         /// <returns>The value of the attribute chosen</returns>
+        [JsonIgnore]
         public double this[SuppAttribute attr]
         {
             get
@@ -1152,6 +1154,7 @@ namespace Models.GrazPlan
         /// </value>
         /// <param name="idx">The index.</param>
         /// <returns>The supplement object</returns>
+        [JsonIgnore]
         public SupplementItem this[int idx]
         {
             get

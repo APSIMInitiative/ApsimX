@@ -1,18 +1,16 @@
 ﻿namespace Models.GrazPlan
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Interfaces;
-    using Models.PMF;
     using Models.PMF.Interfaces;
     using Models.Soils;
     using Models.Surface;
     using StdUnits;
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Linq;
 
     /// <summary>
     /// #GrazPlan Stock
@@ -136,27 +134,12 @@
         /// <summary>
         /// The list of user specified forage component names
         /// </summary>
-        private List<string> userForages;
+        private readonly List<string> userForages;
 
         /// <summary>
         /// The list of user specified paddocks
         /// </summary>
-        private List<string> userPaddocks;
-
-        /// <summary>
-        /// The main stock model
-        /// </summary>
-        private StockList stockModel;
-
-        /// <summary>
-        /// True if at the first step of the run
-        /// </summary>
-        private bool isFirstStep;
-
-        /// <summary>
-        /// If the paddocks are specified by the user
-        /// </summary>
-        private bool paddocksGiven;
+        private readonly List<string> userPaddocks;
 
         /// <summary>
         /// The random number host
@@ -172,11 +155,6 @@
         /// The excretion info
         /// </summary>
         private ExcretionInfo excretionInfo;
-
-        /// <summary>
-        /// The current time value
-        /// </summary>
-        private DateTime currentTime;
 
         /// <summary>
         /// Used to show it is unset
@@ -206,6 +184,9 @@
         [Link]
         private ISummary outputSummary = null;
 
+        [Link]
+        private List<Zone> paddocks = null;
+
         #endregion
 
         /// <summary>
@@ -219,8 +200,6 @@
 
             this.suppFed = new FoodSupplement();
             this.excretionInfo = new ExcretionInfo();
-            this.paddocksGiven = false;
-            this.isFirstStep = true;
             this.RandSeed = 0;
         }
 
@@ -239,7 +218,7 @@
         /// <summary>
         /// Gives access to the list of animals. Needed for unit testing.
         /// </summary>
-        public StockList AnimalList { get { return stockModel; } }
+        public StockList AnimalList { get; private set; }
 
         ///// <summary>
         ///// Gets or sets the manually-specified structure of paddocks and forages 
@@ -352,8 +331,8 @@
 
                 // using the component ID
                 // return the mass per area for all forages
-                forageProvider = this.stockModel.ForagesAll.FindProvider(0);
-                return this.stockModel.ReturnMassPerArea(0, forageProvider, "kg/ha"); // by paddock or from forage ref
+                forageProvider = this.AnimalList.ForagesAll.FindProvider(0);
+                return this.AnimalList.ReturnMassPerArea(0, forageProvider, "kg/ha"); // by paddock or from forage ref
             }
         }
 
@@ -366,7 +345,7 @@
             get
             {
                 SupplementEaten[] value = null;
-                StockVars.MakeSuppEaten(this.stockModel, ref value);
+                StockVars.MakeSuppEaten(this.AnimalList, ref value);
                 return value;
             }
         }
@@ -379,7 +358,7 @@
         {
             get
             {
-                return this.stockModel.Count();
+                return this.AnimalList.Count();
             }
         }
 
@@ -393,8 +372,8 @@
         {
             get
             {
-                int[] numbers = new int[this.stockModel.Count()];
-                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eBoth, false, false, false, ref numbers);
+                int[] numbers = new int[this.AnimalList.Count()];
+                StockVars.PopulateNumberValue(this.AnimalList, StockVars.CountType.eBoth, false, false, false, ref numbers);
                 return numbers;
             }
         }
@@ -408,7 +387,7 @@
             get
             {
                 int[] numbers = new int[1];
-                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eBoth, false, true, false, ref numbers);
+                StockVars.PopulateNumberValue(this.AnimalList, StockVars.CountType.eBoth, false, true, false, ref numbers);
                 return numbers[0];
             }
         }
@@ -421,8 +400,8 @@
         {
             get
             {
-                int[] numbers = new int[this.stockModel.HighestTag()];
-                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eBoth, false, false, true, ref numbers);
+                int[] numbers = new int[this.AnimalList.HighestTag()];
+                StockVars.PopulateNumberValue(this.AnimalList, StockVars.CountType.eBoth, false, false, true, ref numbers);
                 return numbers;
             }
         }
@@ -437,8 +416,8 @@
         {
             get
             {
-                int[] numbers = new int[this.stockModel.Count()];
-                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eBoth, true, false, false, ref numbers);
+                int[] numbers = new int[this.AnimalList.Count()];
+                StockVars.PopulateNumberValue(this.AnimalList, StockVars.CountType.eBoth, true, false, false, ref numbers);
                 return numbers;
             }
         }
@@ -452,7 +431,7 @@
             get
             {
                 int[] numbers = new int[1];
-                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eBoth, true, true, false, ref numbers);
+                StockVars.PopulateNumberValue(this.AnimalList, StockVars.CountType.eBoth, true, true, false, ref numbers);
                 return numbers[0];
             }
         }
@@ -465,8 +444,8 @@
         {
             get
             {
-                int[] numbers = new int[this.stockModel.HighestTag()];
-                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eBoth, true, false, true, ref numbers);
+                int[] numbers = new int[this.AnimalList.HighestTag()];
+                StockVars.PopulateNumberValue(this.AnimalList, StockVars.CountType.eBoth, true, false, true, ref numbers);
                 return numbers;
             }
         }
@@ -481,8 +460,8 @@
         {
             get
             {
-                int[] numbers = new int[this.stockModel.Count()];
-                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eFemale, false, false, false, ref numbers);
+                int[] numbers = new int[this.AnimalList.Count()];
+                StockVars.PopulateNumberValue(this.AnimalList, StockVars.CountType.eFemale, false, false, false, ref numbers);
                 return numbers;
             }
         }
@@ -496,7 +475,7 @@
             get
             {
                 int[] numbers = new int[1];
-                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eFemale, false, true, false, ref numbers);
+                StockVars.PopulateNumberValue(this.AnimalList, StockVars.CountType.eFemale, false, true, false, ref numbers);
                 return numbers[0];
             }
         }
@@ -509,8 +488,8 @@
         {
             get
             {
-                int[] numbers = new int[this.stockModel.HighestTag()];
-                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eFemale, false, false, true, ref numbers);
+                int[] numbers = new int[this.AnimalList.HighestTag()];
+                StockVars.PopulateNumberValue(this.AnimalList, StockVars.CountType.eFemale, false, false, true, ref numbers);
                 return numbers;
             }
         }
@@ -525,8 +504,8 @@
         {
             get
             {
-                int[] numbers = new int[this.stockModel.Count()];
-                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eFemale, true, false, false, ref numbers);
+                int[] numbers = new int[this.AnimalList.Count()];
+                StockVars.PopulateNumberValue(this.AnimalList, StockVars.CountType.eFemale, true, false, false, ref numbers);
                 return numbers;
             }
         }
@@ -540,7 +519,7 @@
             get
             {
                 int[] numbers = new int[1];
-                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eFemale, true, true, false, ref numbers);
+                StockVars.PopulateNumberValue(this.AnimalList, StockVars.CountType.eFemale, true, true, false, ref numbers);
                 return numbers[0];
             }
         }
@@ -553,8 +532,8 @@
         {
             get
             {
-                int[] numbers = new int[this.stockModel.HighestTag()];
-                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eFemale, true, false, true, ref numbers);
+                int[] numbers = new int[this.AnimalList.HighestTag()];
+                StockVars.PopulateNumberValue(this.AnimalList, StockVars.CountType.eFemale, true, false, true, ref numbers);
                 return numbers;
             }
         }
@@ -569,8 +548,8 @@
         {
             get
             {
-                int[] numbers = new int[this.stockModel.Count()];
-                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eMale, false, false, false, ref numbers);
+                int[] numbers = new int[this.AnimalList.Count()];
+                StockVars.PopulateNumberValue(this.AnimalList, StockVars.CountType.eMale, false, false, false, ref numbers);
                 return numbers;
             }
         }
@@ -584,7 +563,7 @@
             get
             {
                 int[] numbers = new int[1];
-                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eMale, false, true, false, ref numbers);
+                StockVars.PopulateNumberValue(this.AnimalList, StockVars.CountType.eMale, false, true, false, ref numbers);
                 return numbers[0];
             }
         }
@@ -597,8 +576,8 @@
         {
             get
             {
-                int[] numbers = new int[this.stockModel.HighestTag()];
-                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eMale, false, false, true, ref numbers);
+                int[] numbers = new int[this.AnimalList.HighestTag()];
+                StockVars.PopulateNumberValue(this.AnimalList, StockVars.CountType.eMale, false, false, true, ref numbers);
                 return numbers;
             }
         }
@@ -613,8 +592,8 @@
         {
             get
             {
-                int[] numbers = new int[this.stockModel.Count()];
-                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eMale, true, false, false, ref numbers);
+                int[] numbers = new int[this.AnimalList.Count()];
+                StockVars.PopulateNumberValue(this.AnimalList, StockVars.CountType.eMale, true, false, false, ref numbers);
                 return numbers;
             }
         }
@@ -628,7 +607,7 @@
             get
             {
                 int[] numbers = new int[1];
-                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eMale, true, true, false, ref numbers);
+                StockVars.PopulateNumberValue(this.AnimalList, StockVars.CountType.eMale, true, true, false, ref numbers);
                 return numbers[0];
             }
         }
@@ -641,8 +620,8 @@
         {
             get
             {
-                int[] numbers = new int[this.stockModel.HighestTag()];
-                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eMale, true, false, true, ref numbers);
+                int[] numbers = new int[this.AnimalList.HighestTag()];
+                StockVars.PopulateNumberValue(this.AnimalList, StockVars.CountType.eMale, true, false, true, ref numbers);
                 return numbers;
             }
         }
@@ -658,7 +637,7 @@
             get
             {
                 int[] numbers = new int[1];
-                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eDeaths, false, true, false, ref numbers);
+                StockVars.PopulateNumberValue(this.AnimalList, StockVars.CountType.eDeaths, false, true, false, ref numbers);
                 return numbers[0];
             }
         }
@@ -671,8 +650,8 @@
         {
             get
             {
-                int[] numbers = new int[this.stockModel.Count()];
-                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eDeaths, false, false, false, ref numbers);
+                int[] numbers = new int[this.AnimalList.Count()];
+                StockVars.PopulateNumberValue(this.AnimalList, StockVars.CountType.eDeaths, false, false, false, ref numbers);
                 return numbers;
             }
         }
@@ -685,8 +664,8 @@
         {
             get
             {
-                int[] numbers = new int[this.stockModel.HighestTag()];
-                StockVars.PopulateNumberValue(this.stockModel, StockVars.CountType.eDeaths, false, false, true, ref numbers);
+                int[] numbers = new int[this.AnimalList.HighestTag()];
+                StockVars.PopulateNumberValue(this.AnimalList, StockVars.CountType.eDeaths, false, false, true, ref numbers);
                 return numbers;
             }
         }
@@ -699,9 +678,9 @@
         {
             get
             {
-                string[] values = new string[this.stockModel.Count()];
-                for (int idx = 0; idx < this.stockModel.Count(); idx++)
-                    values[idx] = this.stockModel.SexString((int)idx, false);
+                string[] values = new string[this.AnimalList.Count()];
+                for (int idx = 0; idx < this.AnimalList.Count(); idx++)
+                    values[idx] = this.AnimalList.SexString((int)idx, false);
                 return values;
             }
         }
@@ -717,8 +696,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpAGE, false, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpAGE, false, false, false, ref values);
                 return values;
             }
         }
@@ -733,7 +712,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpAGE, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpAGE, false, true, false, ref values);
                 return values[0];
             }
         }
@@ -747,8 +726,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpAGE, false, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpAGE, false, false, true, ref values);
                 return values;
             }
         }
@@ -764,8 +743,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpAGE, true, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpAGE, true, false, false, ref values);
                 return values;
             }
         }
@@ -780,7 +759,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpAGE, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpAGE, true, true, false, ref values);
                 return values[0];
             }
         }
@@ -794,8 +773,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpAGE, true, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpAGE, true, false, true, ref values);
                 return values;
             }
         }
@@ -810,8 +789,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpAGE_MONTHS, false, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpAGE_MONTHS, false, false, false, ref values);
                 return values;
             }
         }
@@ -825,7 +804,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpAGE_MONTHS, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpAGE_MONTHS, false, true, false, ref values);
                 return values[0];
             }
         }
@@ -838,8 +817,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpAGE_MONTHS, false, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpAGE_MONTHS, false, false, true, ref values);
                 return values;
             }
         }
@@ -854,8 +833,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpAGE_MONTHS, true, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpAGE_MONTHS, true, false, false, ref values);
                 return values;
             }
         }
@@ -869,7 +848,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpAGE_MONTHS, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpAGE_MONTHS, true, true, false, ref values);
                 return values[0];
             }
         }
@@ -882,8 +861,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpAGE_MONTHS, true, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpAGE_MONTHS, true, false, true, ref values);
                 return values;
             }
         }
@@ -899,8 +878,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpLIVE_WT, false, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpLIVE_WT, false, false, false, ref values);
                 return values;
             }
         }
@@ -915,7 +894,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpLIVE_WT, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpLIVE_WT, false, true, false, ref values);
                 return values[0];
             }
         }
@@ -929,8 +908,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpLIVE_WT, false, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpLIVE_WT, false, false, true, ref values);
                 return values;
             }
         }
@@ -946,8 +925,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpLIVE_WT, true, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpLIVE_WT, true, false, false, ref values);
                 return values;
             }
         }
@@ -962,7 +941,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpLIVE_WT, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpLIVE_WT, true, true, false, ref values);
                 return values[0];
             }
         }
@@ -976,8 +955,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpLIVE_WT, true, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpLIVE_WT, true, false, true, ref values);
                 return values;
             }
         }
@@ -993,8 +972,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpBASE_WT, false, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpBASE_WT, false, false, false, ref values);
                 return values;
             }
         }
@@ -1009,7 +988,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpBASE_WT, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpBASE_WT, false, true, false, ref values);
                 return values[0];
             }
         }
@@ -1023,8 +1002,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpBASE_WT, false, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpBASE_WT, false, false, true, ref values);
                 return values;
             }
         }
@@ -1040,8 +1019,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpBASE_WT, true, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpBASE_WT, true, false, false, ref values);
                 return values;
             }
         }
@@ -1056,7 +1035,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpBASE_WT, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpBASE_WT, true, true, false, ref values);
                 return values[0];
             }
         }
@@ -1070,8 +1049,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpBASE_WT, true, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpBASE_WT, true, false, true, ref values);
                 return values;
             }
         }
@@ -1086,8 +1065,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCOND_SCORE, false, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpCOND_SCORE, false, false, false, ref values);
                 return values;
             }
         }
@@ -1101,7 +1080,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCOND_SCORE, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpCOND_SCORE, false, true, false, ref values);
                 return values[0];
             }
         }
@@ -1114,8 +1093,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCOND_SCORE, false, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpCOND_SCORE, false, false, true, ref values);
                 return values;
             }
         }
@@ -1130,8 +1109,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCOND_SCORE, true, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpCOND_SCORE, true, false, false, ref values);
                 return values;
             }
         }
@@ -1145,7 +1124,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCOND_SCORE, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpCOND_SCORE, true, true, false, ref values);
                 return values[0];
             }
         }
@@ -1158,8 +1137,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCOND_SCORE, true, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpCOND_SCORE, true, false, true, ref values);
                 return values;
             }
         }
@@ -1175,8 +1154,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpMAX_PREV_WT, false, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpMAX_PREV_WT, false, false, false, ref values);
                 return values;
             }
         }
@@ -1191,7 +1170,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpMAX_PREV_WT, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpMAX_PREV_WT, false, true, false, ref values);
                 return values[0];
             }
         }
@@ -1205,8 +1184,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpMAX_PREV_WT, false, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpMAX_PREV_WT, false, false, true, ref values);
                 return values;
             }
         }
@@ -1222,8 +1201,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpMAX_PREV_WT, true, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpMAX_PREV_WT, true, false, false, ref values);
                 return values;
             }
         }
@@ -1238,7 +1217,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpMAX_PREV_WT, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpMAX_PREV_WT, true, true, false, ref values);
                 return values[0];
             }
         }
@@ -1252,8 +1231,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpMAX_PREV_WT, true, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpMAX_PREV_WT, true, false, true, ref values);
                 return values;
             }
         }
@@ -1269,8 +1248,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpFLEECE_WT, false, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpFLEECE_WT, false, false, false, ref values);
                 return values;
             }
         }
@@ -1285,7 +1264,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpFLEECE_WT, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpFLEECE_WT, false, true, false, ref values);
                 return values[0];
             }
         }
@@ -1299,8 +1278,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpFLEECE_WT, false, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpFLEECE_WT, false, false, true, ref values);
                 return values;
             }
         }
@@ -1316,8 +1295,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpFLEECE_WT, true, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpFLEECE_WT, true, false, false, ref values);
                 return values;
             }
         }
@@ -1332,7 +1311,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpFLEECE_WT, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpFLEECE_WT, true, true, false, ref values);
                 return values[0];
             }
         }
@@ -1346,8 +1325,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpFLEECE_WT, true, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpFLEECE_WT, true, false, true, ref values);
                 return values;
             }
         }
@@ -1363,8 +1342,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCFLEECE_WT, false, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpCFLEECE_WT, false, false, false, ref values);
                 return values;
             }
         }
@@ -1379,7 +1358,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCFLEECE_WT, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpCFLEECE_WT, false, true, false, ref values);
                 return values[0];
             }
         }
@@ -1393,8 +1372,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCFLEECE_WT, false, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpCFLEECE_WT, false, false, true, ref values);
                 return values;
             }
         }
@@ -1410,8 +1389,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCFLEECE_WT, true, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpCFLEECE_WT, true, false, false, ref values);
                 return values;
             }
         }
@@ -1426,7 +1405,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCFLEECE_WT, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpCFLEECE_WT, true, true, false, ref values);
                 return values[0];
             }
         }
@@ -1440,8 +1419,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCFLEECE_WT, true, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpCFLEECE_WT, true, false, true, ref values);
                 return values;
             }
         }
@@ -1457,8 +1436,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpFIBRE_DIAM, false, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpFIBRE_DIAM, false, false, false, ref values);
                 return values;
             }
         }
@@ -1473,7 +1452,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpFIBRE_DIAM, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpFIBRE_DIAM, false, true, false, ref values);
                 return values[0];
             }
         }
@@ -1487,8 +1466,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpFIBRE_DIAM, false, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpFIBRE_DIAM, false, false, true, ref values);
                 return values;
             }
         }
@@ -1504,8 +1483,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpFIBRE_DIAM, true, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpFIBRE_DIAM, true, false, false, ref values);
                 return values;
             }
         }
@@ -1520,7 +1499,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpFIBRE_DIAM, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpFIBRE_DIAM, true, true, false, ref values);
                 return values[0];
             }
         }
@@ -1534,8 +1513,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpFIBRE_DIAM, true, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpFIBRE_DIAM, true, false, true, ref values);
                 return values;
             }
         }
@@ -1551,8 +1530,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpPREGNANT, false, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpPREGNANT, false, false, false, ref values);
                 return values;
             }
         }
@@ -1567,7 +1546,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpPREGNANT, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpPREGNANT, false, true, false, ref values);
                 return values[0];
             }
         }
@@ -1581,8 +1560,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpPREGNANT, false, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpPREGNANT, false, false, true, ref values);
                 return values;
             }
         }
@@ -1598,8 +1577,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpLACTATING, false, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpLACTATING, false, false, false, ref values);
                 return values;
             }
         }
@@ -1614,7 +1593,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpLACTATING, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpLACTATING, false, true, false, ref values);
                 return values[0];
             }
         }
@@ -1628,8 +1607,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpLACTATING, false, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpLACTATING, false, false, true, ref values);
                 return values;
             }
         }
@@ -1644,8 +1623,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpNO_FOETUSES, false, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpNO_FOETUSES, false, false, false, ref values);
                 return values;
             }
         }
@@ -1659,7 +1638,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpNO_FOETUSES, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpNO_FOETUSES, false, true, false, ref values);
                 return values[0];
             }
         }
@@ -1672,8 +1651,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpNO_FOETUSES, false, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpNO_FOETUSES, false, false, true, ref values);
                 return values;
             }
         }
@@ -1689,8 +1668,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpNO_SUCKLING, false, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpNO_SUCKLING, false, false, false, ref values);
                 return values;
             }
         }
@@ -1704,7 +1683,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpNO_SUCKLING, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpNO_SUCKLING, false, true, false, ref values);
                 return values[0];
             }
         }
@@ -1717,8 +1696,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpNO_SUCKLING, false, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpNO_SUCKLING, false, false, true, ref values);
                 return values;
             }
         }
@@ -1733,8 +1712,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpBIRTH_CS, false, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpBIRTH_CS, false, false, false, ref values);
                 return values;
             }
         }
@@ -1748,7 +1727,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpBIRTH_CS, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpBIRTH_CS, false, true, false, ref values);
                 return values[0];
             }
         }
@@ -1761,8 +1740,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpBIRTH_CS, false, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpBIRTH_CS, false, false, true, ref values);
                 return values;
             }
         }
@@ -1775,9 +1754,9 @@
         {
             get
             {
-                string[] paddocks = new string[this.stockModel.Count()];
-                for (int idx = 1; idx <= this.stockModel.Count(); idx++)
-                    paddocks[idx - 1] = this.stockModel.GetInPadd((int)idx);
+                string[] paddocks = new string[this.AnimalList.Count()];
+                for (int idx = 1; idx <= this.AnimalList.Count(); idx++)
+                    paddocks[idx - 1] = this.AnimalList.GetInPadd((int)idx);
                 return paddocks;
             }
         }
@@ -1790,9 +1769,9 @@
         {
             get
             {
-                int[] tags = new int[this.stockModel.Count()];
-                for (int idx = 1; idx <= this.stockModel.Count(); idx++)
-                    tags[idx - 1] = this.stockModel.GetTag((int)idx);
+                int[] tags = new int[this.AnimalList.Count()];
+                for (int idx = 1; idx <= this.AnimalList.Count(); idx++)
+                    tags[idx - 1] = this.AnimalList.GetTag((int)idx);
                 return tags;
             }
         }
@@ -1805,9 +1784,9 @@
         {
             get
             {
-                int[] priorities = new int[this.stockModel.Count()];
-                for (int idx = 1; idx <= this.stockModel.Count(); idx++)
-                    priorities[idx - 1] = this.stockModel.GetPriority((int)idx);
+                int[] priorities = new int[this.AnimalList.Count()];
+                for (int idx = 1; idx <= this.AnimalList.Count(); idx++)
+                    priorities[idx - 1] = this.AnimalList.GetPriority((int)idx);
                 return priorities;
             }
         }
@@ -1822,8 +1801,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpDSE, false, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpDSE, false, false, false, ref values);
                 return values;
             }
         }
@@ -1837,7 +1816,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpDSE, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpDSE, false, true, false, ref values);
                 return values[0];
             }
         }
@@ -1850,8 +1829,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpDSE, false, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpDSE, false, false, true, ref values);
                 return values;
             }
         }
@@ -1866,8 +1845,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpDSE, true, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpDSE, true, false, false, ref values);
                 return values;
             }
         }
@@ -1881,7 +1860,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpDSE, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpDSE, true, true, false, ref values);
                 return values[0];
             }
         }
@@ -1894,8 +1873,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpDSE, true, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpDSE, true, false, true, ref values);
                 return values;
             }
         }
@@ -1912,8 +1891,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpWT_CHANGE, false, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpWT_CHANGE, false, false, false, ref values);
                 return values;
             }
         }
@@ -1928,7 +1907,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpWT_CHANGE, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpWT_CHANGE, false, true, false, ref values);
                 return values[0];
             }
         }
@@ -1942,8 +1921,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpWT_CHANGE, false, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpWT_CHANGE, false, false, true, ref values);
                 return values;
             }
         }
@@ -1959,8 +1938,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpWT_CHANGE, true, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpWT_CHANGE, true, false, false, ref values);
                 return values;
             }
         }
@@ -1975,7 +1954,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpWT_CHANGE, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpWT_CHANGE, true, true, false, ref values);
                 return values[0];
             }
         }
@@ -1989,8 +1968,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpWT_CHANGE, true, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpWT_CHANGE, true, false, true, ref values);
                 return values;
             }
         }
@@ -2005,8 +1984,8 @@
         {
             get
             {
-                DMPoolHead[] pools = new DMPoolHead[this.stockModel.Count()];
-                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE, false, false, false, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.AnimalList.Count()];
+                StockVars.PopulateDMPoolValue(this.AnimalList, StockProps.prpINTAKE, false, false, false, ref pools);
                 return pools;
             }
         }
@@ -2020,7 +1999,7 @@
             get
             {
                 DMPoolHead[] pools = new DMPoolHead[1];
-                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE, false, true, false, ref pools);
+                StockVars.PopulateDMPoolValue(this.AnimalList, StockProps.prpINTAKE, false, true, false, ref pools);
                 return pools[0];
             }
         }
@@ -2033,8 +2012,8 @@
         {
             get
             {
-                DMPoolHead[] pools = new DMPoolHead[this.stockModel.HighestTag()];
-                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE, false, false, true, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.AnimalList.HighestTag()];
+                StockVars.PopulateDMPoolValue(this.AnimalList, StockProps.prpINTAKE, false, false, true, ref pools);
                 return pools;
             }
         }
@@ -2049,8 +2028,8 @@
         {
             get
             {
-                DMPoolHead[] pools = new DMPoolHead[this.stockModel.Count()];
-                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE, true, false, false, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.AnimalList.Count()];
+                StockVars.PopulateDMPoolValue(this.AnimalList, StockProps.prpINTAKE, true, false, false, ref pools);
                 return pools;
             }
         }
@@ -2064,7 +2043,7 @@
             get
             {
                 DMPoolHead[] pools = new DMPoolHead[1];
-                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE, true, true, false, ref pools);
+                StockVars.PopulateDMPoolValue(this.AnimalList, StockProps.prpINTAKE, true, true, false, ref pools);
                 return pools[0];
             }
         }
@@ -2077,8 +2056,8 @@
         {
             get
             {
-                DMPoolHead[] pools = new DMPoolHead[this.stockModel.HighestTag()];
-                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE, true, false, true, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.AnimalList.HighestTag()];
+                StockVars.PopulateDMPoolValue(this.AnimalList, StockProps.prpINTAKE, true, false, true, ref pools);
                 return pools;
             }
         }
@@ -2093,8 +2072,8 @@
         {
             get
             {
-                DMPoolHead[] pools = new DMPoolHead[this.stockModel.Count()];
-                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE_PAST, false, false, false, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.AnimalList.Count()];
+                StockVars.PopulateDMPoolValue(this.AnimalList, StockProps.prpINTAKE_PAST, false, false, false, ref pools);
                 return pools;
             }
         }
@@ -2108,7 +2087,7 @@
             get
             {
                 DMPoolHead[] pools = new DMPoolHead[1];
-                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE_PAST, false, true, false, ref pools);
+                StockVars.PopulateDMPoolValue(this.AnimalList, StockProps.prpINTAKE_PAST, false, true, false, ref pools);
                 return pools[0];
             }
         }
@@ -2121,8 +2100,8 @@
         {
             get
             {
-                DMPoolHead[] pools = new DMPoolHead[this.stockModel.HighestTag()];
-                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE_PAST, false, false, true, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.AnimalList.HighestTag()];
+                StockVars.PopulateDMPoolValue(this.AnimalList, StockProps.prpINTAKE_PAST, false, false, true, ref pools);
                 return pools;
             }
         }
@@ -2137,8 +2116,8 @@
         {
             get
             {
-                DMPoolHead[] pools = new DMPoolHead[this.stockModel.Count()];
-                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE_PAST, true, false, false, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.AnimalList.Count()];
+                StockVars.PopulateDMPoolValue(this.AnimalList, StockProps.prpINTAKE_PAST, true, false, false, ref pools);
                 return pools;
             }
         }
@@ -2152,7 +2131,7 @@
             get
             {
                 DMPoolHead[] pools = new DMPoolHead[1];
-                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE_PAST, true, true, false, ref pools);
+                StockVars.PopulateDMPoolValue(this.AnimalList, StockProps.prpINTAKE_PAST, true, true, false, ref pools);
                 return pools[0];
             }
         }
@@ -2165,8 +2144,8 @@
         {
             get
             {
-                DMPoolHead[] pools = new DMPoolHead[this.stockModel.HighestTag()];
-                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE_PAST, true, false, true, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.AnimalList.HighestTag()];
+                StockVars.PopulateDMPoolValue(this.AnimalList, StockProps.prpINTAKE_PAST, true, false, true, ref pools);
                 return pools;
             }
         }
@@ -2181,8 +2160,8 @@
         {
             get
             {
-                DMPoolHead[] pools = new DMPoolHead[this.stockModel.Count()];
-                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE_SUPP, false, false, false, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.AnimalList.Count()];
+                StockVars.PopulateDMPoolValue(this.AnimalList, StockProps.prpINTAKE_SUPP, false, false, false, ref pools);
                 return pools;
             }
         }
@@ -2196,7 +2175,7 @@
             get
             {
                 DMPoolHead[] pools = new DMPoolHead[1];
-                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE_SUPP, false, true, false, ref pools);
+                StockVars.PopulateDMPoolValue(this.AnimalList, StockProps.prpINTAKE_SUPP, false, true, false, ref pools);
                 return pools[0];
             }
         }
@@ -2209,8 +2188,8 @@
         {
             get
             {
-                DMPoolHead[] pools = new DMPoolHead[this.stockModel.HighestTag()];
-                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE_SUPP, false, false, true, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.AnimalList.HighestTag()];
+                StockVars.PopulateDMPoolValue(this.AnimalList, StockProps.prpINTAKE_SUPP, false, false, true, ref pools);
                 return pools;
             }
         }
@@ -2225,8 +2204,8 @@
         {
             get
             {
-                DMPoolHead[] pools = new DMPoolHead[this.stockModel.Count()];
-                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE_SUPP, true, false, false, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.AnimalList.Count()];
+                StockVars.PopulateDMPoolValue(this.AnimalList, StockProps.prpINTAKE_SUPP, true, false, false, ref pools);
                 return pools;
             }
         }
@@ -2240,7 +2219,7 @@
             get
             {
                 DMPoolHead[] pools = new DMPoolHead[1];
-                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE_SUPP, true, true, false, ref pools);
+                StockVars.PopulateDMPoolValue(this.AnimalList, StockProps.prpINTAKE_SUPP, true, true, false, ref pools);
                 return pools[0];
             }
         }
@@ -2253,8 +2232,8 @@
         {
             get
             {
-                DMPoolHead[] pools = new DMPoolHead[this.stockModel.HighestTag()];
-                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINTAKE_SUPP, true, false, true, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.AnimalList.HighestTag()];
+                StockVars.PopulateDMPoolValue(this.AnimalList, StockProps.prpINTAKE_SUPP, true, false, true, ref pools);
                 return pools;
             }
         }
@@ -2270,8 +2249,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpME_INTAKE, false, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpME_INTAKE, false, false, false, ref values);
                 return values;
             }
         }
@@ -2286,7 +2265,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpME_INTAKE, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpME_INTAKE, false, true, false, ref values);
                 return values[0];
             }
         }
@@ -2300,8 +2279,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpME_INTAKE, false, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpME_INTAKE, false, false, true, ref values);
                 return values;
             }
         }
@@ -2317,8 +2296,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpME_INTAKE, true, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpME_INTAKE, true, false, false, ref values);
                 return values;
             }
         }
@@ -2333,7 +2312,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpME_INTAKE, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpME_INTAKE, true, true, false, ref values);
                 return values[0];
             }
         }
@@ -2347,8 +2326,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpME_INTAKE, true, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpME_INTAKE, true, false, true, ref values);
                 return values;
             }
         }
@@ -2364,8 +2343,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCPI_INTAKE, false, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpCPI_INTAKE, false, false, false, ref values);
                 return values;
             }
         }
@@ -2380,7 +2359,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCPI_INTAKE, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpCPI_INTAKE, false, true, false, ref values);
                 return values[0];
             }
         }
@@ -2394,8 +2373,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCPI_INTAKE, false, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpCPI_INTAKE, false, false, true, ref values);
                 return values;
             }
         }
@@ -2411,8 +2390,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCPI_INTAKE, true, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpCPI_INTAKE, true, false, false, ref values);
                 return values;
             }
         }
@@ -2427,7 +2406,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCPI_INTAKE, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpCPI_INTAKE, true, true, false, ref values);
                 return values[0];
             }
         }
@@ -2441,8 +2420,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCPI_INTAKE, true, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpCPI_INTAKE, true, false, true, ref values);
                 return values;
             }
         }
@@ -2458,8 +2437,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCFLEECE_GROWTH, false, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpCFLEECE_GROWTH, false, false, false, ref values);
                 return values;
             }
         }
@@ -2474,7 +2453,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCFLEECE_GROWTH, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpCFLEECE_GROWTH, false, true, false, ref values);
                 return values[0];
             }
         }
@@ -2488,8 +2467,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCFLEECE_GROWTH, false, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpCFLEECE_GROWTH, false, false, true, ref values);
                 return values;
             }
         }
@@ -2505,8 +2484,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCFLEECE_GROWTH, true, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpCFLEECE_GROWTH, true, false, false, ref values);
                 return values;
             }
         }
@@ -2521,7 +2500,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCFLEECE_GROWTH, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpCFLEECE_GROWTH, true, true, false, ref values);
                 return values[0];
             }
         }
@@ -2535,8 +2514,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCFLEECE_GROWTH, true, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpCFLEECE_GROWTH, true, false, true, ref values);
                 return values;
             }
         }
@@ -2552,8 +2531,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpDAY_FIBRE_DIAM, false, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpDAY_FIBRE_DIAM, false, false, false, ref values);
                 return values;
             }
         }
@@ -2568,7 +2547,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpDAY_FIBRE_DIAM, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpDAY_FIBRE_DIAM, false, true, false, ref values);
                 return values[0];
             }
         }
@@ -2582,8 +2561,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpDAY_FIBRE_DIAM, false, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpDAY_FIBRE_DIAM, false, false, true, ref values);
                 return values;
             }
         }
@@ -2599,8 +2578,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpDAY_FIBRE_DIAM, true, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpDAY_FIBRE_DIAM, true, false, false, ref values);
                 return values;
             }
         }
@@ -2615,7 +2594,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpDAY_FIBRE_DIAM, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpDAY_FIBRE_DIAM, true, true, false, ref values);
                 return values[0];
             }
         }
@@ -2629,8 +2608,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpDAY_FIBRE_DIAM, true, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpDAY_FIBRE_DIAM, true, false, true, ref values);
                 return values;
             }
         }
@@ -2646,8 +2625,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpMILK_WT, false, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpMILK_WT, false, false, false, ref values);
                 return values;
             }
         }
@@ -2662,7 +2641,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpMILK_WT, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpMILK_WT, false, true, false, ref values);
                 return values[0];
             }
         }
@@ -2676,8 +2655,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpMILK_WT, false, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpMILK_WT, false, false, true, ref values);
                 return values;
             }
         }
@@ -2693,8 +2672,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpMILK_ME, false, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpMILK_ME, false, false, false, ref values);
                 return values;
             }
         }
@@ -2709,7 +2688,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpMILK_ME, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpMILK_ME, false, true, false, ref values);
                 return values[0];
             }
         }
@@ -2723,8 +2702,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpMILK_ME, false, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpMILK_ME, false, false, true, ref values);
                 return values;
             }
         }
@@ -2740,8 +2719,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_N, false, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRETAINED_N, false, false, false, ref values);
                 return values;
             }
         }
@@ -2756,7 +2735,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_N, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRETAINED_N, false, true, false, ref values);
                 return values[0];
             }
         }
@@ -2770,8 +2749,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_N, false, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRETAINED_N, false, false, true, ref values);
                 return values;
             }
         }
@@ -2787,8 +2766,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_N, true, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRETAINED_N, true, false, false, ref values);
                 return values;
             }
         }
@@ -2803,7 +2782,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_N, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRETAINED_N, true, true, false, ref values);
                 return values[0];
             }
         }
@@ -2817,8 +2796,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_N, true, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRETAINED_N, true, false, true, ref values);
                 return values;
             }
         }
@@ -2835,8 +2814,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_P, false, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRETAINED_P, false, false, false, ref values);
                 return values;
             }
         }
@@ -2851,7 +2830,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_P, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRETAINED_P, false, true, false, ref values);
                 return values[0];
             }
         }
@@ -2865,8 +2844,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_P, false, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRETAINED_P, false, false, true, ref values);
                 return values;
             }
         }
@@ -2882,8 +2861,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_P, true, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRETAINED_P, true, false, false, ref values);
                 return values;
             }
         }
@@ -2898,7 +2877,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_P, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRETAINED_P, true, true, false, ref values);
                 return values[0];
             }
         }
@@ -2912,8 +2891,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_P, true, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRETAINED_P, true, false, true, ref values);
                 return values;
             }
         }
@@ -2928,8 +2907,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_S, false, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRETAINED_S, false, false, false, ref values);
                 return values;
             }
         }
@@ -2944,7 +2923,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_S, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRETAINED_S, false, true, false, ref values);
                 return values[0];
             }
         }
@@ -2958,8 +2937,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_S, false, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRETAINED_S, false, false, true, ref values);
                 return values;
             }
         }
@@ -2975,8 +2954,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_S, true, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRETAINED_S, true, false, false, ref values);
                 return values;
             }
         }
@@ -2991,7 +2970,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_S, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRETAINED_S, true, true, false, ref values);
                 return values[0];
             }
         }
@@ -3005,8 +2984,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRETAINED_S, true, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRETAINED_S, true, false, true, ref values);
                 return values;
             }
         }
@@ -3021,8 +3000,8 @@
         {
             get
             {
-                DMPoolHead[] pools = new DMPoolHead[this.stockModel.Count()];
-                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpFAECES, false, false, false, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.AnimalList.Count()];
+                StockVars.PopulateDMPoolValue(this.AnimalList, StockProps.prpFAECES, false, false, false, ref pools);
                 return pools;
             }
         }
@@ -3036,7 +3015,7 @@
             get
             {
                 DMPoolHead[] pools = new DMPoolHead[1];
-                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpFAECES, false, true, false, ref pools);
+                StockVars.PopulateDMPoolValue(this.AnimalList, StockProps.prpFAECES, false, true, false, ref pools);
                 return pools[0];
             }
         }
@@ -3049,8 +3028,8 @@
         {
             get
             {
-                DMPoolHead[] pools = new DMPoolHead[this.stockModel.HighestTag()];
-                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpFAECES, false, false, true, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.AnimalList.HighestTag()];
+                StockVars.PopulateDMPoolValue(this.AnimalList, StockProps.prpFAECES, false, false, true, ref pools);
                 return pools;
             }
         }
@@ -3065,8 +3044,8 @@
         {
             get
             {
-                DMPoolHead[] pools = new DMPoolHead[this.stockModel.Count()];
-                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpFAECES, true, false, false, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.AnimalList.Count()];
+                StockVars.PopulateDMPoolValue(this.AnimalList, StockProps.prpFAECES, true, false, false, ref pools);
                 return pools;
             }
         }
@@ -3080,7 +3059,7 @@
             get
             {
                 DMPoolHead[] pools = new DMPoolHead[1];
-                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpFAECES, true, true, false, ref pools);
+                StockVars.PopulateDMPoolValue(this.AnimalList, StockProps.prpFAECES, true, true, false, ref pools);
                 return pools[0];
             }
         }
@@ -3093,8 +3072,8 @@
         {
             get
             {
-                DMPoolHead[] pools = new DMPoolHead[this.stockModel.HighestTag()];
-                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpFAECES, true, false, true, ref pools);
+                DMPoolHead[] pools = new DMPoolHead[this.AnimalList.HighestTag()];
+                StockVars.PopulateDMPoolValue(this.AnimalList, StockProps.prpFAECES, true, false, true, ref pools);
                 return pools;
             }
         }
@@ -3109,9 +3088,9 @@
         {
             get
             {
-                DMPoolHead[] pools = new DMPoolHead[this.stockModel.Count()];
+                DMPoolHead[] pools = new DMPoolHead[this.AnimalList.Count()];
                 InorgFaeces[] inorgpools = new InorgFaeces[pools.Length];
-                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINORG_FAECES, false, false, false, ref pools);
+                StockVars.PopulateDMPoolValue(this.AnimalList, StockProps.prpINORG_FAECES, false, false, false, ref pools);
                 for (int i = 0; i < pools.Length; i++)
                 {
                     inorgpools[i].N = pools[i].N;
@@ -3132,7 +3111,7 @@
             {
                 DMPoolHead[] pools = new DMPoolHead[1];
                 InorgFaeces[] inorgpools = new InorgFaeces[pools.Length];
-                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINORG_FAECES, false, true, false, ref pools);
+                StockVars.PopulateDMPoolValue(this.AnimalList, StockProps.prpINORG_FAECES, false, true, false, ref pools);
                 inorgpools[0].N = pools[0].N;
                 inorgpools[0].P = pools[0].P;
                 inorgpools[0].S = pools[0].S;
@@ -3148,9 +3127,9 @@
         {
             get
             {
-                DMPoolHead[] pools = new DMPoolHead[this.stockModel.HighestTag()];
+                DMPoolHead[] pools = new DMPoolHead[this.AnimalList.HighestTag()];
                 InorgFaeces[] inorgpools = new InorgFaeces[pools.Length];
-                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINORG_FAECES, false, false, true, ref pools);
+                StockVars.PopulateDMPoolValue(this.AnimalList, StockProps.prpINORG_FAECES, false, false, true, ref pools);
                 for (int i = 0; i < pools.Length; i++)
                 {
                     inorgpools[i].N = pools[i].N;
@@ -3171,9 +3150,9 @@
         {
             get
             {
-                DMPoolHead[] pools = new DMPoolHead[this.stockModel.Count()];
+                DMPoolHead[] pools = new DMPoolHead[this.AnimalList.Count()];
                 InorgFaeces[] inorgpools = new InorgFaeces[pools.Length];
-                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINORG_FAECES, true, false, false, ref pools);
+                StockVars.PopulateDMPoolValue(this.AnimalList, StockProps.prpINORG_FAECES, true, false, false, ref pools);
                 for (int i = 0; i < pools.Length; i++)
                 {
                     inorgpools[i].N = pools[i].N;
@@ -3194,7 +3173,7 @@
             {
                 DMPoolHead[] pools = new DMPoolHead[1];
                 InorgFaeces[] inorgpools = new InorgFaeces[pools.Length];
-                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINORG_FAECES, true, true, false, ref pools);
+                StockVars.PopulateDMPoolValue(this.AnimalList, StockProps.prpINORG_FAECES, true, true, false, ref pools);
                 inorgpools[0].N = pools[0].N;
                 inorgpools[0].P = pools[0].P;
                 inorgpools[0].S = pools[0].S;
@@ -3210,9 +3189,9 @@
         {
             get
             {
-                DMPoolHead[] pools = new DMPoolHead[this.stockModel.HighestTag()];
+                DMPoolHead[] pools = new DMPoolHead[this.AnimalList.HighestTag()];
                 InorgFaeces[] inorgpools = new InorgFaeces[pools.Length];
-                StockVars.PopulateDMPoolValue(this.stockModel, StockProps.prpINORG_FAECES, true, false, true, ref pools);
+                StockVars.PopulateDMPoolValue(this.AnimalList, StockProps.prpINORG_FAECES, true, false, true, ref pools);
                 for (int i = 0; i < pools.Length; i++)
                 {
                     inorgpools[i].N = pools[i].N;
@@ -3231,8 +3210,8 @@
         {
             get
             {
-                EnergyUse[] use = new EnergyUse[this.stockModel.Count()];
-                StockVars.MakeEnergyUse(this.stockModel, ref use);
+                EnergyUse[] use = new EnergyUse[this.AnimalList.Count()];
+                StockVars.MakeEnergyUse(this.AnimalList, ref use);
                 return use;
             }
         }
@@ -3248,8 +3227,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCH4_OUTPUT, false, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpCH4_OUTPUT, false, false, false, ref values);
                 return values;
             }
         }
@@ -3264,7 +3243,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCH4_OUTPUT, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpCH4_OUTPUT, false, true, false, ref values);
                 return values[0];
             }
         }
@@ -3278,8 +3257,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCH4_OUTPUT, false, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpCH4_OUTPUT, false, false, true, ref values);
                 return values;
             }
         }
@@ -3295,8 +3274,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCH4_OUTPUT, true, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpCH4_OUTPUT, true, false, false, ref values);
                 return values;
             }
         }
@@ -3311,7 +3290,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCH4_OUTPUT, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpCH4_OUTPUT, true, true, false, ref values);
                 return values[0];
             }
         }
@@ -3325,8 +3304,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpCH4_OUTPUT, true, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpCH4_OUTPUT, true, false, true, ref values);
                 return values;
             }
         }
@@ -3342,8 +3321,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_N, false, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpURINE_N, false, false, false, ref values);
                 return values;
             }
         }
@@ -3358,7 +3337,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_N, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpURINE_N, false, true, false, ref values);
                 return values[0];
             }
         }
@@ -3372,8 +3351,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_N, false, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpURINE_N, false, false, true, ref values);
                 return values;
             }
         }
@@ -3389,8 +3368,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_N, true, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpURINE_N, true, false, false, ref values);
                 return values;
             }
         }
@@ -3405,7 +3384,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_N, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpURINE_N, true, true, false, ref values);
                 return values[0];
             }
         }
@@ -3419,8 +3398,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_N, true, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpURINE_N, true, false, true, ref values);
                 return values;
             }
         }
@@ -3436,8 +3415,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_P, false, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpURINE_P, false, false, false, ref values);
                 return values;
             }
         }
@@ -3452,7 +3431,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_P, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpURINE_P, false, true, false, ref values);
                 return values[0];
             }
         }
@@ -3466,8 +3445,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_P, false, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpURINE_P, false, false, true, ref values);
                 return values;
             }
         }
@@ -3483,8 +3462,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_P, true, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpURINE_P, true, false, false, ref values);
                 return values;
             }
         }
@@ -3499,7 +3478,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_P, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpURINE_P, true, true, false, ref values);
                 return values[0];
             }
         }
@@ -3513,8 +3492,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_P, true, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpURINE_P, true, false, true, ref values);
                 return values;
             }
         }
@@ -3530,8 +3509,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_S, false, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpURINE_S, false, false, false, ref values);
                 return values;
             }
         }
@@ -3546,7 +3525,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_S, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpURINE_S, false, true, false, ref values);
                 return values[0];
             }
         }
@@ -3560,8 +3539,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_S, false, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpURINE_S, false, false, true, ref values);
                 return values;
             }
         }
@@ -3577,8 +3556,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_S, true, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpURINE_S, true, false, false, ref values);
                 return values;
             }
         }
@@ -3593,7 +3572,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_S, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpURINE_S, true, true, false, ref values);
                 return values[0];
             }
         }
@@ -3607,8 +3586,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpURINE_S, true, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpURINE_S, true, false, true, ref values);
                 return values;
             }
         }
@@ -3624,8 +3603,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDPI, false, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRDPI, false, false, false, ref values);
                 return values;
             }
         }
@@ -3640,7 +3619,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDPI, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRDPI, false, true, false, ref values);
                 return values[0];
             }
         }
@@ -3654,8 +3633,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDPI, false, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRDPI, false, false, true, ref values);
                 return values;
             }
         }
@@ -3671,8 +3650,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDPI, true, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRDPI, true, false, false, ref values);
                 return values;
             }
         }
@@ -3687,7 +3666,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDPI, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRDPI, true, true, false, ref values);
                 return values[0];
             }
         }
@@ -3701,8 +3680,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDPI, true, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRDPI, true, false, true, ref values);
                 return values;
             }
         }
@@ -3718,8 +3697,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDPR, false, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRDPR, false, false, false, ref values);
                 return values;
             }
         }
@@ -3734,7 +3713,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDPR, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRDPR, false, true, false, ref values);
                 return values[0];
             }
         }
@@ -3748,8 +3727,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDPR, false, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRDPR, false, false, true, ref values);
                 return values;
             }
         }
@@ -3765,8 +3744,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDPR, true, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRDPR, true, false, false, ref values);
                 return values;
             }
         }
@@ -3781,7 +3760,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDPR, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRDPR, true, true, false, ref values);
                 return values[0];
             }
         }
@@ -3795,8 +3774,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDPR, true, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRDPR, true, false, true, ref values);
                 return values;
             }
         }
@@ -3811,8 +3790,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDP_EFFECT, false, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRDP_EFFECT, false, false, false, ref values);
                 return values;
             }
         }
@@ -3826,7 +3805,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDP_EFFECT, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRDP_EFFECT, false, true, false, ref values);
                 return values[0];
             }
         }
@@ -3839,8 +3818,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDP_EFFECT, false, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRDP_EFFECT, false, false, true, ref values);
                 return values;
             }
         }
@@ -3855,8 +3834,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDP_EFFECT, true, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRDP_EFFECT, true, false, false, ref values);
                 return values;
             }
         }
@@ -3870,7 +3849,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDP_EFFECT, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRDP_EFFECT, true, true, false, ref values);
                 return values[0];
             }
         }
@@ -3883,8 +3862,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpRDP_EFFECT, true, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpRDP_EFFECT, true, false, true, ref values);
                 return values;
             }
         }
@@ -3898,7 +3877,7 @@
             get
             {
                 string[] ranks = new string[1];
-                StockVars.MakePaddockRank(this.stockModel, ref ranks);
+                StockVars.MakePaddockRank(this.AnimalList, ref ranks);
                 return ranks;
             }
         }
@@ -3913,8 +3892,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpINTAKE_MOD, false, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpINTAKE_MOD, false, false, false, ref values);
                 return values;
             }
         }
@@ -3928,7 +3907,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpINTAKE_MOD, false, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpINTAKE_MOD, false, true, false, ref values);
                 return values[0];
             }
         }
@@ -3941,8 +3920,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpINTAKE_MOD, false, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpINTAKE_MOD, false, false, true, ref values);
                 return values;
             }
         }
@@ -3957,8 +3936,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.Count()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpINTAKE_MOD, true, false, false, ref values);
+                double[] values = new double[this.AnimalList.Count()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpINTAKE_MOD, true, false, false, ref values);
                 return values;
             }
         }
@@ -3972,7 +3951,7 @@
             get
             {
                 double[] values = new double[1];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpINTAKE_MOD, true, true, false, ref values);
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpINTAKE_MOD, true, true, false, ref values);
                 return values[0];
             }
         }
@@ -3985,8 +3964,8 @@
         {
             get
             {
-                double[] values = new double[this.stockModel.HighestTag()];
-                StockVars.PopulateRealValue(this.stockModel, StockProps.prpINTAKE_MOD, true, false, true, ref values);
+                double[] values = new double[this.AnimalList.HighestTag()];
+                StockVars.PopulateRealValue(this.AnimalList, StockProps.prpINTAKE_MOD, true, false, true, ref values);
                 return values;
             }
         }
@@ -4003,74 +3982,14 @@
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            this.stockModel = new StockList(this, systemClock, locWtr);
+            AnimalList = new StockList(this, systemClock, locWtr, paddocks);
 
             var childGenotypes = Apsim.Children(this, typeof(Genotype)).Cast<Genotype>().ToList();
             if (childGenotypes != null)
                 childGenotypes.ForEach(animalParamSet => Genotypes.Add(animalParamSet));
 
-            if (!this.paddocksGiven)
-            {
-                // get the paddock areas from the simulation
-                foreach (Zone zone in Apsim.FindAll(this, typeof(Zone)))
-                {
-                    this.stockModel.Paddocks.Add(zone, zone.Name);                          // Add to the Paddocks list
-                    this.stockModel.Paddocks.ByObj(zone).Area = zone.Area;
-
-                    PaddockInfo thePadd = this.stockModel.Paddocks.ByObj(zone);
-
-                    // find all the child crop, pasture components that have removable biomass
-                    foreach (IPlantDamage crop in Apsim.FindAll(zone, typeof(IPlantDamage)))
-                    {
-                        this.stockModel.ForagesAll.AddProvider(thePadd, zone.Name, zone.Name + "." + crop.Name, 0, 0, crop);
-                    }
-
-                    // locate surfaceOM and soil nutrient model
-                    thePadd.AddFaecesObj = (SurfaceOrganicMatter)Apsim.Find(zone, typeof(SurfaceOrganicMatter));
-                    thePadd.Soil = (ISoil)Apsim.Find(zone, typeof(ISoil));
-                    thePadd.AddUrineObj = (ISolute)Apsim.Find(zone, "Urea");
-                }
-            }
-
-            this.currentTime = this.systemClock.Today;
-            int currentDay = this.currentTime.Day + (this.currentTime.Month * 0x100) + (this.currentTime.Year * 0x10000);
-            this.stockModel.ManageInternalInit(currentDay);               // init groups
-        }
-
-        /// <summary>
-        /// New weather data available handler
-        /// </summary>
-        /// <param name="sender">The sending object</param>
-        /// <param name="e">The argument parameters</param>
-        [EventSubscribe("NewWeatherDataAvailable")]
-        private void OnNewWeatherDataAvailable(object sender, EventArgs e)
-        {
-        }
-
-        /// <summary>
-        /// Handle the start of day event and get the latitude, time and weather
-        /// </summary>
-        /// <param name="sender">The sending object</param>
-        /// <param name="e">The argument parameters</param>
-        [EventSubscribe("StartOfDay")]
-        private void OnStartOfDay(object sender, EventArgs e)
-        {
-            if (this.isFirstStep)
-            {
-                this.isFirstStep = false;
-            }
-
-            this.GetTimeAndWeather();
-        }
-
-        /// <summary>
-        /// Handle the end of day event 
-        /// </summary>
-        /// <param name="sender">The sending object</param>
-        /// <param name="e">The event arguments</param>
-        [EventSubscribe("EndOfDay")]
-        private void OnEndOfDay(object sender, EventArgs e)
-        {
+            int currentDay = systemClock.Today.Day + (systemClock.Today.Month * 0x100) + (systemClock.Today.Year * 0x10000);
+            this.AnimalList.ManageInternalInit(currentDay);               // init groups
         }
 
         /// <summary>
@@ -4081,23 +4000,16 @@
         [EventSubscribe("DoStock")]
         private void OnDoStock(object sender, EventArgs e)
         {
-            // Weather is retrieved at StartOfDay
-
             //// for each paddock
             ////FModel.Paddocks.byID(1).fWaterlog = 0.0;    // TODO
 
-            if (!this.paddocksGiven)
-            {
-                // update the paddock area as this can change during the simulation
-                foreach (Zone zone in Apsim.FindAll(this, typeof(Zone)))
-                {
-                    this.stockModel.Paddocks.ByObj(zone).Area = zone.Area;
-                    this.stockModel.Paddocks.ByObj(zone).Slope = zone.Slope;
-                }
-            }
             this.RequestAvailableToAnimal();  // accesses each forage provider (crop)
 
-            this.stockModel.Paddocks.BeginTimeStep();
+            foreach (var paddock in AnimalList.Paddocks)
+            {
+                paddock.ClearSupplement();
+                paddock.ZeroRemoval();
+            }
 
             if (this.suppFeed != null)
             {
@@ -4107,23 +4019,23 @@
                 {
                     // each paddock
                     this.suppFed.SetSuppAttrs(availSupp[idx]);
-                    this.stockModel.PlaceSuppInPadd(availSupp[idx].Paddock, availSupp[idx].Amount, this.suppFed, availSupp[idx].FeedSuppFirst);
+                    this.AnimalList.PlaceSuppInPadd(availSupp[idx].Paddock, availSupp[idx].Amount, this.suppFed, availSupp[idx].FeedSuppFirst);
                 }
             }
 
             // Do internal management tasks that are defined for the various
             // enterprises. This includes shearing, buying, selling...
-            int currentDay = this.currentTime.Day + (this.currentTime.Month * 0x100) + (this.currentTime.Year * 0x10000);
-            this.stockModel.ManageInternalTasks(currentDay);
+            int currentDay = this.systemClock.Today.Day + (this.systemClock.Today.Month * 0x100) + (this.systemClock.Today.Year * 0x10000);
+            this.AnimalList.ManageInternalTasks(currentDay);
 
-            this.stockModel.Dynamics();
+            this.AnimalList.Dynamics();
 
             ForageProvider forageProvider;
 
             // Return the amounts of forage removed
-            for (int i = 0; i <= this.stockModel.ForagesAll.Count() - 1; i++)
+            for (int i = 0; i <= this.AnimalList.ForagesAll.Count() - 1; i++)
             {
-                forageProvider = this.stockModel.ForagesAll.ForageProvider(i);
+                forageProvider = this.AnimalList.ForagesAll.ForageProvider(i);
                 if (forageProvider.ForageObj != null)
                 {
                     // if there is forage removed from this forage object/crop/pasture
@@ -4138,9 +4050,9 @@
 
             // if destinations for the surface om and nutrients are known then
             // send the values to the components
-            for (int idx = 0; idx <= this.stockModel.Paddocks.Count() - 1; idx++)
+            for (int idx = 0; idx <= this.AnimalList.Paddocks.Count() - 1; idx++)
             {
-                PaddockInfo paddInfo = this.stockModel.Paddocks.ByIndex(idx);
+                PaddockInfo paddInfo = this.AnimalList.Paddocks[idx];
 
                 if (paddInfo.AddFaecesObj != null)
                 {
@@ -4189,9 +4101,8 @@
         /// <param name="animals">The animal data</param>
         public void Add(StockAdd animals)
         {
-            this.GetTimeAndWeather();
             this.outputSummary.WriteMessage(this, "Adding " + animals.Number.ToString() + ", " + animals.Genotype + " " + animals.Sex);
-            this.stockModel.DoStockManagement(this.stockModel, animals);
+            this.AnimalList.DoStockManagement(this.AnimalList, animals);
         }
 
         /// <summary>
@@ -4201,7 +4112,7 @@
         public void Buy(StockBuy stock)
         {
             this.outputSummary.WriteMessage(this, "Buying " + stock.Number.ToString() + ", " + stock.Age.ToString() + " month old " + stock.Genotype + " " + stock.Sex.ToString() + " ");
-            this.stockModel.DoStockManagement(this.stockModel, stock);
+            this.AnimalList.DoStockManagement(this.AnimalList, stock);
         }
 
         /// <summary>
@@ -4223,7 +4134,7 @@
             stock.Weight = weight;
             stock.FleeceWt = fleeceWeight;
             this.outputSummary.WriteMessage(this, "Buying " + stock.Number.ToString() + ", " + stock.Age.ToString() + " month old " + stock.Genotype + " " + stock.Sex.ToString() + " ");
-            this.stockModel.DoStockManagement(this.stockModel, stock);
+            this.AnimalList.DoStockManagement(this.AnimalList, stock);
         }
 
         /// <summary>
@@ -4241,7 +4152,7 @@
             closedZones.Closed = zonesClosed;
             this.RequestAvailableToAnimal();
             this.outputSummary.WriteMessage(this, "Drafting animals. Excluding paddocks: " + string.Join(", ", closedZones.Closed));
-            this.stockModel.DoStockManagement(this.stockModel, closedZones);
+            this.AnimalList.DoStockManagement(this.AnimalList, closedZones);
         }
 
         /// <summary>
@@ -4261,7 +4172,7 @@
             else
                 msg += "from group " + group.ToString();
             this.outputSummary.WriteMessage(this, msg);
-            this.stockModel.DoStockManagement(this.stockModel, selling);
+            this.AnimalList.DoStockManagement(this.AnimalList, selling);
         }
 
         /// <summary>
@@ -4276,7 +4187,7 @@
             selling.Tag = tag;
             selling.Number = number;
             this.outputSummary.WriteMessage(this, "Selling " + number.ToString() + " animals from tag group " + tag.ToString());
-            this.stockModel.DoStockManagement(this.stockModel, selling);
+            this.AnimalList.DoStockManagement(this.AnimalList, selling);
         }
 
         /// <summary>
@@ -4297,7 +4208,7 @@
             else
                 msg += "in group " + group.ToString();
             this.outputSummary.WriteMessage(this, msg);
-            this.stockModel.DoStockManagement(this.stockModel, shearing);
+            this.AnimalList.DoStockManagement(this.AnimalList, shearing);
         }
 
         /// <summary>
@@ -4311,7 +4222,7 @@
             move.Group = group;
             move.Paddock = paddock;
             this.outputSummary.WriteMessage(this, "Moving animal group " + group.ToString() + " to " + paddock);
-            this.stockModel.DoStockManagement(this.stockModel, move);
+            this.AnimalList.DoStockManagement(this.AnimalList, move);
         }
 
         /// <summary>
@@ -4323,13 +4234,13 @@
         {
             StockMove move = new StockMove();
             move.Paddock = paddock;
-            for (int g = 1; g <= this.stockModel.Count(); g++)
+            for (int g = 1; g <= this.AnimalList.Count(); g++)
             {
-                if ((this.stockModel.At(g) != null) && (tag == this.stockModel.GetTag(g)))
+                if ((this.AnimalList.At(g) != null) && (tag == this.AnimalList.GetTag(g)))
                 {
                     move.Group = g;
-                    this.outputSummary.WriteMessage(this, "Moving " + this.stockModel.At(g).NoAnimals.ToString() + " animals tagged " + tag.ToString() + " to " + paddock);
-                    this.stockModel.DoStockManagement(this.stockModel, move);
+                    this.outputSummary.WriteMessage(this, "Moving " + this.AnimalList.At(g).NoAnimals.ToString() + " animals tagged " + tag.ToString() + " to " + paddock);
+                    this.AnimalList.DoStockManagement(this.AnimalList, move);
                 }
             }
         }
@@ -4354,7 +4265,7 @@
             else
                 msg += "group " + group.ToString() + " to " + mateTo;
             this.outputSummary.WriteMessage(this, msg);
-            this.stockModel.DoStockManagement(this.stockModel, join);
+            this.AnimalList.DoStockManagement(this.AnimalList, join);
         }
 
         /// <summary>
@@ -4377,7 +4288,7 @@
             else
                 msg += "in group " + group.ToString();
             this.outputSummary.WriteMessage(this, msg);
-            this.stockModel.DoStockManagement(this.stockModel, castrate);
+            this.AnimalList.DoStockManagement(this.AnimalList, castrate);
         }
 
         /// <summary>
@@ -4404,7 +4315,7 @@
             else
                 msg += " from group " + wean.Group.ToString();
             this.outputSummary.WriteMessage(this, msg);
-            this.stockModel.DoStockManagement(this.stockModel, wean);
+            this.AnimalList.DoStockManagement(this.AnimalList, wean);
         }
 
         /// <summary>
@@ -4426,7 +4337,7 @@
             else
                 msg += "in group " + group.ToString();
             this.outputSummary.WriteMessage(this, msg);
-            this.stockModel.DoStockManagement(this.stockModel, dryoff);
+            this.AnimalList.DoStockManagement(this.AnimalList, dryoff);
         }
 
         /// <summary>
@@ -4437,7 +4348,7 @@
         public void SplitAll(StockSplitAll splitall)
         {
             this.outputSummary.WriteMessage(this, "Split all animals by " + splitall.Type + " at " + splitall.Value);
-            this.stockModel.DoStockManagement(this.stockModel, splitall);
+            this.AnimalList.DoStockManagement(this.AnimalList, splitall);
         }
 
         /// <summary>
@@ -4451,7 +4362,7 @@
         public void Split(StockSplit split)
         {
             this.outputSummary.WriteMessage(this, "Split animals by " + split.Type + " at " + split.Value);
-            this.stockModel.DoStockManagement(this.stockModel, split);
+            this.AnimalList.DoStockManagement(this.AnimalList, split);
         }
 
         /// <summary>
@@ -4468,7 +4379,7 @@
             tag.Group = group;
             tag.Value = value;
             this.outputSummary.WriteMessage(this, "Tag animal group " + group.ToString() + " to " + value.ToString());
-            this.stockModel.DoStockManagement(this.stockModel, tag);
+            this.AnimalList.DoStockManagement(this.AnimalList, tag);
         }
 
         /// <summary>
@@ -4482,7 +4393,7 @@
             prioritise.Group = group;
             prioritise.Value = value;
             this.outputSummary.WriteMessage(this, "Prioritise animal group " + group.ToString() + " to " + value.ToString());
-            this.stockModel.DoStockManagement(this.stockModel, prioritise);
+            this.AnimalList.DoStockManagement(this.AnimalList, prioritise);
         }
 
         /// <summary>
@@ -4492,19 +4403,12 @@
         {
             StockSort sortEvent = new StockSort();
             this.outputSummary.WriteMessage(this, "Sort animals");
-            this.stockModel.DoStockManagement(this.stockModel, sortEvent);
+            this.AnimalList.DoStockManagement(this.AnimalList, sortEvent);
         }
 
         #endregion ============================================
 
         #region Private functions ============================================
-        /// <summary>
-        /// Get the current time and weather values
-        /// </summary>
-        private void GetTimeAndWeather()
-        {
-            this.currentTime = this.systemClock.Today;
-        }
 
         /// <summary>
         /// Do a request for all the biomasses in every paddock
@@ -4515,13 +4419,13 @@
             ForageProvider forageProvider;
 
             // iterate through all the paddocks and sum the total green and store it in each forage provider
-            for (int idx = 0; idx <= this.stockModel.Paddocks.Count() - 1; idx++)
+            for (int idx = 0; idx <= this.AnimalList.Paddocks.Count() - 1; idx++)
             {
                 double pastureGreen = 0;
-                PaddockInfo paddInfo = this.stockModel.Paddocks.ByIndex(idx);
-                for (int i = 0; i <= this.stockModel.ForagesAll.Count() - 1; i++)
+                PaddockInfo paddInfo = this.AnimalList.Paddocks[idx];
+                for (int i = 0; i <= this.AnimalList.ForagesAll.Count() - 1; i++)
                 {
-                    forageProvider = this.stockModel.ForagesAll.ForageProvider(i);
+                    forageProvider = this.AnimalList.ForagesAll.ForageProvider(i);
                     if (string.Compare(forageProvider.OwningPaddock.Name, paddInfo.Name, true) == 0)
                     {
                         if (forageProvider.ForageObj != null)
@@ -4540,9 +4444,9 @@
                     }
                 }
 
-                for (int i = 0; i <= this.stockModel.ForagesAll.Count() - 1; i++)
+                for (int i = 0; i <= this.AnimalList.ForagesAll.Count() - 1; i++)
                 {
-                    forageProvider = this.stockModel.ForagesAll.ForageProvider(i);
+                    forageProvider = this.AnimalList.ForagesAll.ForageProvider(i);
                     if (string.Compare(forageProvider.OwningPaddock.Name, paddInfo.Name, true) == 0)
                     {
                         forageProvider.PastureGreenDM = pastureGreen;
@@ -4551,9 +4455,9 @@
             }
 
             // now update the available forages
-            for (int i = 0; i <= this.stockModel.ForagesAll.Count() - 1; i++)
+            for (int i = 0; i <= this.AnimalList.ForagesAll.Count() - 1; i++)
             {
-                forageProvider = this.stockModel.ForagesAll.ForageProvider(i);
+                forageProvider = this.AnimalList.ForagesAll.ForageProvider(i);
                 if (forageProvider.ForageObj != null)
                 {
                     forageProvider.UpdateForages(forageProvider.ForageObj);
@@ -4574,7 +4478,7 @@
             int s = (int)GrazType.TOMElement.s;
             bool result = false;
 
-            this.stockModel.ReturnExcretion(paddID, out this.excretionInfo);
+            this.AnimalList.ReturnExcretion(paddID, out this.excretionInfo);
 
             if (this.excretionInfo.Defaecations > 0)
             {
@@ -4609,7 +4513,7 @@
             int s = (int)GrazType.TOMElement.s;
             bool result = false;
 
-            this.stockModel.ReturnExcretion(paddID, out this.excretionInfo);
+            this.AnimalList.ReturnExcretion(paddID, out this.excretionInfo);
             if (this.excretionInfo.Urinations > 0)
             {
                 urineValue.Urinations = this.excretionInfo.Urinations;
