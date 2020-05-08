@@ -104,6 +104,14 @@ namespace Models.Agroforestry
         /// <summary> calculate the time of sun set</summary>
         /// <returns>Sun set time</returns>
         public double CalculateSunSet(){return MathUtilities.SolarNoon(this.clock.Today.DayOfYear, this.Latitude) + CalculateDayLength(-6) / 2;}
+
+        /// <summary>In interface but this class does not implement </summary>
+        /// <param name="date">blank date</param>
+        public DailyMetDataFromFile GetMetData(DateTime date)
+        {
+            throw new Exception("Canot call met data from file with " + this.Name + "IWeather type");
+
+        }
     }
 }
 

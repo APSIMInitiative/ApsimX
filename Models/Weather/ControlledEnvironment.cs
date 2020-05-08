@@ -198,5 +198,26 @@ namespace Models
             if (this.PreparingNewWeatherData != null)
                 this.PreparingNewWeatherData.Invoke(this, new EventArgs());
         }
+
+        /// <summary>In interface but this class does not implement </summary>
+        /// <param name="date">blank date</param>
+        public DailyMetDataFromFile GetMetData(DateTime date)
+        {
+            DailyMetDataFromFile CEData = new DailyMetDataFromFile();
+
+            CEData.MaxT = this.MaxT;
+            CEData.MinT = this.MinT;
+            CEData.PanEvap = this.PanEvap;
+            CEData.Rain = this.Rain;
+            CEData.Radn = this.Radn;
+            CEData.VP = this.VP;
+            CEData.Wind = this.Wind;
+            CEData.RainfallHours = 0;
+            CEData.AirPressure = this.AirPressure;
+            CEData.DiffuseFraction = 0;
+            CEData.DayLength = this.DayLength;
+
+            return CEData;
+        }
     }
 }

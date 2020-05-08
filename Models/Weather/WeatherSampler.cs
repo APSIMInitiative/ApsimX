@@ -309,5 +309,13 @@
             return rowIndex;
         }
 
+        /// <summary>In interface but this class does not implement </summary>
+        /// <param name="date">blank date</param>
+        public DailyMetDataFromFile GetMetData(DateTime date)
+        {
+            throw new Exception("Canot call met data from file with " + this.Name + "IWeather type");
+
+        }
+
     }
 }

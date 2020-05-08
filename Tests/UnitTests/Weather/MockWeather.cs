@@ -51,5 +51,11 @@
         {
             throw new NotImplementedException();
         }
+
+        public DailyMetDataFromFile GetMetData(DateTime date)
+        {
+            throw new NotImplementedException();
+
+        }
     }
 }
