@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 281,
-  "Version": 95,
+  "Version": 99,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -111,6 +111,9 @@
                     },
                     {
                       "$type": "Models.Functions.AirTemperatureFunction, Models",
+                      "SubDailyTemperatures": null,
+                      "SubDailyResponse": null,
+                      "agregationMethod": 0,
                       "Name": "Progression",
                       "Children": [
                         {
@@ -129,7 +132,7 @@
                             0.0,
                             0.0
                           ],
-                          "Name": "XYPairs",
+                          "Name": "TemperatureResponse",
                           "Children": [
                             {
                               "$type": "Models.Graph, Models",
@@ -199,6 +202,15 @@
                               "ReadOnly": false
                             }
                           ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.ThreeHourSin, Models",
+                          "TempRangeFactors": null,
+                          "Name": "InterpolationMethod",
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -6384,9 +6396,16 @@
               "potentialDMAllocation": null,
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
-              "RootAngle": 45.0,
               "Name": "Root",
               "Children": [
+                {
+                  "$type": "Models.Functions.RootShape.RootShapeCylindre, Models",
+                  "Name": "RootShape",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.1,
@@ -8074,7 +8093,7 @@
             },
             {
               "$type": "Models.Clock, Models",
-              "Start": "2001-01-01T00:00:00",
+              "Start": "2004-01-01T00:00:00",
               "End": "2014-10-31T00:00:00",
               "Name": "Clock",
               "Children": [],
