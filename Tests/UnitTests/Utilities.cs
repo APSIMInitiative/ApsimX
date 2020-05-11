@@ -38,6 +38,14 @@ namespace UnitTests
             }
         }
 
+        /// <summary>ResolveLinks in a model</summary>
+        public static void ResolveLinks(IModel model)
+        {
+            Apsim.ParentAllChildren(model);
+            var links = new Links();
+            links.Resolve(model, true, true);
+        }
+
         /// <summary>Inject a link into a model</summary>
         public static void InjectLink(object model, string linkFieldName, object linkFieldValue)
         {

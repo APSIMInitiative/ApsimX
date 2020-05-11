@@ -3,10 +3,12 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.IO;
     using System.Linq;
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Interfaces;
+    using Models.PMF;
     using Models.PMF.Interfaces;
     using Models.Soils;
     using Models.Surface;
@@ -126,8 +128,8 @@
     /// ---
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.StockView")]
-    [PresenterName("UserInterface.Presenters.StockPresenter")]
+    [ViewName("UserInterface.Views.HTMLView")]
+    [PresenterName("UserInterface.Presenters.GenericPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     public class Stock : Model
     {
@@ -147,24 +149,14 @@
         private StockList stockModel;
 
         /// <summary>
-        /// Weather used by the model
-        /// </summary>
-        private AnimalWeather localWeather;
-
-        /// <summary>
         /// True if at the first step of the run
         /// </summary>
         private bool isFirstStep;
 
         /// <summary>
-        /// The list of specified genotypes
-        /// </summary>
-        private SingleGenotypeInits[] genotypeInits = new SingleGenotypeInits[0];
-
-        /// <summary>
         /// The init values for the animal
         /// </summary>
-        private AnimalInits[] animalInits;
+        private Animals[] animalInits;
 
         /// <summary>
         /// If the paddocks are specified by the user
@@ -179,7 +171,7 @@
         /// <summary>
         /// The random number host
         /// </summary>
-        private MyRandom randFactory;
+        public MyRandom randFactory;
 
         /// <summary>
         /// The supplement used
@@ -220,12 +212,6 @@
         [Link(IsOptional = true)]
         private Supplement suppFeed = null;
 
-        /// <summary>
-        /// The simulation host
-        /// </summary>
-        [Link]
-        private Simulation sim = null;
-
         /// <summary>Link to APSIM summary (logs the messages raised during model run).</summary>
         [Link]
         private ISummary outputSummary = null;
@@ -240,9 +226,7 @@
             this.userForages = new List<string>();
             this.userPaddocks = new List<string>();
             this.randFactory = new MyRandom(this.randSeed);       // random number generator
-            this.stockModel = new StockList(this.randFactory);
 
-            Array.Resize(ref this.genotypeInits, 0);
             Array.Resize(ref this.animalInits, 0);
             this.suppFed = new FoodSupplement();
             this.excretionInfo = new ExcretionInfo();
@@ -252,24 +236,6 @@
         }
 
         #region Initialisation properties ====================================================
-
-        /// <summary>
-        /// Gets or sets the parameter filename for the stock model
-        /// </summary>
-        [Description("Name of an XML file containing genotypic parameters. If an empty string is specified, a default parameter set that is compiled into APSIM is used. " +
-                     "If a file name is used, the parameters in the file modify (rather than replacing) the default parameter set")]
-        [Units("")]
-        [Summary]
-        public string ParamFile
-        {
-            get { return stockModel.ParamFile; }
-            set 
-            {
-                if (value != string.Empty)
-                    this.outputSummary.WriteMessage(this, "Using animal parameters from " + value);
-                stockModel.ParamFile = value; 
-            }
-        }
         
         /// <summary>
         /// Gets or sets the Seed for the random number generator. Used when computing numbers of animals dying and conceiving from the equations for mortality and conception rates
@@ -283,30 +249,14 @@
         }
 
         /// <summary>
-        /// Gets or sets the information about each animal genotype
+        /// An instance that contains all stock genotypes.
         /// </summary>
-        [Description("Information about each animal genotype")]
-        [Units("")]
-        public SingleGenotypeInits[] Genotypes
-        {
-            get
-            {
-                return this.genotypeInits;
-            }
-
-            set
-            {
-                if (value != null)
-                {
-                    this.genotypeInits = value;
-                }
-            }
-        }
+        public Genotypes Genotypes { get; } = new Genotypes();
 
         /// <summary>
         /// Gets or sets the initial state of each animal group
         /// </summary>
-        public AnimalInits[] Animals
+        public Animals[] Animals
         {
             get
             {
@@ -321,101 +271,106 @@
         }
 
         /// <summary>
-        /// Gets or sets the manually-specified structure of paddocks and forages 
+        /// Gives access to the list of animals. Needed for unit testing.
         /// </summary>
-        [Description("Manually-specified structure of paddocks and forages")]
-        public PaddockInit[] PaddockList
-        {
-            get
-            {
-                PaddockInit[] paddocks = new PaddockInit[1];
-                StockVars.MakePaddockList(this.stockModel, ref paddocks);
-                return paddocks;
-            }
+        public StockList AnimalList { get { return stockModel; } }
 
-            set
-            {
-                this.paddocksGiven = value.Length > 1;    // more than the null paddock
-                PaddockInfo paddockInfo;
-                if (this.paddocksGiven)
-                {
-                    while (this.stockModel.Paddocks.Count() > 0)
-                        this.stockModel.Paddocks.Delete(this.stockModel.Paddocks.Count() - 1);
+        ///// <summary>
+        ///// Gets or sets the manually-specified structure of paddocks and forages 
+        ///// </summary>
+        //[Description("Manually-specified structure of paddocks and forages")]
+        //public PaddockInit[] PaddockList
+        //{
+        //    get
+        //    {
+        //        PaddockInit[] paddocks = new PaddockInit[1];
+        //        StockVars.MakePaddockList(this.stockModel, ref paddocks);
+        //        return paddocks;
+        //    }
 
-                    for (int idx = 0; idx < value.Length; idx++)
-                    {
-                        // TODO: Find the paddock object for this name and store it
-                        // if the paddock object is found then add it to Paddocks
-                        this.stockModel.Paddocks.Add(idx, value[idx].Name);
+        //    set
+        //    {
+        //        this.paddocksGiven = value.Length > 1;    // more than the null paddock
+        //        PaddockInfo paddockInfo;
+        //        if (this.paddocksGiven)
+        //        {
+        //            while (this.stockModel.Paddocks.Count() > 0)
+        //                this.stockModel.Paddocks.Delete(this.stockModel.Paddocks.Count() - 1);
 
-                        paddockInfo = this.stockModel.Paddocks.ByIndex(idx);
-                        paddockInfo.ExcretionDest = value[idx].Excretion;
-                        paddockInfo.UrineDest = value[idx].Urine;
-                        paddockInfo.Area = value[idx].Area;
-                        paddockInfo.Slope = value[idx].Slope;
-                        for (int jdx = 0; jdx < value[idx].Forages.Length; jdx++)
-                        {
-                            this.userForages.Add(value[idx].Forages[jdx]);    // keep a local list of these for queryInfos later
-                            this.userPaddocks.Add(value[idx].Name);
-                        }
-                    }
-                }
-            }
-        }
+        //            for (int idx = 0; idx < value.Length; idx++)
+        //            {
+        //                // TODO: Find the paddock object for this name and store it
+        //                // if the paddock object is found then add it to Paddocks
+        //                this.stockModel.Paddocks.Add(idx, value[idx].Name);
 
-        /// <summary>
-        /// Gets or sets the livestock enterprises and their management options
-        /// </summary>
-        [Description("Livestock enterprises and their management options")]
-        public EnterpriseInfo[] EnterpriseList
-        {
-            get
-            {
-                EnterpriseInfo[] ents = new EnterpriseInfo[this.stockModel.Enterprises.Count];
-                for (int i = 0; i < this.stockModel.Enterprises.Count; i++)
-                    ents[i] = this.stockModel.Enterprises.byIndex(i);
-                return ents;
-            }
+        //                paddockInfo = this.stockModel.Paddocks.ByIndex(idx);
+        //                paddockInfo.ExcretionDest = value[idx].Excretion;
+        //                paddockInfo.UrineDest = value[idx].Urine;
+        //                paddockInfo.Area = value[idx].Area;
+        //                paddockInfo.Slope = value[idx].Slope;
+        //                for (int jdx = 0; jdx < value[idx].Forages.Length; jdx++)
+        //                {
+        //                    this.userForages.Add(value[idx].Forages[jdx]);    // keep a local list of these for queryInfos later
+        //                    this.userPaddocks.Add(value[idx].Name);
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
 
-            set
-            {
-                if (value != null && this.stockModel.Enterprises != null)
-                {
-                    while (this.stockModel.Enterprises.Count > 0)
-                        this.stockModel.Enterprises.Delete(this.stockModel.Enterprises.Count - 1);
-                    for (int i = 0; i < value.Length; i++)
-                        this.stockModel.Enterprises.Add(value[i]);
-                }
-            }
-        }
+        ///// <summary>
+        ///// Gets or sets the livestock enterprises and their management options
+        ///// </summary>
+        //[Description("Livestock enterprises and their management options")]
+        //public EnterpriseInfo[] EnterpriseList
+        //{
+        //    get
+        //    {
+        //        EnterpriseInfo[] ents = new EnterpriseInfo[this.stockModel.Enterprises.Count];
+        //        for (int i = 0; i < this.stockModel.Enterprises.Count; i++)
+        //            ents[i] = this.stockModel.Enterprises.byIndex(i);
+        //        return ents;
+        //    }
 
-        /// <summary>
-        /// Gets or sets the livestock grazing rotations
-        /// </summary>
-        [Description("Livestock grazing rotations")]
-        public GrazingPeriod[] GrazingPeriods
-        {
-            get
-            {
-                GrazingPeriod[] periods = new GrazingPeriod[this.stockModel.GrazingPeriods.Count()];
-                for (int i = 0; i < this.stockModel.GrazingPeriods.Count(); i++)
-                    periods[i] = this.stockModel.GrazingPeriods.ByIndex(i);
-                return periods;
-            }
+        //    set
+        //    {
+        //        if (value != null && this.stockModel.Enterprises != null)
+        //        {
+        //            while (this.stockModel.Enterprises.Count > 0)
+        //                this.stockModel.Enterprises.Delete(this.stockModel.Enterprises.Count - 1);
+        //            for (int i = 0; i < value.Length; i++)
+        //                this.stockModel.Enterprises.Add(value[i]);
+        //        }
+        //    }
+        //}
 
-            set
-            {
-                if (value != null && this.stockModel.GrazingPeriods != null)
-                {
-                    while (this.stockModel.GrazingPeriods.Count() > 0)
-                    {
-                        this.stockModel.GrazingPeriods.Delete(this.stockModel.GrazingPeriods.Count() - 1);
-                    }
-                    for (int i = 0; i < value.Length; i++)
-                        this.stockModel.GrazingPeriods.Add(value[i]);
-                }
-            }
-        }
+        ///// <summary>
+        ///// Gets or sets the livestock grazing rotations
+        ///// </summary>
+        //[Description("Livestock grazing rotations")]
+        //public GrazingPeriod[] GrazingPeriods
+        //{
+        //    get
+        //    {
+        //        GrazingPeriod[] periods = new GrazingPeriod[this.stockModel.GrazingPeriods.Count()];
+        //        for (int i = 0; i < this.stockModel.GrazingPeriods.Count(); i++)
+        //            periods[i] = this.stockModel.GrazingPeriods.ByIndex(i);
+        //        return periods;
+        //    }
+
+        //    set
+        //    {
+        //        if (value != null && this.stockModel.GrazingPeriods != null)
+        //        {
+        //            while (this.stockModel.GrazingPeriods.Count() > 0)
+        //            {
+        //                this.stockModel.GrazingPeriods.Delete(this.stockModel.GrazingPeriods.Count() - 1);
+        //            }
+        //            for (int i = 0; i < value.Length; i++)
+        //                this.stockModel.GrazingPeriods.Add(value[i]);
+        //        }
+        //    }
+        //}
 
         #endregion
 
@@ -4085,10 +4040,16 @@
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
+            this.stockModel = new StockList(this, systemClock, locWtr);
+
+            var childGenotypes = Apsim.Children(this, typeof(Genotype)).Cast<Genotype>().ToList();
+            if (childGenotypes != null)
+                childGenotypes.ForEach(animalParamSet => Genotypes.Add(animalParamSet));
+
             if (!this.paddocksGiven)
             {
                 // get the paddock areas from the simulation
-                foreach (Zone zone in Apsim.FindAll(this.sim, typeof(Zone)))
+                foreach (Zone zone in Apsim.FindAll(this, typeof(Zone)))
                 {
                     this.stockModel.Paddocks.Add(zone, zone.Name);                          // Add to the Paddocks list
                     this.stockModel.Paddocks.ByObj(zone).Area = zone.Area;
@@ -4108,13 +4069,13 @@
                 }
             }
 
-            this.stockModel.AddGenotypes(this.genotypeInits);
+            // Add all child animal groups to stock.
             for (int idx = 0; idx <= this.animalInits.Length - 1; idx++)                // Only create the initial animal groups 
                 this.stockModel.Add(this.animalInits[idx]);                             // after the paddocks have been identified                          
 
             this.currentTime = this.systemClock.Today;
             int currentDay = this.currentTime.Day + (this.currentTime.Month * 0x100) + (this.currentTime.Year * 0x10000);
-            this.stockModel.ManageInternalInit(currentDay, this.localWeather.Latitude);               // init groups
+            this.stockModel.ManageInternalInit(currentDay);               // init groups
         }
 
         /// <summary>
@@ -4137,8 +4098,6 @@
         {
             if (this.isFirstStep)
             {
-                this.localWeather.Latitude = this.locWtr.Latitude;
-
                 this.isFirstStep = false;
             }
 
@@ -4171,7 +4130,7 @@
             if (!this.paddocksGiven)
             {
                 // update the paddock area as this can change during the simulation
-                foreach (Zone zone in Apsim.FindAll(this.sim, typeof(Zone)))
+                foreach (Zone zone in Apsim.FindAll(this, typeof(Zone)))
                 {
                     this.stockModel.Paddocks.ByObj(zone).Area = zone.Area;
                     this.stockModel.Paddocks.ByObj(zone).Slope = zone.Slope;
@@ -4193,12 +4152,10 @@
                 }
             }
 
-            this.localWeather.MeanTemp = 0.5 * (this.localWeather.MaxTemp + this.localWeather.MinTemp);
-            this.stockModel.Weather = this.localWeather;
-
             // Do internal management tasks that are defined for the various
             // enterprises. This includes shearing, buying, selling...
-            this.stockModel.ManageInternalTasks(this.localWeather.TheDay);
+            int currentDay = this.currentTime.Day + (this.currentTime.Month * 0x100) + (this.currentTime.Year * 0x10000);
+            this.stockModel.ManageInternalTasks(currentDay);
 
             this.stockModel.Dynamics();
 
@@ -4275,7 +4232,7 @@
         {
             this.GetTimeAndWeather();
             this.outputSummary.WriteMessage(this, "Adding " + animals.Number.ToString() + ", " + animals.Genotype + " " + animals.Sex);
-            this.stockModel.DoStockManagement(this.stockModel, animals, this.localWeather.TheDay, this.localWeather.Latitude);
+            this.stockModel.DoStockManagement(this.stockModel, animals);
         }
 
         /// <summary>
@@ -4285,7 +4242,7 @@
         public void Buy(StockBuy stock)
         {
             this.outputSummary.WriteMessage(this, "Buying " + stock.Number.ToString() + ", " + stock.Age.ToString() + " month old " + stock.Genotype + " " + stock.Sex.ToString() + " ");
-            this.stockModel.DoStockManagement(this.stockModel, stock, this.localWeather.TheDay, this.localWeather.Latitude);
+            this.stockModel.DoStockManagement(this.stockModel, stock);
         }
 
         /// <summary>
@@ -4307,7 +4264,7 @@
             stock.Weight = weight;
             stock.FleeceWt = fleeceWeight;
             this.outputSummary.WriteMessage(this, "Buying " + stock.Number.ToString() + ", " + stock.Age.ToString() + " month old " + stock.Genotype + " " + stock.Sex.ToString() + " ");
-            this.stockModel.DoStockManagement(this.stockModel, stock, this.localWeather.TheDay, this.localWeather.Latitude);
+            this.stockModel.DoStockManagement(this.stockModel, stock);
         }
 
         /// <summary>
@@ -4325,7 +4282,7 @@
             closedZones.Closed = zonesClosed;
             this.RequestAvailableToAnimal();
             this.outputSummary.WriteMessage(this, "Drafting animals. Excluding paddocks: " + string.Join(", ", closedZones.Closed));
-            this.stockModel.DoStockManagement(this.stockModel, closedZones, this.localWeather.TheDay, this.localWeather.Latitude);
+            this.stockModel.DoStockManagement(this.stockModel, closedZones);
         }
 
         /// <summary>
@@ -4345,7 +4302,7 @@
             else
                 msg += "from group " + group.ToString();
             this.outputSummary.WriteMessage(this, msg);
-            this.stockModel.DoStockManagement(this.stockModel, selling, this.localWeather.TheDay, this.localWeather.Latitude);
+            this.stockModel.DoStockManagement(this.stockModel, selling);
         }
 
         /// <summary>
@@ -4360,7 +4317,7 @@
             selling.Tag = tag;
             selling.Number = number;
             this.outputSummary.WriteMessage(this, "Selling " + number.ToString() + " animals from tag group " + tag.ToString());
-            this.stockModel.DoStockManagement(this.stockModel, selling, this.localWeather.TheDay, this.localWeather.Latitude);
+            this.stockModel.DoStockManagement(this.stockModel, selling);
         }
 
         /// <summary>
@@ -4381,7 +4338,7 @@
             else
                 msg += "in group " + group.ToString();
             this.outputSummary.WriteMessage(this, msg);
-            this.stockModel.DoStockManagement(this.stockModel, shearing, this.localWeather.TheDay, this.localWeather.Latitude);
+            this.stockModel.DoStockManagement(this.stockModel, shearing);
         }
 
         /// <summary>
@@ -4395,7 +4352,7 @@
             move.Group = group;
             move.Paddock = paddock;
             this.outputSummary.WriteMessage(this, "Moving animal group " + group.ToString() + " to " + paddock);
-            this.stockModel.DoStockManagement(this.stockModel, move, this.localWeather.TheDay, this.localWeather.Latitude);
+            this.stockModel.DoStockManagement(this.stockModel, move);
         }
 
         /// <summary>
@@ -4413,7 +4370,7 @@
                 {
                     move.Group = g;
                     this.outputSummary.WriteMessage(this, "Moving " + this.stockModel.At(g).NoAnimals.ToString() + " animals tagged " + tag.ToString() + " to " + paddock);
-                    this.stockModel.DoStockManagement(this.stockModel, move, this.localWeather.TheDay, this.localWeather.Latitude);
+                    this.stockModel.DoStockManagement(this.stockModel, move);
                 }
             }
         }
@@ -4438,7 +4395,7 @@
             else
                 msg += "group " + group.ToString() + " to " + mateTo;
             this.outputSummary.WriteMessage(this, msg);
-            this.stockModel.DoStockManagement(this.stockModel, join, this.localWeather.TheDay, this.localWeather.Latitude);
+            this.stockModel.DoStockManagement(this.stockModel, join);
         }
 
         /// <summary>
@@ -4461,7 +4418,7 @@
             else
                 msg += "in group " + group.ToString();
             this.outputSummary.WriteMessage(this, msg);
-            this.stockModel.DoStockManagement(this.stockModel, castrate, this.localWeather.TheDay, this.localWeather.Latitude);
+            this.stockModel.DoStockManagement(this.stockModel, castrate);
         }
 
         /// <summary>
@@ -4488,7 +4445,7 @@
             else
                 msg += " from group " + wean.Group.ToString();
             this.outputSummary.WriteMessage(this, msg);
-            this.stockModel.DoStockManagement(this.stockModel, wean, this.localWeather.TheDay, this.localWeather.Latitude);
+            this.stockModel.DoStockManagement(this.stockModel, wean);
         }
 
         /// <summary>
@@ -4510,7 +4467,7 @@
             else
                 msg += "in group " + group.ToString();
             this.outputSummary.WriteMessage(this, msg);
-            this.stockModel.DoStockManagement(this.stockModel, dryoff, this.localWeather.TheDay, this.localWeather.Latitude);
+            this.stockModel.DoStockManagement(this.stockModel, dryoff);
         }
 
         /// <summary>
@@ -4521,7 +4478,7 @@
         public void SplitAll(StockSplitAll splitall)
         {
             this.outputSummary.WriteMessage(this, "Split all animals by " + splitall.Type + " at " + splitall.Value);
-            this.stockModel.DoStockManagement(this.stockModel, splitall, this.localWeather.TheDay, this.localWeather.Latitude);
+            this.stockModel.DoStockManagement(this.stockModel, splitall);
         }
 
         /// <summary>
@@ -4535,7 +4492,7 @@
         public void Split(StockSplit split)
         {
             this.outputSummary.WriteMessage(this, "Split animals by " + split.Type + " at " + split.Value);
-            this.stockModel.DoStockManagement(this.stockModel, split, this.localWeather.TheDay, this.localWeather.Latitude);
+            this.stockModel.DoStockManagement(this.stockModel, split);
         }
 
         /// <summary>
@@ -4552,7 +4509,7 @@
             tag.Group = group;
             tag.Value = value;
             this.outputSummary.WriteMessage(this, "Tag animal group " + group.ToString() + " to " + value.ToString());
-            this.stockModel.DoStockManagement(this.stockModel, tag, this.localWeather.TheDay, this.localWeather.Latitude);
+            this.stockModel.DoStockManagement(this.stockModel, tag);
         }
 
         /// <summary>
@@ -4566,7 +4523,7 @@
             prioritise.Group = group;
             prioritise.Value = value;
             this.outputSummary.WriteMessage(this, "Prioritise animal group " + group.ToString() + " to " + value.ToString());
-            this.stockModel.DoStockManagement(this.stockModel, prioritise, this.localWeather.TheDay, this.localWeather.Latitude);
+            this.stockModel.DoStockManagement(this.stockModel, prioritise);
         }
 
         /// <summary>
@@ -4576,7 +4533,7 @@
         {
             StockSort sortEvent = new StockSort();
             this.outputSummary.WriteMessage(this, "Sort animals");
-            this.stockModel.DoStockManagement(this.stockModel, sortEvent, this.localWeather.TheDay, this.localWeather.Latitude);
+            this.stockModel.DoStockManagement(this.stockModel, sortEvent);
         }
 
         #endregion ============================================
@@ -4588,12 +4545,6 @@
         private void GetTimeAndWeather()
         {
             this.currentTime = this.systemClock.Today;
-            this.localWeather.DayLength = this.locWtr.CalculateDayLength(-6.0);   // civil twighlight
-            this.localWeather.TheDay = this.currentTime.Day + (this.currentTime.Month * 0x100) + (this.currentTime.Year * 0x10000);
-            this.localWeather.MaxTemp = this.locWtr.MaxT;
-            this.localWeather.MinTemp = this.locWtr.MinT;
-            this.localWeather.Precipitation = this.locWtr.Rain;
-            this.localWeather.WindSpeed = this.locWtr.Wind;
         }
 
         /// <summary>
@@ -4717,100 +4668,5 @@
 
         #endregion
 
-        #region Public functions ============================================
-
-        /// <summary>
-        /// Get the parameters for this genotype
-        /// </summary>
-        /// <param name="mainParams">The base parameter set</param>
-        /// <param name="genoInits">The list of genotypes</param>
-        /// <param name="genoIdx">The index of the item in the list to use</param>
-        /// <returns>The animal parameter set for this genotype</returns>
-        public AnimalParamSet ParamsFromGenotypeInits(AnimalParamSet mainParams, SingleGenotypeInits[] genoInits, int genoIdx)
-        {
-            /*SingleGenotypeInits[] genotypeInits = new SingleGenotypeInits[genoInits.Length];
-            for (int idx = 0; idx < genoInits.Length; idx++)
-            {
-                genotypeInits[idx] = new SingleGenotypeInits();
-                this.stockModel.Value2GenotypeInits(genoInits[idx], ref genotypeInits[idx]);
-            }*/
-            return this.stockModel.ParamsFromGenotypeInits(mainParams, genoInits, genoIdx);
-        }
-
-        /// <summary>
-        /// Get a list of genotype names for the animal type from the current parameter set
-        /// </summary>
-        /// <param name="animal">The animal type (sheep/cattle)</param>
-        /// <returns>Array of genotype names</returns>
-        public string[] GenotypeNames(GrazType.AnimalType animal)
-        {
-            AnimalParamSet paramSet = stockModel.BaseParams;   
-
-            int count = paramSet.BreedCount(animal);
-            string[] namesArray = new string[count];
-            for (int i = 0; i < count; i++)
-            {
-                namesArray[i] = paramSet.BreedName(animal, i);
-            }
-
-            return namesArray;
-        }
-
-        /// <summary>
-        /// Get the combined list of genotype names that are defined for this instance
-        /// of the stock component.
-        /// </summary>
-        /// <param name="animal">The animal type (sheep/cattle)</param>
-        /// <returns>Array of genotype names</returns>
-        public string[] GenotypeNamesDefined(GrazType.AnimalType animal)
-        {
-            AnimalParamSet paramSet = stockModel.BaseParams;   
-            string[] genoParams = GenotypeNames(animal);
-            foreach (SingleGenotypeInits geno in Genotypes)
-            {
-                if (!genoParams.Contains(geno.GenotypeName))
-                {
-                    // check that the user defined genotype is of animal type
-                    AnimalParamSet parameters = paramSet.Match(geno.GenotypeName);
-                    if (parameters.Animal == animal)
-                    {
-                        Array.Resize(ref genoParams, genoParams.Length + 1);
-                        genoParams[genoParams.Length - 1] = geno.GenotypeName;
-                    }
-                }
-            }
-
-            Array.Sort(genoParams, StringComparer.InvariantCulture);
-            return genoParams;
-        }
-
-        /// <summary>
-        /// Returns the combined list of all animal types and user defined types.
-        /// </summary>
-        /// <returns>Genotype names</returns>
-        public string[] GenotypeNamesAll()
-        {
-            string[] allGenoNames = new string[0];
-            foreach (GrazType.AnimalType animal in Enum.GetValues(typeof(GrazType.AnimalType)))
-            {
-                string[] genoParams = GenotypeNames(animal);
-                
-                Array.Resize(ref allGenoNames, allGenoNames.Length + genoParams.Length);
-                genoParams.CopyTo(allGenoNames, allGenoNames.Length - genoParams.Length);
-            }
-
-            foreach (SingleGenotypeInits geno in Genotypes)
-            {
-                if (!allGenoNames.Contains(geno.GenotypeName))
-                {
-                    Array.Resize(ref allGenoNames, allGenoNames.Length + 1);
-                    allGenoNames[allGenoNames.Length - 1] = geno.GenotypeName;
-                }
-            }
-            Array.Sort(allGenoNames, StringComparer.InvariantCulture);
-
-            return allGenoNames;
-        }
-        #endregion
     }
 }

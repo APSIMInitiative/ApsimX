@@ -27,7 +27,7 @@ namespace Models.CLEM.Resources
     {
         private List<string> WarningsMultipleEntry = new List<string>();
         private List<string> WarningsNotFound = new List<string>();
-        private LabourAERelationship adultEquivalentRelationship = null;
+        private Relationship adultEquivalentRelationship = null;
 
         /// <summary>
         /// Get the Clock.
@@ -72,7 +72,7 @@ namespace Models.CLEM.Resources
             availabilityList = Apsim.Children(this, typeof(LabourAvailabilityList)).Cast<LabourAvailabilityList>().FirstOrDefault();
 
             // locate AE relationship
-            adultEquivalentRelationship = Apsim.Children(this, typeof(LabourAERelationship)).Cast<LabourAERelationship>().FirstOrDefault();
+            adultEquivalentRelationship = Apsim.Children(this, typeof(Relationship)).Where(a => a.Name.ToUpper().Contains("AE")).Cast<Relationship>().FirstOrDefault();
 
             if (Clock.Today.Day != 1)
             {
@@ -167,7 +167,7 @@ namespace Models.CLEM.Resources
             // clone pricelist so model can modify if needed and not affect initial parameterisation
             if (Apsim.Children(this, typeof(LabourPricing)).Count() > 0)
             {
-                PayList = (Apsim.Children(this, typeof(LabourPricing)).FirstOrDefault() as LabourPricing).Clone();
+                PayList = Apsim.Clone(Apsim.Children(this, typeof(LabourPricing)).FirstOrDefault()) as LabourPricing;
             }
         }
 

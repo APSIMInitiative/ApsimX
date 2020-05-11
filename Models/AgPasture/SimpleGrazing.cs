@@ -138,7 +138,11 @@
         [Separator("Urine and Dung.")]
 
         [Description("Fraction of defoliated N going to soil (0-1): ")]
-        public double FractionDefoliatedNToSoil { get; set; }
+        public double[] FractionDefoliatedNToSoil { get; set; }   
+
+        /// <summary>Fraction Defoliated N Transferred / Exported To Lanes Camps and structures (can be monthly values)</summary>
+        [Description("Fraction Defoliated N Transferred / Exported To Lanes Camps and structures (can be monthly values)")]
+        public double[] FractionDefoliatedNLostToCamps { get; set; } = new double[] { 0.25 };
 
         /// <summary></summary>
         [Description("Proportion of excreted N going to dung (0-1). Yearly or 12 monthly values. Blank means use C:N ratio of dung.")]
@@ -326,6 +330,12 @@
                 simpleGrazingFrequency = 0;
             else
                 simpleGrazingFrequency = Convert.ToInt32(SimpleGrazingFrequencyString);
+
+            if (FractionDefoliatedNToSoil == null || FractionDefoliatedNToSoil.Length == 0)
+                FractionDefoliatedNToSoil = new double[] { 0 };
+
+            if (FractionDefoliatedNLostToCamps == null || FractionDefoliatedNLostToCamps.Length == 0)
+                FractionDefoliatedNLostToCamps = new double[] { 0 };
 
             // Initialise the days since grazing.
             if (GrazingRotationType == GrazingRotationTypeEnum.SimpleRotation)
@@ -566,7 +576,7 @@
                 foreach (var grazedForage in grazedForages)
                 {
                     returnedToSoilWt += (1 - grazedForage.DMDOfStructural) * grazedForage.Wt;
-                    returnedToSoilN += FractionDefoliatedNToSoil * grazedForage.N;
+                    returnedToSoilN += GetValueFromMonthArray(FractionDefoliatedNToSoil) * grazedForage.N;
                 }
 
                 double dungNReturned;

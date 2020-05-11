@@ -6,6 +6,7 @@ using Models.Interfaces;
 using System.Linq;
 using Models.Soils.Standardiser;
 using APSIM.Shared.Utilities;
+using Models.PMF.Interfaces;
 
 namespace Models.PMF.Organs
 {
@@ -23,10 +24,10 @@ namespace Models.PMF.Organs
         public ISolute NH4 = null;
 
         /// <summary>The parent plant</summary>
-        private Plant plant = null;
+        public Plant plant = null;
 
         /// <summary>The root organ</summary>
-        private  Root root = null;
+        public Root root = null;
 
         /// <summary>The root front velocity function</summary>
         private IFunction rootFrontVelocity;
@@ -89,6 +90,9 @@ namespace Models.PMF.Organs
         public double Depth { get; set; }
 
         /// <summary>Gets the RootFront</summary>
+        public double RootLength { get { return Depth - plant.SowingData.Depth; } }
+
+        /// <summary>Gets the RootFront</summary>
         public double RootFront { get; set; }
         /// <summary>Gets the RootFront</summary>
         public double RootSpread { get; set; }
@@ -96,6 +100,16 @@ namespace Models.PMF.Organs
         public double LeftDist { get; set; }
         /// <summary>Gets the RootFront</summary>
         public double RightDist { get; set; }
+
+        /// <summary>Gets the RootProportions</summary>
+        public double[] RootProportions { get; set; }
+
+        /// <summary>Gets the LLModifier for leaf angles != RootAngleBase</summary>
+        public double[] LLModifier { get; set; }
+
+        /// <summary>Soil area occipied by roots</summary>
+        [Units("m2")]
+        public double RootArea { get; set; }
 
         /// <summary>Gets or sets AvailableSW during SW Uptake
         /// Old Sorghum does actual uptake at end of day
@@ -129,8 +143,8 @@ namespace Models.PMF.Organs
         /// <param name="rfv">Root front velocity</param>
         /// <param name="mrd">Maximum root depth</param>
         /// <param name="remobCost">Remobilisation cost</param>
-        public ZoneState(Plant Plant, Root Root, Soil soil, double depth, 
-                         double initialDM, double population, double maxNConc,
+        public ZoneState(Plant Plant, Root Root, Soil soil, double depth,
+                         BiomassDemand initialDM, double population, double maxNConc,
                          IFunction rfv, IFunction mrd, IFunction remobCost)
         {
             this.soil = soil;
@@ -155,27 +169,52 @@ namespace Models.PMF.Organs
         /// <param name="initialDM">Initial dry matter</param>
         /// <param name="population">plant population</param>
         /// <param name="maxNConc">maximum n concentration</param>
-        public void Initialise(double depth, double initialDM, double population, double maxNConc)
+        public void Initialise(double depth, BiomassDemand initialDM, double population, double maxNConc)
         {
             Depth = depth;
             RootFront = depth;
             //distribute root biomass evenly through root depth
             double[] fromLayer = new double[1] { depth };
-            double[] fromMass = new double[1] { initialDM };
-            double[] toMass = Layers.MapMass(fromMass, fromLayer, soil.Thickness);
+            double[] fromStructural = new double[1] { initialDM.Structural.Value() };
+            double[] toStructural = Layers.MapMass(fromStructural, fromLayer, soil.Thickness);
+            double[] fromMetabolic = new double[1] { initialDM.Metabolic.Value() };
+            double[] toMetabolic = Layers.MapMass(fromMetabolic, fromLayer, soil.Thickness);
+            double[] fromStorage = new double[1] { initialDM.Storage.Value() };
+            double[] toStorage = Layers.MapMass(fromStorage, fromLayer, soil.Thickness);
 
             for (int layer = 0; layer < soil.Thickness.Length; layer++)
             {
-                LayerLive[layer].StructuralWt = toMass[layer] * population;
+                LayerLive[layer].StructuralWt = toStructural[layer] * population;
+                LayerLive[layer].MetabolicWt = toMetabolic[layer] * population;
+                LayerLive[layer].StorageWt = toStorage[layer] * population;
                 LayerLive[layer].StructuralN = LayerLive[layer].StructuralWt * maxNConc;
+                LLModifier[layer] = 1;
             }
-            if(plant.SowingData != null)
+
+            if (plant.SowingData != null)
             {
-                LeftDist = plant.SowingData.RowSpacing * (plant.SowingData.SkipRow - 0.5);
-                RightDist = plant.SowingData.RowSpacing * 0.5;
+                if (plant.SowingData.SkipType == 0)
+                {
+                    LeftDist = plant.SowingData.RowSpacing * 0.5;
+                    RightDist = plant.SowingData.RowSpacing * 0.5;
+                }
+                if (plant.SowingData.SkipType == 1)
+                {
+                    LeftDist = plant.SowingData.RowSpacing * 1.0;
+                    RightDist = plant.SowingData.RowSpacing * 1.0;
+                }
+                if (plant.SowingData.SkipType == 2)
+                {
+                    LeftDist = plant.SowingData.RowSpacing * 1.0;
+                    RightDist = plant.SowingData.RowSpacing * 0.5;
+                }
+                if (plant.SowingData.SkipType == 3)
+                {
+                    LeftDist = plant.SowingData.RowSpacing * 1.5;
+                    RightDist = plant.SowingData.RowSpacing * 0.5;
+                }
             }
         }
-
 
         /// <summary>Clears this instance.</summary>
         public void Clear()
@@ -184,6 +223,8 @@ namespace Models.PMF.Organs
             NitUptake = null;
             DeltaNO3 = new double[soil.Thickness.Length];
             DeltaNH4 = new double[soil.Thickness.Length];
+            RootProportions = new double[soil.Thickness.Length];
+            LLModifier = new double[soil.Thickness.Length];
 
             Depth = 0.0;
 
@@ -249,14 +290,19 @@ namespace Models.PMF.Organs
             Depth = Math.Min(Depth, MaxDepth);
 
             //RootFront - needed by sorghum
-            if(root.RootFrontCalcSwitch?.Value() == 1)
+            if (root.RootFrontCalcSwitch?.Value() == 1)
             {
                 var dltRootFront = rootFrontVelocity.Value(RootLayer) * rootDepthWaterStress * xf[RootLayer];
 
                 double maxFront = Math.Sqrt(Math.Pow(Depth, 2) + Math.Pow(LeftDist, 2));
                 dltRootFront = Math.Min(dltRootFront, maxFront - RootFront);
-                RootFront = RootFront + dltRootFront;
+                RootFront += dltRootFront;
             }
+            else
+            {
+                RootFront = Depth;
+            }
+            root.RootShape.CalcRootProportionInLayers(this);
         }
         /// <summary>
         /// Calculate Root Activity Values for water and nitrogen
@@ -269,7 +315,7 @@ namespace Models.PMF.Organs
                 if (layer <= soil.LayerIndexOfDepth(Depth))
                     if (LayerLive[layer].Wt > 0)
                     {
-                        RAw[layer] = - WaterUptake[layer] / LayerLive[layer].Wt
+                        RAw[layer] = -WaterUptake[layer] / LayerLive[layer].Wt
                                    * soil.Thickness[layer]
                                    * soil.ProportionThroughLayer(layer, Depth);
                         RAw[layer] = Math.Max(RAw[layer], 1e-20);  // Make sure small numbers to avoid lack of info for partitioning
@@ -285,10 +331,10 @@ namespace Models.PMF.Organs
         /// <summary>
         /// Partition root mass into layers
         /// </summary>
-        public void PartitionRootMass(double TotalRAw, double TotalDMAllocated)
+        public void PartitionRootMass(double TotalRAw, Biomass TotalDMAllocated)
         {
             DMAllocated = new double[soil.Thickness.Length];
-
+ 
             if (Depth > 0)
             {
                 double[] RAw = CalculateRootActivityValues();
@@ -296,8 +342,13 @@ namespace Models.PMF.Organs
                 for (int layer = 0; layer < soil.Thickness.Length; layer++)
                     if (TotalRAw > 0)
                     {
-                        LayerLive[layer].StructuralWt += TotalDMAllocated * RAw[layer] / TotalRAw;
-                        DMAllocated[layer] += TotalDMAllocated * RAw[layer] / TotalRAw;
+                        LayerLive[layer].StructuralWt += TotalDMAllocated.StructuralWt * RAw[layer] / TotalRAw;
+                        LayerLive[layer].StorageWt += TotalDMAllocated.StorageWt * RAw[layer] / TotalRAw;
+                        LayerLive[layer].MetabolicWt += TotalDMAllocated.MetabolicWt * RAw[layer] / TotalRAw;
+
+                        DMAllocated[layer] += (TotalDMAllocated.StructuralWt + 
+                                               TotalDMAllocated.StorageWt +
+                                               TotalDMAllocated.MetabolicWt)* RAw[layer] / TotalRAw;
                     }
             }
         }

@@ -137,10 +137,6 @@
             {
                 return "Mean air temperature (oC)";
             }
-            else if (xYPairs.Parent is SoilTemperatureFunction)
-            {
-                return "Mean soil temperature (oC)";
-            }
             else if (xYPairs.Parent is SoilTemperatureWeightedFunction)
             {
                 return "Weighted soil temperature (oC)";

@@ -67,7 +67,6 @@
         #region Class properties and fields
 
         /// <summary>Used by several organs to determine the type of crop.</summary>
-        [Description("Used by several organs to determine the type of crop.")]
         public string CropType { get; set; }
 
         /// <summary>Gets a value indicating how leguminous a plant is</summary>
@@ -357,7 +356,7 @@
         /// <param name="maxCover">The maximum cover.</param>
         /// <param name="budNumber">The bud number.</param>
         /// <param name="rowConfig">SkipRow configuration.</param>
-        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1)
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 0)
         {
             SowingDate = Clock.Today;
 
@@ -369,7 +368,36 @@
             SowingData.MaxCover = maxCover;
             SowingData.BudNumber = budNumber;
             SowingData.RowSpacing = rowSpacing;
-            SowingData.SkipRow = rowConfig;
+            SowingData.SkipType = rowConfig;
+
+            if (rowConfig == 0)
+            {
+                // No skip row
+                SowingData.SkipPlant = 1.0;
+                SowingData.SkipRow = 0.0;
+            }
+            if (rowConfig == 1)
+            {
+                // Alternate rows (plant 1 – skip 1)
+                SowingData.SkipPlant = 1.0;
+                SowingData.SkipRow = 1.0;
+            }
+            if (rowConfig == 2)
+            {
+                // Planting two rows and skipping one row (plant 2 – skip 1)
+                SowingData.SkipPlant = 2.0;
+                SowingData.SkipRow = 1.0;
+            }
+            if (rowConfig == 3)
+            {
+                // Alternate pairs of rows (plant 2 – skip 2)
+                SowingData.SkipPlant = 2.0;
+                SowingData.SkipRow = 2.0;
+            }
+
+            // Adjusting number of plant per meter in each row
+            SowingData.SkipDensityScale = 1.0 + SowingData.SkipRow / SowingData.SkipPlant;
+
             IsAlive = true;
 
             this.Population = population;
@@ -509,30 +537,33 @@
             var preRemovalBiomass = AboveGround.Wt*10;
             foreach (var organ in Organs.Cast<IOrganDamage>())
             {
-                // These calculations convert organ live weight from g/m2 to kg/ha
-                var amountLiveToRemove = organ.Live.Wt * 10 / preRemovalBiomass * amountToRemove;
-                var amountDeadToRemove = organ.Dead.Wt * 10 / preRemovalBiomass * amountToRemove;
-                var fractionLiveToRemove = MathUtilities.Divide(amountLiveToRemove, (organ.Live.Wt * 10), 0);
-                var fractionDeadToRemove = MathUtilities.Divide(amountDeadToRemove, (organ.Dead.Wt * 10), 0);
-                var defoliatedDigestibility = organ.Live.DMDOfStructural * fractionLiveToRemove
-                                            + organ.Dead.DMDOfStructural * fractionDeadToRemove;
-                var defoliatedDM = amountLiveToRemove + amountDeadToRemove;
-                var defoliatedN = organ.Live.N * 10 * fractionLiveToRemove + organ.Dead.N * 10 * fractionDeadToRemove;
-                if (defoliatedDM > 0)
+                if (organ.IsAboveGround)
                 {
-                    RemoveBiomass(organ.Name, "Graze",
-                                  new OrganBiomassRemovalType()
-                                  {
-                                      FractionLiveToRemove = fractionLiveToRemove,
-                                      FractionDeadToRemove = fractionDeadToRemove
-                                  });
-
-                    defoliatedBiomass += new Biomass()
+                    // These calculations convert organ live weight from g/m2 to kg/ha
+                    var amountLiveToRemove = organ.Live.Wt * 10 / preRemovalBiomass * amountToRemove;
+                    var amountDeadToRemove = organ.Dead.Wt * 10 / preRemovalBiomass * amountToRemove;
+                    var fractionLiveToRemove = MathUtilities.Divide(amountLiveToRemove, (organ.Live.Wt * 10), 0);
+                    var fractionDeadToRemove = MathUtilities.Divide(amountDeadToRemove, (organ.Dead.Wt * 10), 0);
+                    var defoliatedDigestibility = organ.Live.DMDOfStructural * fractionLiveToRemove
+                                                + organ.Dead.DMDOfStructural * fractionDeadToRemove;
+                    var defoliatedDM = amountLiveToRemove + amountDeadToRemove;
+                    var defoliatedN = organ.Live.N * 10 * fractionLiveToRemove + organ.Dead.N * 10 * fractionDeadToRemove;
+                    if (defoliatedDM > 0)
                     {
-                        StructuralWt = defoliatedDM,
-                        StructuralN = defoliatedN,
-                        DMDOfStructural = defoliatedDigestibility
-                    };
+                        RemoveBiomass(organ.Name, "Graze",
+                                      new OrganBiomassRemovalType()
+                                      {
+                                          FractionLiveToRemove = fractionLiveToRemove,
+                                          FractionDeadToRemove = fractionDeadToRemove
+                                      });
+
+                        defoliatedBiomass += new Biomass()
+                        {
+                            StructuralWt = defoliatedDM,
+                            StructuralN = defoliatedN,
+                            DMDOfStructural = defoliatedDigestibility
+                        };
+                    }
                 }
             }
             return defoliatedBiomass;

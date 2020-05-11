@@ -60,27 +60,6 @@ namespace Models.CLEM.Groupings
         }
 
         /// <summary>
-        /// Create a copy of the current instance
-        /// </summary>
-        /// <returns></returns>
-        public AnimalPriceGroup Clone()
-        {
-            AnimalPriceGroup clone = new AnimalPriceGroup()
-            {
-                PricingStyle = this.PricingStyle,
-                PurchaseOrSale = this.PurchaseOrSale,
-                Value = this.Value
-            };
-
-            foreach (RuminantFilter item in this.Children.OfType<RuminantFilter>())
-            {
-                clone.Children.Add(item.Clone());
-            }
-
-            return clone;
-        }
-
-        /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
         /// <param name="formatForParentControl">Use full verbose description</param>
