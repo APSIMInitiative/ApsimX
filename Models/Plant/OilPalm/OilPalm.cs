@@ -803,6 +803,7 @@ namespace Models.PMF.OilPalm
             SowingData.BudNumber = budNumber;
             SowingData.RowSpacing = rowSpacing;
             CropInGround = true;
+            plant_status = "alive";
 
             if (SowingData.Cultivar == "")
                 throw new Exception("Cultivar not specified on sow line.");
@@ -837,19 +838,6 @@ namespace Models.PMF.OilPalm
 
         /// <summary>Occurs when [biomass removed].</summary>
         public event BiomassRemovedDelegate BiomassRemoved;
-
-        /// <summary>Called when [sow].</summary>
-        /// <param name="Sow">The sow.</param>
-        [EventSubscribe("Sow")]
-        private void OnSow(SowPlant2Type Sow)
-        {
-            SowingData = Sow;
-            plant_status = "alive";
-            Population = SowingData.Population;
-
-            if (Sowing != null)
-                Sowing.Invoke(this, new EventArgs());
-        }
 
         /// <summary>Called when [do plant growth].</summary>
         /// <param name="sender">The sender.</param>

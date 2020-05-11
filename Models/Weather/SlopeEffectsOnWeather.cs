@@ -95,6 +95,9 @@
         /// <summary>Hour angle for second sunset on tilted surface.</summary>
         private double sunsetAngle2Slope = 0.0;
 
+        /// <summary>Aspect of slope - degrees from south (in radians).</summary>
+        private double aspectFromSouthInRadians;
+
         /// <summary>Albedo of the surrounding environment (0-1).</summary>
         [Separator("General description of the site")]
         [Description("Albedo of the surrounding environment (0-1)")]
@@ -288,9 +291,9 @@
         {
             // Check parameter values
             if ((zone.Slope < 0.0) || (zone.Slope > 90))
-                throw new Exception("Slope angle is out of the expected range (0-90deg)");
+                throw new Exception("Slope angle is out of the expected range (0-90 deg)");
             if ((zone.AspectAngle < 0.0) || (zone.AspectAngle > 360))
-                throw new Exception("Aspect angle is out of the expected range (0-600deg)");
+                throw new Exception("Aspect angle is out of the expected range (0-360 deg)");
             if ((zone.Altitude < -100.0) || (SurroundsAlbedo > 5000))
                 throw new Exception("Altitude value is out of bounds (0-1)");
             if ((SurroundsAlbedo < 0.0) || (SurroundsAlbedo > 1.0))
@@ -299,12 +302,14 @@
                 throw new Exception("Turbidity coefficient value is out of bounds (0-1)");
 
             // Convert and fix some parameters
-            // AspectAngle is degres from north. Should really check this against original 
-            // sources of the equations. Seems to make sense.
-            //if (zone.AspectAngle > 180)
-            //    zone.AspectAngle -= 180;
+            // zone.AspectAngle is degrees from north. This algorithm seems to work using aspect from south in radians.
+            // Should really check this against original sources of the equations. Seems to make sense.
+            aspectFromSouthInRadians = zone.AspectAngle + 180;
+            if (aspectFromSouthInRadians > 360)
+                aspectFromSouthInRadians -= 360;
+
             zone.Slope = Math.PI * zone.Slope / 180;
-            zone.AspectAngle = Math.PI * zone.AspectAngle / 180;
+            aspectFromSouthInRadians = Math.PI * aspectFromSouthInRadians / 180;
             latitudeAngle = Math.PI * weather.Latitude / 180;
 
             // Get the local mean atmospheric pressure, similar to Allen et al (1998)
@@ -413,10 +418,10 @@
             {
                 // Auxiliary variables for radiation (Allen et al., 2006)
                 double a_ = Math.Sin(SolarDeclination) * ((Math.Sin(latitudeAngle) * Math.Cos(zone.Slope))
-                          - (Math.Cos(latitudeAngle) * Math.Sin(zone.Slope) * Math.Cos(zone.AspectAngle)));
+                          - (Math.Cos(latitudeAngle) * Math.Sin(zone.Slope) * Math.Cos(aspectFromSouthInRadians)));
                 double b_ = Math.Cos(SolarDeclination) * ((Math.Cos(latitudeAngle) * Math.Cos(zone.Slope))
-                          + (Math.Sin(latitudeAngle) * Math.Sin(zone.Slope) * Math.Cos(zone.AspectAngle)));
-                double c_ = Math.Cos(SolarDeclination) * (Math.Sin(zone.Slope) * Math.Sin(zone.AspectAngle));
+                          + (Math.Sin(latitudeAngle) * Math.Sin(zone.Slope) * Math.Cos(aspectFromSouthInRadians)));
+                double c_ = Math.Cos(SolarDeclination) * (Math.Sin(zone.Slope) * Math.Sin(aspectFromSouthInRadians));
                 double g_ = Math.Sin(SolarDeclination) * Math.Sin(latitudeAngle);
                 double h_ = Math.Cos(SolarDeclination) * Math.Cos(latitudeAngle);
 

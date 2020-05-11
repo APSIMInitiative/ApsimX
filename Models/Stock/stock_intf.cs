@@ -8,6 +8,7 @@
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Core.ApsimFile;
+    using Models.Interfaces;
     using Models.PMF;
     using Newtonsoft.Json.Linq;
     using StdUnits;
@@ -131,7 +132,6 @@
         /// </summary>
         public int Priority;
     }
-
     /// <summary>
     ///  Abbreviated animal initialisation set, used in TStockList.Buy                
     /// </summary>
@@ -406,7 +406,13 @@
         /// <summary>
         /// The parent stock model.
         /// </summary>
-        private Stock parentStockModel = null;
+        private readonly Stock parentStockModel = null;
+
+        /// <summary>The clock model.</summary>
+        private readonly Clock clock;
+
+        /// <summary>The weather model.</summary>
+        private readonly IWeather weather;
 
         /// <summary>
         /// False flag
@@ -439,14 +445,9 @@
         private double[] MAXSRW = { 120.0, 1000.0 };
 
         /// <summary>
-        /// Base parameters
-        /// </summary>
-        private AnimalParamSet baseParams = null;
-
-        /// <summary>
         /// Set of genotype parameters
         /// </summary>
-        private AnimalParamSet[] genotypeParams = new AnimalParamSet[0];
+        private Genotype[] genotypeParams = new Genotype[0];
 
         /// <summary>
         /// stock[0] is kept for use as temporary storage         
@@ -457,11 +458,6 @@
         /// The paddock list
         /// </summary>
         private PaddockList paddockList;
-
-        /// <summary>
-        /// The list of enterprises to manage
-        /// </summary>
-        private EnterpriseList enterpriseList;
 
         /// <summary>
         /// The list of grazing periods
@@ -479,14 +475,6 @@
         public int StartRun { get; set; }
 
         /// <summary>
-        /// Gets the base parameter set for this instance
-        /// specified by the ParamFile
-        /// </summary>
-        public AnimalParamSet BaseParams
-        {
-            get { return baseParams; }
-        }
-        /// <summary>
         /// Gets the list of paddocks
         /// </summary>
         public PaddockList Paddocks
@@ -497,10 +485,7 @@
         /// <summary>
         /// Gets the enterprise list
         /// </summary>
-        public EnterpriseList Enterprises
-        {
-            get { return this.enterpriseList; }
-        }
+        public List<EnterpriseInfo> Enterprises { get; }
 
         /// <summary>
         /// Gets the grazing periods
@@ -516,34 +501,6 @@
         public ForageProviders ForagesAll
         {
             get { return this.forageProviders; }
-        }
-
-        /// <summary>
-        /// Sets the animals weather
-        /// </summary>
-        public AnimalWeather Weather
-        {
-            set
-            {
-                this.SetWeather(value);
-            }
-        }
-
-        /// <summary>
-        /// Makes a copy of TAnimalParamsGlb and modifies it according to sConstFile     
-        /// </summary>
-        /// <param name="constFileName">The name of the parameter file</param>
-        /// <returns>The animal parameter set</returns>
-        public static AnimalParamSet MakeParamSet(string constFileName)
-        {
-            AnimalParamSet result = new AnimalParamSet((AnimalParamSet)null);
-            GlobalAnimalParams animalParams = new GlobalAnimalParams();
-            result.CopyAll(animalParams.AnimalParamsGlb());
-            if (constFileName != string.Empty)
-                GlobalParameterFactory.ParamXMLFactory().ReadFromFile(constFileName, result, true);
-            result.CurrLocale = GrazLocale.DefaultLocale();
-
-            return result;
         }
 
         /// <summary>
@@ -633,22 +590,6 @@
         }
 
         /// <summary>
-        /// Set the weather data for the animal group
-        /// </summary>
-        /// <param name="theEnv">The weather data</param>
-        private void SetWeather(AnimalWeather theEnv)
-        {
-            int i;
-
-            for (i = 1; i <= this.Count(); i++)
-            {
-                this.At(i).Weather = theEnv;
-                if (this.At(i).Young != null)
-                    this.At(i).Young.Weather = theEnv;
-            }
-        }
-
-        /// <summary>
         /// These values are paddock-specific and are stored in the FPaddocks list.        
         /// </summary>
         /// <param name="paddIdx">The paddock index</param>
@@ -712,9 +653,9 @@
         /// <param name="posIdx">Index in stock list</param>
         private void StoreInitialState(int posIdx)
         {
-            this.At(posIdx).storeStateInfo(ref this.stock[posIdx].InitState[0]);
+            this.At(posIdx).StoreStateInfo(ref this.stock[posIdx].InitState[0]);
             if (this.At(posIdx).Young != null)
-                this.At(posIdx).Young.storeStateInfo(ref this.stock[posIdx].InitState[1]);
+                this.At(posIdx).Young.StoreStateInfo(ref this.stock[posIdx].InitState[1]);
         }
 
         /// <summary>
@@ -726,12 +667,12 @@
         /// <param name="posIdx">Index in stock list</param>
         private void RevertInitialState(int posIdx)
         {
-            this.At(posIdx).revertStateInfo(this.stock[posIdx].InitState[0]);
+            this.At(posIdx).RevertStateInfo(this.stock[posIdx].InitState[0]);
             this.At(posIdx).PotIntake = this.At(posIdx).PotIntake * this.stock[posIdx].RDPFactor[0];
 
             if (this.At(posIdx).Young != null)
             {
-                this.At(posIdx).Young.revertStateInfo(this.stock[posIdx].InitState[1]);
+                this.At(posIdx).Young.RevertStateInfo(this.stock[posIdx].InitState[1]);
                 this.At(posIdx).Young.PotIntake = this.At(posIdx).Young.PotIntake * this.stock[posIdx].RDPFactor[1];
             }
         }
@@ -867,9 +808,9 @@
         /// <param name="group">Animal group</param>
         public void ComputeIntakeLimit(AnimalGroup group)
         {
-            group.Calc_IntakeLimit();
+            group.CalculateIntakeLimit();
             if (group.Young != null)
-                group.Young.Calc_IntakeLimit();
+                group.Young.CalculateIntakeLimit();
         }
 
         /// <summary>
@@ -964,12 +905,12 @@
         private void ComputeNutrition(int posIdx, ref double availRDP)
         {
             this.At(posIdx).Nutrition();
-            this.stock[posIdx].RDPFactor[0] = this.At(posIdx).RDP_IntakeFactor();
+            this.stock[posIdx].RDPFactor[0] = this.At(posIdx).RDPIntakeFactor();
             availRDP = Math.Min(availRDP, this.stock[posIdx].RDPFactor[0]);
             if (this.At(posIdx).Young != null)
             {
                 this.At(posIdx).Young.Nutrition();
-                this.stock[posIdx].RDPFactor[1] = this.At(posIdx).Young.RDP_IntakeFactor();
+                this.stock[posIdx].RDPFactor[1] = this.At(posIdx).Young.RDPIntakeFactor();
                 availRDP = Math.Min(availRDP, this.stock[posIdx].RDPFactor[1]);
             }
         }
@@ -980,9 +921,9 @@
         /// <param name="posIdx">Index in the stock list</param>
         private void CompleteGrowth(int posIdx)
         {
-            this.At(posIdx).completeGrowth(this.stock[posIdx].RDPFactor[0]);
+            this.At(posIdx).CompleteGrowth(this.stock[posIdx].RDPFactor[0]);
             if (this.At(posIdx).Young != null)
-                this.At(posIdx).Young.completeGrowth(this.stock[posIdx].RDPFactor[1]);
+                this.At(posIdx).Young.CompleteGrowth(this.stock[posIdx].RDPFactor[1]);
         }
 
         /// <summary>
@@ -1350,7 +1291,9 @@
         /// Create a TStockList
         /// </summary>
         /// <param name="stockModel">The parent stock model.</param>
-        public StockList(Stock stockModel)
+        /// <param name="clockModel">The clock model.</param>
+        /// <param name="weatherModel">The weather model.</param>
+        public StockList(Stock stockModel, Clock clockModel, IWeather weatherModel)
         {
             this.parentStockModel = stockModel;
             this.StartRun = 0;
@@ -1359,8 +1302,10 @@
             this.paddockList.Add(-1, string.Empty);                                      // The "null" paddock is added here      
             //  FForages  := TForageList.Create( TRUE );
             this.forageProviders = new ForageProviders();
-            this.enterpriseList = new EnterpriseList();
+            this.Enterprises = new List<EnterpriseInfo>();
             this.grazingList = new GrazingList();
+            clock = clockModel;
+            weather = weatherModel;
         }
 
         /// <summary>
@@ -1377,7 +1322,7 @@
         /// </summary>
         /// <param name="idx">Genotype index</param>
         /// <returns>The genotype</returns>
-        public AnimalParamSet GetGenotype(int idx)
+        public Genotype GetGenotype(int idx)
         {
             return this.genotypeParams[idx];
         }
@@ -1388,12 +1333,12 @@
         /// </summary>
         /// <param name="genoName">The genotype name</param>
         /// <returns>The genotype</returns>
-        public AnimalParamSet GetGenotype(string genoName)
+        public Genotype GetGenotype(string genoName)
         {
             int idx;
-            AnimalParamSet srcParamSet;
+            Genotype srcParamSet;
 
-            AnimalParamSet result = null;
+            Genotype result = null;
             if ((genoName == string.Empty) && (this.genotypeParams.Length >= 1))                           // Null string is a special case         
                 result = this.genotypeParams[0];
             else
@@ -1407,13 +1352,12 @@
                 else
                 {
                     srcParamSet = parentStockModel.Genotypes.Get(genoName).Parameters;
-                    srcParamSet.EnglishName = genoName;
                     srcParamSet.DeriveParams();
                     //srcParamSet.Initialise();
 
                     if (srcParamSet != null)
                     {
-                        result = new AnimalParamSet(null, srcParamSet);
+                        result = new Genotype(srcParamSet);
                         idx = this.genotypeParams.Length;
                         Array.Resize(ref this.genotypeParams, idx + 1);
                         this.genotypeParams[idx] = result;
@@ -1440,7 +1384,7 @@
         {
             int idx;
 
-            animalGroup.Calc_IntakeLimit();
+            animalGroup.CalculateIntakeLimit();
 
             idx = this.stock.Length;
             Array.Resize(ref this.stock, idx + 1);
@@ -1459,19 +1403,19 @@
         /// </summary>
         /// <param name="animalInits">The animal data</param>
         /// <returns>The index of the new animal group</returns>
-        public int Add(AnimalInits animalInits)
+        public int Add(Animals animalInits)
         {
             AnimalGroup newGroup;
             PaddockInfo paddock;
 
-            newGroup = new AnimalGroup(
-                                        this.GetGenotype(animalInits.Genotype),
+            newGroup = new AnimalGroup( this.GetGenotype(animalInits.Genotype),
                                         animalInits.Sex,
                                         animalInits.Number,
                                         animalInits.AgeDays,
                                         animalInits.Weight,
                                         animalInits.FleeceWt,
-                                        parentStockModel.randFactory);
+                                        parentStockModel.randFactory,
+                                        clock, weather);
             if (this.IsGiven(animalInits.MaxPrevWt))
                 newGroup.MaxPrevWeight = animalInits.MaxPrevWt;
             if (this.IsGiven(animalInits.FibreDiam))
@@ -1495,7 +1439,7 @@
                     newGroup.Young = null;
                 }
                 if (this.IsGiven(animalInits.BirthCS))
-                    newGroup.BirthCondition = AnimalParamSet.CondScore2Condition(animalInits.BirthCS, AnimalParamSet.Cond_System.csSYSTEM1_5);
+                    newGroup.BirthCondition = StockUtilities.CondScore2Condition(animalInits.BirthCS, StockUtilities.Cond_System.csSYSTEM1_5);
             }
 
             if (newGroup.Young != null)
@@ -1675,7 +1619,7 @@
             const double EPS = 1.0E-6;
 
             double totPotIntake;
-            AnimalList newGroups;
+            List<AnimalGroup> newGroups;
             PaddockInfo thePaddock;
             double timeValue;
             double delta;
@@ -1701,8 +1645,6 @@
                 this.At(idx).Age(1, ref newGroups);
 
                 // Ensure the new young have climate data                             
-                if (this.At(idx).Young != null)                                             
-                    this.At(idx).Young.Weather = this.At(idx).Weather;
                 this.Add(newGroups, this.GetPaddInfo(idx), this.GetTag(idx), this.GetPriority(idx));       // The new groups are added back onto    
                 newGroups = null;                                                           // the main list                       
             }
@@ -1714,7 +1656,7 @@
             {
                 this.StoreInitialState(idx);                                                     
                 this.ComputeIntakeLimit(this.At(idx));
-                this.At(idx).Reset_Grazing();
+                this.At(idx).ResetGrazing();
             }
 
             // Compute the total potential intake (used to distribute supplement between groups of animals)         
@@ -2013,7 +1955,7 @@
         /// <param name="ageDays">Age in days</param>
         /// <param name="parameters">Breed parameter set</param>
         /// <returns>The maximum normal weight kg</returns>
-        private double MaxNormWtFunc(double srw, double bw, int ageDays, AnimalParamSet parameters)
+        private double MaxNormWtFunc(double srw, double bw, int ageDays, Genotype parameters)
         {
             double growthRate;
 
@@ -2028,7 +1970,7 @@
         /// <param name="reprodStatus">Reproductive status</param>
         /// <param name="parameters">Animal parameter set</param>
         /// <returns>The normal weight kg</returns>
-        public double GrowthCurve(int ageDays, GrazType.ReproType reprodStatus, AnimalParamSet parameters)
+        public double GrowthCurve(int ageDays, GrazType.ReproType reprodStatus, Genotype parameters)
         {
             double stdRefWt;
 
@@ -2049,7 +1991,7 @@
         /// <param name="condition">Animal condition</param>
         /// <param name="chill">Chill index</param>
         /// <returns>The reproduction rate</returns>
-        private double GetReproRate(CohortsInfo cohortsInfo, AnimalParamSet mainGenotype, AgeInfo[] ageInfo, double latitude, int mateDOY, double condition, double chill)
+        private double GetReproRate(CohortsInfo cohortsInfo, Genotype mainGenotype, AgeInfo[] ageInfo, double latitude, int mateDOY, double condition, double chill)
         {
             double result = 0.0;
             double[] pregRate = new double[4];
@@ -2133,10 +2075,10 @@
         /// <param name="newGroups">List of new animal groups</param>
         public void AddCohorts(CohortsInfo cohortsInfo, int dayOfYear, double latitude, List<int> newGroups)
         {
-            AnimalParamSet mainGenotype;
+            Genotype mainGenotype;
             AgeInfo[] ageInfoList;
 
-            AnimalInits animalInits;
+            var animalInits = new Animals();
             int numCohorts;
             double survival;
             int daysSinceShearing;
@@ -2180,7 +2122,7 @@
                 if (mainGenotype.Animal == GrazType.AnimalType.Cattle)
                     daysSinceShearing = 0;
                 else if (this.IsGiven(cohortsInfo.MeanGFW) && (cohortsInfo.FleeceDays == 0))
-                    daysSinceShearing = Convert.ToInt32(Math.Truncate(365.25 * cohortsInfo.MeanGFW / mainGenotype.PotentialGFW), CultureInfo.InvariantCulture);
+                    daysSinceShearing = Convert.ToInt32(Math.Truncate(365.25 * cohortsInfo.MeanGFW / mainGenotype.PotFleeceWt), CultureInfo.InvariantCulture);
                 else
                     daysSinceShearing = cohortsInfo.FleeceDays;
 
@@ -2198,7 +2140,7 @@
                     ageInfoList[cohortIdx].NormalBaseWt = this.GrowthCurve(ageInfoList[cohortIdx].AgeDays, cohortsInfo.ReproClass, mainGenotype);
 
                     // Estimate a default fleece weight based on time since shearing
-                    ageInfoList[cohortIdx].FleeceWt = AnimalParamSet.fDefaultFleece(
+                    ageInfoList[cohortIdx].FleeceWt = StockUtilities.DefaultFleece(
                                                                                     mainGenotype,
                                                                                     ageInfoList[cohortIdx].AgeDays,
                                                                                     cohortsInfo.ReproClass,
@@ -2224,7 +2166,7 @@
                 if (this.IsGiven(cohortsInfo.MeanLiveWt))
                     baseWtScalar = (cohortsInfo.MeanLiveWt - cohortsInfo.MeanGFW) / meanNormalWt;
                 else if (this.IsGiven(cohortsInfo.CondScore))
-                    baseWtScalar = AnimalParamSet.CondScore2Condition(cohortsInfo.CondScore);
+                    baseWtScalar = StockUtilities.CondScore2Condition(cohortsInfo.CondScore);
                 else
                     baseWtScalar = 1.0;
 
@@ -2261,7 +2203,7 @@
                             ageInfoList[cohortIdx].SizeAtMating = this.GrowthCurve(
                                                                                     ageInfoList[cohortIdx].AgeAtMating,
                                                                                     cohortsInfo.ReproClass,
-                                                                                    mainGenotype) / mainGenotype.fSexStdRefWt(cohortsInfo.ReproClass);
+                                                                                    mainGenotype) / mainGenotype.SexStdRefWt(cohortsInfo.ReproClass);
                         }
 
                         // binary search for the body condition at mating that yields the desired pregnancy rate
@@ -2327,7 +2269,7 @@
                             ageInfoList[cohortIdx].SizeAtMating = this.GrowthCurve(
                                                                                 ageInfoList[cohortIdx].AgeAtMating,
                                                                                 cohortsInfo.ReproClass,
-                                                                                mainGenotype) / mainGenotype.fSexStdRefWt(cohortsInfo.ReproClass);
+                                                                                mainGenotype) / mainGenotype.SexStdRefWt(cohortsInfo.ReproClass);
                         }
 
                         if (mainGenotype.Animal == GrazType.AnimalType.Sheep)
@@ -2434,7 +2376,7 @@
                                 animalInits.Weight = ageInfoList[cohortIdx].BaseWeight + ageInfoList[cohortIdx].FleeceWt;
                                 animalInits.MaxPrevWt = StdMath.DMISSING; // compute from cond_score
                                 animalInits.FleeceWt = ageInfoList[cohortIdx].FleeceWt;
-                                animalInits.FibreDiam = AnimalParamSet.fDefaultMicron(
+                                animalInits.FibreDiam = StockUtilities.DefaultMicron(
                                                                                      mainGenotype,
                                                                                      animalInits.AgeDays,
                                                                                      animalInits.Sex,
@@ -2486,13 +2428,13 @@
         /// <returns>The index of the new group</returns>
         protected int Buy(PurchaseInfo animalInfo)
         {
-            AnimalParamSet agenotype;
+            Genotype agenotype;
             AnimalGroup newGroup;
             double bodyCondition;
             double liveWeight;
             double lowBaseWeight = 0.0;
             double highBaseWeight = 0.0;
-            AnimalList weanList;
+            List<AnimalGroup> weanList;
             int paddNo;
 
             int result = 0;
@@ -2507,7 +2449,7 @@
                 {
                     liveWeight = this.GrowthCurve(animalInfo.AgeDays, animalInfo.Repro, agenotype);
                     if (animalInfo.CondScore > 0.0)
-                        liveWeight = liveWeight * AnimalParamSet.CondScore2Condition(animalInfo.CondScore);
+                        liveWeight = liveWeight * StockUtilities.CondScore2Condition(animalInfo.CondScore);
                     if (agenotype.Animal == GrazType.AnimalType.Sheep)
                         liveWeight = liveWeight + animalInfo.GFW;
                 }
@@ -2520,12 +2462,13 @@
                                             animalInfo.AgeDays,                       // Preg  field.                        
                                             liveWeight,
                                             animalInfo.GFW,
-                                            parentStockModel.randFactory);
+                                            parentStockModel.randFactory,
+                                            clock, weather);
 
                 // Adjust the condition score if it has been given
                 if ((animalInfo.CondScore > 0.0) && (animalInfo.LiveWt > 0.0))        
                 {                                                                                                
-                    bodyCondition = AnimalParamSet.CondScore2Condition(animalInfo.CondScore);
+                    bodyCondition = StockUtilities.CondScore2Condition(animalInfo.CondScore);
                     newGroup.WeightRangeForCond(
                                                 animalInfo.Repro, 
                                                 animalInfo.AgeDays,
@@ -2535,7 +2478,7 @@
                                                 ref highBaseWeight);
 
                     if ((newGroup.BaseWeight >= lowBaseWeight) && (newGroup.BaseWeight <= highBaseWeight))
-                        newGroup.setConditionAtWeight(bodyCondition);
+                        newGroup.SetConditionAtWeight(bodyCondition);
                     else
                     {
                         newGroup = null;
@@ -2745,7 +2688,7 @@
         {
             int numToWean;
             int mothersToWean;
-            AnimalList newGroups;
+            List<AnimalGroup> newGroups;
             int idx, n;
 
             number = Math.Max(number, 0);
@@ -2927,7 +2870,7 @@
 
                         diffRatio = numAnimals / (numAnimals - numToRemove) * (removeLW / liveWt - 1.0);
                         diffs.BaseWeight = diffRatio * srcGroup.BaseWeight;
-                        diffs.StdRefWt = diffRatio * srcGroup.StdReferenceWt;               // Weight diffs within a group are       
+                        diffs.StdRefWt = diffRatio * srcGroup.standardReferenceWeight;      // Weight diffs within a group are       
                         diffs.FleeceWt = diffRatio * srcGroup.FleeceCutWeight;              // assumed genetic!                    
                     }                       
 
@@ -2947,7 +2890,7 @@
         public void SplitYoung(int groupIdx)
         {
             AnimalGroup srcGroup;
-            AnimalList newGroups;
+            List<AnimalGroup> newGroups;
 
             srcGroup = this.GetAt(groupIdx);
             if (srcGroup != null)
@@ -3188,8 +3131,7 @@
         /// for this component.
         /// </summary>
         /// <param name="currentDay">Todays date</param>
-        /// <param name="latitude">The Latitude</param>
-        public void ManageInternalInit(int currentDay, double latitude)
+        public void ManageInternalInit(int currentDay)
         {
             int i;
             EnterpriseInfo curEnt;
@@ -3197,7 +3139,7 @@
             // for each enterprise
             for (i = 0; i <= this.Enterprises.Count - 1; i++)   
             {
-                curEnt = this.Enterprises.byIndex(i);
+                curEnt = this.Enterprises[i];
  
                 if (curEnt.ManageGrazing)
                     this.ManageGrazing(currentDay, currentDay, curEnt);
@@ -3219,7 +3161,7 @@
             // for each enterprise
             for (i = 0; i <= this.Enterprises.Count - 1; i++)    
             {
-                curEnt = this.Enterprises.byIndex(i);
+                curEnt = this.Enterprises[i];
                 this.ManageDailyTasks(currentDay, curEnt);       // correct order?
 
                 if (curEnt.ManageGrazing)
@@ -3247,7 +3189,7 @@
             if (this.Count() > 0)
                 tempAnimals = this.At(1).Copy();
             else
-                tempAnimals = new AnimalGroup(this.GetGenotype("Medium Merino"), GrazType.ReproType.Empty, 1, 365 * 4, 50.0, 0.0, parentStockModel.randFactory);
+                tempAnimals = new AnimalGroup(this.GetGenotype("Medium Merino"), GrazType.ReproType.Empty, 1, 365 * 4, 50.0, 0.0, parentStockModel.randFactory, clock, weather);
             for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)
                 paddockRank[paddIdx] = this.GetPaddockRank(this.Paddocks.ByIndex(paddIdx), tempAnimals);
 
@@ -3392,6 +3334,22 @@
             return result;
         }
 
+        /// <summary>
+        /// Calculate the days from the day of year in a non leap year
+        /// </summary>
+        /// <param name="firstDOY">Start day</param>
+        /// <param name="secondDOY">End day</param>
+        /// <returns>The days in the interval</returns>
+        public int DaysFromDOY365Simple(int firstDOY, int secondDOY)
+        {
+            if (firstDOY == 0 || secondDOY == 0)
+                return 0;
+            else if (firstDOY > secondDOY)
+                return 365 - firstDOY + secondDOY;
+            else
+                return secondDOY - firstDOY;
+        }
+
         // checking paddock for grazing move
         private const int MAX_CRITERIA = 1;
         private const int DRAFT_MOVE = 0;
@@ -3451,7 +3409,7 @@
         /// <param name="condition">Animal condition</param>
         /// <param name="chillIndex">The chill index</param>
         /// <returns>Offspring rates</returns>
-        private double[] GetOffspringRates(AnimalParamSet parameters, double latitude, int mateDOY, int ageDays, double matingSize, double condition, double chillIndex = 0.0)
+        private double[] GetOffspringRates(Genotype parameters, double latitude, int mateDOY, int ageDays, double matingSize, double condition, double chillIndex = 0.0)
         {
             const double NO_CYCLES = 2.5;
             const double STD_LATITUDE = -35.0;             // Latitude (in degrees) for which the DayLengthConst[] parameters are set    
@@ -3515,15 +3473,15 @@
         /// <param name="paddInfo">The paddock info</param>
         /// <param name="tagNo">The tag number</param>
         /// <param name="priority">Priority value</param>
-        public void Add(AnimalList animalList, PaddockInfo paddInfo, int tagNo, int priority)
+        public void Add(List<AnimalGroup> animalList, PaddockInfo paddInfo, int tagNo, int priority)
         {
             int idx;
 
             if (animalList != null)
                 for (idx = 0; idx <= animalList.Count - 1; idx++)
                 {
-                    this.Add(animalList.At(idx), paddInfo, tagNo, priority);
-                    animalList.SetAt(idx, null);                           // Detach the animal group from the TAnimalList                              
+                    this.Add(animalList[idx], paddInfo, tagNo, priority);
+                    animalList[idx] = null;                           // Detach the animal group from the TAnimalList                              
                 }
         }
         
@@ -3532,9 +3490,7 @@
         /// </summary>
         /// <param name="model">The stock model</param>
         /// <param name="stockEvent">The event parameters</param>
-        /// <param name="dateToday">Today's date</param>
-        /// <param name="latitude">The latitiude</param>
-        public void DoStockManagement(StockList model, IStockEvent stockEvent, int dateToday = 0, double latitude = -35.0)
+        public void DoStockManagement(StockList model, IStockEvent stockEvent)
         {
             CohortsInfo cohort = new CohortsInfo();
             PurchaseInfo purchaseInfo = new PurchaseInfo();
@@ -3545,7 +3501,7 @@
             double value;
             int tagNo;
             int numGroups;
-
+            
             if (stockEvent != null)
             {
                 // add_animals
@@ -3556,19 +3512,13 @@
                     cohort.Number = Math.Max(0, stockInfo.Number);
                     if (!this.ParseRepro(stockInfo.Sex, ref cohort.ReproClass))
                         throw new Exception("Event ADD does not support sex='" + stockInfo.Sex + "'");
-                    if (dateToday > 0)
-                        cohort.AgeOffsetDays = this.DaysFromDOY365(stockInfo.BirthDay, dateToday);
-                    else
-                        cohort.AgeOffsetDays = 0;
+                    cohort.AgeOffsetDays = this.DaysFromDOY365Simple(stockInfo.BirthDay, clock.Today.DayOfYear);
                     cohort.MinYears = stockInfo.MinYears;
                     cohort.MaxYears = stockInfo.MaxYears;
                     cohort.MeanLiveWt = stockInfo.MeanWeight;
                     cohort.CondScore = stockInfo.CondScore;
                     cohort.MeanGFW = stockInfo.MeanFleeceWt;
-                    if (dateToday > 0)
-                        cohort.FleeceDays = this.DaysFromDOY365(stockInfo.ShearDay, dateToday);
-                    else
-                        cohort.FleeceDays = 0;
+                    cohort.FleeceDays = this.DaysFromDOY365Simple(stockInfo.ShearDay, clock.Today.DayOfYear);
                     cohort.MatedTo = stockInfo.MatedTo;
                     cohort.DaysPreg = stockInfo.Pregnant;
                     cohort.Foetuses = stockInfo.Foetuses;
@@ -3579,7 +3529,7 @@
                     cohort.LambGFW = stockInfo.YoungFleeceWt;
 
                     if (cohort.Number > 0)
-                        model.AddCohorts(cohort, 1 + this.DaysFromDOY365(1, dateToday), latitude, null);
+                        model.AddCohorts(cohort, clock.Today.DayOfYear, weather.Latitude, null);
                 }
                 else if (stockEvent.GetType() == typeof(StockBuy))
                 {
