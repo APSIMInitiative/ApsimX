@@ -894,10 +894,9 @@ namespace Models.GrazPlan
             theCopy.clock = clock;
             if (PaddOccupied != null)
             {
-                theCopy.PaddOccupied.PaddObj = PaddOccupied.PaddObj;
+                theCopy.PaddOccupied.zone = PaddOccupied.zone;
                 theCopy.PaddOccupied.AddFaecesObj = PaddOccupied.AddFaecesObj;
                 theCopy.PaddOccupied.AddUrineObj = PaddOccupied.AddUrineObj;
-                theCopy.PaddOccupied.Soil = PaddOccupied.Soil;
             }
             if (theCopy.Young != null)
             {

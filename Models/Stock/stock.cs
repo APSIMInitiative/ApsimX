@@ -292,27 +292,26 @@
         ///// <summary>
         ///// Gets or sets the livestock grazing rotations
         ///// </summary>
-        //[Description("Livestock grazing rotations")]
         //public GrazingPeriod[] GrazingPeriods
         //{
         //    get
         //    {
-        //        GrazingPeriod[] periods = new GrazingPeriod[this.stockModel.GrazingPeriods.Count()];
-        //        for (int i = 0; i < this.stockModel.GrazingPeriods.Count(); i++)
-        //            periods[i] = this.stockModel.GrazingPeriods.ByIndex(i);
+        //        GrazingPeriod[] periods = new GrazingPeriod[this.AnimalList.GrazingPeriods.Count()];
+        //        for (int i = 0; i < this.AnimalList.GrazingPeriods.Count(); i++)
+        //            periods[i] = this.AnimalList.GrazingPeriods.ByIndex(i);
         //        return periods;
         //    }
 
         //    set
         //    {
-        //        if (value != null && this.stockModel.GrazingPeriods != null)
+        //        if (value != null && this.AnimalList.GrazingPeriods != null)
         //        {
-        //            while (this.stockModel.GrazingPeriods.Count() > 0)
+        //            while (this.AnimalList.GrazingPeriods.Count() > 0)
         //            {
-        //                this.stockModel.GrazingPeriods.Delete(this.stockModel.GrazingPeriods.Count() - 1);
+        //                this.AnimalList.GrazingPeriods.Delete(this.AnimalList.GrazingPeriods.Count() - 1);
         //            }
         //            for (int i = 0; i < value.Length; i++)
-        //                this.stockModel.GrazingPeriods.Add(value[i]);
+        //                this.AnimalList.GrazingPeriods.Add(value[i]);
         //        }
         //    }
         //}
@@ -332,14 +331,13 @@
                 // using the component ID
                 // return the mass per area for all forages
                 forageProvider = this.AnimalList.ForagesAll.FindProvider(0);
-                return this.AnimalList.ReturnMassPerArea(0, forageProvider, "kg/ha"); // by paddock or from forage ref
+                return this.AnimalList.ReturnMassPerArea(AnimalList.Paddocks[0], forageProvider, "kg/ha"); // by paddock or from forage ref
             }
         }
 
         /// <summary>
         /// Gets the consumption of supplementary feed by animals
         /// </summary>
-        [Description("Consumption of supplementary feed by animals")]
         public SupplementEaten[] SuppEaten
         {
             get
@@ -353,7 +351,6 @@
         /// <summary>
         /// Gets the number of animal groups
         /// </summary>
-        [Description("Number of animal groups")]
         public int NoGroups
         {
             get
@@ -367,7 +364,6 @@
         /// <summary>
         /// Gets the number of animals in each group
         /// </summary>
-        [Description("Number of animals in each group")]
         public int[] Number
         {
             get
@@ -381,7 +377,6 @@
         /// <summary>
         /// Gets the total number of animals
         /// </summary>
-        [Description("Total number of animals")]
         public int NumberAll
         {
             get
@@ -395,7 +390,6 @@
         /// <summary>
         /// Gets the number of animals in each tag group
         /// </summary>
-        [Description("Number of animals in each tag group")]
         public int[] NumberTag
         {
             get
@@ -411,7 +405,6 @@
         /// <summary>
         /// Gets the number of unweaned young animals in each group
         /// </summary>
-        [Description("Number of unweaned young animals in each group")]
         public int[] NumberYng
         {
             get
@@ -425,7 +418,6 @@
         /// <summary>
         /// Gets the total number of unweaned young animals
         /// </summary>
-        [Description("Number of unweaned young animals")]
         public int NumberYngAll
         {
             get
@@ -439,7 +431,6 @@
         /// <summary>
         /// Gets the number of unweaned young animals in each group
         /// </summary>
-        [Description("Number of unweaned young animals in each tag group")]
         public int[] NumberYngTag
         {
             get
@@ -455,7 +446,6 @@
         /// <summary>
         /// Gets the number of female animals in each group
         /// </summary>
-        [Description("Number of female animals in each group")]
         public int[] NoFemale
         {
             get
@@ -469,7 +459,6 @@
         /// <summary>
         /// Gets the total number of female animals
         /// </summary>
-        [Description("Total number of female animals")]
         public int NoFemaleAll
         {
             get
@@ -483,7 +472,6 @@
         /// <summary>
         /// Gets the number of female animals in each tag group
         /// </summary>
-        [Description("Number of female animals in each tag group")]
         public int[] NoFemaleTag
         {
             get
@@ -499,7 +487,6 @@
         /// <summary>
         /// Gets the number of unweaned female animals in each group
         /// </summary>
-        [Description("Number of unweaned female animals in each group")]
         public int[] NoFemaleYng
         {
             get
@@ -513,7 +500,6 @@
         /// <summary>
         /// Gets the total number of unweaned female animals
         /// </summary>
-        [Description("Total number of unweaned female animals")]
         public int NoFemaleYngAll
         {
             get
@@ -527,7 +513,6 @@
         /// <summary>
         /// Gets the number of unweaned female animals in each tag group
         /// </summary>
-        [Description("Number of unweaned female animals in each tag group")]
         public int[] NoFemaleYngTag
         {
             get
@@ -543,7 +528,6 @@
         /// <summary>
         /// Gets the number of male animals in each group
         /// </summary>
-        [Description("Number of male animals in each group")]
         public int[] NoMale
         {
             get
@@ -557,7 +541,6 @@
         /// <summary>
         /// Gets the total number of male animals
         /// </summary>
-        [Description("Total number of male animals")]
         public int NoMaleAll
         {
             get
@@ -571,7 +554,6 @@
         /// <summary>
         /// Gets the number of male animals in each tag group
         /// </summary>
-        [Description("Number of male animals in each tag group")]
         public int[] NoMaleTag
         {
             get
@@ -587,7 +569,6 @@
         /// <summary>
         /// Gets the number of unweaned male animals in each group
         /// </summary>
-        [Description("Number of unweaned male animals in each group")]
         public int[] NoMaleYng
         {
             get
@@ -601,7 +582,6 @@
         /// <summary>
         /// Gets the total number of unweaned male animals
         /// </summary>
-        [Description("Total number of unweaned male animals")]
         public int NoMaleYngAll
         {
             get
@@ -615,7 +595,6 @@
         /// <summary>
         /// Gets the number of unweaned male animals in each tag group
         /// </summary>
-        [Description("Number of unweaned male animals in each tag group")]
         public int[] NoMaleYngTag
         {
             get
@@ -631,7 +610,6 @@
         /// <summary>
         /// Gets the deaths of all non suckling animals
         /// </summary>
-        [Description("Number of all deaths")]
         public int DeathsAll
         {
             get
@@ -645,7 +623,6 @@
         /// <summary>
         /// Gets the deaths of non suckling animals in each group
         /// </summary>
-        [Description("Number of deaths in each group")]
         public int[] Deaths
         {
             get
@@ -659,7 +636,6 @@
         /// <summary>
         /// Gets the deaths of non suckling animals in each tag group
         /// </summary>
-        [Description("Number of deaths in each tag group")]
         public int[] DeathsTag
         {
             get
@@ -673,7 +649,6 @@
         /// <summary>
         /// Gets the sex field of the sheep and cattle initialisation variables
         /// </summary>
-        [Description("See the sex field of the sheep and cattle initialisation variables. Returns 'heifer' for cows under two years of age")]
         public string[] Sex
         {
             get
@@ -690,7 +665,6 @@
         /// <summary>
         /// Gets the age of animals by group.
         /// </summary>
-        [Description("Age of animals by group")]
         [Units("d")]
         public double[] Age
         {
@@ -705,7 +679,6 @@
         /// <summary>
         /// Gets the age of animals total
         /// </summary>
-        [Description("Age of animals total")]
         [Units("d")]
         public double AgeAll
         {
@@ -720,7 +693,6 @@
         /// <summary>
         /// Gets the age of animals by tag number
         /// </summary>
-        [Description("Age of animals by tag number")]
         [Units("d")]
         public double[] AgeTag
         {
@@ -737,7 +709,6 @@
         /// <summary>
         /// Gets the age of unweaned young animals by group
         /// </summary>
-        [Description("Age of unweaned young animals by group")]
         [Units("d")]
         public double[] AgeYng
         {
@@ -752,7 +723,6 @@
         /// <summary>
         /// Gets the age of unweaned young animals total
         /// </summary>
-        [Description("Age of unweaned young animals total")]
         [Units("d")]
         public double AgeYngAll
         {
@@ -767,7 +737,6 @@
         /// <summary>
         /// Gets the age of unweaned young animals by tag number
         /// </summary>
-        [Description("Age of unweaned young animals by tag number")]
         [Units("d")]
         public double[] AgeYngTag
         {
@@ -784,7 +753,6 @@
         /// <summary>
         /// Gets the age of animals, in months by group
         /// </summary>
-        [Description("Age of animals, in months by group")]
         public double[] AgeMonths
         {
             get
@@ -798,7 +766,6 @@
         /// <summary>
         /// Gets the age of animals, in months total
         /// </summary>
-        [Description("Age of animals, in months total")]
         public double AgeMonthsAll
         {
             get
@@ -812,7 +779,6 @@
         /// <summary>
         /// Gets the age of animals, in months by tag number
         /// </summary>
-        [Description("Age of animals, in months by tag number")]
         public double[] AgeMonthsTag
         {
             get
@@ -828,7 +794,6 @@
         /// <summary>
         /// Gets the age of unweaned young animals, in months by group
         /// </summary>
-        [Description("Age of unweaned young animals, in months by group")]
         public double[] AgeMonthsYng
         {
             get
@@ -842,7 +807,6 @@
         /// <summary>
         /// Gets the age of unweaned young animals, in months total
         /// </summary>
-        [Description("Age of unweaned young animals, in months total")]
         public double AgeMonthsYngAll
         {
             get
@@ -856,7 +820,6 @@
         /// <summary>
         /// Gets the age of unweaned young animals, in months by tag number
         /// </summary>
-        [Description("Age of unweaned young animals, in months by tag number")]
         public double[] AgeMonthsYngTag
         {
             get
@@ -872,7 +835,6 @@
         /// <summary>
         /// Gets the average live weight by group
         /// </summary>
-        [Description("Average live weight by group")]
         [Units("kg")]
         public double[] Weight
         {
@@ -887,7 +849,6 @@
         /// <summary>
         /// Gets the averge live weight total
         /// </summary>
-        [Description("Averge live weight total")]
         [Units("kg")]
         public double WeightAll
         {
@@ -902,7 +863,6 @@
         /// <summary>
         /// Gets the average live weight by tag number
         /// </summary>
-        [Description("Average live weight by tag number")]
         [Units("kg")]
         public double[] WeightTag
         {
@@ -919,7 +879,6 @@
         /// <summary>
         /// Gets the average live weight of unweaned young animals by group
         /// </summary>
-        [Description("Average live weight of unweaned young animals by group")]
         [Units("kg")]
         public double[] WeightYng
         {
@@ -934,7 +893,6 @@
         /// <summary>
         /// Gets the average live weight of unweaned young animals total
         /// </summary>
-        [Description("Average live weight of unweaned young animals total")]
         [Units("kg")]
         public double WeightYngAll
         {
@@ -949,7 +907,6 @@
         /// <summary>
         /// Gets the average live weight of unweaned young animals by tag number
         /// </summary>
-        [Description("Average live weight of unweaned young animals by tag number")]
         [Units("kg")]
         public double[] WeightYngTag
         {
@@ -966,7 +923,6 @@
         /// <summary>
         /// Gets the fleece-free, conceptus-free weight by group
         /// </summary>
-        [Description("Fleece-free, conceptus-free weight by group")]
         [Units("kg")]
         public double[] BaseWt
         {
@@ -981,7 +937,6 @@
         /// <summary>
         /// Gets the fleece-free, conceptus-free weight total
         /// </summary>
-        [Description("Fleece-free, conceptus-free weight total")]
         [Units("kg")]
         public double BaseWtAll
         {
@@ -996,7 +951,6 @@
         /// <summary>
         /// Gets the fleece-free, conceptus-free weight by tag number
         /// </summary>
-        [Description("Fleece-free, conceptus-free weight by tag number")]
         [Units("kg")]
         public double[] BaseWtTag
         {
@@ -1013,7 +967,6 @@
         /// <summary>
         /// Gets the fleece-free, conceptus-free weight of unweaned young animals by group
         /// </summary>
-        [Description("Fleece-free, conceptus-free weight of unweaned young animals by group")]
         [Units("kg")]
         public double[] BaseWtYng
         {
@@ -1028,7 +981,6 @@
         /// <summary>
         /// Gets the fleece-free, conceptus-free weight of unweaned young animals total
         /// </summary>
-        [Description("Fleece-free, conceptus-free weight of unweaned young animals total")]
         [Units("kg")]
         public double BaseWtYngAll
         {
@@ -1043,7 +995,6 @@
         /// <summary>
         /// Gets the fleece-free, conceptus-free weight of unweaned young animals by tag number
         /// </summary>
-        [Description("Fleece-free, conceptus-free weight of unweaned young animals by tag number")]
         [Units("kg")]
         public double[] BaseWtYngTag
         {
@@ -1060,7 +1011,6 @@
         /// <summary>
         /// Gets the condition score of animals (1-5 scale) by group
         /// </summary>
-        [Description("Condition score of animals (1-5 scale) by group")]
         public double[] CondScore
         {
             get
@@ -1074,7 +1024,6 @@
         /// <summary>
         /// Gets the condition score of animals (1-5 scale) total
         /// </summary>
-        [Description("Condition score of animals (1-5 scale) total")]
         public double CondScoreAll
         {
             get
@@ -1088,7 +1037,6 @@
         /// <summary>
         /// Gets the condition score of animals (1-5 scale) by tag number
         /// </summary>
-        [Description("Condition score of animals (1-5 scale) by tag number")]
         public double[] CondScoreTag
         {
             get
@@ -1104,7 +1052,6 @@
         /// <summary>
         /// Gets the condition score of unweaned young animals (1-5 scale) by group
         /// </summary>
-        [Description("Condition score of unweaned young animals (1-5 scale) by group")]
         public double[] CondScoreYng
         {
             get
@@ -1118,7 +1065,6 @@
         /// <summary>
         /// Gets the condition score of unweaned young animals (1-5 scale) total
         /// </summary>
-        [Description("Condition score of unweaned young animals (1-5 scale) total")]
         public double CondScoreYngAll
         {
             get
@@ -1132,7 +1078,6 @@
         /// <summary>
         /// Gets the condition score of unweaned young animals (1-5 scale) by tag number
         /// </summary>
-        [Description("Condition score of unweaned young animals (1-5 scale) by tag number")]
         public double[] CondScoreYngTag
         {
             get
@@ -1148,7 +1093,6 @@
         /// <summary>
         /// Gets the maximum previous basal weight (fleece-free, conceptus-free) attained by each animal group
         /// </summary>
-        [Description("Maximum previous basal weight (fleece-free, conceptus-free) attained by each animal group")]
         [Units("kg")]
         public double[] MaxPrevWt
         {
@@ -1163,7 +1107,6 @@
         /// <summary>
         /// Gets the maximum previous basal weight (fleece-free, conceptus-free) attained total
         /// </summary>
-        [Description("Maximum previous basal weight (fleece-free, conceptus-free) attained total")]
         [Units("kg")]
         public double MaxPrevWtAll
         {
@@ -1178,7 +1121,6 @@
         /// <summary>
         /// Gets the maximum previous basal weight (fleece-free, conceptus-free) attained by tag number
         /// </summary>
-        [Description("Maximum previous basal weight (fleece-free, conceptus-free) attained by tag number")]
         [Units("kg")]
         public double[] MaxPrevWtTag
         {
@@ -1195,7 +1137,6 @@
         /// <summary>
         /// Gets the maximum previous basal weight (fleece-free, conceptus-free) attained of unweaned young animals by group
         /// </summary>
-        [Description("Maximum previous basal weight (fleece-free, conceptus-free) attained of unweaned young animals by group")]
         [Units("kg")]
         public double[] MaxPrevWtYng
         {
@@ -1210,7 +1151,6 @@
         /// <summary>
         /// Gets the maximum previous basal weight (fleece-free, conceptus-free) attained unweaned young animals total
         /// </summary>
-        [Description("Maximum previous basal weight (fleece-free, conceptus-free) attained of unweaned young animals total")]
         [Units("kg")]
         public double MaxPrevWtYngAll
         {
@@ -1225,7 +1165,6 @@
         /// <summary>
         /// Gets the maximum previous basal weight (fleece-free, conceptus-free) attained of unweaned young animals by tag number
         /// </summary>
-        [Description("Maximum previous basal weight (fleece-free, conceptus-free) attained of unweaned young animals by tag number")]
         [Units("kg")]
         public double[] MaxPrevWtYngTag
         {
@@ -1242,7 +1181,6 @@
         /// <summary>
         /// Gets the current greasy fleece weight by group
         /// </summary>
-        [Description("Current greasy fleece weight by group")]
         [Units("kg")]
         public double[] FleeceWt
         {
@@ -1257,7 +1195,6 @@
         /// <summary>
         /// Gets the current greasy fleece weight total
         /// </summary>
-        [Description("Current greasy fleece weight total")]
         [Units("kg")]
         public double FleeceWtAll
         {
@@ -1272,7 +1209,6 @@
         /// <summary>
         /// Gets the current greasy fleece weight by tag number
         /// </summary>
-        [Description("Current greasy fleece weight by tag number")]
         [Units("kg")]
         public double[] FleeceWtTag
         {
@@ -1289,7 +1225,6 @@
         /// <summary>
         /// Gets the current greasy fleece weight of unweaned young animals by group
         /// </summary>
-        [Description("Current greasy fleece weight of unweaned young animals by group")]
         [Units("kg")]
         public double[] FleeceWtYng
         {
@@ -1304,7 +1239,6 @@
         /// <summary>
         /// Gets the current greasy fleece weight of unweaned young animals total
         /// </summary>
-        [Description("Current greasy fleece weight of unweaned young animals total")]
         [Units("kg")]
         public double FleeceWtYngAll
         {
@@ -1319,7 +1253,6 @@
         /// <summary>
         /// Gets the current greasy fleece weight of unweaned young animals by tag number
         /// </summary>
-        [Description("Current greasy fleece weight of unweaned young animals by tag number")]
         [Units("kg")]
         public double[] FleeceWtYngTag
         {
@@ -1336,7 +1269,6 @@
         /// <summary>
         /// Gets the current clean fleece weight by group
         /// </summary>
-        [Description("Current clean fleece weight by group")]
         [Units("kg")]
         public double[] CFleeceWt
         {
@@ -1351,7 +1283,6 @@
         /// <summary>
         /// Gets the current clean fleece weight total
         /// </summary>
-        [Description("Current clean fleece weight total")]
         [Units("kg")]
         public double CFleeceWtAll
         {
@@ -1366,7 +1297,6 @@
         /// <summary>
         /// Gets the current clean fleece weight by tag number
         /// </summary>
-        [Description("Current clean fleece weight by tag number")]
         [Units("kg")]
         public double[] CFleeceWtTag
         {
@@ -1383,7 +1313,6 @@
         /// <summary>
         /// Gets the current clean fleece weight of unweaned young animals by group
         /// </summary>
-        [Description("Current clean fleece weight of unweaned young animals by group")]
         [Units("kg")]
         public double[] CFleeceWtYng
         {
@@ -1398,7 +1327,6 @@
         /// <summary>
         /// Gets the current clean fleece weight of unweaned young animals total
         /// </summary>
-        [Description("Current clean fleece weight of unweaned young animals total")]
         [Units("kg")]
         public double CFleeceWtYngAll
         {
@@ -1413,7 +1341,6 @@
         /// <summary>
         /// Gets the current clean fleece weight of unweaned young animals by tag number
         /// </summary>
-        [Description("Current clean fleece weight of unweaned young animals by tag number")]
         [Units("kg")]
         public double[] CFleeceWtYngTag
         {
@@ -1430,7 +1357,6 @@
         /// <summary>
         /// Gets the current average wool fibre diameter by group
         /// </summary>
-        [Description("Current average wool fibre diameter by group")]
         [Units("um")]
         public double[] FibreDiam
         {
@@ -1445,7 +1371,6 @@
         /// <summary>
         /// Gets the current average wool fibre diameter total
         /// </summary>
-        [Description("Current average wool fibre diameter total")]
         [Units("um")]
         public double FibreDiamAll
         {
@@ -1460,7 +1385,6 @@
         /// <summary>
         /// Gets the current average wool fibre diameter by tag number
         /// </summary>
-        [Description("Current average wool fibre diameter by tag number")]
         [Units("um")]
         public double[] FibreDiamTag
         {
@@ -1477,7 +1401,6 @@
         /// <summary>
         /// Gets the current average wool fibre diameter of unweaned young animals by group
         /// </summary>
-        [Description("Current average wool fibre diameter of unweaned young animals by group")]
         [Units("um")]
         public double[] FibreDiamYng
         {
@@ -1492,7 +1415,6 @@
         /// <summary>
         /// Gets the current average wool fibre diameter of unweaned young animals total
         /// </summary>
-        [Description("Current average wool fibre diameter of unweaned young animals total")]
         [Units("um")]
         public double FibreDiamYngAll
         {
@@ -1507,7 +1429,6 @@
         /// <summary>
         /// Gets the current average wool fibre diameter of unweaned young animals by tag number
         /// </summary>
-        [Description("Current average wool fibre diameter of unweaned young animals by tag number")]
         [Units("um")]
         public double[] FibreDiamYngTag
         {
@@ -1524,7 +1445,6 @@
         /// <summary>
         /// Gets the the pregnecy status. If the animals are pregnant, the number of days since conception; zero otherwise, by group
         /// </summary>
-        [Description("If the animals are pregnant, the number of days since conception; zero otherwise, by group")]
         [Units("d")]
         public double[] Pregnant
         {
@@ -1539,7 +1459,6 @@
         /// <summary>
         /// Gets the the pregnecy status. If the animals are pregnant, the number of days since conception; zero otherwise, total
         /// </summary>
-        [Description("If the animals are pregnant, the number of days since conception; zero otherwise, total")]
         [Units("d")]
         public double PregnantAll
         {
@@ -1554,7 +1473,6 @@
         /// <summary>
         /// Gets the the pregnecy status. If the animals are pregnant, the number of days since conception; zero otherwise, by tag number
         /// </summary>
-        [Description("If the animals are pregnant, the number of days since conception; zero otherwise, by tag number")]
         [Units("d")]
         public double[] PregnantTag
         {
@@ -1571,7 +1489,6 @@
         /// <summary>
         /// Gets the lactation status. If the animals are lactating, the number of days since birth of the lamb or calf; zero otherwise, by group
         /// </summary>
-        [Description("If the animals are lactating, the number of days since birth of the lamb or calf; zero otherwise, by group")]
         [Units("d")]
         public double[] Lactating
         {
@@ -1586,7 +1503,6 @@
         /// <summary>
         /// Gets the lactation status. If the animals are lactating, the number of days since birth of the lamb or calf; zero otherwise, total
         /// </summary>
-        [Description("If the animals are lactating, the number of days since birth of the lamb or calf; zero otherwise, total")]
         [Units("d")]
         public double LactatingAll
         {
@@ -1601,7 +1517,6 @@
         /// <summary>
         /// Gets the lactation status. If the animals are lactating, the number of days since birth of the lamb or calf; zero otherwise, by tag number
         /// </summary>
-        [Description("If the animals are lactating, the number of days since birth of the lamb or calf; zero otherwise, by tag number")]
         [Units("d")]
         public double[] LactatingTag
         {
@@ -1618,7 +1533,6 @@
         /// <summary>
         /// Gets the number of foetuses per head by group
         /// </summary>
-        [Description("Number of foetuses per head by group")]
         public double[] NoFoetuses
         {
             get
@@ -1632,7 +1546,6 @@
         /// <summary>
         /// Gets the number of foetuses per head total
         /// </summary>
-        [Description("Number of foetuses per head total")]
         public double NoFoetusesAll
         {
             get
@@ -1646,7 +1559,6 @@
         /// <summary>
         /// Gets the number of foetuses per head by tag number
         /// </summary>
-        [Description("Number of foetuses per head by tag number")]
         public double[] NoFoetusesTag
         {
             get
@@ -1663,7 +1575,6 @@
         /// <summary>
         /// Gets the number of unweaned lambs or calves per head by group
         /// </summary>
-        [Description("Number of unweaned lambs or calves per head by group")]
         public double[] NoSuckling
         {
             get
@@ -1677,7 +1588,6 @@
         /// <summary>
         /// Gets the number of unweaned lambs or calves per head total
         /// </summary>
-        [Description("Number of unweaned lambs or calves per head total")]
         public double NoSucklingAll
         {
             get
@@ -1691,7 +1601,6 @@
         /// <summary>
         /// Gets the number of unweaned lambs or calves per head by tag number
         /// </summary>
-        [Description("Number of unweaned lambs or calves per head by tag number")]
         public double[] NoSucklingTag
         {
             get
@@ -1707,7 +1616,6 @@
         /// <summary>
         /// Gets the condition score at last parturition; zero if lactating=0, by group
         /// </summary>
-        [Description("Condition score at last parturition; zero if lactating=0, by group")]
         public double[] BirthCS
         {
             get
@@ -1721,7 +1629,6 @@
         /// <summary>
         /// Gets the condition score at last parturition; zero if lactating=0, total
         /// </summary>
-        [Description("Condition score at last parturition; zero if lactating=0, total")]
         public double BirthCSAll
         {
             get
@@ -1735,7 +1642,6 @@
         /// <summary>
         /// Gets the condition score at last parturition; zero if lactating=0, by tag number
         /// </summary>
-        [Description("Condition score at last parturition; zero if lactating=0, by tag number")]
         public double[] BirthCSTag
         {
             get
@@ -1749,54 +1655,23 @@
         /// <summary>
         /// Gets the paddock occupied by each animal group
         /// </summary>
-        [Description("Paddock occupied by each animal group")]
-        public string[] Paddock
-        {
-            get
-            {
-                string[] paddocks = new string[this.AnimalList.Count()];
-                for (int idx = 1; idx <= this.AnimalList.Count(); idx++)
-                    paddocks[idx - 1] = this.AnimalList.GetInPadd((int)idx);
-                return paddocks;
-            }
-        }
+        public string[] Paddock { get { return AnimalList.Paddocks.Skip(1).Select(p => p.Name).ToArray(); } }
 
         /// <summary>
         /// Gets the tag value assigned to each animal group
         /// </summary>
-        [Description("Tag value assigned to each animal group")]
-        public int[] TagNo
-        {
-            get
-            {
-                int[] tags = new int[this.AnimalList.Count()];
-                for (int idx = 1; idx <= this.AnimalList.Count(); idx++)
-                    tags[idx - 1] = this.AnimalList.GetTag((int)idx);
-                return tags;
-            }
-        }
-
+        public int[] TagNo { get { return AnimalList.Animals.Skip(1).Select(p => p.Tag).ToArray(); } }
+        
         /// <summary>
         /// Gets the priority score assigned to each animal group; used in drafting
         /// </summary>
-        [Description("Priority score assigned to each animal group; used in drafting")]
-        public int[] Priority
-        {
-            get
-            {
-                int[] priorities = new int[this.AnimalList.Count()];
-                for (int idx = 1; idx <= this.AnimalList.Count(); idx++)
-                    priorities[idx - 1] = this.AnimalList.GetPriority((int)idx);
-                return priorities;
-            }
-        }
+        public int[] Priority { get { return AnimalList.Animals.Skip(1).Select(p => p.Priority).ToArray(); } }
 
         // =========== Dry sheep equivalents, based on potential intake ==================
 
         /// <summary>
         /// Gets the dry sheep equivalents, based on potential intake by group
         /// </summary>
-        [Description("Dry sheep equivalents, based on potential intake by group")]
         public double[] DSE
         {
             get
@@ -1810,7 +1685,6 @@
         /// <summary>
         /// Gets the dry sheep equivalents, based on potential intake total
         /// </summary>
-        [Description("Dry sheep equivalents, based on potential intake total")]
         public double DSEAll
         {
             get
@@ -1824,7 +1698,6 @@
         /// <summary>
         /// Gets the dry sheep equivalents, based on potential intake by tag number
         /// </summary>
-        [Description("Dry sheep equivalents, based on potential intake by tag number")]
         public double[] DSETag
         {
             get
@@ -1840,7 +1713,6 @@
         /// <summary>
         /// Gets the dry sheep equivalents, based on potential intake of unweaned young animals by group
         /// </summary>
-        [Description("Dry sheep equivalents, based on potential intake of unweaned young animals by group")]
         public double[] DSEYng
         {
             get
@@ -1854,7 +1726,6 @@
         /// <summary>
         /// Gets the dry sheep equivalents, based on potential intake of unweaned young animals total
         /// </summary>
-        [Description("Dry sheep equivalents, based on potential intake of unweaned young animals total")]
         public double DSEYngAll
         {
             get
@@ -1868,7 +1739,6 @@
         /// <summary>
         /// Gets the dry sheep equivalents, based on potential intake of unweaned young animals by tag number
         /// </summary>
-        [Description("Dry sheep equivalents, based on potential intake of unweaned young animals by tag number")]
         public double[] DSEYngTag
         {
             get
@@ -1885,7 +1755,6 @@
         /// <summary>
         /// Gets the rate of change of base weight of each animal by group
         /// </summary>
-        [Description("Rate of change of base weight of each animal by group")]
         [Units("kg/d")]
         public double[] WtChange
         {
@@ -1900,7 +1769,6 @@
         /// <summary>
         /// Gets the rate of change of base weight of each animal total
         /// </summary>
-        [Description("Rate of change of base weight of each animal total")]
         [Units("kg/d")]
         public double WtChangeAll
         {
@@ -1915,7 +1783,6 @@
         /// <summary>
         /// Gets the rate of change of base weight of each animal by tag number
         /// </summary>
-        [Description("Rate of change of base weight of each animal by tag number")]
         [Units("kg/d")]
         public double[] WtChangeTag
         {
@@ -1932,7 +1799,6 @@
         /// <summary>
         /// Gets the rate of change of base weight of unweaned young animals by group
         /// </summary>
-        [Description("Rate of change of base weight of unweaned young animals by group")]
         [Units("kg/d")]
         public double[] WtChangeYng
         {
@@ -1947,7 +1813,6 @@
         /// <summary>
         /// Gets the rate of change of base weight of unweaned young animals total
         /// </summary>
-        [Description("Rate of change of base weight of unweaned young animals total")]
         [Units("kg/d")]
         public double WtChangeYngAll
         {
@@ -1962,7 +1827,6 @@
         /// <summary>
         /// Gets the rate of change of base weight of unweaned young animals by tag number
         /// </summary>
-        [Description("Rate of change of base weight of unweaned young animals by tag number")]
         [Units("kg/d")]
         public double[] WtChangeYngTag
         {
@@ -1979,7 +1843,6 @@
         /// <summary>
         /// Gets the total intake per head of dry matter and nutrients by each animal group
         /// </summary>
-        [Description("Total intake per head of dry matter and nutrients by each animal group")]
         public DMPoolHead[] Intake
         {
             get
@@ -1993,7 +1856,6 @@
         /// <summary>
         /// Gets the total intake per head of dry matter and nutrients
         /// </summary>
-        [Description("Total intake per head of dry matter and nutrients")]
         public DMPoolHead IntakeAll
         {
             get
@@ -2007,7 +1869,6 @@
         /// <summary>
         /// Gets the total intake per head of dry matter and nutrients by tag
         /// </summary>
-        [Description("Total intake per head of dry matter and nutrients by tag")]
         public DMPoolHead[] IntakeTag
         {
             get
@@ -2023,7 +1884,6 @@
         /// <summary>
         /// Gets the total intake per head of dry matter and nutrients of unweaned animals by group
         /// </summary>
-        [Description("Total intake per head of dry matter and nutrients of unweaned animals by group")]
         public DMPoolHead[] IntakeYng
         {
             get
@@ -2037,7 +1897,6 @@
         /// <summary>
         /// Gets the total intake per head of dry matter and nutrients of unweaned animals
         /// </summary>
-        [Description("Total intake per head of dry matter and nutrients of unweaned animals")]
         public DMPoolHead IntakeYngAll
         {
             get
@@ -2051,7 +1910,6 @@
         /// <summary>
         /// Gets the total intake per head of dry matter and nutrients of unweaned animals by tag
         /// </summary>
-        [Description("Total intake per head of dry matter and nutrients of unweaned animals by tag")]
         public DMPoolHead[] IntakeYngTag
         {
             get
@@ -2067,7 +1925,6 @@
         /// <summary>
         /// Gets the intake per head of pasture dry matter and nutrients by each animal group
         /// </summary>
-        [Description("Intake per head of pasture dry matter and nutrients by each animal group")]
         public DMPoolHead[] PastIntake
         {
             get
@@ -2081,7 +1938,6 @@
         /// <summary>
         /// Gets the intake per head of pasture dry matter and nutrients
         /// </summary>
-        [Description("Intake per head of pasture dry matter and nutrients")]
         public DMPoolHead PastIntakeAll
         {
             get
@@ -2095,7 +1951,6 @@
         /// <summary>
         /// Gets the intake per head of pasture dry matter and nutrients by tag
         /// </summary>
-        [Description("Intake per head of pasture dry matter and nutrients by tag")]
         public DMPoolHead[] PastIntakeTag
         {
             get
@@ -2111,7 +1966,6 @@
         /// <summary>
         /// Gets the intake per head of pasture dry matter and nutrients of unweaned animals by group
         /// </summary>
-        [Description("Intake per head of pasture dry matter and nutrients of unweaned animals by group")]
         public DMPoolHead[] PastIntakeYng
         {
             get
@@ -2125,7 +1979,6 @@
         /// <summary>
         /// Gets the intake per head of pasture dry matter and nutrients of unweaned animals
         /// </summary>
-        [Description("Intake per head of pasture dry matter and nutrients of unweaned animals")]
         public DMPoolHead PastIntakeYngAll
         {
             get
@@ -2139,7 +1992,6 @@
         /// <summary>
         /// Gets the intake per head of pasture dry matter and nutrients of unweaned animals by tag
         /// </summary>
-        [Description("Intake per head of pasture dry matter and nutrients of unweaned animals by tag")]
         public DMPoolHead[] PastIntakeYngTag
         {
             get
@@ -2155,7 +2007,6 @@
         /// <summary>
         /// Gets the intake per head of supplement dry matter and nutrients by each animal group
         /// </summary>
-        [Description("Intake per head of supplement dry matter and nutrients by each animal group")]
         public DMPoolHead[] SuppIntake
         {
             get
@@ -2169,7 +2020,6 @@
         /// <summary>
         /// Gets the intake per head of supplement dry matter and nutrients
         /// </summary>
-        [Description("Intake per head of supplement dry matter and nutrients")]
         public DMPoolHead SuppIntakeAll
         {
             get
@@ -2183,7 +2033,6 @@
         /// <summary>
         /// Gets the intake per head of supplement dry matter and nutrients by tag
         /// </summary>
-        [Description("Intake per head of supplement dry matter and nutrients by tag")]
         public DMPoolHead[] SuppIntakeTag
         {
             get
@@ -2199,7 +2048,6 @@
         /// <summary>
         /// Gets the intake per head of supplement dry matter and nutrients of unweaned animals by group
         /// </summary>
-        [Description("Intake per head of supplement dry matter and nutrients of unweaned animals by group")]
         public DMPoolHead[] SuppIntakeYng
         {
             get
@@ -2213,7 +2061,6 @@
         /// <summary>
         /// Gets the intake per head of supplement dry matter and nutrients of unweaned animals
         /// </summary>
-        [Description("Intake per head of supplement dry matter and nutrients of unweaned animals")]
         public DMPoolHead SuppIntakeYngAll
         {
             get
@@ -2227,7 +2074,6 @@
         /// <summary>
         /// Gets the intake per head of supplement dry matter and nutrients of unweaned animals by tag
         /// </summary>
-        [Description("Intake per head of supplement dry matter and nutrients of unweaned animals by tag")]
         public DMPoolHead[] SuppIntakeYngTag
         {
             get
@@ -2243,7 +2089,6 @@
         /// <summary>
         /// Gets the intake per head of metabolizable energy by group
         /// </summary>
-        [Description("Intake per head of metabolizable energy by group")]
         [Units("MJ/d")]
         public double[] MEIntake
         {
@@ -2258,7 +2103,6 @@
         /// <summary>
         /// Gets the intake per head of metabolizable energy total
         /// </summary>
-        [Description("Intake per head of metabolizable energy total")]
         [Units("MJ/d")]
         public double MEIntakeAll
         {
@@ -2273,7 +2117,6 @@
         /// <summary>
         /// Gets the intake per head of metabolizable energy by tag number
         /// </summary>
-        [Description("Intake per head of metabolizable energy by tag number")]
         [Units("MJ/d")]
         public double[] MEIntakeTag
         {
@@ -2290,7 +2133,6 @@
         /// <summary>
         /// Gets the intake per head of metabolizable energy of unweaned young animals by group
         /// </summary>
-        [Description("Intake per head of metabolizable energy of unweaned young animals by group")]
         [Units("MJ/d")]
         public double[] MEIntakeYng
         {
@@ -2305,7 +2147,6 @@
         /// <summary>
         /// Gets the intake per head of metabolizable energy of unweaned young animals total
         /// </summary>
-        [Description("Intake per head of metabolizable energy of unweaned young animals total")]
         [Units("MJ/d")]
         public double MEIntakeYngAll
         {
@@ -2320,7 +2161,6 @@
         /// <summary>
         /// Gets the intake per head of metabolizable energy of unweaned young animals by tag number
         /// </summary>
-        [Description("Intake per head of metabolizable energy of unweaned young animals by tag number")]
         [Units("MJ/d")]
         public double[] MEIntakeYngTag
         {
@@ -2337,7 +2177,6 @@
         /// <summary>
         /// Gets the crude protein intake per head by group
         /// </summary>
-        [Description("Crude protein intake per head by group")]
         [Units("kg/d")]
         public double[] CPIntake
         {
@@ -2352,7 +2191,6 @@
         /// <summary>
         /// Gets the crude protein intake per head total
         /// </summary>
-        [Description("Crude protein intake per head total")]
         [Units("kg/d")]
         public double CPIntakeAll
         {
@@ -2367,7 +2205,6 @@
         /// <summary>
         /// Gets the crude protein intake per head by tag number
         /// </summary>
-        [Description("Crude protein intake per head by tag number")]
         [Units("kg/d")]
         public double[] CPIntakeTag
         {
@@ -2384,7 +2221,6 @@
         /// <summary>
         /// Gets the crude protein intake per head of unweaned young animals by group
         /// </summary>
-        [Description("Crude protein intake per head of unweaned young animals by group")]
         [Units("kg/d")]
         public double[] CPIntakeYng
         {
@@ -2399,7 +2235,6 @@
         /// <summary>
         /// Gets the crude protein intake per head of unweaned young animals total
         /// </summary>
-        [Description("Crude protein intake per head of unweaned young animals total")]
         [Units("kg/d")]
         public double CPIntakeYngAll
         {
@@ -2414,7 +2249,6 @@
         /// <summary>
         /// Gets the crude protein intake per head of unweaned young animals by tag number
         /// </summary>
-        [Description("Crude protein intake per head of unweaned young animals by tag number")]
         [Units("kg/d")]
         public double[] CPIntakeYngTag
         {
@@ -2431,7 +2265,6 @@
         /// <summary>
         /// Gets the growth rate of clean fleece by group
         /// </summary>
-        [Description("Growth rate of clean fleece by group")]
         [Units("kg/d")]
         public double[] CFleeceGrowth
         {
@@ -2446,7 +2279,6 @@
         /// <summary>
         /// Gets the growth rate of clean fleece total
         /// </summary>
-        [Description("Growth rate of clean fleece total")]
         [Units("kg/d")]
         public double CFleeceGrowthAll
         {
@@ -2461,7 +2293,6 @@
         /// <summary>
         /// Gets the growth rate of clean fleece by tag number
         /// </summary>
-        [Description("Growth rate of clean fleece by tag number")]
         [Units("kg/d")]
         public double[] CFleeceGrowthTag
         {
@@ -2478,7 +2309,6 @@
         /// <summary>
         /// Gets the growth rate of clean fleece of unweaned young animals by group
         /// </summary>
-        [Description("Growth rate of clean fleece of unweaned young animals by group")]
         [Units("kg/d")]
         public double[] CFleeceGrowthYng
         {
@@ -2493,7 +2323,6 @@
         /// <summary>
         /// Gets the growth rate of clean fleece of unweaned young animals total
         /// </summary>
-        [Description("Growth rate of clean fleece of unweaned young animals total")]
         [Units("kg/d")]
         public double CFleeceGrowthYngAll
         {
@@ -2508,7 +2337,6 @@
         /// <summary>
         /// Gets the growth rate of clean fleece of unweaned young animals by tag number
         /// </summary>
-        [Description("Growth rate of clean fleece of unweaned young animals by tag number")]
         [Units("kg/d")]
         public double[] CFleeceGrowthYngTag
         {
@@ -2525,7 +2353,6 @@
         /// <summary>
         /// Gets the fibre diameter of the current day's wool growth by group
         /// </summary>
-        [Description("Fibre diameter of the current day's wool growth by group")]
         [Units("um")]
         public double[] FibreGrowthDiam
         {
@@ -2540,7 +2367,6 @@
         /// <summary>
         /// Gets the fibre diameter of the current day's wool growth total
         /// </summary>
-        [Description("Fibre diameter of the current day's wool growth total")]
         [Units("um")]
         public double FibreGrowthDiamAll
         {
@@ -2555,7 +2381,6 @@
         /// <summary>
         /// Gets the fibre diameter of the current day's wool growth by tag number
         /// </summary>
-        [Description("Fibre diameter of the current day's wool growth by tag number")]
         [Units("um")]
         public double[] FibreGrowthDiamTag
         {
@@ -2572,7 +2397,6 @@
         /// <summary>
         /// Gets the fibre diameter of the current day's wool growth of unweaned young animals by group
         /// </summary>
-        [Description("Fibre diameter of the current day's wool growth of unweaned young animals by group")]
         [Units("um")]
         public double[] FibreGrowthDiamYng
         {
@@ -2587,7 +2411,6 @@
         /// <summary>
         /// Gets the fibre diameter of the current day's wool growth of unweaned young animals total
         /// </summary>
-        [Description("Fibre diameter of the current day's wool growth of unweaned young animals total")]
         [Units("um")]
         public double FibreGrowthDiamYngAll
         {
@@ -2602,7 +2425,6 @@
         /// <summary>
         /// Gets the fibre diameter of the current day's wool growth of unweaned young animals by tag number
         /// </summary>
-        [Description("Fibre diameter of the current day's wool growth of unweaned young animals by tag number")]
         [Units("um")]
         public double[] FibreGrowthDiamYngTag
         {
@@ -2619,7 +2441,6 @@
         /// <summary>
         /// Gets the weight of milk produced per head, on a 4pc fat-corrected basis by group
         /// </summary>
-        [Description("Weight of milk produced per head, on a 4pc fat-corrected basis by group")]
         [Units("kg/d")]
         public double[] MilkWt
         {
@@ -2634,7 +2455,6 @@
         /// <summary>
         /// Gets the weight of milk produced per head, on a 4pc fat-corrected basis total
         /// </summary>
-        [Description("Weight of milk produced per head, on a 4pc fat-corrected basis total")]
         [Units("kg/d")]
         public double MilkWtAll
         {
@@ -2649,7 +2469,6 @@
         /// <summary>
         /// Gets the weight of milk produced per head, on a 4pc fat-corrected basis by tag number
         /// </summary>
-        [Description("Weight of milk produced per head, on a 4pc fat-corrected basis by tag number")]
         [Units("kg/d")]
         public double[] MilkWtTag
         {
@@ -2666,7 +2485,6 @@
         /// <summary>
         /// Gets the metabolizable energy produced in milk (per head) by each animal group by group
         /// </summary>
-        [Description("Metabolizable energy produced in milk (per head) by each animal group by group")]
         [Units("MJ/d")]
         public double[] MilkME
         {
@@ -2681,7 +2499,6 @@
         /// <summary>
         /// Gets the metabolizable energy produced in milk (per head) by each animal group total
         /// </summary>
-        [Description("Metabolizable energy produced in milk (per head) by each animal group total")]
         [Units("MJ/d")]
         public double MilkMEAll
         {
@@ -2696,7 +2513,6 @@
         /// <summary>
         /// Gets the metabolizable energy produced in milk (per head) by each animal group by tag number
         /// </summary>
-        [Description("Metabolizable energy produced in milk (per head) by each animal group by tag number")]
         [Units("MJ/d")]
         public double[] MilkMETag
         {
@@ -2713,7 +2529,6 @@
         /// <summary>
         /// Gets the nitrogen retained within the animals, on a per-head basis by group
         /// </summary>
-        [Description("Nitrogen retained within the animals, on a per-head basis by group")]
         [Units("kg/d")]
         public double[] RetainedN
         {
@@ -2728,7 +2543,6 @@
         /// <summary>
         /// Gets the nitrogen retained within the animals, on a per-head basis total
         /// </summary>
-        [Description("Nitrogen retained within the animals, on a per-head basis total")]
         [Units("kg/d")]
         public double RetainedNAll
         {
@@ -2743,7 +2557,6 @@
         /// <summary>
         /// Gets the nitrogen retained within the animals, on a per-head basis by tag number
         /// </summary>
-        [Description("Nitrogen retained within the animals, on a per-head basis by tag number")]
         [Units("kg/d")]
         public double[] RetainedNTag
         {
@@ -2760,7 +2573,6 @@
         /// <summary>
         /// Gets the nitrogen retained within the animals, on a per-head basis of unweaned young animals by group
         /// </summary>
-        [Description("Nitrogen retained within the animals, on a per-head basis of unweaned young animals by group")]
         [Units("kg/d")]
         public double[] RetainedNYng
         {
@@ -2775,7 +2587,6 @@
         /// <summary>
         /// Gets the nitrogen retained within the animals, on a per-head basis of unweaned young animals total
         /// </summary>
-        [Description("Nitrogen retained within the animals, on a per-head basis of unweaned young animals total")]
         [Units("kg/d")]
         public double RetainedNYngAll
         {
@@ -2790,7 +2601,6 @@
         /// <summary>
         /// Gets the nitrogen retained within the animals, on a per-head basis of unweaned young animals by tag number
         /// </summary>
-        [Description("Nitrogen retained within the animals, on a per-head basis of unweaned young animals by tag number")]
         [Units("kg/d")]
         public double[] RetainedNYngTag
         {
@@ -2808,7 +2618,6 @@
         /// <summary>
         /// Gets the phosphorus retained within the animals, on a per-head basis by group
         /// </summary>
-        [Description("Phosphorus retained within the animals, on a per-head basis by group")]
         [Units("kg/d")]
         public double[] RetainedP
         {
@@ -2823,7 +2632,6 @@
         /// <summary>
         /// Gets the phosphorus retained within the animals, on a per-head basis total
         /// </summary>
-        [Description("Phosphorus retained within the animals, on a per-head basis total")]
         [Units("kg/d")]
         public double RetainedPAll
         {
@@ -2838,7 +2646,6 @@
         /// <summary>
         /// Gets the phosphorus retained within the animals, on a per-head basis by tag number
         /// </summary>
-        [Description("Phosphorus retained within the animals, on a per-head basis by tag number")]
         [Units("kg/d")]
         public double[] RetainedPTag
         {
@@ -2855,7 +2662,6 @@
         /// <summary>
         /// Gets the phosphorus retained within the animals, on a per-head basis of unweaned young animals by group
         /// </summary>
-        [Description("Phosphorus retained within the animals, on a per-head basis of unweaned young animals by group")]
         [Units("kg/d")]
         public double[] RetainedPYng
         {
@@ -2870,7 +2676,6 @@
         /// <summary>
         /// Gets the phosphorus retained within the animals, on a per-head basis of unweaned young animals total
         /// </summary>
-        [Description("Phosphorus retained within the animals, on a per-head basis of unweaned young animals total")]
         [Units("kg/d")]
         public double RetainedPYngAll
         {
@@ -2885,7 +2690,6 @@
         /// <summary>
         /// Gets the phosphorus retained within the animals, on a per-head basis of unweaned young animals by tag number
         /// </summary>
-        [Description("Phosphorus retained within the animals, on a per-head basis of unweaned young animals by tag number")]
         [Units("kg/d")]
         public double[] RetainedPYngTag
         {
@@ -2902,7 +2706,6 @@
         /// <summary>
         /// Gets the sulphur retained within the animals, on a per-head basis by group
         /// </summary>
-        [Description("Sulphur retained within the animals, on a per-head basis by group")]
         public double[] RetainedS
         {
             get
@@ -2916,7 +2719,6 @@
         /// <summary>
         /// Gets the sulphur retained within the animals, on a per-head basis total
         /// </summary>
-        [Description("Sulphur retained within the animals, on a per-head basis total")]
         [Units("kg/d")]
         public double RetainedSAll
         {
@@ -2931,7 +2733,6 @@
         /// <summary>
         /// Gets the sulphur retained within the animals, on a per-head basis by tag number
         /// </summary>
-        [Description("Sulphur retained within the animals, on a per-head basis by tag number")]
         [Units("kg/d")]
         public double[] RetainedSTag
         {
@@ -2948,7 +2749,6 @@
         /// <summary>
         /// Gets the sulphur retained within the animals, on a per-head basis of unweaned young animals by group
         /// </summary>
-        [Description("Sulphur retained within the animals, on a per-head basis of unweaned young animals by group")]
         [Units("kg/d")]
         public double[] RetainedSYng
         {
@@ -2963,7 +2763,6 @@
         /// <summary>
         /// Gets the sulphur retained within the animals, on a per-head basis of unweaned young animals total
         /// </summary>
-        [Description("Sulphur retained within the animals, on a per-head basis of unweaned young animals total")]
         [Units("kg/d")]
         public double RetainedSYngAll
         {
@@ -2978,7 +2777,6 @@
         /// <summary>
         /// Gets the sulphur retained within the animals, on a per-head basis of unweaned young animals by tag number
         /// </summary>
-        [Description("Sulphur retained within the animals, on a per-head basis of unweaned young animals by tag number")]
         [Units("kg/d")]
         public double[] RetainedSYngTag
         {
@@ -2995,7 +2793,6 @@
         /// <summary>
         /// Gets the faecal dry matter and nutrients per head by each animal group
         /// </summary>
-        [Description("Faecal dry matter and nutrients per head by each animal group")]
         public DMPoolHead[] Faeces
         {
             get
@@ -3009,7 +2806,6 @@
         /// <summary>
         /// Gets the faecal dry matter and nutrients per head
         /// </summary>
-        [Description("Faecal dry matter and nutrients per head")]
         public DMPoolHead FaecesAll
         {
             get
@@ -3023,7 +2819,6 @@
         /// <summary>
         /// Gets the faecal dry matter and nutrients per head by tag
         /// </summary>
-        [Description("Faecal dry matter and nutrients per head by tag")]
         public DMPoolHead[] FaecesTag
         {
             get
@@ -3039,7 +2834,6 @@
         /// <summary>
         /// Gets the faecal dry matter and nutrients per head of unweaned animals by group
         /// </summary>
-        [Description("Faecal dry matter and nutrients per head of unweaned animals by group")]
         public DMPoolHead[] FaecesYng
         {
             get
@@ -3053,7 +2847,6 @@
         /// <summary>
         /// Gets the faecal dry matter and nutrients per head of unweaned animals
         /// </summary>
-        [Description("Faecal dry matter and nutrients per head of unweaned animals")]
         public DMPoolHead FaecesYngAll
         {
             get
@@ -3067,7 +2860,6 @@
         /// <summary>
         /// Gets the faecal dry matter and nutrients per head of unweaned animals by tag
         /// </summary>
-        [Description("Faecal dry matter and nutrients per head of unweaned animals by tag")]
         public DMPoolHead[] FaecesYngTag
         {
             get
@@ -3083,7 +2875,6 @@
         /// <summary>
         /// Gets the inorganic nutrients excreted in faeces, per head by each animal group
         /// </summary>
-        [Description("Inorganic nutrients excreted in faeces, per head by each animal group")]
         public InorgFaeces[] FaecesInorg
         {
             get
@@ -3104,7 +2895,6 @@
         /// <summary>
         /// Gets the inorganic nutrients excreted in faeces, per head
         /// </summary>
-        [Description("Inorganic nutrients excreted in faeces, per head")]
         public InorgFaeces FaecesInorgAll
         {
             get
@@ -3122,7 +2912,6 @@
         /// <summary>
         /// Gets the inorganic nutrients excreted in faeces, per head by tag
         /// </summary>
-        [Description("Inorganic nutrients excreted in faeces, per head by tag")]
         public InorgFaeces[] FaecesInorgTag
         {
             get
@@ -3145,7 +2934,6 @@
         /// <summary>
         /// Gets the inorganic nutrients excreted in faeces, per head of unweaned animals by group
         /// </summary>
-        [Description("Inorganic nutrients excreted in faeces, per head of unweaned animals by group")]
         public InorgFaeces[] FaecesInorgYng
         {
             get
@@ -3166,7 +2954,6 @@
         /// <summary>
         /// Gets the inorganic nutrients excreted in faeces, per head of unweaned animals
         /// </summary>
-        [Description("Inorganic nutrients excreted in faeces, per head of unweaned animals")]
         public InorgFaeces FaecesInorgYngAll
         {
             get
@@ -3184,7 +2971,6 @@
         /// <summary>
         /// Gets the inorganic nutrients excreted in faeces, per head of unweaned animals by tag
         /// </summary>
-        [Description("Inorganic nutrients excreted in faeces, per head of unweaned animals by tag")]
         public InorgFaeces[] FaecesInorgYngTag
         {
             get
@@ -3205,7 +2991,6 @@
         /// <summary>
         /// Gets the metabolizable energy use for each animal group
         /// </summary>
-        [Description("Metabolizable energy use for each animal group")]
         public EnergyUse[] EnergyUse
         {
             get
@@ -3221,7 +3006,6 @@
         /// <summary>
         /// Gets the output of methane (per head) by group
         /// </summary>
-        [Description("Output of methane (per head) by group")]
         [Units("kg/d")]
         public double[] Methane
         {
@@ -3236,7 +3020,6 @@
         /// <summary>
         /// Gets the output of methane (per head) total
         /// </summary>
-        [Description("Output of methane (per head) total")]
         [Units("kg/d")]
         public double MethaneAll
         {
@@ -3251,7 +3034,6 @@
         /// <summary>
         /// Gets the output of methane (per head) by tag number
         /// </summary>
-        [Description("Output of methane (per head) by tag number")]
         [Units("kg/d")]
         public double[] MethaneTag
         {
@@ -3268,7 +3050,6 @@
         /// <summary>
         /// Gets the output of methane (per head) of unweaned young animals by group
         /// </summary>
-        [Description("Output of methane (per head) of unweaned young animals by group")]
         [Units("kg/d")]
         public double[] MethaneYng
         {
@@ -3283,7 +3064,6 @@
         /// <summary>
         /// Gets the output of methane (per head) of unweaned young animals total
         /// </summary>
-        [Description("Output of methane (per head) of unweaned young animals total")]
         [Units("kg/d")]
         public double MethaneYngAll
         {
@@ -3298,7 +3078,6 @@
         /// <summary>
         /// Gets the output of methane (per head) of unweaned young animals by tag number
         /// </summary>
-        [Description("Output of methane (per head) of unweaned young animals by tag number")]
         [Units("kg/d")]
         public double[] MethaneYngTag
         {
@@ -3315,7 +3094,6 @@
         /// <summary>
         /// Gets the urinary nitrogen output per head by group
         /// </summary>
-        [Description("Urinary nitrogen output per head by group")]
         [Units("kg/d")]
         public double[] UrineN
         {
@@ -3330,7 +3108,6 @@
         /// <summary>
         /// Gets the urinary nitrogen output per head total
         /// </summary>
-        [Description("Urinary nitrogen output per head total")]
         [Units("kg/d")]
         public double UrineNAll
         {
@@ -3345,7 +3122,6 @@
         /// <summary>
         /// Gets the urinary nitrogen output per head by tag number
         /// </summary>
-        [Description("Urinary nitrogen output per head by tag number")]
         [Units("kg/d")]
         public double[] UrineNTag
         {
@@ -3362,7 +3138,6 @@
         /// <summary>
         /// Gets the urinary nitrogen output per head of unweaned young animals by group
         /// </summary>
-        [Description("Urinary nitrogen output per head of unweaned young animals by group")]
         [Units("kg/d")]
         public double[] UrineNYng
         {
@@ -3377,7 +3152,6 @@
         /// <summary>
         /// Gets the urinary nitrogen output per head of unweaned young animals total
         /// </summary>
-        [Description("Urinary nitrogen output per head of unweaned young animals total")]
         [Units("kg/d")]
         public double UrineNYngAll
         {
@@ -3392,7 +3166,6 @@
         /// <summary>
         /// Gets the urinary nitrogen output per head of unweaned young animals by tag number
         /// </summary>
-        [Description("Urinary nitrogen output per head of unweaned young animals by tag number")]
         [Units("kg/d")]
         public double[] UrineNYngTag
         {
@@ -3409,7 +3182,6 @@
         /// <summary>
         /// Gets the urinary phosphorus output per head by group
         /// </summary>
-        [Description("Urinary phosphorus output per head by group")]
         [Units("kg/d")]
         public double[] UrineP
         {
@@ -3424,7 +3196,6 @@
         /// <summary>
         /// Gets the urinary phosphorus output per head total
         /// </summary>
-        [Description("Urinary phosphorus output per head total")]
         [Units("kg/d")]
         public double UrinePAll
         {
@@ -3439,7 +3210,6 @@
         /// <summary>
         /// Gets the urinary phosphorus output per head by tag number
         /// </summary>
-        [Description("Urinary phosphorus output per head by tag number")]
         [Units("kg/d")]
         public double[] UrinePTag
         {
@@ -3456,7 +3226,6 @@
         /// <summary>
         /// Gets the urinary phosphorus output per head of unweaned young animals by group
         /// </summary>
-        [Description("Urinary phosphorus output per head of unweaned young animals by group")]
         [Units("kg/d")]
         public double[] UrinePYng
         {
@@ -3471,7 +3240,6 @@
         /// <summary>
         /// Gets the urinary phosphorus output per head of unweaned young animals total
         /// </summary>
-        [Description("Urinary phosphorus output per head of unweaned young animals total")]
         [Units("kg/d")]
         public double UrinePYngAll
         {
@@ -3486,7 +3254,6 @@
         /// <summary>
         /// Gets the urinary phosphorus output per head of unweaned young animals by tag number
         /// </summary>
-        [Description("Urinary phosphorus output per head of unweaned young animals by tag number")]
         [Units("kg/d")]
         public double[] UrinePYngTag
         {
@@ -3503,7 +3270,6 @@
         /// <summary>
         /// Gets the urinary sulphur output per head by group
         /// </summary>
-        [Description("Urinary sulphur output per head by group")]
         [Units("kg/d")]
         public double[] UrineS
         {
@@ -3518,7 +3284,6 @@
         /// <summary>
         /// Gets the urinary sulphur output per head total
         /// </summary>
-        [Description("Urinary sulphur output per head total")]
         [Units("kg/d")]
         public double UrineSAll
         {
@@ -3533,7 +3298,6 @@
         /// <summary>
         /// Gets the urinary sulphur output per head by tag number
         /// </summary>
-        [Description("Urinary sulphur output per head by tag number")]
         [Units("kg/d")]
         public double[] UrineSTag
         {
@@ -3550,7 +3314,6 @@
         /// <summary>
         /// Gets the urinary sulphur output per head of unweaned young animals by group
         /// </summary>
-        [Description("Urinary sulphur output per head of unweaned young animals by group")]
         [Units("kg/d")]
         public double[] UrineSYng
         {
@@ -3565,7 +3328,6 @@
         /// <summary>
         /// Gets the urinary sulphur output per head of unweaned young animals total
         /// </summary>
-        [Description("Urinary sulphur output per head of unweaned young animals total")]
         [Units("kg/d")]
         public double UrineSYngAll
         {
@@ -3580,7 +3342,6 @@
         /// <summary>
         /// Gets the urinary sulphur output per head of unweaned young animals by tag number
         /// </summary>
-        [Description("Urinary sulphur output per head of unweaned young animals by tag number")]
         [Units("kg/d")]
         public double[] UrineSYngTag
         {
@@ -3597,7 +3358,6 @@
         /// <summary>
         /// Gets the intake per head of rumen-degradable protein by group
         /// </summary>
-        [Description("Intake per head of rumen-degradable protein by group")]
         [Units("kg/d")]
         public double[] RDPIntake
         {
@@ -3612,7 +3372,6 @@
         /// <summary>
         /// Gets the intake per head of rumen-degradable protein total
         /// </summary>
-        [Description("Intake per head of rumen-degradable protein total")]
         [Units("kg/d")]
         public double RDPIntakeAll
         {
@@ -3627,7 +3386,6 @@
         /// <summary>
         /// Gets the intake per head of rumen-degradable protein by tag number
         /// </summary>
-        [Description("Intake per head of rumen-degradable protein by tag number")]
         [Units("kg/d")]
         public double[] RDPIntakeTag
         {
@@ -3644,7 +3402,6 @@
         /// <summary>
         /// Gets the intake per head of rumen-degradable protein of unweaned young animals by group
         /// </summary>
-        [Description("Intake per head of rumen-degradable protein of unweaned young animals by group")]
         [Units("kg/d")]
         public double[] RDPIntakeYng
         {
@@ -3659,7 +3416,6 @@
         /// <summary>
         /// Gets the intake per head of rumen-degradable protein of unweaned young animals total
         /// </summary>
-        [Description("Intake per head of rumen-degradable protein of unweaned young animals total")]
         [Units("kg/d")]
         public double RDPIntakeYngAll
         {
@@ -3674,7 +3430,6 @@
         /// <summary>
         /// Gets the intake per head of rumen-degradable protein of unweaned young animals by tag number
         /// </summary>
-        [Description("Intake per head of rumen-degradable protein of unweaned young animals by tag number")]
         [Units("kg/d")]
         public double[] RDPIntakeYngTag
         {
@@ -3691,7 +3446,6 @@
         /// <summary>
         /// Gets the requirement per head of rumen-degradable protein by group
         /// </summary>
-        [Description("Requirement per head of rumen-degradable protein by group")]
         [Units("kg/d")]
         public double[] RDPReqd
         {
@@ -3706,7 +3460,6 @@
         /// <summary>
         /// Gets the requirement per head of rumen-degradable protein total
         /// </summary>
-        [Description("Requirement per head of rumen-degradable protein total")]
         [Units("kg/d")]
         public double RDPReqdAll
         {
@@ -3721,7 +3474,6 @@
         /// <summary>
         /// Gets the requirement per head of rumen-degradable protein by tag number
         /// </summary>
-        [Description("Requirement per head of rumen-degradable protein by tag number")]
         [Units("kg/d")]
         public double[] RDPReqdTag
         {
@@ -3738,7 +3490,6 @@
         /// <summary>
         /// Gets the requirement per head of rumen-degradable protein of unweaned young animals by group
         /// </summary>
-        [Description("Requirement per head of rumen-degradable protein of unweaned young animals by group")]
         [Units("kg/d")]
         public double[] RDPReqdYng
         {
@@ -3753,7 +3504,6 @@
         /// <summary>
         /// Gets the requirement per head of rumen-degradable protein of unweaned young animals total
         /// </summary>
-        [Description("Requirement per head of rumen-degradable protein of unweaned young animals total")]
         [Units("kg/d")]
         public double RDPReqdYngAll
         {
@@ -3768,7 +3518,6 @@
         /// <summary>
         /// Gets the requirement per head of rumen-degradable protein of unweaned young animals by tag number
         /// </summary>
-        [Description("Requirement per head of rumen-degradable protein of unweaned young animals by tag number")]
         [Units("kg/d")]
         public double[] RDPReqdYngTag
         {
@@ -3785,7 +3534,6 @@
         /// <summary>
         /// Gets the effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) by group
         /// </summary>
-        [Description("Effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) by group")]
         public double[] RDPFactor
         {
             get
@@ -3799,7 +3547,6 @@
         /// <summary>
         /// Gets the effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) total
         /// </summary>
-        [Description("Effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) total")]
         public double RDPFactorAll
         {
             get
@@ -3813,7 +3560,6 @@
         /// <summary>
         /// Gets the effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) by tag number
         /// </summary>
-        [Description("Effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) by tag number")]
         public double[] RDPFactorTag
         {
             get
@@ -3829,7 +3575,6 @@
         /// <summary>
         /// Gets the effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) of unweaned young animals by group
         /// </summary>
-        [Description("Effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) of unweaned young animals by group")]
         public double[] RDPFactorYng
         {
             get
@@ -3843,7 +3588,6 @@
         /// <summary>
         /// Gets the effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) of unweaned young animals total
         /// </summary>
-        [Description("Effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) of unweaned young animals total")]
         public double RDPFactorYngAll
         {
             get
@@ -3857,7 +3601,6 @@
         /// <summary>
         /// Gets the effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) of unweaned young animals by tag number
         /// </summary>
-        [Description("Effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) of unweaned young animals by tag number")]
         public double[] RDPFactorYngTag
         {
             get
@@ -3871,7 +3614,6 @@
         /// <summary>
         /// Gets the list of all paddocks identified by the component. In decreasing order of herbage relative intake (computed for the first group of animals in the list)
         /// </summary>
-        [Description("List of all paddocks identified by the component. In decreasing order of herbage relative intake (computed for the first group of animals in the list)")]
         public string[] PaddockRank
         {
             get
@@ -3887,7 +3629,6 @@
         /// <summary>
         /// Gets the externally-imposed scaling factor for potential intake. This property is resettable by group
         /// </summary>
-        [Description("Externally-imposed scaling factor for potential intake. This property is resettable by group")]
         public double[] IntakeModifier
         {
             get
@@ -3901,7 +3642,6 @@
         /// <summary>
         /// Gets the externally-imposed scaling factor for potential intake. This property is resettable, total
         /// </summary>
-        [Description("Externally-imposed scaling factor for potential intake. This property is resettable, total")]
         public double IntakeModifierAll
         {
             get
@@ -3915,7 +3655,6 @@
         /// <summary>
         /// Gets the externally-imposed scaling factor for potential intake. This property is resettable by tag number
         /// </summary>
-        [Description("Externally-imposed scaling factor for potential intake. This property is resettable by tag number")]
         public double[] IntakeModifierTag
         {
             get
@@ -3931,7 +3670,6 @@
         /// <summary>
         /// Gets the externally-imposed scaling factor for potential intake. This property is resettable, of unweaned young animals by group
         /// </summary>
-        [Description("Externally-imposed scaling factor for potential intake. This property is resettable, of unweaned young animals by group")]
         public double[] IntakeModifierYng
         {
             get
@@ -3945,7 +3683,6 @@
         /// <summary>
         /// Gets the externally-imposed scaling factor for potential intake. This property is resettable, of unweaned young animals total
         /// </summary>
-        [Description("Externally-imposed scaling factor for potential intake. This property is resettable, of unweaned young animals total")]
         public double IntakeModifierYngAll
         {
             get
@@ -3959,7 +3696,6 @@
         /// <summary>
         /// Gets the externally-imposed scaling factor for potential intake. This property is resettable, of unweaned young animals by tag number
         /// </summary>
-        [Description("Externally-imposed scaling factor for potential intake. This property is resettable, of unweaned young animals by tag number")]
         public double[] IntakeModifierYngTag
         {
             get
@@ -4057,7 +3793,7 @@
                 if (paddInfo.AddFaecesObj != null)
                 {
                     Surface.AddFaecesType faeces = new Surface.AddFaecesType();
-                    if (this.PopulateFaeces(paddInfo.PaddID, faeces))
+                    if (this.PopulateFaeces(paddInfo, faeces))
                     {
                         ((SurfaceOrganicMatter)paddInfo.AddFaecesObj).AddFaeces(faeces);
                     }
@@ -4065,13 +3801,13 @@
                 if (paddInfo.AddUrineObj != null)
                 {
                     AddUrineType urine = new AddUrineType();
-                    if (this.PopulateUrine(paddInfo.PaddID, urine))
+                    if (this.PopulateUrine(paddInfo, urine))
                     {
                         // We could just add the urea to the top layer, but it's better
                         // to work out the penetration depth, and spread it through those layers.
                         double liquidDepth = urine.VolumePerUrination / urine.AreaPerUrination * 1000.0; // Depth of liquid to be added per urinat, in mm
                         double maxDepth = liquidDepth / 0.05; // basically treats soil as having 5% pore space. This is the depth to which urine will penetrate
-                        double[] dlayers = paddInfo.Soil.Thickness;
+                        double[] dlayers = paddInfo.SoilLayerThickness;
                         int nLayers = dlayers.Length;
                         double cumDepth = 0.0;
                         double[] ureaAdded = new double[nLayers];
@@ -4234,12 +3970,12 @@
         {
             StockMove move = new StockMove();
             move.Paddock = paddock;
-            for (int g = 1; g <= this.AnimalList.Count(); g++)
+            for (int g = 1; g <= this.AnimalList.Animals.Count; g++)
             {
-                if ((this.AnimalList.At(g) != null) && (tag == this.AnimalList.GetTag(g)))
+                if (AnimalList.Animals[g] != null && tag == AnimalList.Animals[g].Tag)
                 {
                     move.Group = g;
-                    this.outputSummary.WriteMessage(this, "Moving " + this.AnimalList.At(g).NoAnimals.ToString() + " animals tagged " + tag.ToString() + " to " + paddock);
+                    this.outputSummary.WriteMessage(this, "Moving " + this.AnimalList.Animals[g].NoAnimals.ToString() + " animals tagged " + tag.ToString() + " to " + paddock);
                     this.AnimalList.DoStockManagement(this.AnimalList, move);
                 }
             }
@@ -4468,17 +4204,17 @@
         /// <summary>
         /// Populate the AddFaecesType object
         /// </summary>
-        /// <param name="paddID">The paddock ID</param>
+        /// <param name="paddock">The paddock</param>
         /// <param name="faecesValue">The faeces data</param>
         /// <returns>True if the number of defaecations > 0</returns>
-        private bool PopulateFaeces(int paddID, Surface.AddFaecesType faecesValue)
+        private bool PopulateFaeces(PaddockInfo paddock, Surface.AddFaecesType faecesValue)
         {
             int n = (int)GrazType.TOMElement.n;
             int p = (int)GrazType.TOMElement.p;
             int s = (int)GrazType.TOMElement.s;
             bool result = false;
 
-            this.AnimalList.ReturnExcretion(paddID, out this.excretionInfo);
+            this.AnimalList.ReturnExcretion(paddock, out this.excretionInfo);
 
             if (this.excretionInfo.Defaecations > 0)
             {
@@ -4503,17 +4239,17 @@
         /// <summary>
         /// Copy the urine info into the AddUrineType
         /// </summary>
-        /// <param name="paddID">The paddock ID</param>
+        /// <param name="paddock">The paddock</param>
         /// <param name="urineValue">The urine data</param>
         /// <returns>True if the number of urinations > 0</returns>
-        private bool PopulateUrine(int paddID, AddUrineType urineValue)
+        private bool PopulateUrine(PaddockInfo paddock, AddUrineType urineValue)
         {
             int n = (int)GrazType.TOMElement.n;
             int p = (int)GrazType.TOMElement.p;
             int s = (int)GrazType.TOMElement.s;
             bool result = false;
 
-            this.AnimalList.ReturnExcretion(paddID, out this.excretionInfo);
+            this.AnimalList.ReturnExcretion(paddock, out this.excretionInfo);
             if (this.excretionInfo.Urinations > 0)
             {
                 urineValue.Urinations = this.excretionInfo.Urinations;

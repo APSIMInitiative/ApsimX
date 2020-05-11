@@ -58,12 +58,14 @@
 
         /// <summary>Get a genotype. Throws if not found.</summary>
         /// <param name="genotypeName"></param>
-        public GenotypeWrapper Get(string genotypeName)
+        public Genotype Get(string genotypeName)
         {
-            var foundGenotype = All.Where(genotype => genotype.Name.Equals(genotypeName, StringComparison.InvariantCultureIgnoreCase));
+            var foundGenotype = All.Where(g => g.Name.Equals(genotypeName, StringComparison.InvariantCultureIgnoreCase));
             if (foundGenotype.Count() == 0)
                 throw new Exception($"Cannot find stock genotype {genotypeName}");
-            return foundGenotype.First();
+            var genotype = foundGenotype.First().Parameters;
+            genotype.DeriveParams();
+            return genotype;
         }
 
         /// <summary>

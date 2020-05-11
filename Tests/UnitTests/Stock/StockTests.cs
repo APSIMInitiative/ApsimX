@@ -28,7 +28,7 @@
                       "</parameters>";
             var genotypes = new Genotypes();
             genotypes.ReadPRM(xml);
-            var animalParamSet = genotypes.Get("sheep").Parameters;
+            var animalParamSet = genotypes.Get("sheep");
 
             Assert.AreEqual("Andrew Moore", animalParamSet.sEditor);
             Assert.AreEqual("30 Jan 2013", animalParamSet.sEditDate);
@@ -43,7 +43,7 @@
         public void GetStandardGenotype()
         {
             var genotypes = new Genotypes();
-            var friesian = genotypes.Get("Friesian").Parameters;
+            var friesian = genotypes.Get("Friesian");
             Assert.AreEqual(550,  friesian.BreedSRW, 550);
             Assert.AreEqual(0.05, friesian.SelfWeanPropn);
             Assert.IsTrue(friesian.bDairyBreed);
@@ -57,7 +57,7 @@
         {
             // Get a friesian genotype.
             var genotypes = new Genotypes();
-            var friesian = genotypes.Get("Friesian").Parameters;
+            var friesian = genotypes.Get("Friesian");
 
             // Clone the genotype and change it.
             friesian = Apsim.Clone(friesian) as Genotype;
@@ -67,7 +67,7 @@
             genotypes.Add(friesian);
 
             // Now ask for friesian again. This time it should return the user genotype, not the standard one.
-            friesian = genotypes.Get("Friesian").Parameters;
+            friesian = genotypes.Get("Friesian");
 
             Assert.AreEqual(1, friesian.BreedSRW);
         }
@@ -131,7 +131,7 @@
             Utilities.CallEvent(genotypeCross, "StartOfSimulation");
 
             // Get a friesian genotype.
-            var animalParamSet = stock.Genotypes.Get("NewGenotype").Parameters;
+            var animalParamSet = stock.Genotypes.Get("NewGenotype");
 
             // Make sure we can retrieve the new genotype.
             Assert.IsNotNull(animalParamSet);
@@ -168,12 +168,12 @@
             Utilities.CallEvent(genotypeCross, "StartOfSimulation");
 
             // Get the cross.
-            var animalParamSet = stock.Genotypes.Get("NZFriesianCross").Parameters;
+            var animalParamSet = stock.Genotypes.Get("NZFriesianCross");
 
             Assert.AreEqual("NZFriesianCross", animalParamSet.Name);
             Assert.IsTrue(animalParamSet.bDairyBreed);
             Assert.AreEqual(550, animalParamSet.BreedSRW);
-            Assert.AreEqual(35, animalParamSet.PeakMilk);
+            Assert.AreEqual(27.5, animalParamSet.PeakMilk);
             Assert.AreEqual(new double[] { 0, 0 }, animalParamSet.ConceiveSigs[0]);
             Assert.AreEqual(new double[] { 10, 5.89 }, animalParamSet.ConceiveSigs[1]);
             Assert.AreEqual(new double[] { 10, 5.89 }, animalParamSet.ConceiveSigs[2]);

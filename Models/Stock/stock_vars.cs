@@ -266,12 +266,12 @@
                 total = 0;
 
                 for (idx = 1; idx <= model.Count(); idx++)
-                    if (!useTag || (model.GetTag(idx) == p))
+                    if (!useTag || (model.Animals[idx].Tag == p))
                     {
                         if (!useYoung)
-                            animalGroup = model.At(idx);
+                            animalGroup = model.Animals[idx];
                         else
-                            animalGroup = model.At(idx).Young;
+                            animalGroup = model.Animals[idx].Young;
 
                         value = 0;
                         if (animalGroup != null)
@@ -343,12 +343,12 @@
 
                 for (idx = 1; idx <= model.Count(); idx++)
                 {
-                    if (!useTag || (model.GetTag(idx) == passIdx))
+                    if (!useTag || (model.Animals[idx].Tag == passIdx))
                     {
                         if (!useYoung)
-                            animalGroup = model.At(idx);
+                            animalGroup = model.Animals[idx];
                         else
-                            animalGroup = model.At(idx).Young;
+                            animalGroup = model.Animals[idx].Young;
 
                         value = 0.0;
                         if (animalGroup != null)
@@ -514,12 +514,12 @@
 
                 for (idx = 1; idx <= model.Count(); idx++)
                 {
-                    if (!useTag || (model.GetTag(idx) == passIdx))
+                    if (!useTag || (model.Animals[idx].Tag == passIdx))
                     {
                         if (!useYoung)
-                            animalGroup = model.At(idx);
+                            animalGroup = model.Animals[idx];
                         else
-                            animalGroup = model.At(idx).Young;
+                            animalGroup = model.Animals[idx].Young;
 
                         GrazType.ZeroDMPool(ref pool);
                         if (animalGroup != null)
@@ -638,7 +638,7 @@
 
             for (idx = 1; idx <= model.Count(); idx++)
             {
-                AnimalGroup group = model.At(idx);
+                AnimalGroup group = model.Animals[idx];
                 ME_Metab = group.AnimalState.EnergyUse.Metab / group.AnimalState.Efficiency.Maint;
                 ME_MoveGraze = group.AnimalState.EnergyUse.Maint - ME_Metab - group.AnimalState.EnergyUse.Cold;
 

@@ -40,16 +40,11 @@
     [Serializable]
     public class StockList
     {
-        /// <summary>
-        /// The parent stock model.
-        /// </summary>
-        private readonly Stock parentStockModel = null;
 
-        /// <summary>The clock model.</summary>
-        private readonly Clock clock;
-
-        /// <summary>The weather model.</summary>
-        private readonly IWeather weather;
+        // checking paddock for grazing move
+        private const int MAX_CRITERIA = 1;
+        private const int DRAFT_MOVE = 0;
+        private string[] CRITERIA = new string[MAX_CRITERIA] { "draft" };   // used in radiogroup on dialog
 
         /// <summary>
         /// Conversion factor for months to days
@@ -61,18 +56,55 @@
         /// </summary>
         private const double WEIGHT2DSE = 0.02;
 
-        /// <summary>
-        /// Set of genotype parameters
-        /// </summary>
-        private Genotype[] genotypeParams = new Genotype[0];
+        /// <summary>The parent stock model.</summary>
+        private readonly Stock parentStockModel = null;
+
+        /// <summary>The clock model.</summary>
+        private readonly Clock clock;
+
+        /// <summary>The weather model.</summary>
+        private readonly IWeather weather;
 
         /// <summary>
         /// stock[0] is kept for use as temporary storage         
         /// </summary>
         private AnimalGroup[] stock = new AnimalGroup[0];
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="stockModel">The parent stock model.</param>
+        /// <param name="clockModel">The clock model.</param>
+        /// <param name="weatherModel">The weather model.</param>
+        /// <param name="paddocksInSimulation">The paddocks in the simulation.</param>
+        public StockList(Stock stockModel, Clock clockModel, IWeather weatherModel, List<Zone> paddocksInSimulation)
+        {
+            parentStockModel = stockModel;
+            ForagesAll = new ForageProviders();
+            Enterprises = new List<EnterpriseInfo>();
+            GrazingPeriods = new GrazingList();
+            clock = clockModel;
+            weather = weatherModel;
+
+            Array.Resize(ref this.stock, 1);                                          // Set aside temporary storage           
+            Paddocks = new List<PaddockInfo>();
+
+            Paddocks.Add(new PaddockInfo());
+
+            // get the paddock areas from the simulation
+            foreach (var zone in paddocksInSimulation)
+            {
+                var newPadd = new PaddockInfo(zone) { zone = zone };
+                Paddocks.Add(newPadd);
+
+                // find all the child crop, pasture components that have removable biomass
+                foreach (IPlantDamage crop in Apsim.FindAll(zone, typeof(IPlantDamage)))
+                    ForagesAll.AddProvider(newPadd, zone.Name, zone.Name + "." + crop.Name, 0, 0, crop);
+            }
+        }
+
         /// <summary>Gets an enumeration of all animal groups.</summary>
-        public IEnumerable<AnimalGroup> Animals { get { return stock; } }
+        public IList<AnimalGroup> Animals { get { return stock; } }
 
         /// <summary>
         /// Gets the list of paddocks
@@ -95,53 +127,6 @@
         public ForageProviders ForagesAll { get; }
 
         /// <summary>
-        /// posIdx is 1-offset; so is stock                                              
-        /// </summary>
-        /// <param name="posIdx">Index in the stock list</param>
-        /// <returns>The paddock</returns>
-        private PaddockInfo GetPaddInfo(int posIdx)
-        {
-            return this.stock[posIdx].PaddOccupied;
-        }
-
-        /// <summary>
-        /// posIdx is 1-offset; so is stock                                              
-        /// </summary>
-        /// <param name="posIdx">Index in the stock list</param>
-        /// <returns>Get the paddock occupied</returns>
-        public string GetInPadd(int posIdx)
-        {
-            if ((posIdx >= 1) && (posIdx <= this.Count()))
-                return this.stock[posIdx].PaddOccupied.Name;
-            else
-                return string.Empty;
-        }
-
-        /// <summary>
-        /// posIdx is 1-offset; so is stock                                              
-        /// </summary>
-        /// <param name="posIdx">Index in stock list</param>
-        /// <returns>The priority value</returns>
-        public int GetPriority(int posIdx)
-        {
-            if ((posIdx >= 1) && (posIdx <= this.Count()))
-                return this.stock[posIdx].Priority;
-            else
-                return 0;
-        }
-
-        /// <summary>
-        /// posIdx is 1-offset; so is stock
-        /// </summary>
-        /// <param name="posIdx">Index in stock list</param>
-        /// <param name="value">Priority value</param>
-        public void SetPriority(int posIdx, int value)
-        {
-            if ((posIdx >= 1) && (posIdx <= this.Count()))
-                this.stock[posIdx].Priority = value;
-        }
-
-        /// <summary>
         /// Combine sufficiently-similar groups of animals and delete empty ones         
         /// </summary>
         private void Merge()
@@ -152,7 +137,7 @@
             // Remove empty groups                   
             for (idx = 1; idx <= this.Count(); idx++)                                                     
             {
-                if ((this.At(idx) != null) && (this.At(idx).NoAnimals == 0))
+                if ((stock[idx] != null) && (stock[idx].NoAnimals == 0))
                 {
                     stock[idx] = null;
                 }
@@ -163,15 +148,15 @@
             {
                 for (jdx = idx + 1; jdx <= this.Count(); jdx++)
                 {
-                    if ((this.At(idx) != null) && (this.At(jdx) != null)
-                       && this.At(idx).Similar(this.At(jdx))
-                       && (this.GetPaddInfo(idx) == this.GetPaddInfo(jdx))
-                       && (this.GetTag(idx) == this.GetTag(jdx))
-                       && (this.GetPriority(idx) == this.GetPriority(jdx)))
+                    if ((stock[idx] != null) && (stock[jdx] != null)
+                       && stock[idx].Similar(stock[jdx])
+                       && (stock[idx].PaddOccupied == stock[jdx].PaddOccupied)
+                       && (stock[idx].Tag == stock[jdx].Tag)
+                       && (stock[idx].Priority == stock[jdx].Priority))
                     {
-                        animalGroup = this.At(jdx);
+                        animalGroup = stock[jdx];
                         stock[jdx] = null;
-                        this.At(idx).Merge(ref animalGroup);
+                        stock[idx].Merge(ref animalGroup);
                     }
                 }
             }
@@ -179,7 +164,7 @@
             // Pack the lists and priority array.      
             for (idx = this.Count(); idx >= 1; idx--)                                              
             {
-                if (this.At(idx) == null)
+                if (stock[idx] == null)
                     this.Delete(idx);
             }
         }
@@ -191,9 +176,9 @@
         /// <param name="posIdx">Index in stock list</param>
         private void StoreInitialState(int posIdx)
         {
-            this.At(posIdx).StoreStateInfo(ref this.stock[posIdx].InitState[0]);
-            if (this.At(posIdx).Young != null)
-                this.At(posIdx).Young.StoreStateInfo(ref this.stock[posIdx].InitState[1]);
+            stock[posIdx].StoreStateInfo(ref this.stock[posIdx].InitState[0]);
+            if (stock[posIdx].Young != null)
+                stock[posIdx].Young.StoreStateInfo(ref this.stock[posIdx].InitState[1]);
         }
 
         /// <summary>
@@ -205,13 +190,13 @@
         /// <param name="posIdx">Index in stock list</param>
         private void RevertInitialState(int posIdx)
         {
-            this.At(posIdx).RevertStateInfo(this.stock[posIdx].InitState[0]);
-            this.At(posIdx).PotIntake = this.At(posIdx).PotIntake * this.stock[posIdx].RDPFactor[0];
+            stock[posIdx].RevertStateInfo(this.stock[posIdx].InitState[0]);
+            stock[posIdx].PotIntake = stock[posIdx].PotIntake * this.stock[posIdx].RDPFactor[0];
 
-            if (this.At(posIdx).Young != null)
+            if (stock[posIdx].Young != null)
             {
-                this.At(posIdx).Young.RevertStateInfo(this.stock[posIdx].InitState[1]);
-                this.At(posIdx).Young.PotIntake = this.At(posIdx).Young.PotIntake * this.stock[posIdx].RDPFactor[1];
+                stock[posIdx].Young.RevertStateInfo(this.stock[posIdx].InitState[1]);
+                stock[posIdx].Young.PotIntake = stock[posIdx].Young.PotIntake * this.stock[posIdx].RDPFactor[1];
             }
         }
 
@@ -228,8 +213,8 @@
             PaddockInfo paddock;
             int jdx;
 
-            group = this.At(posIdx);
-            paddock = this.GetPaddInfo(posIdx);
+            group = stock[posIdx];
+            paddock = stock[posIdx].PaddOccupied;
 
             group.PaddSteep = paddock.Steepness;
             group.WaterLogging = paddock.Waterlog;
@@ -266,8 +251,8 @@
             double propn;
             int jdx;
 
-            paddock = this.GetPaddInfo(posIdx);
-            group = this.At(posIdx);
+            paddock = stock[posIdx].PaddOccupied;
+            group = stock[posIdx];
 
             this.stock[posIdx].PaddockInputs = new GrazType.GrazingInputs();
             for (jdx = 0; jdx <= paddock.Forages.Count() - 1; jdx++)
@@ -315,14 +300,14 @@
             int classIdx;
 
             posn = 1;                                                                  // Find the first animal group occupying 
-            while ((posn <= this.Count()) && (this.GetPaddInfo(posn) != paddock))          // this paddock                         
+            while ((posn <= this.Count()) && (stock[posn].PaddOccupied != paddock))    // this paddock                         
                 posn++;
 
             if ((posn > this.Count()) || (paddock.Area <= 0.0))
                 result = 1.0;
             else
             {
-                this.At(posn).CalculateRelIntake(this.At(posn), 1.0, false, 1.0, ref herbageRI, ref seedRI, ref suppRelIntake);
+                stock[posn].CalculateRelIntake(stock[posn], 1.0, false, 1.0, ref herbageRI, ref seedRI, ref suppRelIntake);
 
                 removalTime = 9999.9;
                 for (classIdx = 1; classIdx <= GrazType.DigClassNo; classIdx++)
@@ -360,9 +345,9 @@
         /// <param name="feedSuppFirst">Feed supplement first</param>
         private void ComputeGrazing(int posIdx, double startTime, double deltaTime, bool feedSuppFirst)
         {
-            this.At(posIdx).Grazing(deltaTime, (startTime == 0.0), feedSuppFirst, ref this.stock[posIdx].PastIntakeRate[0], ref this.stock[posIdx].SuppIntakeRate[0]);
-            if (this.At(posIdx).Young != null)
-                this.At(posIdx).Young.Grazing(deltaTime, (startTime == 0.0), false, ref this.stock[posIdx].PastIntakeRate[1], ref this.stock[posIdx].SuppIntakeRate[1]);
+            stock[posIdx].Grazing(deltaTime, (startTime == 0.0), feedSuppFirst, ref this.stock[posIdx].PastIntakeRate[0], ref this.stock[posIdx].SuppIntakeRate[0]);
+            if (stock[posIdx].Young != null)
+                stock[posIdx].Young.Grazing(deltaTime, (startTime == 0.0), false, ref this.stock[posIdx].PastIntakeRate[1], ref this.stock[posIdx].SuppIntakeRate[1]);
         }
 
         /// <summary>
@@ -384,9 +369,9 @@
             {
                 for (posn = 1; posn <= this.Count(); posn++)
                 {
-                    if (this.GetPaddInfo(posn) == paddock)
+                    if (stock[posn].PaddOccupied == paddock)
                     {
-                        group = this.At(posn);
+                        group = stock[posn];
 
                         for (forageIdx = 0; forageIdx <= paddock.Forages.Count() - 1; forageIdx++)
                         {
@@ -418,7 +403,7 @@
 
                 for (posn = 1; posn <= this.Count(); posn++)
                 {
-                    if (this.GetPaddInfo(posn) == paddock)
+                    if (stock[posn].PaddOccupied == paddock)
                     {
                         for (forageIdx = 0; forageIdx <= paddock.Forages.Count() - 1; forageIdx++)
                         {
@@ -442,13 +427,13 @@
         /// <param name="availRDP">The rumen degradable protein value</param>
         private void ComputeNutrition(int posIdx, ref double availRDP)
         {
-            this.At(posIdx).Nutrition();
-            this.stock[posIdx].RDPFactor[0] = this.At(posIdx).RDPIntakeFactor();
+            stock[posIdx].Nutrition();
+            this.stock[posIdx].RDPFactor[0] = stock[posIdx].RDPIntakeFactor();
             availRDP = Math.Min(availRDP, this.stock[posIdx].RDPFactor[0]);
-            if (this.At(posIdx).Young != null)
+            if (stock[posIdx].Young != null)
             {
-                this.At(posIdx).Young.Nutrition();
-                this.stock[posIdx].RDPFactor[1] = this.At(posIdx).Young.RDPIntakeFactor();
+                stock[posIdx].Young.Nutrition();
+                this.stock[posIdx].RDPFactor[1] = stock[posIdx].Young.RDPIntakeFactor();
                 availRDP = Math.Min(availRDP, this.stock[posIdx].RDPFactor[1]);
             }
         }
@@ -459,9 +444,9 @@
         /// <param name="posIdx">Index in the stock list</param>
         private void CompleteGrowth(int posIdx)
         {
-            this.At(posIdx).CompleteGrowth(this.stock[posIdx].RDPFactor[0]);
-            if (this.At(posIdx).Young != null)
-                this.At(posIdx).Young.CompleteGrowth(this.stock[posIdx].RDPFactor[1]);
+            stock[posIdx].CompleteGrowth(this.stock[posIdx].RDPFactor[0]);
+            if (stock[posIdx].Young != null)
+                stock[posIdx].Young.CompleteGrowth(this.stock[posIdx].RDPFactor[1]);
         }
 
         /// <summary>
@@ -502,8 +487,6 @@
                 result = result + (herbageRI[classIdx] * GrazType.ClassDig[classIdx]);
             return result;
         }
-        
-        // management events described by the livestock dialog
 
         /// <summary>
         /// Do daily tasks
@@ -544,12 +527,12 @@
                         tagNo = curEnt.GetMateTag(t);
 
                         // if mate this group and this group belongs to this ent
-                        if ((tagNo == this.GetTag(g)) && (curEnt.ContainsTag(this.GetTag(g))))    
+                        if ((tagNo == stock[g].Tag) && (curEnt.ContainsTag(stock[g].Tag)))    
                         {
-                            if (this.At(g).AgeDays >= (365 * curEnt.MateYears))
+                            if (stock[g].AgeDays >= (365 * curEnt.MateYears))
                             {
                                 this.Join(g, curEnt.MateWith, 42);
-                                this.SetTag(g, curEnt.JoinedTag);                        // retag the ewes that are mated into a ewe tag group
+                                stock[g].Tag = curEnt.JoinedTag;                        // retag the ewes that are mated into a ewe tag group
                             }
                         }
                     }
@@ -574,9 +557,9 @@
                     while (g <= groups)                             
                     {
                         // if this group belongs to this ent
-                        if (curEnt.ContainsTag(this.GetTag(g)))          
+                        if (curEnt.ContainsTag(stock[g].Tag))          
                         {
-                            this.Castrate(g, this.At(g).NoAnimals); // castrate all male young in the group
+                            this.Castrate(g, stock[g].NoAnimals); // castrate all male young in the group
                         }
                         g++;
                     }
@@ -591,13 +574,13 @@
                 while (g <= groups)                         
                 {
                     // if this group belongs to this ent
-                    if (curEnt.ContainsTag(this.GetTag(g)))              
+                    if (curEnt.ContainsTag(stock[g].Tag))              
                     {
-                        this.Wean(g, this.At(g).NoAnimals, true, true);  // wean all young in the group
+                        this.Wean(g, stock[g].NoAnimals, true, true);  // wean all young in the group
                         if (curEnt.IsCattle)
-                            this.DryOff(g, this.At(g).NoAnimals);   // ## may be possible to include option in user interface
-                                                                    // retag the mothers into dry ewes tag group
-                        this.SetTag(g, curEnt.DryTag);
+                            this.DryOff(g, stock[g].NoAnimals);   // ## may be possible to include option in user interface
+                                                                  // retag the mothers into dry ewes tag group
+                        stock[g].Tag = curEnt.DryTag;
                     }
                     g++;
                 }
@@ -609,22 +592,22 @@
                     t = 1;
                     while (!found && (t <= curEnt.MateTagCount))
                     {
-                        if (this.GetTag(g) == curEnt.GetMateTag(t))
+                        if (stock[g].Tag == curEnt.GetMateTag(t))
                             found = true;                           // this tag belongs to a mated group
                         t++;
                     }
                     if (found)
                     {
                         // retag the weaners
-                        if (this.At(g).MaleNo > 0)
+                        if (stock[g].MaleNo > 0)
                         {
-                            this.SetTag(g, curEnt.WeanerMTag);
+                            stock[g].Tag = curEnt.WeanerMTag;
                         }
 
                         // the new group will be retagged M/F
-                        if (this.At(g).FemaleNo > 0)
+                        if (stock[g].FemaleNo > 0)
                         {
-                            this.SetTag(g, curEnt.WeanerFTag);
+                            stock[g].Tag = curEnt.WeanerFTag;
                         }
                     }
                 }
@@ -722,40 +705,6 @@
         }
 
         /// <summary>
-        /// For a given day of year, obtains the ages (in years, rounded down) of   
-        /// the youngest and oldest animals in a flock/herd from the policy for     
-        /// additions to and sales from it.                                         
-        /// </summary>
-        /// <param name="enterDOY">Day of year for entry to the flock/herd</param>
-        /// <param name="enterDays">Age in days at entry</param>
-        /// <param name="sale_yrs">The age at sale</param>
-        /// <param name="sale_day">The day of sale</param>
-        /// <param name="todaysDate">Today's date</param>
-        /// <param name="youngYrs">Youngest age</param>
-        /// <param name="oldYrs">Oldest age</param>
-        protected void GetAgeRange(int enterDOY, int enterDays, int sale_yrs, int sale_day, int todaysDate, ref int youngYrs, ref int oldYrs)
-        {
-            int ageAtSale;                                                  // Age of animals at sale (in days)         
-            int timeSinceEntry;                                             // Time since last entry of animals (days)  
-            int timeSinceSale;                                              // Time since last sale                     
-
-            ageAtSale = (366 * sale_yrs) + ((enterDays + this.DaysFromDOY(enterDOY, sale_day)) % 366);
-
-            // If todaysDate is the same day-of-year as enterDOY, then the entry hasn't happened yet        
-            timeSinceEntry = this.DaysFromDOY(enterDOY, todaysDate);       
-            if (timeSinceEntry == 0)                                       
-                timeSinceEntry = 366;                                                         
-
-            timeSinceSale = this.DaysFromDOY(sale_day, todaysDate);         // Ditto for the sale day-of-year           
-            if (timeSinceSale == 0)
-                timeSinceSale = 366;
-
-            youngYrs = (enterDays + timeSinceEntry) / 366;
-            oldYrs = ((ageAtSale + timeSinceSale) / 366) - 1;                 // Oldest animals left were AgeAtSale-366   
-                                                                            // days old on the last Sales.DOY         
-        }
-
-        /// <summary>
         /// Find the index of the paddock that this tag group is currently grazing
         /// </summary>
         /// <param name="tagNo">The tag number</param>
@@ -805,113 +754,6 @@
         }
 
         /// <summary>
-        /// Create a TStockList
-        /// </summary>
-        /// <param name="stockModel">The parent stock model.</param>
-        /// <param name="clockModel">The clock model.</param>
-        /// <param name="weatherModel">The weather model.</param>
-        /// <param name="paddocksInSimulation">The paddocks in the simulation.</param>
-        public StockList(Stock stockModel, Clock clockModel, IWeather weatherModel, List<Zone> paddocksInSimulation)
-        {
-            parentStockModel = stockModel;
-            ForagesAll = new ForageProviders();
-            Enterprises = new List<EnterpriseInfo>();
-            GrazingPeriods = new GrazingList();
-            clock = clockModel;
-            weather = weatherModel;
-
-            Array.Resize(ref this.stock, 1);                                          // Set aside temporary storage           
-            Paddocks = new List<PaddockInfo>();
-
-            var newPadd = new PaddockInfo();
-            newPadd.PaddID = -1;
-            newPadd.Name = string.Empty;
-            Paddocks.Add(newPadd);
-
-            // get the paddock areas from the simulation
-            foreach (var zone in paddocksInSimulation)
-            {
-                newPadd = new PaddockInfo();
-                newPadd.PaddID = Paddocks.Count() + 1; // ID is 1 based here
-                newPadd.PaddObj = zone;
-                newPadd.Name = zone.Name.ToLower();
-                Paddocks.Add(newPadd);
-
-                // find all the child crop, pasture components that have removable biomass
-                foreach (IPlantDamage crop in Apsim.FindAll(zone, typeof(IPlantDamage)))
-                    ForagesAll.AddProvider(newPadd, zone.Name, zone.Name + "." + crop.Name, 0, 0, crop);
-
-                // locate surfaceOM and soil nutrient model
-                newPadd.AddFaecesObj = (SurfaceOrganicMatter)Apsim.Find(zone, typeof(SurfaceOrganicMatter));
-                newPadd.Soil = (ISoil)Apsim.Find(zone, typeof(ISoil));
-                newPadd.AddUrineObj = (ISolute)Apsim.Find(zone, "Urea");
-            }
-        }
-
-        /// <summary>
-        /// Get the genotype count
-        /// </summary>
-        /// <returns>The number of genotypes</returns>
-        public int GenotypeCount()
-        {
-            return this.genotypeParams.Length;
-        }
-
-        /// <summary>
-        /// Get the genotype at the index
-        /// </summary>
-        /// <param name="idx">Genotype index</param>
-        /// <returns>The genotype</returns>
-        public Genotype GetGenotype(int idx)
-        {
-            return this.genotypeParams[idx];
-        }
-
-        /// <summary>
-        /// Locate a genotype in FGenotypes. If this fails, try searching for it in the  
-        /// main parameter set and adding it to FGenotypes.                            
-        /// </summary>
-        /// <param name="genoName">The genotype name</param>
-        /// <returns>The genotype</returns>
-        public Genotype GetGenotype(string genoName)
-        {
-            int idx;
-            Genotype srcParamSet;
-
-            Genotype result = null;
-            if ((genoName == string.Empty) && (this.genotypeParams.Length >= 1))                           // Null string is a special case         
-                result = this.genotypeParams[0];
-            else
-            {
-                idx = 0;
-                while ((idx < this.genotypeParams.Length) && (genoName.ToLower() != this.genotypeParams[idx].Name.ToLower()))
-                    idx++;
-
-                if (idx < this.genotypeParams.Length)
-                    result = this.genotypeParams[idx];
-                else
-                {
-                    srcParamSet = parentStockModel.Genotypes.Get(genoName).Parameters;
-                    srcParamSet.DeriveParams();
-                    //srcParamSet.Initialise();
-
-                    if (srcParamSet != null)
-                    {
-                        result = new Genotype(srcParamSet);
-                        idx = this.genotypeParams.Length;
-                        Array.Resize(ref this.genotypeParams, idx + 1);
-                        this.genotypeParams[idx] = result;
-                    }
-                }
-            }
-
-            if (result == null)
-                throw new Exception("Genotype name \"" + genoName + "\" not recognised");
-
-            return result;
-        }
-
-        /// <summary>
         /// Add a group of animals to the list                                           
         /// Returns the group index of the group that was added. 0->n                    
         /// </summary>
@@ -947,7 +789,7 @@
             AnimalGroup newGroup;
             PaddockInfo paddock;
 
-            newGroup = new AnimalGroup( this.GetGenotype(animalInits.Genotype),
+            newGroup = new AnimalGroup(parentStockModel.Genotypes.Get(animalInits.Genotype),
                                         animalInits.Sex,
                                         animalInits.Number,
                                         animalInits.AgeDays,
@@ -961,7 +803,7 @@
                 newGroup.FibreDiam = animalInits.FibreDiam;
 
             if (animalInits.MatedTo != string.Empty)
-                newGroup.MatedTo = this.GetGenotype(animalInits.MatedTo);
+                newGroup.MatedTo = parentStockModel.Genotypes.Get(animalInits.MatedTo);
             if ((newGroup.ReproState == GrazType.ReproType.Empty) && (animalInits.Pregnant > 0))
             {
                 newGroup.Pregnancy = animalInits.Pregnant;
@@ -996,19 +838,6 @@
             return this.Add(newGroup, paddock, animalInits.Tag, animalInits.Priority);
         }
 
-        ///// <summary>Add a group of animals to the list.</summary>
-        ///// <param name="newGroup">New animal group.</param>
-        ///// <returns>The index of the new group in the stock array. 0 based.</returns>
-        //public int Add(AnimalGroup newGroup)
-        //{
-        //    newGroup.InitialiseFromParameters();
-        //    var paddock = this.paddockList.ByName(newGroup.PaddockName.ToLower());
-        //    if (paddock == null)
-        //        paddock = this.paddockList.ByIndex(0);
-
-        //    return this.Add(newGroup, paddock, newGroup.Tag, newGroup.Priority);
-        //}
-
         /// <summary>
         ///  * N.B. posn is 1-offset; stock list is effectively also a 1-offset array        
         /// </summary>
@@ -1030,75 +859,12 @@
         }
 
         /// <summary>
-        /// Clear the list
-        /// </summary>
-        public void Clear()
-        {
-            while (this.Count() > 0)
-                this.Delete(this.Count());
-        }
-
-        /// <summary>
-        /// Remove empty groups                   
-        /// </summary>
-        public void Pack()
-        {
-            int idx;
-
-            for (idx = 1; idx <= this.Count(); idx++)
-            {
-                if ((this.At(idx) != null) && (this.At(idx).NoAnimals == 0))
-                {
-                    stock[idx] = null;
-                }
-            }
-
-            for (idx = this.Count(); idx >= 1; idx++)
-                if (this.At(idx) == null)
-                    this.Delete(idx);
-        }
-
-        /// <summary>
         /// Only groups 1 to Length()-1 are counted                                    
         /// </summary>
         /// <returns>The number of items in the stock list</returns>
         public int Count()
         {
             return this.stock.Length - 1;
-        }
-
-        /// <summary>
-        /// Get the animal group at the position
-        /// </summary>
-        /// <param name="posn">The position in the list</param>
-        /// <returns>The animal group at the index position</returns>
-        public AnimalGroup At(int posn)
-        {
-            return stock[posn];
-        }
-
-        /// <summary>
-        /// posIdx is 1-offset; so is stock                                              
-        /// </summary>
-        /// <param name="posIdx">The position in the stock list</param>
-        /// <returns>The tag number</returns>
-        public int GetTag(int posIdx)
-        {
-            if ((posIdx >= 1) && (posIdx <= this.Count()))
-                return this.stock[posIdx].Tag;
-            else
-                return 0;
-        }
-
-        /// <summary>
-        /// Set the tag value
-        /// </summary>
-        /// <param name="posIdx">The position in the stock list</param>
-        /// <param name="value">Tag value</param>
-        public void SetTag(int posIdx, int value)
-        {
-            if ((posIdx >= 1) && (posIdx <= this.Count()))
-                this.stock[posIdx].Tag = value;
         }
 
         /// <summary>
@@ -1111,7 +877,7 @@
 
             int result = 0;
             for (idx = 1; idx <= this.Count(); idx++)
-                result = Math.Max(result, this.GetTag(idx));
+                result = Math.Max(result, stock[idx].Tag);
             return result;
         }
 
@@ -1132,8 +898,6 @@
             else
                 thePadd.FeedSupplement(suppKG, supplement, feedSuppFirst);
         }
-
-        // Model execution routines ................................................
 
         /// <summary>
         /// Advance the list by one time step.  All the input properties should be set first                                                                        
@@ -1166,10 +930,10 @@
             for (idx = 1; idx <= n; idx++)                                                  
             {                                                                               
                 newGroups = null;                                                            
-                this.At(idx).Age(1, ref newGroups);
+                stock[idx].Age(1, ref newGroups);
 
                 // Ensure the new young have climate data                             
-                this.Add(newGroups, this.GetPaddInfo(idx), this.GetTag(idx), this.GetPriority(idx));       // The new groups are added back onto    
+                this.Add(newGroups, stock[idx].PaddOccupied, stock[idx].Tag, stock[idx].Priority);       // The new groups are added back onto    
                 newGroups = null;                                                           // the main list                       
             }
 
@@ -1179,8 +943,8 @@
             for (idx = 1; idx <= this.Count(); idx++)                                       
             {
                 this.StoreInitialState(idx);                                                     
-                this.ComputeIntakeLimit(this.At(idx));
-                this.At(idx).ResetGrazing();
+                this.ComputeIntakeLimit(stock[idx]);
+                stock[idx].ResetGrazing();
             }
 
             // Compute the total potential intake (used to distribute supplement between groups of animals)         
@@ -1190,11 +954,11 @@
                 totPotIntake = 0.0;
 
                 for (idx = 1; idx <= this.Count(); idx++)
-                    if (this.GetPaddInfo(idx) == thePaddock)
+                    if (stock[idx].PaddOccupied == thePaddock)
                     {
-                        totPotIntake = totPotIntake + (this.At(idx).NoAnimals * this.At(idx).PotIntake);
-                        if (this.At(idx).Young != null)
-                            totPotIntake = totPotIntake + (this.At(idx).Young.NoAnimals * this.At(idx).Young.PotIntake);
+                        totPotIntake = totPotIntake + (stock[idx].NoAnimals * stock[idx].PotIntake);
+                        if (stock[idx].Young != null)
+                            totPotIntake = totPotIntake + (stock[idx].Young.NoAnimals * stock[idx].Young.PotIntake);
                     }
                 thePaddock.SummedPotIntake = totPotIntake;
             }
@@ -1214,14 +978,14 @@
                     while (timeValue < 1.0 - EPS)
                     {
                         for (idx = 1; idx <= this.Count(); idx++)
-                            if (this.GetPaddInfo(idx) == thePaddock)
+                            if (stock[idx].PaddOccupied == thePaddock)
                                 this.ComputeStepAvailability(idx);
 
                         delta = Math.Min(this.ComputeStepLength(thePaddock), 1.0 - timeValue);
 
                         // Compute rate of grazing for this substep                             
                         for (idx = 1; idx <= this.Count(); idx++)                           
-                            if (this.GetPaddInfo(idx) == thePaddock)                             
+                            if (stock[idx].PaddOccupied == thePaddock)                             
                                 this.ComputeGrazing(idx, timeValue, delta, thePaddock.FeedSuppFirst);
 
                         this.ComputeRemoval(thePaddock, delta);
@@ -1232,7 +996,7 @@
                     // Nutrition submodel here...            
                     RDP = 1.0;
                     for (idx = 1; idx <= this.Count(); idx++)                               
-                        if (this.GetPaddInfo(idx) == thePaddock)
+                        if (stock[idx].PaddOccupied == thePaddock)
                             this.ComputeNutrition(idx, ref RDP);
 
                     // Maximum of 2 iterations in the RDP loop
@@ -1247,7 +1011,7 @@
 
                             // If so, we have to revert the state of the animal group ready for the second iteration.
                             for (idx = 1; idx <= this.Count(); idx++)                       
-                                if (this.GetPaddInfo(idx) == thePaddock)
+                                if (stock[idx].PaddOccupied == thePaddock)
                                     this.RevertInitialState(idx);                                                   
                         }
                     }
@@ -1260,36 +1024,31 @@
                 this.CompleteGrowth(idx);
         }
 
-        // Outputs to other models .................................................
-
         /// <summary>
         /// Get the mass for the area
         /// </summary>
-        /// <param name="paddID">Paddock id</param>
+        /// <param name="thePadd">Paddock</param>
         /// <param name="provider">The forage provider object</param>
         /// <param name="units">The units</param>
         /// <returns>The mass</returns>
-        public double ReturnMassPerArea(int paddID, ForageProvider provider, string units)
+        public double ReturnMassPerArea(PaddockInfo thePadd, ForageProvider provider, string units)
         {
             double result;
-            PaddockInfo thePadd;
             double massKGHA;
             int idx;
 
             if (provider != null)
                 thePadd = provider.OwningPaddock;
-            else
-                thePadd = this.Paddocks.Find(p => p.PaddID == paddID);
 
             massKGHA = 0.0;
             if (thePadd != null)
             {
                 for (idx = 1; idx <= this.Count(); idx++)
-                    if (this.GetPaddInfo(idx) == thePadd)
+                    if (stock[idx].PaddOccupied == thePadd)
                     {
-                        massKGHA = massKGHA + (this.At(idx).NoAnimals * this.At(idx).LiveWeight);
-                        if (this.At(idx).Young != null)
-                            massKGHA = massKGHA + (this.At(idx).Young.NoAnimals * this.At(idx).Young.LiveWeight);
+                        massKGHA = massKGHA + (stock[idx].NoAnimals * stock[idx].LiveWeight);
+                        if (stock[idx].Young != null)
+                            massKGHA = massKGHA + (stock[idx].Young.NoAnimals * stock[idx].Young.LiveWeight);
                     }
                 massKGHA = massKGHA / thePadd.Area;
             }
@@ -1307,8 +1066,6 @@
 
             return result;
         }
-
-        // function    returnRemoval(     iForageID : Integer; sUnit : string   ) : TGrazingOutputs;
 
         /// <summary>
         /// Calculate the weighted mean
@@ -1398,15 +1155,12 @@
         ///        don't need to concern ourselves with unweaned young in this        
         ///        particular calculation except when computing PatchFract.           
         /// </summary>
-        /// <param name="paddID">Paddock ID</param>
+        /// <param name="thePadd">Paddock</param>
         /// <param name="excretion">The excretion info</param>
-        public void ReturnExcretion(int paddID, out ExcretionInfo excretion)
+        public void ReturnExcretion(PaddockInfo thePadd, out ExcretionInfo excretion)
         {
-            PaddockInfo thePadd;
             double area;
             int idx;
-
-            thePadd = this.Paddocks.Find(p => p.PaddID == paddID);
 
             if (thePadd != null)
                 area = thePadd.Area;
@@ -1422,11 +1176,11 @@
             excretion = new ExcretionInfo();
             for (idx = 1; idx <= this.Count(); idx++)
             {
-                if ((thePadd == null) || (this.GetPaddInfo(idx) == thePadd))
+                if ((thePadd == null) || (stock[idx].PaddOccupied == thePadd))
                 {
-                    this.AddExcretions(ref excretion, this.At(idx).Excretion);
-                    if (this.At(idx).Young != null)
-                        this.AddExcretions(ref excretion, this.At(idx).Young.Excretion);
+                    this.AddExcretions(ref excretion, stock[idx].Excretion);
+                    if (stock[idx].Young != null)
+                        this.AddExcretions(ref excretion, stock[idx].Young.Excretion);
                 }
             }
 
@@ -1451,9 +1205,9 @@
             AnimalGroup theGroup;
 
             if (useYoung)
-                theGroup = this.At(idx).Young;
+                theGroup = stock[idx].Young;
             else
-                theGroup = this.At(idx);
+                theGroup = stock[idx];
             if (theGroup == null)
                 result = string.Empty;
             else
@@ -1533,64 +1287,6 @@
         }
 
         /// <summary>
-        /// The age information
-        /// </summary>
-        internal class AgeInfo
-        {
-            /// <summary>
-            /// Proportion
-            /// </summary>
-            public double Propn;
-
-            /// <summary>
-            /// Proportion pregnant
-            /// </summary>
-            public double[] PropnPreg = new double[4];
-
-            /// <summary>
-            /// Proportion lactating
-            /// </summary>
-            public double[] PropnLact = new double[4];
-
-            /// <summary>
-            /// The animal numbers preg and lactating
-            /// </summary>
-            public int[,] Numbers = new int[4, 4];
-
-            /// <summary>
-            /// Gets or sets the age of animal
-            /// </summary>
-            public int AgeDays { get; set; }
-
-            /// <summary>
-            /// Gets or sets the normal base weight
-            /// </summary>
-            public double NormalBaseWt { get; set; }
-
-            /// <summary>
-            /// Gets or sets the animals base weight
-            /// </summary>
-            public double BaseWeight { get; set; }
-
-            /// <summary>
-            /// Gets or sets the fleece weight in kg
-            /// </summary>
-            public double FleeceWt { get; set; }
-
-            /// <summary>
-            /// Gets or sets the age at mating in days
-            /// </summary>
-            public int AgeAtMating { get; set; }
-
-            /// <summary>
-            /// Gets or sets the size at mating in kg
-            /// </summary>
-            public double SizeAtMating { get; set; }
-        }
-
-        // Management events .......................................................
-
-        /// <summary>
         /// Add animal cohorts
         /// </summary>
         /// <param name="cohortsInfo">The animal cohort</param>
@@ -1635,7 +1331,7 @@
 
             if (cohortsInfo.Number > 0)
             {
-                mainGenotype = this.GetGenotype(cohortsInfo.Genotype);
+                mainGenotype = parentStockModel.Genotypes.Get(cohortsInfo.Genotype);
 
                 ageInfoList = new AgeInfo[cohortsInfo.MaxYears + 1];
                 for (int i = 0; i < cohortsInfo.MaxYears + 1; i++)
@@ -1965,7 +1661,7 @@
 
             if (animalInfo.Number > 0)
             {
-                agenotype = this.GetGenotype(animalInfo.Genotype);
+                agenotype = parentStockModel.Genotypes.Get(animalInfo.Genotype);
 
                 if (animalInfo.LiveWt > 0.0)
                     liveWeight = animalInfo.LiveWt;
@@ -2018,7 +1714,7 @@
                 {
                     // Use TAnimalGroup's property interface to set up pregnancy and lactation.  
                     if (animalInfo.MatedTo != string.Empty)                                      
-                        newGroup.MatedTo = this.GetGenotype(animalInfo.MatedTo);            
+                        newGroup.MatedTo = parentStockModel.Genotypes.Get(animalInfo.MatedTo);            
                     newGroup.Pregnancy = animalInfo.Preg;
                     newGroup.Lactation = animalInfo.Lact;
 
@@ -2088,10 +1784,10 @@
             while ((idx <= this.Count()) && (number > 0))                                   
             {
                 // Does this call apply to group I?      
-                if (((groupIdx == 0) || (groupIdx == idx)) && (this.At(idx) != null))       
+                if (((groupIdx == 0) || (groupIdx == idx)) && (stock[idx] != null))       
                 {
-                    numToSell = Math.Min(number, this.At(idx).NoAnimals);
-                    this.At(idx).NoAnimals = this.At(idx).NoAnimals - numToSell;
+                    numToSell = Math.Min(number, stock[idx].NoAnimals);
+                    stock[idx].NoAnimals = stock[idx].NoAnimals - numToSell;
                     if (groupIdx == 0)
                         number = number - numToSell;
                     else
@@ -2120,10 +1816,10 @@
             while ((idx <= this.Count()) && (remainToSell > 0))                             
             {
                 // Does this call apply to group I? 
-                if ((tagNo == this.GetTag(idx)) && (this.At(idx) != null))                            
+                if ((tagNo == stock[idx].Tag) && (stock[idx] != null))                            
                 {
-                    numToSell = Math.Min(remainToSell, this.At(idx).NoAnimals);             // only sell what is possible from this group
-                    this.At(idx).NoAnimals = this.At(idx).NoAnimals - numToSell;
+                    numToSell = Math.Min(remainToSell, stock[idx].NoAnimals);             // only sell what is possible from this group
+                    stock[idx].NoAnimals = stock[idx].NoAnimals - numToSell;
                     remainToSell = remainToSell - numToSell;
                 }
                 idx++;
@@ -2144,12 +1840,12 @@
 
             for (idx = 1; idx <= this.Count(); idx++)
             {
-                if (((groupIdx == 0) || (groupIdx == idx)) && (this.At(idx) != null))
+                if (((groupIdx == 0) || (groupIdx == idx)) && (stock[idx] != null))
                 {
                     if (adults)
-                        this.At(idx).Shear(ref dummy);
-                    if (lambs && (this.At(idx).Young != null))
-                        this.At(idx).Young.Shear(ref dummy);
+                        stock[idx].Shear(ref dummy);
+                    if (lambs && (stock[idx].Young != null))
+                        stock[idx].Young.Shear(ref dummy);
                 }
             }
         }
@@ -2166,8 +1862,8 @@
             int idx;
 
             for (idx = 1; idx <= this.Count(); idx++)
-                if (((groupIdx == 0) || (groupIdx == idx)) && (this.At(idx) != null))
-                    this.At(idx).Join(this.GetGenotype(mateTo), mateDays);
+                if (((groupIdx == 0) || (groupIdx == idx)) && (stock[idx] != null))
+                    stock[idx].Join(parentStockModel.Genotypes.Get(mateTo), mateDays);
         }
 
         /// <summary>
@@ -2186,14 +1882,14 @@
             n = this.Count();                                                                   // Store the initial list size so that groups which are split off aren't processed twice
             for (idx = 1; idx <= n; idx++)                                                                                         
             {
-                if (((groupIdx == 0) || (groupIdx == idx)) && (this.At(idx) != null))               
+                if (((groupIdx == 0) || (groupIdx == idx)) && (stock[idx] != null))               
                 {
-                    if ((this.At(idx).Young != null) && (this.At(idx).Young.MaleNo > 0) && (number > 0))
+                    if ((stock[idx].Young != null) && (stock[idx].Young.MaleNo > 0) && (number > 0))
                     {
-                        numToCastrate = Math.Min(number, this.At(idx).Young.MaleNo);
-                        if (numToCastrate < this.At(idx).Young.MaleNo)
-                            this.Split(idx, Convert.ToInt32(Math.Round((double)number / numToCastrate * this.At(idx).NoAnimals), CultureInfo.InvariantCulture));  // TODO: check this conversion
-                        this.At(idx).Young.Castrate();
+                        numToCastrate = Math.Min(number, stock[idx].Young.MaleNo);
+                        if (numToCastrate < stock[idx].Young.MaleNo)
+                            this.Split(idx, Convert.ToInt32(Math.Round((double)number / numToCastrate * stock[idx].NoAnimals), CultureInfo.InvariantCulture));  // TODO: check this conversion
+                        stock[idx].Young.Castrate();
                         number = number - numToCastrate;
                     }
                 }
@@ -2222,17 +1918,17 @@
             for (idx = 1; idx <= n; idx++)                                                  
             {
                 // Group Idx, or all groups if 0         
-                if (((groupIdx == 0) || (groupIdx == idx)) && (this.At(idx) != null))       
+                if (((groupIdx == 0) || (groupIdx == idx)) && (stock[idx] != null))       
                 {
-                    if (this.At(idx).Young != null)
+                    if (stock[idx].Young != null)
                     {
                         // Establish the number of lambs/calves to wean from this group of mothers  
                         if (weanMales && weanFemales)                                       
-                            numToWean = Math.Min(number, this.At(idx).Young.NoAnimals);     
+                            numToWean = Math.Min(number, stock[idx].Young.NoAnimals);     
                         else if (weanMales)
-                            numToWean = Math.Min(number, this.At(idx).Young.MaleNo);
+                            numToWean = Math.Min(number, stock[idx].Young.MaleNo);
                         else if (weanFemales)
-                            numToWean = Math.Min(number, this.At(idx).Young.FemaleNo);
+                            numToWean = Math.Min(number, stock[idx].Young.FemaleNo);
                         else
                             numToWean = 0;
 
@@ -2242,15 +1938,15 @@
                             {
                                 // If there are more lambs/calves present than are to be weaned, split the excess off                       
                                 if (weanMales && weanFemales)                                                               
-                                    mothersToWean = Convert.ToInt32(Math.Round((double)numToWean / this.At(idx).NoOffspring), CultureInfo.InvariantCulture);
+                                    mothersToWean = Convert.ToInt32(Math.Round((double)numToWean / stock[idx].NoOffspring), CultureInfo.InvariantCulture);
                                 else                                                                                        
-                                    mothersToWean = Convert.ToInt32(Math.Round(numToWean / (this.At(idx).NoOffspring / 2.0)), CultureInfo.InvariantCulture);
-                                if (mothersToWean < this.At(idx).NoAnimals)
+                                    mothersToWean = Convert.ToInt32(Math.Round(numToWean / (stock[idx].NoOffspring / 2.0)), CultureInfo.InvariantCulture);
+                                if (mothersToWean < stock[idx].NoAnimals)
                                     this.Split(idx, mothersToWean);
                             }
                             newGroups = null;                                                           // Carry out the weaning process. N.B.   
-                            this.At(idx).Wean(weanFemales, weanMales, ref newGroups, ref newGroups);    // the weaners appear in the same      
-                            this.Add(newGroups, this.GetPaddInfo(idx), this.GetTag(idx), this.GetPriority(idx));  // paddock as their mothers and with   
+                            stock[idx].Wean(weanFemales, weanMales, ref newGroups, ref newGroups);    // the weaners appear in the same      
+                            this.Add(newGroups, stock[idx].PaddOccupied, stock[idx].Tag, stock[idx].Priority);  // paddock as their mothers and with   
                             newGroups = null;                                                           // the same tag and priority value     
                         }
 
@@ -2278,14 +1974,14 @@
             for (idx = 1; idx <= n; idx++)                                                          
             {
                 // Group I, or all groups if I=0
-                if (((groupIdx == 0) || (groupIdx == idx)) && (this.At(idx) != null) && (this.At(idx).Lactation > 0))
+                if (((groupIdx == 0) || (groupIdx == idx)) && (stock[idx] != null) && (stock[idx].Lactation > 0))
                 {
-                    numToDryOff = Math.Min(number, this.At(idx).FemaleNo);
+                    numToDryOff = Math.Min(number, stock[idx].FemaleNo);
                     if (numToDryOff > 0)
                     {
-                        if (numToDryOff < this.At(idx).FemaleNo)
+                        if (numToDryOff < stock[idx].FemaleNo)
                             this.Split(idx, numToDryOff);
-                        this.At(idx).DryOff();
+                        stock[idx].DryOff();
                     }
                     number = number - numToDryOff;
                 }
@@ -2310,7 +2006,7 @@
             {
                 numToSplit = Math.Max(0, srcGroup.NoAnimals - Math.Max(numToKeep, 0));
                 if (numToSplit > 0)
-                    this.Add(srcGroup.Split(numToSplit, false, srcGroup.NODIFF, srcGroup.NODIFF), this.GetPaddInfo(groupIdx), this.GetTag(groupIdx), this.GetPriority(groupIdx));
+                    this.Add(srcGroup.Split(numToSplit, false, srcGroup.NODIFF, srcGroup.NODIFF), stock[groupIdx].PaddOccupied, stock[groupIdx].Tag, stock[groupIdx].Priority);
             }
         }
 
@@ -2330,7 +2026,7 @@
             {
                 srcGroup.GetOlder(ageDays, ref numMales, ref numFemales);
                 if (numMales + numFemales > 0)
-                    this.Add(srcGroup.Split(numMales + numFemales, true, srcGroup.NODIFF, srcGroup.NODIFF), this.GetPaddInfo(groupIdx), this.GetTag(groupIdx), this.GetPriority(groupIdx));
+                    this.Add(srcGroup.Split(numMales + numFemales, true, srcGroup.NODIFF, srcGroup.NODIFF), stock[groupIdx].PaddOccupied, stock[groupIdx].Tag, stock[groupIdx].Priority);
             }
         }
 
@@ -2400,9 +2096,9 @@
 
                     this.Add(
                          srcGroup.Split(numToRemove, false, diffs, srcGroup.NODIFF),     // Now we have computed Diffs, we split  
-                         this.GetPaddInfo(groupIdx), 
-                         this.GetTag(groupIdx), 
-                         this.GetPriority(groupIdx));   // up the animals                      
+                         stock[groupIdx].PaddOccupied,
+                         stock[groupIdx].Tag,
+                         stock[groupIdx].Priority);   // up the animals                      
                 } 
             }
         }
@@ -2421,7 +2117,7 @@
             {
                 newGroups = null;
                 srcGroup.SplitYoung(ref newGroups);
-                this.Add(newGroups, this.GetPaddInfo(groupIdx), this.GetTag(groupIdx), this.GetPriority(groupIdx));
+                this.Add(newGroups, stock[groupIdx].PaddOccupied, stock[groupIdx].Tag, stock[groupIdx].Priority);
                 newGroups = null;
             }
         }
@@ -2475,9 +2171,9 @@
                 // Paddocks occupied by groups that are not to be drafted                   
                 for (idx = 1; idx <= this.Count(); idx++)                                           
                 {
-                    if (this.GetPriority(idx) <= 0)                                                      
+                    if (stock[idx].Priority <= 0)                                                      
                     {
-                        paddIdx = this.Paddocks.FindIndex(p => p.Name.Equals(GetInPadd(idx), StringComparison.InvariantCultureIgnoreCase));
+                        paddIdx = this.Paddocks.FindIndex(p => p.Name.Equals(stock[idx].PaddOccupied.Name, StringComparison.InvariantCultureIgnoreCase));
                         if (paddIdx >= 0)
                             available[paddIdx] = false;
                     }
@@ -2492,7 +2188,7 @@
                 }
 
                 // Rank order for open, unoccupied paddocks                            
-                tempAnimals = this.At(1).Copy();
+                tempAnimals = stock[1].Copy();
                 for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)                 
                 {
                     if (available[paddIdx])
@@ -2527,14 +2223,14 @@
                     bestPriority = int.MaxValue;                                                  // Locate the next-smallest priority score 
                     for (idx = 1; idx <= this.Count(); idx++)
                     {
-                        if ((this.GetPriority(idx) < bestPriority) && (this.GetPriority(idx) > prevPriority))
-                            bestPriority = this.GetPriority(idx);
+                        if ((stock[idx].Priority < bestPriority) && (stock[idx].Priority > prevPriority))
+                            bestPriority = stock[idx].Priority;
                     }
 
                     // Move animals with that priority score 
                     for (idx = 1; idx <= this.Count(); idx++)                                       
                     {
-                        if (this.GetPriority(idx) == bestPriority)
+                        if (stock[idx].Priority == bestPriority)
                             stock[idx].PaddOccupied = Paddocks[bestPadd];
                     }
                     available[bestPadd] = false;
@@ -2575,9 +2271,9 @@
                 // Paddocks occupied by groups that are not to be drafted                   
                 for (idx = 1; idx <= this.Count(); idx++)                                   
                 {
-                    if (this.GetPriority(idx) <= 0)                                              
+                    if (stock[idx].Priority <= 0)                                              
                     {
-                        paddIdx = this.Paddocks.FindIndex(p => p.Name.Equals(GetInPadd(idx), StringComparison.InvariantCultureIgnoreCase));
+                        paddIdx = this.Paddocks.FindIndex(p => p.Name.Equals(stock[idx].PaddOccupied.Name, StringComparison.InvariantCultureIgnoreCase));
                         if (paddIdx >= 0)
                             available[paddIdx] = false;
                     }
@@ -2591,7 +2287,7 @@
                         available[paddIdx] = false;
                 }
 
-                tempAnimals = this.At(1).Copy();
+                tempAnimals = stock[1].Copy();
 
                 // Rank order for open, unoccupied
                 for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)                            
@@ -2626,14 +2322,14 @@
                     bestPriority = Int32.MaxValue;                                         // Locate the next-smallest priority score 
                     for (idx = 1; idx <= this.Count(); idx++)
                     {
-                        if ((this.GetPriority(idx) < bestPriority) && (this.GetPriority(idx) > prevPriority))
-                            bestPriority = this.GetPriority(idx);
+                        if ((stock[idx].Priority < bestPriority) && (stock[idx].Priority > prevPriority))
+                            bestPriority = stock[idx].Priority;
                     }
 
                     // Move animals with that priority score 
                     for (idx = 1; idx <= this.Count(); idx++)                               
                     {
-                        if ((this.GetTag(idx) == tagNo) && (this.GetPriority(idx) == bestPriority))
+                        if ((stock[idx].Tag == tagNo) && (stock[idx].Priority == bestPriority))
                             stock[idx].PaddOccupied = Paddocks[bestPadd];
                     }
 
@@ -2711,9 +2407,9 @@
             int paddIdx, idx;
 
             if (this.Count() > 0)
-                tempAnimals = this.At(1).Copy();
+                tempAnimals = stock[1].Copy();
             else
-                tempAnimals = new AnimalGroup(this.GetGenotype("Medium Merino"), GrazType.ReproType.Empty, 1, 365 * 4, 50.0, 0.0, parentStockModel.randFactory, clock, weather);
+                tempAnimals = new AnimalGroup(parentStockModel.Genotypes.Get("Medium Merino"), GrazType.ReproType.Empty, 1, 365 * 4, 50.0, 0.0, parentStockModel.randFactory, clock, weather);
             for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)
                 paddockRank[paddIdx] = this.GetPaddockRank(this.Paddocks[paddIdx], tempAnimals);
 
@@ -2732,33 +2428,6 @@
                 }
                 paddockList.Add(this.Paddocks[bestPadd].Name);
                 paddockRank[bestPadd] = -999.9;
-            }
-        }
-
-        /// <summary>
-        /// The reproduction record
-        /// </summary>
-        private struct ReproRecord
-        {
-            /// <summary>
-            /// The name
-            /// </summary>
-            public string Name;
-
-            /// <summary>
-            /// The reproduction record
-            /// </summary>
-            public GrazType.ReproType Repro;
-
-            /// <summary>
-            /// The ReproRecord constructor
-            /// </summary>
-            /// <param name="name">Name of the reproduction</param>
-            /// <param name="repro">Reproduction type</param>
-            public ReproRecord(string name, GrazType.ReproType repro)
-            {
-                this.Name = name;
-                this.Repro = repro;
             }
         }
 
@@ -2784,46 +2453,6 @@
             }
             return false;
         }
-                
-        /// <summary>
-        /// These functions return the number of days from the first date to the  
-        /// second.  PosInterval assumes that its arguments are days-of-year, i.e.    
-        /// YearOf(DOY1)=YearOf(DOY2)=0, while DaysFromDOY treats its first argument  
-        /// as though it is a day-of-year and computes the number of days from that   
-        /// day-of-year to the second date.                                           
-        /// </summary>
-        /// <param name="dayOfYear1">Start day</param>
-        /// <param name="dayOfYear2">End day</param>
-        /// <returns>The interval in days</returns>
-        private int PosInterval(int dayOfYear1, int dayOfYear2)
-        {
-            int result = StdDate.Interval(dayOfYear1, dayOfYear2);
-            if (result < 0)
-                result = 366 + result;
-            return result;
-        }
-
-        /// <summary>
-        /// Get the days difference
-        /// </summary>
-        /// <param name="dayOfYear">Start date</param>
-        /// <param name="theDate">The end date</param>
-        /// <returns>The difference</returns>
-        private int DaysFromDOY(int dayOfYear, int theDate)
-        {
-            int DOY_MASK = 0xFFFF;
-            int result;
-            if (StdDate.YearOf(theDate) == 0)
-                result = this.PosInterval(dayOfYear & DOY_MASK, theDate);
-            else
-            {
-                dayOfYear = StdDate.DateVal(StdDate.DayOf(dayOfYear), StdDate.MonthOf(dayOfYear), StdDate.YearOf(theDate));
-                if (dayOfYear > theDate)
-                    dayOfYear = StdDate.DateShift(dayOfYear, 0, 0, -1);
-                result = StdDate.Interval(dayOfYear, theDate);
-            }
-            return result;
-        }
 
         /// <summary>
         /// Tests for a non-MISSING, non-zero value                                      
@@ -2833,29 +2462,6 @@
         public bool IsGiven(double x)
         {
             return ((x != 0.0) && (Math.Abs(x - StdMath.DMISSING) > Math.Abs(0.0001 * StdMath.DMISSING)));
-        }
-
-        /// <summary>
-        /// Calculate the days from the day of year in a non leap year
-        /// </summary>
-        /// <param name="dayOfYear">Start day</param>
-        /// <param name="otherDay">End day</param>
-        /// <returns>The days in the interval</returns>
-        public int DaysFromDOY365(int dayOfYear, int otherDay)
-        {
-            int theDOY;
-            int result;
-
-            if (dayOfYear == 0)
-                result = 0;
-            else
-            {
-                theDOY = StdDate.DateShift(StdDate.DateVal(31, 12, StdDate.YearOf(otherDay) - 1), dayOfYear % 365, 0, 0);
-                if ((StdDate.YearOf(otherDay) > 0) && (theDOY > otherDay))
-                    theDOY = StdDate.DateShift(theDOY, 0, 0, -1);
-                result = StdDate.Interval(theDOY, otherDay);
-            }
-            return result;
         }
 
         /// <summary>
@@ -2873,11 +2479,6 @@
             else
                 return secondDOY - firstDOY;
         }
-
-        // checking paddock for grazing move
-        private const int MAX_CRITERIA = 1;
-        private const int DRAFT_MOVE = 0;
-        private string[] CRITERIA = new string[MAX_CRITERIA] { "draft" };   // used in radiogroup on dialog
 
         /// <summary>
         /// Utility routines for manipulating the DM_Pool type.  AddDMPool adds the   
@@ -3082,7 +2683,7 @@
                     {
                         model.Buy(purchaseInfo);
                         if (tagNo > 0)
-                            model.SetTag(model.Count(), tagNo);
+                            model.Animals[model.Count()].Tag = tagNo;
                     }
                 } 
                 else if (stockEvent.GetType() == typeof(StockSell))
@@ -3174,7 +2775,7 @@
                         if ((tagNo > 0) && (model.Count() > groups))     // if a tag for any new group is given
                         {
                             for (int g = groups + 1; g <= model.Count(); g++)
-                                model.SetTag(g, tagNo);
+                                model.Animals[g].Tag = tagNo;
                         }
                     }
                 }
@@ -3203,7 +2804,7 @@
                     if ((tagNo > 0) && (model.Count() > numGroups))     // if a tag for the new group is given
                     {
                         for (int g = numGroups + 1; g <= model.Count(); g++)
-                            model.SetTag(g, tagNo);
+                            model.Animals[g].Tag = tagNo;
                     }
                 }
                 else if (stockEvent.GetType() == typeof(StockTag))
@@ -3211,7 +2812,7 @@
                     StockTag stockInfo = (StockTag)stockEvent;
                     param1 = stockInfo.Group;
                     if ((param1 >= 1) && (param1 <= model.Count()))
-                        model.SetTag(param1, stockInfo.Value);
+                        model.Animals[param1].Tag = stockInfo.Value;
                     else
                         throw new Exception("Invalid group number in TAG event");
                 }
@@ -3224,7 +2825,7 @@
                     StockPrioritise stockInfo = (StockPrioritise)stockEvent;
                     param1 = stockInfo.Group;
                     if ((param1 >= 1) && (param1 <= model.Count()))
-                        model.SetPriority(param1, stockInfo.Value);
+                        model.stock[param1].Priority = stockInfo.Value;
                     else
                         throw new Exception("Invalid group number in PRIORITISE event");
                 }
@@ -3239,5 +2840,21 @@
                     throw new Exception("Event not recognised in STOCK");
             }
         }
+
+        ///// <summary>
+        ///// The reproduction record
+        ///// </summary>
+        //private struct ReproRecord
+        //{
+        //    /// <summary>
+        //    /// The name
+        //    /// </summary>
+        //    public string Name;
+
+        //    /// <summary>
+        //    /// The reproduction record
+        //    /// </summary>
+        //    public GrazType.ReproType Repro;
+        //}
     }
 }
