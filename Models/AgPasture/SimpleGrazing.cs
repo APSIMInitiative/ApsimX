@@ -25,7 +25,7 @@
         [Link] Clock clock = null;
         [Link] ISummary summary = null;
         [Link] List<IPlantDamage> forages = null;
-        [Link] ISolute NO3 = null;
+        [Link(ByName = true)] ISolute Urea = null;
         [Link] Soil soil = null;
         [Link] SurfaceOrganicMatter surfaceOrganicMatter = null;
 
@@ -396,9 +396,9 @@
 
             if (TramplingOn)
             {
-                var proportionLitterMovedToSoil = Math.Min(MathUtilities.Divide(PastureConsumedAtMaximumRateOfLitterRemoval, amountDMToRemove, 0), 
+                var proportionLitterMovedToSoil = Math.Min(MathUtilities.Divide(PastureConsumedAtMaximumRateOfLitterRemoval, amountDMToRemove, 0),
                                                            MaximumPropLitterMovedToSoil);
-                surfaceOrganicMatter.Incorporate(proportionLitterMovedToSoil, depth:100);
+                surfaceOrganicMatter.Incorporate(proportionLitterMovedToSoil, depth: 100);
             }
         }
 
@@ -460,9 +460,10 @@
             // find the layer that the fertilizer is to be added to.
             int layer = soil.LayerIndexOfDepth(DepthUrineIsAdded);
 
-            var no3Values = NO3.kgha;
-            no3Values[layer] += AmountUrineNReturned;
-            NO3.SetKgHa(SoluteSetterType.Fertiliser, no3Values);
+            var ureaValues = Urea.kgha;
+            ureaValues[layer] += AmountUrineNReturned;
+            Urea.SetKgHa(SoluteSetterType.Fertiliser, ureaValues);
+            
         }
 
         /// <summary>Return a value from an array that can have either 1 yearly value or 12 monthly values.</summary>
