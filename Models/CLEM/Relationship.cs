@@ -22,7 +22,7 @@ namespace Models.CLEM
     [Version(1, 0, 3, "Graph of relationship displayed in Summary")]
     [Version(1, 0, 2, "Added RelationshipCalculationMethod to allow user to define fixed or linear solver")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/Relationships/Relationship.htm")]
+    [HelpUri(@"Content/Features/Relationships/Relationship.htm")]
     public class Relationship : CLEMModel, IValidatableObject
     {
         /// <summary>

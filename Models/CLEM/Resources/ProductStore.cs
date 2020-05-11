@@ -48,6 +48,16 @@ namespace Models.CLEM.Resources
             }
         }
 
+        /// <summary>
+        /// Add all events when a new child is added to this resource in run time
+        /// </summary>
+        /// <param name="child"></param>
+        public override void AddNewResourceType(IResourceWithTransactionType child)
+        {
+            child.TransactionOccurred += Resource_TransactionOccurred;
+            this.Children.Add(child as Model);
+        }
+
         #region Transactions
 
         // Must be included away from base class so that APSIM Event.Subscriber can find them 

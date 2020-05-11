@@ -93,7 +93,12 @@ namespace Models.CLEM.Activities
         /// </summary>
         public ResourceRequest LastShortfallResourceRequest { get; set; }
 
-        private void ActivitiesHolder_ResourceShortfallOccurred(object sender, EventArgs e)
+        /// <summary>
+        /// Hander for shortfall
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void ActivitiesHolder_ResourceShortfallOccurred(object sender, EventArgs e)
         {
             // save resource request
             LastShortfallResourceRequest = (e as ResourceRequestEventArgs).Request;

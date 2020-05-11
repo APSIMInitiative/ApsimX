@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 90,
+  "Version": 96,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -756,6 +756,7 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "MaintenanceRespiration": 0.0,
               "GrowthRespiration": 0.0,
@@ -1516,13 +1517,21 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
-              "RootAngle": 45.0,
               "Name": "Root",
               "Children": [
+                {
+                  "$type": "Models.Functions.RootShape.RootShapeCylindre, Models",
+                  "Name": "RootShape",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
                 {
                   "$type": "Models.Functions.PhaseBasedSwitch, Models",
                   "Start": "Emergence",
@@ -1689,16 +1698,6 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 5.0,
-                  "Units": "g/plant",
-                  "Name": "InitialDM",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 100.0,
                   "Units": "m/g",
                   "Name": "SpecificRootLength",
@@ -1845,7 +1844,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.7,
+                          "FixedValue": 1.0,
                           "Units": "g/g",
                           "Name": "StructuralFraction",
                           "Children": [],
@@ -2026,6 +2025,45 @@
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "InitialWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 5.0,
+                      "Units": "g/plant",
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": false,
@@ -2038,6 +2076,7 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "IsAboveGround": true,
@@ -2118,16 +2157,6 @@
                   "FixedValue": 0.0014,
                   "Units": null,
                   "Name": "MinimumNConc",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
-                  "Units": "g/m^2",
-                  "Name": "InitialWtFunction",
                   "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
@@ -2490,6 +2519,45 @@
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "InitialWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": "g/m^2",
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": false,
@@ -2501,6 +2569,7 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "Name": "Nodule",
@@ -3774,7 +3843,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Gliricidia",
                       "ResourceName": "Gliricidia",
                       "Name": "Gliricidia",
                       "IncludeInDocumentation": true,
@@ -5068,7 +5136,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Gliricidia",
                       "ResourceName": "Gliricidia",
                       "Name": "Gliricidia",
                       "IncludeInDocumentation": true,
@@ -6966,7 +7033,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Gliricidia",
                       "ResourceName": "Gliricidia",
                       "Name": "Gliricidia",
                       "IncludeInDocumentation": true,
@@ -10005,7 +10071,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Maize",
                       "ResourceName": "Maize",
                       "Name": "Maize",
                       "IncludeInDocumentation": false,
@@ -10045,7 +10110,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Gliricidia",
                       "ResourceName": "Gliricidia",
                       "Name": "Gliricidia",
                       "IncludeInDocumentation": false,
@@ -12708,7 +12772,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Gliricidia;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Gliricidia.Root.ZoneNamesToGrowRootsIn.Add(\"MaizeZone\");\r\n            Gliricidia.Root.ZoneRootDepths.Add(50);\r\n            Gliricidia.Root.ZoneInitialDM.Add(10);\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                      "Code": "using Models.Functions;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Gliricidia;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            Gliricidia.Root.ZoneNamesToGrowRootsIn.Add(\"MaizeZone\");\r\n            Gliricidia.Root.ZoneRootDepths.Add(50);\r\nBiomassDemand InitialDM = new BiomassDemand();\r\nConstant InitStruct = new Constant();\r\nInitStruct.FixedValue = 10;\r\nInitialDM.Structural = InitStruct;\r\nConstant InitMetab = new Constant();\r\nInitMetab.FixedValue = 0;\r\nInitialDM.Metabolic = InitMetab;\r\nConstant InitStor = new Constant();\r\nInitStor.FixedValue = 0;\r\nInitialDM.Storage = InitStor;\r\n            Gliricidia.Root.ZoneInitialDM.Add(InitialDM);\r\n\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n\n",
                       "Parameters": [
                         {
                           "Key": "UseExtraZone",
@@ -12722,7 +12786,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Gliricidia",
                       "ResourceName": "Gliricidia",
                       "Name": "Gliricidia",
                       "IncludeInDocumentation": true,
@@ -13339,7 +13402,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Maize",
                       "ResourceName": "Maize",
                       "Name": "Maize",
                       "IncludeInDocumentation": false,
@@ -14123,7 +14185,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Maize",
                       "ResourceName": "Maize",
                       "Name": "Maize",
                       "IncludeInDocumentation": false,
@@ -14893,7 +14954,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Maize",
                       "ResourceName": "Maize",
                       "Name": "Maize",
                       "IncludeInDocumentation": false,
@@ -29886,7 +29946,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "CropType": "Gliricidia",
                           "ResourceName": "Gliricidia",
                           "Name": "Gliricidia",
                           "IncludeInDocumentation": false,
@@ -49894,7 +49953,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "CropType": "Gliricidia",
                           "ResourceName": "Gliricidia",
                           "Name": "Gliricidia",
                           "IncludeInDocumentation": false,
@@ -53711,7 +53769,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "CropType": "Gliricidia",
                           "ResourceName": "Gliricidia",
                           "Name": "Gliricidia",
                           "IncludeInDocumentation": false,

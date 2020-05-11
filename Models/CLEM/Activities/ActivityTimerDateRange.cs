@@ -28,6 +28,7 @@ namespace Models.CLEM.Activities
     {
         [XmlIgnore]
         [Link]
+        [NonSerialized]
         Clock Clock = null;
 
         /// <summary>

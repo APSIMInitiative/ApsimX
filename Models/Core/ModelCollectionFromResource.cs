@@ -20,6 +20,16 @@
         /// <summary>Gets or sets the name of the resource.</summary>
         public string ResourceName { get; set; }
 
+        private string FullResourceName
+        {
+            get
+            {
+                if (ResourceName.Contains('.'))
+                    return ResourceName;
+                else
+                    return $"Models.Resources.{ResourceName}.json";
+            }
+        }
         /// <summary>Allow children to be serialised?</summary>
         [JsonIgnore]
         public bool DoSerialiseChildren
@@ -77,7 +87,7 @@
             // lookup the resource get the xml and then deserialise to a model.
             if (!string.IsNullOrEmpty(ResourceName))
             {
-                string contents = ReflectionUtilities.GetResourceAsString("Models.Resources." + ResourceName + ".json");
+                var contents = ReflectionUtilities.GetResourceAsString(FullResourceName);
                 if (contents != null)
                 {
                     Model modelFromResource = GetResourceModel();
@@ -103,7 +113,7 @@
         {
             if (ResourceName != null && ResourceName != "")
             {
-                string contents = ReflectionUtilities.GetResourceAsString("Models.Resources." + ResourceName + ".json");
+                string contents = ReflectionUtilities.GetResourceAsString(FullResourceName);
                 if (contents != null)
                 {
                     var parameterNames = new List<string>();
@@ -147,10 +157,10 @@
 
         private Model GetResourceModel()
         {
-            if (string.IsNullOrEmpty(ResourceName))
+            if (string.IsNullOrEmpty(FullResourceName))
                 return null;
 
-            string contents = ReflectionUtilities.GetResourceAsString($"Models.Resources.{ResourceName}.json");
+            string contents = ReflectionUtilities.GetResourceAsString(FullResourceName);
             if (string.IsNullOrEmpty(contents))
                 return null;
 

@@ -249,7 +249,7 @@ namespace Models.CLEM.Activities
                 case LabourUnitType.perKg:
                     return "kg";
                 case LabourUnitType.perUnit:
-                    return "hectare";
+                    return "unit";
                 default:
                     return "Unknown";
             }

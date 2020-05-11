@@ -972,18 +972,5 @@
                 explorerPresenter.MainPresenter.ShowError(err);
             }
         }
-
-        [ContextMenu(MenuName = "Add all genotypes",
-                     AppliesTo = new[] { typeof(Stock) })]
-        public void AddSheepGenotypes(object sender, EventArgs e)
-        {
-            var stock = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Stock;
-            foreach (var genotype in stock.Genotypes.All)
-            {
-                var command = new AddModelCommand(explorerPresenter.CurrentNodePath, genotype.Parameters, explorerPresenter);
-                command.Do(null);
-            }
-        }
-
     }
 }
