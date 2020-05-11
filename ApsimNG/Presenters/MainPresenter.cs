@@ -128,14 +128,18 @@
 
             foreach (ExplorerPresenter presenter in this.Presenters1.OfType<ExplorerPresenter>())
             {
-                ok &= presenter.SaveIfChanged();
-                presenter.Detach();
+                if (presenter.SaveIfChanged())
+                    presenter.Detach();
+                else
+                    ok = false;
             }
 
             foreach (ExplorerPresenter presenter in this.presenters2.OfType<ExplorerPresenter>())
             {
-                ok &= presenter.SaveIfChanged();
-                presenter.Detach();
+                if (presenter.SaveIfChanged())
+                    presenter.Detach();
+                else
+                    ok = false;
             }
 
             return ok;
