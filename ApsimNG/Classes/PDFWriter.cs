@@ -392,13 +392,20 @@
                                 map.HideZoomControls();
 
                             popupWin.ShowAll();
+
                             while (Gtk.Application.EventsPending())
                                 Gtk.Application.RunIteration();
 
-                            // todo - we may need to add a small wait here
-                            // we used to have context-sensitive code in the
-                            // mapview which I have removed. Need to test this
-                            // on webkit and safari.
+                            // From MapView:
+                            // With WebKit, it appears we need to give it time to actually update the display
+                            // Really only a problem with the temporary windows used for generating documentation
+                            if (view is MapView)
+                            {
+                                var watch = new System.Diagnostics.Stopwatch();
+                                watch.Start();
+                                while (watch.ElapsedMilliseconds < 1000)
+                                    Gtk.Application.RunIteration();
+                            }
 
                             string pngFileName = (presenter as IExportable).ExportToPNG(WorkingDirectory);
                             section.AddImage(pngFileName);
