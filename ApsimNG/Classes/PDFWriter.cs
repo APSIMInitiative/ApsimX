@@ -372,7 +372,11 @@
                     PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(modelView.model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
                     if (viewName != null && presenterName != null)
                     {
-                        ViewBase view = Assembly.GetExecutingAssembly().CreateInstance(viewName.ToString(), false, BindingFlags.Default, null, new object[] { ViewBase.MasterView }, null, null) as ViewBase;
+                        ViewBase owner = ViewBase.MasterView as ViewBase;
+                        if (viewName.ToString() == "UserInterface.Views.MapView")
+                            owner = null;
+
+                        ViewBase view = Assembly.GetExecutingAssembly().CreateInstance(viewName.ToString(), false, BindingFlags.Default, null, new object[] { owner }, null, null) as ViewBase;
                         IPresenter presenter = Assembly.GetExecutingAssembly().CreateInstance(presenterName.ToString()) as IPresenter;
 
                         if (view != null && presenter != null)
@@ -380,21 +384,21 @@
                             explorerPresenter.ApsimXFile.Links.Resolve(presenter);
                             presenter.Attach(modelView.model, view, explorerPresenter);
 
-                            Gtk.Window popupWin = null;
-                            if (view is MapView)
-                            {
-                                popupWin = (view as MapView)?.GetPopupWin();
-                                popupWin?.SetSizeRequest(515, 500);
-                            }
-                            if (popupWin == null)
-                            {
-                                popupWin = new Gtk.Window(Gtk.WindowType.Popup);
-                                popupWin.SetSizeRequest(800, 800);
-                                popupWin.Add(view.MainWidget);
-                            }
+                            Gtk.Window popupWin = new Gtk.Window(Gtk.WindowType.Popup);
+                            popupWin.SetSizeRequest(800, 800);
+                            popupWin.Add(view.MainWidget);
+
+                            if (view is IMapView map)
+                                map.HideZoomControls();
+
                             popupWin.ShowAll();
                             while (Gtk.Application.EventsPending())
                                 Gtk.Application.RunIteration();
+
+                            // todo - we may need to add a small wait here
+                            // we used to have context-sensitive code in the
+                            // mapview which I have removed. Need to test this
+                            // on webkit and safari.
 
                             string pngFileName = (presenter as IExportable).ExportToPNG(WorkingDirectory);
                             section.AddImage(pngFileName);
