@@ -384,27 +384,21 @@
                             explorerPresenter.ApsimXFile.Links.Resolve(presenter);
                             presenter.Attach(modelView.model, view, explorerPresenter);
 
-                            Gtk.Window popupWin = null;
-                            if (view is MapView)
-                            {
-                                popupWin = (view as MapView)?.GetPopupWin();
-                                popupWin?.SetSizeRequest(515, 500);
-                            }
-                            if (popupWin == null)
-                            {
-                                popupWin = new Gtk.Window(Gtk.WindowType.Popup);
-                                popupWin.SetSizeRequest(800, 800);
-                                popupWin.Add(view.MainWidget);
-                            }
+                            Gtk.Window popupWin = new Gtk.Window(Gtk.WindowType.Popup);
+                            popupWin.SetSizeRequest(800, 800);
+                            popupWin.Add(view.MainWidget);
+
                             if (view is IMapView map)
-                            {
-                                map.EnsureMarkersAreVisible();
                                 map.HideZoomControls();
-                            }
 
                             popupWin.ShowAll();
                             while (Gtk.Application.EventsPending())
                                 Gtk.Application.RunIteration();
+
+                            // todo - we may need to add a small wait here
+                            // we used to have context-sensitive code in the
+                            // mapview which I have removed. Need to test this
+                            // on webkit and safari.
 
                             string pngFileName = (presenter as IExportable).ExportToPNG(WorkingDirectory);
                             section.AddImage(pngFileName);

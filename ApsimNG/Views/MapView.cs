@@ -18,6 +18,12 @@
         /// </summary>
         event EventHandler ViewChanged;
 
+        /// <summary>
+        /// Invoked when the user wants to preview the map as it will appear
+        /// in the autodocs.
+        /// </summary>
+        event EventHandler PreviewDocs;
+
         /// <summary>Show the map</summary>
         void ShowMap(List<Models.Map.Coordinate> coordinates, List<string> locNames, double zoom, Models.Map.Coordinate center);
 
@@ -37,11 +43,6 @@
         /// Store current position and zoom settings
         /// </summary>
         void StoreSettings();
-
-        /// <summary>
-        /// Decrease zoom level enough that all markers are visible.
-        /// </summary>
-        void EnsureMarkersAreVisible();
 
         /// <summary>
         /// Hide zoom controls.
@@ -65,14 +66,74 @@
     /// </summary>
     public class MapView : HTMLView, IMapView
     {
+        private double zoom = 1.0;
+        private Gtk.Button previewDocsButton;
+
+        /// <summary>
+        /// Latitude of the center position.
+        /// </summary>
+        /// <remarks>
+        /// It would be more convenient to use a Coordinate object,
+        /// but then we run into shallow copy issues because the presenter
+        /// does this.view.Center = map.Center; which means that
+        /// modifying the center object will modify the map's center
+        /// object, meaning the user dragging the map around won't
+        /// be undo-able (or redoable).
+        /// </remarks>
+        private double latitude;
+
+        /// <summary>
+        /// Longitude of the center position.
+        /// </summary>
+        /// <remarks>
+        /// See remarks on latitude.
+        /// </remarks>
+        private double longitude;
+
         /// <summary>
         /// Invoked when the zoom level or map center is changed
         /// </summary>
         public event EventHandler ViewChanged;
 
+        /// <summary>
+        /// Invoked when the user wants to preview the map as it will appear
+        /// in the autodocs.
+        /// </summary>
+        public event EventHandler PreviewDocs;
+
         /// <summary>Construtor</summary>
         public MapView(ViewBase owner) : base(owner)
         {
+            if (owner != null)
+            {
+                previewDocsButton = new Gtk.Button("Preview Map Documentation");
+                previewDocsButton.HasTooltip = true;
+                previewDocsButton.TooltipText = "Click to show a preview of how the map will appear in the auto-generated documentation";
+                previewDocsButton.Clicked += OnPreviewDocsClicked;
+                vbox2.PackEnd(previewDocsButton, false, false, 0);
+            }
+
+            MainWidget.Destroyed += OnMainWidgetDestroyed;
+        }
+
+        private void OnMainWidgetDestroyed(object sender, EventArgs e)
+        {
+            MainWidget.Destroyed -= OnMainWidgetDestroyed;
+
+            if (previewDocsButton != null)
+                previewDocsButton.Clicked -= OnPreviewDocsClicked;
+        }
+
+        private void OnPreviewDocsClicked(object sender, EventArgs e)
+        {
+            try
+            {
+                PreviewDocs?.Invoke(this, EventArgs.Empty);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Show the map</summary>
@@ -111,8 +172,6 @@
             html += "    var mymap = L.map('mapid', {";
             html += "center: new L.LatLng(" + center.Latitude.ToString(CultureInfo.InvariantCulture) + ", " + center.Longitude.ToString(CultureInfo.InvariantCulture) + ")";
             html += ", zoom: " + zoom.ToString(CultureInfo.InvariantCulture);
-            if (popupWindow != null) // Exporting to a report, so leave off the zoom control
-                html += ", zoomControl: false";
             html += "});";
 
 
@@ -136,10 +195,11 @@
     {
         L.marker(locations[i]).addTo(mymap).bindPopup('<b>' + locations[i][2] + '</b><br>Latitude: ' + locations[i][0] + '<br>Longitude: ' + locations[i][1]);
     }
-    AutoZoom();
+
     function SetTitle()
     {
-        window.document.title = mymap.getZoom().toString() + ', (' + mymap.getCenter().lat.toString() + ', ' + mymap.getCenter().lng.toString() + ')';
+	    var center = mymap.getCenter().wrap();
+	    window.document.title = mymap.getZoom().toString() + ', (' + center.lat.toString() + ', ' + center.lng.toString() + ')';
     }
     function SetZoom(newZoom)
     {
@@ -151,18 +211,9 @@
         mymap.panTo(center);
     }
 
-    function AutoZoom()
-    {
-    	var markers = [];
-    	for (i = 0; i < locations.length; i++)
-    		markers.push(L.marker(locations[i]));
-        if (markers.length > 0)
-    	    mymap.fitBounds(new L.featureGroup(markers).getBounds());
-    }
-
     function HideZoomControls()
     {
-        mymap.zoomControl = false;
+        mymap.removeControl(mymap.zoomControl);
     }
 
     mymap.on('zoomend', SetTitle);
@@ -175,12 +226,6 @@
 </html>";
             SetContents(html, false);
         }
-
-        /// <summary>
-        /// Returns the Popup window used for exporting
-        /// </summary>
-        /// <returns></returns>
-        public Gtk.Window GetPopupWin() { return popupWindow; }
 
         /// <summary>
         /// Export the map to an image.
@@ -219,10 +264,6 @@
             return bitmap;
         }
 
-        private double zoom = 1.0;
-
-        private Models.Map.Coordinate center = new Models.Map.Coordinate() { Latitude = 0.0, Longitude = 0.0 };
-
         /// <summary>
         /// Get or set the zoom factor of the map
         /// </summary>
@@ -236,7 +277,10 @@
             {
                 zoom = Math.Truncate(value + 0.5);
                 browser.ExecJavaScript("SetZoom", new object[] { (int)zoom });
-                if (popupWindow != null)
+
+                // With WebKit, it appears we need to give it time to actually update the display
+                // Really only a problem with the temporary windows used for generating documentation
+                if (owner == null)
                 {
                     Stopwatch watch = new Stopwatch();
                     watch.Start();
@@ -253,16 +297,17 @@
         {
             get
             {
-                return center;
+                return new Models.Map.Coordinate(latitude, longitude);
             }
             set
             {
-                center = value;
+                latitude = value.Latitude;
+                longitude = value.Longitude;
                 browser.ExecJavaScript("SetCenter", new object[] { value.Latitude, value.Longitude });
 
                 // With WebKit, it appears we need to give it time to actually update the display
                 // Really only a problem with the temporary windows used for generating documentation
-                if (popupWindow != null)
+                if (owner == null)
                 {
                     Stopwatch watch = new Stopwatch();
                     watch.Start();
@@ -275,14 +320,6 @@
         public void StoreSettings()
         {
             NewTitle(browser.GetTitle());
-        }
-
-        /// <summary>
-        /// Decrease zoom level enough that all markers are visible.
-        /// </summary>
-        public void EnsureMarkersAreVisible()
-        {
-            browser.ExecJavaScript("AutoZoom", new object[0]);
         }
 
         public void HideZoomControls()
@@ -307,12 +344,11 @@
                     zoom = newZoom;
                     modified = true;
                 }
-                if (Double.TryParse(parts[1], out newLat) &&
-                    Double.TryParse(parts[2], out newLong) &&
-                    (newLat != center.Latitude || newLong != center.Longitude))
+                if (Double.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out newLat) &&
+                    Double.TryParse(parts[2], NumberStyles.Float, CultureInfo.InvariantCulture, out newLong) &&
+                    (newLat != latitude || newLong != longitude))
                 {
-                    center.Latitude = newLat;
-                    center.Longitude = newLong;
+                    Center = new Models.Map.Coordinate(newLat, newLong);
                     modified = true;
                 }
                 if (modified && ViewChanged != null)
