@@ -670,7 +670,7 @@ namespace Models.GrazPlan
         /// <param name="Rates">Rates array[1..  3]</param>
         private void SetConceptions(double[] Rates)
         {
-            double[] InitScale = new double[2] { 0.08, 0.05 };
+            double[] InitScale = new double[2] { 0.08, -0.05 };
 
             double PR, SeekPR, PrevPR;
             double Scale;
@@ -710,9 +710,9 @@ namespace Models.GrazPlan
                         ComputeConception(ConceiveSigs[1], 1, ref fCR1);
                     PR = ComputeConception(Sigs, N, ref fCR1);                          // Search algorithm begins.  Only a little  
                     if (PR > SeekPR)                                                    //   search, so coded for size not speed    
-                        Scale = -InitScale[Idx];
-                    else
                         Scale = InitScale[Idx];
+                    else
+                        Scale = -InitScale[Idx];
 
                     do
                     {
