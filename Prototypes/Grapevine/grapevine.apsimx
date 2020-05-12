@@ -42873,7 +42873,7 @@
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factor, Models",
-                      "Specification": "[Weather].FileName = Site1001_BRA.met,Site1002_OYB.met,Site1003_SEA.met,Site1004_RPC.met",
+                      "Specification": "[Weather].FileName = Site1001_BRA.met",
                       "Name": "Climate",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -42907,7 +42907,7 @@
                 {
                   "$type": "Models.Clock, Models",
                   "Start": "2004-01-01T00:00:00",
-                  "End": "2017-07-01T00:00:00",
+                  "End": "2005-07-01T00:00:00",
                   "Name": "Clock",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -43516,17 +43516,8 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Zone zone;\r\n        [Link] Summary Summary;\r\n\r\n        [Description(\"endotarget\")]\r\n        public double endotarget {get; set;}\r\n\r\n        [Description(\"budding\")]\r\n        public double budding {get; set;}\r\n\r\n        //[Description(\"FlowerTarget\")]\r\n        //public double FlowerTarget {get; set;}\r\n\r\n        //[Description(\"VeraTarget\")]\r\n        //public double VeraTarget {get; set;}\r\n      //  [Description(\"chill_a\")]\r\n       // public double chill_a  {get; set;}\r\n\r\n       // [Description(\"chill_c\")]\r\n       // public double chill_c  {get; set;}\r\n    \r\n        //Description(\"EndoTarget\")]\r\n        //public double EndoTarget  {get; set;}\r\n        //[Description(\"FloweringTarget\")]\r\n        //public double FloweringTarget  {get; set;}\r\n\r\n                \r\n        [EventSubscribe(\"PlantSowing\")]\r\n        private void OnPlantSowing(object sender, EventArgs e)\r\n        {\r\n            zone.Set(\"Grapevine.Phenology.EndoDormancy.Target.BaseTarget.FixedValue\", endotarget);\r\n            zone.Set(\"Grapevine.Phenology.Budding.Target.FixedValue\", budding);\r\n\r\n            //zone.Set(\"Grapevine.Phenology.Flowering.Target.FixedValue\", FlowerTarget);\r\n            //zone.Set(\"Grapevine.Phenology.BerryDevelopment.Target.Base.FixedValue\", VeraTarget);\r\n\r\n            //zone.Set(\"Grapevine.Phenology.Budding.Target.ChillingTadjustment.A\", chill_a);\r\n            //zone.Set(\"Grapevine.Phenology.Budding.Target.ChillingTadjustment.C\", chill_c);\r\n            //zone.Set(\"Grapevine.Phenology.EndoDormancy.Target.FixedValue\", EndoTarget);\r\n            //zone.Set(\"Grapevine.Phenology.Flowering.Target.FixedValue\", FloweringTarget);                      \r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
-                  "Parameters": [
-                    {
-                      "Key": "endotarget",
-                      "Value": "8"
-                    },
-                    {
-                      "Key": "budding",
-                      "Value": "80"
-                    }
-                  ],
+                  "Code": "\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Zone zone;\r\n        [Link] Summary Summary;\r\n\r\n       // [Description(\"endotarget\")]\r\n       // public double endotarget {get; set;}\r\n\r\n        //[Description(\"budding\")]\r\n        //public double budding {get; set;}\r\n\r\n        //[Description(\"FlowerTarget\")]\r\n        //public double FlowerTarget {get; set;}\r\n\r\n        //[Description(\"VeraTarget\")]\r\n        //public double VeraTarget {get; set;}\r\n      //  [Description(\"chill_a\")]\r\n       // public double chill_a  {get; set;}\r\n\r\n       // [Description(\"chill_c\")]\r\n       // public double chill_c  {get; set;}\r\n    \r\n        //Description(\"EndoTarget\")]\r\n        //public double EndoTarget  {get; set;}\r\n        //[Description(\"FloweringTarget\")]\r\n        //public double FloweringTarget  {get; set;}\r\n\r\n                \r\n        [EventSubscribe(\"PlantSowing\")]\r\n        private void OnPlantSowing(object sender, EventArgs e)\r\n        {\r\n           // zone.Set(\"Grapevine.Phenology.EndoDormancy.Target.BaseTarget.FixedValue\", endotarget);\r\n           // zone.Set(\"Grapevine.Phenology.Budding.Target.FixedValue\", budding);\r\n\r\n            //zone.Set(\"Grapevine.Phenology.Flowering.Target.FixedValue\", FlowerTarget);\r\n            //zone.Set(\"Grapevine.Phenology.BerryDevelopment.Target.Base.FixedValue\", VeraTarget);\r\n\r\n            //zone.Set(\"Grapevine.Phenology.Budding.Target.ChillingTadjustment.A\", chill_a);\r\n            //zone.Set(\"Grapevine.Phenology.Budding.Target.ChillingTadjustment.C\", chill_c);\r\n            //zone.Set(\"Grapevine.Phenology.EndoDormancy.Target.FixedValue\", EndoTarget);\r\n            //zone.Set(\"Grapevine.Phenology.Flowering.Target.FixedValue\", FloweringTarget);                      \r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
+                  "Parameters": [],
                   "Name": "ParameterTest",
                   "IncludeInDocumentation": true,
                   "Enabled": true,
