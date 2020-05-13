@@ -2230,9 +2230,12 @@
         {
             foreach (var simpleGrazing in JsonUtilities.ChildrenOfType(root, "SimpleGrazing"))
             {
-                var arr = new JArray();
-                arr.Add(simpleGrazing["FractionDefoliatedNToSoil"].Value<double>());
-                simpleGrazing["FractionDefoliatedNToSoil"] = arr;
+                if (simpleGrazing["FractionDefoliatedNToSoil"] != null)
+                {
+                    var arr = new JArray();
+                    arr.Add(simpleGrazing["FractionDefoliatedNToSoil"].Value<double>());
+                    simpleGrazing["FractionDefoliatedNToSoil"] = arr;
+                }
             }
         }
 

@@ -303,7 +303,7 @@ namespace UserInterface.Views
 
         public void ExecJavaScript(string command, object[] args)
         {
-            Browser.Document.InvokeScript(command, args);
+            var res = Browser.Document.InvokeScript(command, args);
         }
 
         public void ExecJavaScript(string script)
@@ -767,7 +767,7 @@ namespace UserInterface.Views
         /// <summary>
         /// VBox obejct which holds the web browser.
         /// </summary>
-        private VBox vbox2 = null;
+        protected VBox vbox2 = null;
 
         /// <summary>
         /// Frame object which holds and is used to position <see cref="vbox2"/>.
@@ -801,11 +801,6 @@ namespace UserInterface.Views
         private bool editing = false;
 
         /// <summary>
-        /// Used when exporting a map (e.g. autodocs).
-        /// </summary>
-        protected Gtk.Window popupWindow = null;
-
-        /// <summary>
         /// Constructor
         /// </summary>
         public HTMLView(ViewBase owner) : base(owner)
@@ -816,21 +811,6 @@ namespace UserInterface.Views
             frame1 = (Frame)builder.GetObject("frame1");
             hbox1 = (HBox)builder.GetObject("hbox1");
             mainWidget = vpaned1;
-            // Handle a temporary browser created when we want to export a map.
-            if (owner == null)
-            {
-                popupWindow = new Gtk.Window(Gtk.WindowType.Popup);
-                popupWindow.SetSizeRequest(500, 500);
-                // Move the window offscreen; the user doesn't need to see it.
-                // This works with IE, but not with WebKit
-                // Not yet tested on OSX
-                if (ProcessUtilities.CurrentOS.IsWindows)
-                    popupWindow.Move(-10000, -10000);
-                popupWindow.Add(MainWidget);
-                popupWindow.ShowAll();
-                while (Gtk.Application.EventsPending())
-                    Gtk.Application.RunIteration();
-            }
             memo = new MemoView(this);
             hbox1.PackStart(memo.MainWidget, true, true, 0);
             vpaned1.PositionSet = true;
@@ -955,10 +935,6 @@ namespace UserInterface.Views
                 }
                 if (browser != null)
                     browser.Dispose();
-                if (popupWindow != null)
-                {
-                    popupWindow.Destroy();
-                }
                 memo.StartEdit -= this.ToggleEditing;
                 memo.MainWidget.Destroy();
                 memo = null;
