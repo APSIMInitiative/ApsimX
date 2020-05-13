@@ -37,6 +37,10 @@ namespace Models.GrazPlan
         [NonSerialized]
         private Clock clock;
 
+        /// <summary>The parent stock list</summary>
+        [NonSerialized]
+        private StockList stockList = null;
+
         /// <summary>
         /// Paramters of the animal mated to
         /// </summary>
@@ -161,7 +165,7 @@ namespace Models.GrazPlan
         /// 
         /// </summary>
         private double lactationRatio;
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -221,20 +225,23 @@ namespace Models.GrazPlan
         /// <param name="RandomFactory"></param>
         /// <param name="clockModel">The clock model.</param>
         /// <param name="weatherModel">The weather model.</param>
+        /// <param name="stockListModel">The stock list model.</param>
         /// <param name="bTakeParams"></param>
         public AnimalGroup(Genotype Params,
-                                 GrazType.ReproType Repro,
-                                 int Number,
-                                 int AgeD,
-                                 double LiveWt,
-                                 double GFW,                   // NB this is a *fleece* weight             
-                                 MyRandom RandomFactory,
-                                 Clock clockModel,
-                                 IWeather weatherModel,
-                                 bool bTakeParams = false)
+                           GrazType.ReproType Repro,
+                           int Number,
+                           int AgeD,
+                           double LiveWt,
+                           double GFW,                   // NB this is a *fleece* weight             
+                           MyRandom RandomFactory,
+                           Clock clockModel,
+                           IWeather weatherModel,
+                           StockList stockListModel,
+                           bool bTakeParams = false)
         {
             clock = clockModel;
             weather = weatherModel;
+            stockList = stockListModel;
 
             for (int i = 0; i < 2; i++)
                 this.PastIntakeRate[i] = new GrazType.GrazingOutputs();
@@ -519,11 +526,6 @@ namespace Models.GrazPlan
         public int Tag { get; set; }
 
         /// <summary>
-        /// Gets or sets the priority level
-        /// </summary>
-        public int Priority { get; set; }
-
-        /// <summary>
         /// 0=mothers, 1=suckling young
         /// </summary>
         public AnimalStateInfo[] InitState = new AnimalStateInfo[2];
@@ -692,6 +694,18 @@ namespace Models.GrazPlan
                 ComputeSRW();
                 CalculateWeights();
             }
+        }
+
+        /// <summary>
+        /// Move the animal group to a new paddock.
+        /// </summary>
+        /// <param name="paddockName"></param>
+        public void MoveToPaddock(string paddockName)
+        {
+            var paddock = stockList.Paddocks.Find(p => p.Name == paddockName);
+            if (paddock == null)
+                throw new Exception($"Cannot find paddock {paddock}");
+            PaddOccupied = paddock;
         }
 
         // Information properties ........................................
@@ -892,6 +906,7 @@ namespace Models.GrazPlan
             AnimalGroup theCopy = ReflectionUtilities.Clone(this) as AnimalGroup;
             theCopy.weather = weather;
             theCopy.clock = clock;
+            theCopy.stockList = stockList;
             if (PaddOccupied != null)
             {
                 theCopy.PaddOccupied.zone = PaddOccupied.zone;

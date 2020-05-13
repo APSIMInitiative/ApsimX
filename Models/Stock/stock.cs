@@ -172,7 +172,7 @@
         /// The simulation weather component
         /// </summary>
         [Link]
-        private Weather locWtr = null;
+        private IWeather locWtr = null;
 
         /// <summary>
         /// The supplement component
@@ -221,49 +221,6 @@
         public StockList AnimalList { get; private set; }
 
         ///// <summary>
-        ///// Gets or sets the manually-specified structure of paddocks and forages 
-        ///// </summary>
-        //[Description("Manually-specified structure of paddocks and forages")]
-        //public PaddockInit[] PaddockList
-        //{
-        //    get
-        //    {
-        //        PaddockInit[] paddocks = new PaddockInit[1];
-        //        StockVars.MakePaddockList(this.stockModel, ref paddocks);
-        //        return paddocks;
-        //    }
-
-        //    set
-        //    {
-        //        this.paddocksGiven = value.Length > 1;    // more than the null paddock
-        //        PaddockInfo paddockInfo;
-        //        if (this.paddocksGiven)
-        //        {
-        //            while (this.stockModel.Paddocks.Count() > 0)
-        //                this.stockModel.Paddocks.Delete(this.stockModel.Paddocks.Count() - 1);
-
-        //            for (int idx = 0; idx < value.Length; idx++)
-        //            {
-        //                // TODO: Find the paddock object for this name and store it
-        //                // if the paddock object is found then add it to Paddocks
-        //                this.stockModel.Paddocks.Add(idx, value[idx].Name);
-
-        //                paddockInfo = this.stockModel.Paddocks.ByIndex(idx);
-        //                paddockInfo.ExcretionDest = value[idx].Excretion;
-        //                paddockInfo.UrineDest = value[idx].Urine;
-        //                paddockInfo.Area = value[idx].Area;
-        //                paddockInfo.Slope = value[idx].Slope;
-        //                for (int jdx = 0; jdx < value[idx].Forages.Length; jdx++)
-        //                {
-        //                    this.userForages.Add(value[idx].Forages[jdx]);    // keep a local list of these for queryInfos later
-        //                    this.userPaddocks.Add(value[idx].Name);
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
-
-        ///// <summary>
         ///// Gets or sets the livestock enterprises and their management options
         ///// </summary>
         //[Description("Livestock enterprises and their management options")]
@@ -285,33 +242,6 @@
         //                this.stockModel.Enterprises.Delete(this.stockModel.Enterprises.Count - 1);
         //            for (int i = 0; i < value.Length; i++)
         //                this.stockModel.Enterprises.Add(value[i]);
-        //        }
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Gets or sets the livestock grazing rotations
-        ///// </summary>
-        //public GrazingPeriod[] GrazingPeriods
-        //{
-        //    get
-        //    {
-        //        GrazingPeriod[] periods = new GrazingPeriod[this.AnimalList.GrazingPeriods.Count()];
-        //        for (int i = 0; i < this.AnimalList.GrazingPeriods.Count(); i++)
-        //            periods[i] = this.AnimalList.GrazingPeriods.ByIndex(i);
-        //        return periods;
-        //    }
-
-        //    set
-        //    {
-        //        if (value != null && this.AnimalList.GrazingPeriods != null)
-        //        {
-        //            while (this.AnimalList.GrazingPeriods.Count() > 0)
-        //            {
-        //                this.AnimalList.GrazingPeriods.Delete(this.AnimalList.GrazingPeriods.Count() - 1);
-        //            }
-        //            for (int i = 0; i < value.Length; i++)
-        //                this.AnimalList.GrazingPeriods.Add(value[i]);
         //        }
         //    }
         //}
@@ -1661,11 +1591,6 @@
         /// Gets the tag value assigned to each animal group
         /// </summary>
         public int[] TagNo { get { return AnimalList.Animals.Skip(1).Select(p => p.Tag).ToArray(); } }
-        
-        /// <summary>
-        /// Gets the priority score assigned to each animal group; used in drafting
-        /// </summary>
-        public int[] Priority { get { return AnimalList.Animals.Skip(1).Select(p => p.Priority).ToArray(); } }
 
         // =========== Dry sheep equivalents, based on potential intake ==================
 
@@ -3611,19 +3536,6 @@
             }
         }
 
-        /// <summary>
-        /// Gets the list of all paddocks identified by the component. In decreasing order of herbage relative intake (computed for the first group of animals in the list)
-        /// </summary>
-        public string[] PaddockRank
-        {
-            get
-            {
-                string[] ranks = new string[1];
-                StockVars.MakePaddockRank(this.AnimalList, ref ranks);
-                return ranks;
-            }
-        }
-
         // =========== Externally-imposed scaling factor for potential intake ==================
 
         /// <summary>
@@ -3725,7 +3637,6 @@
                 childGenotypes.ForEach(animalParamSet => Genotypes.Add(animalParamSet));
 
             int currentDay = systemClock.Today.Day + (systemClock.Today.Month * 0x100) + (systemClock.Today.Year * 0x10000);
-            this.AnimalList.ManageInternalInit(currentDay);               // init groups
         }
 
         /// <summary>
@@ -3762,7 +3673,6 @@
             // Do internal management tasks that are defined for the various
             // enterprises. This includes shearing, buying, selling...
             int currentDay = this.systemClock.Today.Day + (this.systemClock.Today.Month * 0x100) + (this.systemClock.Today.Year * 0x10000);
-            this.AnimalList.ManageInternalTasks(currentDay);
 
             this.AnimalList.Dynamics();
 

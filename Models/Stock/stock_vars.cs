@@ -194,22 +194,6 @@
         public const double MONTH2DAY = 365.25 / 12;
 
         /// <summary>
-        /// Rank the paddocks
-        /// </summary>
-        /// <param name="model">The animal model</param>
-        /// <param name="initValue">The paddock ranks</param>
-        public static void MakePaddockRank(StockList model, ref string[] initValue)
-        {
-            List<string> rankingList = new List<string>();
-
-            model.RankPaddocks(rankingList);
-            initValue = rankingList.ToArray();
-            /*Array.Resize(ref aValue, sList.Count);
-            for (int Idx = 0; Idx < aValue.Length; Idx++)
-                aValue[Idx] = sList[Idx];*/
-        }
-
-        /// <summary>
         /// The output counts for these type of animals
         /// </summary>
         public enum CountType

@@ -1,5 +1,6 @@
 ﻿namespace Models.GrazPlan
 {
+    using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Interfaces;
     using Models.PMF.Interfaces;
@@ -151,8 +152,7 @@
                     if ((stock[idx] != null) && (stock[jdx] != null)
                        && stock[idx].Similar(stock[jdx])
                        && (stock[idx].PaddOccupied == stock[jdx].PaddOccupied)
-                       && (stock[idx].Tag == stock[jdx].Tag)
-                       && (stock[idx].Priority == stock[jdx].Priority))
+                       && (stock[idx].Tag == stock[jdx].Tag))
                     {
                         animalGroup = stock[jdx];
                         stock[jdx] = null;
@@ -614,97 +614,7 @@
             }
         }
 
-        /// <summary>
-        /// There can be a number of grazing periods. Each of these can include the
-        /// movement of any number of tag groups to any paddocks. There are two types
-        /// of grazing period, Fixed and Flexible.
-        /// </summary>
-        /// <param name="currentDate">The current date</param>
-        /// <param name="currentDay">The current day</param>
-        /// <param name="curEnt">The enterprise</param>
-        protected void ManageGrazing(int currentDate, int currentDay, EnterpriseInfo curEnt)
-        {
-            int p;
-            int paddock, atag;
-            int tagNo;
-            int paddockIter, tagIter;
-            int stockedIdx;
-            List<string> exclPaddocks;
-            bool found;
-            int index;
-
-            // for each grazing period
-            for (p = 1; p <= this.GrazingPeriods.Count(); p++)   
-            {
-                // if this period applies - within dates or within wrapped dates
-                if (this.TodayIsInPeriod(currentDay, this.GrazingPeriods.GetStartDay(p), this.GrazingPeriods.GetFinishDay(p)))
-                {
-                    // if fixed period
-                    if ((this.GrazingPeriods.GetPeriodType(p).ToLower()) == EnterpriseInfo.PERIOD_TEXT[EnterpriseInfo.FIXEDPERIOD].ToLower()) 
-                    {
-                        // move the tag groups to their paddocks
-                        // (they may already be there, although it is possible they may not be due to starting part way through the period)
-                        // for each paddock in this grazing period
-                        for (paddockIter = 1; paddockIter <= this.GrazingPeriods.GetFixedPaddCount(p); paddockIter++)                
-                        {
-                            paddock = this.GrazingPeriods.GetFixedPadd(p, paddockIter);                                             // test this paddock index
-
-                            // for each tag group that is planned for this paddock
-                            for (tagIter = 1; tagIter <= this.GrazingPeriods.GetFixedPaddTagCount(p, paddockIter); tagIter++)        
-                            {
-                                atag = this.GrazingPeriods.GetFixedPaddTag(p, paddockIter, tagIter);
-                                if (curEnt.ContainsTag(atag))
-                                {
-                                    stockedIdx = this.PaddockIndexStockedByTagNo(atag);
-                                    if (paddock != stockedIdx) 
-                                        foreach (var animalGroup in stock.Skip(1).Where(group => group.Tag == atag))
-                                            animalGroup.PaddOccupied = Paddocks[paddock];
-                                }
-                            }
-                        }
-                    }
-                    else if (this.GrazingPeriods.GetPeriodType(p).ToLower() == EnterpriseInfo.PERIOD_TEXT[EnterpriseInfo.FLEXIBLEPERIOD].ToLower())     
-                    {
-                        // Flexible grazing
-                        // X day intervals from the start of the period - is this the check day or day one?
-                        if ((this.GrazingPeriods.GetMoveCheck(p) > 0) && (StdDate.Interval(this.GrazingPeriods.GetStartDay(p), currentDay) % this.GrazingPeriods.GetMoveCheck(p) == 0)) 
-                        {
-                            // else if drafting for this period then
-                            if (this.GrazingPeriods.GetCriteria(p) == this.CRITERIA[DRAFT_MOVE])                                      
-                            {
-                                // get the list of excluded paddocks
-                                exclPaddocks = new List<string>();
-
-                                // for each tag in the GrazingPeriod
-                                for (tagIter = 1; tagIter <= this.GrazingPeriods.GetTagCount(p); tagIter++)      
-                                {
-                                    for (index = 1; index <= this.Paddocks.Count() - 1; index++)
-                                    {
-                                        found = false;
-                                        paddockIter = 1;
-
-                                        // for each paddock in the GrazingPeriod
-                                        while (paddockIter <= this.GrazingPeriods.GetTagPaddocks(p, tagIter))    
-                                        {
-                                            paddock = this.GrazingPeriods.GetPaddock(p, tagIter, paddockIter);
-                                            if (paddock == index)
-                                                found = true;
-                                            paddockIter++;
-                                        }
-                                        if (!found)
-                                            exclPaddocks.Add(this.Paddocks[index].Name);           // add to the exclude list
-                                    }
-                                    tagNo = this.GrazingPeriods.GetTag(p, tagIter);
-                                    this.Draft(tagNo, exclPaddocks); // now do the draft only for this tagno
-                                } // next tag
-                            }
-                        }
-                    }
-                }
-            } // next period
-        }
-
-        /// <summary>
+         /// <summary>
         /// Find the index of the paddock that this tag group is currently grazing
         /// </summary>
         /// <param name="tagNo">The tag number</param>
@@ -760,9 +670,8 @@
         /// <param name="animalGroup">Animal group</param>
         /// <param name="paddInfo">The paddock information</param>
         /// <param name="tagNo">Tag value</param>
-        /// <param name="priority">Priority number</param>
         /// <returns>The index of the new group in the stock array</returns>
-        public int Add(AnimalGroup animalGroup, PaddockInfo paddInfo, int tagNo, int priority)
+        public int Add(AnimalGroup animalGroup, PaddockInfo paddInfo, int tagNo)
         {
             int idx;
 
@@ -773,7 +682,6 @@
             this.stock[idx] = animalGroup.Copy();
             this.stock[idx].PaddOccupied = paddInfo;
             this.stock[idx].Tag = tagNo;
-            this.stock[idx].Priority = priority;
 
             this.SetInitialStockInputs(idx);
             return idx;
@@ -790,13 +698,13 @@
             PaddockInfo paddock;
 
             newGroup = new AnimalGroup(parentStockModel.Genotypes.Get(animalInits.Genotype),
-                                        animalInits.Sex,
-                                        animalInits.Number,
-                                        animalInits.AgeDays,
-                                        animalInits.Weight,
-                                        animalInits.FleeceWt,
-                                        parentStockModel.randFactory,
-                                        clock, weather);
+                                       animalInits.Sex,
+                                       animalInits.Number,
+                                       animalInits.AgeDays,
+                                       animalInits.Weight,
+                                       animalInits.FleeceWt,
+                                       parentStockModel.randFactory,
+                                       clock, weather, this);
             if (this.IsGiven(animalInits.MaxPrevWt))
                 newGroup.MaxPrevWeight = animalInits.MaxPrevWt;
             if (this.IsGiven(animalInits.FibreDiam))
@@ -831,11 +739,11 @@
                     newGroup.Young.FleeceCutWeight = animalInits.YoungGFW;
             }
 
-            paddock = this.Paddocks.Find(p => p.Name == animalInits.Paddock.ToLower());
+            paddock = this.Paddocks.Find(p => p.Name.Equals(animalInits.Paddock, StringComparison.InvariantCultureIgnoreCase));
             if (paddock == null)
                 paddock = this.Paddocks[0];
 
-            return this.Add(newGroup, paddock, animalInits.Tag, animalInits.Priority);
+            return this.Add(newGroup, paddock, animalInits.Tag);
         }
 
         /// <summary>
@@ -933,7 +841,7 @@
                 stock[idx].Age(1, ref newGroups);
 
                 // Ensure the new young have climate data                             
-                this.Add(newGroups, stock[idx].PaddOccupied, stock[idx].Tag, stock[idx].Priority);       // The new groups are added back onto    
+                this.Add(newGroups, stock[idx].PaddOccupied, stock[idx].Tag);       // The new groups are added back onto    
                 newGroups = null;                                                           // the main list                       
             }
 
@@ -1581,7 +1489,6 @@
                 animalInits.BirthCS = StdMath.DMISSING;
                 animalInits.Paddock = string.Empty;
                 animalInits.Tag = 0;
-                animalInits.Priority = 0;
 
                 for (cohortIdx = cohortsInfo.MinYears; cohortIdx <= cohortsInfo.MaxYears; cohortIdx++)
                 {
@@ -1683,7 +1590,7 @@
                                             liveWeight,
                                             animalInfo.GFW,
                                             parentStockModel.randFactory,
-                                            clock, weather);
+                                            clock, weather, this);
 
                 // Adjust the condition score if it has been given
                 if ((animalInfo.CondScore > 0.0) && (animalInfo.LiveWt > 0.0))        
@@ -1760,7 +1667,7 @@
                     paddNo++;
                 if (paddNo >= this.Paddocks.Count())
                     paddNo = 0;
-                result = this.Add(newGroup, this.Paddocks[paddNo], 0, 0);
+                result = this.Add(newGroup, this.Paddocks[paddNo], 0);
             } // if AnimalInfo.Number > 0 
             return result;
         }
@@ -1946,7 +1853,7 @@
                             }
                             newGroups = null;                                                           // Carry out the weaning process. N.B.   
                             stock[idx].Wean(weanFemales, weanMales, ref newGroups, ref newGroups);    // the weaners appear in the same      
-                            this.Add(newGroups, stock[idx].PaddOccupied, stock[idx].Tag, stock[idx].Priority);  // paddock as their mothers and with   
+                            this.Add(newGroups, stock[idx].PaddOccupied, stock[idx].Tag);  // paddock as their mothers and with   
                             newGroups = null;                                                           // the same tag and priority value     
                         }
 
@@ -2006,7 +1913,7 @@
             {
                 numToSplit = Math.Max(0, srcGroup.NoAnimals - Math.Max(numToKeep, 0));
                 if (numToSplit > 0)
-                    this.Add(srcGroup.Split(numToSplit, false, srcGroup.NODIFF, srcGroup.NODIFF), stock[groupIdx].PaddOccupied, stock[groupIdx].Tag, stock[groupIdx].Priority);
+                    this.Add(srcGroup.Split(numToSplit, false, srcGroup.NODIFF, srcGroup.NODIFF), stock[groupIdx].PaddOccupied, stock[groupIdx].Tag);
             }
         }
 
@@ -2026,7 +1933,7 @@
             {
                 srcGroup.GetOlder(ageDays, ref numMales, ref numFemales);
                 if (numMales + numFemales > 0)
-                    this.Add(srcGroup.Split(numMales + numFemales, true, srcGroup.NODIFF, srcGroup.NODIFF), stock[groupIdx].PaddOccupied, stock[groupIdx].Tag, stock[groupIdx].Priority);
+                    this.Add(srcGroup.Split(numMales + numFemales, true, srcGroup.NODIFF, srcGroup.NODIFF), stock[groupIdx].PaddOccupied, stock[groupIdx].Tag);
             }
         }
 
@@ -2097,8 +2004,7 @@
                     this.Add(
                          srcGroup.Split(numToRemove, false, diffs, srcGroup.NODIFF),     // Now we have computed Diffs, we split  
                          stock[groupIdx].PaddOccupied,
-                         stock[groupIdx].Tag,
-                         stock[groupIdx].Priority);   // up the animals                      
+                         stock[groupIdx].Tag);   // up the animals                      
                 } 
             }
         }
@@ -2117,7 +2023,7 @@
             {
                 newGroups = null;
                 srcGroup.SplitYoung(ref newGroups);
-                this.Add(newGroups, stock[groupIdx].PaddOccupied, stock[groupIdx].Tag, stock[groupIdx].Priority);
+                this.Add(newGroups, stock[groupIdx].PaddOccupied, stock[groupIdx].Tag);
                 newGroups = null;
             }
         }
@@ -2143,293 +2049,11 @@
             }
         }
 
-        /// <summary>
-        /// Perform a drafting operation
-        /// </summary>
-        /// <param name="closedList">List of closed paddocks</param>
-        public void Draft(List<string> closedList)
-        {
-            double[] paddockRank;
-            bool[] available;
-            AnimalGroup tempAnimals;
-            int prevPadd;
-            int bestPadd;
-            double bestRank;
-            int prevPriority;
-            int bestPriority;
-            int paddIdx, idx;
-
-            if ((this.Count() > 0) && (this.Paddocks.Count() > 0))
-            {
-                paddockRank = new double[this.Paddocks.Count()];
-                available = new bool[this.Paddocks.Count()];
-
-                // Only draft into pasture paddocks     
-                for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)                       
-                    available[paddIdx] = this.Paddocks[paddIdx].Forages.Count() > 0;
-
-                // Paddocks occupied by groups that are not to be drafted                   
-                for (idx = 1; idx <= this.Count(); idx++)                                           
-                {
-                    if (stock[idx].Priority <= 0)                                                      
-                    {
-                        paddIdx = this.Paddocks.FindIndex(p => p.Name.Equals(stock[idx].PaddOccupied.Name, StringComparison.InvariantCultureIgnoreCase));
-                        if (paddIdx >= 0)
-                            available[paddIdx] = false;
-                    }
-                }
-
-                // Paddocks closed by the manager        
-                for (idx = 0; idx <= closedList.Count() - 1; idx++)                                 
-                {
-                    paddIdx = this.Paddocks.FindIndex(p => p.Name.Equals(closedList[idx], StringComparison.InvariantCultureIgnoreCase));
-                    if (paddIdx >= 0)
-                        available[paddIdx] = false;
-                }
-
-                // Rank order for open, unoccupied paddocks                            
-                tempAnimals = stock[1].Copy();
-                for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)                 
-                {
-                    if (available[paddIdx])
-                        paddockRank[paddIdx] = this.GetPaddockRank(this.Paddocks[paddIdx], tempAnimals);
-                    else
-                        paddockRank[paddIdx] = 0.0;
-                }
-                tempAnimals = null;
-
-                prevPadd = 0;                                                                       // Fallback paddock if none available    
-                while ((prevPadd < this.Paddocks.Count() - 1) && (this.Paddocks[prevPadd].Name == string.Empty))
-                    prevPadd++;
-
-                prevPriority = 0;
-                do
-                {
-                    bestPadd = -1;                                                                  // Locate the best available paddock     
-                    bestRank = -1.0;
-                    for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)
-                    {
-                        if (available[paddIdx] && (paddockRank[paddIdx] > bestRank))
-                        {
-                            bestPadd = paddIdx;
-                            bestRank = paddockRank[paddIdx];
-                        }
-                    }
-
-                    // No unoccupied paddocks - use the lowest-ranked unoccupied paddock    
-                    if (bestPadd == -1)                                                             
-                        bestPadd = prevPadd;                                                        
-
-                    bestPriority = int.MaxValue;                                                  // Locate the next-smallest priority score 
-                    for (idx = 1; idx <= this.Count(); idx++)
-                    {
-                        if ((stock[idx].Priority < bestPriority) && (stock[idx].Priority > prevPriority))
-                            bestPriority = stock[idx].Priority;
-                    }
-
-                    // Move animals with that priority score 
-                    for (idx = 1; idx <= this.Count(); idx++)                                       
-                    {
-                        if (stock[idx].Priority == bestPriority)
-                            stock[idx].PaddOccupied = Paddocks[bestPadd];
-                    }
-                    available[bestPadd] = false;
-
-                    prevPadd = bestPadd;
-                    prevPriority = bestPriority;
-                }
-                while (bestPriority != int.MaxValue);
-            }
-        }
-
-        /// <summary>
-        /// Perform a drafting operation
-        /// </summary>
-        /// <param name="tagNo">The tag number</param>
-        /// <param name="closedPaddocks">List of closed paddocks</param>
-        public void Draft(int tagNo, List<string> closedPaddocks)
-        {
-            double[] paddockRank;
-            bool[] available;
-            AnimalGroup tempAnimals;
-            int prevPadd;
-            int bestPadd;
-            double bestRank;
-            int prevPriority;
-            int bestPriority;
-            int paddIdx, idx;
-
-            if ((this.Count() > 0) && (this.Paddocks.Count() > 0))
-            {
-                paddockRank = new double[this.Paddocks.Count()];
-                available = new bool[this.Paddocks.Count()];
-
-                // Only draft into pasture paddocks      
-                for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)                
-                    available[paddIdx] = (this.Paddocks[paddIdx].Forages.Count() > 0);
-
-                // Paddocks occupied by groups that are not to be drafted                   
-                for (idx = 1; idx <= this.Count(); idx++)                                   
-                {
-                    if (stock[idx].Priority <= 0)                                              
-                    {
-                        paddIdx = this.Paddocks.FindIndex(p => p.Name.Equals(stock[idx].PaddOccupied.Name, StringComparison.InvariantCultureIgnoreCase));
-                        if (paddIdx >= 0)
-                            available[paddIdx] = false;
-                    }
-                }
-
-                // Paddocks closed by the manager       
-                for (idx = 0; idx <= closedPaddocks.Count() - 1; idx++)                             
-                {
-                    paddIdx = this.Paddocks.FindIndex(p => p.Name.Equals(closedPaddocks[idx], StringComparison.InvariantCultureIgnoreCase));
-                    if (paddIdx >= 0)
-                        available[paddIdx] = false;
-                }
-
-                tempAnimals = stock[1].Copy();
-
-                // Rank order for open, unoccupied
-                for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)                            
-                {
-                    if (available[paddIdx])                                                  // paddocks                            
-                        paddockRank[paddIdx] = this.GetPaddockRank(this.Paddocks[paddIdx], tempAnimals);
-                    else
-                        paddockRank[paddIdx] = 0.0;
-                }
-                tempAnimals = null;
-
-                prevPadd = 0;                                                              // Fallback paddock if none available    
-                while ((prevPadd < this.Paddocks.Count() - 1) && (this.Paddocks[prevPadd].Name == string.Empty))
-                    prevPadd++;
-
-                prevPriority = 0;
-                do
-                {
-                    bestPadd = -1;                                                         // Locate the best available paddock     
-                    bestRank = -1.0;
-                    for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)
-                    {
-                        if (available[paddIdx] && (paddockRank[paddIdx] > bestRank))
-                        {
-                            bestPadd = paddIdx;
-                            bestRank = paddockRank[paddIdx];
-                        }
-                    }
-                    if (bestPadd == -1)                                                    // No unoccupied paddocks - use the      
-                        bestPadd = prevPadd;                                              // lowest-ranked unoccupied paddock    
-
-                    bestPriority = Int32.MaxValue;                                         // Locate the next-smallest priority score 
-                    for (idx = 1; idx <= this.Count(); idx++)
-                    {
-                        if ((stock[idx].Priority < bestPriority) && (stock[idx].Priority > prevPriority))
-                            bestPriority = stock[idx].Priority;
-                    }
-
-                    // Move animals with that priority score 
-                    for (idx = 1; idx <= this.Count(); idx++)                               
-                    {
-                        if ((stock[idx].Tag == tagNo) && (stock[idx].Priority == bestPriority))
-                            stock[idx].PaddOccupied = Paddocks[bestPadd];
-                    }
-
-                    available[bestPadd] = false;
-
-                    prevPadd = bestPadd;
-                    prevPriority = bestPriority;
-                }
-                while (bestPriority != Int32.MaxValue);
-            }
-        }
-
         // ==============================================================================
         // Execute user's internally defined tasks for this day
         // ==============================================================================
 
-        /// <summary>
-        /// Setup the stock groups using the internal criteria the user has defined
-        /// for this component.
-        /// </summary>
-        /// <param name="currentDay">Todays date</param>
-        public void ManageInternalInit(int currentDay)
-        {
-            int i;
-            EnterpriseInfo curEnt;
-
-            // for each enterprise
-            for (i = 0; i <= this.Enterprises.Count - 1; i++)   
-            {
-                curEnt = this.Enterprises[i];
- 
-                if (curEnt.ManageGrazing)
-                    this.ManageGrazing(currentDay, currentDay, curEnt);
-            }
-        }
-
-        /// <summary>
-        /// Follow the management events described by the user for this stock component.
-        /// </summary>
-        /// <param name="currentDate">Todays date</param>
-        public void ManageInternalTasks(int currentDate)
-        {
-            int i;
-            EnterpriseInfo curEnt;
-            int currentDay;
-
-            currentDay = StdDate.DateVal(StdDate.DayOf(currentDate), StdDate.MonthOf(currentDate), 0);
-
-            // for each enterprise
-            for (i = 0; i <= this.Enterprises.Count - 1; i++)    
-            {
-                curEnt = this.Enterprises[i];
-                this.ManageDailyTasks(currentDay, curEnt);       // correct order?
-
-                if (curEnt.ManageGrazing)
-                    this.ManageGrazing(currentDate, currentDay, curEnt);
-
-                if (curEnt.ManageReproduction)
-                    this.ManageReproduction(currentDay, curEnt);
-            } // next enterprise
-        }
-
         // Paddock rank order ......................................................
-
-        /// <summary>
-        /// Rank the paddocks
-        /// </summary>
-        /// <param name="paddockList">List of paddocks returned</param>
-        public void RankPaddocks(List<string> paddockList)
-        {
-            double[] paddockRank = new double[this.Paddocks.Count()];
-            AnimalGroup tempAnimals;
-            int bestPadd;
-            double bestRank;
-            int paddIdx, idx;
-
-            if (this.Count() > 0)
-                tempAnimals = stock[1].Copy();
-            else
-                tempAnimals = new AnimalGroup(parentStockModel.Genotypes.Get("Medium Merino"), GrazType.ReproType.Empty, 1, 365 * 4, 50.0, 0.0, parentStockModel.randFactory, clock, weather);
-            for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)
-                paddockRank[paddIdx] = this.GetPaddockRank(this.Paddocks[paddIdx], tempAnimals);
-
-            paddockList.Clear();
-            for (idx = 0; idx <= this.Paddocks.Count() - 1; idx++)
-            {
-                bestRank = -1.0;
-                bestPadd = -1;
-                for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)
-                {
-                    if (paddockRank[paddIdx] > bestRank)
-                    {
-                        bestPadd = paddIdx;
-                        bestRank = paddockRank[paddIdx];
-                    }
-                }
-                paddockList.Add(this.Paddocks[bestPadd].Name);
-                paddockRank[bestPadd] = -999.9;
-            }
-        }
 
         /// <summary>
         /// Converts a ReproductiveType to a ReproType. 
@@ -2597,15 +2221,14 @@
         /// <param name="animalList">The source animal list</param>
         /// <param name="paddInfo">The paddock info</param>
         /// <param name="tagNo">The tag number</param>
-        /// <param name="priority">Priority value</param>
-        public void Add(List<AnimalGroup> animalList, PaddockInfo paddInfo, int tagNo, int priority)
+        public void Add(List<AnimalGroup> animalList, PaddockInfo paddInfo, int tagNo)
         {
             int idx;
 
             if (animalList != null)
                 for (idx = 0; idx <= animalList.Count - 1; idx++)
                 {
-                    this.Add(animalList[idx], paddInfo, tagNo, priority);
+                    this.Add(animalList[idx], paddInfo, tagNo);
                     animalList[idx] = null;                           // Detach the animal group from the TAnimalList                              
                 }
         }
@@ -2619,7 +2242,6 @@
         {
             CohortsInfo cohort = new CohortsInfo();
             PurchaseInfo purchaseInfo = new PurchaseInfo();
-            List<string> closedPaddocks;
             string strParam;
             int param1;
             int param3;
@@ -2819,22 +2441,6 @@
                 else if (stockEvent.GetType() == typeof(StockSort))
                 {
                     model.Sort();
-                }
-                else if (stockEvent.GetType() == typeof(StockPrioritise))
-                {
-                    StockPrioritise stockInfo = (StockPrioritise)stockEvent;
-                    param1 = stockInfo.Group;
-                    if ((param1 >= 1) && (param1 <= model.Count()))
-                        model.stock[param1].Priority = stockInfo.Value;
-                    else
-                        throw new Exception("Invalid group number in PRIORITISE event");
-                }
-                else if (stockEvent.GetType() == typeof(StockDraft))
-                {
-                    StockDraft stockInfo = (StockDraft)stockEvent;
-                    closedPaddocks = new List<string>(stockInfo.Closed);
-                    
-                    model.Draft(closedPaddocks);
                 }
                 else
                     throw new Exception("Event not recognised in STOCK");

@@ -333,6 +333,7 @@
     <Compile Include="Soils\Standardiser\SoilDefaults.cs" />
     <Compile Include="Soils\Standardiser\SoilUnits.cs" />
     <Compile Include="Soils\Standardiser\SoilStandardiser.cs" />
+    <Compile Include="StockManagement\Draft.cs" />
     <Compile Include="Stock\AgeInfo.cs" />
     <Compile Include="Stock\Animals.cs" />
     <Compile Include="Stock\AnimalOutput.cs" />
