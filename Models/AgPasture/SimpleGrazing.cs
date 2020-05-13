@@ -25,7 +25,7 @@
         [Link] Clock clock = null;
         [Link] ISummary summary = null;
         [Link] List<IPlantDamage> forages = null;
-        [Link] ISolute NO3 = null;
+        [Link(ByName = true)] ISolute Urea = null;
         [Link] Soil soil = null;
         [Link] SurfaceOrganicMatter surfaceOrganicMatter = null;
 
@@ -138,7 +138,11 @@
         [Separator("Urine and Dung.")]
 
         [Description("Fraction of defoliated N going to soil (0-1): ")]
-        public double FractionDefoliatedNToSoil { get; set; }
+        public double[] FractionDefoliatedNToSoil { get; set; }   
+
+        /// <summary>Fraction Defoliated N Transferred / Exported To Lanes Camps and structures (can be monthly values)</summary>
+        [Description("Fraction Defoliated N Transferred / Exported To Lanes Camps and structures (can be monthly values)")]
+        public double[] FractionDefoliatedNLostToCamps { get; set; } = new double[] { 0.25 };
 
         /// <summary></summary>
         [Description("Proportion of excreted N going to dung (0-1). Yearly or 12 monthly values. Blank means use C:N ratio of dung.")]
@@ -327,6 +331,12 @@
             else
                 simpleGrazingFrequency = Convert.ToInt32(SimpleGrazingFrequencyString);
 
+            if (FractionDefoliatedNToSoil == null || FractionDefoliatedNToSoil.Length == 0)
+                FractionDefoliatedNToSoil = new double[] { 0 };
+
+            if (FractionDefoliatedNLostToCamps == null || FractionDefoliatedNLostToCamps.Length == 0)
+                FractionDefoliatedNLostToCamps = new double[] { 0 };
+
             // Initialise the days since grazing.
             if (GrazingRotationType == GrazingRotationTypeEnum.SimpleRotation)
                 DaysSinceGraze = simpleGrazingFrequency;
@@ -396,9 +406,9 @@
 
             if (TramplingOn)
             {
-                var proportionLitterMovedToSoil = Math.Min(MathUtilities.Divide(PastureConsumedAtMaximumRateOfLitterRemoval, amountDMToRemove, 0), 
+                var proportionLitterMovedToSoil = Math.Min(MathUtilities.Divide(PastureConsumedAtMaximumRateOfLitterRemoval, amountDMToRemove, 0),
                                                            MaximumPropLitterMovedToSoil);
-                surfaceOrganicMatter.Incorporate(proportionLitterMovedToSoil, depth:100);
+                surfaceOrganicMatter.Incorporate(proportionLitterMovedToSoil, depth: 100);
             }
         }
 
@@ -460,9 +470,10 @@
             // find the layer that the fertilizer is to be added to.
             int layer = soil.LayerIndexOfDepth(DepthUrineIsAdded);
 
-            var no3Values = NO3.kgha;
-            no3Values[layer] += AmountUrineNReturned;
-            NO3.SetKgHa(SoluteSetterType.Fertiliser, no3Values);
+            var ureaValues = Urea.kgha;
+            ureaValues[layer] += AmountUrineNReturned;
+            Urea.SetKgHa(SoluteSetterType.Fertiliser, ureaValues);
+            
         }
 
         /// <summary>Return a value from an array that can have either 1 yearly value or 12 monthly values.</summary>
@@ -566,7 +577,7 @@
                 foreach (var grazedForage in grazedForages)
                 {
                     returnedToSoilWt += (1 - grazedForage.DMDOfStructural) * grazedForage.Wt;
-                    returnedToSoilN += FractionDefoliatedNToSoil * grazedForage.N;
+                    returnedToSoilN += GetValueFromMonthArray(FractionDefoliatedNToSoil) * grazedForage.N;
                 }
 
                 double dungNReturned;
