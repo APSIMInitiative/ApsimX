@@ -693,7 +693,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 247.0,
+                              "FixedValue": 200.0,
                               "Units": "make sure the photoperiod is decreasing",
                               "Name": "autumn",
                               "Children": [],
@@ -711,10 +711,49 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].EndoDormancy.Progression",
-                              "Name": "ChillingUnit",
-                              "Children": [],
+                              "$type": "Models.Functions.LessThanFunction, Models",
+                              "Name": "LessThanFunction",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.PhotoperiodFunction, Models",
+                                  "Twilight": 0.0,
+                                  "DayLength": 0.0,
+                                  "Name": "PhotoperiodFunction",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 13.14,
+                                  "Units": null,
+                                  "Name": "CriticalPhotoPeriod",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Phenology].EndoDormancy.Progression",
+                                  "Name": "ChillingUnit",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 0.0,
+                                  "Units": null,
+                                  "Name": "Zero",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -8058,7 +8097,7 @@
                     "[Clock].Today.Year",
                     "[Clock].Today.DayOfYear",
                     "[Weather].DaysSinceWinterSolstice as DAWS",
-                    "[Grapevine].Phenology.PhotoperiodFunction",
+                    "",
                     "[Grapevine].Phenology.CurrentSeason as CurrentSeason",
                     "[Grapevine].Phenology.Stage",
                     "[Grapevine].Phenology.AccumulatedEmergedTT",
