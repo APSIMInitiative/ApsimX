@@ -679,7 +679,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 314.0,
+                          "FixedValue": 315.0,
                           "Units": null,
                           "Name": "PruningTime",
                           "Children": [],
@@ -693,7 +693,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 248.0,
+                              "FixedValue": 247.0,
                               "Units": "make sure the photoperiod is decreasing",
                               "Name": "autumn",
                               "Children": [],
@@ -750,16 +750,6 @@
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.PhotoperiodFunction, Models",
-                  "Twilight": -6.0,
-                  "DayLength": 0.0,
-                  "Name": "PhotoperiodFunction",
-                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -10145,7 +10135,7 @@
               "LineThickness": 0,
               "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "Grapevine.Phenology.PhotoperiodFunction",
+              "YFieldName": "Grapevine.Phenology.AccChillBefPrune",
               "X2FieldName": "",
               "Y2FieldName": "",
               "ShowInLegend": false,
@@ -10578,7 +10568,7 @@
                   "Children": [
                     {
                       "$type": "Models.Weather, Models",
-                      "FileName": "Site1004_RPC.met",
+                      "FileName": "Site1003_SEA.met",
                       "ExcelWorkSheetName": "",
                       "Name": "Weather",
                       "Children": [],
@@ -10588,7 +10578,7 @@
                     },
                     {
                       "$type": "Models.Clock, Models",
-                      "Start": "2004-01-01T00:00:00",
+                      "Start": "2003-01-01T00:00:00",
                       "End": "2017-07-01T00:00:00",
                       "Name": "Clock",
                       "Children": [],
@@ -10760,7 +10750,7 @@
                             },
                             {
                               "Key": "SowingDate",
-                              "Value": "01/01/2004 00:00:00"
+                              "Value": "01/01/2003 00:00:00"
                             },
                             {
                               "Key": "VineDistance",
@@ -11591,7 +11581,7 @@
                             },
                             {
                               "Key": "SowingDate",
-                              "Value": "01/01/2004 00:00:00"
+                              "Value": "01/01/2003 00:00:00"
                             },
                             {
                               "Key": "RootDepth",
@@ -12471,6 +12461,73 @@
                               "ReadOnly": false
                             }
                           ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": 2000.0,
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "BudBurstPredic1",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Climate",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "CurrentSeason",
+                          "YFieldName": "BudBurstDOY",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Series",
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -13645,7 +13702,7 @@
                     },
                     {
                       "$type": "Models.Clock, Models",
-                      "Start": "2004-01-01T00:00:00",
+                      "Start": "2003-01-01T00:00:00",
                       "End": "2017-07-01T00:00:00",
                       "Name": "Clock",
                       "Children": [],
@@ -13817,7 +13874,7 @@
                             },
                             {
                               "Key": "SowingDate",
-                              "Value": "01/01/2004 00:00:00"
+                              "Value": "01/01/2003 00:00:00"
                             },
                             {
                               "Key": "VineDistance",
@@ -14648,7 +14705,7 @@
                             },
                             {
                               "Key": "SowingDate",
-                              "Value": "01/01/2004 00:00:00"
+                              "Value": "01/01/2003 00:00:00"
                             },
                             {
                               "Key": "RootDepth",
@@ -15287,253 +15344,6 @@
                         }
                       ],
                       "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Core.Folder, Models",
-                  "ShowPageOfGraphs": true,
-                  "Name": "Phenology",
-                  "Children": [
-                    {
-                      "$type": "Models.Graph, Models",
-                      "Caption": null,
-                      "Axis": [
-                        {
-                          "$type": "Models.Axis, Models",
-                          "Type": 3,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        },
-                        {
-                          "$type": "Models.Axis, Models",
-                          "Type": 0,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        }
-                      ],
-                      "LegendPosition": 0,
-                      "LegendOrientation": 0,
-                      "DisabledSeries": [],
-                      "LegendOutsideGraph": false,
-                      "Name": "BudBurstPredic",
-                      "Children": [
-                        {
-                          "$type": "Models.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Climate",
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 0,
-                          "MarkerSize": 0,
-                          "Line": 4,
-                          "LineThickness": 0,
-                          "TableName": "PredictedObserved",
-                          "XFieldName": "Observed.BudBurstDOY",
-                          "YFieldName": "Predicted.BudBurstDOY",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
-                          "ShowInLegend": false,
-                          "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "Series",
-                          "Children": [
-                            {
-                              "$type": "Models.Regression, Models",
-                              "ForEachSeries": true,
-                              "showOneToOne": true,
-                              "showEquation": true,
-                              "Name": "Regression",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph, Models",
-                      "Caption": null,
-                      "Axis": [
-                        {
-                          "$type": "Models.Axis, Models",
-                          "Type": 3,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        },
-                        {
-                          "$type": "Models.Axis, Models",
-                          "Type": 0,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        }
-                      ],
-                      "LegendPosition": 0,
-                      "LegendOrientation": 0,
-                      "DisabledSeries": [],
-                      "LegendOutsideGraph": false,
-                      "Name": "FloweringPred",
-                      "Children": [
-                        {
-                          "$type": "Models.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -1663232,
-                          "FactorToVaryColours": "Climate",
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 0,
-                          "MarkerSize": 0,
-                          "Line": 4,
-                          "LineThickness": 0,
-                          "TableName": "PredictedObserved",
-                          "XFieldName": "Observed.FloweringDOY",
-                          "YFieldName": "Predicted.FloweringDOY",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
-                          "ShowInLegend": true,
-                          "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "Series",
-                          "Children": [
-                            {
-                              "$type": "Models.Regression, Models",
-                              "ForEachSeries": true,
-                              "showOneToOne": true,
-                              "showEquation": true,
-                              "Name": "Regression",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph, Models",
-                      "Caption": null,
-                      "Axis": [
-                        {
-                          "$type": "Models.Axis, Models",
-                          "Type": 3,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        },
-                        {
-                          "$type": "Models.Axis, Models",
-                          "Type": 0,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        }
-                      ],
-                      "LegendPosition": 0,
-                      "LegendOrientation": 0,
-                      "DisabledSeries": [],
-                      "LegendOutsideGraph": false,
-                      "Name": "VeraisonPred",
-                      "Children": [
-                        {
-                          "$type": "Models.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -1663232,
-                          "FactorToVaryColours": "Climate",
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 0,
-                          "MarkerSize": 0,
-                          "Line": 4,
-                          "LineThickness": 0,
-                          "TableName": "PredictedObserved",
-                          "XFieldName": "Observed.VeraisonDOY",
-                          "YFieldName": "Predicted.VeraisonDOY",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
-                          "ShowInLegend": true,
-                          "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "Series",
-                          "Children": [
-                            {
-                              "$type": "Models.Regression, Models",
-                              "ForEachSeries": false,
-                              "showOneToOne": true,
-                              "showEquation": true,
-                              "Name": "Regression",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
