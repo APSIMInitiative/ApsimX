@@ -32,7 +32,7 @@
               "Command": [
                 ""
               ],
-              "Name": "SauvignonBlanc2C",
+              "Name": "SauvignonBlanc",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -43,7 +43,40 @@
               "Command": [
                 ""
               ],
-              "Name": "SauvignonBlanc4C",
+              "Name": "Chardonnay",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                ""
+              ],
+              "Name": "Merlot",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                ""
+              ],
+              "Name": "PinotNoir",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                ""
+              ],
+              "Name": "PinotGris",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -8080,7 +8113,7 @@
                     {
                       "$type": "Models.Operation, Models",
                       "Date": "2004-01-01",
-                      "Action": "[Grapevine].Sow(population: 0.231481, cultivar: \"SauvignonBlanc4C\", depth: 800, rowSpacing: 2400, budNumber:24);",
+                      "Action": "[Grapevine].Sow(population: 0.231481, cultivar: \"SauvignonBlanc\", depth: 800, rowSpacing: 2400, budNumber:24);",
                       "Enabled": true
                     }
                   ],
@@ -10785,7 +10818,7 @@
                           "Parameters": [
                             {
                               "Key": "CultivarName",
-                              "Value": "SauvignonBlanc4C"
+                              "Value": "SauvignonBlanc"
                             },
                             {
                               "Key": "SowingDate",
@@ -13909,7 +13942,7 @@
                           "Parameters": [
                             {
                               "Key": "CultivarName",
-                              "Value": "SauvignonBlanc4C"
+                              "Value": "SauvignonBlanc"
                             },
                             {
                               "Key": "SowingDate",
@@ -18225,7 +18258,7 @@
                           "Parameters": [
                             {
                               "Key": "CultivarName",
-                              "Value": "SauvignonBlanc4C"
+                              "Value": "SauvignonBlanc"
                             },
                             {
                               "Key": "SowingDate",
@@ -26143,11 +26176,11 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using Models.Zones;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [Description(\"Row spacing(m)\")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Vine distance(m)\")]\r\n        public double VineDistance { get; set; }\r\n\r\n        [Description(\"Bud number(#)\")]\r\n        public double BudNumber { get; set; }\r\n\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        [Description(\"Kl in the shallowest layer\")]\r\n        public double SurfaceKL { get; set; }\r\n        [Description(\"Factor to change Kl modifier with Depth\")]\r\n        public double KLReductionFactor { get; set; }\r\n        [Description(\"Depth that KL starts to decline\")]\r\n        public double KLReductionDepth { get; set; }\r\n        \r\n        public double[] YKLModifiers { get; set; }\r\n        public double[] XDepth { get; set; }\r\n        private double Depth { get; set; }\r\n        private RectangularZone RowZone {get; set;}\r\n              \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n                //double maxRootDepth = (double)zone.Get(\"Grapevine.Root.MaximumRootDepth.FixedValue\");\r\n                //double initialRootDepth = Math.Min(1,StartAge/6) * maxRootDepth;\r\n                //int budNumberInput;\r\n                //assume 8 shoots from the head of the vine which is about 17% of the total number of shoot \r\n                //10 buds per cane\r\n                //if(CultivarName == \"SauvignonBlanc2C\") budNumberInput = 28; \r\n                //if(CultivarName == \"SauvignonBlanc4C\") budNumberInput = 48;\r\n                RowZone = Apsim.Find(this.Parent.Parent.Parent,\"Row\") as RectangularZone;\r\n                double pop = 1/RowZone.Width/VineDistance;             \r\n                Grapevine.Sow(cultivar: CultivarName,population: pop, \r\n                depth: 2000, rowSpacing: RowSpacing*1000, budNumber:BudNumber);\r\n               // object StartAgeValue = StartAge;\r\n                //zone.Set(\"Grapevine.Phenology.Age.Years\",StartAgeValue);\r\n                YKLModifiers = new double[Soil.Thickness.Length];\r\n                XDepth = new double[Soil.Thickness.Length];\r\n                Depth = 0;\r\n                for (int layer = 0; layer < Soil.Thickness.Length; layer++)\r\n                {\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add half of the thickness of the current layer so depth is the mid depth of that layer\r\n                    if (Depth <= KLReductionDepth)\r\n                    {\r\n                        YKLModifiers[layer] = SurfaceKL;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    else\r\n                    {\r\n                        double KLMod = SurfaceKL * Math.Exp(-KLReductionFactor * (Depth - KLReductionDepth));\r\n                        YKLModifiers[layer] = KLMod;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add the other half of the current layer so depth is the top of the next layer\r\n                }\r\n                object KLMods = YKLModifiers;\r\n                zone.Set(\"Grapevine.Root.KLModifier.XYPairs.Y\", KLMods);\r\n                object Depths = XDepth;\r\n                zone.Set(\"Grapevine.Root.KLModifier.XYPairs.X\", Depths);\r\n            }\r\n        }\r\n    }\r\n}            \r\n",
+                          "Code": "using Models.Zones;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [Description(\"Row spacing(m)\")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Vine distance(m)\")]\r\n        public double VineDistance { get; set; }\r\n\r\n        [Description(\"Bud number(#)\")]\r\n        public double BudNumber { get; set; }\r\n\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        [Description(\"Kl in the shallowest layer\")]\r\n        public double SurfaceKL { get; set; }\r\n        [Description(\"Factor to change Kl modifier with Depth\")]\r\n        public double KLReductionFactor { get; set; }\r\n        [Description(\"Depth that KL starts to decline\")]\r\n        public double KLReductionDepth { get; set; }\r\n        \r\n        public double[] YKLModifiers { get; set; }\r\n        public double[] XDepth { get; set; }\r\n        private double Depth { get; set; }\r\n        private RectangularZone RowZone {get; set;}\r\n              \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n                //double maxRootDepth = (double)zone.Get(\"Grapevine.Root.MaximumRootDepth.FixedValue\");\r\n                //double initialRootDepth = Math.Min(1,StartAge/6) * maxRootDepth;\r\n                //int budNumberInput;\r\n                //assume 8 shoots from the head of the vine which is about 17% of the total number of shoot \r\n                //10 buds per cane\r\n                //if(CultivarName == \"SauvignonBlanc2C\") budNumberInput = 28; \r\n                //if(CultivarName == \"SauvignonBlanc\") budNumberInput = 48;\r\n                RowZone = Apsim.Find(this.Parent.Parent.Parent,\"Row\") as RectangularZone;\r\n                double pop = 1/RowZone.Width/VineDistance;             \r\n                Grapevine.Sow(cultivar: CultivarName,population: pop, \r\n                depth: 2000, rowSpacing: RowSpacing*1000, budNumber:BudNumber);\r\n               // object StartAgeValue = StartAge;\r\n                //zone.Set(\"Grapevine.Phenology.Age.Years\",StartAgeValue);\r\n                YKLModifiers = new double[Soil.Thickness.Length];\r\n                XDepth = new double[Soil.Thickness.Length];\r\n                Depth = 0;\r\n                for (int layer = 0; layer < Soil.Thickness.Length; layer++)\r\n                {\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add half of the thickness of the current layer so depth is the mid depth of that layer\r\n                    if (Depth <= KLReductionDepth)\r\n                    {\r\n                        YKLModifiers[layer] = SurfaceKL;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    else\r\n                    {\r\n                        double KLMod = SurfaceKL * Math.Exp(-KLReductionFactor * (Depth - KLReductionDepth));\r\n                        YKLModifiers[layer] = KLMod;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add the other half of the current layer so depth is the top of the next layer\r\n                }\r\n                object KLMods = YKLModifiers;\r\n                zone.Set(\"Grapevine.Root.KLModifier.XYPairs.Y\", KLMods);\r\n                object Depths = XDepth;\r\n                zone.Set(\"Grapevine.Root.KLModifier.XYPairs.X\", Depths);\r\n            }\r\n        }\r\n    }\r\n}            \r\n",
                           "Parameters": [
                             {
                               "Key": "CultivarName",
-                              "Value": "SauvignonBlanc4C"
+                              "Value": "SauvignonBlanc"
                             },
                             {
                               "Key": "SowingDate",
@@ -30406,7 +30439,7 @@
                           "Parameters": [
                             {
                               "Key": "CultivarName",
-                              "Value": "SauvignonBlanc4C"
+                              "Value": "SauvignonBlanc"
                             },
                             {
                               "Key": "SowingDate",
@@ -34492,7 +34525,7 @@
                       "Parameters": [
                         {
                           "Key": "CultivarName",
-                          "Value": "SauvignonBlanc4C"
+                          "Value": "SauvignonBlanc"
                         },
                         {
                           "Key": "SowingDate",
@@ -37318,7 +37351,7 @@
                       "Parameters": [
                         {
                           "Key": "CultivarName",
-                          "Value": "SauvignonBlanc4C"
+                          "Value": "SauvignonBlanc"
                         },
                         {
                           "Key": "SowingDate",
@@ -40144,7 +40177,7 @@
                       "Parameters": [
                         {
                           "Key": "CultivarName",
-                          "Value": "SauvignonBlanc4C"
+                          "Value": "SauvignonBlanc"
                         },
                         {
                           "Key": "SowingDate",
@@ -43404,6 +43437,22 @@
                       "Name": "Management",
                       "Children": [
                         {
+                          "$type": "Models.Operations, Models",
+                          "Operation": [
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "2004-01-01",
+                              "Action": "[Grapevine].Sow(population: 0.231481, cultivar: \"SauvignonBlanc\", depth: 80, rowSpacing: 2400, budNumber:24);",
+                              "Enabled": true
+                            }
+                          ],
+                          "Name": "Sowing",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
                           "$type": "Models.Manager, Models",
                           "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Plant Grapevine;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"CordonDiameter_mm\")]         \r\n        public double CordonDiameter { get; set; }  //mm\r\n        \r\n\r\n        [EventSubscribe(\"PlantSowing\")]\r\n        private void OnPlantSowing(object sender, EventArgs e)\r\n        {\r\n            zone.Set(\"Grapevine.Cordon.CordonDiameter.FixedValue\", CordonDiameter);      \r\n        }\r\n\r\n     }\r\n}\r\n",
                           "Parameters": [
@@ -43413,22 +43462,6 @@
                             }
                           ],
                           "Name": "ExtraVariables",
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Operations, Models",
-                          "Operation": [
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Date": "2004-01-01",
-                              "Action": "[Grapevine].Sow(population: 0.231481, cultivar: \"SauvignonBlanc4C\", depth: 80, rowSpacing: 2400, budNumber:24);",
-                              "Enabled": true
-                            }
-                          ],
-                          "Name": "Operations",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
