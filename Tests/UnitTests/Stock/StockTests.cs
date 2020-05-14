@@ -52,7 +52,7 @@
             Assert.AreEqual(550,  friesian.BreedSRW, 550);
             Assert.AreEqual(0.05, friesian.SelfWeanPropn);
             Assert.IsTrue(friesian.bDairyBreed);
-            Assert.AreEqual(new double[] { 0.0, 0.85, 0.577, 0.9 },        friesian.IntakeLactC);
+            Assert.AreEqual(new double[] { 0.85, 0.577, 0.9, 0.0 },       friesian.IntakeLactC);
             Assert.AreEqual(new double[] { 0.0, 0.0115, 0.27, 0.4, 1.1 }, friesian.GrowthC);
         }
 
