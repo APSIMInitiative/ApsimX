@@ -6,11 +6,11 @@
   "Children": [
     {
       "$type": "Models.PMF.Plant, Models",
-      "CropType": "Eucalyptus",
+      "CropType": "Pinus",
       "IsEnding": false,
       "DaysAfterEnding": 0,
       "ResourceName": null,
-      "Name": "Eucalyptus",
+      "Name": "Pinus",
       "Children": [
         {
           "$type": "Models.Memo, Models",
@@ -506,7 +506,7 @@
           "Children": [
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Eucalyptus].TotalLive.Wt",
+              "VariableName": "[Pinus].TotalLive.Wt",
               "Name": "LiveWt",
               "Children": [],
               "IncludeInDocumentation": false,
@@ -515,7 +515,7 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Eucalyptus].Population",
+              "VariableName": "[Pinus].Population",
               "Name": "Population",
               "Children": [],
               "IncludeInDocumentation": false,
@@ -542,7 +542,7 @@
           "Children": [
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Eucalyptus].Stem.Wt",
+              "VariableName": "[Pinus].Stem.Wt",
               "Name": "LiveWt",
               "Children": [],
               "IncludeInDocumentation": false,
@@ -551,7 +551,7 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Eucalyptus].Population",
+              "VariableName": "[Pinus].Population",
               "Name": "Population",
               "Children": [],
               "IncludeInDocumentation": false,
@@ -733,7 +733,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "([ExtinctionCoefficient].KMatureTrees+([ExtinctionCoefficient].KYoungTrees-[ExtinctionCoefficient].KMatureTrees)*Exp((0-2)*([Eucalyptus].Leaf.LAI/[ExtinctionCoefficient].LAIIntermediateK)^[ExtinctionCoefficient].ShapeCurve))",
+              "Expression": "([ExtinctionCoefficient].KMatureTrees+([ExtinctionCoefficient].KYoungTrees-[ExtinctionCoefficient].KMatureTrees)*Exp((0-2)*([Pinus].Leaf.LAI/[ExtinctionCoefficient].LAIIntermediateK)^[ExtinctionCoefficient].ShapeCurve))",
               "Name": "ExtinctionCoefficient",
               "Children": [
                 {
@@ -778,7 +778,7 @@
                 },
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "A value of 0.50 is commonly used for Eucalyptus ([macfarlane2007estimation]).\r\n",
+                  "Text": "A value of 0.50 is commonly used for Pinus ([macfarlane2007estimation]).\r\n",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -1510,7 +1510,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Eucalyptus].Age",
+                      "VariableName": "[Pinus].Age",
                       "Name": "XValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1607,7 +1607,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Eucalyptus].Age",
+                  "VariableName": "[Pinus].Age",
                   "Name": "XValue",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1762,7 +1762,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Eucalyptus].IndividualTreeLiveWt",
+                              "VariableName": "[Pinus].IndividualTreeLiveWt",
                               "Name": "XValue",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -2167,7 +2167,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Eucalyptus].IndividualTreeLiveWt",
+                              "VariableName": "[Pinus].IndividualTreeLiveWt",
                               "Name": "XValue",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -2634,7 +2634,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "0.685*([Eucalyptus].AboveGround.Wt^0.3262)",
+              "Expression": "0.685*([Pinus].AboveGround.Wt^0.3262)",
               "Name": "DBH",
               "Children": [],
               "IncludeInDocumentation": false,
@@ -2647,7 +2647,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
-                  "Expression": "0.5201*([Eucalyptus].Stem.DBH^1.3604)",
+                  "Expression": "0.5201*([Pinus].Stem.DBH^1.3604)",
                   "Name": "HeightFunction",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -2704,7 +2704,7 @@
                 },
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
-                  "Expression": "(((((([Eucalyptus].Stem.DBH)/2)^2)*3.14159)/3)*([Eucalyptus].Stem.Ht*100))*[Eucalyptus].Population*10000/1000000",
+                  "Expression": "(((((([Pinus].Stem.DBH)/2)^2)*3.14159)/3)*([Pinus].Stem.Ht*100))*[Pinus].Population*10000/1000000",
                   "Name": "VolumeEquation",
                   "Children": [
                     {
@@ -2728,7 +2728,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "[Eucalyptus].Stem.Vol/[Eucalyptus].Age",
+              "Expression": "[Pinus].Stem.Vol/[Pinus].Age",
               "Name": "MAI",
               "Children": [
                 {
@@ -2790,7 +2790,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Eucalyptus].IndividualTreeLiveWt",
+                              "VariableName": "[Pinus].IndividualTreeLiveWt",
                               "Name": "XValue",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -3290,7 +3290,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Eucalyptus].IndividualTreeLiveWt",
+                              "VariableName": "[Pinus].IndividualTreeLiveWt",
                               "Name": "XValue",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -4082,7 +4082,7 @@
           "Children": [
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Eucalyptus].BelowGround.Wt",
+              "VariableName": "[Pinus].BelowGround.Wt",
               "Name": "Numerator",
               "Children": [],
               "IncludeInDocumentation": false,
@@ -4091,7 +4091,7 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Eucalyptus].AboveGround.Wt",
+              "VariableName": "[Pinus].AboveGround.Wt",
               "Name": "Denominator",
               "Children": [],
               "IncludeInDocumentation": false,
@@ -4116,7 +4116,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "This genotype specification was originally planned to be for the species E. grandis in general, but we did not actually provide any specific parameters. As no parameter values were changed here, generic Eucalyptus parameters were used where this genotype was specified in a simulation.\r\n\r\n    \r\n",
+                  "Text": "This genotype specification was originally planned to be for the species E. grandis in general, but we did not actually provide any specific parameters. As no parameter values were changed here, generic Pinus parameters were used where this genotype was specified in a simulation.\r\n\r\n    \r\n",
                   "Name": "Genotype note",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -4137,7 +4137,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "This genotype specification is for a Coffs Harbour provenance of E. grandis, but as no actually genotype-specific parameters are specified, simulations using this genotype use the unchanged parameter set of the main Eucalyptus model. \r\n\r\n  \r\n",
+                  "Text": "This genotype specification is for a Coffs Harbour provenance of E. grandis, but as no actually genotype-specific parameters are specified, simulations using this genotype use the unchanged parameter set of the main Pinus model. \r\n\r\n  \r\n",
                   "Name": "Genotype note",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -4220,7 +4220,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "This genotype specification was originally planned to be for a cline of grandisXurophylla, but we did not actually provide any specific parameters. As no parameter values were changed here, generic Eucalyptus parameters were used where this genotype was specified in a simulation.\r\n\r\n    \r\n",
+                  "Text": "This genotype specification was originally planned to be for a cline of grandisXurophylla, but we did not actually provide any specific parameters. As no parameter values were changed here, generic Pinus parameters were used where this genotype was specified in a simulation.\r\n\r\n    \r\n",
                   "Name": "Genotype note",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -4241,7 +4241,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "This genotype specification was originally planned to be for the clone C3334, but we did not actually provide any specific parameters. As no parameter values were changed here, generic Eucalyptus parameters were used where this genotype was specified in a simulation.\r\n\r\n    \r\n",
+                  "Text": "This genotype specification was originally planned to be for the clone C3334, but we did not actually provide any specific parameters. As no parameter values were changed here, generic Pinus parameters were used where this genotype was specified in a simulation.\r\n\r\n    \r\n",
                   "Name": "Genotype note",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -4262,7 +4262,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "This genotype specification was originally planned to be for the clone C3336, but we did not actually provide any specific parameters. As no parameter values were changed here, generic Eucalyptus parameters were used where this genotype was specified in a simulation.\r\n\r\n    \r\n",
+                  "Text": "This genotype specification was originally planned to be for the clone C3336, but we did not actually provide any specific parameters. As no parameter values were changed here, generic Pinus parameters were used where this genotype was specified in a simulation.\r\n\r\n    \r\n",
                   "Name": "Genotype note",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -4292,7 +4292,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "This genotype specification was originally planned to be for the urophyllaXglobulus hybird of E. grandis, but we did not actually provide any specific parameters. As no parameter values were changed here, generic Eucalyptus parameters were used where this genotype was specified in a simulation.\r\n\r\n    \r\n",
+                  "Text": "This genotype specification was originally planned to be for the urophyllaXglobulus hybird of E. grandis, but we did not actually provide any specific parameters. As no parameter values were changed here, generic Pinus parameters were used where this genotype was specified in a simulation.\r\n\r\n    \r\n",
                   "Name": "Genotype note",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -4451,7 +4451,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "This genotype specification was originally planned to be for the species E. saligna, but we did not actually provide any specific parameters. As no parameter values were changed here, generic Eucalyptus parameters were used where this genotype was specified in a simulation.\r\n\r\n    \r\n",
+                  "Text": "This genotype specification was originally planned to be for the species E. saligna, but we did not actually provide any specific parameters. As no parameter values were changed here, generic Pinus parameters were used where this genotype was specified in a simulation.\r\n\r\n    \r\n",
                   "Name": "Genotype note",
                   "Children": [],
                   "IncludeInDocumentation": false,
