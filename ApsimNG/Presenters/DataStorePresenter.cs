@@ -45,9 +45,6 @@ namespace UserInterface.Presenters
         private EditView rowFilterEditBox;
 
         /// <summary>Row filter edit box.</summary>
-        private GridView grid;
-
-        /// <summary>Row filter edit box.</summary>
         private EditView maxNumRecordsEditBox;
 
         /// <summary>Gets or sets the experiment filter. When specified, will only show experiment data.</summary>
