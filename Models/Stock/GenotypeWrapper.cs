@@ -222,7 +222,17 @@
                     for (int i = 0; i != values.Length; i++)
                     {
                         if (values[i] != string.Empty)
-                            commands.Add(new PropertyReplacement($"{animalParamName}[{i+2}]", values[i]));  // 1 based array indexing before equals sign.
+                        {
+                            if (animalParamName == "IntakeLactC")
+                            {
+                                if (i == 0)
+                                    commands.Add(new PropertyReplacement($"FDairyIntakePeak", values[i]));
+                                else
+                                    commands.Add(new PropertyReplacement($"{animalParamName}[{i + 1}]", values[i])); 
+                            }
+                            else
+                                commands.Add(new PropertyReplacement($"{animalParamName}[{i + 2}]", values[i]));  // 1 based array indexing before equals sign.
+                        }
                     }
                 }
                 else

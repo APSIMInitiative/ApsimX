@@ -352,7 +352,7 @@
       "BreedSRW": 55.0,
       "Animal": 0,
       "FDairyIntakePeak": 0.0,
-      "MaxYoung": 0,
+      "MaxYoung": 3,
       "PotFleeceWt": 4.235,
       "PeakMilk": 0.0,
       "ConceiveSigs": [
