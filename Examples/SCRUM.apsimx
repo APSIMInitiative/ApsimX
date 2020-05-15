@@ -1,7 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 286,
-  "Version": 67,
+  "Version": 85,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -206,6 +207,8 @@
               "$type": "Models.Core.Zone, Models",
               "Area": 1.0,
               "Slope": 0.0,
+              "AspectAngle": 0.0,
+              "Altitude": 50.0,
               "Name": "Field",
               "Children": [
                 {
@@ -311,6 +314,8 @@
                         300.0
                       ],
                       "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.2,
                         1.2,
@@ -339,9 +344,9 @@
                         0.33,
                         0.33,
                         0.31,
-                        0.15,
-                        0.1,
-                        0.06
+                        0.3,
+                        0.3,
+                        0.3
                       ],
                       "SAT": [
                         0.5,
@@ -485,6 +490,7 @@
                         0.0,
                         0.0
                       ],
+                      "PrecipitationInterception": 0.0,
                       "Name": "SoilWater",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -691,22 +697,6 @@
                             "Colour": "White",
                             "OutlineColour": "White",
                             "Transparent": true
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "PlantAvailableNO3",
-                            "Location": "688, 415",
-                            "Colour": "0, 158, 115",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "PlantAvailableNH4",
-                            "Location": "691, 421",
-                            "Colour": "0, 158, 115",
-                            "OutlineColour": "Black",
-                            "Transparent": false
                           }
                         ],
                         "Arcs": [
@@ -843,6 +833,7 @@
                   "d_interception": 0.0,
                   "soil_albedo": 0.23,
                   "SoilHeatFluxFraction": 0.4,
+                  "MinimumHeightDiffForNewLayer": 0.0,
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
@@ -869,7 +860,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SCRUM;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Initial Root Depth\")]\r\n        public double InitialRootDepth { get; set; }\r\n        [Description(\"Sowing Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n               \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n                SCRUM.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);\r\n            //PMFCrop.Sow(... Contains the following arguements:\r\n            //Population  double  Optional  Seeds sowing/m2.  Default is zero\r\n            //Cultivar    string  Required  \"NameOfCultivar\"\r\n            //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm \r\n            //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0\r\n            //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0\r\n            //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm\r\n            //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is \"Plant\"\r\n        }\r\n    }\r\n}\r\n                \r\n",
+                  "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SCRUM;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName, PlantName = \"SCRUM\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Initial Root Depth\")]\r\n        public double InitialRootDepth { get; set; }\r\n        [Description(\"Sowing Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n               \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n                SCRUM.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);\r\n            //PMFCrop.Sow(... Contains the following arguements:\r\n            //Population  double  Optional  Seeds sowing/m2.  Default is zero\r\n            //Cultivar    string  Required  \"NameOfCultivar\"\r\n            //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm \r\n            //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0\r\n            //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0\r\n            //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm\r\n            //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is \"Plant\"\r\n        }\r\n    }\r\n}\r\n                \r\n",
                   "Parameters": [
                     {
                       "Key": "CultivarName",
@@ -891,13 +882,14 @@
                 },
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                  "Canopies": [],
                   "InitialResidueName": "wheat",
                   "InitialResidueType": "wheat",
                   "InitialResidueMass": 2000.0,
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 80.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "surface organic matter",
                   "IncludeInDocumentation": true,
@@ -919,7 +911,6 @@
                     "[SCRUM].Stover.Live.NConc",
                     "[SCRUM].Root.Live.NConc",
                     "[SCRUM].Product.Live.NConc",
-                    "[SCRUM].Root.WaterSupply",
                     "[SCRUM].Root.WaterUptake",
                     "[SCRUM].Stover.Transpiration",
                     "[SCRUM].Stover.WaterDemand",
@@ -929,8 +920,7 @@
                     "[SCRUM].Stover.CoverGreen",
                     "[SCRUM].Stover.LAI",
                     "[SCRUM].Stover.Height",
-                    "[SCRUM].Product.LiveFWt",
-                    "[SCRUM].Phenology.ThermalTime.Value()",
+                    "[SCRUM].Phenology.ThermalTime",
                     "[SCRUM].Phenology.CurrentPhaseName",
                     "[SCRUM].Phenology.Stage"
                   ],
@@ -946,6 +936,7 @@
                 {
                   "$type": "Models.PMF.Plant, Models",
                   "CropType": "SCRUM",
+                  "IsAlive": false,
                   "IsEnding": false,
                   "DaysAfterEnding": 0,
                   "ResourceName": "SCRUM",
@@ -1002,7 +993,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using Models.Interfaces;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing System.Xml.Serialization;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\n        \r\nnamespace Models\r\n{\r\n   [Serializable] \r\n   [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {      \r\n        [Link] private ISummary summary;\r\n        [Link] private Fertiliser Fertiliser;\r\n        [Link] private Clock Clock;\r\n        [Link] private Plant SCRUM;\r\n        [ScopedLinkByName]\r\n        private ISolute NO3;\r\n       //Communication to other modules\r\n       [Link] Soils.Soil Soil;\r\n       \r\n       //User inputs from properties tab\r\n       [Description(\"Fertiliser on (yes or no)\")]\r\n       public string Fertiliser_Yes_No { get; set; }\r\n       [Description(\"SeasonStart (dd-MMM)\")]\r\n       public string Season_Start { get; set; }\r\n       [Description(\"SeasonEnd (dd-MMM)\")]\r\n       public string Season_End { get; set; }\r\n       [Description(\"Season Allocation (kg/ha)\")]\r\n       public double Season_Allocation { get; set; }\r\n       [Description(\"Mineral N to maintain soil above (kg/ha)\")]\r\n       public double TriggerN { get; set; }\r\n       [Description(\"Amount of N to apply (kg/ha)\")]\r\n       public double NApplicationAmount { get; set; }\r\n       [Description(\"Minimum days for Fertiliser spreader to return\")]\r\n       public double Return_days { get; set; }\r\n       [Description(\"Depth to calculate mineral N (mm)\")]\r\n       public double Top_Depth { get; set; }\r\n       \r\n       //Class members\r\n       [XmlIgnore] private bool FertiliserIsAvailable { get; set; }\r\n       [XmlIgnore] public bool SeasonIsOpen { get; set; }\r\n       [XmlIgnore] private bool CropIsActive { get; set; }\r\n       [XmlIgnore] private bool FertSpreaderIsAvailable { get; set; }\r\n       [XmlIgnore] private bool SoilNIsLow { get; set; }\r\n       [XmlIgnore] public double Top_SoilN { get; set; }\r\n       [XmlIgnore] public double Accumulated_depth { get; set; }   \r\n       [XmlIgnore] public double Days_since_fertiliser { get; set; }\r\n       [XmlIgnore] public double Season_Application { get; set; }\r\n        \r\n       //Variables for date logic testing\r\n       [XmlIgnore] public string StartString {get; set;}\r\n       [XmlIgnore] public string EndString {get; set;}\r\n       [XmlIgnore] public DateTime StartDate {get; set;}\r\n       [XmlIgnore] public DateTime EndDate {get; set;}\r\n       [XmlIgnore] public int TodayYear {get; set;}\r\n       [XmlIgnore] public int TodayMonth {get; set;}\r\n       [XmlIgnore] public int StartMonth {get; set;}\r\n       [XmlIgnore] public int EndMonth {get; set;}\r\n       [XmlIgnore] public int TodayDay {get; set;}\r\n       [XmlIgnore] public int StartDay {get; set;}\r\n       [XmlIgnore] public int EndDay {get; set;}\r\n              \r\n       //Determine daily requirement for fertiliser\r\n        [EventSubscribe(\"StartOfDay\")]\r\n           private void OnStartOfDay(object sender, EventArgs e)\r\n           { \r\n          //Can we irrigate?\r\n          FertiliserIsAvailable = false; \r\n          if (Fertiliser_Yes_No == \"yes\")\r\n             FertiliserIsAvailable = true; \r\n    \r\n          //Are we Allowed to Irrigate?\r\n          TodayYear = Clock.Today.Year;\r\n          StartString = Season_Start + \"-\" + TodayYear.ToString();\r\n          EndString = Season_End + \"-\" + TodayYear.ToString();\r\n          StartDate = DateTime.Parse(StartString);\r\n          EndDate = DateTime.Parse(EndString);\r\n          TodayMonth = Clock.Today.Month;\r\n          TodayDay = Clock.Today.Day;\r\n          StartDay = StartDate.Day;\r\n          StartMonth = StartDate.Month;\r\n          EndDay = EndDate.Day;\r\n          EndMonth = EndDate.Month;\r\n          \r\n          SeasonIsOpen = false;\r\n          //if we are in the spring and after the start date then yes\r\n          if((Clock.Today.Month > 6) && (Clock.Today >= StartDate))\r\n          SeasonIsOpen = true;\r\n          //if we are in the autumn and before the end date then yes\r\n          if((Clock.Today.Month <= 6) && (Clock.Today <= EndDate))\r\n          SeasonIsOpen = true;\r\n          \r\n          //Is there a crop in the ground that needs irrigation?\r\n          CropIsActive = false;\r\n          if ((SCRUM.Phenology.Stage >= 3.0) && (SCRUM.Phenology.Stage < 6.0))\r\n                CropIsActive = true;\r\n          \r\n          //Is the irrigator available?\r\n          FertSpreaderIsAvailable = false;\r\n          Days_since_fertiliser += 1;\r\n          if (Days_since_fertiliser >= Return_days)\r\n             FertSpreaderIsAvailable = true;\r\n          \r\n          //Is the soil N low enough to require fertiliser?\r\n          SoilNIsLow = false;\r\n          double CurrentRootDepth = 0;\r\n          double RootDepth = SCRUM.Root.Depth;\r\n          CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);\r\n          \r\n          Accumulated_depth = 0;\r\n          Top_SoilN = 0;\r\n          for (int layer = 0; Accumulated_depth < Top_Depth; layer++)\r\n          {\r\n             Top_SoilN += NO3.kgha[layer];\r\n             Accumulated_depth += Soil.Thickness[layer];\r\n          }\r\n          if (Top_SoilN <= TriggerN)\r\n             SoilNIsLow = true;\r\n                \r\n          //Lets bloody well irrigate then!!!!\r\n          if((FertiliserIsAvailable) && (SeasonIsOpen) && (CropIsActive) && (FertSpreaderIsAvailable) && (SoilNIsLow)) //The conditions are rife for irrigation\r\n          {\r\n             Fertiliser.Apply(NApplicationAmount, Fertiliser.Types.UreaN, 10);\r\n             Days_since_fertiliser = 0;\r\n             Season_Application += NApplicationAmount;\r\n             summary.WriteMessage(this, \"Automatic Fertiliser\");\r\n            \r\n          }\r\n       }\r\n    }\r\n}\r\n             \r\n             \r\n",
+                  "Code": "using Models.Interfaces;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing System.Xml.Serialization;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\n        \r\nnamespace Models\r\n{\r\n   [Serializable] \r\n   [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {      \r\n        [Link] private ISummary summary;\r\n        [Link] private Fertiliser Fertiliser;\r\n        [Link] private Clock Clock;\r\n        [Link] private Plant SCRUM;\r\n        [Link(ByName = true)]\r\n        private ISolute NO3;\r\n       //Communication to other modules\r\n       [Link] Soils.Soil Soil;\r\n       \r\n       //User inputs from properties tab\r\n       [Description(\"Fertiliser on (yes or no)\")]\r\n       public string Fertiliser_Yes_No { get; set; }\r\n       [Description(\"SeasonStart (dd-MMM)\")]\r\n       public string Season_Start { get; set; }\r\n       [Description(\"SeasonEnd (dd-MMM)\")]\r\n       public string Season_End { get; set; }\r\n       [Description(\"Season Allocation (kg/ha)\")]\r\n       public double Season_Allocation { get; set; }\r\n       [Description(\"Mineral N to maintain soil above (kg/ha)\")]\r\n       public double TriggerN { get; set; }\r\n       [Description(\"Amount of N to apply (kg/ha)\")]\r\n       public double NApplicationAmount { get; set; }\r\n       [Description(\"Minimum days for Fertiliser spreader to return\")]\r\n       public double Return_days { get; set; }\r\n       [Description(\"Depth to calculate mineral N (mm)\")]\r\n       public double Top_Depth { get; set; }\r\n       \r\n       //Class members\r\n       [XmlIgnore] private bool FertiliserIsAvailable { get; set; }\r\n       [XmlIgnore] public bool SeasonIsOpen { get; set; }\r\n       [XmlIgnore] private bool CropIsActive { get; set; }\r\n       [XmlIgnore] private bool FertSpreaderIsAvailable { get; set; }\r\n       [XmlIgnore] private bool SoilNIsLow { get; set; }\r\n       [XmlIgnore] public double Top_SoilN { get; set; }\r\n       [XmlIgnore] public double Accumulated_depth { get; set; }   \r\n       [XmlIgnore] public double Days_since_fertiliser { get; set; }\r\n       [XmlIgnore] public double Season_Application { get; set; }\r\n        \r\n       //Variables for date logic testing\r\n       [XmlIgnore] public string StartString {get; set;}\r\n       [XmlIgnore] public string EndString {get; set;}\r\n       [XmlIgnore] public DateTime StartDate {get; set;}\r\n       [XmlIgnore] public DateTime EndDate {get; set;}\r\n       [XmlIgnore] public int TodayYear {get; set;}\r\n       [XmlIgnore] public int TodayMonth {get; set;}\r\n       [XmlIgnore] public int StartMonth {get; set;}\r\n       [XmlIgnore] public int EndMonth {get; set;}\r\n       [XmlIgnore] public int TodayDay {get; set;}\r\n       [XmlIgnore] public int StartDay {get; set;}\r\n       [XmlIgnore] public int EndDay {get; set;}\r\n              \r\n       //Determine daily requirement for fertiliser\r\n        [EventSubscribe(\"StartOfDay\")]\r\n           private void OnStartOfDay(object sender, EventArgs e)\r\n           { \r\n          //Can we irrigate?\r\n          FertiliserIsAvailable = false; \r\n          if (Fertiliser_Yes_No == \"yes\")\r\n             FertiliserIsAvailable = true; \r\n    \r\n          //Are we Allowed to Irrigate?\r\n          TodayYear = Clock.Today.Year;\r\n          StartString = Season_Start + \"-\" + TodayYear.ToString();\r\n          EndString = Season_End + \"-\" + TodayYear.ToString();\r\n          StartDate = DateTime.Parse(StartString);\r\n          EndDate = DateTime.Parse(EndString);\r\n          TodayMonth = Clock.Today.Month;\r\n          TodayDay = Clock.Today.Day;\r\n          StartDay = StartDate.Day;\r\n          StartMonth = StartDate.Month;\r\n          EndDay = EndDate.Day;\r\n          EndMonth = EndDate.Month;\r\n          \r\n          SeasonIsOpen = false;\r\n          //if we are in the spring and after the start date then yes\r\n          if((Clock.Today.Month > 6) && (Clock.Today >= StartDate))\r\n          SeasonIsOpen = true;\r\n          //if we are in the autumn and before the end date then yes\r\n          if((Clock.Today.Month <= 6) && (Clock.Today <= EndDate))\r\n          SeasonIsOpen = true;\r\n          \r\n          //Is there a crop in the ground that needs irrigation?\r\n          CropIsActive = false;\r\n          if ((SCRUM.Phenology.Stage >= 3.0) && (SCRUM.Phenology.Stage < 6.0))\r\n                CropIsActive = true;\r\n          \r\n          //Is the irrigator available?\r\n          FertSpreaderIsAvailable = false;\r\n          Days_since_fertiliser += 1;\r\n          if (Days_since_fertiliser >= Return_days)\r\n             FertSpreaderIsAvailable = true;\r\n          \r\n          //Is the soil N low enough to require fertiliser?\r\n          SoilNIsLow = false;\r\n          double CurrentRootDepth = 0;\r\n          double RootDepth = SCRUM.Root.Depth;\r\n          CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);\r\n          \r\n          Accumulated_depth = 0;\r\n          Top_SoilN = 0;\r\n          for (int layer = 0; Accumulated_depth < Top_Depth; layer++)\r\n          {\r\n             Top_SoilN += NO3.kgha[layer];\r\n             Accumulated_depth += Soil.Thickness[layer];\r\n          }\r\n          if (Top_SoilN <= TriggerN)\r\n             SoilNIsLow = true;\r\n                \r\n          //Lets bloody well irrigate then!!!!\r\n          if((FertiliserIsAvailable) && (SeasonIsOpen) && (CropIsActive) && (FertSpreaderIsAvailable) && (SoilNIsLow)) //The conditions are rife for irrigation\r\n          {\r\n             Fertiliser.Apply(NApplicationAmount, Fertiliser.Types.UreaN, 10);\r\n             Days_since_fertiliser = 0;\r\n             Season_Application += NApplicationAmount;\r\n             summary.WriteMessage(this, \"Automatic Fertiliser\");\r\n            \r\n          }\r\n       }\r\n    }\r\n}\r\n             \r\n             \r\n",
                   "Parameters": [
                     {
                       "Key": "Fertiliser_Yes_No",
@@ -1080,7 +1071,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": [],
+          "LegendOutsideGraph": false,
           "Name": "ProductDryYield",
           "Children": [
             {
@@ -1096,12 +1089,11 @@
               "MarkerSize": 0,
               "Line": 0,
               "LineThickness": 0,
-              "Checkpoint": "Current",
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "SCRUM.Product.Live.Wt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,

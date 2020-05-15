@@ -109,7 +109,7 @@ namespace Models.CLEM.Activities
             // This method will only fire if the user has added this activity to the UI
             // Otherwise all details will be provided from GrazeAll or GrazePaddock code [CLEMInitialiseActivity]
 
-            this.InitialiseHerd(true, true);
+            this.InitialiseHerd(true, false);
 
             // if no settings have been provided from parent set limiter to 1.0. i.e. no limitation
             if (GrazingCompetitionLimiter == 0)
@@ -284,7 +284,7 @@ namespace Models.CLEM.Activities
                 List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == this.GrazeFoodStoreModel.Name && a.HerdName == this.RuminantTypeModel.Name).ToList();
                 if (herd.Count() > 0)
                 {
-                    //Get total amount
+                    // Get total amount
                     // assumes animals will stop eating at potential intake if they have been feed before grazing.
                     // hours grazed is not adjusted for this reduced feeding. Used to be 1.2 * Potential
                     double totalDesired = 0;

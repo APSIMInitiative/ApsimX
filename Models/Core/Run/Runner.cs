@@ -97,10 +97,7 @@
             this.wait = wait;
             this.numberOfProcessors = numberOfProcessors;
 
-            List<string> files = new List<string>();
-            DirectoryUtilities.FindFiles(Path.GetDirectoryName(pathAndFileSpec), 
-                                         Path.GetFileName(pathAndFileSpec),
-                                         ref files, recurse);
+            string[] files = DirectoryUtilities.FindFiles(pathAndFileSpec, recurse);
             foreach (string fileName in files)
             {
                 if (!DoIgnoreFile(fileName, ignorePaths))
@@ -209,11 +206,13 @@
                 double nComplete = NumberOfSimulationsCompleted;
                 if (jobRunner != null)
                 {
-                    // Should this have a lock? If so, on what?
-                    foreach (IRunnable runningSim in jobRunner.SimsRunning)
+                    lock (jobRunner.runningLock)
                     {
-                        Simulation sim = (runningSim as SimulationDescription)?.SimulationToRun;
-                        nComplete += sim?.FractionComplete ?? 0;
+                        foreach (IRunnable runningSim in jobRunner.SimsRunning)
+                        {
+                            Simulation sim = (runningSim as SimulationDescription)?.SimulationToRun;
+                            nComplete += sim?.FractionComplete ?? 0;
+                        }
                     }
                 }
                 return 100.0 * Math.Min(1.0, nComplete / TotalNumberOfSimulations);

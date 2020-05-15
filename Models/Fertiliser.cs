@@ -79,13 +79,13 @@ namespace Models
         [Link] private ISummary Summary = null;
 
         /// <summary>NO3 solute</summary>
-        [ScopedLinkByName] private ISolute NO3 = null;
+        [Link(ByName = true)] private ISolute NO3 = null;
 
         /// <summary>NO3 solute</summary>
-        [ScopedLinkByName] private ISolute NH4 = null;
+        [Link(ByName = true)] private ISolute NH4 = null;
 
         /// <summary>NO3 solute</summary>
-        [ScopedLinkByName] private ISolute Urea = null;
+        [Link(ByName = true)] private ISolute Urea = null;
 
         // Parameters
         /// <summary>Gets or sets the definitions.</summary>
@@ -179,6 +179,9 @@ namespace Models
                 if (fertiliserType == null)
                     throw new ApsimXException(this, "Cannot find fertiliser type '" + Type + "'");
 
+                // We find the current amount of N in each form, add to it as needed, 
+                // then set the new value. An alternative approach could call AddKgHaDelta
+                // rather than SetKgHa
                 if (fertiliserType.FractionNO3 != 0)
                 {
                     var values = NO3.kgha;

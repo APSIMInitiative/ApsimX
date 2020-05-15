@@ -170,14 +170,34 @@ namespace Models.CLEM.Activities
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"filterborder clearfix\">";
             html += "\n<div class=\"filter\">";
-            html += "Perform every <span class=\"setvalueextra\">";
-            html += Interval.ToString();
-            html += "</span> months from <span class=\"setvalueextra\">";
-            html += new DateTime(2000, MonthDue, 1).ToString("MMMM");
+            html += "Perform every ";
+            if (Interval > 0)
+            {
+                html += "<span class=\"setvalueextra\">";
+                html += Interval.ToString();
+            }
+            else
+            {
+                html += "<span class=\"errorlink\">";
+                html += "NOT SET";
+            }
+            html += "</span> months from ";
+            if(MonthDue > 0)
+            {
+                html += "<span class=\"setvalueextra\">";
+                html += new DateTime(2000, MonthDue, 1).ToString("MMMM");
+            }
+            else
+            {
+                html += "<span class=\"errorlink\">";
+                html += "NOT SET";
+            }
             html += "</span></div>";
-            html += "\n</div>";
+            if(!this.Enabled)
+            {
+                html += " - DISABLED!";
+            }
             return html;
         }
 
@@ -187,7 +207,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
-            return "";
+            return "</div>";
         }
 
         /// <summary>
@@ -196,7 +216,9 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
-            return "";
+            string html = "";
+            html += "\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
+            return html;
         }
 
     }

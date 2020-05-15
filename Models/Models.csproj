@@ -109,8 +109,8 @@
       <HintPath>..\packages\PDFsharp-MigraDoc-gdi.1.50.3638-beta\lib\net20\MigraDoc.RtfRendering-gdi.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PdfSharp-gdi, Version=1.50.3638.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
       <HintPath>..\packages\PDFsharp-MigraDoc-gdi.1.50.3638-beta\lib\net20\PdfSharp-gdi.dll</HintPath>
@@ -132,9 +132,18 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AgPasture\AgPasture.PastureSpecies.cs" />
-    <Compile Include="AgPasture\AgPasture.PastureSpecies.Organs.cs" />
-    <Compile Include="AgPasture\AgPasture.Sward.cs" />
+    <Compile Include="AgPasture\AGPBiomass.cs" />
+    <Compile Include="AgPasture\BiomassAndN.cs" />
+    <Compile Include="AgPasture\BiomassAndNLayered.cs" />
+    <Compile Include="AgPasture\IAGPBiomass.cs" />
+    <Compile Include="AgPasture\TissuesHelper.cs" />
+    <Compile Include="AgPasture\SimpleGrazing.cs" />
+    <Compile Include="AgPasture\PastureSpecies.cs" />
+    <Compile Include="AgPasture\PastureAboveGroundOrgan.cs" />
+    <Compile Include="AgPasture\PastureBelowGroundOrgan.cs" />
+    <Compile Include="AgPasture\GenericTissue.cs" />
+    <Compile Include="AgPasture\RootTissue.cs" />
+    <Compile Include="AgPasture\RootZone.cs" />
     <Compile Include="Agroforestry\AgroforestrySystem.cs" />
     <Compile Include="Agroforestry\LocalMicroClimate.cs" />
     <Compile Include="Agroforestry\TreeProxy.cs" />
@@ -143,9 +152,21 @@
     <Compile Include="Aqua\Prawns.cs" />
     <Compile Include="Aqua\WaterPropertiesData.cs" />
     <Compile Include="CLEM\Activities\FinanceActivityIncome.cs" />
+    <Compile Include="CLEM\Activities\LabourActivityFeedTarget.cs" />
+    <Compile Include="CLEM\Activities\LabourActivityFeedTargetPurchase.cs" />
+    <Compile Include="CLEM\Activities\LabourActivityFeedToTargets.cs" />
+    <Compile Include="CLEM\Activities\LabourActivityFeedToTargetsV1.cs" />
     <Compile Include="CLEM\Activities\LabourActivityPayHired.cs" />
     <Compile Include="CLEM\Activities\LabourActivityFeed.cs" />
-    <Compile Include="CLEM\Activities\LabourAERelationship.cs" />
+    <Compile Include="CLEM\IFilterGroup.cs" />
+    <Compile Include="CLEM\Market.cs" />
+    <Compile Include="CLEM\RainfallShuffler.cs" />
+    <Compile Include="CLEM\RandomNumberGenerator.cs" />
+    <Compile Include="CLEM\Relationship.cs" />
+    <Compile Include="CLEM\RelationshipTracker.cs" />
+    <Compile Include="CLEM\Reporting\ConceptionStatus.cs" />
+    <Compile Include="CLEM\Reporting\ConceptionStatusChangedEventArgs.cs" />
+    <Compile Include="CLEM\Resources\LabourDietComponent.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityMarkForSale.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityShear.cs" />
     <Compile Include="CLEM\FileSQLiteCrop.cs" />
@@ -154,12 +175,14 @@
     <Compile Include="CLEM\ICLEMUI.cs" />
     <Compile Include="CLEM\IFileCrop.cs" />
     <Compile Include="CLEM\Reporting\CustomQuery.cs" />
+    <Compile Include="CLEM\Resources\HumanFoodStorePool.cs" />
     <Compile Include="CLEM\Resources\LabourPricing.cs" />
     <Compile Include="CLEM\Resources\ResourceUnitsConverter.cs" />
     <Compile Include="CLEM\Resources\RuminantConceptionByCondition.cs" />
     <Compile Include="CLEM\Resources\RuminantConceptionCurve.cs" />
     <Compile Include="CLEM\Reporting\PivotTable.cs" />
     <Compile Include="CLEM\WarningLog.cs" />
+    <Compile Include="Core\Apsim710File\Importer.cs" />
     <Compile Include="Core\ApsimFile\ConverterReturnType.cs" />
     <Compile Include="Core\ApsimFile\JsonUtilities.cs" />
     <Compile Include="Core\ApsimFile\Structure.cs" />
@@ -193,8 +216,8 @@
     <Compile Include="CLEM\Resources\LabourSpecifications.cs" />
     <Compile Include="CLEM\Resources\ResourcePricing.cs" />
     <Compile Include="Core\Attributes\CategoryAttribute.cs" />
+    <Compile Include="Core\Attributes\TooltipAttribute.cs" />
     <Compile Include="Core\Attributes\VersionAttribute.cs" />
-    <Compile Include="Core\Checkpoints.cs" />
     <Compile Include="CLEM\Activities\BlankActivity.cs" />
     <Compile Include="CLEM\FileSQLiteGRASP.cs" />
     <Compile Include="CLEM\Groupings\RuminantDestockGroup.cs" />
@@ -222,7 +245,6 @@
     <Compile Include="Core\Attributes\SoluteAttribute.cs" />
     <Compile Include="Core\AutoDocumentation.cs" />
     <Compile Include="Core\Alias.cs" />
-    <Compile Include="Core\EventArgs\LoadedEventArgs.cs" />
     <Compile Include="Core\Events.cs" />
     <Compile Include="Core\ApsimFile\FileFormat.cs" />
     <Compile Include="Core\ICustomDocumentation.cs" />
@@ -241,21 +263,69 @@
     <Compile Include="Core\Run\Runner.cs" />
     <Compile Include="Core\Run\SimulationDescription.cs" />
     <Compile Include="Factorial\Permutation.cs" />
+    <Compile Include="Functions\AccumulateResetAtStage.cs" />
+    <Compile Include="Functions\RootShape\RootShapeSemiCircleSorghum.cs" />
+    <Compile Include="Functions\RootShape\RootShapeSemiEllipse.cs" />
+    <Compile Include="Functions\RootShape\RootShapeSemiCircle.cs" />
+    <Compile Include="Functions\RootShape\RootShapeCylindre.cs" />
     <Compile Include="Functions\DecumulateFunction.cs" />
     <Compile Include="Functions\EndOfDayFunction.cs" />
+    <Compile Include="Functions\CSharpExpressionFunction.cs" />
     <Compile Include="Functions\LiveOnEventFunction.cs" />
+    <Compile Include="Functions\ProtectedDivideFunction.cs" />
+    <Compile Include="Functions\BetaGrowthFunction.cs" />
     <Compile Include="Graph\DefaultPainter.cs" />
+    <Compile Include="Graph\ShadedBarsOnGraph.cs" />
     <Compile Include="Graph\GraphPanel.cs" />
     <Compile Include="Graph\IGraphPanelScript.cs" />
     <Compile Include="Graph\ISeriesDefinitionPainter.cs" />
     <Compile Include="Graph\MultiDescriptorPainter.cs" />
     <Compile Include="Graph\SequentialPainter.cs" />
     <Compile Include="Graph\SeriesDefinition.cs" />
+    <Compile Include="Lifecycle\AccumulateCohortExpression.cs" />
+    <Compile Include="Lifecycle\IInfest.cs" />
+    <Compile Include="Lifecycle\Infestation.cs" />
+    <Compile Include="Lifecycle\ProgenyDestinationPhase.cs" />
+    <Compile Include="Lifecycle\MigrantDestinationPhase.cs" />
+    <Compile Include="Lifecycle\PlantAssimilateConsumption.cs" />
+    <Compile Include="Lifecycle\PlantOrganFunctionalDimensionReduction.cs" />
+    <Compile Include="Lifecycle\PlantOrganConsumption.cs" />
+    <Compile Include="Lifecycle\PlantMortality.cs" />
+    <Compile Include="Interfaces\ILeaf.cs" />
+    <Compile Include="Plant\Arbitrator\BiomassTypeArbitrator.cs" />
+    <Compile Include="Interfaces\IRootShape.cs" />
+    <Compile Include="Plant\Arbitrator\IArbitrationMethod.cs" />
+    <Compile Include="Plant\Arbitrator\IUptakeMethod.cs" />
+    <Compile Include="Plant\Arbitrator\Methods\AllocateFixationMethod.cs" />
+    <Compile Include="Plant\Arbitrator\Methods\AllocateUptakesMethod.cs" />
+    <Compile Include="Plant\Arbitrator\Methods\C4NitrogenUptakeMethod.cs" />
+    <Compile Include="Plant\Arbitrator\Methods\C4RetranslocationMethod.cs" />
+    <Compile Include="Plant\Arbitrator\Methods\C4WaterUptakeMethod.cs" />
+    <Compile Include="Plant\Arbitrator\Methods\DryMatterAllocationsMethod.cs" />
+    <Compile Include="Plant\Arbitrator\Methods\IPartitionMethod.cs" />
+    <Compile Include="Plant\Arbitrator\Methods\NitrogenAllocationsMethod.cs" />
+    <Compile Include="Plant\Arbitrator\Methods\NitrogenUptakeMethod.cs" />
+    <Compile Include="Plant\Arbitrator\Methods\NutrientConstrainedAllocationMethod.cs" />
+    <Compile Include="Plant\Arbitrator\Methods\ReallocationMethod.cs" />
+    <Compile Include="Plant\Arbitrator\Methods\RetranslocationMethod.cs" />
+    <Compile Include="Plant\Arbitrator\Methods\SendPotentialDMAllocationsMethod.cs" />
+    <Compile Include="Plant\Arbitrator\Methods\UpdateLeafAreaMethod.cs" />
+    <Compile Include="Plant\Arbitrator\QPriorityThenRelativeAllocation.cs" />
     <Compile Include="Plant\Arbitrator\RetranslocateAvailableN.cs" />
     <Compile Include="Factorial\CompositeFactor.cs" />
+    <Compile Include="Plant\Arbitrator\Methods\WaterUptakeMethods.cs" />
+    <Compile Include="Plant\Interfaces\IPlantDamage.cs" />
+    <Compile Include="Plant\Organs\BasialBuds.cs" />
     <Compile Include="Plant\Phenology\Phases\DAWSPhase.cs" />
+    <Compile Include="Plant\Phenology\Phases\SimpleLeafAppearancePhase.cs" />
     <Compile Include="Plant\Phenology\Scales\Age.cs" />
     <EmbeddedResource Include="Resources\Scripts\GraphPanelScriptTemplate.cs" />
+    <EmbeddedResource Include="Resources\Scripts\CSharpExpressionTemplate.cs" />
+    <Compile Include="Plant\Phenology\Scales\ZadokPMFWheat.cs" />
+    <Compile Include="Plant\Structure\Culm.cs" />
+    <Compile Include="Plant\Structure\CulmParams.cs" />
+    <Compile Include="Plant\Structure\LeafCulms.cs" />
+    <Compile Include="Report\VariableGroup.cs" />
     <Compile Include="Soils\Nutrients\INutrientPool.cs" />
     <Compile Include="Soils\SoilTemp\SoilTemperature.cs" />
     <Compile Include="Soils\Standardiser\Layers.cs" />
@@ -263,6 +333,24 @@
     <Compile Include="Soils\Standardiser\SoilDefaults.cs" />
     <Compile Include="Soils\Standardiser\SoilUnits.cs" />
     <Compile Include="Soils\Standardiser\SoilStandardiser.cs" />
+    <Compile Include="StockManagement\Draft.cs" />
+    <Compile Include="Stock\AgeInfo.cs" />
+    <Compile Include="Stock\Animals.cs" />
+    <Compile Include="Stock\AnimalOutput.cs" />
+    <Compile Include="Stock\AgeList.cs" />
+    <Compile Include="Stock\AnimalStateInfo.cs" />
+    <Compile Include="Stock\CohortsInfo.cs" />
+    <Compile Include="Stock\ExcretionInfo.cs" />
+    <Compile Include="Stock\PaddockInfo.cs" />
+    <Compile Include="Stock\PurchaseInfo.cs" />
+    <Compile Include="Stock\StateDifference.cs" />
+    <Compile Include="Stock\Diet.cs" />
+    <Compile Include="Stock\GenotypeWrapper.cs" />
+    <Compile Include="Stock\GenotypeCross.cs" />
+    <Compile Include="Stock\Genotypes.cs" />
+    <Compile Include="Stock\PhysiologicalState.cs" />
+    <Compile Include="Stock\StockUtilities.cs" />
+    <Compile Include="Storage\Checkpoint.cs" />
     <Compile Include="Storage\WriteTableCommand.cs" />
     <Compile Include="Storage\DatabaseTableDetails.cs" />
     <Compile Include="Storage\IDataStore.cs" />
@@ -296,15 +384,12 @@
     <Compile Include="Plant\Arbitrator\BaseArbitrator.cs" />
     <Compile Include="Plant\Arbitrator\RetranslocateNonStructural.cs" />
     <Compile Include="Plant\Interfaces\IRetranslocateMethod.cs" />
-    <Compile Include="Plant\Organs\Culm.cs" />
     <Compile Include="Plant\Organs\EnergyBalance.cs" />
     <Compile Include="Plant\Organs\SorghumLeaf.cs" />
-    <Compile Include="Plant\Structure\CulmStructure.cs" />
     <Compile Include="Sensitivity\FactorialAnova.cs" />
     <Compile Include="Sensitivity\SensitivityParameter.cs" />
     <Compile Include="Sensitivity\Sobol.cs" />
     <Compile Include="Sensitivity\Morris.cs" />
-    <Compile Include="Lifecycle\LifestageImmigrationProcess.cs" />
     <Compile Include="Functions\AccumulateByDate.cs" />
     <Compile Include="Functions\AccumulateByNumericPhase.cs" />
     <Compile Include="Functions\TrackerFunction.cs" />
@@ -316,7 +401,7 @@
     <Compile Include="Plant\Phenology\Phases\IPhaseWithTrarget.cs" />
     <Compile Include="Plant\Phenology\Phases\PhaseChangedType.cs" />
     <Compile Include="Plant\Phenology\Phases\IPhase.cs" />
-    <Compile Include="Plant\Interfaces\IRemovableBiomass.cs" />
+    <Compile Include="Plant\Interfaces\IOrganDamage.cs" />
     <Compile Include="Plant\Phenology\Responses\Vernalisation.cs" />
     <Compile Include="Plant\Phenology\Scales\BBCH.cs" />
     <Compile Include="Plant\Structure\BudNumberFunction.cs" />
@@ -344,7 +429,6 @@
     <Compile Include="Grazplan\GrazSupp.cs" />
     <Compile Include="IClock.cs" />
     <Compile Include="Irrigation\IIrrigation.cs" />
-    <Compile Include="Interfaces\ILeaf.cs" />
     <Compile Include="Interfaces\ISoilTemperature.cs" />
     <Compile Include="Interfaces\ISoil.cs" />
     <Compile Include="Interfaces\ISurfaceOrganicMatter.cs" />
@@ -354,15 +438,12 @@
     <Compile Include="Interfaces\INutrient.cs" />
     <Compile Include="Interfaces\IWeather.cs" />
     <Compile Include="Lifecycle\Cohort.cs" />
-    <Compile Include="Lifecycle\Lifecycle.cs" />
-    <Compile Include="Lifecycle\Lifestage.cs" />
-    <Compile Include="Lifecycle\LifestageProcess.cs" />
-    <Compile Include="Lifecycle\LifestageReproductionProcess.cs" />
+    <Compile Include="Lifecycle\LifeCycle.cs" />
+    <Compile Include="Lifecycle\LifeCyclePhase.cs" />
     <Compile Include="Map.cs" />
-    <Compile Include="MicroClimate\CanopyType.cs" />
-    <Compile Include="MicroClimate\ZoneMicroClimate.cs" />
+    <Compile Include="MicroClimate\MicroClimateCanopy.cs" />
+    <Compile Include="MicroClimate\MicroClimateZone.cs" />
     <Compile Include="Plant\Arbitrator\BiomassArbitrationType.cs" />
-    <Compile Include="Plant\Arbitrator\IArbitrationMethod.cs" />
     <Compile Include="Plant\Arbitrator\PriorityThenRelativeAllocation.cs" />
     <Compile Include="Plant\Arbitrator\PriorityAllocation.cs" />
     <Compile Include="Plant\Arbitrator\RelativeAllocationSinglePass.cs" />
@@ -433,16 +514,10 @@
     <Compile Include="Factorial\Factors.cs" />
     <Compile Include="Memo.cs" />
     <Compile Include="Plant\SimpleTree\SimpleTree.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Core\IEvent.cs" />
     <Compile Include="Core\ILocator.cs" />
     <Compile Include="Report\IReportColumn.cs" />
     <Compile Include="Storage\IStorageReader.cs" />
-    <Compile Include="Report\ReportColumnWithValues.cs" />
     <Compile Include="Report\ReportColumnConstantValue.cs" />
     <Compile Include="Report\ReportColumn.cs" />
     <Compile Include="Soils\Nutrients\NFlow.cs" />
@@ -468,29 +543,19 @@
     <Compile Include="Soils\SoilNitrogen\SoilNitrogen.CNPatchHandlers.cs" />
     <Compile Include="Soils\SoilNitrogen\SoilNitrogen.cs" />
     <Compile Include="Soils\SoilNitrogen\SoilNitrogen.Variables.cs" />
-    <Compile Include="Soils\SoilWaterBackend\SoilWaterDataTypes.cs" />
-    <Compile Include="Soils\SoilWaterBackend\SoilWaterEvap.cs" />
-    <Compile Include="Soils\SoilWaterBackend\SoilWaterRunoff.cs" />
-    <Compile Include="Soils\SoilWaterBackend\SoilWaterSoil.cs" />
-    <Compile Include="Soils\SoilWaterBackend\SoilWaterSurface.cs" />
-    <Compile Include="Stock\animgrp.cs" />
-    <Compile Include="Stock\animprm.cs" />
+    <Compile Include="Stock\AnimalGroup.cs" />
+    <Compile Include="Stock\Genotype.cs" />
     <Compile Include="Stock\grazenv.cs" />
-    <Compile Include="Stock\grazparam.cs" />
-    <Compile Include="Stock\grazprmread.cs" />
     <Compile Include="Stock\graztype.cs" />
-    <Compile Include="Stock\sdmlpsr.cs" />
     <Compile Include="Stock\stddate.cs" />
     <Compile Include="Stock\stdmath.cs" />
     <Compile Include="Stock\stdstrng.cs" />
     <Compile Include="Stock\stock.cs" />
     <Compile Include="Stock\stock_ent.cs" />
-    <Compile Include="Stock\stock_intf.cs" />
+    <Compile Include="Stock\StockList.cs" />
     <Compile Include="Stock\stock_manage.cs" />
     <Compile Include="Stock\stock_padd.cs" />
     <Compile Include="Stock\stock_vars.cs" />
-    <Compile Include="Stock\typedval.cs" />
-    <Compile Include="Stock\xmlpsr.cs" />
     <Compile Include="Storage\DataStoreWriter.cs" />
     <Compile Include="Storage\InsertQuery.cs" />
     <Compile Include="Storage\Row.cs" />
@@ -506,7 +571,6 @@
     <Compile Include="Log.cs" />
     <Compile Include="Manager.cs" />
     <Compile Include="MicroClimate\MicroClimate.cs" />
-    <Compile Include="MicroClimate\MicroClimateScience.cs" />
     <Compile Include="Operations.cs" />
     <Compile Include="Plant\Arbitrator\OrganArbitrator.cs" />
     <Compile Include="Plant\Biomass\ArrayBiomass.cs" />
@@ -542,7 +606,6 @@
     <Compile Include="Functions\PowerFunction.cs" />
     <Compile Include="Functions\SigmoidFunction.cs" />
     <Compile Include="Functions\SoilTemperatureDepthFunction.cs" />
-    <Compile Include="Functions\SoilTemperatureFunction.cs" />
     <Compile Include="Functions\SoilTemperatureWeightedFunction.cs" />
     <Compile Include="Functions\SplineInterpolationFunction.cs" />
     <Compile Include="Functions\StageBasedInterpolation.cs" />
@@ -589,7 +652,6 @@
     <Compile Include="Soils\SWIM\SwimWaterTable.cs" />
     <Compile Include="Soils\TillageType.cs" />
     <Compile Include="Soils\Physical.cs" />
-    <Compile Include="Soils\SoilWaterBackend\SoilWater.cs" />
     <Compile Include="Summary.cs" />
     <Compile Include="Surface\AddFaecesType.cs" />
     <Compile Include="Surface\OMFractionType.cs" />
@@ -614,7 +676,6 @@
     <Compile Include="Soils\WaterModel\CNReductionForTillage.cs" />
     <Compile Include="Soils\WaterModel\Conversions.cs" />
     <Compile Include="Soils\WaterModel\EvaporationModel.cs" />
-    <Compile Include="Soils\WaterModel\ISoil.cs" />
     <Compile Include="Soils\WaterModel\LateralFlow.cs" />
     <Compile Include="Soils\WaterModel\Runoff.cs" />
     <Compile Include="Soils\WaterModel\SaturatedFlow.cs" />
@@ -622,6 +683,7 @@
     <Compile Include="Soils\WaterModel\UnsaturatedFlow.cs" />
     <Compile Include="Soils\WaterModel\WaterTable.cs" />
     <Compile Include="Weather\ControlledEnvironment.cs" />
+    <Compile Include="Weather\SlopeEffectsOnWeather.cs" />
     <Compile Include="Weather\Weather.cs" />
     <Compile Include="Report\Report.cs" />
     <Compile Include="Main.cs" />
@@ -641,7 +703,6 @@
     <Compile Include="CLEM\Activities\LabourActivityOffFarm.cs" />
     <Compile Include="CLEM\Activities\OtherAnimalsActivityGrow.cs" />
     <Compile Include="CLEM\Activities\PastureActivityBurn.cs" />
-    <Compile Include="CLEM\Activities\Relationship.cs" />
     <Compile Include="CLEM\Activities\ResourceActivitySell.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityGrazeAll.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityGrazePasture.cs" />
@@ -726,16 +787,90 @@
     <Compile Include="CLEM\Validation.cs" />
     <Compile Include="CLEM\CLEMModel.cs" />
     <Compile Include="CLEM\ZoneCLEM.cs" />
+    <Compile Include="Weather\WeatherSampler.cs" />
     <Compile Include="Zones\CircularZone.cs" />
     <Compile Include="Zones\RectangularZone.cs" />
+    <Compile Include="G_Range\G_Range.cs" />
+    <Compile Include="G_Range\GRLosses.cs" />
+    <Compile Include="G_Range\GRParms.cs" />
+    <Compile Include="G_Range\GRPlant.cs" />
+    <Compile Include="G_Range\GRWeather.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="ClassDiagram.cd" />
-    <None Include="Resources\FodderBeet.json" />
+    <EmbeddedResource Include="Resources\AGPRyegrass.json" />
+    <EmbeddedResource Include="Resources\AGPWhiteClover.json" />
+    <EmbeddedResource Include="Resources\FodderBeet.json" />
     <EmbeddedResource Include="Resources\Nutrient.json" />
-    <None Include="Resources\Potato.json" />
-    <None Include="Resources\WhiteClover.json" />
+    <EmbeddedResource Include="Resources\Potato.json" />
+    <EmbeddedResource Include="Resources\RedClover.json" />
+    <EmbeddedResource Include="Resources\WhiteClover.json" />
+    <EmbeddedResource Include="Resources\AGPBrowntop.json" />
+    <EmbeddedResource Include="Resources\AGPCocksfoot.json" />
+    <EmbeddedResource Include="Resources\AGPKikuyu.json" />
+    <EmbeddedResource Include="Resources\AGPPaspalum.json" />
+    <EmbeddedResource Include="Resources\AGPPhalaris.json" />
+    <EmbeddedResource Include="Resources\AGPRedClover.json" />
+    <EmbeddedResource Include="Resources\AGPRhodes.json" />
+    <EmbeddedResource Include="Resources\AGPTallFescue.json" />
+    <EmbeddedResource Include="Resources\AGPLucerne.json" />
+    <EmbeddedResource Include="Resources\WaterBalance.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Beef\Angus.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Beef\Beef Shorthorn.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Beef\Hereford.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Beef\South Devon.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Dairy\Ayrshire.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Dairy\Brown Swiss.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Dairy\Dairy Shorthorn.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Dairy\Friesian.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Dairy\Guernsey.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Dairy\Holstein.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Dairy\Jersey.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Goats\Ujimqin Goats.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Sheep\Crossbreds\Border Leicester x Merino.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Sheep\Crossbreds\Dorset x Merino.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Sheep\Crossbreds\Mongolian x Merino.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Sheep\Meat breeds\Blackface x Whiteface.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Sheep\Meat breeds\Border Leicester.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Sheep\Meat breeds\Columbia.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Sheep\Meat breeds\Dorset.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Sheep\Meat breeds\Finnsheep.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Sheep\Meat breeds\Hampshire.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Sheep\Meat breeds\Polypay.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Sheep\Meat breeds\Suffolk.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Sheep\Meat breeds\Suffolk %28US%29.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Sheep\Meat breeds\Texel.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Sheep\Meat breeds\Ujimqin Sheep.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Sheep\Meat breeds\Cheviot.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Sheep\Meat breeds\Rambouillet.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Sheep\Meat breeds\Ryeland.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Sheep\Meat breeds\Southdown.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Sheep\Meat breeds\Southdown %28US%29.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Sheep\Wool breeds\Corriedale.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Sheep\Wool breeds\Romney.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Sheep\Wool breeds\Targhee.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Sheep\Wool breeds\Delaine-Merino.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Sheep\Wool breeds\Large Merino.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Sheep\Wool breeds\Medium Merino.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Sheep\Wool breeds\Polwarth.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Sheep\Wool breeds\Small Merino.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Beef\British x Brahman.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Beef\British x Charolais.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Beef\British x Friesian.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Beef\British x Holstein.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Beef\Charolais x Friesian.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Beef\Charolais x Holstein.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Beef\Charolais.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Beef\Chianina.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Beef\Limousin.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Beef\Simmental.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Beef\Brahman.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Beef\Ujimqin Cattle.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Beef\Ujimqin x Angus %281st cross%29.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Beef\Ujimqin x Angus %282nd cross%29.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Beef\Ujimqin x Charolais %281st cross%29.json" />
+    <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Beef\Ujimqin x Charolais %282nd cross%29.json" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
@@ -760,40 +895,25 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
     <EmbeddedResource Include="Resources\GetPackage.R" />
     <EmbeddedResource Include="Resources\Eucalyptus.json" />
-    <None Include="Resources\Barley.json" />
-    <None Include="Resources\ruminant.prm" />
-    <None Include="Resources\Wheat.json">
-      <SubType>Designer</SubType>
-    </None>
+    <EmbeddedResource Include="Resources\Barley.json" />
+    <EmbeddedResource Include="Resources\ruminant.prm" />
+    <EmbeddedResource Include="Resources\Wheat.json" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\OilPalm.json">
-      <SubType>Designer</SubType>
-    </None>
+    <EmbeddedResource Include="Resources\OilPalm.json" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Oats.json">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Resources\Maize.json" />
-    <None Include="Resources\Chicory.json" />
-    <None Include="Resources\Plantain.json" />
-    <None Include="Resources\SurfaceOrganicMatter.json">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Resources\SCRUM.json" />
-    <None Include="Resources\Slurp.json" />
-    <None Include="Resources\Supplement.txt" />
+    <EmbeddedResource Include="Resources\Oats.json" />
+    <EmbeddedResource Include="Resources\Maize.json" />
+    <EmbeddedResource Include="Resources\Chicory.json" />
+    <EmbeddedResource Include="Resources\Plantain.json" />
+    <EmbeddedResource Include="Resources\SurfaceOrganicMatter.json" />
+    <EmbeddedResource Include="Resources\SCRUM.json" />
+    <EmbeddedResource Include="Resources\Slurp.json" />
+    <EmbeddedResource Include="Resources\Supplement.txt" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -804,6 +924,10 @@
       <Name>APSIM.Shared</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\GRangeLandUnits.txt" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

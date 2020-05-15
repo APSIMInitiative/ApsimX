@@ -28,6 +28,7 @@ namespace Models.CLEM.Activities
     {
         [XmlIgnore]
         [Link]
+        [NonSerialized]
         Clock Clock = null;
 
         /// <summary>
@@ -74,6 +75,10 @@ namespace Models.CLEM.Activities
         {
             get
             {
+                if (Clock is null)
+                {
+                    return true;
+                }
                 bool inrange = IsMonthInRange(Clock.Today);
                 if(inrange)
                 {
@@ -135,16 +140,24 @@ namespace Models.CLEM.Activities
             DateTime startDate = new DateTime(StartDate.Year, StartDate.Month, 1);
 
             string html = "";
-            html += "\n<div class=\"filterborder clearfix\">";
             html += "\n<div class=\"filter\">";
             string invertString = "";
             if (Invert)
             {
                 invertString = "when <b>NOT</b> ";
             }
-            html += "Perform "+invertString+"between <span class=\"setvalueextra\">";
-            html += startDate.ToString("d MMM yyyy");
-            html += "</span> and ";
+            html += "Perform " + invertString + "between ";
+            if (startDate.Year == 1)
+            {
+                html += "<span class=\"errorlink\">NOT SET</span>";
+            }
+            else
+            {
+                html += "<span class=\"setvalueextra\">";
+                html += startDate.ToString("d MMM yyyy");
+                html += "</span>";
+            }
+            html += " and ";
             if (EndDate <= StartDate)
             {
                 html += "<span class=\"errorlink\">[must be > StartDate]";
@@ -160,7 +173,10 @@ namespace Models.CLEM.Activities
                 html += " (modified for monthly timestep)";
             }
             html += "</div>";
-            html += "\n</div>";
+            if (!this.Enabled)
+            {
+                html += " - DISABLED!";
+            }
             return html;
         }
 
@@ -170,7 +186,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
-            return "";
+            return "</div>";
         }
 
         /// <summary>
@@ -179,7 +195,9 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
-            return "";
+            string html = "";
+            html += "\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
+            return html;
         }
 
     }

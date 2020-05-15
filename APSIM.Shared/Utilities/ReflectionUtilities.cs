@@ -1,12 +1,8 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ReflectionUtilities.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace APSIM.Shared.Utilities
+﻿namespace APSIM.Shared.Utilities
 {
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Serialization;
     using System;
-    using System.CodeDom.Compiler;
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
@@ -49,6 +45,20 @@ namespace APSIM.Shared.Utilities
             var list = GetAllFields(type.BaseType, flags);
             // in order to avoid duplicates, force BindingFlags.DeclaredOnly
             list.AddRange(type.GetFields(flags | BindingFlags.DeclaredOnly));
+            return list;
+        }
+
+        /// <summary>
+        /// Return all properties. The normal .NET reflection doesn't return private fields in base classes.
+        /// This function does.
+        /// </summary>
+        public static List<PropertyInfo> GetAllProperties(Type type, BindingFlags flags)
+        {
+            if (type == typeof(Object)) return new List<PropertyInfo>();
+
+            var list = GetAllProperties(type.BaseType, flags);
+            // in order to avoid duplicates, force BindingFlags.DeclaredOnly
+            list.AddRange(type.GetProperties(flags | BindingFlags.DeclaredOnly));
             return list;
         }
 
@@ -256,7 +266,7 @@ namespace APSIM.Shared.Utilities
         {
             PropertyInfo NameProperty = obj.GetType().GetProperty("Name");
             if (NameProperty == null || !NameProperty.CanWrite)
-                throw new Exception("Cannot set the name of object with type: " + obj.GetType().Name + 
+                throw new Exception("Cannot set the name of object with type: " + obj.GetType().Name +
                                     ". It does not have a public, settable, name property");
             else
                 NameProperty.SetValue(obj, newName, null);
@@ -324,6 +334,45 @@ namespace APSIM.Shared.Utilities
             IFormatter formatter = new BinaryFormatter();
             return formatter.Deserialize(stream);
         }
+
+        /// <summary>
+        /// Convert an object into a json string. 
+        /// </summary>
+        /// <param name="source">The source object.</param>
+        /// <param name="includePrivates">Serialise private members as well as publics?</param>
+        /// <returns>The string representation of the object.</returns>
+        public static string JsonSerialise(object source, bool includePrivates)
+        {
+            return JsonConvert.SerializeObject(source, Formatting.Indented,
+                    new JsonSerializerSettings
+                    {
+                        ContractResolver = new DynamicContractResolver(includePrivates),
+                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                    });
+        }
+
+        ///<summary> Custom Contract resolver to stop deseralization of Parent properties </summary>
+        private class DynamicContractResolver : DefaultContractResolver
+        {
+            private BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
+
+            public DynamicContractResolver(bool includePrivates)
+            {
+                if (includePrivates)
+                    bindingFlags |= BindingFlags.NonPublic;
+            }
+
+            protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
+            {
+                var props = GetAllFields(type, bindingFlags).Select(p => base.CreateProperty(p, memberSerialization))
+                            .Union(
+                            GetAllProperties(type, bindingFlags).Select(p => base.CreateProperty(p, memberSerialization))
+                            ).ToList();
+                props.ForEach(p => { p.Writable = true; p.Readable = true; });
+                return props.Where(p => p.PropertyName != "Parent").ToList();
+            }
+        }
+
 
         /// <summary>
         /// Convert the specified 'stringValue' into an object of the specified 'type'
@@ -518,22 +567,27 @@ namespace APSIM.Shared.Utilities
 
 
         /// <summary>
-        /// Get a string from a resource file.
+        /// Get a string from a resource file stored in the current assembly.
         /// </summary>
-        /// <param name="resourceName"></param>
-        /// <returns></returns>
+        /// <param name="resourceName">Name of the resource.</param>
         public static string GetResourceAsString(string resourceName)
         {
-            string result;
-            var assembly = Assembly.GetCallingAssembly();
-            assembly.GetManifestResourceStream(resourceName);
-            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
-            using (StreamReader reader = new StreamReader(stream))
-            {
-                result = reader.ReadToEnd();
-            }
+            return GetResourceAsString(Assembly.GetCallingAssembly(), resourceName);
+        }
 
-            return result;
+        /// <summary>
+        /// Get a string from a resource file stored in a specific assembly.
+        /// </summary>
+        /// <param name="assembly">Assembly which houses the resource file.</param>
+        /// <param name="resourceName">Name of the resource.</param>
+        public static string GetResourceAsString(Assembly assembly, string resourceName)
+        {
+            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+                if (stream != null)
+                    using (StreamReader reader = new StreamReader(stream))
+                        return reader.ReadToEnd();
+
+            return null;
         }
     }
 }

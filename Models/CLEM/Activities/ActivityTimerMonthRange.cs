@@ -84,14 +84,14 @@ namespace Models.CLEM.Activities
             bool due = false;
             if (StartMonth <= EndMonth)
             {
-                if ((date.Month >= StartMonth) && (date.Month <= EndMonth))
+                if ((date.Month >= StartMonth) & (date.Month <= EndMonth))
                 {
                     due = true;
                 }
             }
             else
             {
-                if ((date.Month >= EndMonth) || (date.Month <= StartMonth))
+                if ((date.Month <= EndMonth) | (date.Month >= StartMonth))
                 {
                     due = true;
                 }
@@ -116,14 +116,32 @@ namespace Models.CLEM.Activities
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"filterborder clearfix\">";
             html += "\n<div class=\"filter\">";
-            html += "Perform between <span class=\"setvalueextra\">";
-            html += new DateTime(2000, StartMonth, 1).ToString("MMMM");
-            html += "</span> and <span class=\"setvalueextra\">";
-            html += new DateTime(2000, EndMonth, 1).ToString("MMMM");
-            html += "</span></div>";
-            html += "\n</div>";
+            html += "Perform between ";
+            if (StartMonth == 0)
+            {
+                html += "<span class=\"errorlink\">NOT SET</span>";
+            }
+            else
+            {
+                html += "<span class=\"setvalueextra\">";
+                html += new DateTime(2000, StartMonth, 1).ToString("MMMM") + "</span>";
+            }
+            html += " and <span class=\"setvalueextra\">";
+            if (EndMonth == 0)
+            {
+                html += "<span class=\"errorlink\">NOT SET</span>";
+            }
+            else
+            {
+                html += "<span class=\"setvalueextra\">";
+                html += new DateTime(2000, EndMonth, 1).ToString("MMMM") + "</span>";
+            }
+            html += "</div>";
+            if (!this.Enabled)
+            {
+                html += " - DISABLED!";
+            }
             return html;
         }
 
@@ -133,7 +151,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
-            return "";
+            return "</div>";
         }
 
         /// <summary>
@@ -142,7 +160,9 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
-            return "";
+            string html = "";
+            html += "\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
+            return html;
         }
     }
 }

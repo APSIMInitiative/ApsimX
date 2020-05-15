@@ -21,8 +21,7 @@ namespace Models.Agroforestry
     /// Several parameters are required of the user to specify the state of trees within the simulation.  These include:
     /// 
     /// * Tree height (m)
-    /// * Tree canopy width (m)
-    /// * Tree leaf area (m<sup>2</sup>/tree)
+    /// * Shade modifier with age (0-1)
     /// * Tree root radius (cm)
     /// * Shade at a range of distances from the trees (%)
     /// * Tree root length density at various depths and distances from the trees (cm/cm<sup>3</sup>)
@@ -73,21 +72,11 @@ namespace Models.Agroforestry
         public double heightToday { get { return GetHeightToday();}}
 
         /// <summary>
-        /// CanopyWidth
-        /// </summary>
-        [XmlIgnore]
-        [Units("m")]
-        public double CanopyWidthToday { 
-            get
-            { return GetCanopyWidthToday();}
-            }
-
-        /// <summary>
         /// Leaf Area
         /// </summary>
         [XmlIgnore]
         [Units("m2")]
-        public double LeafAreaToday { get { return GetTreeLeafAreaToday();} }
+        public double ShadeModiferToday { get { return GetShadeModifierToday();} }
 
         /// <summary>
         /// The trees water uptake per layer in a single zone
@@ -192,22 +181,16 @@ namespace Models.Agroforestry
         public double[] NDemands { get; set; }
 
         /// <summary>
-        /// Tree canopy widths
+        /// Shade Modifiers
         /// </summary>
         [Summary]
-        public double[] CanopyWidths { get; set; } = new double[0];
-
-        /// <summary>
-        /// Tree leaf areas
-        /// </summary>
-        [Summary]
-        public double[] TreeLeafAreas { get; set; }
+        public double[] ShadeModifiers { get; set; }
 
         private Dictionary<double, double> shade = new Dictionary<double, double>();
         private Dictionary<double, double[]> rld = new Dictionary<double, double[]>();
         private List<IModel> forestryZones;
         private Zone treeZone;
-        private Soils.SoilWater treeZoneWater;
+        private ISoilWater treeZoneWater;
 
         /// <summary>
         /// Return the distance from the tree for a given zone. The tree is assumed to be in the first Zone.
@@ -276,7 +259,7 @@ namespace Models.Agroforestry
         {
             double distInTH = ZoneDistanceInTreeHeights(z);
             bool didInterp = false;
-            return MathUtilities.LinearInterpReal(distInTH, shade.Keys.ToArray(), shade.Values.ToArray(), out didInterp);
+            return MathUtilities.LinearInterpReal(distInTH, shade.Keys.ToArray(), shade.Values.ToArray(), out didInterp) * GetShadeModifierToday();
         }
 
         /// <summary>
@@ -338,24 +321,14 @@ namespace Models.Agroforestry
             return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, NDemands, out didInterp);
         }
 
-        private double GetCanopyWidthToday()
+        private double GetShadeModifierToday()
         {
             double[] OADates = new double[Dates.Count()];
             bool didInterp;
 
             for (int i = 0; i < Dates.Count(); i++)
                 OADates[i] = Dates[i].ToOADate();
-            return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, CanopyWidths, out didInterp);
-        }
-
-        private double GetTreeLeafAreaToday()
-        {
-            double[] OADates = new double[Dates.Count()];
-            bool didInterp;
-
-            for (int i = 0; i < Dates.Count(); i++)
-                OADates[i] = Dates[i].ToOADate();
-            return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, TreeLeafAreas, out didInterp);
+            return MathUtilities.LinearInterpReal(clock.Today.ToOADate(), OADates, ShadeModifiers, out didInterp);
         }
 
         /// <summary>
@@ -422,7 +395,7 @@ namespace Models.Agroforestry
             //pre-fetch static information
             forestryZones = Apsim.ChildrenRecursively(Parent, typeof(Zone));
             treeZone = ZoneList[0] as Zone;
-            treeZoneWater = Apsim.Find(treeZone, typeof(Soils.SoilWater)) as Soils.SoilWater;
+            treeZoneWater = Apsim.Find(treeZone, typeof(ISoilWater)) as ISoilWater;
 
             TreeWaterUptake = new double[ZoneList.Count];
 

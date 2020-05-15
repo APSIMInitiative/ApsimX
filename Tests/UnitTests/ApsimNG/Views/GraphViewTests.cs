@@ -16,6 +16,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnitTests.ApsimNG.Utilities;
+using UserInterface.Commands;
 using UserInterface.Presenters;
 using UserInterface.Views;
 using Utility;
@@ -57,7 +58,7 @@ namespace UnitTests.ApsimNG.Views
                                 Area = 1,
                                 Children = new List<Model>()
                                 {
-                                    new Models.Report.Report()
+                                    new Models.Report()
                                     {
                                         Name = "Report",
                                         VariableNames = new string[]
@@ -109,17 +110,27 @@ namespace UnitTests.ApsimNG.Views
             IModel paddock = Apsim.Find(sims, typeof(Zone));
             Folder graphs = new Folder();
             graphs.Name = "Graphs";
-            explorer.Add(graphs, Apsim.FullPath(paddock));
+
+            var command = new AddModelCommand(Apsim.FullPath(paddock),
+                                              graphs,
+                                              explorer);
+            explorer.CommandHistory.Add(command, true);
 
             // Add an empty graph to the folder.
-            Models.Graph.Graph graph = new Models.Graph.Graph();
+            Models.Graph graph = new Models.Graph();
             graph.Name = "Graph";
-            explorer.Add(graph, Apsim.FullPath(graphs));
+            command = new AddModelCommand(Apsim.FullPath(graphs),
+                                          graph,
+                                          explorer);
+            explorer.CommandHistory.Add(command, true);
 
             // Add an empty series to the graph.
-            Models.Graph.Series series = new Models.Graph.Series();
+            Models.Series series = new Models.Series();
             series.Name = "Series";
-            explorer.Add(series, Apsim.FullPath(graph));
+            command = new AddModelCommand(Apsim.FullPath(graph),
+                                          series,
+                                          explorer);
+            explorer.CommandHistory.Add(command, true);
 
             // click on the series node.
             explorer.SelectNode(Apsim.FullPath(series));
@@ -201,7 +212,7 @@ namespace UnitTests.ApsimNG.Views
             ComboBox combo = ReflectionUtilities.GetValueOfFieldOrProperty("combobox1", legendView) as ComboBox;
 
             // fixme - we should support all valid OxyPlot legend position types.
-            foreach (Models.Graph.Graph.LegendPositionType legendPosition in Enum.GetValues(typeof(Models.Graph.Graph.LegendPositionType)))
+            foreach (Models.Graph.LegendPositionType legendPosition in Enum.GetValues(typeof(Models.Graph.LegendPositionType)))
             {
                 string name = legendPosition.ToString();
                 GtkUtilities.SelectComboBoxItem(combo, name, wait: true);
@@ -209,6 +220,47 @@ namespace UnitTests.ApsimNG.Views
                 OxyPlot.LegendPosition oxyPlotEquivalent = (OxyPlot.LegendPosition)Enum.Parse(typeof(OxyPlot.LegendPosition), name);
                 Assert.AreEqual(plot.Model.LegendPosition, oxyPlotEquivalent);
             }
+
+            // If we change the graph to a box plot then the several unused properties should be disabled.
+            // These are x variable dropdown, x cumulative, x on top, marker size/type checkboxes.
+
+            // First, make sure that these options are sensitive to input and can be changed.
+            Assert.IsTrue(seriesView.X.IsSensitive);
+            Assert.IsTrue(seriesView.XCumulative.IsSensitive);
+            Assert.IsTrue(seriesView.XOnTop.IsSensitive);
+            Assert.IsTrue(seriesView.MarkerSize.IsSensitive);
+            Assert.IsTrue(seriesView.MarkerType.IsSensitive);
+
+            // Now change series type to box plot.
+            GtkUtilities.SelectComboBoxItem(seriesView.SeriesType, "Box", wait: true);
+            Assert.AreEqual(SeriesType.Box, series.Type);
+
+            // Ensure the box plot is not white in light theme.
+            plot = ReflectionUtilities.GetValueOfFieldOrProperty("plot1", view) as PlotView;
+            Assert.NotNull(plot);
+            BoxPlotSeries boxPlot = plot.Model.Series.OfType<BoxPlotSeries>().FirstOrDefault();
+            Assert.NotNull(boxPlot);
+
+            Assert.AreNotEqual(empty, boxPlot.Fill);
+            Assert.AreNotEqual(white, boxPlot.Fill);
+            Assert.AreNotEqual(empty, boxPlot.Stroke);
+            Assert.AreNotEqual(white, boxPlot.Stroke);
+
+            // The controls should no longer be sensitive.
+            Assert.IsFalse(seriesView.XCumulative.IsSensitive);
+            Assert.IsFalse(seriesView.XOnTop.IsSensitive);
+            Assert.IsFalse(seriesView.MarkerSize.IsSensitive);
+            Assert.IsFalse(seriesView.MarkerType.IsSensitive);
+
+            // Change the series type back to scatter.
+            GtkUtilities.SelectComboBoxItem(seriesView.SeriesType, "Scatter", wait: true);
+
+            // The controls should be sensitive once more.
+            Assert.IsTrue(seriesView.X.IsSensitive);
+            Assert.IsTrue(seriesView.XCumulative.IsSensitive);
+            Assert.IsTrue(seriesView.XOnTop.IsSensitive);
+            Assert.IsTrue(seriesView.MarkerSize.IsSensitive);
+            Assert.IsTrue(seriesView.MarkerType.IsSensitive);
         }
     }
 }

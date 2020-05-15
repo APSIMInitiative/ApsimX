@@ -15,6 +15,9 @@ namespace Models.CLEM.Resources
     {
         private RuminantFemale mother;
         private double weight;
+        private double age;
+        private double normalisedWeight;
+        private double adultEquivalent;
 
         /// <summary>
         /// Reference to the Breed Parameters.
@@ -73,13 +76,34 @@ namespace Models.CLEM.Resources
         /// Age (Months)
         /// </summary>
         /// <units>Months</units>
-        public double Age { get; private set; }
+        public double Age
+        {
+            get
+            {
+                return age;
+            }
+            private set
+            {
+                age = value;
+                normalisedWeight = StandardReferenceWeight - ((1 - BreedParams.SRWBirth) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * (Age * 30.4)) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
+            }
+        }
 
         /// <summary>
         /// The age (months) this individual entered the simulation.
         /// </summary>
         /// <units>Months</units>
         public double AgeEnteredSimulation { get; private set; }
+
+        /// <summary>
+        /// A method to set the age (months) this individual entered the simulation.
+        /// This should be used with caution as this is usually a automatic calculation
+        /// </summary>
+        /// <units>Months</units>
+        public void SetAgeEnteredSimulation(double age)
+        {
+            AgeEnteredSimulation = age;
+        }
 
         /// <summary>
         /// Purchase age (Months)
@@ -108,6 +132,8 @@ namespace Models.CLEM.Resources
             {
                 weight = value;
 
+                adultEquivalent = Math.Pow(this.Weight, 0.75) / Math.Pow(this.BreedParams.BaseAnimalEquivalent, 0.75);
+
                 // if highweight has not been defined set to initial weight
                 if (HighWeight == 0)
                 {
@@ -118,13 +144,13 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Previous weight (kg)
+        /// Previous weight
         /// </summary>
         /// <units>kg</units>
         public double PreviousWeight { get; set; }
 
         /// <summary>
-        /// Previous weight (kg)
+        /// Weight gain
         /// </summary>
         /// <units>kg</units>
         public double WeightGain { get { return Weight - PreviousWeight; } }
@@ -132,7 +158,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The adult equivalent of this individual
         /// </summary>
-        public double AdultEquivalent { get { return Math.Pow(this.Weight, 0.75) / Math.Pow(this.BreedParams.BaseAnimalEquivalent, 0.75); } }
+        public double AdultEquivalent { get { return adultEquivalent; } }
         // Needs to include ind.Number*weight if ever added to this model
 
         /// <summary>
@@ -163,6 +189,21 @@ namespace Models.CLEM.Resources
             }
         }
 
+        /// <summary>
+        /// Is this individual a valid breeder and in condition
+        /// </summary>
+        public bool IsBreedingCondition 
+        { 
+            get
+            {
+                return (Gender == Sex.Male & Age >= BreedParams.MinimumAge1stMating) |
+                    (Gender == Sex.Female &
+                    (Age >= BreedParams.MinimumAge1stMating &
+                    HighWeight >= BreedParams.MinimumSize1stMating * StandardReferenceWeight &
+                    Age <= BreedParams.MaximumAgeMating)
+                    );
+            }
+        }
 
         /// <summary>
         /// Determine if weaned and less that 12 months old. Weaner
@@ -254,41 +295,27 @@ namespace Models.CLEM.Resources
                     case HerdChangeReason.None:
                         return 0;
                     case HerdChangeReason.DiedUnderweight:
-                        return -1;
                     case HerdChangeReason.DiedMortality:
-                        return -1;
-                    case HerdChangeReason.Born:
-                        return 1;
                     case HerdChangeReason.TradeSale:
-                        return -1;
                     case HerdChangeReason.DryBreederSale:
-                        return -1;
                     case HerdChangeReason.ExcessBreederSale:
-                        return -1;
-                    case HerdChangeReason.ExcessBullSale:
-                        return -1;
+                    case HerdChangeReason.ExcessSireSale:
                     case HerdChangeReason.MaxAgeSale:
-                        return -1;
                     case HerdChangeReason.AgeWeightSale:
-                        return -1;
-                    case HerdChangeReason.TradePurchase:
-                        return 1;
-                    case HerdChangeReason.BreederPurchase:
-                        return 1;
                     case HerdChangeReason.ExcessHeiferSale:
-                        return -1;
-                    case HerdChangeReason.SirePurchase:
-                        return 1;
                     case HerdChangeReason.Consumed:
-                        return -1;
                     case HerdChangeReason.DestockSale:
-                        return -1;
-                    case HerdChangeReason.RestockPurchase:
-                        return 1;
-                    case HerdChangeReason.InitialHerd:
-                        return 1;
+                    case HerdChangeReason.ReduceInitialHerd:
                     case HerdChangeReason.MarkedSale:
                         return -1;
+                    case HerdChangeReason.Born:
+                    case HerdChangeReason.TradePurchase:
+                    case HerdChangeReason.BreederPurchase:
+                    case HerdChangeReason.SirePurchase:
+                    case HerdChangeReason.RestockPurchase:
+                    case HerdChangeReason.InitialHerd:
+                    case HerdChangeReason.FillInitialHerd:
+                        return 1;
                     default:
                         return 0;
                 }
@@ -309,6 +336,26 @@ namespace Models.CLEM.Resources
         /// Energy balance store
         /// </summary>
         public double EnergyBalance { get; set; }
+
+        /// <summary>
+        /// Energy used for milk production
+        /// </summary>
+        public double EnergyMilk { get; set; }
+
+        /// <summary>
+        /// Energy used for foetal development
+        /// </summary>
+        public double EnergyFoetus { get; set; }
+
+        /// <summary>
+        /// Energy used for maintenance
+        /// </summary>
+        public double EnergyMaintenance { get; set; }
+
+        /// <summary>
+        /// Energy from intake
+        /// </summary>
+        public double EnergyIntake { get; set; }
 
         /// <summary>
         /// Indicates if this individual has died
@@ -342,7 +389,8 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return StandardReferenceWeight - ((1 - BreedParams.SRWBirth) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * (Age * 30.4)) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
+                return normalisedWeight;
+                //return StandardReferenceWeight - ((1 - BreedParams.SRWBirth) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * (Age * 30.4)) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
             }
         }
 
@@ -473,10 +521,10 @@ namespace Models.CLEM.Resources
         /// </summary>
         public Ruminant(double setAge, Sex setGender, double setWeight, RuminantType setParams)
         {
-            this.Age = setAge;
-            this.AgeEnteredSimulation = setAge;
             this.Gender = setGender;
             this.BreedParams = setParams;
+            this.Age = setAge;
+            this.AgeEnteredSimulation = setAge;
 
             if (setWeight <= 0)
             {
@@ -488,6 +536,7 @@ namespace Models.CLEM.Resources
                 this.Weight = setWeight;
             }
 
+            this.PreviousWeight = this.Weight;
             this.Number = 1;
             this.Wool = 0;
             this.Cashmere = 0;

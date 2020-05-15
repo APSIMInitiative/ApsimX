@@ -138,6 +138,12 @@ namespace Models.CLEM.Resources
                 return;
             }
 
+            // if this request aims to trade with a market see if we need to set up details for the first time
+            if (request.MarketTransactionMultiplier > 0)
+            {
+                FindEquivalentMarketStore();
+            }
+
             double amountRemoved = request.Required;
             // avoid taking too much
             amountRemoved = Math.Min(this.amount, amountRemoved);
@@ -151,6 +157,14 @@ namespace Models.CLEM.Resources
             request.AdditionalDetails = additionalDetails;
 
             request.Provided = amountRemoved;
+
+            // send to market if needed
+            if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
+            {
+                additionalDetails.Amount = amountRemoved * request.MarketTransactionMultiplier;
+                (EquivalentMarketStore as AnimalFoodStoreType).Add(additionalDetails, request.ActivityModel, "Farm sales");
+            }
+
             ResourceTransaction details = new ResourceTransaction
             {
                 ResourceType = this,

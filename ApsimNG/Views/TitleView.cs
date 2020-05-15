@@ -42,9 +42,16 @@ namespace UserInterface.Views
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            entry1.Changed -= OnPositionComboChanged;
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            owner = null;
+            try
+            {
+                entry1.Changed -= OnPositionComboChanged;
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -61,12 +68,19 @@ namespace UserInterface.Views
         /// </summary>
         private void OnPositionComboChanged(object sender, EventArgs e)
         {
-            if (originalText == null)
-                originalText = entry1.Text;
-            if (entry1.Text != originalText && OnTitleChanged != null)
+            try
             {
-                originalText = entry1.Text;
-                OnTitleChanged.Invoke(entry1.Text);
+                if (originalText == null)
+                    originalText = entry1.Text;
+                if (entry1.Text != originalText && OnTitleChanged != null)
+                {
+                    originalText = entry1.Text;
+                    OnTitleChanged.Invoke(entry1.Text);
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
     }

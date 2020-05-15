@@ -250,12 +250,13 @@ namespace Models.CLEM.Activities
                         case ENSOState.ElNino:
                             GrazeFoodStoreType pasture = Resources.GetResourceItem(this, typeof(GrazeFoodStoreType), newgroup.Key, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GrazeFoodStoreType;
                             double kgha = pasture.TonnesPerHectare * 1000;
-                            herdChange = this.PastureToStockingChangeElNino.SolveY(kgha, false);
+                            //NOTE: ensure calculation method in relationship is fixed values
+                            herdChange = this.PastureToStockingChangeElNino.SolveY(kgha);
                             break;
                         case ENSOState.LaNina:
                             pasture = Resources.GetResourceItem(this, typeof(GrazeFoodStoreType), newgroup.Key, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GrazeFoodStoreType;
                             kgha = pasture.TonnesPerHectare * 1000;
-                            herdChange = this.PastureToStockingChangeLaNina.SolveY(kgha, false);
+                            herdChange = this.PastureToStockingChangeLaNina.SolveY(kgha);
                             break;
                         default:
                             break;

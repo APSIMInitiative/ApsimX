@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ToolStripView.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using Gtk;
     using Interfaces;
@@ -14,14 +9,44 @@ namespace UserInterface.Views
     /// <summary>
     /// Encapsulates a toolstrip (button bar)
     /// </summary>
-    public class ToolStripView : IToolStripView
+    public class ToolStripView : ViewBase, IToolStripView
     {
         private Toolbar toolStrip = null;
+
+        /// <summary>Constructor.</summary>
+        public ToolStripView()
+        {
+        }
 
         /// <summary>Constructor</summary>
         public ToolStripView(Toolbar toolbar)
         {
             toolStrip = toolbar;
+        }
+
+        /// <summary>
+        /// A method used when a view is wrapping a gtk control.
+        /// </summary>
+        /// <param name="ownerView">The owning view.</param>
+        /// <param name="gtkControl">The gtk control being wrapped.</param>
+        protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
+        {
+            owner = ownerView;
+            toolStrip = (Toolbar) gtkControl;
+            toolStrip.Destroyed += OnDestroyed;
+        }
+
+        private void OnDestroyed(object sender, EventArgs e)
+        {
+            try
+            {
+                toolStrip.Destroyed -= OnDestroyed;
+                Destroy();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Destroy the toolstrip</summary>

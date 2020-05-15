@@ -15,6 +15,7 @@ namespace Models.PMF
     /// Single Pass Relative allocation rules used to determine partitioning
     /// </summary>
     [Serializable]
+    [ValidParent(ParentType = typeof(BiomassTypeArbitrator))]
     public class RelativeAllocationSinglePass : Model, IArbitrationMethod, ICustomDocumentation
     {
         /// <summary>Relatives the allocation.</summary>
@@ -33,17 +34,13 @@ namespace Models.PMF
                 double StorageRequirement = Math.Max(0, BAT.StorageDemand[i] - BAT.StorageAllocation[i]);
                 if ((StructuralRequirement + MetabolicRequirement + StorageRequirement) > 0.0)
                 {
-                    double StructuralFraction = BAT.TotalStructuralDemand / (BAT.TotalStructuralDemand + BAT.TotalMetabolicDemand + BAT.TotalStorageDemand);
-                    double MetabolicFraction = BAT.TotalMetabolicDemand / (BAT.TotalStructuralDemand + BAT.TotalMetabolicDemand + BAT.TotalStorageDemand);
-                    double StorageFraction = BAT.TotalStorageDemand / (BAT.TotalStructuralDemand + BAT.TotalMetabolicDemand + BAT.TotalStorageDemand);
-
-                    double StructuralAllocation = Math.Min(StructuralRequirement, TotalSupply * StructuralFraction * BAT.StructuralDemand[i] / BAT.TotalStructuralDemand);
-                    double MetabolicAllocation = Math.Min(MetabolicRequirement, TotalSupply * MetabolicFraction * MathUtilities.Divide(BAT.MetabolicDemand[i], BAT.TotalMetabolicDemand, 0));
-                    double StorageAllocation = Math.Min(StorageRequirement, TotalSupply * StorageFraction * MathUtilities.Divide(BAT.StorageDemand[i], BAT.TotalStorageDemand, 0));
+                    double StructuralAllocation = Math.Min(StructuralRequirement, TotalSupply * MathUtilities.Divide(BAT.StructuralDemand[i], BAT.TotalPlantDemand,0));
+                    double MetabolicAllocation = Math.Min(MetabolicRequirement, TotalSupply * MathUtilities.Divide(BAT.MetabolicDemand[i], BAT.TotalPlantDemand, 0));
+                    double StorageAllocation = Math.Min(StorageRequirement, TotalSupply *  MathUtilities.Divide(BAT.StorageDemand[i], BAT.TotalPlantDemand, 0));
 
                     BAT.StructuralAllocation[i] += StructuralAllocation;
                     BAT.MetabolicAllocation[i] += MetabolicAllocation;
-                    BAT.StorageAllocation[i] += Math.Max(0, StorageAllocation);
+                    BAT.StorageAllocation[i] += StorageAllocation;
                     NotAllocated -= (StructuralAllocation + MetabolicAllocation + StorageAllocation);
                     TotalAllocated += (StructuralAllocation + MetabolicAllocation + StorageAllocation);
                 }

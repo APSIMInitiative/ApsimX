@@ -5,6 +5,7 @@ namespace UnitTests
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
+    using Models.GrazPlan;
     using Models.Storage;
     using System;
     using System.Collections.Generic;
@@ -36,6 +37,14 @@ namespace UnitTests
                     arguments = new object[] { model, new EventArgs() };
                 eventToInvoke.Invoke(model, arguments);
             }
+        }
+
+        /// <summary>ResolveLinks in a model</summary>
+        public static void ResolveLinks(IModel model)
+        {
+            Apsim.ParentAllChildren(model);
+            var links = new Links();
+            links.Resolve(model, true, true);
         }
 
         /// <summary>Inject a link into a model</summary>
@@ -156,7 +165,7 @@ namespace UnitTests
                                 Area = 1,
                                 Children = new List<Model>()
                                 {
-                                    new Models.Report.Report()
+                                    new Models.Report()
                                     {
                                         VariableNames = new string[]
                                         {
@@ -176,6 +185,17 @@ namespace UnitTests
             Apsim.ParentAllChildren(sims);
             sims.Write(sims.FileName);
             return sims;
+        }
+
+        /// <summary>
+        /// Call OnCreated in a model and all child models.
+        /// </summary>
+        /// <param name="model"></param>
+        public static void CallOnCreated(IModel model)
+        {
+            model.OnCreated();
+            foreach (var child in model.Children)
+                CallOnCreated(child);
         }
     }
 }

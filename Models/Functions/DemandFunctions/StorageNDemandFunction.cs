@@ -17,12 +17,12 @@ namespace Models.Functions.DemandFunctions
     {
         /// <summary>The maximum N concentration of the organ</summary>
         [Description("The maximum N concentration of the organ")]
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction maxNConc = null;
 
         /// <summary>Switch to modulate N demand</summary>
         [Description("Switch to modulate N demand")]
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction nitrogenDemandSwitch = null;
 
         private IArbitration parentOrgan = null;

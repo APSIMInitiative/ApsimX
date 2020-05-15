@@ -1,0 +1,412 @@
+<parameters name="standard" version="2.0">
+  <par name="editor">Andrew Moore</par>
+  <par name="edited">30 Jan 2013</par>
+  <par name="dairy">false</par>
+  <par name="c-srs-">1.2,1.4</par>
+  <par name="c-i-">,1.7,,,,25.0,22.0,,,,,0.15,,0.002,0.5,1.0,0.01,20.0,3.0,1.5,</par>
+  <par name="c-r-">0.8,0.17,1.7,,0.6,,,,0.14,0.28,10.5,0.8,0.35,1.0,0.0,0.0,0.012,1.0,1.0,11.5</par>
+  <par name="c-k-">0.5,0.02,0.85,0.7,0.4,0.02,0.6,0.133,0.95,0.84,0.8,0.7,0.035,0.33,0.12,0.043</par>
+  <par name="c-m-">0.09,,0.00008,0.84,0.23,,0.9,0.000052,0.16,0.0152,,,,,0.15,0.0026,</par>
+  <par name="c-rd-">0.3,0.25,0.1,0.007,0.005,0.35,0.1,0.1</par>
+  <par name="c-a-">0.05,0.85,5.5,0.178,0.92,1.0,0.6,0.25,0.9</par>
+  <par name="c-l-">,,,,0.94,,1.17,,,,,,,,,0.7,0.01,0.1,1.6,4.0,,,3.0,0.6,1.03</par>
+  <par name="c-c-">0.09,4.1,,0.5,0.7,0.15,0.481,0.619,,0.322,39.0,,5.0,0.15,10.0,0.38</par>
+  <par name="c-g-">0.6,0.7,0.8,-6.0,0.4,0.9,0.97,27.0,20.3,2.0,13.8,0.072,0.14,0.008,0.115,1.0,0.5,1.09</par>
+  <par name="c-ph-">0.7,0.95,0.00002,,,,,,,,,,0.0012,,</par>
+  <par name="c-su-">,0.07,,0.00114</par>
+  <par name="c-h-">18.4,0.013,0.00752,0.0237,0.00336,18.1,25.29</par>
+  <par name="c-aa-">0.34,0.28,1.1</par>
+  <par name="c-pbt-">183,365</par>
+  <par name="c-swn">0.05</par>
+
+  <set name="small ruminants">
+    <par name="c-n-">0.0157,0.27,0.4,1.2</par>
+    <par name="c-i-">0.04,,0.5,25.0,0.01,,,28.0,1.4,,,,0.02,,,,,,,,</par>
+    <par name="c-r-">,,,0.00112,,0.00112,0.0,21.0,,,,,,,,,,,,</par>
+    <par name="c-m-">,0.26,,,,0.02,,,,,0.00046,0.000147,0.003375,,,,40.0</par>
+    <par name="c-p-">150.0,1.304,2.625,0.33,1.43,3.38,0.91,4.33,4.37,0.965,0.145,4.56,0.9</par>
+    <par name="c-p14-">1.5,1.75,2.0</par>
+    <par name="c-p15-">0.1,0.085,0.07</par>
+    <par name="c-l-">2.0,22.0,1.0,,,4.7,,,,0.4,30.0,0.3,0.41,0.0714,0.045,,,,,,0.008,0.012,,,</par>
+    <par name="c-w-">24.0,0.004,0.7,0.04,0.25,,1.34,0.016,1.0,1350.0,60000000,0.025,0.18,0.18</par>
+    <par name="c-c-">,,1.3,,,,,,1.41,,,1.3,,,,</par>
+    <par name="c-ph-">,,,0.005,0.0,0.005,0.0015,0.00024,0.00031,0.000008,0.00061,0.000011,,0.003188,0.28</par>
+    <par name="c-su-">0.08,,0.2,</par>
+    <par name="c-f4">17</par>
+    <par name="c-d-">0.0000553,0.3,0.6,0.2,29.44,1.4,9.815,,,,,0.1,0.0000553,300.0,365.0</par>
+
+    <set name="sheep">
+      <par name="animal">sheep</par>
+
+      <set name="wool breeds">
+        <par name="c-imx-">0.524,0.524,0.707,0.891</par>
+        <par name="c-l0-">0.389,0.622,0.746</par>
+        <par name="c-f1-">0.23,0.39,0.39</par>
+        <par name="c-f2-">0.64,1.315,5.0</par>
+        <par name="c-f3-">2.34,2.69,2.69</par>
+        <par name="c-d-">,,,,,,,-9.95,1.71,0.0098,1.1,,,,</par>
+
+        <set name="merinos">
+          <par name="c-pfw">0.09</par>
+          <par name="c-w-6">0.032</par>
+
+          <set name="Small Merino" locales="au;cn">
+            <translate lang="es">Merino pequeño</translate>
+            <par name="srw">40.0</par>
+            <par name="c-mu">19.0</par>
+          </set>
+
+          <set name="Medium Merino" locales="au;cn">
+            <translate lang="es">Merino mediano</translate>
+            <par name="srw">50.0</par>
+            <par name="c-mu">21.0</par>
+          </set>
+
+          <set name="Large Merino" locales="au;cn">
+            <translate lang="es">Merino grande</translate>
+            <par name="srw">60.0</par>
+            <par name="c-mu">23.0</par>
+          </set>
+
+          <set name="Polwarth" locales="au">
+            <par name="srw">50.0</par>
+            <par name="c-mu">21.0</par>
+          </set>
+
+          <set name="Delaine-Merino" locales="ca;us">
+            <par name="srw">50.0</par>
+            <par name="c-mu">21.0</par>
+          </set>
+        </set><!-- merinos -->
+
+        <set name="corriedales">
+          <par name="c-pfw">0.09</par>
+          <par name="c-w-6">0.064</par>
+
+          <set name="Corriedale" locales="au">
+            <par name="srw">55.0</par>
+            <par name="c-mu">21.0</par>
+          </set>
+
+          <set name="Romney" locales="au">
+            <par name="srw">55.0</par>
+            <par name="c-mu">21.0</par>
+          </set>
+
+          <set name="Targhee" locales="ca;us">
+            <par name="srw">60.0</par>
+            <par name="c-mu">23.0</par>
+          </set>
+        </set><!-- corriedales -->
+      </set><!-- wool breeds -->
+
+      <set name="crossbreds">
+        <par name="srw">55.0</par>
+        <par name="c-pfw">0.077</par>
+        <par name="c-mu">23.0</par>
+        <par name="c-imx-">0.59,0.59,0.725,1.0</par>
+        <par name="c-l0-">0.437,0.7,0.839</par>
+        <par name="c-w-6">0.07</par>
+        <par name="c-f1-">0.34,0.64,0.64</par>
+        <par name="c-f2-">0.75,0.94,5.0</par>
+        <par name="c-f3-">5.12,7.1,7.1</par>
+        <par name="c-d-">,,,,,,,-8.9,1.49,0.0081,0.82,,,,</par>
+
+        <set name="Border Leicester x Merino" locales="au;cn">
+        </set>
+
+        <set name="Dorset x Merino" locales="au;cn">
+        </set>
+
+        <set name="Mongolian x Merino" locales="cn">
+          <par name="srw">50.0</par>
+          <par name="c-pfw">0.055</par>
+          <par name="c-mu">20.0</par>
+          <par name="c-g-">,,,,,,,28.5,28.7,2.1,14.8,,,,,,,</par>
+        </set>
+      </set><!-- crossbreds -->
+
+      <set name="meat breeds">
+        <par name="c-pfw">0.063</par>
+        <par name="c-mu">26.0</par>
+        <par name="c-imx-">0.655,0.655,0.884,1.114</par>
+        <par name="c-l0-">0.486,0.778,0.933</par>
+        <par name="c-f1-">0.34,0.64,0.64</par>
+        <par name="c-f2-">0.75,0.94,5.0</par>
+        <par name="c-f3-">5.12,7.1,7.1</par>
+        <par name="c-d-">,,,,,,,-8.9,1.49,0.0081,0.82,,,,</par>
+
+        <set name="cheviot types">
+          <par name="c-w-6">0.086</par>
+
+          <set name="southdowns">
+
+            <set name="Southdown" locales="au">
+              <par name="srw">40.0</par>
+            </set>
+
+            <set name="Southdown (U.S.)" locales="ca;us">
+              <par name="srw">50.0</par>
+            </set>
+          </set><!-- southdowns -->
+
+          <set name="Ryeland" locales="au">
+            <par name="srw">50.0</par>
+          </set>
+
+          <set name="Cheviot" locales="ca;us">
+            <par name="srw">50.0</par>
+          </set>
+
+          <set name="Rambouillet" locales="ca;us">
+            <par name="srw">55.0</par>
+            <par name="c-mu">21.0</par>
+          </set>
+        </set><!-- cheviot types -->
+
+        <set name="border leicester types">
+          <par name="c-w-6">0.108</par>
+
+          <set name="Dorset" locales="au;cn;ca;us">
+            <par name="srw">55.0</par>
+          </set>
+
+          <set name="suffolks">
+
+            <set name="Suffolk" locales="au">
+              <par name="srw">55.0</par>
+            </set>
+
+            <set name="Suffolk (U.S.)" locales="ca;us">
+              <par name="srw">90.0</par>
+            </set>
+          </set><!-- suffolks -->
+
+          <set name="Finnsheep" locales="ca;us">
+            <par name="srw">55.0</par>
+          </set>
+
+          <set name="Polypay" locales="ca;us">
+            <par name="srw">55.0</par>
+          </set>
+
+          <set name="Border Leicester" locales="au">
+            <par name="srw">60.0</par>
+          </set>
+
+          <set name="Texel" locales="au">
+            <par name="srw">60.0</par>
+          </set>
+
+          <set name="Hampshire" locales="ca;us">
+            <par name="srw">73.0</par>
+          </set>
+
+          <set name="Blackface x Whiteface" locales="ca;us">
+            <par name="srw">73.0</par>
+          </set>
+
+          <set name="Columbia" locales="ca;us">
+            <par name="srw">80.0</par>
+            <par name="c-mu">23.0</par>
+          </set>
+
+          <set name="Ujimqin Sheep" locales="cn">
+            <par name="srw">55.0</par>
+            <par name="c-pfw">0.0273</par>
+            <par name="c-mu">30.0</par>
+            <par name="c-g-">,,,,,,,29.8,22.9,2.3,15.6,,,,,,,</par>
+          </set>
+        </set><!-- border leicester types -->
+      </set><!-- meat breeds -->
+    </set><!-- sheep -->
+
+    <set name="goats">
+      <par name="animal">sheep</par>
+      <par name="c-w-6">0.0</par>
+
+      <set name="Ujimqin Goats" locales="cn">
+        <par name="srw">45.0</par>
+        <par name="c-pfw">0.01</par>
+        <par name="c-mu">15.0</par>
+      </set>
+    </set><!-- goats -->
+  </set><!-- small ruminants -->
+
+  <set name="cattle">
+    <par name="animal">cattle</par>
+    <par name="c-n-">0.0115,0.27,0.4,1.1</par>
+    <par name="c-i-">0.06,,0.22,60.0,0.02,,,62.0,1.7,0.6,0.05,,0.005,,,,,,,,</par>
+    <par name="c-r-">,,,0.00078,,0.00074,0.5,,,,,,,,,,,,,</par>
+    <par name="c-m-">,0.36,,,,0.0025,,,,,0.000526,0.0161,0.0422,0.00011,,,5.0</par>
+    <par name="c-p-">285.0,2.2,1.77,0.33,1.8,2.42,1.16,4.11,343.5,0.0164,0.134,6.22,0.747</par>
+    <par name="c-p14-">1.0,1.15,</par>
+    <par name="c-p15-">0.07,0.055,</par>
+    <par name="c-l-">4.0,30.0,0.6,,,3.1,,,,0.04,90.0,0.42,0.58,0.0357,0.032,,,,,,,,,,</par>
+    <par name="c-c-">,,1.6,,,,,,1.1,,,1.5,,,,</par>
+    <par name="c-ph-">,,,0.003,0.000044,0.0041,0.001,0.0,0.00051,0.0000037,0.00051,0.0000037,,0.004635,0.22</par>
+    <par name="c-su-1">0.07</par>
+    <par name="c-f1-">0.0,0.0,</par>
+    <par name="c-f2-">0.7,5.0,</par>
+    <par name="c-f3-">5.89,5.89,</par>
+    <par name="c-f4">21</par>
+    <par name="c-d-">0.0000553,0.3,0.6,,,,,,,,,0.1,0.0000553,300.0,365.0</par>
+
+    <set name="beef breeds">
+      <par name="c-i-21">1.7</par>
+      <par name="c-imx-">0.416,0.416,0.9,</par>
+      <par name="c-r-8">64.0</par>
+      <par name="c-l0-">0.375,0.47,</par>
+      <par name="c-l-">,,,0.6,,,,,,,,,,,,,,,,,0.004,0.006,,,</par>
+
+      <set name="british beef">
+
+        <set name="Hereford" locales="au;cn;ca;us">
+          <par name="srw">500.0</par>
+        </set>
+
+        <set name="Angus" locales="au;cn;ca;us">
+          <par name="srw">500.0</par>
+        </set>
+
+        <set name="Beef Shorthorn" locales="au;cn;ca;us">
+          <par name="srw">500.0</par>
+        </set>
+
+        <set name="South Devon" locales="au;cn;ca;us">
+          <par name="srw">550.0</par>
+        </set>
+      </set><!-- british beef -->
+
+      <set name="Ujimqin Cattle" locales="cn">
+        <par name="srw">370.0</par>
+      </set>
+
+      <set name="Ujimqin x Angus (1st cross)" locales="cn">
+        <par name="srw">435.0</par>
+      </set>
+
+      <set name="Ujimqin x Angus (2nd cross)" locales="cn">
+        <par name="srw">465.0</par>
+      </set>
+
+      <set name="indicus">
+        <par name="c-i-">,,,,0.01,,,,,,,,,,,0.5,,,,,</par>
+        <par name="c-m-">,0.31,,,,,,,,,,0.0129,0.0338,,,,</par>
+
+        <set name="Brahman" locales="au;ca;us">
+          <par name="srw">550.0</par>
+          <par name="c-g-">,,,,,,,23.2,16.5,,,0.092,0.12,,,,,</par>
+        </set>
+      </set><!-- indicus -->
+
+      <set name="european">
+        <par name="c-g-">,,,,,,,23.2,16.5,,,0.092,0.12,,,,,</par>
+
+        <set name="Charolais" locales="au;cn;ca;us">
+          <par name="srw">650.0</par>
+        </set>
+
+        <set name="Simmental" locales="au;cn;ca;us">
+          <par name="srw">650.0</par>
+        </set>
+
+        <set name="Limousin" locales="au;cn;ca;us">
+          <par name="srw">650.0</par>
+        </set>
+
+        <set name="Chianina" locales="au;cn;ca;us">
+          <par name="srw">700.0</par>
+        </set>
+      </set><!-- european -->
+
+      <set name="British x Brahman" locales="au;ca;us">
+        <par name="srw">550.0</par>
+        <par name="c-i-">,,,,0.015,,,,,,,,,,,0.75,,,,,</par>
+        <par name="c-m-">,0.335,,,,,,,,,,0.0145,0.038,,,,</par>
+        <par name="c-g-">,,,,,,,25.1,18.4,,,0.082,0.13,,,,,</par>
+      </set>
+
+      <set name="British x Charolais" locales="au;cn;ca;us">
+        <par name="srw">550.0</par>
+        <par name="c-g-">,,,,,,,25.1,18.4,,,0.082,0.13,,,,,</par>
+      </set>
+
+      <set name="Ujimqin x Charolais (1st cross)" locales="cn">
+        <par name="srw">435.0</par>
+        <par name="c-g-">,,,,,,,25.1,18.4,,,0.082,0.13,,,,,</par>
+      </set>
+
+      <set name="Ujimqin x Charolais (2nd cross)" locales="cn">
+        <par name="srw">465.0</par>
+        <par name="c-g-">,,,,,,,24.2,17.5,,,0.087,0.13,,,,,</par>
+      </set>
+
+      <set name="british-friesian crosses">
+        <par name="srw">550.0</par>
+        <par name="c-imx-1">0.5</par>
+        <par name="c-r-8">107.0</par>
+        <par name="c-l0-">0.44,0.55,</par>
+        <par name="c-l-4">0.35</par>
+
+        <set name="British x Friesian" locales="au">
+        </set>
+
+        <set name="British x Holstein" locales="cn;ca;us">
+        </set>
+      </set><!-- british-friesian crosses -->
+
+      <set name="charolais-friesian crosses" locales="au">
+        <par name="srw">600.0</par>
+        <par name="c-imx-1">0.5</par>
+        <par name="c-r-8">107.0</par>
+        <par name="c-l0-">0.44,0.55,</par>
+        <par name="c-l-4">0.35</par>
+        <par name="c-g-">,,,,,,,25.1,18.4,,,0.082,0.13,,,,,</par>
+
+        <set name="Charolais x Friesian" locales="au;cn">
+        </set>
+
+        <set name="Charolais x Holstein" locales="ca;us">
+        </set>
+      </set><!-- charolais-friesian crosses -->
+    </set><!-- beef breeds -->
+
+    <set name="dairy breeds">
+      <par name="dairy">true</par>
+      <par name="c-i-">,,,,,,,81.0,,,,,,,,,,,,,0.7</par>
+      <par name="c-imx-">0.85,0.577,0.9,</par>
+      <par name="c-r-8">150.0</par>
+      <par name="c-l0-">0.5,0.62,</par>
+      <par name="c-l-">,,,0.105,,,,,,,,,,,,,,,,,0.0027,0.004,,,</par>
+
+      <set name="Jersey" locales="au;cn;ca;us">
+        <par name="srw">400.0</par>
+      </set>
+
+      <set name="Ayrshire" locales="au;cn;ca;us">
+        <par name="srw">450.0</par>
+      </set>
+
+      <set name="Guernsey" locales="au;cn;ca;us">
+        <par name="srw">450.0</par>
+      </set>
+
+      <set name="Dairy Shorthorn" locales="au;ca;us">
+        <par name="srw">500.0</par>
+      </set>
+
+      <set name="Brown Swiss" locales="au;ca;us">
+        <par name="srw">500.0</par>
+      </set>
+
+      <set name="Friesian" locales="au;cn">
+        <par name="srw">550.0</par>
+      </set>
+
+      <set name="Holstein" locales="ca;us">
+        <par name="srw">600.0</par>
+      </set>
+    </set><!-- dairy breeds -->
+  </set><!-- cattle -->
+</parameters>

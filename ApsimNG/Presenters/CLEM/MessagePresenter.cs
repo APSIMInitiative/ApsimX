@@ -69,6 +69,7 @@ namespace UserInterface.Presenters
                 ".errorlink {color:white; font-weight:bold; background-color:red !important;border-color:darkred; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px; }" +
                 ".setvalue {font-weight:bold; background-color: [ValueSetBack] !important; Color: [ValueSetFont]; border-color:#697c7c; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px;}" +
                 ".otherlink {font-weight:bold; color:#333333; background-color:#eeeeee !important;border-color:#999999; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px;}" +
+                ".marketlink {font-weight:bold; color:#1785FF; background-color:#DCEEFF !important;border-color:#1785FF; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px;}" +
                 ".messageentry {padding:5px 0px 5px 0px; line-height: 1.7em; }" +
                 ".holdermain {margin: 20px 0px 20px 0px}" +
                 "@media print { body { -webkit - print - color - adjust: exact; }}" +
@@ -116,21 +117,21 @@ namespace UserInterface.Presenters
                 return htmlString;
             }
             DataRow[] dataRows = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages").Select();
-            int errorCol = dataRows[0].Table.Columns["MessageType"].Ordinal;  //7; // 8;
-            int msgCol = dataRows[0].Table.Columns["Message"].Ordinal;  //6; // 7;
-            dataRows = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages").Select().OrderBy(a => a[errorCol].ToString()).ToArray();
-
-            foreach (DataRow dr in dataRows)
-            {
-                // convert invalid parameter warnings to errors
-                if(dr[msgCol].ToString().StartsWith("Invalid parameter value in model"))
-                {
-                    dr[errorCol] = "0";
-                }
-            }
-
             if (dataRows.Count() > 0)
             {
+                int errorCol = dataRows[0].Table.Columns["MessageType"].Ordinal;  //7; // 8;
+                int msgCol = dataRows[0].Table.Columns["Message"].Ordinal;  //6; // 7;
+                dataRows = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages").Select().OrderBy(a => a[errorCol].ToString()).ToArray();
+
+                foreach (DataRow dr in dataRows)
+                {
+                    // convert invalid parameter warnings to errors
+                    if(dr[msgCol].ToString().StartsWith("Invalid parameter value in model"))
+                    {
+                        dr[errorCol] = "0";
+                    }
+                }
+
                 foreach (DataRow dr in dataRows.Take(maxErrors))
                 {
                     bool ignore = false;
@@ -227,6 +228,7 @@ namespace UserInterface.Presenters
                         msgStr = msgStr.Replace("[f=", "<span class=\"filterlink\">");
                         msgStr = msgStr.Replace("[x=", "<span class=\"filelink\">");
                         msgStr = msgStr.Replace("[o=", "<span class=\"otherlink\">");
+                        msgStr = msgStr.Replace("[m=", "<span class=\"marketlink\">");
                         msgStr = msgStr.Replace("[", "<span class=\"setvalue\">");
                         htmlString += "\n<div class=\"messageentry\">" + msgStr;
                         htmlString += "\n</div>";

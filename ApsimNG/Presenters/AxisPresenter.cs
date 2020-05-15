@@ -1,12 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="AxisPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System;
-    using Models.Graph;
+    using Models;
     using Views;
     using Interfaces;
 

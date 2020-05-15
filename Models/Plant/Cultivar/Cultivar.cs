@@ -22,6 +22,7 @@
     [ViewName("UserInterface.Views.EditorView")]
     [PresenterName("UserInterface.Presenters.CultivarPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
+    [ValidParent(ParentType = typeof(GrazPlan.Stock))]
     [ValidParent(ParentType = typeof(CultivarFolder))]
     public class Cultivar : Model, ICustomDocumentation
     {
@@ -155,7 +156,7 @@
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
                 tags.Add(new AutoDocumentation.Paragraph("This cultivar is defined by overriding some of the base parameters of the plant model.", indent));
                 tags.Add(new AutoDocumentation.Paragraph(Name + " makes the following changes:", indent));
-                if (Command != null)
+                if (Command != null && Command.Length > 0)
                     tags.Add(new AutoDocumentation.Paragraph(Command.Aggregate((a, b) => a + "<br>" + b), indent));
             }
         }

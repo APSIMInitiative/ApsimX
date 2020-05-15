@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ForestryView.cs" company="CSIRO">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using System;
     using System.Collections.Generic;
@@ -14,9 +9,7 @@ namespace UserInterface.Views
     using OxyPlot.Axes;
     using OxyPlot.GtkSharp;
     using Interfaces;
-    using System.Globalization;
     using System.Drawing;
-    using APSIM.Shared.Utilities;
     using EventArguments;
 
     /// <summary>
@@ -196,32 +189,17 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Gets the canopy widths shown in the temporal data grid.
+        /// Gets the shade modifiers shown in the temporal data grid.
         /// </summary>
-        public double[] CanopyWidths
+        public double[] ShadeModifiers
         {
             get
             {
-                List<double> canopyWidths = new List<double>();
+                List<double> shadeModifiers = new List<double>();
                 foreach (DataRow row in TemporalDataGrid.DataSource.Rows)
                     if (!string.IsNullOrEmpty(row[3] as string))
-                        canopyWidths.Add(Convert.ToDouble((string)row[3], System.Globalization.CultureInfo.InvariantCulture));
-                return canopyWidths.ToArray();
-            }
-        }
-
-        /// <summary>
-        /// Gets the tree leaf areas shown in the temporal data grid.
-        /// </summary>
-        public double[] TreeLeafAreas
-        {
-            get
-            {
-                List<double> treeLeafAreas = new List<double>();
-                foreach (DataRow row in TemporalDataGrid.DataSource.Rows)
-                    if (!string.IsNullOrEmpty(row[4] as string))
-                        treeLeafAreas.Add(Convert.ToDouble((string)row[4], System.Globalization.CultureInfo.InvariantCulture));
-                return treeLeafAreas.ToArray();
+                        shadeModifiers.Add(Convert.ToDouble((string)row[3], System.Globalization.CultureInfo.InvariantCulture));
+                return shadeModifiers.ToArray();
             }
         }
 
@@ -236,15 +214,14 @@ namespace UserInterface.Views
         /// <param name="dates">Dates to be displayed in the dates column.</param>
         /// <param name="heights">Heights to be displayed in the heights column.</param>
         /// <param name="nDemands">N Demands to be displayed in the N Demands column.</param>
-        /// <param name="canopyWidths">Canopy widths to be displayed in the canopy widths column.</param>
-        /// <param name="treeLeafAreas">Tree leaf areas to be displayed in the leaf areas column.</param>
-        public void SetupHeights(DateTime[] dates, double[] heights, double[] nDemands, double[] canopyWidths, double[] treeLeafAreas)
+        /// <param name="shadeModifiers">Shade Modifiers to be displayed in the shade modifiers column.</param>
+        public void SetupHeights(DateTime[] dates, double[] heights, double[] nDemands, double[] shadeModifiers)
         {
-            string[] colLabels = new string[] { "Date", "Height (m)", "N Demands (g/m2)", "Canopy Width (m)", "Tree Leaf Area (m2)" };
+            string[] colLabels = new string[] { "Date", "Height (m)", "N Demands (g/m2)", "Shade Modifier (>=0)" };
             DataTable table = new DataTable("Height Data");
 
             // Use the string column type for everything.
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 4; i++)
                 table.Columns.Add(colLabels[i], typeof(string));
 
             for (int i = 0; i < dates.Length; i++)
@@ -252,9 +229,8 @@ namespace UserInterface.Views
                 string date = dates?.Length > i ? dates[i].ToShortDateString() : null;
                 string height = heights?.Length > i ? (heights[i] / 1000).ToString() : null;
                 string nDemand = nDemands?.Length > i ? nDemands[i].ToString() : null;
-                string canopyWidth = canopyWidths?.Length > i ? canopyWidths[i].ToString() : null;
-                string treeLeafArea = treeLeafAreas?.Length > i ? treeLeafAreas[i].ToString() : null;
-                table.Rows.Add(date, height, nDemand, canopyWidth, treeLeafArea);
+                string shadeModifier = shadeModifiers?.Length > i ? shadeModifiers[i].ToString() : null;
+                table.Rows.Add(date, height, nDemand, shadeModifier);
             }
 
             TemporalDataGrid.DataSource = table;

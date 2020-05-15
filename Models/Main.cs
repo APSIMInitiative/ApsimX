@@ -93,9 +93,7 @@
                 else if (edit)
                     EditFile(fileName, recurse);
                 else if (mergeDBFiles)
-                {
-                    DBMerger.MergeFiles(fileName, Path.Combine(Path.GetDirectoryName(fileName), "merged.db"));
-                }
+                    DBMerger.MergeFiles(fileName, recurse, Path.Combine(Path.GetDirectoryName(fileName), "merged.db"));
                 else
                 {
                     // Run simulations
@@ -155,8 +153,7 @@
         /// </summary>
         private static void WriteVersion()
         {
-            Model m = new Model();
-            Console.WriteLine(m.ApsimVersion);
+            Console.WriteLine(Simulations.GetApsimVersion());
         }
 
         /// <summary>
@@ -255,9 +252,86 @@
             foreach (CompositeFactor factor in factors)
             {
                 IVariable variable = Apsim.GetVariableObject(file, factor.Paths[0]);
-                variable.Value = ReflectionUtilities.StringToObject(variable.DataType, factor.Values[0].ToString());
+                if (variable == null)
+                    throw new Exception($"Invalid path: {factor.Paths[0]}");
+
+                string value = factor.Values[0].ToString();
+                string absolutePath;
+                try
+                {
+                    absolutePath = PathUtilities.GetAbsolutePath(value, Directory.GetCurrentDirectory());
+                }
+                catch
+                {
+                    absolutePath = null;
+                }
+
+                string[] parts = value.Split(';');
+                if (parts != null && parts.Length == 2)
+                {
+                    string fileName = parts[0];
+                    string absoluteFileName = PathUtilities.GetAbsolutePath(fileName, Directory.GetCurrentDirectory());
+                    string modelPath = parts[1];
+
+                    if (File.Exists(fileName))
+                        ReplaceModelFromFile(file, factor.Paths[0], fileName, modelPath);
+                    else if (File.Exists(absoluteFileName))
+                        ReplaceModelFromFile(file, factor.Paths[0], absoluteFileName, modelPath);
+                    else
+                        variable.Value = ReflectionUtilities.StringToObject(variable.DataType, value);
+                }
+                else if (File.Exists(value) && variable.Value is IModel)
+                    ReplaceModelFromFile(file, factor.Paths[0], value, null);
+                else if (File.Exists(absolutePath) && variable.Value is IModel)
+                    ReplaceModelFromFile(file, factor.Paths[0], absolutePath, null);
+                else
+                    variable.Value = ReflectionUtilities.StringToObject(variable.DataType, value);
             }
             file.Write(apsimxFileName);
+        }
+
+        /// <summary>
+        /// Replace a model with a model from another file.
+        /// </summary>
+        /// <param name="topLevel">The top-level model of the file being modified.</param>
+        /// <param name="modelToReplace">Path to the model which is to be replaced.</param>
+        /// <param name="replacementFile">Path of the .apsimx file containing the model which will be inserted.</param>
+        /// <param name="replacementPath">Path to the model in replacementFile which will be used to replace a model in topLevel.</param>
+        private static void ReplaceModelFromFile(Simulations topLevel, string modelToReplace, string replacementFile, string replacementPath)
+        {
+            IModel toBeReplaced = Apsim.Get(topLevel, modelToReplace) as IModel;
+            if (toBeReplaced == null)
+                throw new Exception($"Unable to find model which is to be replaced ({modelToReplace}) in file {topLevel.FileName}");
+
+            IModel extFile = FileFormat.ReadFromFile<IModel>(replacementFile, out List<Exception> errors);
+            if (errors?.Count > 0)
+                throw new Exception($"Error reading replacement file {replacementFile}", errors[0]);
+
+            IModel replacement;
+            if (string.IsNullOrEmpty(replacementPath))
+            {
+                replacement = Apsim.ChildrenRecursively(extFile, toBeReplaced.GetType()).FirstOrDefault();
+                if (replacement == null)
+                    throw new Exception($"Unable to find replacement model of type {toBeReplaced.GetType().Name} in file {replacementFile}");
+            }
+            else
+            {
+                replacement = Apsim.Get(extFile, replacementPath) as IModel;
+                if (replacement == null)
+                    throw new Exception($"Unable to find model at path {replacementPath} in file {replacementFile}");
+            }
+
+            IModel parent = toBeReplaced.Parent;
+            int index = parent.Children.IndexOf((Model)toBeReplaced);
+            parent.Children.Remove((Model)toBeReplaced);
+
+            // Need to call Structure.Add to add the model to the parent.
+            Structure.Add(replacement, parent);
+
+            // Move the new model to the index in the list at which the
+            // old model previously resided.
+            parent.Children.Remove((Model)replacement);
+            parent.Children.Insert(index, (Model)replacement);
         }
 
         /// <summary>Job has completed</summary>
@@ -286,7 +360,7 @@
             {
                 string fileName = Path.ChangeExtension((sender as SimulationGroup).FileName, ".db");
                 var storage = new Storage.DataStore(fileName);
-                Report.Report.WriteAllTables(storage, fileName);
+                Report.WriteAllTables(storage, fileName);
                 Console.WriteLine("Successfully created csv file " + Path.ChangeExtension(fileName, ".csv"));
             }
         }

@@ -1,7 +1,7 @@
 ﻿namespace UserInterface.Presenters
 {
     using Models.Functions;
-    using Models.Graph;
+    using Models;
     using System;
     using System.Collections.Generic;
     using Views;
@@ -94,7 +94,7 @@
             }
 
             view.Graph.Clear();
-            view.Graph.DrawLineAndMarkers("", x, y, null, null, null, Axis.AxisType.Bottom, Axis.AxisType.Left, System.Drawing.Color.Blue, LineType.Solid, MarkerType.None, LineThicknessType.Normal, MarkerSizeType.Normal, true);
+            view.Graph.DrawLineAndMarkers("", x, y, null, null, null, Axis.AxisType.Bottom, Axis.AxisType.Left, System.Drawing.Color.Blue, LineType.Solid, MarkerType.None, LineThicknessType.Normal, MarkerSizeType.Normal, 1, true);
             view.Graph.FormatAxis(Axis.AxisType.Bottom, "x", false, double.NaN, double.NaN, double.NaN, false);
             view.Graph.FormatAxis(Axis.AxisType.Left, "y", false, double.NaN, double.NaN, double.NaN, false);
             view.Graph.BackColor = OxyPlot.OxyColors.White;

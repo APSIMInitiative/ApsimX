@@ -1,13 +1,12 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="GenericPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
+    using System;
     using System.Collections.Generic;
+    using System.IO;
+    using System.Reflection;
     using System.Text;
+    using System.Text.RegularExpressions;
+    using APSIM.Shared.Utilities;
     using Models.Core;
     using Views;
 
@@ -63,14 +62,44 @@ namespace UserInterface.Presenters
                 {
                     contents.Append("\r\n");
                     contents.Append((tag as AutoDocumentation.Paragraph).text);
+                    FindImagesInParagraph(tag as AutoDocumentation.Paragraph);
                 }
             }
 
             MarkdownDeep.Markdown markDown = new MarkdownDeep.Markdown();
             markDown.ExtraMode = true;
+            markDown.DocumentLocation = Path.GetTempPath();
+            markDown.UrlBaseLocation = markDown.DocumentLocation;
 
             string html = markDown.Transform(contents.ToString());
             this.genericView.SetContents(html, false, false);
+        }
+
+        /// <summary>
+        /// For each image markdown tag in a paragraph, locate image from resource and save to temp folder.
+        /// </summary>
+        /// <param name="paragraph">The paragraph to scan.</param>
+        private void FindImagesInParagraph(AutoDocumentation.Paragraph paragraph)
+        {
+            var regEx = new Regex(@"!\[(.+)\]\((.+)\)");
+            foreach (Match match in regEx.Matches(paragraph.text))
+            {
+                var fileName = match.Groups[2].ToString();
+                var tempFileName = Path.Combine(Path.GetTempPath(), fileName);
+                if (File.Exists(tempFileName))
+                {
+                    var timeSinceLastAccess = DateTime.Now - File.GetLastAccessTime(tempFileName);
+                    if (timeSinceLastAccess.Hours > 1)
+                    {
+                        using (FileStream file = new FileStream(tempFileName, FileMode.Create, FileAccess.Write))
+                        {
+                            var imageStream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"ApsimNG.Resources.{fileName}");
+                            imageStream?.CopyTo(file);
+                            file.Close();
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>

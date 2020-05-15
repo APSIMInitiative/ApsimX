@@ -23,7 +23,7 @@
             events.Publish("Commencing", args);
             events.Publish("DoDailyInitialisation", args);
 
-            var soilWater = zone.Children[1].Children[4] as SoilWater;
+            var soilWater = zone.Children[1].Children[4] as Models.WaterModel.WaterBalance;
             var swBeforeIrrigation = MathUtilities.Sum(soilWater.SWmm);
             var irrigation = zone.Children[0] as Irrigation;
 
@@ -44,7 +44,7 @@
             events.Publish("Commencing", args);
             events.Publish("DoDailyInitialisation", args);
 
-            var soilWater = zone.Children[1].Children[4] as SoilWater;
+            var soilWater = zone.Children[1].Children[4] as Models.WaterModel.WaterBalance;
             var swBeforeIrrigation = MathUtilities.Sum(soilWater.SWmm);
             var irrigation = zone.Children[0] as Irrigation;
 
@@ -72,7 +72,7 @@
                             {
                                 Thickness = new double[] { 100, 300, 300, 300, 300, 300 },
                                 BD = new double[] { 1.36, 1.216, 1.24, 1.32, 1.372, 1.368 },
-                                AirDry = new double[] { 0.135, 0.214, 0.261, 0.261, 0.261, 0.261 },
+                                AirDry = new double[] { 0.135, 0.214, 0.253, 0.261, 0.261, 0.261 },
                                 LL15 = new double[] { 0.27, 0.267, 0.261, 0.261, 0.261, 0.261 },
                                 DUL = new double[] { 0.365, 0.461, 0.43, 0.412, 0.402, 0.404 },
                                 SAT = new double[] { 0.400, 0.481, 0.45, 0.432, 0.422, 0.424 },
@@ -99,13 +99,14 @@
                             new Sample()
                             {
                                 Thickness = new double[] { 100, 300, 300, 300, 300, 300  },
-                                SW = new double[] { 0.103, 0.238, 0.253, 0.247, 0.247, 0.247 },
+                                SW = new double[] { 0.103, 0.238, 0.253, 0.261, 0.261, 0.261 },
                                 NO3N = new double[] { 23, 7, 2, 1, 1, 1 },
                                 OC = new double[] { 1.35, double.NaN, double.NaN, double.NaN, double.NaN, double.NaN },
                                 SWUnits = Sample.SWUnitsEnum.Gravimetric
                             },
-                            new SoilWater()
+                            new Models.WaterModel.WaterBalance()
                             {
+                                Thickness = new double[] { 100, 300, 300, 300, 300, 300  },
                                 SummerCona = 6,
                                 WinterCona = 3,
                                 SummerU = 6,
@@ -115,7 +116,8 @@
                                 CNRed = 10,
                                 DiffusConst = 10,
                                 DiffusSlope = 10,
-                                Salb = 10
+                                Salb = 10,
+                                ResourceName = "WaterBalance"
                             },
                             new Nutrient()
                             {
@@ -126,9 +128,11 @@
                                     new MockNutrientPool() { Name = "FOMLignin" },
                                     new MockNutrientPool() { Name = "SurfaceResidue" },
                                     new Solute() { Name = "NO3" },
-                                    new Solute() { Name = "NH4" }
+                                    new Solute() { Name = "NH4" },
+                                    new Solute() { Name = "Urea"}
                                 }
-                            }
+                            },
+                            new MockSoilTemperature(),
                         }
                     },
                     new MockClock()

@@ -1,24 +1,13 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ManagerPresenter.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System;
-    using System.Collections.Generic;
     using System.Drawing;
     using System.Linq;
-    using System.Reflection;
     using APSIM.Shared.Utilities;
     using EventArguments;
     using Models;
     using Models.Core;
     using Views;
-    using System.IO;
-    using System.Diagnostics;
-    using System.Threading.Tasks;
     using ICSharpCode.NRefactory.CSharp;
 
     /// <summary>
@@ -71,6 +60,15 @@ namespace UserInterface.Presenters
             intellisense.ItemSelected += OnIntellisenseItemSelected;
 
             scriptModel = manager.Children.FirstOrDefault();
+
+            // See if manager script has a description attribute on it's class.
+            if (scriptModel != null)
+            {
+                DescriptionAttribute descriptionName = ReflectionUtilities.GetAttribute(scriptModel.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
+                if (descriptionName != null)
+                    explorerPresenter.ShowDescriptionInRightHandPanel(descriptionName.ToString());
+            }
+
             propertyPresenter.Attach(scriptModel, managerView.GridView, presenter);
             managerView.Editor.Mode = EditorType.ManagerScript;
             managerView.Editor.Text = manager.Code;
@@ -206,7 +204,14 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnDoCompile(object sender, EventArgs e)
         {
-            BuildScript();
+            try
+            {
+                BuildScript();
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>
@@ -216,10 +221,17 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnDoReformat(object sender, EventArgs e)
         {
-            CSharpFormatter formatter = new CSharpFormatter(FormattingOptionsFactory.CreateAllman());
-            string newText = formatter.Format(managerView.Editor.Text);
-            managerView.Editor.Text = newText;
-            explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(manager, "Code", newText));
+            try
+            {
+                CSharpFormatter formatter = new CSharpFormatter(FormattingOptionsFactory.CreateAllman());
+                string newText = formatter.Format(managerView.Editor.Text);
+                managerView.Editor.Text = newText;
+                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(manager, "Code", newText));
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>

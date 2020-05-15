@@ -21,10 +21,11 @@ namespace Models.CLEM
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
-    [ValidParent(ParentType = typeof(Zone))]
-    [Description("This manages all CLEM resources and activities in the simulation.")]
+    [Description("This represents all CLEM farm resources and activities")]
     [HelpUri(@"Content/Features/CLEMComponent.htm")]
-    [Version(1, 0, 2, "New ResourceUnitConverter functionality added that changes some reporting.\nThis change will cause errors for all previous custom resource ledger reports created using the APSIM Report component.\nTo fix errors add \".Name\" to all LastTransaction.ResourceType and LastTransaction.Activity entries in custom ledgers (i.e. LastTransaction.ResourceType.Name as Resource). The CLEM ReportResourceLedger component has been updated to automatically handle the changes.")]
+    [Version(1, 0, 4, "Random numbers and iteration property moved form this component to a stand-alone component\nChanges will be required to your setup")]
+    [Version(1, 0, 3, "Updated filtering logic to improve performance")]
+    [Version(1, 0, 2, "New ResourceUnitConverter functionality added that changes some reporting.\nThis change will cause errors for all previous custom resource ledger reports created using the APSIM Report component.\nTo fix errors add \".Name\" to all LastTransaction.ResourceType and LastTransaction.Activity entries in custom ledgers (i.e. LastTransaction.ResourceType.Name as Resource). The CLEM ReportResourceLedger component has been updated to automatically handle the changes")]
     [Version(1,0,1,"")]
     [ScopedModel]
     public class ZoneCLEM: Zone, IValidatableObject, ICLEMUI
@@ -38,8 +39,6 @@ namespace Models.CLEM
         [Link]
         IDataStore DataStore = null;
 
-        private static Random randomGenerator;
-
         /// <summary>
         /// Identifies the last selected tab for display
         /// </summary>
@@ -47,19 +46,12 @@ namespace Models.CLEM
         public string SelectedTab { get; set; }
 
         /// <summary>
-        /// Seed for random number generator (0 uses clock)
+        /// Multiplier from single farm to regional number of farms for market transactions
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(1)]
-        [Required, GreaterThanEqualValue(0) ]
-        [Description("Random number generator seed (0 to use clock)")]
-        public int RandomSeed { get; set; }
-
-        /// <summary>
-        /// Access the CLEM random number generator
-        /// </summary>
-        [XmlIgnore]
-        [Description("Random number generator for simulation")]
-        public static Random RandomGenerator { get { return randomGenerator; } }
+        [Required, GreaterThanValue(0)]
+        [Description("Farm multiplier to supply and receive from market")]
+        public double FarmMultiplier { get; set; }
 
         /// <summary>
         /// Index of the simulation Climate Region
@@ -102,6 +94,16 @@ namespace Models.CLEM
         public new double Slope { get; set; }
 
         /// <summary>
+        /// not used in CLEM
+        /// </summary>
+        [XmlIgnore]
+        public new double AspectAngle { get; set; }
+
+        /// <summary>Local altitude (meters above sea level).</summary>
+        [XmlIgnore]
+        public new double Altitude { get; set; } = 50;
+
+        /// <summary>
         /// Validate object
         /// </summary>
         /// <param name="validationContext"></param>
@@ -109,6 +111,16 @@ namespace Models.CLEM
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
+            if (Clock.StartDate.ToShortDateString() == "1/01/0001") 
+            {
+                string[] memberNames = new string[] { "Clock.StartDate" };
+                results.Add(new ValidationResult(String.Format("Invalid start date {0}", Clock.StartDate.ToShortDateString()), memberNames));
+            }
+            if (Clock.EndDate.ToShortDateString() == "1/01/0001")
+            {
+                string[] memberNames = new string[] { "Clock.EndDate" };
+                results.Add(new ValidationResult(String.Format("Invalid end date {0}", Clock.EndDate.ToShortDateString()), memberNames));
+            }
             if (Clock.StartDate.Day != 1)
             {
                 string[] memberNames = new string[] { "Clock.StartDate" };
@@ -157,31 +169,37 @@ namespace Models.CLEM
                 // find IStorageReader of simulation
                 IModel parentSimulation = Apsim.Parent(this, typeof(Simulation));
                 IStorageReader ds = DataStore.Reader;
-                DataRow[] dataRows = ds.GetData(simulationName: parentSimulation.Name, tableName: "_Messages").Select().OrderBy(a => a[7].ToString()).ToArray();
-                // all all current errors and validation problems to error string.
-                foreach (DataRow dr in dataRows)
+                if (ds.GetData(simulationName: parentSimulation.Name, tableName: "_Messages") != null)
                 {
-                    error += "\n" + dr[6].ToString();
+                    DataRow[] dataRows = ds.GetData(simulationName: parentSimulation.Name, tableName: "_Messages").Select().OrderBy(a => a[7].ToString()).ToArray();
+                    // all all current errors and validation problems to error string.
+                    foreach (DataRow dr in dataRows)
+                    {
+                        error += "\n" + dr[6].ToString();
+                    }
                 }
                 throw new ApsimXException(this, error);
             }
 
-            if (EcologicalIndicatorsCalculationMonth >= Clock.StartDate.Month)
+            if (Clock.StartDate.Year > 1) // avoid checking if clock not set.
             {
-                // go back from start month in intervals until
-                DateTime trackDate = new DateTime(Clock.StartDate.Year, EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
-                while (trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval) >= Clock.Today)
+                if (EcologicalIndicatorsCalculationMonth >= Clock.StartDate.Month)
                 {
-                    trackDate = trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval);
+                    // go back from start month in intervals until
+                    DateTime trackDate = new DateTime(Clock.StartDate.Year, EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
+                    while (trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval) >= Clock.Today)
+                    {
+                        trackDate = trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval);
+                    }
+                    EcologicalIndicatorsNextDueDate = trackDate;
                 }
-                EcologicalIndicatorsNextDueDate = trackDate;
-            }
-            else
-            {
-                EcologicalIndicatorsNextDueDate = new DateTime(Clock.StartDate.Year, EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
-                while (Clock.StartDate > EcologicalIndicatorsNextDueDate)
+                else
                 {
-                    EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);
+                    EcologicalIndicatorsNextDueDate = new DateTime(Clock.StartDate.Year, EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
+                    while (Clock.StartDate > EcologicalIndicatorsNextDueDate)
+                    {
+                        EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);
+                    }
                 }
             }
         }
@@ -192,14 +210,6 @@ namespace Models.CLEM
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            if (RandomSeed==0)
-            {
-                randomGenerator = new Random();
-            }
-            else
-            {
-                randomGenerator = new Random(RandomSeed);
-            }
             EcologicalIndicatorsCalculationInterval = 12;
         }
 
@@ -251,6 +261,11 @@ namespace Models.CLEM
             var validationContext = new ValidationContext(model, null, null);
             var validationResults = new List<ValidationResult>();
             Validator.TryValidateObject(model, validationContext, validationResults, true);
+            if(model.Name.EndsWith(" "))
+            {
+                validationResults.Add(new ValidationResult("Component name cannot end with a space character", new string[] {"Name"}));
+            }
+
             if (validationResults.Count > 0)
             {
                 valid = false;
@@ -262,9 +277,13 @@ namespace Models.CLEM
                     var property = model.GetType().GetProperty(validateError.MemberNames.FirstOrDefault());
                     if (property != null)
                     {
-                        var attribute = property.GetCustomAttributes(typeof(DescriptionAttribute), true)[0];
-                        var description = (DescriptionAttribute)attribute;
-                        text = description.ToString();
+                        text = "";
+                        if (property.GetCustomAttributes(typeof(DescriptionAttribute), true).Count() > 0)
+                        {
+                            var attribute = property.GetCustomAttributes(typeof(DescriptionAttribute), true)[0];
+                            var description = (DescriptionAttribute)attribute;
+                            text = description.ToString();
+                        }
                     }
                     string error = String.Format("@validation:Invalid parameter value in " + modelPath + "" + Environment.NewLine + "PARAMETER: " + validateError.MemberNames.FirstOrDefault());
                     if (text != "")
@@ -286,7 +305,7 @@ namespace Models.CLEM
             return valid;
         }
 
-            /// <summary>
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="model"></param>
@@ -296,25 +315,33 @@ namespace Models.CLEM
         public string GetFullSummary(object model, bool useFullDescription, string htmlString)
         {
             string html = "";
-            html += "\n<div class=\"holdermain\">";
-            html += "\n<div class=\"clearfix defaultbanner\">";
-            html += "<div class=\"typediv\">" + this.GetType().Name + "</div>";
-            html += "</div>";
-            html += "\n<div class=\"defaultcontent\">";
-            html += "\n<div class=\"activityentry\">Random numbers are used in this simultion. ";
-            if (RandomSeed == 0)
-            {
-                html += "Every run of this simulation will be different.";
-            }
-            else
-            {
-                html += "Each run of this simulation will be identical using the seed <span class=\"setvalue\">" + RandomSeed.ToString() + "</span>";
-            }
-            html += "\n</div>";
-            html += "\n</div>";
+            html += "\n<div class=\"holdermain\" style=\"opacity: " + ((!this.Enabled) ? "0.4" : "1") + "\">";
 
             // get clock
             IModel parentSim = Apsim.Parent(this, typeof(Simulation));
+
+            // find random number generator
+            RandomNumberGenerator rnd = Apsim.Children(parentSim, typeof(RandomNumberGenerator)).FirstOrDefault() as RandomNumberGenerator;
+            if(rnd != null)
+            {
+                html += "\n<div class=\"clearfix defaultbanner\">";
+                html += "<div class=\"namediv\">" + rnd.Name + "</div>";
+                html += "<div class=\"typediv\">RandomNumberGenerator</div>";
+                html += "</div>";
+                html += "\n<div class=\"defaultcontent\">";
+                html += "\n<div class=\"activityentry\">Random numbers are provided for this simultion.<br />";
+                if (rnd.Seed == 0)
+                {
+                    html += "Every run of this simulation will be different.";
+                }
+                else
+                {
+                    html += "Each run of this simulation will be identical using the seed <span class=\"setvalue\">" + rnd.Seed.ToString() + "</span>";
+                }
+                html += "\n</div>";
+                html += "\n</div>";
+            }
+
             Clock clk = Apsim.Children(parentSim, typeof(Clock)).FirstOrDefault() as Clock;
             if (clk != null)
             {

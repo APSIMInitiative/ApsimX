@@ -54,12 +54,6 @@ namespace Models.CLEM.Resources
         [XmlIgnore]
         public int Age { get; set; }
 
-        ///// <summary>
-        ///// Current pool grazing limit based on ruminant eating pool
-        ///// </summary>
-        //[XmlIgnore]
-        //public double Limit { get; set; }
-
         /// <summary>
         /// Amount to set at start (kg)
         /// </summary>
@@ -83,7 +77,10 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// pricing
         /// </summary>
-        public ResourcePricing Price { get; set; }
+        public ResourcePricing Price(PurchaseOrSalePricingStyleType priceStyle)
+        {
+            return null;
+        }
 
         /// <summary>
         /// Reset timestep stores
@@ -125,7 +122,7 @@ namespace Models.CLEM.Resources
                     Nitrogen = ((Nitrogen * Amount) + (pool.Nitrogen * pool.Amount)) / (Amount + pool.Amount);
                 }
                 amount += pool.Amount;
-                Growth += pool.Amount;
+                Growth += pool.Growth;
             }
         }
 

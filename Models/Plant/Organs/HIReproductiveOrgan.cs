@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Models.Core;
 using Models.Functions;
 using Models.PMF.Interfaces;
@@ -13,7 +13,7 @@ namespace Models.PMF.Organs
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]
-    public class HIReproductiveOrgan : Model, IOrgan, IArbitration, IRemovableBiomass
+    public class HIReproductiveOrgan : Model, IOrgan, IArbitration, IOrganDamage
     {
         /// <summary>The surface organic matter model</summary>
         [Link]
@@ -24,21 +24,21 @@ namespace Models.PMF.Organs
         protected Plant parentPlant = null;
 
         /// <summary>Gets or sets the above ground.</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction AboveGroundWt = null;
 
         /// <summary>The water content</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction WaterContent = null;
         /// <summary>The hi increment</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction HIIncrement = null;
         /// <summary>The n conc</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction NConc = null;
 
         /// <summary>Link to biomass removal model</summary>
-        [ChildLink]
+        [Link(Type = LinkType.Child)]
         public BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>The dry matter potentially being allocated</summary>
@@ -85,6 +85,9 @@ namespace Models.PMF.Organs
 
         /// <summary>Structural nitrogen demand</summary>
         public BiomassPoolType NDemand { get; set; }
+
+        /// <summary>The dry matter demand</summary>
+        public BiomassPoolType DMDemandPriorityFactor { get; set; }
 
         /// <summary>The dry matter supply</summary>
         public BiomassSupplyType DMSupply { get; set; }
@@ -148,6 +151,10 @@ namespace Models.PMF.Organs
             Live = new Biomass();
             Dead = new Biomass();
             DMDemand = new BiomassPoolType();
+            DMDemandPriorityFactor = new BiomassPoolType();
+            DMDemandPriorityFactor.Structural = 1.0;
+            DMDemandPriorityFactor.Metabolic = 1.0;
+            DMDemandPriorityFactor.Storage = 1.0;
             NDemand = new BiomassPoolType();
             DMSupply = new BiomassSupplyType();
             NSupply = new BiomassSupplyType();

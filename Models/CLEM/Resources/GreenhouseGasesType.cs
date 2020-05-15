@@ -25,8 +25,9 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Unit type
         /// </summary>
+        [XmlIgnore]
         [Description("Units (nominal)")]
-        public string Units { get; set; }
+        public string Units { get { return "kg"; } }
 
         /// <summary>
         /// Starting amount
@@ -117,10 +118,23 @@ namespace Models.CLEM.Resources
             {
                 return;
             }
+
+            // if this request aims to trade with a market see if we need to set up details for the first time
+            if (request.MarketTransactionMultiplier > 0)
+            {
+                FindEquivalentMarketStore();
+            }
+
             // avoid taking too much
             double amountRemoved = request.Required;
             amountRemoved = Math.Min(this.Amount, amountRemoved);
             this.amount -= amountRemoved;
+
+            // send to market if needed
+            if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
+            {
+                (EquivalentMarketStore as GreenhouseGasesType).Add(amountRemoved * request.MarketTransactionMultiplier, request.ActivityModel, "Farm sales");
+            }
 
             request.Provided = amountRemoved;
             ResourceTransaction details = new ResourceTransaction
@@ -154,11 +168,12 @@ namespace Models.CLEM.Resources
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            html += "<div class=\"activityentry\">";
-            html += "There is a starting amount of <span class=\"setvalue\">" + this.StartingAmount.ToString("0.#") + "</span>";
-            html += "</div>";
-            // the following line seems unneeded but may be part of wrapping divs
-            //            html += "</div>";
+            if (StartingAmount > 0)
+            {
+                html += "<div class=\"activityentry\">";
+                html += "There is a starting amount of <span class=\"setvalue\">" + this.StartingAmount.ToString("0.#") + "</span>";
+                html += "</div>";
+            }
             return html;
         }
 

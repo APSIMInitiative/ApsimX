@@ -1,14 +1,9 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="DirectedGraphView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using ApsimNG.Classes.DirectedGraph;
     using Cairo;
     using Gtk;
-    using Models.Graph;
+    using Models;
     using System;
     using System.Collections.Generic;
     using System.Drawing;
@@ -75,8 +70,15 @@ namespace UserInterface.Views
             
             mainWidget = scroller;
             drawable.Realized += OnRealized;
-            DGObject.DefaultOutlineColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.Style.Foreground(StateType.Normal));
-            DGObject.DefaultBackgroundColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.Style.Background(StateType.Normal));
+            if (owner == null)
+            {
+                DGObject.DefaultOutlineColour = OxyPlot.OxyColors.Black;
+            }
+            else
+            {
+                DGObject.DefaultOutlineColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.Style.Foreground(StateType.Normal));
+                DGObject.DefaultBackgroundColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.Style.Background(StateType.Normal));
+            }
         }
 
         /// <summary>The description (nodes & arcs) of the directed graph.</summary>
@@ -135,54 +137,75 @@ namespace UserInterface.Views
         /// <summary>Mouse button has been pressed</summary>
         private void OnMouseButtonPress(object o, ButtonPressEventArgs args)
         {
-            // Get the point clicked by the mouse.
-            PointD clickPoint = new PointD(args.Event.X, args.Event.Y);
-
-            // Delselect existing object
-            if (selectedObject != null)
-                selectedObject.Selected = false;
-
-            // Look through nodes for the click point
-            selectedObject = nodes.FindLast(node => node.HitTest(clickPoint));
-
-            // If not found, look through arcs for the click point
-            if (selectedObject == null)
-                selectedObject = arcs.FindLast(arc => arc.HitTest(clickPoint));
-
-            // If found object, select it.
-            if (selectedObject != null)
+            try
             {
-                selectedObject.Selected = true;
-                mouseDown = true;
-                lastPos = clickPoint;
-            }
+                // Get the point clicked by the mouse.
+                PointD clickPoint = new PointD(args.Event.X, args.Event.Y);
 
-            // Redraw area.
-            (o as DrawingArea).QueueDraw();
+                // Delselect existing object
+                if (selectedObject != null)
+                    selectedObject.Selected = false;
+
+                // Look through nodes for the click point
+                selectedObject = nodes.FindLast(node => node.HitTest(clickPoint));
+
+                // If not found, look through arcs for the click point
+                if (selectedObject == null)
+                    selectedObject = arcs.FindLast(arc => arc.HitTest(clickPoint));
+
+                // If found object, select it.
+                if (selectedObject != null)
+                {
+                    selectedObject.Selected = true;
+                    mouseDown = true;
+                    lastPos = clickPoint;
+                }
+
+                // Redraw area.
+                (o as DrawingArea).QueueDraw();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Mouse has been moved</summary>
         private void OnMouseMove(object o, MotionNotifyEventArgs args)
         {
-            // Get the point clicked by the mouse.
-            PointD movePoint = new PointD(args.Event.X, args.Event.Y);
-
-            // If an object is under the mouse then move it
-            if (mouseDown && selectedObject != null)
+            try
             {
-                lastPos.X = movePoint.X;
-                lastPos.Y = movePoint.Y;
-                selectedObject.Location = movePoint;
-                // Redraw area.
-                (o as DrawingArea).QueueDraw();
+                // Get the point clicked by the mouse.
+                PointD movePoint = new PointD(args.Event.X, args.Event.Y);
+
+                // If an object is under the mouse then move it
+                if (mouseDown && selectedObject != null)
+                {
+                    lastPos.X = movePoint.X;
+                    lastPos.Y = movePoint.Y;
+                    selectedObject.Location = movePoint;
+                    // Redraw area.
+                    (o as DrawingArea).QueueDraw();
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
         /// <summary>Mouse button has been released</summary>
         private void OnMouseButtonRelease(object o, ButtonReleaseEventArgs args)
         {
-            mouseDown = false;
-            CheckSizing();
+            try
+            {
+                mouseDown = false;
+                CheckSizing();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -192,7 +215,14 @@ namespace UserInterface.Views
         /// <param name="args">Event arguments.</param>
         private void OnRealized(object sender, EventArgs args)
         {
-            CheckSizing();
+            try
+            {
+                CheckSizing();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>

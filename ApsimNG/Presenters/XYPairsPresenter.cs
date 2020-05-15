@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="XYPairsPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System;
     using System.Collections.Generic;
@@ -13,7 +8,7 @@ namespace UserInterface.Presenters
     using EventArguments;
     using Interfaces;
     using Models.Core;
-    using Models.Graph;
+    using Models;
     using Models.Functions;
     using Views;
 
@@ -141,10 +136,6 @@ namespace UserInterface.Presenters
             else if (xYPairs.Parent is AirTemperatureFunction)
             {
                 return "Mean air temperature (oC)";
-            }
-            else if (xYPairs.Parent is SoilTemperatureFunction)
-            {
-                return "Mean soil temperature (oC)";
             }
             else if (xYPairs.Parent is SoilTemperatureWeightedFunction)
             {

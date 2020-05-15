@@ -1,9 +1,3 @@
-// -----------------------------------------------------------------------
-// <copyright file="ApsimTextFile.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-
 // An APSIMInputFile is either a ".met" file or a ".out" file.
 // They are both text files that share the same format. 
 // These classes are used to read/write these files and create an object instance of them.
@@ -12,7 +6,6 @@
 namespace APSIM.Shared.Utilities
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.Data;
@@ -74,10 +67,10 @@ namespace APSIM.Shared.Utilities
         public StringCollection Units;
 
         /// <summary>The _ constants</summary>
-        private ArrayList _Constants = new ArrayList();
+        private List<ApsimConstant> _Constants = new List<ApsimConstant>();
 
         /// <summary>Is the file a CSV file</summary>
-        private bool IsCSVFile = false;
+        public bool IsCSVFile { get; set; } = false;
 
         /// <summary>The inStreamReader - used for text and csv files</summary>
         private StreamReaderRandomAccess inStreamReader;
@@ -175,7 +168,6 @@ namespace APSIM.Shared.Utilities
         public void Open(Stream stream)
         {
             _FileName = "Memory stream";
-            IsCSVFile = false;
             inStreamReader = new StreamReaderRandomAccess(stream);
             Open();
         }
@@ -253,7 +245,7 @@ namespace APSIM.Shared.Utilities
         public DateTime LastDate { get { return _LastDate; } }
 
         /// <summary>Gets the constants.</summary>
-        public ArrayList Constants { get { return _Constants; } }
+        public List<ApsimConstant> Constants { get { return _Constants; } }
 
         /// <summary>
         /// Constants the specified constant name.
@@ -323,7 +315,7 @@ namespace APSIM.Shared.Utilities
             }
             else
             {
-                ArrayList addedConstants = new ArrayList();
+                List<ApsimConstant> addedConstants = new List<ApsimConstant>();
 
                 StringCollection words = new StringCollection();
                 bool checkHeadingsExist = true;
@@ -621,7 +613,7 @@ namespace APSIM.Shared.Utilities
             if (IsCSVFile)
             {
                 words.Clear();
-                Line = Line.TrimEnd(',');
+                //Line = Line.TrimEnd(',');
                 words.AddRange(Line.Split(",".ToCharArray()));
             }
             else

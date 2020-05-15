@@ -11,7 +11,9 @@
     using MigraDoc.DocumentObjectModel.Tables;
     using MigraDoc.RtfRendering;
     using Models.Core;
-    using Report;
+    using Models.Soils;
+    using Models.Soils.Standardiser;
+    using Models;
     using Storage;
 
     /// <summary>
@@ -77,6 +79,14 @@
         {
             if (CaptureSummaryText)
                 CreateInitialConditionsTable();
+
+
+            //Do checks on the soil to make sure there are no problems with the initial parameterisation.
+
+            List<IModel> soils = Apsim.ChildrenRecursively(simulation, typeof(Soil));
+            foreach (Soil soil in soils)
+                SoilChecker.Check(soil);
+
         }
 
         /// <summary>Invoked when a simulation is completed.</summary>
@@ -198,7 +208,7 @@
             initConditions.Rows.Add(row);
 
             row = initConditions.NewRow();
-            row.ItemArray = new object[] { simulation.Name, simulationPath, "APSIM version", "APSIM version", "String", string.Empty, string.Empty, 0, simulation.ApsimVersion };
+            row.ItemArray = new object[] { simulation.Name, simulationPath, "APSIM version", "APSIM version", "String", string.Empty, string.Empty, 0, Simulations.GetApsimVersion() };
             initConditions.Rows.Add(row);
 
             row = initConditions.NewRow();

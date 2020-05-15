@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="SeriesPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System;
     using System.Collections.Generic;
@@ -14,7 +9,7 @@ namespace UserInterface.Presenters
     using APSIM.Shared.Utilities;
     using Interfaces;
     using Models.Core;
-    using Models.Graph;
+    using Models;
     using Views;
     using Commands;
     using Models.Storage;
@@ -100,7 +95,6 @@ namespace UserInterface.Presenters
         /// <summary>Connect all view events.</summary>
         private void ConnectViewEvents()
         {
-            seriesView.Checkpoint.Changed += OnCheckpointChanged;
             seriesView.DataSource.Changed += OnDataSourceChanged;
             seriesView.SeriesType.Changed += OnSeriesTypeChanged;
             seriesView.LineType.Changed += OnLineTypeChanged;
@@ -118,14 +112,13 @@ namespace UserInterface.Presenters
             seriesView.IncludeSeriesNameInLegend.Changed += OnIncludeSeriesNameInLegendChanged;
             seriesView.YCumulative.Changed += OnCumulativeYChanged;
             seriesView.XCumulative.Changed += OnCumulativeXChanged;
-            seriesView.Filter.Changed += OnFilterChanged;
+            seriesView.Filter.Leave += OnFilterChanged;
             seriesView.Filter.IntellisenseItemsNeeded += OnIntellisenseItemsNeeded;
         }
 
         /// <summary>Disconnect all view events.</summary>
         private void DisconnectViewEvents()
         {
-            seriesView.Checkpoint.Changed -= OnCheckpointChanged;
             seriesView.DataSource.Changed -= OnDataSourceChanged;
             seriesView.SeriesType.Changed -= OnSeriesTypeChanged;
             seriesView.LineType.Changed -= OnLineTypeChanged;
@@ -143,7 +136,7 @@ namespace UserInterface.Presenters
             seriesView.IncludeSeriesNameInLegend.Changed -= OnIncludeSeriesNameInLegendChanged;
             seriesView.YCumulative.Changed -= OnCumulativeYChanged;
             seriesView.XCumulative.Changed -= OnCumulativeXChanged;
-            seriesView.Filter.Changed -= OnFilterChanged;
+            seriesView.Filter.Leave -= OnFilterChanged;
             seriesView.Filter.IntellisenseItemsNeeded -= OnIntellisenseItemsNeeded;
         }
 
@@ -191,7 +184,19 @@ namespace UserInterface.Presenters
         {
             try
             {
-                seriesView.Filter.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
+                // The completion options in the series filter will typically contain the trigger word,
+                // e.g. "Maize.Total.Wt". We don't want to end up with "Maize.Maize.Total.Wt".
+                if (args.ItemSelected.StartsWith(args.TriggerWord))
+                {
+                    int index = args.ItemSelected.IndexOf(args.TriggerWord);
+                    if (index >= 0)
+                        args.ItemSelected = args.ItemSelected.Substring(args.TriggerWord.Length);
+                }
+                string textBeforeCursor = seriesView.Filter.Value.Substring(0, seriesView.Filter.Offset);
+                if (textBeforeCursor.EndsWith(".") && args.ItemSelected.StartsWith("."))
+                    args.ItemSelected = args.ItemSelected.TrimStart('.');
+
+                seriesView.Filter.InsertAtCursor(args.ItemSelected);
             }
             catch (Exception err)
             {
@@ -208,10 +213,15 @@ namespace UserInterface.Presenters
         {
             SeriesType seriesType = (SeriesType)Enum.Parse(typeof(SeriesType), this.seriesView.SeriesType.SelectedValue);
             this.SetModelProperty("Type", seriesType);
-            
+
             // This doesn't quite work yet. If the previous series was a scatter plot, there is no x2, y2 to work with
             // and things go a bit awry.
             // this.seriesView.ShowX2Y2(series.Type == SeriesType.Area);
+
+            // If the series is a box plot, then we want to disable certain unused controls
+            // such as x variable, marker type, etc. These also need to be
+            // re-enabled if we change series type.
+            DisableUnusedControls();
         }
 
         /// <summary>Series line type has been changed by the user.</summary>
@@ -424,15 +434,6 @@ namespace UserInterface.Presenters
             }
         }
 
-        /// <summary>User has changed the checkpoint.</summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">Event arguments</param>
-        private void OnCheckpointChanged(object sender, EventArgs e)
-        {
-            if (series.Checkpoint != this.seriesView.Checkpoint.SelectedValue)
-                this.SetModelProperty("Checkpoint", this.seriesView.Checkpoint.SelectedValue);
-        }
-
         /// <summary>User has changed the show in legend</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
@@ -486,16 +487,6 @@ namespace UserInterface.Presenters
             warnings.AddRange(PopulateLineDropDown());
             warnings.AddRange(PopulateColourDropDown());
 
-            // Populate the checkpoint drop down.
-            List<string> checkpoints = storage.Reader.CheckpointNames;
-            if (!checkpoints.Contains(series.Checkpoint) && !string.IsNullOrEmpty(series.Checkpoint))
-            {
-                checkpoints.Add(series.Checkpoint);
-                warnings.Add(string.Format("WARNING: {0}: Selected Checkpoint '{1}' is invalid. Have the simulations been run?", Apsim.FullPath(series), series.Checkpoint));
-            }
-            seriesView.Checkpoint.Values = checkpoints.ToArray();
-            seriesView.Checkpoint.SelectedValue = series.Checkpoint;
-
             // Populate line thickness drop down.
             List<string> thicknesses = new List<string>(Enum.GetNames(typeof(LineThicknessType)));
             if (!thicknesses.Contains(series.LineThickness.ToString()) && !string.IsNullOrEmpty(series.LineThickness.ToString()))
@@ -538,7 +529,7 @@ namespace UserInterface.Presenters
             this.seriesView.YCumulative.IsChecked = series.Cumulative;
 
             // Populate data source drop down.
-            List<string> dataSources = storage.Reader.TableNames.ToList();
+            List<string> dataSources = storage.Reader.TableAndViewNames.ToList();
             if (!dataSources.Contains(series.TableName) && !string.IsNullOrEmpty(series.TableName))
             {
                 dataSources.Add(series.TableName);
@@ -556,9 +547,22 @@ namespace UserInterface.Presenters
 
             this.seriesView.ShowX2Y2(series.Type == SeriesType.Region);
 
+            DisableUnusedControls();
+
             explorerPresenter.MainPresenter.ClearStatusPanel();
             if (warnings != null && warnings.Count > 0)
                 explorerPresenter.MainPresenter.ShowMessage(warnings, Simulation.MessageType.Warning);
+        }
+
+        private void DisableUnusedControls()
+        {
+            // Box plots ignore x variable, markertype, marker size,
+            // so don't make these controls editable if the series is a box plot.
+            bool isBoxPlot = series.Type == SeriesType.Box;
+            seriesView.MarkerSize.IsSensitive = !isBoxPlot;
+            seriesView.MarkerType.IsSensitive = !isBoxPlot;
+            seriesView.XCumulative.IsSensitive = !isBoxPlot;
+            seriesView.XOnTop.IsSensitive = !isBoxPlot;
         }
 
         /// <summary>Populate the line drop down.</summary>
@@ -568,8 +572,7 @@ namespace UserInterface.Presenters
 
             List<string> values = new List<string>(Enum.GetNames(typeof(LineType)));
 
-            var descriptors = series.GetDescriptorNames();
-            descriptors = descriptors.Concat(storage.Reader.StringColumnNames(series.TableName));
+            var descriptors = series.GetDescriptorNames(storage.Reader);
             if (descriptors != null)
                 values.AddRange(descriptors.Select(factorName => "Vary by " + factorName));
 
@@ -596,8 +599,7 @@ namespace UserInterface.Presenters
             List<string> warnings = new List<string>();
 
             List<string> values = new List<string>(Enum.GetNames(typeof(MarkerType)));
-            var descriptors = series.GetDescriptorNames();
-            descriptors = descriptors.Concat(storage.Reader.StringColumnNames(series.TableName));
+            var descriptors = series.GetDescriptorNames(storage.Reader);
             if (descriptors != null)
                 values.AddRange(descriptors.Select(factorName => "Vary by " + factorName));
 
@@ -628,8 +630,8 @@ namespace UserInterface.Presenters
                 colourOptions.Add(colour);
 
             // Send colour options to view.
-            var descriptors = series.GetDescriptorNames();
-            descriptors = descriptors.Concat(storage.Reader.StringColumnNames(series.TableName));
+            var descriptors = series.GetDescriptorNames(storage.Reader);
+
             if (descriptors != null)
                 colourOptions.AddRange(descriptors.Select(factorName => "Vary by " + factorName));
 

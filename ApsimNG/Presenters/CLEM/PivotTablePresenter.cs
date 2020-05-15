@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="PivotTablePresenter.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-using ApsimNG.Views.CLEM;
+﻿using ApsimNG.Views.CLEM;
 using Models.Core;
 using Models.CLEM.Reporting;
 using Models.Storage;

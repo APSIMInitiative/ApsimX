@@ -6,8 +6,10 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.IO;
     using System.Media;
     using System.Timers;
+    using Utility;
 
     class RunCommand : ICommand
     {
@@ -78,12 +80,27 @@
             else
                 explorerPresenter.MainPresenter.ShowError(errors);
 
-            SoundPlayer player = new SoundPlayer();
-            if (DateTime.Now.Month == 12 && DateTime.Now.Day == 25)
-                player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.notes.wav");
-            else
-                player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.success.wav");
-            player.Play();
+            if (!Configuration.Settings.Muted)
+            {
+                // Play a completion sound.
+                SoundPlayer player = new SoundPlayer();
+                if (errors.Count > 0)
+                {
+                    if (File.Exists(Configuration.Settings.SimulationCompleteWithErrorWavFileName))
+                        player.SoundLocation = Configuration.Settings.SimulationCompleteWithErrorWavFileName;
+                    else
+                        player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.Sounds.Fail.wav");
+                }
+                else
+                {
+                    if (File.Exists(Configuration.Settings.SimulationCompleteWavFileName))
+                        player.SoundLocation = Configuration.Settings.SimulationCompleteWithErrorWavFileName;
+                    else
+                        player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.Sounds.Success.wav");
+                }
+
+                player.Play();
+            }
         }
 
         /// <summary>
@@ -122,13 +139,15 @@
         /// <param name="e"></param>
         private void OnTimerTick(object sender, ElapsedEventArgs e)
         {
-            if (jobRunner.TotalNumberOfSimulations > 0)
+            if (jobRunner == null)
+                timer?.Stop();
+            else if (jobRunner?.TotalNumberOfSimulations > 0)
             {
                 explorerPresenter.MainPresenter.ShowMessage(jobName + " running (" +
-                         jobRunner.NumberOfSimulationsCompleted + " of " +
-                         (jobRunner.TotalNumberOfSimulations) + " completed)", Simulation.MessageType.Information);
+                         jobRunner?.NumberOfSimulationsCompleted + " of " +
+                         (jobRunner?.TotalNumberOfSimulations) + " completed)", Simulation.MessageType.Information);
 
-                explorerPresenter.MainPresenter.ShowProgress(Convert.ToInt32(jobRunner.PercentComplete(), CultureInfo.InvariantCulture));
+                explorerPresenter.MainPresenter.ShowProgress(Convert.ToInt32(jobRunner?.PercentComplete(), CultureInfo.InvariantCulture));
             }
         }
     }

@@ -11,6 +11,7 @@
         /// <param name="soil">The soil.</param>
         public static void Standardise(Soil soil)
         {
+            soil.FindChildren();
             Layers.Standardise(soil);
             SoilUnits.Convert(soil);
             MergeSamplesIntoOne(soil);
@@ -66,7 +67,7 @@
             var initial = soil.Children.Find(child => child is Sample) as Sample;
             if (initial == null)
             {
-                initial = new Sample() { Thickness = soil.Thickness };
+                initial = new Sample() { Thickness = soil.Thickness, Parent = soil };
                 soil.Children.Add(initial);
             }
             initial.Name = "Initial";
@@ -127,6 +128,7 @@
                 {
                     sample = new Sample();
                     sample.Thickness = soil.Thickness;
+                    sample.Parent = soil;
                     soil.Children.Add(sample);
                 }
 

@@ -22,6 +22,8 @@ namespace Models.Agroforestry
         Weather weather = null; // parent weather.
         [Link]
         AgroforestrySystem ParentSystem = null;
+        [Link]
+        private Clock clock = null;
 
         /// <summary>Gets the start date of the weather file</summary>
         public DateTime StartDate { get { return weather.StartDate; } }
@@ -95,6 +97,13 @@ namespace Models.Agroforestry
         /// <summary>Gets the duration of the day in hours.</summary>
         public double CalculateDayLength(double Twilight) { return weather.CalculateDayLength(Twilight); }
 
+        /// <summary> calculate the time of sun rise </summary>
+        /// <returns>the time of sun rise</returns>
+        public double CalculateSunRise(){return MathUtilities.SolarNoon(this.clock.Today.DayOfYear, this.Latitude) - CalculateDayLength(-6) / 2;}
+
+        /// <summary> calculate the time of sun set</summary>
+        /// <returns>Sun set time</returns>
+        public double CalculateSunSet(){return MathUtilities.SolarNoon(this.clock.Today.DayOfYear, this.Latitude) + CalculateDayLength(-6) / 2;}
     }
 }
 

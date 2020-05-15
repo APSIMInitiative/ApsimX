@@ -1,4 +1,4 @@
-﻿namespace Models.Graph
+﻿namespace Models
 {
     using Models.Storage;
     using System.Collections;
@@ -50,7 +50,12 @@
         /// <summary>
         /// A stacked area series - a line series with the area between the line and the x-axis filled with colour.
         /// </summary>
-        StackedArea
+        StackedArea,
+
+        /// <summary>
+        /// A box and whisker plot
+        /// </summary>
+        Box
     }
 
     /// <summary>An enumeration for the different types of markers</summary>
@@ -100,7 +105,14 @@
         Normal,
 
         /// <summary>Small markers</summary>
-        Small
+        Small,
+
+        /// <summary>Very small markers</summary>
+        VerySmall,
+
+        /// <summary>Large size markers.</summary>
+        Large,
+
     }
 
     /// <summary>An enumeration representing the different types of lines</summary>
@@ -186,5 +198,11 @@
 
         /// <summary>Gets the line thickness</summary>
         public LineThicknessType thickness;
+
+        /// <summary>Draw the annotation in front of series?</summary>
+        public bool InFrontOfSeries { get; set; } = true;
+
+        /// <summary>Annotation tooltip</summary>
+        public string ToolTip { get; set; }
     }
 }

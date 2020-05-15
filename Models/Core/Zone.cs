@@ -1,14 +1,10 @@
-﻿using System.Xml.Serialization;
-using System.Xml;
-using System;
-using System.Collections.Generic;
-using System.Xml.Schema;
-using System.Reflection;
-using System.Linq;
-using Models;
-
-namespace Models.Core
+﻿namespace Models.Core
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Xml.Serialization;
+
     /// <summary>
     /// # [Name]
     /// A generic system that can have children
@@ -20,17 +16,23 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Agroforestry.AgroforestrySystem))]
     [ScopedModel]
-    public class Zone : Model
+    public class Zone : Model, ICustomDocumentation
     {
         /// <summary>Area of the zone.</summary>
-        /// <value>The area.</value>
         [Description("Area of zone (ha)")]
         virtual public double Area { get; set; }
 
         /// <summary>Gets or sets the slope.</summary>
-        /// <value>The slope.</value>
-        [Description("Slope (deg)")]
+        [Description("Slope angle (degrees)")]
         virtual public double Slope { get; set; }
+
+        /// <summary>Angle of the aspect, from north (degrees).</summary>
+        [Description("Aspect (degrees from north)")]
+        public double AspectAngle { get; set; }
+
+        /// <summary>Local altitude (meters above sea level).</summary>
+        [Description("Local altitude (meters above sea level)")]
+        public double Altitude { get; set; } = 50;
 
         /// <summary>Return a list of plant models.</summary>
         [XmlIgnore]
@@ -90,5 +92,18 @@ namespace Models.Core
             }
         }
 
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public virtual void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            if (IncludeInDocumentation)
+            {
+                // document children
+                foreach (IModel child in Children)
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
+            }
+        }
     }
 }

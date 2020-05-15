@@ -4,6 +4,7 @@ draft: false
 weight: 10
 ---
 
+* [Write manager scripts](/usage/writemanagerscript)
 * [Debug manager script](/usage/debugmanagerscript)
 * [Memo markdown cheatsheet](/usage/memo)
 * [Using an Excel file for weather data](/usage/usingexcelforweatherdata)

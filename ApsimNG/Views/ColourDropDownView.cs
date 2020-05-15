@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ColourDropDownView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using System;
     using System.Drawing;
@@ -46,12 +41,19 @@ namespace UserInterface.Views
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            combobox1.Changed -= OnChanged;
-            combobox1.SetCellDataFunc(comboRender, null);
-            comboModel.Dispose();
-            comboRender.Destroy();
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            owner = null;
+            try
+            {
+                combobox1.Changed -= OnChanged;
+                combobox1.SetCellDataFunc(comboRender, null);
+                comboModel.Dispose();
+                comboRender.Destroy();
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Invoked when the user changes the selection</summary>
@@ -168,7 +170,14 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void OnDrawColourCombo(CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter)
         {
-            cell.CellBackgroundGdk = (Gdk.Color)model.GetValue(iter, 1);
+            try
+            {
+                cell.CellBackgroundGdk = (Gdk.Color)model.GetValue(iter, 1);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>User has changed the selected colour.</summary>
@@ -176,8 +185,15 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void OnChanged(object sender, EventArgs e)
         {
-            if (Changed != null)
-                Changed.Invoke(this, e);
+            try
+            {
+                if (Changed != null)
+                    Changed.Invoke(this, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
     }
 }

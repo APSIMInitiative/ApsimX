@@ -39,7 +39,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            this.InitialiseHerd(false, true);
+            this.InitialiseHerd(true, true);
 
             // find milk store
             milkStore = Resources.GetResourceItem(this, ResourceTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
@@ -78,6 +78,7 @@ namespace Models.CLEM.Activities
                 foreach (RuminantFemale female in herd)
                 {
                     female.TakeMilk(female.MilkCurrentlyAvailable * labourLimit, MilkUseReason.Milked);
+                    this.Status = ActivityStatus.Success;
                 }
             }
             else

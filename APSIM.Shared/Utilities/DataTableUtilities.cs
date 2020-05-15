@@ -1,8 +1,3 @@
-// -----------------------------------------------------------------------
-// <copyright file="DataTableUtilties.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
 namespace APSIM.Shared.Utilities
 {
     using System;
@@ -13,6 +8,7 @@ namespace APSIM.Shared.Utilities
     using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Text.RegularExpressions;
 
     /// <summary>
     /// Some utilities for manipulating a data table.
@@ -274,8 +270,7 @@ namespace APSIM.Shared.Utilities
                     }
                     catch (Exception)
                     {
-                        throw new Exception("Invalid number found: " + table.Rows[Row][columnName].ToString() +
-                                       ". Row: " + Row.ToString() + ". Column name: " + columnName);
+                        values[index] = double.NaN;
                     }
                 }
                 index++;
@@ -758,6 +753,44 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
+        /// Rename a column
+        /// </summary>
+        /// <param name="table">The table.</param>
+        /// <param name="oldName">The old column name.</param>
+        /// <param name="newName">The new column name.</param>
+        public static void RenameColumn(DataTable table, string oldName, string newName)
+        {
+            var i = table.Columns.IndexOf(oldName);
+            if (i == -1)
+                throw new Exception("Cannot find column: " + oldName);
+            table.Columns[i].ColumnName = newName;
+        }
+
+        /// <summary>
+        /// Reorder a column in a data table.
+        /// </summary>
+        /// <param name="table">The table.</param>
+        /// <param name="name">The column name to reposition.</param>
+        /// <param name="newColumnIndex">The new column index.</param>
+        public static void ReorderColumn(DataTable table, string name, int newColumnIndex)
+        {
+            var i = table.Columns.IndexOf(name);
+            if (i == -1)
+                throw new Exception("Cannot find column: " + name);
+            table.Columns[i].SetOrdinal(newColumnIndex);
+        }
+
+        /// <summary>
+        /// Delete a column in a data table.
+        /// </summary>
+        /// <param name="table">The table.</param>
+        /// <param name="name">The column name to delete.</param>
+        public static void DeleteColumn(DataTable table, string name)
+        {
+            table.Columns.Remove(name);
+        }
+
+        /// <summary>
         /// Copy all rows in 'from' to the 'to' table, inserting them at 'index'
         /// </summary>
         /// <param name="from">Source data table</param>
@@ -773,6 +806,121 @@ namespace APSIM.Shared.Utilities
                 to.Rows.InsertAt(newRow, index + i);
             }
         }
-            
+
+        /// <summary>
+        /// Return true if the specified data column has a DbNull in every row.
+        /// </summary>
+        /// <param name="dataColumn">The column to check.</param>
+        public static bool ColumnIsNull(DataColumn dataColumn)
+        {
+            foreach (DataRow row in dataColumn.Table.Rows)
+                if (!Convert.IsDBNull(row[dataColumn]))
+                    return false;
+            return true;
+        }
+
+        /// <summary>
+        /// Convert a data table to html snippet.
+        /// </summary>
+        /// <param name="table">The data table to convert to string.</param>
+        /// <param name="writeHeaders">Write the table headers to html?</param>
+        /// <returns>HTML snippet. Never returns null.</returns>
+        public static string ToHTML(DataTable table, bool writeHeaders)
+        {
+            var builder = new StringBuilder();
+            if (table.Rows.Count > 0)
+            {
+                builder.Append("<table border='1px' cellpadding='5' cellspacing='0' ");
+                builder.AppendLine("style='border: solid 1px Silver;'>");
+                if (writeHeaders)
+                {
+                    builder.AppendLine("<tr align='left' valign='top'>");
+                    foreach (DataColumn c in table.Columns)
+                    {
+                        builder.Append("<td align='left' valign='top'><b>");
+                        builder.Append(c.ColumnName);
+                        builder.AppendLine("</b></td>");
+                    }
+                    builder.AppendLine("</tr>");
+                }
+                foreach (DataRow r in table.Rows)
+                {
+                    builder.AppendLine("<tr align='left' valign='top'>");
+                    foreach (DataColumn c in table.Columns)
+                    {
+                        builder.AppendLine("<td align='left' valign='top'>");
+                        builder.AppendLine(r[c.ColumnName].ToString());
+                        builder.AppendLine("</td>");
+                    }
+                    builder.AppendLine("</tr>");
+                }
+                builder.AppendLine("</table>");
+
+            }
+            return builder.ToString();
+        }
+
+        /// <summary>
+        /// Convert a csv string into a data table. Note that the datatable of each 
+        /// column will be string.
+        /// </summary>
+        /// <param name="csv">The csv string.</param>
+        /// <returns>The created datatable.</returns>
+        public static DataTable FromCSV(string csv)
+        {
+            var sr = new StringReader(csv);
+            string[] headers = sr.ReadLine().Split(',');
+            DataTable dt = new DataTable();
+            foreach (string header in headers)
+                dt.Columns.Add(header);
+
+            var line = sr.ReadLine();
+            while (!string.IsNullOrEmpty(line))
+            {
+                string[] rows = Regex.Split(line, ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+                DataRow dr = dt.NewRow();
+                for (int i = 0; i < headers.Length; i++)
+                    dr[i] = rows[i];
+                dt.Rows.Add(dr);
+                line = sr.ReadLine();
+            }
+            return dt;
+        }
+
+        /// <summary>
+        /// Convert a csv string into a data table. Note that the datatable of each 
+        /// column will be string.
+        /// </summary>
+        /// <param name="table">The data table.</param>
+        /// <param name="columnName">The column name to convert.</param>
+        /// <param name="newDataType">The new data type of the column.</param>
+        public static void ConvertDataTableOfColumn(DataTable table, string columnName, Type newDataType)
+        {
+            var oldColumn = table.Columns[columnName];
+            if (oldColumn == null)
+                throw new Exception("Cannot find column " + columnName);
+            var newColumn = table.Columns.Add("NewColumn", newDataType);
+            newColumn.SetOrdinal(oldColumn.Ordinal);
+
+            // Move all data to new column.
+            foreach (DataRow row in table.Rows)
+            {
+                if (string.IsNullOrEmpty(row[oldColumn].ToString()))
+                {
+                    if (newDataType == typeof(double))
+                        row[newColumn] = double.NaN;
+                    else
+                        row[newColumn] = Convert.DBNull;
+                }
+                else
+                    row[newColumn] = Convert.ChangeType(row[oldColumn], newDataType);
+            }
+
+            // Delete old column
+            table.Columns.Remove(oldColumn);
+
+            // Rename new column.
+            newColumn.ColumnName = columnName;
+        }
     }
 }

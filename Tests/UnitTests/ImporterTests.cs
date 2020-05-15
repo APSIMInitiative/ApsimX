@@ -1,11 +1,11 @@
 ﻿namespace UnitTests
 {
     using APSIM.Shared.Utilities;
-    using Importer;
     using Models;
     using Models.Core;
+    using Models.Core.Apsim710File;
+    using Models.Interfaces;
     using Models.PMF;
-    using Models.Report;
     using Models.Soils;
     using Models.Storage;
     using Models.Surface;
@@ -33,7 +33,7 @@
             "  </simulation>" +
             "</folder>";
 
-            APSIMImporter importer = new APSIMImporter();
+            var importer = new Importer();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml);
 
             Assert.IsTrue(sims.Children[0] is Simulation);
@@ -62,7 +62,7 @@
             "  </simulation>" +
             "</folder>";
 
-            APSIMImporter importer = new APSIMImporter();
+            var importer = new Importer();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml);
 
             Clock c = sims.Children[1].Children[0] as Clock;
@@ -83,7 +83,7 @@
             "  </simulation>" +
             "</folder>";
 
-            APSIMImporter importer = new APSIMImporter();
+            var importer = new Importer();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml);
 
             var w = sims.Children[0].Children[0] as Models.Weather;
@@ -103,7 +103,7 @@
             "  </simulation>" +
             "</folder>";
 
-            APSIMImporter importer = new APSIMImporter();
+            var importer = new Importer();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml);
 
             Zone z = sims.Children[0].Children[0] as Zone;
@@ -116,7 +116,7 @@
         {
             string oldXml = ReflectionUtilities.GetResourceAsString("UnitTests.ImporterTestsSoilImports.xml");
 
-            APSIMImporter importer = new APSIMImporter();
+            var importer = new Importer();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml);
 
             Soil s = sims.Children[0].Children[0] as Soil;
@@ -131,29 +131,24 @@
             Assert.AreEqual(w.BD, new double[] { 1.02, 1.03, 1.02, 1.02 });
             Assert.AreEqual(w.LL15, new double[] { 0.29, 0.29, 0.29, 0.29 });
 
-            SoilWater sw = s.Children[2] as SoilWater;
+            ISoilWater sw = s.Children[2] as ISoilWater;
             Assert.AreEqual(sw.Thickness, new double[] { 150, 150, 300, 300 });
-            Assert.AreEqual(sw.SWCON, new double[] { 0.3, 0.3, 0.3, 0.3 });
-            Assert.AreEqual(sw.SummerCona, 3.5);
-            Assert.AreEqual(sw.SummerU, 6);
-            Assert.AreEqual(sw.WinterCona, 2);
-            Assert.AreEqual(sw.WinterU, 2);
 
             Assert.IsTrue(s.Children[3] is SoilNitrogen);
-
-            Organic som = s.Children[4] as Organic;
+            Assert.IsTrue(s.Children[4] is CERESSoilTemperature);
+            Organic som = s.Children[5] as Organic;
             Assert.AreEqual(som.Thickness, new double[] { 150, 150, 300, 300 });
             Assert.AreEqual(som.Carbon, new double[] { 1.04, 0.89, 0.89, 0.89 });
             Assert.AreEqual(som.FBiom, new double[] { 0.025, 0.02, 0.015, 0.01});
 
-            Chemical a = s.Children[5] as Chemical;
+            Chemical a = s.Children[6] as Chemical;
             Assert.AreEqual(a.Thickness, new double[] { 150, 150, 300, 300 });
             Assert.AreEqual(a.NO3N, new double[] { 6.5, 2.1, 2.1, 1.0 });
             Assert.AreEqual(a.NH4N, new double[] { 0.5, 0.1, 0.1, 0.2 });
             Assert.AreEqual(a.EC, new double[] { 0.2, 0.25, 0.31, 0.40 });
             Assert.AreEqual(a.PH, new double[] { 8.4, 8.8, 9.0, 9.2 });
 
-            Sample sam = s.Children[6] as Sample;
+            Sample sam = s.Children[7] as Sample;
             Assert.AreEqual(sam.Thickness, new double[] { 150, 150, 300 });
 
             SoilCrop crop = s.Children[1].Children[0] as SoilCrop;
@@ -173,7 +168,7 @@
             "  </simulation>" +
             "</folder>";
 
-            APSIMImporter importer = new APSIMImporter();
+            var importer = new Importer();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml);
 
             var f = sims.Children[0].Children[0] as Plant;
@@ -207,7 +202,7 @@
             "  </simulation>" +
             "</folder>";
 
-            APSIMImporter importer = new APSIMImporter();
+            var importer = new Importer();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml);
 
             var m = sims.Children[0].Children[0] as Manager;
@@ -244,7 +239,7 @@
             "  </simulation>" +
             "</folder>";
 
-            APSIMImporter importer = new APSIMImporter();
+            var importer = new Importer();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml);
 
             var m = sims.Children[0].Children[0] as Manager;
@@ -279,10 +274,10 @@
             "  </simulation>" +
             "</folder>";
 
-            APSIMImporter importer = new APSIMImporter();
+            var importer = new Importer();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml);
 
-            var r = sims.Children[0].Children[0] as Models.Report.Report;
+            var r = sims.Children[0].Children[0] as Models.Report;
             Assert.IsNotNull(r);
             Assert.AreEqual(r.VariableNames[0], "[Clock].Today");
             Assert.AreEqual(r.VariableNames[1], "biomass");
@@ -311,7 +306,7 @@
             "  </simulation>" +
             "</folder>";
 
-            APSIMImporter importer = new APSIMImporter();
+            var importer = new Importer();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml);
 
             var som = sims.Children[0].Children[0] as SurfaceOrganicMatter;
@@ -338,7 +333,7 @@
             "  </simulation>" +
             "</folder>";
 
-            APSIMImporter importer = new APSIMImporter();
+            var importer = new Importer();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml);
 
             var m = sims.Children[0].Children[0] as MicroClimate;
@@ -371,7 +366,7 @@
         {
             string oldXml = ReflectionUtilities.GetResourceAsString("UnitTests.ImporterTestsOldAPSIM.xml");
 
-            APSIMImporter importer = new APSIMImporter();
+            var importer = new Importer();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml);
 
             Assert.IsNotNull(sims);

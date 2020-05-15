@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ListButtonView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using System;
     using System.Linq;
@@ -86,9 +81,16 @@ namespace UserInterface.Views
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            filterEntry.Changed -= OnFilterChanged;
-            owner = null;
+            try
+            {
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                filterEntry.Changed -= OnFilterChanged;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>The list.</summary>
@@ -278,12 +280,19 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void BtnLabel_Realized(object sender, EventArgs e)
         {
-            ((sender as Label).Parent as VBox).Spacing = 0;
-            Pango.Layout layout = (sender as Label).Layout;
-            Pango.Rectangle ink;
-            Pango.Rectangle logical;
-            layout.GetExtents(out ink, out logical);
-            (sender as Label).Xpad = ((layout.Width - logical.Width) / (int)Pango.Scale.PangoScale) / 2;
+            try
+            {
+                ((sender as Label).Parent as VBox).Spacing = 0;
+                Pango.Layout layout = (sender as Label).Layout;
+                Pango.Rectangle ink;
+                Pango.Rectangle logical;
+                layout.GetExtents(out ink, out logical);
+                (sender as Label).Xpad = ((layout.Width - logical.Width) / (int)Pango.Scale.PangoScale) / 2;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -293,7 +302,14 @@ namespace UserInterface.Views
         /// <param name="e">Sender object.</param>
         private void OnFilterChanged(object sender, EventArgs e)
         {
-            FilterChanged?.Invoke(this, EventArgs.Empty);
+            try
+            {
+                FilterChanged?.Invoke(this, EventArgs.Empty);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
     }
 }

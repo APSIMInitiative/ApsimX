@@ -1,6 +1,17 @@
 ﻿namespace Models.PMF.Interfaces
 {
+    using Models.Core;
     using System;
+
+    /// <summary> Inerface for arbitrators </summary>
+    public interface IArbitrator
+    {
+        /// <summary>The DM data class  </summary>
+        BiomassArbitrationType DM { get; }
+
+        /// <summary>The N data class  </summary>
+        BiomassArbitrationType N { get; }
+    }
 
     /// <summary>
     /// An interface that defines what needs to be implemented by an organ
@@ -26,6 +37,9 @@
     {
         /// <summary>Returns the organs dry matter demand</summary>
         BiomassPoolType DMDemand { get; }
+
+        /// <summary>Returns the organs dry matter demand</summary>
+        BiomassPoolType DMDemandPriorityFactor { get; }
 
         /// <summary>Returns the organs dry matter supply</summary>
         BiomassSupplyType DMSupply { get; }
@@ -74,16 +88,22 @@
     /// 
     /// </summary>
     [Serializable]
-    public class BiomassPoolType
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(IOrgan))]
+    public class BiomassPoolType : Model
     {
         /// <summary>Gets or sets the structural.</summary>
         /// <value>The structural.</value>
+        [Description("Initial Structural biomass")]
         public double Structural { get; set; }
         /// <summary>Gets or sets the non structural.</summary>
         /// <value>The non structural.</value>
+        [Description("Initial Storage biomass")]
         public double Storage { get; set; }
         /// <summary>Gets or sets the metabolic.</summary>
         /// <value>The metabolic.</value>
+        [Description("Initial Metabolic biomass")]
         public double Metabolic { get; set; }
 
         /// <summary>Gets the total amount.</summary>

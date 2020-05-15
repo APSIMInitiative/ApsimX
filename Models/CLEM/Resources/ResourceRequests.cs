@@ -21,7 +21,7 @@ namespace Models.CLEM.Resources
         [XmlIgnore]
         public IResourceType Resource { get; set; }
         ///<summary>
-        /// Link to resource being requested 
+        /// Type of resource being requested 
         ///</summary> 
         [XmlIgnore]
         public Type ResourceType { get; set; }
@@ -75,6 +75,12 @@ namespace Models.CLEM.Resources
         ///</summary> 
         public bool TransmutationPossible { get; set; }
         ///<summary>
+        /// Market transcation multiplier
+        /// 0 (default) = not a market transaction
+        ///</summary> 
+        public double MarketTransactionMultiplier { get; set; }
+
+        ///<summary>
         /// ResourceRequest constructor
         ///</summary> 
         public ResourceRequest()
@@ -102,6 +108,29 @@ namespace Models.CLEM.Resources
         /// Percent N of food supplied
         ///</summary> 
         public double PercentN { get; set; }
+    }
+
+    ///<summary>
+    /// Information for a food parcel eaten
+    ///</summary> 
+    public class HumanFoodParcel
+    {
+        /// <summary>
+        /// Link to the food store
+        /// </summary>
+        public HumanFoodStoreType FoodStore { get; set; }
+        /// <summary>
+        /// The pool of food
+        /// </summary>
+        public HumanFoodStorePool Pool { get; set; }
+        /// <summary>
+        /// Number of months before expires
+        /// </summary>
+        public int Expires { get; set; }
+        /// <summary>
+        /// Proportion eaten
+        /// </summary>
+        public double Proportion { get; set; }
     }
 
     /// <summary>

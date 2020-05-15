@@ -1,13 +1,8 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="FolderPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System.Collections.Generic;
     using Models.Core;
-    using Models.Graph;
+    using Models;
     using Views;
 
     /// <summary>

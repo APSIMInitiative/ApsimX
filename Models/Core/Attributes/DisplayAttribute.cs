@@ -1,10 +1,5 @@
-﻿using System.Collections.Generic;
+﻿
 
-// -----------------------------------------------------------------------
-// <copyright file="DisplayAttribute.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
 namespace Models.Core
 {
     using System;
@@ -31,9 +26,24 @@ namespace Models.Core
         CultivarName,
 
         /// <summary>
+        /// A LifePhase name editor.
+        /// </summary>
+        LifeCycleName,
+
+        /// <summary>
+        /// A LifePhase name editor.
+        /// </summary>
+        LifePhaseName,
+
+        /// <summary>
         /// A file name editor.
         /// </summary>
         FileName,
+
+        /// <summary>
+        /// Allows selection of more than one file name.
+        /// </summary>
+        FileNames,
 
         /// <summary>
         /// A field name editor.
@@ -113,5 +123,22 @@ namespace Models.Core
         /// Methods pointed to by this property can return any generic IEnumerable and must accept no arguments.
         /// </summary>
         public string Values { get; set; }
+
+        /// <summary>
+        /// Specifies a callback method that will be called by GUI to determine if this property is enabled.
+        /// </summary>
+        public string EnabledCallback { get; set; }
+
+        /// <summary>
+        /// Used in conjuction with <see cref="DisplayType.CultivarName"/>.
+        /// Specifies the name of a plant whose cultivars should be displayed.
+        /// </summary>
+        public string PlantName { get; set; }
+
+        /// <summary>
+        /// Used in conjuction with <see cref="DisplayType.LifePhaseName"/>.
+        /// Specifies the name of a LifeCycle whose phases should be displayed.
+        /// </summary>
+        public string LifeCycleName { get; set; }
     }
 }

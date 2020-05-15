@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Models.Core;
 using Models.Functions;
 using Models.PMF.Phen;
@@ -15,7 +15,7 @@ namespace Models.PMF.Organs
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]
-    public class ReproductiveOrgan : Model, IOrgan, IArbitration, IRemovableBiomass
+    public class ReproductiveOrgan : Model, IOrgan, IArbitration, IOrganDamage
     {
         #region Parameter Input Classes
         /// <summary>The surface organic matter model</summary>
@@ -61,6 +61,9 @@ namespace Models.PMF.Organs
         /// <summary>The dry matter demand</summary>
         public BiomassPoolType DMDemand { get; set; }
 
+        /// <summary>The dry matter demand</summary>
+        public BiomassPoolType DMDemandPriorityFactor { get; set; }
+
         /// <summary>Structural nitrogen demand</summary>
         public BiomassPoolType NDemand { get; set; }
 
@@ -75,56 +78,56 @@ namespace Models.PMF.Organs
         public double NFixationCost { get { return 0; } }
 
         /// <summary>The water content</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/g")]
         [Description("Water content used to calculate a fresh weight.")]
         IFunction WaterContent = null;
         
         /// <summary>The Maximum potential size of individual grains</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/grain")]
         IFunction MaximumPotentialGrainSize = null;
         
         /// <summary>The number function</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("/m2")]
         IFunction NumberFunction = null;
         /// <summary>The n filling rate</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
         IFunction NFillingRate = null;
         /// <summary>The maximum n conc</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/g")]
         IFunction MaximumNConc = null;
         /// <summary>The minimum n conc</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/g")]
         IFunction MinimumNConc = null;
         /// <summary>Carbon concentration</summary>
         /// [Units("-")]
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction CarbonConcentration = null;
 
         /// <summary>The dm demand function</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
         IFunction DMDemandFunction = null;
 
         /// <summary>Link to biomass removal model</summary>
-        [ChildLink]
+        [Link(Type = LinkType.Child)]
         public BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>Dry matter conversion efficiency</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         public IFunction DMConversionEfficiency = null;
 
         /// <summary>The proportion of biomass repired each day</summary>
-        [Link(IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         public IFunction MaintenanceRespirationFunction = null;
 
         /// <summary>The cost for remobilisation</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         public IFunction RemobilisationCost = null;
 
         #endregion
@@ -324,6 +327,10 @@ namespace Models.PMF.Organs
             Live = new Biomass();
             Dead = new Biomass();
             DMDemand = new BiomassPoolType();
+            DMDemandPriorityFactor = new BiomassPoolType();
+            DMDemandPriorityFactor.Structural = 1.0;
+            DMDemandPriorityFactor.Metabolic = 1.0;
+            DMDemandPriorityFactor.Storage = 1.0;
             NDemand = new BiomassPoolType();
             DMSupply = new BiomassSupplyType();
             NSupply = new BiomassSupplyType();

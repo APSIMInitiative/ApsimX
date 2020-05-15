@@ -9,6 +9,7 @@ pipeline {
 					}
 					environment {
 						APSIM_SITE_CREDS = credentials('apsim-site-creds')
+						SOYBEAN_PASSWORD = credentials('soybean-validation-password')
 					}
 					steps {
 						bat '''
@@ -29,10 +30,7 @@ pipeline {
 							call runTests Examples
 							if errorlevel 1 exit /b 1
 							
-							call createDocumentation
-							if errorlevel 1 exit /b 1
-							
-							call uploadDocumentation
+							..\\Bin\\CreateDocumentation.exe 
 							if errorlevel 1 exit /b 1
 						'''
 					}
@@ -111,6 +109,7 @@ pipeline {
 			}
 			environment {
 				CHANGE_DB_CREDS = credentials('change-db-creds')
+				NETLIFY_BUILD_HOOK = credentials('netlify-build-hook')
 			}
 			steps {
 				bat '''

@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Models.CLEM.Groupings
 {
@@ -21,7 +22,7 @@ namespace Models.CLEM.Groupings
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Purchase and sales identifier used")]
     [HelpUri(@"Content/Features/Filters/AnimalPriceGroup.htm")]
-    public class AnimalPriceGroup: CLEMModel
+    public class AnimalPriceGroup: CLEMModel, IFilterGroup
     {
         /// <summary>
         /// Style of pricing animals
@@ -45,32 +46,17 @@ namespace Models.CLEM.Groupings
         public PurchaseOrSalePricingStyleType PurchaseOrSale { get; set; }
 
         /// <summary>
+        /// Combined ML ruleset for LINQ expression tree
+        /// </summary>
+        [XmlIgnore]
+        public object CombinedRules { get; set; } = null;
+
+        /// <summary>
         /// Constructor
         /// </summary>
         protected AnimalPriceGroup()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
-        }
-
-        /// <summary>
-        /// Create a copy of the current instance
-        /// </summary>
-        /// <returns></returns>
-        public AnimalPriceGroup Clone()
-        {
-            AnimalPriceGroup clone = new AnimalPriceGroup()
-            {
-                PricingStyle = this.PricingStyle,
-                PurchaseOrSale = this.PurchaseOrSale,
-                Value = this.Value
-            };
-
-            foreach (RuminantFilter item in this.Children.OfType<RuminantFilter>())
-            {
-                clone.Children.Add(item.Clone());
-            }
-
-            return clone;
         }
 
         /// <summary>

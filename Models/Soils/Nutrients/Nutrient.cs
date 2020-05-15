@@ -7,7 +7,7 @@
     using Models.Surface;
     using Models.Soils;
     using System.Collections.Generic;
-    using Models.Graph;
+    using Models;
     using System.Drawing;
 
     /// <summary>
@@ -64,18 +64,20 @@
         [Link]
         private Soil Soil = null;
 
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         INutrientPool FOMCellulose = null;
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         INutrientPool FOMCarbohydrate = null;
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         INutrientPool FOMLignin = null;
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         INutrientPool SurfaceResidue = null;
-        [ScopedLinkByName]
+        [Link(ByName = true)]
         private ISolute NO3 = null;
-        [ScopedLinkByName]
+        [Link(ByName = true)]
         private ISolute NH4 = null;
+        [Link(ByName = true)]
+        private ISolute Urea = null;
 
         // Carbon content of FOM
         private double CinFOM = 0.4;
@@ -83,7 +85,7 @@
         private SurfaceOrganicMatterDecompType PotentialSOMDecomp = null;
 
         /// <summary>
-        /// Reset all pools
+        /// Reset all pools and solutes
         /// </summary> 
         public void Reset()
         {
@@ -99,6 +101,7 @@
         /// <summary>
         /// Total C in each soil layer
         /// </summary>
+        [Units("kg/ha")]
         public double[] TotalC
         {
             get
@@ -115,8 +118,9 @@
 
 
         /// <summary>
-        /// total C lost to the atmosphere
+        /// Total C lost to the atmosphere
         /// </summary>
+        [Units("kg/ha")]
         public double[] Catm
         {
             get
@@ -131,8 +135,9 @@
         }
 
         /// <summary>
-        /// total N lost to the atmosphere
+        /// Total N lost to the atmosphere
         /// </summary>
+        [Units("kg/ha")]
         public double[] Natm
         {
             get
@@ -148,8 +153,9 @@
 
 
         /// <summary>
-        /// total N lost to the atmosphere
+        /// Total N2O lost to the atmosphere
         /// </summary>
+        [Units("kg/ha")]
         public double[] N2Oatm
         {
             get
@@ -164,8 +170,9 @@
         }
 
         /// <summary>
-        /// total Net N Mineralisaed in each soil layer
+        /// Total Net N Mineralisation in each soil layer
         /// </summary>
+        [Units("kg/ha")]
         public double[] MineralisedN
         {
             get
@@ -179,8 +186,9 @@
             }
         }
         /// <summary>
-        /// total Net N Mineralisaed in each soil layer
+        /// Total Mineral N in each soil layer
         /// </summary>
+        [Units("kg/ha")]
         public double[] MineralN
         {
             get
@@ -190,12 +198,18 @@
                 double[] no3 = NO3.kgha;
                 values = MathUtilities.Add(values, nh4);
                 values = MathUtilities.Add(values, no3);
+                if (Urea != null)
+                {
+                    double[] urea = Urea.kgha;
+                    values = MathUtilities.Add(values, urea);
+                }
                 return values;
             }
         }
         /// <summary>
-        /// Total C in each soil layer
+        /// Total N in each soil layer
         /// </summary>
+        [Units("kg/ha")]
         public double[] TotalN
         {
             get
@@ -210,8 +224,9 @@
             }
         }
         /// <summary>
-        /// 
+        /// Carbon to Nitrogen Ratio for Fresh Organic Matter in each layer
         /// </summary>
+        [Units("-")]
         public double[] FOMCNR
         {
             get
@@ -230,8 +245,9 @@
 
 
         /// <summary>
-        /// 
+        /// Nitrogen in Fresh Organic Matter in each soil layer
         /// </summary>
+        [Units("kg/ha")]
         public double[] FOMN
         {
             get
@@ -246,8 +262,9 @@
         }
 
         /// <summary>
-        /// 
+        /// Carbon in Fresh Organic Matter in each soil layer
         /// </summary>
+        [Units("kg/ha")]
         public double[] FOMC
         {
             get
@@ -260,7 +277,7 @@
                 return values;
             }
         }
-        /// <summary>Partition the given FOM C and N into fractions in each layer (one FOM)</summary>
+        /// <summary>Incorporate the given FOM C and N into each layer</summary>
         /// <param name="FOMdata">The in fo mdata.</param>
         [EventSubscribe("IncorpFOM")]
         private void IncorpFOM(FOMLayerType FOMdata)
@@ -268,14 +285,10 @@
             DoIncorpFOM(FOMdata);
         }
 
-        /// <summary>Partition the given FOM C and N into fractions in each layer (one FOM)</summary>
+        /// <summary>Incorporate the given FOM C and N into each layer</summary>
         /// <param name="FOMdata">The in fo mdata.</param>
         public void DoIncorpFOM(FOMLayerType FOMdata)
         { 
-            // +  Purpose:
-            //      Partition the given FOM C and N into fractions in each layer.
-            //      It will be assumed that the CN ratios of all fractions are equal
-
         bool nSpecified = false;
             for (int layer = 0; layer < FOMdata.Layer.Length; layer++)
             {

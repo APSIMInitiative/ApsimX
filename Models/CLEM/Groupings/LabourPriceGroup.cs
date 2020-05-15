@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Models.CLEM.Groupings
 {
@@ -20,7 +21,7 @@ namespace Models.CLEM.Groupings
     [Description("This labour price group sets the pay rate for a set group of individuals.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/LabourPriceGroup.htm")]
-    public class LabourPriceGroup : CLEMModel
+    public class LabourPriceGroup : CLEMModel, IFilterGroup
     {
         /// <summary>
         /// Pay rate
@@ -30,30 +31,17 @@ namespace Models.CLEM.Groupings
         public double Value { get; set; }
 
         /// <summary>
+        /// Combined ML ruleset for LINQ expression tree
+        /// </summary>
+        [XmlIgnore]
+        public object CombinedRules { get; set; } = null;
+
+        /// <summary>
         /// Constructor
         /// </summary>
         protected LabourPriceGroup()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
-        }
-
-        /// <summary>
-        /// Create a copy of the current instance
-        /// </summary>
-        /// <returns></returns>
-        public LabourPriceGroup Clone()
-        {
-            LabourPriceGroup clone = new LabourPriceGroup()
-            {
-                Value = this.Value
-            };
-
-            foreach (LabourFilter item in this.Children.OfType<LabourFilter>())
-            {
-                clone.Children.Add(item.Clone());
-            }
-
-            return clone;
         }
 
         /// <summary>

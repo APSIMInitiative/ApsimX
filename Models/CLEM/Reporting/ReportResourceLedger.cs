@@ -3,7 +3,7 @@ using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using Models.Core.Run;
-using Models.Report;
+using Models;
 using Models.Storage;
 using System;
 using System.Collections.Generic;
@@ -28,7 +28,7 @@ namespace Models.CLEM.Reporting
     [Version(1, 0, 2, "Updated to enable ResourceUnitsConverter to be used.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/Ledgers.htm")]
-    public class ReportResourceLedger : Models.Report.Report
+    public class ReportResourceLedger : Models.Report
     {
         /// <summary>The columns to write to the data store.</summary>
         [NonSerialized]
@@ -72,7 +72,6 @@ namespace Models.CLEM.Reporting
             // sanitise the variable names and remove duplicates
             List<string> variableNames = new List<string>
             {
-                "Parent.Name as Zone",
                 "[Clock].Today"
             };
             if (VariableNames != null && VariableNames.Count() > 0)
@@ -99,15 +98,16 @@ namespace Models.CLEM.Reporting
                             bool pricingIncluded = false;
                             if (model.GetType() == typeof(RuminantHerd))
                             {
-                                pricingIncluded = Apsim.ChildrenRecursively(model, typeof(AnimalPricing)).Count() > 0;
+                                pricingIncluded = Apsim.ChildrenRecursively(model, typeof(AnimalPricing)).Where(a => a.Enabled).Count() > 0;
 
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.ID as uID");
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.Breed as Breed");
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.HerdName as Herd");
-                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.GenderAsString as Sex");
+                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.Gender as Sex");
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.Age as Age");
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.Weight as Weight");
-                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.SaleFlagAsString as Reason");
+                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.AdultEquivalent as AE");
+                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.SaleFlag as Reason");
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.PopulationChangeDirection as Change");
 
                                 // ToDo: add pricing for ruminants including buy and sell pricing
@@ -115,7 +115,7 @@ namespace Models.CLEM.Reporting
                             }
                             else
                             {
-                                pricingIncluded = Apsim.ChildrenRecursively(model, typeof(ResourcePricing)).Count() > 0;
+                                pricingIncluded = Apsim.ChildrenRecursively(model, typeof(ResourcePricing)).Where(a => a.Enabled).Count() > 0;
 
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Gain as Gain");
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Loss * -1.0 as Loss");
@@ -149,24 +149,40 @@ namespace Models.CLEM.Reporting
                 events.Subscribe("[Resources]." + this.VariableNames[0] + ".TransactionOccurred", DoOutputEvent);
 
             }
-            base.VariableNames = variableNames.ToArray();
+            // Tidy up variable/event names.
+            VariableNames = variableNames.ToArray();
+            VariableNames = TidyUpVariableNames();
+            EventNames = TidyUpEventNames();
             this.FindVariableMembers();
         }
 
         /// <summary>
         /// Fill the Members list with VariableMember objects for each variable.
         /// </summary>
-        private void FindVariableMembers()
+        private new void FindVariableMembers()
         {
             this.columns = new List<IReportColumn>();
 
             AddExperimentFactorLevels();
 
+            // If a group by variable was specified then all columns need to be aggregated
+            // columns. Find the first aggregated column so that we can, later, use its from and to
+            // variables to create an agregated column that doesn't have them.
+            string from = null;
+            string to = null;
+            if (!string.IsNullOrEmpty(GroupByVariableName))
+                FindFromTo(out from, out to);
+
             foreach (string fullVariableName in this.VariableNames)
             {
-                if (fullVariableName != string.Empty)
+                try
                 {
-                    this.columns.Add(ReportColumn.Create(fullVariableName, clock, storage.Writer, locator, events));
+                    if (!string.IsNullOrEmpty(fullVariableName))
+                        columns.Add(new ReportColumn(fullVariableName, clock, locator, events, GroupByVariableName, from, to));
+                }
+                catch (Exception err)
+                {
+                    throw new Exception($"Error while creating report column '{fullVariableName}'", err);
                 }
             }
         }
@@ -205,8 +221,13 @@ namespace Models.CLEM.Reporting
         {
             if (dataToWriteToDb == null)
             {
+                string folderName = null;
+                var folderDescriptor = simulation.Descriptors.Find(d => d.Name == "FolderName");
+                if (folderDescriptor != null)
+                    folderName = folderDescriptor.Value;
                 dataToWriteToDb = new ReportData()
                 {
+                    FolderName = folderName,
                     SimulationName = simulation.Name,
                     TableName = Name,
                     ColumnNames = columns.Select(c => c.Name).ToList(),
@@ -214,24 +235,43 @@ namespace Models.CLEM.Reporting
                 };
             }
 
-            // Create a row ready for writing.
-            List<object> valuesToWrite = new List<object>();
-            for (int i = 0; i < columns.Count; i++)
+            // Get number of groups.
+            var numGroups = Math.Max(1, columns.Max(c => c.NumberOfGroups));
+
+            for (int groupIndex = 0; groupIndex < numGroups; groupIndex++)
             {
-                valuesToWrite.Add(columns[i].GetValue());
+                // Create a row ready for writing.
+                List<object> valuesToWrite = new List<object>();
+                List<string> invalidVariables = new List<string>();
+                for (int i = 0; i < columns.Count; i++)
+                {
+                    try
+                    {
+                        valuesToWrite.Add(columns[i].GetValue(groupIndex));
+                    }
+                    catch// (Exception err)
+                    {
+                        // Should we include exception message?
+                        invalidVariables.Add(columns[i].Name);
+                    }
+                }
+                if (invalidVariables != null && invalidVariables.Count > 0)
+                    throw new Exception($"Error in report {Name}: Invalid report variables found:\n{string.Join("\n", invalidVariables)}");
+
+                // Add row to our table that will be written to the db file
+                dataToWriteToDb.Rows.Add(valuesToWrite);
             }
 
-            // Add row to our table that will be written to the db file
-            dataToWriteToDb.Rows.Add(valuesToWrite);
-
             // Write the table if we reach our threshold number of rows.
-            if (dataToWriteToDb.Rows.Count == 100)
+            if (dataToWriteToDb.Rows.Count >= 100)
             {
                 storage.Writer.WriteTable(dataToWriteToDb);
                 dataToWriteToDb = null;
             }
+
+            DayAfterLastOutput = clock.Today.AddDays(1);
         }
-		
+
         /// <summary>Create a text report from tables in this data store.</summary>
         /// <param name="storage">The data store.</param>
         /// <param name="fileName">Name of the file.</param>

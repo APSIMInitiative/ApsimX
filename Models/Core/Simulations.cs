@@ -25,12 +25,12 @@ namespace Models.Core
     /// </summary>
     [Serializable]
     [ScopedModel]
+    [ViewName("UserInterface.Views.HTMLView")]
+    [PresenterName("UserInterface.Presenters.GenericPresenter")]
     public class Simulations : Model, ISimulationEngine
     {
         [NonSerialized]
         private Links links;
-
-        private Checkpoints checkpoints;
 
         /// <summary>Gets or sets the width of the explorer.</summary>
         /// <value>The width of the explorer.</value>
@@ -75,7 +75,6 @@ namespace Models.Core
         public Simulations()
         {
             Version = ApsimFile.Converter.LatestVersion;
-            checkpoints = new Checkpoints(this);
         }
 
         /// <summary>
@@ -98,6 +97,32 @@ namespace Models.Core
         }
 
         /// <summary>
+        /// Return the current APSIM version number.
+        /// </summary>
+        public string ApsimVersion
+        {
+            get
+            {
+                return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            }
+            set
+            {
+                // Setter is provided so that this property gets serialized.
+            }
+        }
+
+        /// <summary>
+        /// Return the current APSIM version number.
+        /// </summary>
+        public static string GetApsimVersion()
+        {
+            string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            FileInfo info = new FileInfo(Assembly.GetExecutingAssembly().Location);
+            string buildDate = info.LastWriteTime.ToString("yyyy-MM-dd");
+            return "Version " + version + ", built " + buildDate;
+        }
+
+        /// <summary>
         /// Checkpoint the simulation.
         /// </summary>
         /// <param name="checkpointName">Name of checkpoint</param>
@@ -108,7 +133,10 @@ namespace Models.Core
             filesReferenced.AddRange(FindAllReferencedFiles());
             DataStore storage = Apsim.Find(this, typeof(DataStore)) as DataStore;
             if (storage != null)
+            {
                 storage.Writer.AddCheckpoint(checkpointName, filesReferenced);
+                storage.Reader.Refresh();
+            }
         }
 
         /// <summary>
@@ -120,7 +148,10 @@ namespace Models.Core
         {
             IDataStore storage = Apsim.Find(this, typeof(DataStore)) as DataStore;
             if (storage != null)
+            {
                 storage.Writer.RevertCheckpoint(checkpointName);
+                storage.Reader.Refresh();
+            }
             List<Exception> creationExceptions = new List<Exception>();
             return FileFormat.ReadFromFile<Simulations>(FileName, out creationExceptions);
         }
@@ -141,18 +172,6 @@ namespace Models.Core
             File.Move(tempFileName, FileName);
             this.FileName = FileName;
             SetFileNameInAllSimulations();
-        }
-
-        /// <summary>Find and return a list of duplicate simulation names.</summary>
-        public List<string> FindDuplicateSimulationNames()
-        {
-            List<IModel> allSims = Apsim.ChildrenRecursively(this, typeof(Simulation));
-            List<string> allSimNames = allSims.Select(s => s.Name).ToList();
-            var duplicates = allSimNames
-                .GroupBy(i => i)
-                .Where(g => g.Count() > 1)
-                .Select(g => g.Key);
-            return duplicates.ToList();
         }
 
         /// <summary>Look through all models. For each simulation found set the filename.</summary>
@@ -190,7 +209,6 @@ namespace Models.Core
             if (storage != null)
                 services.Add(storage);
             services.Add(this);
-            services.Add(checkpoints);
             return services;
         }
 

@@ -45,7 +45,7 @@
             intellisense = new IntellisensePresenter(factorView as ViewBase);
             this.factorView.Specification.Value = factor.Specification;
 
-            this.factorView.Specification.Changed += this.OnTextHasChangedByUser;
+            this.factorView.Specification.Leave += this.OnTextHasChangedByUser;
             this.factorView.Specification.IntellisenseItemsNeeded += this.OnContextItemsNeeded;
             this.presenter.CommandHistory.ModelChanged += this.OnModelChanged;
             intellisense.ItemSelected += OnIntellisenseItemSelected;
@@ -59,7 +59,7 @@
             OnTextHasChangedByUser(this, new EventArgs());
             intellisense.ItemSelected -= OnIntellisenseItemSelected;
             intellisense.Cleanup();
-            factorView.Specification.Changed -= this.OnTextHasChangedByUser;
+            factorView.Specification.Leave -= this.OnTextHasChangedByUser;
             factorView.Specification.IntellisenseItemsNeeded -= this.OnContextItemsNeeded;
             presenter.CommandHistory.ModelChanged -= this.OnModelChanged;
         }
@@ -156,7 +156,7 @@
         private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
         {
             if (string.IsNullOrEmpty(args.ItemSelected))
-                factorView.Specification.InsertAtCursor(args.ItemSelected);
+                factorView.Specification.InsertAtCursorInSquareBrackets(args.ItemSelected);
             else
                 factorView.Specification.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
         }

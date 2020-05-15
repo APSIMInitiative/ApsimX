@@ -1,89 +1,100 @@
-﻿using System;
+﻿using Models.Core;
+using System;
 
 namespace ApsimNG.Cloud
 {
+    /// <summary>
+    /// This class holds details about a job to be run on the cloud.
+    /// </summary>
     public class JobParameters
     {
         /// <summary>
+        /// The model to be run on the cloud platform.
+        /// </summary>
+        public IModel Model { get; set; }
+
+        /// <summary>
         /// Display name of the job.
         /// </summary>
-        public string JobDisplayName { get; set; }
+        public string DisplayName { get; set; }
 
         /// <summary>
         /// Unique ID of the job.
         /// </summary>
-        public Guid JobId { get; set; }
+        public Guid ID { get; set; }
 
         /// <summary>
-        /// Directory to save results to.
+        /// Directory or .zip file containing ApsimX to be uploaded.
         /// </summary>
-        public string OutputDir { get; set; }
+        public string ApsimXPath { get; set; }
 
         /// <summary>
-        /// If true, results will be combined into a single .csv file.
+        /// Version of ApsimX to be uploaded.
         /// </summary>
-        public bool Summarise { get; set; }
+        /// <remarks>
+        /// This is currently something stupid, like tmp-hol430-X.
+        /// Changing this may break everything though so it stays for now.
+        /// </remarks>
+        public string ApsimXVersion { get; set; }
 
         /// <summary>
-        /// State of the job (active, running, complete...).
+        /// Iff true, an email will be sent to <see cref="EmailRecipient"/> when the job finishes.
         /// </summary>
-        public string Status { get; set; }
+        public bool SendEmail { get; set; }
 
         /// <summary>
-        /// Directory that model files should be saved to.
+        /// iff <see cref="SendEmail"/> is true, an email will be sent to this address when the job finishes.
         /// </summary>
-        public string ModelPath { get; set; }
-
-        /// <summary>
-        /// If true, ApplicationPackagePath points to a directory. If false, it points to a .zip file.
-        /// </summary>
-        public bool ApsimFromDir { get; set; }
-
-        /// <summary>
-        /// Directory or zip file containing ApsimX to be uploaded.
-        /// </summary>
-        public string ApplicationPackagePath { get; set; }
-
-        /// <summary>
-        /// Version of APSIM to be uploaded.
-        /// </summary>
-        public string ApplicationPackageVersion { get; set; }
-
-        /// <summary>
-        /// An email will be sent to this address when the job finishes.
-        /// </summary>
-        public string Recipient { get; set; }
+        public string EmailRecipient { get; set; }
 
         /// <summary>
         /// Number of cores per process.
         /// </summary>
+        /// <remarks>
+        /// Under the current implementation (Azure) there is no reason
+        /// *not* to set this to 1.
+        /// </remarks>
         public int CoresPerProcess { get; set; }
 
         /// <summary>
-        /// Number of VMs per pool.
+        /// Number of vCPUs to use when running the job.
         /// </summary>
-        public int PoolVMCount { get; set; }
+        public int CpuCount { get; set; }
 
         /// <summary>
-        /// Maximum number of tasks allowed on a single VM.
+        /// Maximum number of tasks allowed to run concurrently on a single VM.
         /// </summary>
-        public int PoolMaxTasksPerVM { get; set; }
+        /// <remarks>
+        /// This will always be 16 for now because the azure component
+        /// uses the standard_d5_v2 VM type, which has 16 vCPUs.
+        /// </remarks>
+        public int MaxTasksPerVM { get; set; }
 
         /// <summary>
-        /// If true, results will automatically be downloaded once the job is finished.
+        /// If true, model (.apsimx) files will be saved after they are generated.
         /// </summary>
-        public bool AutoDownload { get; set; }
-        /// <summary>
-        /// If true, model files will be saved after they are generated.
-        /// </summary>
+        /// <remarks>
+        /// Do we really need this option?
+        /// </remarks>
         public bool SaveModelFiles { get; set; }
 
         /// <summary>
-        /// If true, the job manager will submit the tasks.
+        /// Directory to which model (.apsimx) files should be saved.
         /// </summary>
+        public string ModelPath { get; set; }
+
+        /// <summary>
+        /// Iff true, the job manager will submit the tasks.
+        /// </summary>
+        /// <remarks>
+        /// Always true. todo: remove this property.
+        /// </remarks>
         public bool JobManagerShouldSubmitTasks { get; set; }
 
-
+        /// <summary>
+        /// This is used in some way by the job manager (azure-apsim.exe).
+        /// It's always set to true but I'm not brave enough to remove it.
+        /// </summary>
         public bool AutoScale { get; set; }
     }
 }

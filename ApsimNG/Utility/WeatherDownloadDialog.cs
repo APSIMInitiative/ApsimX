@@ -158,7 +158,7 @@ namespace Utility
                 {
                     Weather newWeather = new Weather();
                     newWeather.FullFileName = newWeatherPath;
-                    AddModelCommand command = new AddModelCommand(replaceNode, newWeather, owningView, explorerPresenter);
+                    var command = new AddModelCommand(replaceNode, newWeather, explorerPresenter);
                     explorerPresenter.CommandHistory.Add(command, true);
                 }
                 dialog1.Destroy();

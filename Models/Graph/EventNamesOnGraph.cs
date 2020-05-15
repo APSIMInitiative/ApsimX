@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="EventNamesOnGraph.cs" company="CSIRO">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Graph
+namespace Models
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
@@ -87,6 +82,7 @@ namespace Models.Graph
         /// <param name="simulationFilter">(Optional) simulation name filter.</param>
         public void GetSeriesToPutOnGraph(IStorageReader storage, List<SeriesDefinition> definitions, List<string> simulationFilter = null)
         {
+            data = null;
             if (definitions != null && definitions.Count > 0)
             {
                 // Try to find a definition that has the correct simulation name.

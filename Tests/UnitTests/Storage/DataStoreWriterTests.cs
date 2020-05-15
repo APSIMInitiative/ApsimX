@@ -13,7 +13,6 @@
     public class DataStoreWriterTests
     {
         private IDatabaseConnection database;
-        private string savedDirectoryName;
 
         /// <summary>Find and return the file name of SQLite runtime .dll</summary>
         public static string FindSqlite3DLL()
@@ -37,22 +36,19 @@
             throw new Exception("Cannot find sqlite3 dll directory");
         }
 
+        [OneTimeSetUp]
+        public void OneTimeInit()
+        {
+            string sqliteSourceFileName = FindSqlite3DLL();
+            Directory.SetCurrentDirectory(Path.GetDirectoryName(sqliteSourceFileName));
+        }
+
         /// <summary>Initialisation code for all unit tests in this class</summary>
         [SetUp]
         public void Initialise()
         {
             database = new SQLite();
             database.OpenDatabase(":memory:", readOnly: false);
-
-            string sqliteSourceFileName = FindSqlite3DLL();
-            savedDirectoryName = Directory.GetCurrentDirectory();
-            Directory.SetCurrentDirectory(Path.GetDirectoryName(sqliteSourceFileName));
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            Directory.SetCurrentDirectory(savedDirectoryName);
         }
 
         /// <summary>Write data for 2 simulations into one table. Ensure data was written correctly.</summary>
@@ -97,8 +93,8 @@
                " 2,Sim2,   Folder2\r\n");
 
             Assert.AreEqual(Utilities.TableToString(database, "_Checkpoints"),
-               "ID,   Name,Version,Date\r\n" +
-               " 1,Current,       ,    \r\n");
+               "ID,   Name,Version,Date,OnGraphs\r\n" +
+               " 1,Current,       ,    ,        \r\n");
 
             Assert.AreEqual(Utilities.TableToString(database, "_Units"),
                "TableName,ColumnHeading,Units\r\n" +
@@ -402,8 +398,8 @@
                            "           1,           2,2017-01-01,21.000\r\n" +
                            "           1,           2,2017-01-02,22.000\r\n");
             Assert.AreEqual(Utilities.TableToString(database, "_Checkpoints"),
-                "ID,   Name,Version,Date\r\n" +
-                " 1,Current,       ,    \r\n");
+                "ID,   Name,Version,Date,OnGraphs\r\n" +
+                " 1,Current,       ,    ,        \r\n");
         }
 
         /// <summary>Revert a checkpoint</summary>

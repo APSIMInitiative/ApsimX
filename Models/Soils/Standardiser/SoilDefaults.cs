@@ -126,6 +126,8 @@
             analysis.EC = FillMissingValues(analysis.EC, analysis.Thickness.Length, 0);
             analysis.ESP = FillMissingValues(analysis.ESP, analysis.Thickness.Length, 0);
             analysis.PH = FillMissingValues(analysis.PH, analysis.Thickness.Length, 7.0);
+            analysis.NO3N = FillMissingValues(analysis.NO3N, analysis.Thickness.Length, 0.1);
+            analysis.NH4N = FillMissingValues(analysis.NH4N, analysis.Thickness.Length, 0.01);
         }
 
         /// <summary>Changes all missing values in an array to a valid value.</summary>

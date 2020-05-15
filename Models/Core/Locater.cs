@@ -1,17 +1,12 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Locater.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.Core
+﻿namespace Models.Core
 {
+    using APSIM.Shared.Utilities;
+    using Functions;
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using APSIM.Shared.Utilities;
-    using System.Collections;
-    using Functions;
 
     /// <summary>
     /// This class is responsible for the location and retrieval of variables or models 
@@ -170,7 +165,11 @@ namespace Models.Core
                     int posPeriod = namePath.IndexOf('.', 1);
                     if (posPeriod == -1)
                     {
-                        posPeriod = namePath.Length;
+                        // Path starts with a . and only contains a single period.
+                        // If name matches then no problem. Otherwise we need to return null.
+                        posPeriod = namePath.IndexOf('.');
+                        if (namePath.Remove(0, posPeriod) == relativeToModel.Name)
+                            posPeriod = namePath.Length;
                     }
 
                     namePath = namePath.Remove(0, posPeriod);
@@ -254,7 +253,7 @@ namespace Models.Core
                     {
                         // Special case: we are trying to get a property of an array(IList). In this case
                         // we want to return the property value for all items in the array.
-                        VariableProperty property = new VariableProperty(relativeToObject, namePathBits[j]);
+                        VariableProperty property = new VariableProperty(relativeToObject, namePathBits[j], arraySpecifier);
                         properties.Add(property);
                         relativeToObject = property.Value;
                     }

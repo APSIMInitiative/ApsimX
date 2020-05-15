@@ -11,6 +11,9 @@ namespace UserInterface.Views
 
         /// <summary>Gets or sets whether the checkbox is checked.</summary>
         bool IsChecked { get; set; }
+
+        /// <summary>Gets or sets whether the checkbox can be changed by the user.</summary>
+        bool IsSensitive { get; set; }
     }
 
 
@@ -33,9 +36,16 @@ namespace UserInterface.Views
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            checkbutton1.Toggled -= OnCheckChanged;
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            owner = null;
+            try
+            {
+                checkbutton1.Toggled -= OnCheckChanged;
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Gets or sets whether the checkbox is checked.</summary>
@@ -51,6 +61,19 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>Gets or sets whether the checkbox can be changed by the user.</summary>
+        public bool IsSensitive
+        {
+            get
+            {
+                return checkbutton1.Sensitive;
+            }
+            set
+            {
+                checkbutton1.Sensitive = value;
+            }
+        }
+
         /// <summary>
         /// The checked status has changed.
         /// </summary>
@@ -58,8 +81,15 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void OnCheckChanged(object sender, EventArgs e)
         {
-            if (Changed != null)
-                Changed.Invoke(this, e);
+            try
+            {
+                if (Changed != null)
+                    Changed.Invoke(this, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Text property. Needed from designer.</summary>

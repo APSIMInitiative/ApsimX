@@ -88,6 +88,11 @@ namespace Models.CLEM.Activities
                 if (ind.Age >= weaningAge)
                 {
                     ind.Wean(true, "Natural");
+                    if (ind.Mother != null)
+                    {
+                        // report conception status changed when last multiple birth dies.
+                        ind.Mother.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother, Clock.Today));
+                    }
                 }
             }
         }
@@ -141,6 +146,7 @@ namespace Models.CLEM.Activities
             ind.MilkIntakePotential = 0;
 
             // calculate milk intake shortfall for sucklings
+            // all in units per day and multiplied at end of this section
             if (!ind.Weaned)
             {
                 // potential milk intake/animal/day
@@ -155,6 +161,8 @@ namespace Models.CLEM.Activities
                 {
                     potentialIntake = Math.Max(0.0, ind.Weight * ind.BreedParams.MaxJuvenileIntake - ind.MilkIntake * ind.BreedParams.ProportionalDiscountDueToMilk);
                 }
+
+                ind.MilkIntake *= 30.4;
             }
             else
             {
@@ -273,6 +281,8 @@ namespace Models.CLEM.Activities
             // grow individuals
 
             List<string> breeds = herd.Select(a => a.BreedParams.Name).Distinct().ToList();
+            this.Status = ActivityStatus.NotNeeded;
+
             foreach (string breed in breeds)
             {
                 double totalMethane = 0;
@@ -347,6 +357,7 @@ namespace Models.CLEM.Activities
 
                 if (methaneEmissions != null)
                 {
+                    // g per day -> total kg
                     methaneEmissions.Add(totalMethane * 30.4 / 1000, this, breed);
                 }
             }
@@ -430,6 +441,10 @@ namespace Models.CLEM.Activities
 
                 energyMaintenance = (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / kml) * Math.Exp(-ind.BreedParams.EMaintExponent * ind.AgeZeroCorrected);
                 ind.EnergyBalance = energyMilkConsumed - energyMaintenance + energyMetablicFromIntake;
+                ind.EnergyIntake = energyMilkConsumed + energyMetablicFromIntake;
+                ind.EnergyFoetus = 0;
+                ind.EnergyMaintenance = energyMaintenance;
+                ind.EnergyMilk = 0;
 
                 double feedingValue;
                 if (ind.EnergyBalance > 0)
@@ -471,7 +486,7 @@ namespace Models.CLEM.Activities
                         // Reference: Freer
                         double potentialBirthWeight = ind.BreedParams.SRWBirth * standardReferenceWeight * (1 - 0.33 * (1 - ind.Weight / standardReferenceWeight));
                         double foetusAge = (femaleind.Age - femaleind.AgeAtLastConception) * 30.4;
-                        //TODO: Check foetus gage correct
+                        //TODO: Check foetus age correct
                         energyFoetus = potentialBirthWeight * 349.16 * 0.000058 * Math.Exp(345.67 - 0.000058 * foetusAge - 349.16 * Math.Exp(-0.000058 * foetusAge)) / 0.13;
                     }
                 }
@@ -487,6 +502,10 @@ namespace Models.CLEM.Activities
                 energyMaintenance = ind.BreedParams.Kme * sme * (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / km) * Math.Exp(-ind.BreedParams.EMaintExponent * maintenanceAge) + (ind.BreedParams.EMaintIntercept * energyMetablicFromIntake);
                 ind.EnergyBalance = energyMetablicFromIntake - energyMaintenance - energyMilk - energyFoetus; // milk will be zero for non lactating individuals.
                 double feedingValue;
+                ind.EnergyIntake = energyMetablicFromIntake;
+                ind.EnergyFoetus = energyFoetus;
+                ind.EnergyMaintenance = energyMaintenance;
+                ind.EnergyMilk = energyMilk;
 
                 // Reference: Feeding_value = Ajustment for rate of loss or gain (SCA p.43, ? different from Hirata model)
                 if (ind.EnergyBalance > 0)
@@ -598,7 +617,7 @@ namespace Models.CLEM.Activities
                     mortalityRate = 1 - (1 - ind.BreedParams.MortalityBase) * (1 - Math.Exp(Math.Pow(-(ind.BreedParams.MortalityCoefficient * (ind.Weight / ind.NormalisedAnimalWeight - ind.BreedParams.MortalityIntercept)), ind.BreedParams.MortalityExponent)));
                 }
                 // convert mortality from annual (calculated) to monthly (applied).
-                if (ZoneCLEM.RandomGenerator.NextDouble() <= (mortalityRate/12))
+                if (RandomNumberGenerator.Generator.NextDouble() <= (mortalityRate/12))
                 {
                     ind.Died = true;
                 }

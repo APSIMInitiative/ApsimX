@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Models.Core;
 using Models.Functions;
@@ -14,10 +14,10 @@ namespace Models.PMF.Phen
     [ValidParent(ParentType = typeof(Phenology))]
     public class PhotoperiodPhase : Model, IPhase, ICustomDocumentation
     {
-        [ScopedLinkByName]
+        [Link(ByName = true)]
         IFunction Photoperiod = null;
 
-        [ScopedLinkByName]
+        [Link(ByName = true)]
         IFunction PhotoperiodDelta = null;
 
         /// <summary>Critical photoperiod to move into next phase</summary>
@@ -83,13 +83,6 @@ namespace Models.PMF.Phen
 
         /// <summary>Resets the phase.</summary>
         public void ResetPhase() { }
-
-        /// <summary>Writes the summary.</summary>
-        /// <param name="writer">The text writer.</param>
-        public void WriteSummary(TextWriter writer)
-        {
-            writer.WriteLine("      " + Name);
-        }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>

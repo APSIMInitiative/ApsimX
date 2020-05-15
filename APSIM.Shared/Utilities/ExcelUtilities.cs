@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ApsimExcelFile.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-
-// An APSIMInputFile is either a ".met" file or a ".out" file.
+﻿// An APSIMInputFile is either a ".met" file or a ".out" file.
 // They are both text files that share the same format. 
 // These classes are used to read/write these files and create an object instance of them.
 
@@ -59,8 +53,9 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         /// <param name="fileName"></param>
         /// <param name="sheetName"></param>
+        /// <param name="headerRow"></param>
         /// <returns>a DataTable</returns>
-        public static DataTable ReadExcelFileData(string fileName, string sheetName)
+        public static DataTable ReadExcelFileData(string fileName, string sheetName, bool headerRow = false)
         {
             DataTable data = new DataTable();
 
@@ -77,7 +72,19 @@ namespace APSIM.Shared.Utilities
                 //Reading from a OpenXml Excel file (2007 format; *.xlsx)
                 IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream);
 
-                DataSet result = excelReader.AsDataSet();
+                DataSet result;
+                if (headerRow)
+                    // Read all sheets from the EXCEL file as a data set
+                    // excelReader.IsFirstRowAsColumnNames = true;
+                    result = excelReader.AsDataSet(new ExcelDataSetConfiguration()
+                    {
+                        ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+                        {
+                            UseHeaderRow = true
+                        }
+                    });
+                else
+                    result = excelReader.AsDataSet();
                 data = result.Tables[sheetName];
 
                 return data;

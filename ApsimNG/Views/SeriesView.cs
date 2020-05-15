@@ -1,12 +1,8 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="SeriesView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using Interfaces;
     using Gtk;
+    using System;
 
     /// <summary>This view allows a single series to be edited.</summary>
     public class SeriesView : ViewBase, ISeriesView
@@ -16,7 +12,6 @@ namespace UserInterface.Views
         private Label label4 = null;
         private Label label5 = null;
 
-        private DropDownView checkpointDropDown;
         private DropDownView dataSourceDropDown;
         private DropDownView xDropDown;
         private DropDownView yDropDown;
@@ -51,7 +46,6 @@ namespace UserInterface.Views
             graphView1 = new GraphView(this);
             vbox1.PackStart(graphView1.MainWidget, true, true, 0);
 
-            checkpointDropDown = new DropDownView(this);
             dataSourceDropDown = new DropDownView(this);
             xDropDown = new DropDownView(this);
             yDropDown = new DropDownView(this);
@@ -79,70 +73,72 @@ namespace UserInterface.Views
 
             editView1 = new EditView(this);
 
-            table1.Attach(checkpointDropDown.MainWidget, 1, 2, 0, 1, AttachOptions.Fill, 0, 10, 2);
-            table1.Attach(dataSourceDropDown.MainWidget, 1, 2, 1, 2, AttachOptions.Fill, 0, 10, 2);
-            table1.Attach(xDropDown.MainWidget, 1, 2, 2, 3, AttachOptions.Fill, 0, 10, 2);
-            table1.Attach(yDropDown.MainWidget, 1, 2, 3, 4, AttachOptions.Fill, 0, 10, 2);
-            table1.Attach(y2DropDown.MainWidget, 1, 2, 4, 5, AttachOptions.Fill, 0, 10, 2);
-            table1.Attach(x2DropDown.MainWidget, 1, 2, 5, 6, AttachOptions.Fill, 0, 10, 2);
-            table1.Attach(seriesDropDown.MainWidget, 1, 2, 6, 7, AttachOptions.Fill, 0, 10, 2);
-            table1.Attach(lineTypeDropDown.MainWidget, 1, 2, 7, 8, AttachOptions.Fill, 0, 10, 2);
-            table1.Attach(markerTypeDropDown.MainWidget, 1, 2, 8, 9, AttachOptions.Fill, 0, 10, 2);
-            table1.Attach(colourDropDown.MainWidget, 1, 2, 9, 10, AttachOptions.Fill, 0, 10, 2);
+            table1.Attach(dataSourceDropDown.MainWidget, 1, 2, 0, 1, AttachOptions.Fill, 0, 10, 2);
+            table1.Attach(xDropDown.MainWidget, 1, 2, 1, 2, AttachOptions.Fill, 0, 10, 2);
+            table1.Attach(yDropDown.MainWidget, 1, 2, 2, 3, AttachOptions.Fill, 0, 10, 2);
+            table1.Attach(y2DropDown.MainWidget, 1, 2, 3, 4, AttachOptions.Fill, 0, 10, 2);
+            table1.Attach(x2DropDown.MainWidget, 1, 2, 4, 5, AttachOptions.Fill, 0, 10, 2);
+            table1.Attach(seriesDropDown.MainWidget, 1, 2, 5, 6, AttachOptions.Fill, 0, 10, 2);
+            table1.Attach(lineTypeDropDown.MainWidget, 1, 2, 6, 7, AttachOptions.Fill, 0, 10, 2);
+            table1.Attach(markerTypeDropDown.MainWidget, 1, 2, 7, 8, AttachOptions.Fill, 0, 10, 2);
+            table1.Attach(colourDropDown.MainWidget, 1, 2, 8, 9, AttachOptions.Fill, 0, 10, 2);
 
             Image helpImage = new Image(null, "ApsimNG.Resources.help.png");
             helpBox = new EventBox();
             helpBox.Add(helpImage);
-            helpBox.ButtonPressEvent += Help_ButtonPressEvent;
+            helpBox.ButtonReleaseEvent += Help_ButtonPressEvent;
             HBox filterBox = new HBox();
             filterBox.PackStart(editView1.MainWidget, true, true, 0);
             filterBox.PackEnd(helpBox, false, true, 0);
 
             //table1.Attach(editView1.MainWidget, 1, 2, 9, 10, AttachOptions.Fill, 0, 10, 2);
-            table1.Attach(filterBox, 1, 2, 10, 11, AttachOptions.Fill, 0, 10, 2);
+            table1.Attach(filterBox, 1, 2, 9, 10, AttachOptions.Fill, 0, 10, 2);
 
-            table1.Attach(checkBoxView1.MainWidget, 2, 3, 2, 3, AttachOptions.Fill, 0, 0, 0);
-            table1.Attach(checkBoxView2.MainWidget, 2, 3, 3, 4, AttachOptions.Fill, 0, 0, 0);
-            table1.Attach(checkBoxView3.MainWidget, 3, 4, 2, 3, AttachOptions.Fill, 0, 0, 0);
-            table1.Attach(checkBoxView4.MainWidget, 3, 4, 3, 4, AttachOptions.Fill, 0, 0, 0);
+            table1.Attach(checkBoxView1.MainWidget, 2, 3, 1, 2, AttachOptions.Fill, 0, 0, 0);
+            table1.Attach(checkBoxView2.MainWidget, 2, 3, 2, 3, AttachOptions.Fill, 0, 0, 0);
+            table1.Attach(checkBoxView3.MainWidget, 3, 4, 1, 2, AttachOptions.Fill, 0, 0, 0);
+            table1.Attach(checkBoxView4.MainWidget, 3, 4, 2, 3, AttachOptions.Fill, 0, 0, 0);
 
-            table1.Attach(checkBoxView5.MainWidget, 2, 4, 9, 10, AttachOptions.Fill, 0, 0, 0);
-            table1.Attach(checkBoxView6.MainWidget, 2, 4, 10, 11, AttachOptions.Fill, 0, 0, 0);
+            table1.Attach(checkBoxView5.MainWidget, 2, 4, 8, 9, AttachOptions.Fill, 0, 0, 0);
+            table1.Attach(checkBoxView6.MainWidget, 2, 4, 9, 10, AttachOptions.Fill, 0, 0, 0);
 
-            table1.Attach(lineThicknessDropDown.MainWidget, 3, 4, 7, 8, AttachOptions.Fill, 0, 0, 5);
-            table1.Attach(markerSizeDropDown.MainWidget, 3, 4, 8, 9, AttachOptions.Fill, 0, 0, 5);
+            table1.Attach(lineThicknessDropDown.MainWidget, 3, 4, 6, 7, AttachOptions.Fill, 0, 0, 5);
+            table1.Attach(markerSizeDropDown.MainWidget, 3, 4, 7, 8, AttachOptions.Fill, 0, 0, 5);
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, System.EventArgs e)
         {
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            helpBox.ButtonPressEvent -= Help_ButtonPressEvent;
-            checkpointDropDown.MainWidget.Destroy();
-            dataSourceDropDown.MainWidget.Destroy();
-            xDropDown.MainWidget.Destroy();
-            yDropDown.MainWidget.Destroy();
-            x2DropDown.MainWidget.Destroy();
-            y2DropDown.MainWidget.Destroy();
-            seriesDropDown.MainWidget.Destroy();
-            lineTypeDropDown.MainWidget.Destroy();
-            markerTypeDropDown.MainWidget.Destroy();
-            colourDropDown.MainWidget.Destroy();
-            lineThicknessDropDown.MainWidget.Destroy();
-            markerSizeDropDown.MainWidget.Destroy();
-            checkBoxView1.MainWidget.Destroy();
-            checkBoxView2.MainWidget.Destroy();
-            checkBoxView3.MainWidget.Destroy();
-            checkBoxView4.MainWidget.Destroy();
-            checkBoxView5.MainWidget.Destroy();
-            checkBoxView6.MainWidget.Destroy();
-            graphView1.MainWidget.Destroy();
-            editView1.MainWidget.Destroy();
-            owner = null;
+            try
+            {
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                helpBox.ButtonReleaseEvent -= Help_ButtonPressEvent;
+                dataSourceDropDown.MainWidget.Destroy();
+                xDropDown.MainWidget.Destroy();
+                yDropDown.MainWidget.Destroy();
+                x2DropDown.MainWidget.Destroy();
+                y2DropDown.MainWidget.Destroy();
+                seriesDropDown.MainWidget.Destroy();
+                lineTypeDropDown.MainWidget.Destroy();
+                markerTypeDropDown.MainWidget.Destroy();
+                colourDropDown.MainWidget.Destroy();
+                lineThicknessDropDown.MainWidget.Destroy();
+                markerSizeDropDown.MainWidget.Destroy();
+                checkBoxView1.MainWidget.Destroy();
+                checkBoxView2.MainWidget.Destroy();
+                checkBoxView3.MainWidget.Destroy();
+                checkBoxView4.MainWidget.Destroy();
+                checkBoxView5.MainWidget.Destroy();
+                checkBoxView6.MainWidget.Destroy();
+                graphView1.MainWidget.Destroy();
+                editView1.MainWidget.Destroy();
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
-
-        /// <summary>Checkpoint control</summary>
-        public IDropDownView Checkpoint { get { return checkpointDropDown; } }
 
         /// <summary>Data source</summary>
         public IDropDownView DataSource { get { return dataSourceDropDown; } }
@@ -214,10 +210,17 @@ namespace UserInterface.Views
         /// <summary>Show the filter help.</summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Help_ButtonPressEvent(object o, ButtonPressEventArgs args)
+        private void Help_ButtonPressEvent(object o, ButtonReleaseEventArgs args)
         {
-            if (args.Event.Button == 1)
-              System.Diagnostics.Process.Start("https://apsimnextgeneration.netlify.com/usage/graphfilters/");
+            try
+            {
+                if (args.Event.Button == 1)
+                  System.Diagnostics.Process.Start("https://apsimnextgeneration.netlify.com/usage/graphfilters/");
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         public void EndEdit()

@@ -17,6 +17,7 @@ namespace Models.CLEM.Activities
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
+    [ValidParent(ParentType = typeof(Market))]
     [Description("This holds all activities used in the CLEM simulation")]
     [HelpUri(@"Content/Features/Activities/ActivitiesHolder.htm")]
     [Version(1, 0, 1, "")]
@@ -92,7 +93,12 @@ namespace Models.CLEM.Activities
         /// </summary>
         public ResourceRequest LastShortfallResourceRequest { get; set; }
 
-        private void ActivitiesHolder_ResourceShortfallOccurred(object sender, EventArgs e)
+        /// <summary>
+        /// Hander for shortfall
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void ActivitiesHolder_ResourceShortfallOccurred(object sender, EventArgs e)
         {
             // save resource request
             LastShortfallResourceRequest = (e as ResourceRequestEventArgs).Request;
@@ -308,7 +314,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
-            return "\n<div class=\"activity\">";
+            return "\n<div class=\"activity\"style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
         }
 
         /// <summary>

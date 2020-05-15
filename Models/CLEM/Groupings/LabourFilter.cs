@@ -20,6 +20,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(LabourFilterGroup))]
     [ValidParent(ParentType = typeof(LabourSpecificationItem))]
     [ValidParent(ParentType = typeof(LabourPriceGroup))]
+    [ValidParent(ParentType = typeof(LabourFeedGroup))]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/LabourFilter.htm")]
     public class LabourFilter: CLEMModel
@@ -124,21 +125,6 @@ namespace Models.CLEM.Groupings
                 str += Value;
             }
             return str;
-        }
-
-        /// <summary>
-        /// Create a copy of the current instance
-        /// </summary>
-        /// <returns></returns>
-        public LabourFilter Clone()
-        {
-            LabourFilter clone = new LabourFilter()
-            {
-                Parameter = this.Parameter,
-                Operator = this.Operator,
-                Value = this.Value
-            };
-            return clone;
         }
 
         /// <summary>

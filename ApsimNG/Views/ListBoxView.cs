@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ListBoxView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using APSIM.Shared.Utilities;
     using System;
@@ -108,15 +103,22 @@ namespace UserInterface.Views
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            //listview.CursorChanged -= OnSelectionChanged;
-            Listview.SelectionChanged -= OnSelectionChanged;
-            Listview.ButtonPressEvent -= OnDoubleClick;
-            ClearPopup();
-            popup.Destroy();
-            listmodel.Dispose();
-            accel.Dispose();
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            owner = null;
+            try
+            {
+                //listview.CursorChanged -= OnSelectionChanged;
+                Listview.SelectionChanged -= OnSelectionChanged;
+                Listview.ButtonPressEvent -= OnDoubleClick;
+                ClearPopup();
+                popup.Destroy();
+                listmodel.Dispose();
+                accel.Dispose();
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Get or sets the list of valid values.</summary>

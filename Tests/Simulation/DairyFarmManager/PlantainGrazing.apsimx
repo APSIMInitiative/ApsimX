@@ -1,11 +1,14 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 47,
+  "Version": 80,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-06",
   "Name": "Simulations",
   "Children": [
     {
       "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
       "Name": "DataStore",
       "Children": [],
       "IncludeInDocumentation": true,
@@ -27,8 +30,8 @@
         },
         {
           "$type": "Models.Clock, Models",
-          "StartDate": "2010-09-01T00:00:00",
-          "EndDate": "2012-08-31T00:00:00",
+          "Start": "2010-09-01T00:00:00",
+          "End": "2012-08-31T00:00:00",
           "Name": "Clock",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -112,10 +115,10 @@
         },
         {
           "$type": "Models.GrazPlan.Stock, Models",
+          "ParamFile": "",
           "RandSeed": 9999,
-          "GenoTypes": [],
-          "Sheep": [],
-          "Cattle": [],
+          "Genotypes": [],
+          "Animals": [],
           "PaddockList": [
             {
               "$type": "Models.GrazPlan.PaddockInit, Models",
@@ -137,7 +140,7 @@
         },
         {
           "$type": "Models.Manager, Models",
-          "Code": "using System;\r\nusing Models;\r\nusing Models.Core;\r\nusing Models.Utilities;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF;\r\nusing Models.Soils; \r\nusing System.Collections;\r\nusing System.Collections.Generic;\r\nusing System.Linq;\r\nusing Models.AgPasture;\r\nusing System.Diagnostics;\r\n\r\nnamespace Models\r\n{\r\n\r\n\t[Serializable]\r\n\tpublic class Script : Model\r\n\t{\r\n\t\t[Link] Clock clock;\r\n\t\t[Link] Stock stock;\r\n\t\t[Link] Supplement supplement;\r\n\t\t[Link] List<Zone> paddocks;\r\n\t\t[Link] ISummary summary;\r\n\t\t[Link] Simulation farm;\r\n\r\n\t\tprivate int CurrentGroupNum = 1;    // animal group number\r\n\t\tprivate int CurrentLocationNum { get; set; }\r\n\r\n\t\tpublic enum Genotypes\r\n\t\t{\r\n\t\t\tSmallMerino,\r\n\t\t\tAngus,\r\n\t\t\tFriesian\r\n\t\t}\r\n\r\n\t\tpublic enum SexTypes\r\n\t\t{\r\n\t\t\tCows,\r\n\t\t\tHeifers,\r\n\t\t\tSteers,\r\n\t\t\tBulls,\r\n\t\t\tEwes,\r\n\t\t\tWeathers,\r\n\t\t\tRams,\r\n\t\t\tCryptos\r\n\t\t}\r\n\r\n\r\n\t\t[Separator(\"Stock type info, the same type of stock are brought onto the paddock at each grazing\")]\r\n\r\n\t\t[Description(\"Stock: genotype (e.g. Small Merino, Angus, Friesian):\")] \r\n\t\tpublic Genotypes Genotype { get; set; }\r\n\r\n\t\t[Description(\"Stock: sex (Cows, Heifers, Steers, Bulls, Ewes, Weathers, Rams, Cryptos):\")] \r\n\t\tpublic SexTypes Sex { get; set; }\r\n\r\n\t\t[Description(\"Stock: age (months):\")] \r\n\t\tpublic double Age { get; set; }\r\n\r\n\t\t[Description(\"Stock: weight (kg liveweight /head):\")] \r\n\t\tpublic double Weight { get; set; }\r\n\r\n\t\t[Description(\"Stock: fertility status (0 if non-pregnant or days since conception):\")] \r\n\t\tpublic int Pregnant { get; set; }\r\n\r\n\t\t[Description(\"Stock: lactation status (0 if non-lactating or days since parturition):\")]\r\n\t\tpublic int Lactating { get; set; }\r\n\r\n\t\t[Description(\"Stock: number of unweaned young:\")]\r\n\t\tpublic int YoungNumber { get; set; }\r\n\r\n\t\t[Description(\"Stock: weight of unweaned young:\")] \r\n\t\tpublic double YoungWt { get; set; }\r\n\r\n\t\t[Separator(\"Grazing type info\")]\r\n\r\n\t\t[Description(\"Paddock stocking rate (head/ha): \")] \r\n\t\tpublic double StockingRate { get; set; }\r\n\r\n\t\t[Description(\"Initial location of the cows (give either the paddock name or 'Away'): \")] \r\n\t\tpublic string CurrentLocation { get; set; }\r\n\r\n\t\t[Description(\"Standing biomass at which to bring the stock into the simulation (kg DM/ha): \")] \r\n\t\tpublic double PreGrazingDM { get; set; }\r\n\r\n\t\t[Description(\"Standing biomass at which to exit  stock from the simulation (kg DM/ha): \")] \r\n\t\tpublic double PostGrazingDM { get; set; }\r\n\r\n\t\t[Description(\"Implement a no-grazing window? (tick for yes): \")] \r\n\t\tpublic bool DoNoGrazingWindow { get; set; }\r\n\r\n\t\t[Description(\"Start of the no-grazing window (dd-MMM)\")] \r\n\t\tpublic string NoGrazeStart { get; set; }\r\n\r\n\t\t[Description(\"End of the no-grazing window (dd-MMM)\")] \r\n\t\tpublic string NoGrazeEnd { get; set; }\r\n\r\n\t\t[Separator(\"Supplementary feeding\")]\r\n\r\n\t\t[Description(\"Name of the supplement to feed: \")] \r\n\t\tpublic string SupplementName { get; set; }\r\n\r\n\t\t[Description(\"Feed the supplement first (i.e. before the new forage is available to the stock)?: \")] \r\n\t\tpublic bool SupplementFirst { get; set; }\r\n\r\n\t\t[Description(\"Amount of supplementary feeding offered every day (kg DM /head /day): \")] \r\n\t\tpublic double SupplementEveryDay { get; set; }\r\n\r\n\t\t[Description(\"Additional amount of supplement offered when available biomass is low (kg DM /head /day): \")] \r\n\t\tpublic double SupplementOnPastureMass { get; set; }\r\n\r\n\t\t[Description(\"Trigger biomass for above rule (kg DM /ha): \")] \r\n\t\tpublic double TriggerPastureMass { get; set; }\r\n\r\n\t\tpublic int NumStock { get; set; }\r\n\t\t// number of cows on the whole farm\r\n\t\tpublic bool GrazingSeasonIsOpen { get; set; }\r\n\r\n\r\n\t\t[EventSubscribe(\"StartOfSimulation\")]\r\n\t\tprivate void OnStartOfSimulation(object sender, EventArgs e)\r\n\t\t{\r\n\r\n\t\t\t//Debugger.Break();\r\n\r\n\t\t\tsummary.WriteMessage(this, \"Initialising the paddock information\");\r\n\r\n\t\t\tNumStock = (int)(Math.Round(StockingRate * farm.Area, 0));\r\n\r\n\t\t\tif (CurrentLocation.ToLower() != \"away\")\r\n\t\t\t{\r\n\t\t\t\tBuyStock();\r\n\t\t\t\tstock.Move(CurrentGroupNum, CurrentLocation);\r\n\t\t\t\tsummary.WriteMessage(this, \" The Stock have been moved to \" + CurrentLocation);\r\n\t\t\t}\r\n\r\n\t\t\tsummary.WriteMessage(this, \"     The number of animals has been rounded to \" + NumStock + \" from \" + (StockingRate * farm.Area));\r\n\t\t\tsummary.WriteMessage(this, \"     The animals will begin in \" + CurrentLocation + \" which is paddock number \" + CurrentLocationNum + \" in the simulation\");\r\n\t\t\tsummary.WriteMessage(this, \"     The area of the whole farm is \" + farm.Area + \" ha\");\r\n\r\n\t\t}\r\n\r\n\t\t[EventSubscribe(\"DoManagement\")]\r\n\t\tprivate void OnDoManagement(object sender, EventArgs e)\r\n\t\t{\r\n\t\t\tGrazingSeasonIsOpen = true;\r\n\t\t\tif (DoNoGrazingWindow)\r\n\t\t\t\tGrazingSeasonIsOpen = !DateUtilities.WithinDates(NoGrazeStart, clock.Today, NoGrazeEnd);\r\n\r\n\t\t\tbool sellSomeStock = false;\r\n\t\t\tif (!GrazingSeasonIsOpen)\r\n\t\t\t\tsellSomeStock = true;\r\n\r\n\t\t\tdouble harvestableBiomass = paddocks[0].Plants.Sum(plant => plant.AboveGround.Wt * 10);\r\n\t\t\tif (harvestableBiomass <= PostGrazingDM)\r\n\t\t\t\tsellSomeStock = true;\r\n\r\n\t\t\tif (CurrentLocation == \"Away\")\r\n\t\t\t\tsellSomeStock = false;\r\n\r\n\t\t\tif (CurrentLocation == \"Away\" && harvestableBiomass >= PreGrazingDM && GrazingSeasonIsOpen)\r\n\t\t\t{\r\n\t\t\t\tCurrentLocation = paddocks[0].Name;\r\n\t\t\t\tCurrentLocationNum = paddocks[0].Index;\r\n\t\t\t\tBuyStock();\r\n\t\t\t\tstock.Move(CurrentGroupNum, CurrentLocation);\r\n\t\t\t\tsummary.WriteMessage(this, \"     Buying stock \");\r\n\t\t\t}\r\n\r\n\t\t\tif (sellSomeStock)\r\n\t\t\t{\r\n\t\t\t\tCurrentLocation = \"Away\";\r\n\t\t\t\tCurrentLocationNum = -1;\r\n\t\t\t\tSellStock();\r\n\t\t\t\tsummary.WriteMessage(this, \"     Selling stock \");\r\n\t\t\t}\r\n\r\n\t\t\tif (CurrentLocation != \"Away\")\r\n\t\t\t{\r\n\t\t\t\tif (SupplementEveryDay > 0)\r\n\t\t\t\t{\r\n\t            \tdouble silageOnHand = supplement.Stores[2 - 1].Stored;\r\n\t            \tif (silageOnHand < SupplementEveryDay * stock.NumberAll)\r\n    \t        \t{\r\n        \t    \t\tsupplement.Buy(SupplementEveryDay * 900.0 * stock.NumberAll, SupplementName);  // i.e. 6 months worth\r\n            \t\t\tsummary.WriteMessage(this, \"SupplementEveryDay: Buying \" + SupplementName + \" of total amount : \" + (SupplementEveryDay * 90 * stock.NumberAll) + \" kg DM\");\r\n            \t\t}\r\n\t\t\t\t\tsupplement.Feed(SupplementName, SupplementEveryDay * stock.NumberAll, CurrentLocation, SupplementFirst);\r\n\t\t\t\t}\r\n\r\n\t\t\t\tif (SupplementOnPastureMass > 0 && harvestableBiomass <= TriggerPastureMass)\r\n\t\t\t\t{\r\n\t            \tdouble silageOnHand = supplement.Stores[2 - 1].Stored;\r\n\t            \tif (silageOnHand < SupplementOnPastureMass * stock.NumberAll)\r\n    \t        \t{\r\n        \t    \t\tsupplement.Buy(SupplementOnPastureMass * 90.0 * stock.NumberAll, SupplementName);  // i.e. 6 months worth\r\n            \t\t\tsummary.WriteMessage(this, \"SupplementOnBiomass: Buying \" + SupplementName + \" of total amount : \" + (SupplementOnPastureMass * 90 * stock.NumberAll) + \" kg DM\");\r\n            \t\t}\r\n\t\t\t\t\tsupplement.Feed(SupplementName, SupplementOnPastureMass * stock.NumberAll, CurrentLocation, SupplementFirst);\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t}\r\n\r\n\r\n\t\tpublic void BuyStock()\r\n\t\t{\r\n\t\t\tCurrentGroupNum = stock.NoGroups + 1;\r\n\t\t\tStockBuy purchase = new StockBuy();\r\n\t\t\tpurchase.Genotype = ReflectionUtilities.EnumToString(Genotype);\r\n\t\t\tpurchase.Number = NumStock;\r\n\t\t\tpurchase.Sex = ReflectionUtilities.EnumToString(Sex);\r\n\t\t\tpurchase.Age = Age;       // age in months\r\n\t\t\tpurchase.Weight = Weight;  // live weight in kg\r\n\t\t\tpurchase.UseTag = CurrentGroupNum + 1;\r\n\t\t\tpurchase.MatedTo = purchase.Genotype;\r\n\t\t\tpurchase.Pregnant = Pregnant;  // days pregnant, 0 = non pregnant, 1 = pregnant\r\n\t\t\tpurchase.Lactating = Lactating;  // 0 for dry, 1 for lactating\r\n\t\t\tpurchase.NumYoung = YoungNumber;\r\n\t\t\tpurchase.YoungWt = YoungWt;\r\n\r\n\t\t\tstock.Buy(purchase);\r\n\t\t}\r\n\r\n\t\tpublic void SellStock()\r\n\t\t{\r\n\t\t\tint NumGroups = stock.NoGroups;\r\n\r\n\t\t\tNumGroups = stock.NoGroups;\r\n\t\t\tfor (int gg = 1; gg <= NumGroups; gg++)\r\n\t\t\t{\r\n\t\t\t\tstock.Sell(gg, stock.Number[gg - 1]);\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n}\r\n",
+          "Code": "using System;\r\nusing Models;\r\nusing Models.Core;\r\nusing Models.Utilities;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF;\r\nusing Models.Soils; \r\nusing System.Collections;\r\nusing System.Collections.Generic;\r\nusing System.Linq;\r\nusing Models.AgPasture;\r\nusing System.Diagnostics;\r\n\r\nnamespace Models\r\n{\r\n\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Stock stock;\r\n        [Link] Supplement supplement;\r\n        [Link] List<Zone> paddocks;\r\n        [Link] ISummary summary;\r\n        [Link] Simulation farm;\r\n\r\n        private int CurrentGroupNum = 1;    // animal group number\r\n        private int CurrentLocationNum { get; set; }\r\n\r\n        public enum Genotypes\r\n        {\r\n            SmallMerino,\r\n            Angus,\r\n            Friesian\r\n        }\r\n\r\n        [Separator(\"Stock type info, the same type of stock are brought onto the paddock at each grazing\")]\r\n\r\n        [Description(\"Stock: genotype (e.g. Small Merino, Angus, Friesian):\")] \r\n        public Genotypes Genotype { get; set; }\r\n\r\n        [Description(\"Stock: sex (Female, Male, Castrate):\")] \r\n        public ReproductiveType Sex { get; set; }\r\n\r\n        [Description(\"Stock: age (months):\")] \r\n        public double Age { get; set; }\r\n\r\n        [Description(\"Stock: weight (kg liveweight /head):\")] \r\n        public double Weight { get; set; }\r\n\r\n        [Description(\"Stock: fertility status (0 if non-pregnant or days since conception):\")] \r\n        public int Pregnant { get; set; }\r\n\r\n        [Description(\"Stock: lactation status (0 if non-lactating or days since parturition):\")]\r\n        public int Lactating { get; set; }\r\n\r\n        [Description(\"Stock: number of unweaned young:\")]\r\n        public int YoungNumber { get; set; }\r\n\r\n        [Description(\"Stock: weight of unweaned young:\")] \r\n        public double YoungWt { get; set; }\r\n\r\n        [Separator(\"Grazing type info\")]\r\n\r\n        [Description(\"Paddock stocking rate (head/ha): \")] \r\n        public double StockingRate { get; set; }\r\n\r\n        [Description(\"Initial location of the cows (give either the paddock name or 'Away'): \")] \r\n        public string CurrentLocation { get; set; }\r\n\r\n        [Description(\"Standing biomass at which to bring the stock into the simulation (kg DM/ha): \")] \r\n        public double PreGrazingDM { get; set; }\r\n\r\n        [Description(\"Standing biomass at which to exit  stock from the simulation (kg DM/ha): \")] \r\n        public double PostGrazingDM { get; set; }\r\n\r\n        [Description(\"Implement a no-grazing window? (tick for yes): \")] \r\n        public bool DoNoGrazingWindow { get; set; }\r\n\r\n        [Description(\"Start of the no-grazing window (dd-MMM)\")] \r\n        public string NoGrazeStart { get; set; }\r\n\r\n        [Description(\"End of the no-grazing window (dd-MMM)\")] \r\n        public string NoGrazeEnd { get; set; }\r\n\r\n        [Separator(\"Supplementary feeding\")]\r\n\r\n        [Description(\"Name of the supplement to feed: \")] \r\n        public string SupplementName { get; set; }\r\n\r\n        [Description(\"Feed the supplement first (i.e. before the new forage is available to the stock)?: \")] \r\n        public bool SupplementFirst { get; set; }\r\n\r\n        [Description(\"Amount of supplementary feeding offered every day (kg DM /head /day): \")] \r\n        public double SupplementEveryDay { get; set; }\r\n\r\n        [Description(\"Additional amount of supplement offered when available biomass is low (kg DM /head /day): \")] \r\n        public double SupplementOnPastureMass { get; set; }\r\n\r\n        [Description(\"Trigger biomass for above rule (kg DM /ha): \")] \r\n        public double TriggerPastureMass { get; set; }\r\n\r\n        public int NumStock { get; set; }\r\n        // number of cows on the whole farm\r\n        public bool GrazingSeasonIsOpen { get; set; }\r\n\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n\r\n            //Debugger.Break();\r\n\r\n            summary.WriteMessage(this, \"Initialising the paddock information\");\r\n\r\n            NumStock = (int)(Math.Round(StockingRate * farm.Area, 0));\r\n\r\n            if (CurrentLocation.ToLower() != \"away\")\r\n            {\r\n                BuyStock();\r\n                stock.Move(CurrentLocation, CurrentGroupNum);\r\n                summary.WriteMessage(this, \" The Stock have been moved to \" + CurrentLocation);\r\n            }\r\n\r\n            summary.WriteMessage(this, \"     The number of animals has been rounded to \" + NumStock + \" from \" + (StockingRate * farm.Area));\r\n            summary.WriteMessage(this, \"     The animals will begin in \" + CurrentLocation + \" which is paddock number \" + CurrentLocationNum + \" in the simulation\");\r\n            summary.WriteMessage(this, \"     The area of the whole farm is \" + farm.Area + \" ha\");\r\n\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            GrazingSeasonIsOpen = true;\r\n            if (DoNoGrazingWindow)\r\n                GrazingSeasonIsOpen = !DateUtilities.WithinDates(NoGrazeStart, clock.Today, NoGrazeEnd);\r\n\r\n            bool sellSomeStock = false;\r\n            if (!GrazingSeasonIsOpen)\r\n                sellSomeStock = true;\r\n\r\n            double harvestableBiomass = paddocks[0].Plants.Sum(plant => plant.AboveGround.Wt * 10);\r\n            if (harvestableBiomass <= PostGrazingDM)\r\n                sellSomeStock = true;\r\n\r\n            if (CurrentLocation == \"Away\")\r\n                sellSomeStock = false;\r\n\r\n            if (CurrentLocation == \"Away\" && harvestableBiomass >= PreGrazingDM && GrazingSeasonIsOpen)\r\n            {\r\n                CurrentLocation = paddocks[0].Name;\r\n                CurrentLocationNum = paddocks[0].Index;\r\n                BuyStock();\r\n                stock.Move(CurrentLocation, CurrentGroupNum);\r\n                summary.WriteMessage(this, \"     Buying stock \");\r\n            }\r\n\r\n            if (sellSomeStock)\r\n            {\r\n                CurrentLocation = \"Away\";\r\n                CurrentLocationNum = -1;\r\n                SellStock();\r\n                summary.WriteMessage(this, \"     Selling stock \");\r\n            }\r\n\r\n            if (CurrentLocation != \"Away\")\r\n            {\r\n                if (SupplementEveryDay > 0)\r\n                {\r\n                    double silageOnHand = supplement.Stores[2 - 1].Stored;\r\n                    if (silageOnHand < SupplementEveryDay * stock.NumberAll)\r\n                    {\r\n                        supplement.Buy(SupplementEveryDay * 900.0 * stock.NumberAll, SupplementName);  // i.e. 6 months worth\r\n                        summary.WriteMessage(this, \"SupplementEveryDay: Buying \" + SupplementName + \" of total amount : \" + (SupplementEveryDay * 90 * stock.NumberAll) + \" kg DM\");\r\n                    }\r\n                    supplement.Feed(SupplementName, SupplementEveryDay * stock.NumberAll, CurrentLocation, SupplementFirst);\r\n                }\r\n\r\n                if (SupplementOnPastureMass > 0 && harvestableBiomass <= TriggerPastureMass)\r\n                {\r\n                    double silageOnHand = supplement.Stores[2 - 1].Stored;\r\n                    if (silageOnHand < SupplementOnPastureMass * stock.NumberAll)\r\n                    {\r\n                        supplement.Buy(SupplementOnPastureMass * 90.0 * stock.NumberAll, SupplementName);  // i.e. 6 months worth\r\n                        summary.WriteMessage(this, \"SupplementOnBiomass: Buying \" + SupplementName + \" of total amount : \" + (SupplementOnPastureMass * 90 * stock.NumberAll) + \" kg DM\");\r\n                    }\r\n                    supplement.Feed(SupplementName, SupplementOnPastureMass * stock.NumberAll, CurrentLocation, SupplementFirst);\r\n                }\r\n            }\r\n        }\r\n\r\n\r\n        public void BuyStock()\r\n        {\r\n            CurrentGroupNum = stock.NoGroups + 1;\r\n            StockBuy purchase = new StockBuy();\r\n            purchase.Genotype = ReflectionUtilities.EnumToString(Genotype);\r\n            purchase.Number = NumStock;\r\n            purchase.Sex = Sex;\r\n            purchase.Age = Age;       // age in months\r\n            purchase.Weight = Weight;  // live weight in kg\r\n            purchase.UseTag = CurrentGroupNum + 1;\r\n            purchase.MatedTo = purchase.Genotype;\r\n            purchase.Pregnant = Pregnant;  // days pregnant, 0 = non pregnant, 1 = pregnant\r\n            purchase.Lactating = Lactating;  // 0 for dry, 1 for lactating\r\n            purchase.NumYoung = YoungNumber;\r\n            purchase.YoungWt = YoungWt;\r\n\r\n            stock.Buy(purchase);\r\n        }\r\n\r\n        public void SellStock()\r\n        {\r\n            int NumGroups = stock.NoGroups;\r\n\r\n            NumGroups = stock.NoGroups;\r\n            for (int gg = 1; gg <= NumGroups; gg++)\r\n            {\r\n                stock.Sell(stock.Number[gg - 1], gg);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
           "Parameters": [
             {
               "Key": "Genotype",
@@ -145,7 +148,7 @@
             },
             {
               "Key": "Sex",
-              "Value": "Steers"
+              "Value": "Castrate"
             },
             {
               "Key": "Age",
@@ -205,7 +208,7 @@
             },
             {
               "Key": "SupplementFirst",
-              "Value": "True"
+              "Value": "False"
             },
             {
               "Key": "SupplementEveryDay",
@@ -235,8 +238,6 @@
         },
         {
           "$type": "Models.Report.Report, Models",
-          "ExperimentFactorNames": null,
-          "ExperimentFactorValues": null,
           "VariableNames": [
             "[Clock].Today",
             "[Stock].NumberAll as NumStock",
@@ -245,8 +246,6 @@
             "[Stock].WeightAll as AveBodyWeight",
             "[Stock].CondScoreAll as AveCS",
             "[Stock].MilkWtAll as AveMilkWeight",
-            "[GrazeForageCrop].Script.CurrentLocationNum as CurrentLocationNum",
-            "[GrazeForageCrop].Script.HarvestableBiomass as harvestableBiomass",
             "[Supplement].stores[2].Stored as SupplementRemaining"
           ],
           "EventNames": [
@@ -275,7 +274,8 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -285,7 +285,8 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": true
+                  "DateTimeAxis": true,
+                  "CrossesAtZero": false
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
@@ -295,11 +296,14 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "Biomass_StockNum_supps",
               "Children": [
                 {
@@ -319,8 +323,8 @@
                   "TableName": "Report",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "NumStock",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
@@ -349,8 +353,8 @@
                   "TableName": "ReportInField",
                   "XFieldName": "Date",
                   "YFieldName": "AboveGroundBiomass_kgDM/ha",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
@@ -379,8 +383,8 @@
                   "TableName": "Report",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "SupplementRemaining",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
@@ -406,6 +410,8 @@
           "$type": "Models.Core.Zone, Models",
           "Area": 1.0,
           "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
           "Name": "Field",
           "Children": [
             {
@@ -415,7 +421,7 @@
               "Children": [
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Plantain;\r\n        [Link] Soil Soil; \r\n        Accumulator accumulatedRain;\r\n\r\n        [Separator(\"======= Sowing conditions =======\")]\r\n        [Description(\"Start of sowing window (dd-mmm)\")] public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (dd-mmm)\")] public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")] public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")] public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")] public int RainDays { get; set;}\r\n        [Description(\"Must sow at the end of the window?\")] public answerType mustSow { get; set; }\r\n\r\n        [Separator(\"======= Sowing data =======\")]\r\n        [Description(\"Cultivar to be sown\")] public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")] public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")] public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")] public double Population { get; set;}    \r\n\r\n        [Separator(\"======= Sowing fertiliser =======\")]\r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")] public double Amount { get; set;}\r\n\r\n           public enum answerType\r\n        {\r\n            /// <summary>a positive answer</summary>\r\n            yes,\r\n            /// <summary>a negative answer</summary>\r\n            no\r\n        }\r\n\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            //if (allowIrrigation == answerType.yes)\r\n\r\n            bool doSowing = false;\r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) && !Plantain.IsAlive)\r\n            \tdoSowing = true;\r\n            if ((MathUtilities.Sum(Soil.SoilWater.ESW) < MinESW) || (accumulatedRain.Sum < MinRain))\r\n            \tdoSowing = false;\r\n            if ((mustSow == answerType.yes) && (DateUtilities.DatesEqual(EndDate, Clock.Today)))\r\n            \tdoSowing = true;\r\n            \r\n            if (doSowing)\r\n            {\r\n               Plantain.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);\r\n               Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                  "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Plantain;\r\n        [Link] Soil Soil; \r\n        Accumulator accumulatedRain;\r\n\r\n        [Separator(\"======= Sowing conditions =======\")]\r\n        [Description(\"Start of sowing window (dd-mmm)\")] public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (dd-mmm)\")] public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")] public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")] public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")] public int RainDays { get; set;}\r\n        [Description(\"Must sow at the end of the window?\")] public answerType mustSow { get; set; }\r\n\r\n        [Separator(\"======= Sowing data =======\")]\r\n        [Description(\"Cultivar to be sown\")] public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")] public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")] public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")] public double Population { get; set;}    \r\n\r\n        [Separator(\"======= Sowing fertiliser =======\")]\r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")] public double Amount { get; set;}\r\n\r\n           public enum answerType\r\n        {\r\n            /// <summary>a positive answer</summary>\r\n            yes,\r\n            /// <summary>a negative answer</summary>\r\n            no\r\n        }\r\n\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            //if (allowIrrigation == answerType.yes)\r\n\r\n            bool doSowing = false;\r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) && !Plantain.IsAlive)\r\n                doSowing = true;\r\n            if ((MathUtilities.Sum(Soil.SoilWater.ESW) < MinESW) || (accumulatedRain.Sum < MinRain))\r\n                doSowing = false;\r\n            if ((mustSow == answerType.yes) && (DateUtilities.DatesEqual(EndDate, Clock.Today)))\r\n                doSowing = true;\r\n            \r\n            if (doSowing)\r\n            {\r\n               Plantain.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);\r\n               Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
                       "Key": "StartDate",
@@ -590,6 +596,7 @@
               "d_interception": 0.0,
               "soil_albedo": 0.23,
               "SoilHeatFluxFraction": 0.4,
+              "MinimumHeightDiffForNewLayer": 0.0,
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
@@ -615,22 +622,15 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.SoluteManager, Models",
-              "Name": "SoluteManager",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "Canopies": [],
               "InitialResidueName": "grass",
               "InitialResidueType": "grass",
               "InitialResidueMass": 500.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 40.0,
-              "FractionFaecesAdded": 0.5,
+              "FractionFaecesAdded": 1.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
               "IncludeInDocumentation": true,
@@ -639,7 +639,6 @@
             },
             {
               "$type": "Models.Soils.Soil, Models",
-              "Weirdo": null,
               "RecordNumber": 0,
               "ASCOrder": null,
               "ASCSubOrder": null,
@@ -660,7 +659,15 @@
               "Name": "Soil",
               "Children": [
                 {
-                  "$type": "Models.Soils.Analysis, Models",
+                  "$type": "Models.Soils.Chemical, Models",
+                  "Depth": [
+                    "0-15",
+                    "15-30",
+                    "30-50",
+                    "50-75",
+                    "75-100",
+                    "100-150"
+                  ],
                   "Thickness": [
                     150.0,
                     150.0,
@@ -669,21 +676,22 @@
                     250.0,
                     500.0
                   ],
-                  "Rocks": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0
+                  "NO3N": [
+                    9.433962264150944,
+                    6.5929299501192782,
+                    3.6820973075106305,
+                    2.1917808219178077,
+                    2.1917808219178077,
+                    0.74074074074074092
                   ],
-                  "RocksMetadata": null,
-                  "Texture": null,
-                  "TextureMetadata": null,
-                  "MunsellColour": null,
-                  "MunsellMetadata": null,
-                  "EC": null,
-                  "ECMetadata": null,
+                  "NH4N": [
+                    0.37735849056603776,
+                    0.24072869225764482,
+                    0.11360415682569673,
+                    0.054794520547945182,
+                    0.054794520547945237,
+                    0.02962962962962962
+                  ],
                   "PH": [
                     6.0,
                     6.0,
@@ -692,71 +700,25 @@
                     6.0,
                     6.0
                   ],
-                  "PHMetadata": null,
                   "CL": null,
-                  "CLMetadata": null,
-                  "Boron": null,
-                  "BoronMetadata": null,
-                  "CEC": [
-                    13.0,
-                    11.0,
-                    9.0,
-                    8.0,
-                    7.0,
-                    6.0
-                  ],
-                  "CECMetadata": null,
-                  "Ca": null,
-                  "CaMetadata": null,
-                  "Mg": null,
-                  "MgMetadata": null,
-                  "Na": null,
-                  "NaMetadata": null,
-                  "K": null,
-                  "KMetadata": null,
+                  "EC": null,
                   "ESP": null,
-                  "ESPMetadata": null,
-                  "Mn": null,
-                  "MnMetadata": null,
-                  "Al": null,
-                  "AlMetadata": null,
-                  "ParticleSizeSand": [
-                    15.0,
-                    20.0,
-                    20.0,
-                    25.0,
-                    35.0,
-                    35.0
-                  ],
-                  "ParticleSizeSandMetadata": null,
-                  "ParticleSizeSilt": [
-                    65.0,
-                    60.0,
-                    60.0,
-                    60.0,
-                    55.0,
-                    55.0
-                  ],
-                  "ParticleSizeSiltMetadata": null,
-                  "ParticleSizeClay": [
-                    20.0,
-                    20.0,
-                    20.0,
-                    15.0,
-                    10.0,
-                    10.0
-                  ],
-                  "ParticleSizeClayMetadata": null,
-                  "PHUnits": 0,
-                  "BoronUnits": 0,
-                  "Name": "Analysis",
+                  "Name": "Chemical",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.Water, Models",
+                  "$type": "Models.Soils.Physical, Models",
+                  "Depth": [
+                    "0-15",
+                    "15-30",
+                    "30-50",
+                    "50-75",
+                    "75-100",
+                    "100-150"
+                  ],
                   "Thickness": [
                     150.0,
                     150.0,
@@ -765,6 +727,16 @@
                     250.0,
                     500.0
                   ],
+                  "ParticleSizeClay": [
+                    20.0,
+                    20.0,
+                    20.0,
+                    15.0,
+                    10.0,
+                    10.0
+                  ],
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
                   "BD": [
                     1.3,
                     1.4,
@@ -819,7 +791,7 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
-                  "Name": "Water",
+                  "Name": "Physical",
                   "Children": [
                     {
                       "$type": "Models.Soils.SoilCrop, Models",
@@ -887,6 +859,14 @@
                     250.0,
                     500.0
                   ],
+                  "Depth": [
+                    "0-15",
+                    "15-30",
+                    "30-50",
+                    "50-75",
+                    "75-100",
+                    "100-150"
+                  ],
                   "SWCON": [
                     0.45,
                     0.35,
@@ -896,7 +876,7 @@
                     0.2
                   ],
                   "KLAT": null,
-                  "ResidueInterception": 0.0,
+                  "PrecipitationInterception": 0.0,
                   "Name": "SoilWater",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -938,26 +918,54 @@
                     0.9
                   ],
                   "Name": "SoilNitrogen",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                      "Name": "NO3",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                      "Name": "NH4",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                      "Name": "Urea",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                      "Name": "PlantAvailableNO3",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                      "Name": "PlantAvailableNH4",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.SoilOrganicMatter, Models",
-                  "RootCN": 40.0,
-                  "RootWt": 1000.0,
-                  "SoilCN": 12.0,
-                  "EnrACoeff": 7.4,
-                  "EnrBCoeff": 0.2,
-                  "Thickness": [
-                    150.0,
-                    150.0,
-                    200.0,
-                    250.0,
-                    250.0,
-                    500.0
-                  ],
+                  "$type": "Models.Soils.Organic, Models",
                   "Depth": [
                     "0-15",
                     "15-30",
@@ -966,7 +974,16 @@
                     "75-100",
                     "100-150"
                   ],
-                  "OC": [
+                  "FOMCNRatio": 40.0,
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    200.0,
+                    250.0,
+                    250.0,
+                    500.0
+                  ],
+                  "Carbon": [
                     2.5,
                     1.25,
                     0.5,
@@ -974,7 +991,14 @@
                     0.15,
                     0.1
                   ],
-                  "OCMetadata": null,
+                  "SoilCNRatio": [
+                    12.0,
+                    12.0,
+                    12.0,
+                    12.0,
+                    12.0,
+                    12.0
+                  ],
                   "FBiom": [
                     0.04,
                     0.025,
@@ -991,8 +1015,15 @@
                     0.95,
                     0.98
                   ],
-                  "OCUnits": 0,
-                  "Name": "SoilOrganicMatter",
+                  "FOM": [
+                    358.61744427798754,
+                    265.67033697544377,
+                    178.0841525116833,
+                    108.01349850727648,
+                    65.513498507487952,
+                    24.101069220120792
+                  ],
+                  "Name": "Organic",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -1012,32 +1043,26 @@
                 },
                 {
                   "$type": "Models.Soils.Sample, Models",
+                  "Depth": [
+                    "0-20",
+                    "20-40",
+                    "40-100",
+                    "100-150"
+                  ],
                   "Thickness": [
                     200.0,
                     200.0,
                     600.0,
                     500.0
                   ],
-                  "NO3": [
-                    25.0,
-                    15.0,
-                    20.0,
-                    5.0
-                  ],
-                  "NH4": [
-                    1.0,
-                    0.5,
-                    0.5,
-                    0.2
-                  ],
+                  "NO3N": null,
+                  "NH4N": null,
                   "SW": null,
                   "OC": null,
                   "EC": null,
                   "CL": null,
                   "ESP": null,
                   "PH": null,
-                  "NO3Units": 1,
-                  "NH4Units": 1,
                   "SWUnits": 0,
                   "OCUnits": 0,
                   "PHUnits": 0,
@@ -1063,6 +1088,9 @@
             {
               "$type": "Models.PMF.Plant, Models",
               "CropType": "Plantain",
+              "IsAlive": false,
+              "IsEnding": false,
+              "DaysAfterEnding": 0,
               "ResourceName": "Plantain",
               "Name": "Plantain",
               "IncludeInDocumentation": true,
@@ -1071,8 +1099,6 @@
             },
             {
               "$type": "Models.Report.Report, Models",
-              "ExperimentFactorNames": null,
-              "ExperimentFactorValues": null,
               "VariableNames": [
                 "[Clock].Today as Date",
                 "",
@@ -1092,7 +1118,7 @@
                 "sum([Soil].SoilNitrogen.Denitrification) as DenitrifiedN",
                 "([Soil].SoilWater.LeachNH4 + [Soil].SoilWater.LeachNO3) as LeachedN",
                 "(-1*[Plantain].Root.NUptake) as UptakeN",
-                "(sum([Soil].SoilNitrogen.urea) + sum([Soil].SoilNitrogen.NH4) + sum([Soil].SoilNitrogen.NO3)) as SoilNContent",
+                "(sum([Soil].SoilNitrogen.Urea.kgha) + sum([Soil].SoilNitrogen.NH4.kgha) + sum([Soil].SoilNitrogen.NO3.kgha)) as SoilNContent",
                 "",
                 "[Plantain].Total.Wt",
                 "[Plantain].AboveGround.Wt",
@@ -1133,7 +1159,8 @@
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": "NaN",
-              "DateTimeAxis": false
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             },
             {
               "$type": "Models.Graph.Axis, Models",
@@ -1143,11 +1170,14 @@
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": "NaN",
-              "DateTimeAxis": true
+              "DateTimeAxis": true,
+              "CrossesAtZero": false
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": [],
+          "LegendOutsideGraph": false,
           "Name": "Biomass",
           "Children": [
             {
@@ -1167,8 +1197,8 @@
               "TableName": "ReportInField",
               "XFieldName": "Date",
               "YFieldName": "Plantain.Total.Wt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": false,
@@ -1197,8 +1227,8 @@
               "TableName": "ReportInField",
               "XFieldName": "Date",
               "YFieldName": "Plantain.AboveGround.Wt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": false,
@@ -1227,8 +1257,8 @@
               "TableName": "ReportInField",
               "XFieldName": "Date",
               "YFieldName": "Plantain.BelowGround.Wt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": false,
@@ -1257,7 +1287,8 @@
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": "NaN",
-              "DateTimeAxis": false
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             },
             {
               "$type": "Models.Graph.Axis, Models",
@@ -1267,11 +1298,14 @@
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": "NaN",
-              "DateTimeAxis": true
+              "DateTimeAxis": true,
+              "CrossesAtZero": false
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": [],
+          "LegendOutsideGraph": false,
           "Name": "PlantParts",
           "Children": [
             {
@@ -1291,8 +1325,8 @@
               "TableName": "ReportInField",
               "XFieldName": "Date",
               "YFieldName": "Plantain.Leaf.Live.Wt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": false,
@@ -1321,8 +1355,8 @@
               "TableName": "ReportInField",
               "XFieldName": "Date",
               "YFieldName": "Plantain.Stem.Live.Wt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": false,
@@ -1351,8 +1385,8 @@
               "TableName": "ReportInField",
               "XFieldName": "Date",
               "YFieldName": "Plantain.Inflorescence.Live.Wt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": false,
@@ -1381,8 +1415,8 @@
               "TableName": "ReportInField",
               "XFieldName": "Date",
               "YFieldName": "Plantain.Taproot.Live.Wt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": false,
@@ -1411,8 +1445,8 @@
               "TableName": "ReportInField",
               "XFieldName": "Date",
               "YFieldName": "Plantain.Root.Live.Wt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": false,
@@ -1441,7 +1475,8 @@
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": "NaN",
-              "DateTimeAxis": false
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             },
             {
               "$type": "Models.Graph.Axis, Models",
@@ -1451,11 +1486,14 @@
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": "NaN",
-              "DateTimeAxis": true
+              "DateTimeAxis": true,
+              "CrossesAtZero": false
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": [],
+          "LegendOutsideGraph": false,
           "Name": "Water",
           "Children": [
             {
@@ -1475,8 +1513,8 @@
               "TableName": "ReportInField",
               "XFieldName": "Date",
               "YFieldName": "TotalSWC",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": false,
@@ -1505,8 +1543,8 @@
               "TableName": "ReportInField",
               "XFieldName": "Date",
               "YFieldName": "TotalDUL",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": false,
@@ -1535,8 +1573,8 @@
               "TableName": "ReportInField",
               "XFieldName": "Date",
               "YFieldName": "TotalLL15",
-              "X2FieldName": null,
-              "Y2FieldName": null,
+              "X2FieldName": "",
+              "Y2FieldName": "",
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": false,

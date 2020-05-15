@@ -17,13 +17,13 @@ namespace Models.Soils.Nutrients
     [ViewName("UserInterface.Views.GridView")]
     public class NFlow : Model
     {
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction rate = null;
 
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction NLoss = null;
 
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction N2OFraction = null;
 
         private ISolute sourceSolute = null;
@@ -61,8 +61,8 @@ namespace Models.Soils.Nutrients
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            sourceSolute = Apsim.Find(this, Parent.Name) as ISolute;
-            destinationSolute = Apsim.Find(this, destinationName) as ISolute;
+            sourceSolute = Apsim.FindAll(this, typeof(ISolute)).Find(s => s.Name == Parent.Name) as ISolute;
+            destinationSolute = Apsim.FindAll(this, typeof(ISolute)).Find(s => s.Name == destinationName) as ISolute;
         }
 
         /// <summary>

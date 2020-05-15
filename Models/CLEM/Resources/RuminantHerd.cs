@@ -79,7 +79,7 @@ namespace Models.CLEM.Resources
                 List<Ruminant> herd = Herd.Where(a => a.HerdName == herdName).ToList();
 
                 // get list of females of breeding age and condition
-                List<RuminantFemale> breedFemales = herd.Where(a => a.Gender == Sex.Female && a.Age >= a.BreedParams.MinimumAge1stMating + a.BreedParams.GestationLength && a.Weight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight) && a.Weight >= (a.BreedParams.CriticalCowWeight * a.StandardReferenceWeight)).OrderByDescending(a => a.Age).ToList().Cast<RuminantFemale>().ToList();
+                List<RuminantFemale> breedFemales = herd.Where(a => a.Gender == Sex.Female && a.Age >= a.BreedParams.MinimumAge1stMating + a.BreedParams.GestationLength && a.Age <= a.BreedParams.MaximumAgeMating && a.HighWeight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight) && a.Weight >= (a.BreedParams.CriticalCowWeight * a.StandardReferenceWeight)).OrderByDescending(a => a.Age).ToList().Cast<RuminantFemale>().ToList();
 
                 // get list of all sucking individuals
                 List<Ruminant> sucklingList = herd.Where(a => a.Weaned == false).ToList();
@@ -88,7 +88,8 @@ namespace Models.CLEM.Resources
                 {
                     if (sucklingList.Count > 0)
                     {
-                        Summary.WriteWarning(this, String.Format("Insufficient breeding females to assign [{0}] sucklings for herd [r={1}].\nUnassigned calves will need to graze or be fed and may have reduced growth until weaned.\nBreeding females must be at least minimum breeding age + gestation length at the start of the simulation to provide a calf.", sucklingList.Count, herdName));
+                        Summary.WriteWarning(this, String.Format("Insufficient breeding females to assign [{0}] sucklings for herd [r={1}].\nUnassigned calves will need to graze or be fed and may have reduced growth until weaned.\nBreeding females must be at least minimum breeding age + gestation length + age of sucklings at the start of the simulation to provide a calf.", sucklingList.Count, herdName));
+                        break;
                     }
                 }
                 else
@@ -127,23 +128,11 @@ namespace Models.CLEM.Resources
                                 // restrict minimum period between births
                                 currentIPI = Math.Max(currentIPI, breedFemales[0].BreedParams.GestationLength + 2);
 
-                                // calculate previous births
-                                // no longer needed as only work with stats during the simulation.
-                                //breedFemales[0].NumberOfBirths = Convert.ToInt32((breedFemales[0].Age - suckling.Age - breedFemales[0].BreedParams.GestationLength - breedFemales[0].BreedParams.MinimumAge1stMating) / ((currentIPI + minsizeIPI) / 2));
-                                //breedFemales[0].NumberOfConceptions = breedFemales[0].NumberOfBirths;
-
-                                // add this birth
-                                if (suckling.Age == 0)
-                                {
-                                    // do not add if this is not a new born suckling at initialisation as was assumed to be previously added
-                                    breedFemales[0].NumberOfBirths++;
-                                    breedFemales[0].NumberOfConceptions++;
-                                }
-
                                 //breedFemales[0].Parity = breedFemales[0].Age - suckling.Age - 9;
                                 // AL removed the -9 as this would make it conception month not birth month
                                 breedFemales[0].AgeAtLastBirth = breedFemales[0].Age - suckling.Age;
                                 breedFemales[0].AgeAtLastConception = breedFemales[0].AgeAtLastBirth - breedFemales[0].BreedParams.GestationLength;
+                                breedFemales[0].SetAgeEnteredSimulation(breedFemales[0].AgeAtLastConception);
                             }
 
                             // add this offspring to birth count
@@ -161,9 +150,11 @@ namespace Models.CLEM.Resources
                             breedFemales[0].NumberOfOffspring++;
 
                             // check if a twin and if so apply next individual to same mother.
-                            // otherwise remove this mother from the list
+                            // otherwise remove this mother from the list and change counters
                             if (numberThisPregnancy == 1)
                             {
+                                breedFemales[0].NumberOfBirths++;
+                                breedFemales[0].NumberOfConceptions=1;
                                 breedFemales.RemoveAt(0);
                             }
                             else
@@ -173,14 +164,15 @@ namespace Models.CLEM.Resources
                         }
                         else
                         {
-                            Summary.WriteWarning(this, String.Format("Insufficient breeding females to assign [{0}] sucklings for herd [r={1}].\nUnassigned calves will need to graze or be fed and may have reduced growth until weaned.\nBreeding females must be at least minimum breeding age + gestation length at the start of the simulation to provide a calf.", sucklingList.Count - sucklingCount, herdName));
+                            Summary.WriteWarning(this, String.Format("Insufficient breeding females to assign [{0}] sucklings for herd [r={1}].\nUnassigned calves will need to graze or be fed and may have reduced growth until weaned.\nBreeding females must be at least minimum breeding age + gestation length + age of sucklings at the start of the simulation to provide a calf.", sucklingList.Count - sucklingCount, herdName));
+                            break;
                         }
                     }
 
                     // assigning values for the remaining females who haven't just bred.
                     // i.e meet breeding rules and not pregnant or lactating (just assigned calf), but calculate for underweight individuals not previously provided calves.
                     double ageFirstBirth = herd[0].BreedParams.MinimumAge1stMating + herd[0].BreedParams.GestationLength;
-                    foreach (RuminantFemale female in herd.Where(a => a.Gender == Sex.Female && a.Age > a.BreedParams.MinimumAge1stMating + a.BreedParams.GestationLength && a.Weight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight)).Cast<RuminantFemale>().Where(a => !a.IsLactating && !a.IsPregnant))
+                    foreach (RuminantFemale female in herd.Where(a => a.Gender == Sex.Female && a.Age > a.BreedParams.MinimumAge1stMating + a.BreedParams.GestationLength && a.HighWeight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight)).Cast<RuminantFemale>().Where(a => !a.IsLactating && !a.IsPregnant))
                     {
                         female.DryBreeder = true;
                         // generalised curve
@@ -191,15 +183,17 @@ namespace Models.CLEM.Resources
                         // calculate number of births assuming conception at min age first mating
                         // therefore first birth min age + gestation length
 
-                        female.NumberOfBirths = Convert.ToInt32((female.Age - ageFirstBirth) / ((currentIPI + minsizeIPI) / 2), CultureInfo.InvariantCulture) - 1;
-                        female.AgeAtLastBirth = ageFirstBirth + (currentIPI* female.NumberOfBirths);
+                        int numberOfBirths = Convert.ToInt32((female.Age - ageFirstBirth) / ((currentIPI + minsizeIPI) / 2), CultureInfo.InvariantCulture) - 1;
+                        female.AgeAtLastBirth = ageFirstBirth + (currentIPI * numberOfBirths);
                         female.AgeAtLastConception = female.AgeAtLastBirth - breedFemales[0].BreedParams.GestationLength;
+                        
+                        // no longer needed as only work with stats during the simulation.
 
                         // fill breeding stats prior to simulation start
                         // assumes all previous births successful
-                        female.NumberOfConceptions = female.NumberOfBirths;
-                        female.NumberOfOffspring = female.NumberOfBirths;
-                        female.NumberOfWeaned = female.NumberOfBirths;
+                        //female.NumberOfConceptions = female.NumberOfBirths;
+                        //female.NumberOfOffspring = female.NumberOfBirths;
+                        //female.NumberOfWeaned = female.NumberOfBirths;
                     }
                 }
             }
@@ -211,7 +205,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("EndOfSimulation")]
         private void OnEndOfSimulation(object sender, EventArgs e)
         {
-            // report all fmeales of breeding age at end of simulation
+            // report all females of breeding age at end of simulation
             foreach (RuminantFemale female in Herd.Where(a => a.Gender == Sex.Female && a.Age >= a.BreedParams.MinimumAge1stMating))
             {
                 RuminantReportItemEventArgs args = new RuminantReportItemEventArgs
@@ -293,9 +287,6 @@ namespace Models.CLEM.Resources
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);
 
-            // remove change flag
-            ind.SaleFlag = HerdChangeReason.None;
-
             // report female breeding stats if needed
             if(ind.Gender == Sex.Female & ind.Age >= ind.BreedParams.MinimumAge1stMating)
             {
@@ -307,6 +298,8 @@ namespace Models.CLEM.Resources
                 OnFinalFemaleOccurred(args);
             }
 
+            // remove change flag
+            ind.SaleFlag = HerdChangeReason.None;
         }
 
         /// <summary>

@@ -1,16 +1,17 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 47,
+  "Version": 76,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-01-31",
   "Name": "Management toolbox",
   "Children": [
     {
       "$type": "Models.Manager, Models",
-      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Crop\")]\r\n        public IPlant Crop { get; set; }\r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n    [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n        \r\n\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))\r\n            {\r\n                Crop.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        \r\n        [Description(\"Crop\")]\r\n        public IPlant Crop { get; set; }\r\n\r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n\r\n    \t[Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))\r\n            {\r\n                Crop.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        }\r\n    }\r\n}",
       "Parameters": [
         {
           "Key": "Crop",
-          "Value": "Chickpea"
+          "Value": ""
         },
         {
           "Key": "SowDate",
@@ -40,7 +41,7 @@
     },
     {
       "$type": "Models.Manager, Models",
-      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Crop\")]\r\n        public IPlant Crop { get; set; }\r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set; }\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set; }\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set; }\r\n    [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n        \r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&\r\n                !Crop.IsAlive &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n                Crop.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Crop\")]\r\n        public IPlant Crop { get; set; }\r\n\r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set; }\r\n\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set; }\r\n\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set; }\r\n\r\n    \t[Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n        \r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&\r\n                !Crop.IsAlive &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n                Crop.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        }\r\n    }\r\n}",
       "Parameters": [
         {
           "Key": "Crop",
@@ -94,7 +95,7 @@
       "Parameters": [
         {
           "Key": "Crop",
-          "Value": "Maize"
+          "Value": ""
         }
       ],
       "Name": "Harvesting",
@@ -104,7 +105,7 @@
     },
     {
       "$type": "Models.Manager, Models",
-      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        \r\n        [Separator(\"A component to apply fertiliser on one or more dates on every year of the simulation\")]\r\n\r\n        [Description(\"Type of fertiliser to apply? \")] public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n        [Description(\"Enter the fertilisation dates as dd-mmm with comma separation (any year information entered will be ignored): \")] public string[] FertiliserDates { get; set; } \r\n\r\n        [Description(\"Amount of fertiliser to be applied (kg /ha)\")] public double Amount { get; set; }\r\n\r\n        [Description(\"Is the above amount to be applied each time? (yes/ticked)? Or is it the total annual amount across all dates (no/unticked)\")] public bool AmountType { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n        \tforeach (string ddMMM in FertiliserDates)\r\n        \t{\r\n    \t\t\tif (DateUtilities.DatesEqual(ddMMM, Clock.Today))\r\n        \t\t{\r\n        \t\t\tif (AmountType)\r\n        \t\t\t\tFertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n        \t\t\telse\r\n        \t\t\t\tFertiliser.Apply(Amount: Amount / FertiliserDates.Length, Type: FertiliserType);\r\n        \t\t}\r\n        \t}\r\n        }\r\n    }\r\n}\r\n",
+      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        \r\n        [Separator(\"A component to apply fertiliser on one or more dates on every year of the simulation\")]\r\n\r\n        [Description(\"Type of fertiliser to apply? \")] \r\n        public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n        [Description(\"Enter the fertilisation dates as dd-mmm with comma separation (any year information entered will be ignored): \")] \r\n        public string[] FertiliserDates { get; set; } \r\n\r\n        [Description(\"Amount of fertiliser to be applied (kg /ha)\")] \r\n        public double Amount { get; set; }\r\n\r\n        [Description(\"Is the above amount to be applied each time? (yes/ticked)? Or is it the total annual amount across all dates (no/unticked)\")] \r\n        public bool AmountType { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            foreach (string ddMMM in FertiliserDates)\r\n            {\r\n                if (DateUtilities.DatesEqual(ddMMM, Clock.Today))\r\n                {\r\n                    if (AmountType)\r\n                        Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n                    else\r\n                        Fertiliser.Apply(Amount: Amount / FertiliserDates.Length, Type: FertiliserType);\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
       "Parameters": [
         {
           "Key": "FertiliserType",
@@ -128,51 +129,51 @@
       "Enabled": true,
       "ReadOnly": false
     },
-	{
-	  "$type": "Models.Manager, Models",
-	  "Code": "using System;\r\nusing Models.Core;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Linq;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Fertiliser fertiliser;\r\n        [Link] ISummary summary;\r\n        [Link] Soil soil;\r\n\r\n        private Nutrient nutrient;\r\n        private SoilNitrogen soilN;\r\n\r\n        [Separator(\"Fertiliser will be applied on the date(s) below\")]\r\n        [Description(\"Apply fertiliser on the same day(s) each year? If no, then must include the year of appliaction below\")]\r\n        public bool EachYear { get; set; }\r\n\r\n        [Description(\"Dates for one or more fertiliser applications (dd-mmm or dd-mmm-yyyy) as a list with a comma between dates\")]\r\n        public string[] Dates { get; set; }\r\n\r\n        [Separator(\"Test for the mineral N in the soil and don't apply the fertiliser if greater than X kgN/ha is stored in the soil above a depth of Y mm\")]\r\n        [Description(\"Use a critical soil mineral N to prevent application above a threshold?\")]\r\n        public bool UseCritNThreshold { get; set; }\r\n\r\n        [Description(\"Don't add fertiliser if N in the soil to the depth below exceeds (kg/ha)\")]\r\n        public double CritNThreshold { get; set; }\r\n\r\n        [Description(\"Depth to which the amount of N in the soil should be calculated (mm)\")]\r\n        public double CritNDepth { get; set; }\r\n\r\n        [Separator(\"Fertiliser application details\")]\r\n        [Description(\"Depth at which to apply the fertiliser (mm)\")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Amount of fertiliser to apply (kg N /ha) per application\")]\r\n        public double Amount { get; set; }\r\n\r\n        [Description(\"Fertiliser type - select from the list\")]\r\n        public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void FindSoilNOrNutrient(object sender, EventArgs e)\r\n        {\r\n        \tnutrient = Apsim.Find(this, typeof(Nutrient)) as Nutrient;\r\n        \tsoilN = Apsim.Find(this, typeof(SoilNitrogen)) as SoilNitrogen;\r\n\r\n        \tif (nutrient == null && soilN == null)\r\n        \t\tthrow new Exception(string.Format(\"Error in script {0}: Unable to find nutrient or soilN.\", Name));\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n        \tif (OnApplicationDate())\r\n        \t{\r\n        \t\tif (NContentBelowThreshold())\r\n        \t\t\tfertiliser.Apply(Amount, FertiliserType, Depth);\r\n        \t\telse\r\n        \t\t\tsummary.WriteMessage(this, \"Skipping fertiliser application due to soil mineral N content being above critical threshold.\");\r\n    \t\t}\r\n        }\r\n\r\n        /// <summary>Checks if today's date is one of the specified fertiliser application dates.</summary>\r\n        private bool OnApplicationDate()\r\n        {\r\n        \tif (EachYear)\r\n        \t\treturn Dates.Any(d => DateUtilities.DatesEqual(d, clock.Today));\r\n        \t\r\n        \tDateTime[] dates = Dates.Select(d => DateTime.ParseExact(d, \"d-MMM-yyyy\", null)).ToArray();\r\n        \treturn dates.Any(d => SameDate(d, clock.Today));\r\n        }\r\n\r\n        /// <summary>Checks if N content in soil is below critical threshold.</summary>\r\n        private bool NContentBelowThreshold()\r\n        {\r\n        \tif (!UseCritNThreshold)\r\n        \t\treturn true;\r\n        \t\r\n        \tdouble[] weights = GetLayerWeights();\r\n        \tdouble cumSoilN = 0;\r\n\r\n        \tfor (int i = 0; i < soil.Thickness.Length; i++)\r\n        \t{\r\n        \t\tif (nutrient != null)\r\n        \t\t\tcumSoilN += weights[i] * nutrient.MineralN[i];\r\n        \t\telse if (soilN != null)\r\n        \t\t\tcumSoilN += weights[i] * soilN.mineral_n[i];\r\n    \t\t}\r\n\r\n        \treturn cumSoilN <= CritNThreshold;\r\n        }\r\n\r\n        private double[] GetLayerWeights()\r\n\t\t{\r\n\t\t\tdouble[] weights = new double[soil.Thickness.Length];\r\n\t\t\tdouble cumDepth = 0;\r\n\r\n\t\t\tfor (int i = 0; i < soil.Thickness.Length; i++)\r\n\t\t\t{\r\n\t\t\t\tcumDepth += soil.Thickness[i];\r\n\t\t\t\tif (cumDepth < CritNDepth)\r\n\t\t\t\t\tweights[i] = 1;\r\n\t\t\t\telse if (cumDepth - soil.Thickness[i] <= CritNDepth)\r\n\t\t\t\t\tweights[i] = (CritNDepth - (cumDepth - soil.Thickness[i])) / soil.Thickness[i];\r\n\t\t\t\telse\r\n\t\t\t\t\tweights[i] = 0;\r\n\t\t\t}\r\n\r\n\t\t\treturn weights;\r\n\t\t}\r\n\r\n\t\tprivate bool SameDate(DateTime d1, DateTime d2)\r\n\t\t{\r\n\t\t\treturn d1.Year == d2.Year && d1.DayOfYear == d2.DayOfYear;\r\n\t\t}\r\n    }\r\n}\r\n",
-	  "Parameters": [
-		{
-		  "Key": "EachYear",
-		  "Value": "True"
-		},
-		{
-		  "Key": "Dates",
-		  "Value": "30-nov,15-apr"
-		},
-		{
-		  "Key": "UseCritNThreshold",
-		  "Value": "False"
-		},
-		{
-		  "Key": "CritNThreshold",
-		  "Value": "50"
-		},
-		{
-		  "Key": "CritNDepth",
-		  "Value": "75"
-		},
-		{
-		  "Key": "Depth",
-		  "Value": "50"
-		},
-		{
-		  "Key": "Amount",
-		  "Value": "25"
-		},
-		{
-		  "Key": "FertiliserType",
-		  "Value": "UreaN"
-		}
-	  ],
-	  "Name": "Fertilise on fixed dates (advanced version)",
-	  "IncludeInDocumentation": true,
-	  "Enabled": true,
-	  "ReadOnly": false
-	},
     {
       "$type": "Models.Manager, Models",
-      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public IPlant Crop { get; set; }\r\n\r\n        [Description(\"Type of fertiliser to apply? \")] public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n    \r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n            Model crop = sender as Model;\r\n            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())\r\n                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n        }\r\n        \r\n    }\r\n}\r\n",
+      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Linq;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Fertiliser fertiliser;\r\n        [Link] ISummary summary;\r\n        [Link] Soil soil;\r\n\r\n        private Nutrient nutrient;\r\n        private SoilNitrogen soilN;\r\n\r\n        [Separator(\"Fertiliser will be applied on the date(s) below\")]\r\n        [Description(\"Apply fertiliser on the same day(s) each year? If no, then must include the year of appliaction below\")]\r\n        public bool EachYear { get; set; }\r\n\r\n        [Description(\"Dates for one or more fertiliser applications (dd-mmm or dd-mmm-yyyy) as a list with a comma between dates\")]\r\n        public string[] Dates { get; set; }\r\n\r\n        [Separator(\"Test for the mineral N in the soil and don't apply the fertiliser if greater than X kgN/ha is stored in the soil above a depth of Y mm\")]\r\n        [Description(\"Use a critical soil mineral N to prevent application above a threshold?\")]\r\n        public bool UseCritNThreshold { get; set; }\r\n\r\n        [Description(\"Don't add fertiliser if N in the soil to the depth below exceeds (kg/ha)\")]\r\n        public double CritNThreshold { get; set; }\r\n\r\n        [Description(\"Depth to which the amount of N in the soil should be calculated (mm)\")]\r\n        public double CritNDepth { get; set; }\r\n\r\n        [Separator(\"Fertiliser application details\")]\r\n        [Description(\"Depth at which to apply the fertiliser (mm)\")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Amount of fertiliser to apply (kg N /ha) per application\")]\r\n        public double Amount { get; set; }\r\n\r\n        [Description(\"Fertiliser type - select from the list\")]\r\n        public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void FindSoilNOrNutrient(object sender, EventArgs e)\r\n        {\r\n            nutrient = Apsim.Find(this, typeof(Nutrient)) as Nutrient;\r\n            soilN = Apsim.Find(this, typeof(SoilNitrogen)) as SoilNitrogen;\r\n\r\n            if (nutrient == null && soilN == null)\r\n                throw new Exception(string.Format(\"Error in script {0}: Unable to find nutrient or soilN.\", Name));\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (OnApplicationDate())\r\n            {\r\n                if (NContentBelowThreshold())\r\n                    fertiliser.Apply(Amount, FertiliserType, Depth);\r\n                else\r\n                    summary.WriteMessage(this, \"Skipping fertiliser application due to soil mineral N content being above critical threshold.\");\r\n            }\r\n        }\r\n\r\n        /// <summary>Checks if today's date is one of the specified fertiliser application dates.</summary>\r\n        private bool OnApplicationDate()\r\n        {\r\n            if (EachYear)\r\n                return Dates.Any(d => DateUtilities.DatesEqual(d, clock.Today));\r\n            \r\n            DateTime[] dates = Dates.Select(d => DateTime.ParseExact(d, \"d-MMM-yyyy\", null)).ToArray();\r\n            return dates.Any(d => SameDate(d, clock.Today));\r\n        }\r\n\r\n        /// <summary>Checks if N content in soil is below critical threshold.</summary>\r\n        private bool NContentBelowThreshold()\r\n        {\r\n            if (!UseCritNThreshold)\r\n                return true;\r\n            \r\n            double[] weights = GetLayerWeights();\r\n            double cumSoilN = 0;\r\n\r\n            for (int i = 0; i < soil.Thickness.Length; i++)\r\n            {\r\n                if (nutrient != null)\r\n                    cumSoilN += weights[i] * nutrient.MineralN[i];\r\n                else if (soilN != null)\r\n                    cumSoilN += weights[i] * soilN.mineral_n[i];\r\n            }\r\n\r\n            return cumSoilN <= CritNThreshold;\r\n        }\r\n\r\n        private double[] GetLayerWeights()\r\n        {\r\n            double[] weights = new double[soil.Thickness.Length];\r\n            double cumDepth = 0;\r\n\r\n            for (int i = 0; i < soil.Thickness.Length; i++)\r\n            {\r\n                cumDepth += soil.Thickness[i];\r\n                if (cumDepth < CritNDepth)\r\n                    weights[i] = 1;\r\n                else if (cumDepth - soil.Thickness[i] <= CritNDepth)\r\n                    weights[i] = (CritNDepth - (cumDepth - soil.Thickness[i])) / soil.Thickness[i];\r\n                else\r\n                    weights[i] = 0;\r\n            }\r\n\r\n            return weights;\r\n        }\r\n\r\n        private bool SameDate(DateTime d1, DateTime d2)\r\n        {\r\n            return d1.Year == d2.Year && d1.DayOfYear == d2.DayOfYear;\r\n        }\r\n    }\r\n}\r\n",
+      "Parameters": [
+        {
+          "Key": "EachYear",
+          "Value": "True"
+        },
+        {
+          "Key": "Dates",
+          "Value": "30-nov,15-apr"
+        },
+        {
+          "Key": "UseCritNThreshold",
+          "Value": "False"
+        },
+        {
+          "Key": "CritNThreshold",
+          "Value": "50"
+        },
+        {
+          "Key": "CritNDepth",
+          "Value": "75"
+        },
+        {
+          "Key": "Depth",
+          "Value": "50"
+        },
+        {
+          "Key": "Amount",
+          "Value": "25"
+        },
+        {
+          "Key": "FertiliserType",
+          "Value": "UreaN"
+        }
+      ],
+      "Name": "Fertilise on fixed dates (advanced version)",
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Manager, Models",
+      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public IPlant Crop { get; set; }\r\n\r\n        [Description(\"Type of fertiliser to apply? \")] \r\n        public Fertiliser.Types FertiliserType { get; set; }\r\n    \r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n            Model crop = sender as Model;\r\n            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())\r\n                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n        }\r\n    }\r\n}",
       "Parameters": [
         {
           "Key": "Crop",
@@ -194,7 +195,7 @@
     },
     {
       "$type": "Models.Manager, Models",
-      "Code": "using System; \r\nusing Models.Core; \r\nusing Models.PMF; \r\nnamespace Models \r\n{ \r\n  [Serializable] \r\n  public class Script : Model \r\n  { \r\n    [Link] Clock Clock; \r\n    [Link] Fertiliser Fertiliser; \r\n    [Link] Summary Summary; \r\n    [Link] Plant Wheat; \r\n \r\n    private bool hasFertilised = false; \r\n\r\n    [Description(\"Fertilise once crop reaches stage:\")]\r\n    public double Stage {get; set;}\r\n\r\n    [Description(\"Type of fertiliser to apply? \")] public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n    [Description(\"Amount of fertiliser to be applied (kg/ha)\")] \r\n    public double Amount { get; set;} \r\n     \r\n    [EventSubscribe(\"DoManagement\")] \r\n    private void OnDoManagement(object sender, EventArgs e) \r\n    { \r\n      double zadok = (double)Apsim.Get(Wheat,\"Phenology.Zadok.Stage\"); \r\n \r\n      if(zadok >= Stage && !hasFertilised) \r\n      { \r\n         Summary.WriteMessage(this, \"Fertilising!!\"); \r\n         Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n         hasFertilised = true; \r\n      } \r\n    }\r\n\r\n    [EventSubscribe(\"Sowing\")]\r\n    private void OnSowing(object sender, EventArgs e)\r\n    {\r\n        hasFertilised = false;\r\n    }\r\n  } \r\n} \r\n",
+      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n\t[Serializable] \r\n\tpublic class Script : Model\r\n\t{\r\n\t\t[Link] Clock Clock;\r\n\t\t[Link] Fertiliser Fertiliser;\r\n\t\t[Link] Summary Summary;\r\n\t\t[Link] Plant Wheat;\r\n \r\n\t\tprivate bool hasFertilised = false;\r\n\r\n\t\t[Description(\"Fertilise once crop reaches stage:\")]\r\n\t\tpublic double Stage { get; set; }\r\n\r\n\t\t[Description(\"Type of fertiliser to apply? \")] \r\n\t\tpublic Fertiliser.Types FertiliserType { get; set; }\r\n\r\n\t\t[Description(\"Amount of fertiliser to be applied (kg/ha)\")] \r\n\t\tpublic double Amount { get; set; }\r\n     \r\n\t\t[EventSubscribe(\"DoManagement\")] \r\n\t\tprivate void OnDoManagement(object sender, EventArgs e)\r\n\t\t{ \r\n\t\t\tdouble zadok = (double)Apsim.Get(Wheat, \"Phenology.Zadok.Stage\"); \r\n \r\n\t\t\tif (zadok >= Stage && !hasFertilised)\r\n\t\t\t{ \r\n\t\t\t\tSummary.WriteMessage(this, \"Fertilising!!\"); \r\n\t\t\t\tFertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n\t\t\t\thasFertilised = true; \r\n\t\t\t} \r\n\t\t}\r\n\r\n\t\t[EventSubscribe(\"Sowing\")]\r\n\t\tprivate void OnSowing(object sender, EventArgs e)\r\n\t\t{\r\n\t\t\thasFertilised = false;\r\n\t\t}\r\n\t}\r\n}\r\n",
       "Parameters": [
         {
           "Key": "Stage",
@@ -216,7 +217,25 @@
     },
     {
       "$type": "Models.Manager, Models",
-      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Irrigation Irrigation;\r\n        \r\n        [Separator(\"A component to apply irrigation on one or more dates on every year of the simulation\")]\r\n\r\n        [Description(\"Enter the irrigation dates as dd-mmm with comma separation (any year information entered will be ignored)\")] public string[] IrrigateDates { get; set; }\r\n        \r\n        [Description(\"Amount of irrigation to be applied (mm)\")] public double Amount { get; set; }\r\n        \r\n        [Description(\"Depth in the soil to apply the  irrigation (mm)\")] public double Depth { get; set; }\r\n        \r\n        [Description(\"Efficiency of irrigation (0-1)\")] public double Efficiency { get; set; }\r\n        \r\n        [Description(\"Will the irrigation runoff?\")] public bool WillRunoff { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n        \tforeach (string ddMMM in IrrigateDates)\r\n        \t{\r\n    \t\t\tif (DateUtilities.DatesEqual(ddMMM, Clock.Today))\r\n        \t\t\tIrrigation.Apply(amount: Amount, depth: Depth, efficiency: Efficiency, willRunoff: WillRunoff);\r\n        \t}\r\n        }\r\n    }\r\n}\r\n",
+      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils.Nutrients;\r\nusing APSIM.Shared.Utilities;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link(ByName=true)] Solute NO3;\r\n\r\n        [Description(\"Type of fertiliser to apply? \")] \r\n        public Fertiliser.Types FertiliserType { get; set; }\r\n    \r\n\t\t[Description(\"Threshold amount of NO3 to topup to (kg/ha)\")]\r\n\t\tpublic double Threshold { get; set;}\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n        \tdouble Amount = Threshold - MathUtilities.Sum(NO3.kgha);\r\n            Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n        }\r\n    }\r\n}",
+      "Parameters": [
+        {
+          "Key": "FertiliserType",
+          "Value": "NO3N"
+        },
+        {
+          "Key": "Threshold",
+          "Value": "200"
+        }
+      ],
+      "Name": "Fertilise topup",
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Manager, Models",
+      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Irrigation Irrigation;\r\n        \r\n        [Separator(\"A component to apply irrigation on one or more dates on every year of the simulation\")]\r\n\r\n        [Description(\"Enter the irrigation dates as dd-mmm with comma separation (any year information entered will be ignored)\")] \r\n        public string[] IrrigateDates { get; set; }\r\n        \r\n        [Description(\"Amount of irrigation to be applied (mm)\")] \r\n        public double Amount { get; set; }\r\n        \r\n        [Description(\"Depth in the soil to apply the  irrigation (mm)\")] \r\n        public double Depth { get; set; }\r\n        \r\n        [Description(\"Efficiency of irrigation (0-1)\")] \r\n        public double Efficiency { get; set; }\r\n        \r\n        [Description(\"Will the irrigation runoff?\")] \r\n        public bool WillRunoff { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            foreach (string ddMMM in IrrigateDates)\r\n            {\r\n                if (DateUtilities.DatesEqual(ddMMM, Clock.Today))\r\n                    Irrigation.Apply(amount: Amount, depth: Depth, efficiency: Efficiency, willRunoff: WillRunoff);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
       "Parameters": [
         {
           "Key": "IrrigateDates",
@@ -246,7 +265,7 @@
     },
     {
       "$type": "Models.Manager, Models",
-      "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        [Link] Zone zone;\r\n        [Link] Irrigation irrigation;\r\n        [Link] Soil soil;\r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (AutoIrrigationOn)\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = 10;\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)\r\n                              - excess_fr * soil.Water[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = soil.ThicknessCumulative;\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
+      "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        [Link] Zone zone;\r\n        [Link] Irrigation irrigation;\r\n        [Link] Soil soil;\r\n\r\n        [Description(\"Crop to irrigate\")]\r\n        public IPlant Crop { get; set; }\r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [Description(\"Minimum weeks between irrigations\")]\r\n        public double weeks { get; set; }\r\n\r\n        [Description(\"Minimum days after sowing for first irrigation\")]\r\n        public int afterSowing { get; set; }\r\n\r\n        private double irrigationGap = 0;\t// gap between irrigations\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (AutoIrrigationOn && Crop.IsAlive)\r\n            {\r\n               \tirrigationGap += 1;\t\t\t\t// increment gap between irrigations\r\n            \tCalculateFASW();\t\t\t\t// calc FASW and WaterDeficit\r\n                if ((FASW < FASWThreshold) && (irrigationGap >= weeks * 7))\r\n                {\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                    irrigationGap = 0;\t\t\t// reset\r\n                }\r\n            }\r\n            else\r\n            {\r\n            \tirrigationGap = weeks * 7 - afterSowing - 1;\t// allow irrigation a number of days after it becomes alive/sown\r\n            }\r\n        }\r\n\r\n        // Calculate the fraction of the potential available sw\r\n        // Calculate the deficit amount from DUL\r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex(FASWDepth);\r\n            double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);\t// tricky function that sums up to before nlayr\r\n\r\n            double part_layer = MathUtilities.Divide((FASWDepth - cumdep), soil.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0) + part_layer * soil.Water[nlayr])\r\n                            - (MathUtilities.Sum(LL15, 0, nlayr, 0.0) + part_layer * LL15[nlayr]);\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0) + part_layer * DUL[nlayr])\r\n                                - (MathUtilities.Sum(LL15, 0, nlayr, 0.0) + part_layer * LL15[nlayr]);\r\n\t\t\t\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        // Get index of the layer that has this depth in it \r\n        private int GetLayerIndex(double pointDepth)\r\n        {\r\n            double[] cumThickness = soil.ThicknessCumulative;\r\n            int layerIdx = 0;\r\n            while ((layerIdx < cumThickness.Length) && (pointDepth > cumThickness[layerIdx]))\r\n            {\r\n            \tlayerIdx += 1;\r\n            }\r\n\r\n            return layerIdx;\r\n        }\r\n    }\r\n}",
       "Parameters": [
         {
           "Key": "FASW",
@@ -255,6 +274,10 @@
         {
           "Key": "WaterDeficit",
           "Value": "0"
+        },
+        {
+          "Key": "Crop",
+          "Value": ""
         },
         {
           "Key": "AutoIrrigationOn",
@@ -267,6 +290,14 @@
         {
           "Key": "FASWDepth",
           "Value": "600"
+        },
+        {
+          "Key": "weeks",
+          "Value": "3"
+        },
+        {
+          "Key": "afterSowing",
+          "Value": "2"
         }
       ],
       "Name": "Automatic irrigation based on water deficit",
@@ -274,54 +305,54 @@
       "Enabled": true,
       "ReadOnly": false
     },
-	{
-	  "$type": "Models.Manager, Models",
-	  "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing Models.Surface;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Wheat = null;\r\n        [Link] SoilWater SoilWater = null;\r\n        [Link] Nutrient nutrient = null;\r\n        [Link] SurfaceOrganicMatter SOM = null;\r\n        [Link] Summary Summary;\r\n\r\n        [Description(\"Reset Water? (Yes or No)\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Soil Nutrients? (Yes or No)\")]\r\n        public string ResetNutrients {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter? (Yes or No)\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n            if (ResetWater == \"Yes\")\r\n            {\r\n                Summary.WriteMessage(this, \"Reset Water\");\r\n                SoilWater.Reset();\r\n            }\r\n            if (ResetNutrients == \"Yes\")\r\n            {\r\n                Summary.WriteMessage(this, \"Reset Nutrients\");\r\n                nutrient.Reset();\r\n            }\r\n            if (ResetSOM == \"Yes\")\r\n            {\r\n                Summary.WriteMessage(this, \"Reset Surface OM\");\r\n                SOM.Reset();\r\n            }\r\n        }\r\n    }\r\n}\r\n",
-	  "Parameters": [
-		{
-		  "Key": "ResetWater",
-		  "Value": "Yes"
-		},
-		{
-		  "Key": "ResetSOM",
-		  "Value": "Yes"
-		},
-		{
-		  "Key": "ResetNutrients",
-		  "Value": "Yes"
-		}
-	  ],
-	  "Name": "Reset on sowing",
-	  "IncludeInDocumentation": true,
-	  "Enabled": true,
-	  "ReadOnly": false
-	},
-	{
-	  "$type": "Models.Manager, Models",
-	  "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing Models.Surface;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Plant Wheat = null;\r\n        [Link] SoilWater SoilWater = null;\r\n        [Link] Nutrient nutrient = null;\r\n        [Link] SurfaceOrganicMatter SOM = null;\r\n        [Link] Summary Summary;\r\n\r\n        [Description(\"Date to reset on:\")]\r\n        public string ResetDate {get;set;}\r\n\r\n        [Description(\"Reset Water? (Yes or No)\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Soil Nutrients ? (Yes or No)\")]\r\n        public string ResetNutrients {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter? (Yes or No)\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(ResetDate, Clock.Today, ResetDate))\r\n            {\r\n                if (ResetWater == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Water\");\r\n                    SoilWater.Reset();\r\n                }\r\n                if (ResetNutrients == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Nitrogen\");\r\n                    nutrient.Reset();\r\n                }\r\n                if (ResetSOM == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Surface OM\");\r\n                    SOM.Reset();\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
-	  "Parameters": [
-		{
-		  "Key": "ResetDate",
-		  "Value": "1-Jan"
-		},
-		{
-		  "Key": "ResetWater",
-		  "Value": "Yes"
-		},
-		{
-		  "Key": "ResetNutrients",
-		  "Value": "Yes"
-		},
-		{
-		  "Key": "ResetSOM",
-		  "Value": "Yes"
-		}
-	  ],
-	  "Name": "Reset on date",
-	  "IncludeInDocumentation": true,
-	  "Enabled": true,
-	  "ReadOnly": false
-	},
+    {
+      "$type": "Models.Manager, Models",
+      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing Models.Surface;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Wheat = null;\r\n        [Link] SoilWater SoilWater = null;\r\n        [Link] Nutrient nutrient = null;\r\n        [Link] SurfaceOrganicMatter SOM = null;\r\n        [Link] Summary Summary;\r\n\r\n        [Description(\"Reset Water? (Yes or No)\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Soil Nutrients? (Yes or No)\")]\r\n        public string ResetNutrients {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter? (Yes or No)\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n            if (ResetWater == \"Yes\")\r\n            {\r\n                Summary.WriteMessage(this, \"Reset Water\");\r\n                SoilWater.Reset();\r\n            }\r\n            if (ResetNutrients == \"Yes\")\r\n            {\r\n                Summary.WriteMessage(this, \"Reset Nutrients\");\r\n                nutrient.Reset();\r\n            }\r\n            if (ResetSOM == \"Yes\")\r\n            {\r\n                Summary.WriteMessage(this, \"Reset Surface OM\");\r\n                SOM.Reset();\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+      "Parameters": [
+        {
+          "Key": "ResetWater",
+          "Value": "Yes"
+        },
+        {
+          "Key": "ResetNutrients",
+          "Value": "Yes"
+        },
+        {
+          "Key": "ResetSOM",
+          "Value": "Yes"
+        }
+      ],
+      "Name": "Reset on sowing",
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Manager, Models",
+      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing Models.Surface;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Plant Wheat = null;\r\n        [Link] SoilWater SoilWater = null;\r\n        [Link] Nutrient nutrient = null;\r\n        [Link] SurfaceOrganicMatter SOM = null;\r\n        [Link] Summary Summary;\r\n\r\n        [Description(\"Date to reset on:\")]\r\n        public string ResetDate {get;set;}\r\n\r\n        [Description(\"Reset Water? (Yes or No)\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Soil Nutrients ? (Yes or No)\")]\r\n        public string ResetNutrients {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter? (Yes or No)\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(ResetDate, Clock.Today, ResetDate))\r\n            {\r\n                if (ResetWater == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Water\");\r\n                    SoilWater.Reset();\r\n                }\r\n                if (ResetNutrients == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Nitrogen\");\r\n                    nutrient.Reset();\r\n                }\r\n                if (ResetSOM == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Surface OM\");\r\n                    SOM.Reset();\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+      "Parameters": [
+        {
+          "Key": "ResetDate",
+          "Value": "1-Jan"
+        },
+        {
+          "Key": "ResetWater",
+          "Value": "Yes"
+        },
+        {
+          "Key": "ResetNutrients",
+          "Value": "Yes"
+        },
+        {
+          "Key": "ResetSOM",
+          "Value": "Yes"
+        }
+      ],
+      "Name": "Reset on date",
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
     {
       "$type": "Models.Manager, Models",
       "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Surface;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] SurfaceOrganicMatter SOM;\r\n        \r\n        [Description(\"Tillage Date\")]\r\n        public string TillageDate { get; set; }\r\n        \r\n        [Description(\"Fraction of Residues To Remove (0-1)\")]\r\n        public double Fraction { get; set; }\r\n\r\n        [Description(\"Depth of Tillage (mm)\")]\r\n        public double Depth { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(TillageDate, Clock.Today, TillageDate))\r\n                SOM.Incorporate(Fraction, Depth);\r\n        }\r\n    }\r\n}\r\n",
@@ -370,44 +401,44 @@
       "Enabled": true,
       "ReadOnly": false
     },
-	{
-	  "$type": "Models.Manager, Models",
-	  "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Plant;\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n\r\n        public double TimeSincePlanting {get; set;}\r\n\r\n        [Description(\"Spacing (m) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n\r\n        [Description(\"Spacing (m) between rows\")]\r\n        public double RowWidth { get; set; }\r\n\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n\r\n        [Description(\"Planting Date (dd-mmm)\")]\r\n        public String PlantingDate { get; set; }\r\n\r\n        [Description(\"Harvest Age (years)\")]\r\n        public double HarvestAge { get; set; }\r\n\r\n        [Description(\"Amount of fertiliser N to be applied at planting (kg N/ha)\")]\r\n        public double FertAmount { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / (RowWidth * RowSpace);\r\n            double RowWidthmm = RowWidth * 1000;\r\n\r\n            if (DateUtilities.WithinDates(PlantingDate, Clock.Today, PlantingDate) && !Plant.IsAlive)\r\n            {\r\n                Plant.Sow(population: PlantPopulation, \r\n                    cultivar: CultivarName, \r\n                    depth: 100, \r\n                    rowSpacing: RowWidthmm);\r\n                TimeSincePlanting = 0;\r\n                Fertiliser.Apply(Amount: FertAmount, Type: Fertiliser.Types.NO3N);\r\n            }\r\n\r\n            if (TimeSincePlanting > HarvestAge && Plant.IsAlive)\r\n            {\r\n               Plant.Harvest();\r\n               Plant.EndCrop();         \r\n               TimeSincePlanting = 0;  \r\n            }\r\n\r\n            TimeSincePlanting += 1.0/365.0;\r\n        }\r\n    }\r\n}\r\n                \r\n",
-	  "Parameters": [
-		{
-		  "Key": "TimeSincePlanting",
-		  "Value": "0"
-		},
-		{
-		  "Key": "RowSpace",
-		  "Value": "3"
-		},
-		{
-		  "Key": "RowWidth",
-		  "Value": "3"
-		},
-		{
-		  "Key": "CultivarName",
-		  "Value": "grandisCoffsHarbour"
-		},
-		{
-		  "Key": "PlantingDate",
-		  "Value": "1-aug"
-		},
-		{
-		  "Key": "HarvestAge",
-		  "Value": "7"
-		},
-		{
-		  "Key": "FertAmount",
-		  "Value": "100"
-		}
-	  ],
-	  "Name": "TreeManagement",
-	  "IncludeInDocumentation": true,
-	  "Enabled": true,
-	  "ReadOnly": false
-	}
+    {
+      "$type": "Models.Manager, Models",
+      "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Plant;\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n\r\n        public double TimeSincePlanting {get; set;}\r\n\r\n        [Description(\"Spacing (m) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n\r\n        [Description(\"Spacing (m) between rows\")]\r\n        public double RowWidth { get; set; }\r\n\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n\r\n        [Description(\"Planting Date (dd-mmm)\")]\r\n        public String PlantingDate { get; set; }\r\n\r\n        [Description(\"Harvest Age (years)\")]\r\n        public double HarvestAge { get; set; }\r\n\r\n        [Description(\"Amount of fertiliser N to be applied at planting (kg N/ha)\")]\r\n        public double FertAmount { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / (RowWidth * RowSpace);\r\n            double RowWidthmm = RowWidth * 1000;\r\n\r\n            if (DateUtilities.WithinDates(PlantingDate, Clock.Today, PlantingDate) && !Plant.IsAlive)\r\n            {\r\n                Plant.Sow(population: PlantPopulation, \r\n                    cultivar: CultivarName, \r\n                    depth: 100, \r\n                    rowSpacing: RowWidthmm);\r\n                TimeSincePlanting = 0;\r\n                Fertiliser.Apply(Amount: FertAmount, Type: Fertiliser.Types.NO3N);\r\n            }\r\n\r\n            if (TimeSincePlanting > HarvestAge && Plant.IsAlive)\r\n            {\r\n               Plant.Harvest();\r\n               Plant.EndCrop();         \r\n               TimeSincePlanting = 0;  \r\n            }\r\n\r\n            TimeSincePlanting += 1.0/365.0;\r\n        }\r\n    }\r\n}",
+      "Parameters": [
+        {
+          "Key": "TimeSincePlanting",
+          "Value": "0"
+        },
+        {
+          "Key": "RowSpace",
+          "Value": "3"
+        },
+        {
+          "Key": "RowWidth",
+          "Value": "3"
+        },
+        {
+          "Key": "CultivarName",
+          "Value": "grandisCoffsHarbour"
+        },
+        {
+          "Key": "PlantingDate",
+          "Value": "1-aug"
+        },
+        {
+          "Key": "HarvestAge",
+          "Value": "7"
+        },
+        {
+          "Key": "FertAmount",
+          "Value": "100"
+        }
+      ],
+      "Name": "TreeManagement",
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    }
   ],
   "IncludeInDocumentation": true,
   "Enabled": true,

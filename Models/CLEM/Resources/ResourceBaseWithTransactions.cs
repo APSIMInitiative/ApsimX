@@ -48,5 +48,24 @@ namespace Models.CLEM.Resources
         {
             return this.Children.Where(a => a.Name == name).FirstOrDefault();
         }
+
+        /// <summary>
+        /// Add all events when a new child is added to this resource in run time
+        /// </summary>
+        /// <param name="child"></param>
+        public virtual void AddNewResourceType(IResourceWithTransactionType child)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Resource_TransactionOccurred(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

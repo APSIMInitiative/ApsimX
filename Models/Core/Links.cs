@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Links.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Core
+﻿namespace Models.Core
 {
     using APSIM.Shared.Utilities;
     using System;
@@ -36,7 +31,8 @@ namespace Models.Core
         /// <param name="rootNode"></param>
         /// <param name="recurse">Recurse through all child models?</param>
         /// <param name="allLinks">Unresolve all links or just the non child links?</param>
-        public void Resolve(IModel rootNode, bool allLinks, bool recurse = true)
+        /// <param name="throwOnFail">Should all links be considered optional?</param>
+        public void Resolve(IModel rootNode, bool allLinks, bool recurse = true, bool throwOnFail = false)
         {
             var scope = new ScopingRules();
 
@@ -47,11 +43,11 @@ namespace Models.Core
                 foreach (IModel modelNode in allModels)
                 {
                     if (modelNode.Enabled)
-                        ResolveInternal(modelNode, scope);
+                        ResolveInternal(modelNode, scope, throwOnFail);
                 }
             }
             else
-                ResolveInternal(rootNode, scope);
+                ResolveInternal(rootNode, scope, throwOnFail);
         }
 
         /// <summary>
@@ -109,7 +105,8 @@ namespace Models.Core
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="scope">The scoping rules to use to resolve links.</param>
-        private void ResolveInternal(object obj, ScopingRules scope)
+        /// <param name="throwOnFail">Should all links be considered optional?</param>
+        private void ResolveInternal(object obj, ScopingRules scope, bool throwOnFail)
         {
             foreach (IVariable field in GetAllDeclarations(GetModel(obj),
                                                      GetModel(obj).GetType(),
@@ -136,25 +133,25 @@ namespace Models.Core
                     }
                     if (matches.Count == 0)
                     {
-                        if (link is ParentLinkAttribute)
+                        if (link.Type == LinkType.Ancestor)
                         {
                             matches = new List<object>();
                             matches.Add(GetParent(obj, fieldType));
                         }
-                        else if (link is LinkByPathAttribute)
+                        else if (link.Type == LinkType.Path)
                         {
                             var locater = new Locater();
-                            object match = locater.Get((link as LinkByPathAttribute).Path, obj as Model);
+                            object match = locater.Get(link.Path, obj as Model);
                             if (match != null)
                                 matches.Add(match);
                         }
-                        else if (link.IsScoped(field))
+                        else if (link.Type == LinkType.Scoped)
                             matches = scope.FindAll(obj as IModel).Cast<object>().ToList();
                         else
                             matches = GetChildren(obj);
                     }
                     matches.RemoveAll(match => !fieldType.IsAssignableFrom(GetModel(match).GetType()));
-                    if (link.UseNameToMatch(field))
+                    if (link.ByName)
                         matches.RemoveAll(match => !StringUtilities.StringsAreEqual(GetName(match), field.Name));
                     if (field.DataType.IsArray)
                     {
@@ -172,12 +169,12 @@ namespace Models.Core
                             array.Add(GetModel(matches[i]));
                         field.Value = array;
                     }
-                    else if (matches.Count == 0)
+                    else if (matches.Count == 0 && !throwOnFail)
                     {
                         if (!link.IsOptional)
                             throw new Exception("Cannot find a match for link " + field.Name + " in model " + GetFullName(obj));
                     }
-                    else if (matches.Count >= 2 && !link.IsScoped(field))
+                    else if (matches.Count >= 2 && link.Type != LinkType.Scoped)
                         throw new Exception(string.Format(": Found {0} matches for link {1} in model {2} !", matches.Count, field.Name, GetFullName(obj)));
                     else
                         field.Value = GetModel(matches[0]);

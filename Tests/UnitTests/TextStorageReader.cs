@@ -3,6 +3,7 @@ namespace UnitTests
 {
     using APSIM.Shared.Utilities;
     using Models.Storage;
+    using System;
     using System.Collections.Generic;
     using System.Data;
     using System.IO;
@@ -38,6 +39,10 @@ namespace UnitTests
         public List<string> SimulationNames { get { return DataTableUtilities.GetColumnAsStrings(data, "SimulationName").Distinct().ToList(); } }
 
         public List<string> TableNames { get { return new List<string>() { "Report" }; } }
+
+        public List<string> ViewNames => throw new System.NotImplementedException();
+
+        public List<string> TableAndViewNames => throw new System.NotImplementedException();
 
         public List<string> ColumnNames(string tableName) { return DataTableUtilities.GetColumnNames(data).ToList(); }
 
@@ -154,6 +159,16 @@ namespace UnitTests
         public void Refresh()
         {
             throw new System.NotImplementedException();
+        }
+
+        public List<Tuple<string, Type>> GetColumns(string tableName)
+        {
+            return new List<Tuple<string, Type>>();
+        }
+
+        public bool GetCheckpointShowOnGraphs(string checkpointName)
+        {
+            return true;
         }
     }
 

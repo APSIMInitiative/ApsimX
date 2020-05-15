@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="MapPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System;
     using System.Collections.Generic;
@@ -51,7 +46,39 @@ namespace UserInterface.Presenters
             this.view.Zoom = this.map.Zoom;
             this.view.Center = this.map.Center;
             this.view.ViewChanged += this.OnViewChanged;
+            this.view.PreviewDocs += OnPreviewDocs;
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+        }
+
+        /// <summary>
+        /// Invoked when the user wants to preview the map as it will appear
+        /// in the autodocs.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnPreviewDocs(object sender, EventArgs e)
+        {
+            // Save any changes to the main map so that the preview
+            // map uses the current zoom/coordinates as the main map.
+            this.view.StoreSettings();
+
+            var newView = new MapView(null);
+            var newPresenter = new MapPresenter();
+
+            var window = new WindowView((ViewBase.MasterView as MainView), newView, "Map Documentation Preview");
+            window.Width = 800;
+            window.Height = 800;
+            window.Resizable = false;
+
+            newPresenter.Attach(map, newView, explorerPresenter);
+            newView.HideZoomControls();
+
+            // If the user moves/zooms the map in the popup window,
+            // changes will be saved to the map object when the presenter
+            // is detached, and will be propagated automatically to the
+            // master map via the OnModelChanged method below.
+            window.Closed += (_, __) => newPresenter.Detach();
+            window.Visible = true;
         }
 
         /// <summary>
@@ -59,6 +86,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
+            view.PreviewDocs -= OnPreviewDocs;
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
             this.view.StoreSettings();
             this.view.ViewChanged -= this.OnViewChanged;

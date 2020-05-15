@@ -18,6 +18,7 @@ namespace UserInterface.Presenters
     using Views;
     using Models.Storage;
     using System.Globalization;
+    using Models.LifeCycle;
 
     /// <summary>
     /// <para>
@@ -119,6 +120,7 @@ namespace UserInterface.Presenters
             }
 
             this.grid.NumericFormat = "G6";
+            grid.CanGrow = false;
             this.childrenWithSameType = this.GetChildModelsWithSameType(this.model);
             this.FindAllPropertiesForChildren();
             if (this.grid.DataSource == null)
@@ -317,7 +319,7 @@ namespace UserInterface.Presenters
 
         /// <summary>
         /// Updates the model (Just one column)
-        /// Updates the lists of Cultivar and Field names in the model.
+        /// Updates the lists of Cultivar, LifeCycle Phases and Field names in the model.
         /// This is used when the model has been changed. For example, when a 
         /// new crop has been selecled.
         /// </summary>
@@ -339,6 +341,22 @@ namespace UserInterface.Presenters
                     if (crop != null)
                     {
                         cell.DropDownStrings = this.GetCultivarNames(crop);
+                    }
+                }
+                else if (this.properties[propListIndex][i].Display.Type == DisplayType.LifeCycleName)
+                {
+                    Zone zone = Apsim.Find(model,typeof(Zone)) as Zone;
+                    if (zone != null)
+                    {
+                        cell.DropDownStrings = this.GetLifeCycleNames(zone);
+                    }
+                }
+                else if (this.properties[propListIndex][i].Display.Type == DisplayType.LifePhaseName)
+                {
+                    LifeCycle lifeCycle = this.GetLifeCycle(this.properties[propListIndex]);
+                    if (lifeCycle != null)
+                    {
+                        cell.DropDownStrings = this.GetPhaseNames(lifeCycle);
                     }
                 }
                 else if (this.properties[propListIndex][i].Display.Type == DisplayType.FieldName)
@@ -436,6 +454,24 @@ namespace UserInterface.Presenters
                     if (crop != null)
                     {
                         cell.DropDownStrings = this.GetCultivarNames(crop);
+                    }
+                }
+                else if (this.properties[propListIndex][i].Display != null && this.properties[propListIndex][i].Display.Type == DisplayType.LifeCycleName)
+                {
+                    cell.EditorType = EditorTypeEnum.DropDown;
+                    Zone zone = Apsim.Find(model, typeof(Zone)) as Zone;
+                    if (zone != null)
+                    {
+                        cell.DropDownStrings = this.GetLifeCycleNames(zone);
+                    }
+                }
+                else if (this.properties[propListIndex][i].Display != null && this.properties[propListIndex][i].Display.Type == DisplayType.LifePhaseName)
+                {
+                    cell.EditorType = EditorTypeEnum.DropDown;
+                    LifeCycle lifeCycle = this.GetLifeCycle(this.properties[propListIndex]);
+                    if (lifeCycle != null)
+                    {
+                        cell.DropDownStrings = this.GetPhaseNames(lifeCycle);
                     }
                 }
                 else if (this.properties[propListIndex][i].Display != null && this.properties[propListIndex][i].Display.Type == DisplayType.FileName)
@@ -553,6 +589,52 @@ namespace UserInterface.Presenters
             return new string[0];
         }
 
+        /// <summary>Get a list of life cycles in the zone.</summary>
+        /// <param name="zone">The zone.</param>
+        /// <returns>A list of life cycles.</returns>
+        private string[] GetLifeCycleNames(Zone zone)
+        {
+            List<IModel> LifeCycles = Apsim.Children(zone, typeof(LifeCycle));
+            if (LifeCycles.Count > 0)
+            {
+                string[] Namelist = new string[LifeCycles.Count];
+                int i = 0;
+                foreach (IModel LC in LifeCycles)
+                {
+                    Namelist[i] = LC.Name;
+                    i++;
+                }
+                return Namelist;
+            }
+            return new string[0];
+        }
+
+        /// <summary>Get a list of Phase Names for life Cycle</summary>
+        /// <param name="crop">The crop.</param>
+        /// <returns>A list of Phase Names.</returns>
+        private string[] GetPhaseNames(LifeCycle lifeCycle)
+        {
+            if (lifeCycle.LifeCyclePhaseNames.Length == 0)
+            {
+                Simulations simulations = Apsim.Parent(lifeCycle as IModel, typeof(Simulations)) as Simulations;
+                Replacements replacements = Apsim.Child(simulations, typeof(Replacements)) as Replacements;
+                if (replacements != null)
+                {
+                    LifeCycle replacementLifeCycle = Apsim.Child(replacements, (lifeCycle as IModel).Name) as LifeCycle;
+                    if (replacementLifeCycle != null)
+                    {
+                        return replacementLifeCycle.LifeCyclePhaseNames;
+                    }
+                }
+            }
+            else
+            {
+                return lifeCycle.LifeCyclePhaseNames;
+            }
+
+            return new string[0];
+        }
+
         /// <summary>Get a list of database fieldnames. 
         /// Returns the names associated with the first table name in the property list
         /// </summary>
@@ -599,6 +681,30 @@ namespace UserInterface.Presenters
 
             // Not found so look for one in scope.
             return Apsim.Find(this.model, typeof(IPlant)) as IPlant;
+        }
+
+        /// <summary>
+        /// Go find a LifeCycle property in the specified list of properties or if not
+        /// found, find the Life cycle in scope.
+        /// </summary>
+        /// <param name="properties">The list of properties to look through.</param>
+        /// <returns>The found crop or null if none found.</returns>
+        private LifeCycle GetLifeCycle(List<VariableProperty> properties)
+        {
+            foreach (VariableProperty property in properties)
+            {
+                if (property.DataType == typeof(LifeCycle))
+                {
+                    LifeCycle lifeCycle = property.Value as LifeCycle;
+                    if (lifeCycle != null)
+                    {
+                        return lifeCycle;
+                    }
+                }
+            }
+
+            // Not found so look for one in scope.
+            return Apsim.Find(this.model, typeof(LifeCycle)) as LifeCycle;
         }
 
         private string[] GetResidueNames()
@@ -664,6 +770,10 @@ namespace UserInterface.Presenters
 
                     object newValue = GetNewCellValue(property, cell.NewValue);
                     this.SetPropertyValue(childmodel, property, newValue);
+                    if (newValue.GetType().IsEnum)
+                        newValue = VariableProperty.GetEnumDescription(newValue as Enum);
+                    grid.DataSource.Rows[cell.RowIndex][cell.ColIndex] = newValue;
+
                 }
                 catch (Exception ex)
                 {
