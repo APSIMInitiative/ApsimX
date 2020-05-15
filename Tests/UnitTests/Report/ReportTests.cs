@@ -65,6 +65,22 @@
         [Test]
         public void TestMultipleChildren()
         {
+            var m1 = new Manager()
+            {
+                Name = "Manager1",
+                Code = "using System;\r\nusing Models.Core;\r\nnamespace Models\r\n{\r\n[Serializable]\r\n" +
+                            "public class Script : Model\r\n {\r\n " +
+                            "public double A { get { return (1); } set { } }\r\n" +
+                            "public double B { get { return (2); } set { } }\r\n }\r\n}\r\n"
+            };
+            var m2 = new Manager()
+            {
+                Name = "Manager2",
+                Code = "using System;\r\nusing Models.Core;\r\nnamespace Models\r\n{\r\n[Serializable]\r\n" + "" +
+                            "    public class Script : Model\r\n {\r\n" +
+                            " public double A { get { return (3); } set { } }\r\n" +
+                            " public double B { get { return (4); } set { } }\r\n }\r\n}\r\n"
+            };
             report.VariableNames = new string[]
             {
                 "[Clock].Today.DayOfYear as n",
@@ -80,36 +96,17 @@
             {
                 "[Clock].DoReport"
             };
-            simulation.Children.AddRange(new[]
-            {
-                new Manager()
-                {
-                    Name = "Manager1",
-                    Code = "using System;\r\nusing Models.Core;\r\nnamespace Models\r\n{\r\n[Serializable]\r\n"+
-                            "public class Script : Model\r\n {\r\n " +
-                            "public double A { get { return (1); } set { } }\r\n" +
-                            "public double B { get { return (2); } set { } }\r\n }\r\n}\r\n"
-                },
-                new Manager()
-                {
-                    Name = "Manager2",
-                    Code = "using System;\r\nusing Models.Core;\r\nnamespace Models\r\n{\r\n[Serializable]\r\n" +"" +
-                            "    public class Script : Model\r\n {\r\n" +
-                            " public double A { get { return (3); } set { } }\r\n" +
-                            " public double B { get { return (4); } set { } }\r\n }\r\n}\r\n"
-                }
-            });
+            simulation.Children.AddRange(new[] { m1, m2 });
+            m1.OnCreated();
+            m2.OnCreated();
             var runner = new Runner(simulation);
             List<Exception> errors = runner.Run();
             if (errors != null && errors.Count > 0)
                 throw errors[0];
 
-            var storage = simulation.Children[0] as IDataStore;
-            DataTable data = storage.Reader.GetData("Report", fieldNames: new List<string>() { "n", "M1A", "M2A" });
 
-            double[] actual = DataTableUtilities.GetColumnAsDoubles(data, "M1A");
-            double[] expected = DataTableUtilities.GetColumnAsDoubles(data, "M2A");
-            Console.WriteLine("A=" + actual);
+            double[] actual = storage.Get<double>("M1A");
+            double[] expected = storage.Get<double>("M2A");
             Assert.AreNotEqual(expected, actual);
         }
 
