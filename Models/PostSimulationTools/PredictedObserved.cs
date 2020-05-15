@@ -65,6 +65,8 @@ namespace Models.PostSimulationTools
                 IEnumerable<string> predictedDataNames = dataStore.Reader.ColumnNames(PredictedTableName);
                 IEnumerable<string> observedDataNames = dataStore.Reader.ColumnNames(ObservedTableName);
 
+                CheckForDuplicateData();
+
                 if (predictedDataNames == null)
                     throw new ApsimXException(this, "Could not find model data table: " + PredictedTableName);
 
@@ -237,6 +239,49 @@ namespace Models.PostSimulationTools
                     else
                         throw new Exception(Name + ": Observed data was found but didn't match the predicted values. Make sure the values in the SimulationName column match the simulation names in the user interface. Also ensure column names in the observed file match the APSIM report column names.");
                 }
+            }
+        }
+
+        /// <summary>
+        /// We should have only 1 observation and 1 prediction for each match.
+        /// Throw an error if this is not true.
+        /// 
+        /// E.g. if we have two observations for the same simulation name on the
+        /// same date, that is going to cause problems.
+        /// </summary>
+        /// <remarks>
+        /// Need to think through the implications of having more than 1 zone.
+        /// Does this make it valid to have >1 observation on a given date?
+        /// </remarks>
+        private void CheckForDuplicateData()
+        {
+            List<string> fieldsToMatchOn = new List<string>();
+            if (!string.IsNullOrEmpty(FieldNameUsedForMatch))
+                fieldsToMatchOn.Add(FieldNameUsedForMatch);
+            if (!string.IsNullOrEmpty(FieldName2UsedForMatch))
+                fieldsToMatchOn.Add(FieldName2UsedForMatch);
+            if (!string.IsNullOrEmpty(FieldName3UsedForMatch))
+                fieldsToMatchOn.Add(FieldName3UsedForMatch);
+
+            string[] escapedFields = fieldsToMatchOn.Select(f => $"[{f}]").ToArray();
+            string sql = $@"SELECT s.Name as SimulationName, {string.Join(", ", escapedFields)}, COUNT(*) as N
+FROM [{ObservedTableName}]
+INNER JOIN _Simulations s
+ON SimulationID = s.ID
+GROUP BY SimulationID, {string.Join(", ", escapedFields)}
+HAVING N > 1";
+
+            foreach (string field in escapedFields)
+                sql += Environment.NewLine + $"AND {field} NOT NULL";
+
+            DataTable duplicates = dataStore.Reader.GetDataUsingSql(sql);
+            if (duplicates.Rows.Count > 0)
+            {
+                StringBuilder msg = new StringBuilder();
+                msg.AppendLine($"Error in PredictedObserved {Name}: duplicate records detected for {duplicates.Rows.Count} simulations in observed table {ObservedTableName}:");
+                msg.AppendLine($"You are seeing this error because there are multiple (N) rows in this table which have the same simulation name, {string.Join(", ", fieldsToMatchOn)}.");
+                DataTableUtilities.DataTableToText(duplicates, 0, ", ", true, new System.IO.StringWriter(msg));
+                throw new Exception(msg.ToString());
             }
         }
     }
