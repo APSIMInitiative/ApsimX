@@ -109,16 +109,6 @@
             RebuildScriptModel();
         }
 
-        /// <summary>At simulation commencing time, rebuild the script assembly if required.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            RebuildScriptModel();
-            SetParametersInObject(Apsim.Child(this, "Script") as Model);
-        }
-
         /// <summary>Rebuild the script model and return error message if script cannot be compiled.</summary>
         public void RebuildScriptModel()
         {
