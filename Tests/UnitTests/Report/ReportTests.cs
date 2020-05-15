@@ -81,24 +81,16 @@
                             " public double A { get { return (3); } set { } }\r\n" +
                             " public double B { get { return (4); } set { } }\r\n }\r\n}\r\n"
             };
-            report.VariableNames = new string[]
+            report.VariableNames = new[]
             {
-                "[Clock].Today.DayOfYear as n",
-                "sum of [Clock].Today.DayOfYear from [Clock].StartDate to [Clock].Today as TriangularNumbers",
-                "sum of [Clock].Today.DayOfYear from [Clock].StartOfWeek to [Clock].EndOfWeek as test",
-                "[Clock].Today.Year as Year",
-                "sum of [Clock].Today.DayOfYear from 1-Jan to 31-Dec as SigmaDay",
-                "sum of [Clock].Today.DayOfYear from 1-Jan to 9-Jan as HardCoded",
                 "[Manager1].Script.A as M1A",
                 "[Manager2].Script.A as M2A"
             };
-            report.EventNames = new string[]
+            report.EventNames = new[]
             {
                 "[Clock].DoReport"
             };
             simulation.Children.AddRange(new[] { m1, m2 });
-            m1.OnCreated();
-            m2.OnCreated();
             var runner = new Runner(simulation);
             List<Exception> errors = runner.Run();
             if (errors != null && errors.Count > 0)

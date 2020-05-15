@@ -46,6 +46,20 @@ namespace UnitTests
         }
 
         /// <summary>
+        /// This test ensures that scripts aren't recompiled after events have
+        /// been hooked up. Such behaviour would cause scripts to not receive
+        /// any events, and the old/discarded scripts would receive events.
+        /// </summary>
+        [Test]
+        public void TestScriptNotRebuilt()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.bork.apsimx");
+            IModel file = FileFormat.ReadFromString<IModel>(json, out List<Exception> errors);
+            Simulation sim = Apsim.Find(file, typeof(Simulation)) as Simulation;
+            Assert.DoesNotThrow(() => sim.Run());
+        }
+
+        /// <summary>
         /// Ensures that Manager Scripts are allowed to override the
         /// OnCreated() method.
         /// </summary>

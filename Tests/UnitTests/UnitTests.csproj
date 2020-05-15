@@ -236,6 +236,7 @@
     <EmbeddedResource Include="ApsimNG\Resources\SampleFiles\BasicSimulation.apsimx" />
     <EmbeddedResource Include="BasicFile.apsimx" />
     <EmbeddedResource Include="ApsimNG\Resources\SampleFiles\NullSample.apsimx" />
+    <EmbeddedResource Include="bork.apsimx" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Core\ApsimFile\FileFormatTestsReadFromString.json" />
     <EmbeddedResource Include="Core\ApsimFile\FileFormatTestsCheckThatModelsCanThrowExceptionsDuringCreation.json" />
