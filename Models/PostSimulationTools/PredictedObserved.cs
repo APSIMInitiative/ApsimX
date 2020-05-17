@@ -278,6 +278,7 @@ HAVING N > 1";
             if (duplicates.Rows.Count > 0)
             {
                 StringBuilder msg = new StringBuilder();
+                msg.AppendLine($"Error in file {System.IO.Path.ChangeExtension(dataStore.FileName, ".apsimx")}:");
                 msg.AppendLine($"Error in PredictedObserved {Name}: duplicate records detected for {duplicates.Rows.Count} simulations in observed table {ObservedTableName}:");
                 msg.AppendLine($"You are seeing this error because there are multiple (N) rows in this table which have the same simulation name, {string.Join(", ", fieldsToMatchOn)}.");
                 DataTableUtilities.DataTableToText(duplicates, 0, ", ", true, new System.IO.StringWriter(msg));
