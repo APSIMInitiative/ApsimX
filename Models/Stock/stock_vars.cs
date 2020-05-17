@@ -194,22 +194,6 @@
         public const double MONTH2DAY = 365.25 / 12;
 
         /// <summary>
-        /// Rank the paddocks
-        /// </summary>
-        /// <param name="model">The animal model</param>
-        /// <param name="initValue">The paddock ranks</param>
-        public static void MakePaddockRank(StockList model, ref string[] initValue)
-        {
-            List<string> rankingList = new List<string>();
-
-            model.RankPaddocks(rankingList);
-            initValue = rankingList.ToArray();
-            /*Array.Resize(ref aValue, sList.Count);
-            for (int Idx = 0; Idx < aValue.Length; Idx++)
-                aValue[Idx] = sList[Idx];*/
-        }
-
-        /// <summary>
         /// The output counts for these type of animals
         /// </summary>
         public enum CountType
@@ -266,12 +250,12 @@
                 total = 0;
 
                 for (idx = 1; idx <= model.Count(); idx++)
-                    if (!useTag || (model.GetTag(idx) == p))
+                    if (!useTag || (model.Animals[idx].Tag == p))
                     {
                         if (!useYoung)
-                            animalGroup = model.At(idx);
+                            animalGroup = model.Animals[idx];
                         else
-                            animalGroup = model.At(idx).Young;
+                            animalGroup = model.Animals[idx].Young;
 
                         value = 0;
                         if (animalGroup != null)
@@ -343,12 +327,12 @@
 
                 for (idx = 1; idx <= model.Count(); idx++)
                 {
-                    if (!useTag || (model.GetTag(idx) == passIdx))
+                    if (!useTag || (model.Animals[idx].Tag == passIdx))
                     {
                         if (!useYoung)
-                            animalGroup = model.At(idx);
+                            animalGroup = model.Animals[idx];
                         else
-                            animalGroup = model.At(idx).Young;
+                            animalGroup = model.Animals[idx].Young;
 
                         value = 0.0;
                         if (animalGroup != null)
@@ -514,12 +498,12 @@
 
                 for (idx = 1; idx <= model.Count(); idx++)
                 {
-                    if (!useTag || (model.GetTag(idx) == passIdx))
+                    if (!useTag || (model.Animals[idx].Tag == passIdx))
                     {
                         if (!useYoung)
-                            animalGroup = model.At(idx);
+                            animalGroup = model.Animals[idx];
                         else
-                            animalGroup = model.At(idx).Young;
+                            animalGroup = model.Animals[idx].Young;
 
                         GrazType.ZeroDMPool(ref pool);
                         if (animalGroup != null)
@@ -606,20 +590,20 @@
             uint idx;
 
             count = 0;
-            for (paddIdx = 0; paddIdx <= model.Paddocks.Count() - 1; paddIdx++)
+            for (paddIdx = 0; paddIdx <= model.Paddocks.Count - 1; paddIdx++)
             {
-                if (model.Paddocks.ByIndex(paddIdx).SuppRemovalKG > 0.0)
+                if (model.Paddocks[paddIdx].SuppRemovalKG > 0.0)
                     count++;
             }
             
             suppValues = new SupplementEaten[count];
             idx = 0;
-            for (paddIdx = 0; paddIdx <= model.Paddocks.Count() - 1; paddIdx++)
-                if (model.Paddocks.ByIndex(paddIdx).SuppRemovalKG > 0.0)
+            for (paddIdx = 0; paddIdx <= model.Paddocks.Count - 1; paddIdx++)
+                if (model.Paddocks[paddIdx].SuppRemovalKG > 0.0)
                 {
                     suppValues[idx] = new SupplementEaten();
-                    suppValues[idx].Paddock = model.Paddocks.ByIndex(paddIdx).Name;
-                    suppValues[idx].Eaten = model.Paddocks.ByIndex(paddIdx).SuppRemovalKG;
+                    suppValues[idx].Paddock = model.Paddocks[paddIdx].Name;
+                    suppValues[idx].Eaten = model.Paddocks[paddIdx].SuppRemovalKG;
                     idx++;
                 }
         }
@@ -638,7 +622,7 @@
 
             for (idx = 1; idx <= model.Count(); idx++)
             {
-                AnimalGroup group = model.At(idx);
+                AnimalGroup group = model.Animals[idx];
                 ME_Metab = group.AnimalState.EnergyUse.Metab / group.AnimalState.Efficiency.Maint;
                 ME_MoveGraze = group.AnimalState.EnergyUse.Maint - ME_Metab - group.AnimalState.EnergyUse.Cold;
 

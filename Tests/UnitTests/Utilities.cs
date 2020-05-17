@@ -5,6 +5,7 @@ namespace UnitTests
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
+    using Models.GrazPlan;
     using Models.Storage;
     using System;
     using System.Collections.Generic;
@@ -184,6 +185,17 @@ namespace UnitTests
             Apsim.ParentAllChildren(sims);
             sims.Write(sims.FileName);
             return sims;
+        }
+
+        /// <summary>
+        /// Call OnCreated in a model and all child models.
+        /// </summary>
+        /// <param name="model"></param>
+        public static void CallOnCreated(IModel model)
+        {
+            model.OnCreated();
+            foreach (var child in model.Children)
+                CallOnCreated(child);
         }
     }
 }
