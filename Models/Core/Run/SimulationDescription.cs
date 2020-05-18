@@ -63,12 +63,12 @@
         public List<Descriptor> Descriptors { get; set; } = new List<Descriptor>();
 
         /// <summary>Gets or sets the DataStore for this simulaton.</summary>
-        public DataStore Storage
+        public IDataStore Storage
         {
             get
             {
                 var scope = new ScopingRules();
-                return scope.FindAll(baseSimulation).First(model => model is DataStore) as DataStore;
+                return scope.FindAll(baseSimulation).First(model => model is IDataStore) as IDataStore;
             }
         }
         /// <summary>

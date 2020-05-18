@@ -43,6 +43,7 @@
                 else
                     numberOfProcessors = System.Math.Max(Environment.ProcessorCount - 1, 1);
             }
+            numberOfProcessors = 1;
         }
 
         /// <summary>
@@ -255,7 +256,7 @@
             public IRunnable JobSentToClient { get; set; }
 
             /// <summary>The data store relating to the job</summary>
-            public DataStore DataStore { get; set; }
+            public IDataStore DataStore { get; set; }
         }
     }
 }
