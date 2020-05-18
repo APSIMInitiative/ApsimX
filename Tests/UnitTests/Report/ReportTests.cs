@@ -91,17 +91,22 @@
                 "[Clock].DoReport"
             };
             simulation.Children.AddRange(new[] { m1, m2 });
-            var runner = new Runner(simulation);
-            List<Exception> errors = runner.Run();
-            if (errors != null && errors.Count > 0)
-                throw errors[0];
+            var runners = new[]
+            {
+                new Runner(simulation, runType: Runner.RunTypeEnum.MultiThreaded),
+                new Runner(simulation, runType: Runner.RunTypeEnum.MultiProcess)
+            };
+            foreach (Runner runner in runners)
+            {
+                List<Exception> errors = runner.Run();
+                if (errors != null && errors.Count > 0)
+                    throw errors[0];
 
-
-            double[] actual = storage.Get<double>("M1A");
-            double[] expected = storage.Get<double>("M2A");
-            Assert.AreNotEqual(expected, actual);
+                double[] actual = storage.Get<double>("M1A");
+                double[] expected = storage.Get<double>("M2A");
+                Assert.AreNotEqual(expected, actual);
+            }
         }
-
 
         /// <summary>
         /// This test ensures that aggregation to and from variable dates (ie [Clock].Today) works.
