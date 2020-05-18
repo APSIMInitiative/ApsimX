@@ -34,7 +34,6 @@
         private static object haveTrappedAssemblyResolveEventLock = new object();
 
         /// <summary>The compiled code</summary>
-        [NonSerialized]
         private string CompiledCode;
 
         /// <summary>Has the manager model been fully created yet?</summary>
