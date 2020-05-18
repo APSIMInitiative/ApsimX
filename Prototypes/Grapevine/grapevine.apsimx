@@ -4410,8 +4410,8 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.AccumulateByNumericPhase, Models",
-                          "StartStageName": 3.4,
-                          "EndStageName": 4.1,
+                          "StartStageName": 3.3,
+                          "EndStageName": 4.2,
                           "ResetStageName": "BudBurst",
                           "FractionRemovedOnCut": 0.0,
                           "FractionRemovedOnHarvest": 0.0,
@@ -4435,8 +4435,8 @@
                         },
                         {
                           "$type": "Models.Functions.AccumulateByNumericPhase, Models",
-                          "StartStageName": 3.4,
-                          "EndStageName": 4.1,
+                          "StartStageName": 3.3,
+                          "EndStageName": 4.2,
                           "ResetStageName": "BudBurst",
                           "FractionRemovedOnCut": 0.0,
                           "FractionRemovedOnHarvest": 0.0,
@@ -4470,8 +4470,8 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.AccumulateByNumericPhase, Models",
-                          "StartStageName": 3.62785714285714,
-                          "EndStageName": 4.0035,
+                          "StartStageName": 3.5,
+                          "EndStageName": 4.1,
                           "ResetStageName": "BudBurst",
                           "FractionRemovedOnCut": 0.0,
                           "FractionRemovedOnHarvest": 0.0,
@@ -4495,8 +4495,8 @@
                         },
                         {
                           "$type": "Models.Functions.AccumulateByNumericPhase, Models",
-                          "StartStageName": 3.62786,
-                          "EndStageName": 4.0035,
+                          "StartStageName": 3.5,
+                          "EndStageName": 4.1,
                           "ResetStageName": "BudBurst",
                           "FractionRemovedOnCut": 0.0,
                           "FractionRemovedOnHarvest": 0.0,
@@ -4898,7 +4898,7 @@
                     },
                     {
                       "$type": "Models.Functions.OnEventFunction, Models",
-                      "SetEvent": "Veraison",
+                      "SetEvent": "Ecodormancy",
                       "ReSetEvent": null,
                       "Name": "BUN_TmaxIni1",
                       "Children": [
@@ -4928,7 +4928,7 @@
                     },
                     {
                       "$type": "Models.Functions.OnEventFunction, Models",
-                      "SetEvent": "Veraison",
+                      "SetEvent": "Ecodormancy",
                       "ReSetEvent": null,
                       "Name": "BUN_RadIni1",
                       "Children": [
@@ -4998,8 +4998,8 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.OnEventFunction, Models",
-                      "SetEvent": "Ecodormancy",
-                      "ReSetEvent": "Endodormancy",
+                      "SetEvent": "BudBurst",
+                      "ReSetEvent": null,
                       "Name": "BunchesPerVine",
                       "Children": [
                         {
@@ -14773,7 +14773,7 @@
                             "[Weather].DaysSinceWinterSolstice as DAWS"
                           ],
                           "EventNames": [
-                            "[Clock].DoReport"
+                            "[Row].Grapevine.Pruning"
                           ],
                           "GroupByVariableName": null,
                           "Name": "Report",
