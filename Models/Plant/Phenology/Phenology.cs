@@ -8,6 +8,7 @@ using System.Data;
 using System.Linq;
 using Models.PMF.Struct;
 using System.Globalization;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.Phen
 {
@@ -24,6 +25,9 @@ namespace Models.PMF.Phen
         
         [Link]
         private Plant plant = null;
+
+        [Link]
+        private Clock clock = null;
 
         /// <summary>The thermal time</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -57,10 +61,16 @@ namespace Models.PMF.Phen
         /// <summary>Occurs when daily phenology timestep completed</summary>
         public event EventHandler PostPhenology;
 
+        /// <summary>Called if emergence date sepcified</summary>
+        public event EventHandler ForceEmergence;
 
         ///5. Public Properties
         /// --------------------------------------------------------------------------------------------------
 
+        /// <summary>The date for emergence to occur</summary>
+        [XmlIgnore]
+        public string EmergenceDate { get; set; }
+        
         /// <summary>The Thermal time accumulated tt</summary>
         [XmlIgnore]
         public double AccumulatedTT {get; set;}
@@ -77,6 +87,7 @@ namespace Models.PMF.Phen
         [XmlIgnore]
         public double Stage { get; set; }
 
+        
         /// <summary>This property is used to retrieve or set the current phase name.</summary>
         [XmlIgnore]
         public string CurrentPhaseName
@@ -370,7 +381,12 @@ namespace Models.PMF.Phen
             {
                 if (thermalTime.Value() < 0)
                     throw new Exception("Negative Thermal Time, check the set up of the ThermalTime Function in" + this);
-               
+
+                if (DateUtilities.DatesEqual(EmergenceDate, clock.Today))
+                {
+                    ForceEmergence.Invoke(this, new EventArgs());
+                }
+                
                 // Calculate progression through current phase
                 double propOfDayToUse = 1;
                 bool incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
