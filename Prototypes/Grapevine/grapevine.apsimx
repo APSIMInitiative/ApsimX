@@ -87,6 +87,40 @@
               "Name": "Phenology",
               "Children": [
                 {
+                  "$type": "Models.Functions.AirTemperatureFunction, Models",
+                  "SubDailyTemperatures": null,
+                  "SubDailyResponse": null,
+                  "agregationMethod": 0,
+                  "Name": "ThermalTime",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.WangEngelTempFunction, Models",
+                      "MinTemp": 4.0,
+                      "OptTemp": 28.0,
+                      "MaxTemp": 40.0,
+                      "RefTemp": 25.0,
+                      "MaximumTemperatureWeighting": 0.5,
+                      "Name": "TemperatureResponse",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ThreeHourSin, Models",
+                      "TempRangeFactors": null,
+                      "Name": "InterpolationMethod",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Memo, Models",
                   "Text": "Dormancy sequence: Paradormancy (Apical dominance), Endodormancy(Chilling requirement), Ecodormancy (forcing unit)\r\nSarvas (1974) separates bud dormancy in two periods: the \"rest\" period is defined as the period when buds are dormant due to physiological conditions (endodormancy), and the \"quiescence\" period is when buds remain dormant due to unfavourable environmental conditions (ecodormancy). The current phenological models assume the dormancy starts at March 1st, and budburst is regulated by temperature. Ecodormancy is induced by a period with chilling temperatures, and then followed by a period with forcing temperatures till bud burst (Chuine et al., 2003).\r\n\r\nWe then simulated the time of flowering, fruitSet,veraison, leaf fall. After one cycle, bud goes to dormancy at March 1st. \r\n\r\nParadormancy, which is the suspension of growth caused by factors outside the meristem but within the plant. It is typically an influence of one organ over another, and includes an apical bud preventing outgrowth of a lower bud, which relates to apical dominance (see Martin 1987 for review).\r\n\r\n\r\n",
                   "Name": "Memo",
@@ -102,7 +136,7 @@
                   "MaxTemp": 40.0,
                   "RefTemp": 25.0,
                   "MaximumTemperatureWeighting": 0.5,
-                  "Name": "ThermalTime",
+                  "Name": "ThermalTime2",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -5028,7 +5062,7 @@
                     {
                       "$type": "Models.Functions.OnEventFunction, Models",
                       "SetEvent": "Veraison",
-                      "ReSetEvent": null,
+                      "ReSetEvent": "Flowering",
                       "Name": "BEN_TmaxIni1",
                       "Children": [
                         {
@@ -5068,7 +5102,7 @@
                     {
                       "$type": "Models.Functions.OnEventFunction, Models",
                       "SetEvent": "BudBurst",
-                      "ReSetEvent": null,
+                      "ReSetEvent": "Ecodormancy",
                       "Name": "BunchesPerVine",
                       "Children": [
                         {
@@ -5225,7 +5259,7 @@
                     {
                       "$type": "Models.Functions.OnEventFunction, Models",
                       "SetEvent": "Flowering",
-                      "ReSetEvent": null,
+                      "ReSetEvent": "BudBurst",
                       "Name": "BerryNum",
                       "Children": [
                         {
@@ -16447,7 +16481,7 @@
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "CurrentSeason",
-                          "YFieldName": "BudBurstDOY",
+                          "YFieldName": "FloweringDOY",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
