@@ -62,12 +62,12 @@
         /// <returns>The absolute path</returns>
         public static string GetAbsolutePath(string path, string relativePath)
         {
-            if (path == null)
-                return null;
+            if (string.IsNullOrEmpty(path) || string.IsNullOrEmpty(relativePath))
+                return path;
 
             // Remove any %root% macro.
-            string rootDirectory = System.IO.Directory.GetParent(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)).FullName;
-            path = path.Replace("%root%", rootDirectory);
+            string apsimxDirectory = Directory.GetParent(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)).FullName;
+            path = path.Replace("%root%", apsimxDirectory);
             
             // Make sure we have a relative directory 
             string relativeDirectory = Path.GetDirectoryName(relativePath);
@@ -95,8 +95,8 @@
         /// <returns>The relative path</returns>
         public static string GetRelativePath(string path, string relativePath)
         {
-            if (System.String.IsNullOrEmpty(path))
-                throw new ArgumentNullException("path");
+            if (string.IsNullOrEmpty(path) || string.IsNullOrEmpty(relativePath))
+                return path;
 
             // Make sure we have a relative directory 
             string relativeDirectory = Path.GetDirectoryName(relativePath);
@@ -106,7 +106,7 @@
                 path = path.Replace(relativeDirectory + Path.DirectorySeparatorChar, "");  // the relative path should not have a preceding \
 
                 // Try putting in a %root%.
-                string rootDirectory = System.IO.Directory.GetParent(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)).FullName;
+                string rootDirectory = Directory.GetParent(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)).FullName;
                 // if (path.StartsWith(Path.Combine(rootDirectory, "Examples")))
                 path = path.Replace(rootDirectory, "%root%");
             }
