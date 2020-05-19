@@ -43,7 +43,6 @@
                 else
                     numberOfProcessors = System.Math.Max(Environment.ProcessorCount - 1, 1);
             }
-            numberOfProcessors = 1;
         }
 
         /// <summary>
