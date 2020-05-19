@@ -98,8 +98,7 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>Will trigger emergence on the day it is called</summary>
-        [EventSubscribe("ForceEmergence")]
-        private void ForceEmergence(object sender, EventArgs e)
+        public void ForceEmergence()
         {
             ProgressThroughPhase = Target;
         }
