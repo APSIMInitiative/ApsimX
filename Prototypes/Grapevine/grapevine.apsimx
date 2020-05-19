@@ -87,6 +87,40 @@
               "Name": "Phenology",
               "Children": [
                 {
+                  "$type": "Models.Functions.AirTemperatureFunction, Models",
+                  "SubDailyTemperatures": null,
+                  "SubDailyResponse": null,
+                  "agregationMethod": 0,
+                  "Name": "ThermalTime",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.WangEngelTempFunction, Models",
+                      "MinTemp": 4.0,
+                      "OptTemp": 28.0,
+                      "MaxTemp": 40.0,
+                      "RefTemp": 25.0,
+                      "MaximumTemperatureWeighting": 0.5,
+                      "Name": "TemperatureResponse",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ThreeHourSin, Models",
+                      "TempRangeFactors": null,
+                      "Name": "InterpolationMethod",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Memo, Models",
                   "Text": "Dormancy sequence: Paradormancy (Apical dominance), Endodormancy(Chilling requirement), Ecodormancy (forcing unit)\r\nSarvas (1974) separates bud dormancy in two periods: the \"rest\" period is defined as the period when buds are dormant due to physiological conditions (endodormancy), and the \"quiescence\" period is when buds remain dormant due to unfavourable environmental conditions (ecodormancy). The current phenological models assume the dormancy starts at March 1st, and budburst is regulated by temperature. Ecodormancy is induced by a period with chilling temperatures, and then followed by a period with forcing temperatures till bud burst (Chuine et al., 2003).\r\n\r\nWe then simulated the time of flowering, fruitSet,veraison, leaf fall. After one cycle, bud goes to dormancy at March 1st. \r\n\r\nParadormancy, which is the suspension of growth caused by factors outside the meristem but within the plant. It is typically an influence of one organ over another, and includes an apical bud preventing outgrowth of a lower bud, which relates to apical dominance (see Martin 1987 for review).\r\n\r\n\r\n",
                   "Name": "Memo",
@@ -102,7 +136,7 @@
                   "MaxTemp": 40.0,
                   "RefTemp": 25.0,
                   "MaximumTemperatureWeighting": 0.5,
-                  "Name": "ThermalTime",
+                  "Name": "ThermalTime2",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -266,7 +300,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 500.0,
+                      "FixedValue": 447.0,
                       "Units": "thermaltime",
                       "Name": "Target",
                       "Children": [],
@@ -421,6 +455,36 @@
                 {
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "Flowering",
+                  "End": "FruitSet",
+                  "Name": "FruitSet",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 10.0,
+                      "Units": null,
+                      "Name": "Target",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].ThermalTime",
+                      "Name": "Progression",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Phen.GenericPhase, Models",
+                  "Start": "FruitSet",
                   "End": "Veraison",
                   "Name": "BerryDevelopment",
                   "Children": [
@@ -430,7 +494,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 40.0,
+                          "FixedValue": 30.0,
                           "Units": null,
                           "Name": "Base",
                           "Children": [],
@@ -587,6 +651,45 @@
                     {
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 176.0,
+                      "Units": null,
+                      "Name": "PreEventValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Weather].DaysSinceWinterSolstice",
+                      "Name": "PostEventValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.OnEventFunction, Models",
+                  "SetEvent": "Veraison",
+                  "ReSetEvent": "Ecodormancy",
+                  "Name": "VeraisonDOY1",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "\r\nA function is used to provide flowering date as days after sowing(DAS).\r\n",
+                      "Name": "memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
                       "Units": null,
                       "Name": "PreEventValue",
                       "Children": [],
@@ -4530,8 +4633,8 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.AccumulateByNumericPhase, Models",
-                          "StartStageName": 3.747142857,
-                          "EndStageName": 4.0005,
+                          "StartStageName": 3.7,
+                          "EndStageName": 4.05,
                           "ResetStageName": "BudBurst",
                           "FractionRemovedOnCut": 0.0,
                           "FractionRemovedOnHarvest": 0.0,
@@ -4555,8 +4658,8 @@
                         },
                         {
                           "$type": "Models.Functions.AccumulateByNumericPhase, Models",
-                          "StartStageName": 3.747142857,
-                          "EndStageName": 4.0005,
+                          "StartStageName": 3.7,
+                          "EndStageName": 4.05,
                           "ResetStageName": "BudBurst",
                           "FractionRemovedOnCut": 0.0,
                           "FractionRemovedOnHarvest": 0.0,
@@ -4590,8 +4693,8 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.AccumulateByNumericPhase, Models",
-                          "StartStageName": 3.625,
-                          "EndStageName": 4.06725,
+                          "StartStageName": 3.5875,
+                          "EndStageName": 4.296,
                           "ResetStageName": "BudBurst",
                           "FractionRemovedOnCut": 0.0,
                           "FractionRemovedOnHarvest": 0.0,
@@ -4634,8 +4737,8 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.AccumulateByNumericPhase, Models",
-                          "StartStageName": 3.717142857,
-                          "EndStageName": 4.75925,
+                          "StartStageName": 3.6,
+                          "EndStageName": 5.8,
                           "ResetStageName": "BudBurst",
                           "FractionRemovedOnCut": 0.0,
                           "FractionRemovedOnHarvest": 0.0,
@@ -4659,8 +4762,8 @@
                         },
                         {
                           "$type": "Models.Functions.AccumulateByNumericPhase, Models",
-                          "StartStageName": 3.717142857,
-                          "EndStageName": 4.75925,
+                          "StartStageName": 3.6,
+                          "EndStageName": 5.8,
                           "ResetStageName": "BudBurst",
                           "FractionRemovedOnCut": 0.0,
                           "FractionRemovedOnHarvest": 0.0,
@@ -4694,8 +4797,8 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.AccumulateByNumericPhase, Models",
-                          "StartStageName": 3.642142857,
-                          "EndStageName": 4.02925,
+                          "StartStageName": 3.6,
+                          "EndStageName": 4.2,
                           "ResetStageName": "BudBurst",
                           "FractionRemovedOnCut": 0.0,
                           "FractionRemovedOnHarvest": 0.0,
@@ -4719,8 +4822,8 @@
                         },
                         {
                           "$type": "Models.Functions.AccumulateByNumericPhase, Models",
-                          "StartStageName": 3.642142857,
-                          "EndStageName": 4.02925,
+                          "StartStageName": 3.6,
+                          "EndStageName": 4.2,
                           "ResetStageName": "BudBurst",
                           "FractionRemovedOnCut": 0.0,
                           "FractionRemovedOnHarvest": 0.0,
@@ -4754,8 +4857,8 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.AccumulateByNumericPhase, Models",
-                          "StartStageName": 3.520714286,
-                          "EndStageName": 4.073,
+                          "StartStageName": 3.5,
+                          "EndStageName": 4.3,
                           "ResetStageName": "BudBurst",
                           "FractionRemovedOnCut": 0.0,
                           "FractionRemovedOnHarvest": 0.0,
@@ -4798,8 +4901,8 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.AccumulateByNumericPhase, Models",
-                          "StartStageName": 3.593928571,
-                          "EndStageName": 4.2855,
+                          "StartStageName": 3.5,
+                          "EndStageName": 5.05,
                           "ResetStageName": "BudBurst",
                           "FractionRemovedOnCut": 0.0,
                           "FractionRemovedOnHarvest": 0.0,
@@ -4823,8 +4926,8 @@
                         },
                         {
                           "$type": "Models.Functions.AccumulateByNumericPhase, Models",
-                          "StartStageName": 3.593928571,
-                          "EndStageName": 4.2855,
+                          "StartStageName": 3.5,
+                          "EndStageName": 5.05,
                           "ResetStageName": "BudBurst",
                           "FractionRemovedOnCut": 0.0,
                           "FractionRemovedOnHarvest": 0.0,
@@ -4858,8 +4961,8 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.AccumulateByNumericPhase, Models",
-                          "StartStageName": 4.3805,
-                          "EndStageName": 4.6725,
+                          "StartStageName": 5.38,
+                          "EndStageName": 5.67,
                           "ResetStageName": "BudBurst",
                           "FractionRemovedOnCut": 0.0,
                           "FractionRemovedOnHarvest": 0.0,
@@ -4959,7 +5062,7 @@
                     {
                       "$type": "Models.Functions.OnEventFunction, Models",
                       "SetEvent": "Veraison",
-                      "ReSetEvent": null,
+                      "ReSetEvent": "Flowering",
                       "Name": "BEN_TmaxIni1",
                       "Children": [
                         {
@@ -4999,7 +5102,7 @@
                     {
                       "$type": "Models.Functions.OnEventFunction, Models",
                       "SetEvent": "BudBurst",
-                      "ReSetEvent": null,
+                      "ReSetEvent": "Ecodormancy",
                       "Name": "BunchesPerVine",
                       "Children": [
                         {
@@ -5156,7 +5259,7 @@
                     {
                       "$type": "Models.Functions.OnEventFunction, Models",
                       "SetEvent": "Flowering",
-                      "ReSetEvent": null,
+                      "ReSetEvent": "BudBurst",
                       "Name": "BerryNum",
                       "Children": [
                         {
@@ -5451,7 +5554,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 2.3,
+                          "FixedValue": 2.1,
                           "Units": null,
                           "Name": "PreEventValue",
                           "Children": [],
@@ -5473,7 +5576,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 1.4,
+                                      "FixedValue": 1.0,
                                       "Units": null,
                                       "Name": "Constant",
                                       "Children": [],
@@ -5486,81 +5589,29 @@
                                       "Name": "TmeanFlow",
                                       "Children": [
                                         {
+                                          "$type": "Models.Functions.XYPairs, Models",
+                                          "X": [
+                                            0.0,
+                                            1.0,
+                                            10.0,
+                                            20.0
+                                          ],
+                                          "Y": [
+                                            0.0,
+                                            0.05,
+                                            0.5,
+                                            1.0
+                                          ],
+                                          "Name": "XYPairs",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
                                           "$type": "Models.Functions.VariableReference, Models",
                                           "VariableName": "[Berry].MetFactors.BM_TmeanFlow",
                                           "Name": "XValue",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.XYPairs, Models",
-                                          "X": [
-                                            0.0,
-                                            0.01,
-                                            10.0,
-                                            20.0,
-                                            25.0,
-                                            30.0,
-                                            40.0
-                                          ],
-                                          "Y": [
-                                            0.0,
-                                            0.0,
-                                            -0.165,
-                                            -0.33,
-                                            -0.4125,
-                                            -0.495,
-                                            -0.495
-                                          ],
-                                          "Name": "XYPairs",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                      "Name": "RainTotFlow",
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Berry].MetFactors.BM_RainTotFlow",
-                                          "Name": "XValue",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.XYPairs, Models",
-                                          "X": [
-                                            0.0,
-                                            0.01,
-                                            10.0,
-                                            20.0,
-                                            30.0,
-                                            60.0,
-                                            90.0,
-                                            150.0
-                                          ],
-                                          "Y": [
-                                            0.0,
-                                            0.0,
-                                            -0.167,
-                                            -0.334,
-                                            -0.501,
-                                            -1.002,
-                                            -1.503,
-                                            -2.0
-                                          ],
-                                          "Name": "XYPairs",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
                                           "Enabled": true,
@@ -5588,25 +5639,51 @@
                                           "$type": "Models.Functions.XYPairs, Models",
                                           "X": [
                                             0.0,
-                                            0.01,
-                                            10.0,
-                                            20.0,
-                                            25.0,
-                                            30.0,
-                                            40.0,
-                                            50.0
+                                            1.0,
+                                            10.0
                                           ],
                                           "Y": [
                                             0.0,
-                                            0.0,
-                                            0.38,
-                                            0.76,
-                                            0.95,
-                                            1.14,
-                                            1.52,
-                                            1.52
+                                            0.018,
+                                            0.18
                                           ],
                                           "Name": "XYPairs",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                      "Name": "RainTotFlow",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.XYPairs, Models",
+                                          "X": [
+                                            0.0,
+                                            1.0,
+                                            10.0
+                                          ],
+                                          "Y": [
+                                            0.0,
+                                            -0.0013165,
+                                            -0.013165
+                                          ],
+                                          "Name": "XYPairs",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Berry].MetFactors.BM_RainTotFlow",
+                                          "Name": "XValue",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
                                           "Enabled": true,
@@ -5634,139 +5711,15 @@
                                           "$type": "Models.Functions.XYPairs, Models",
                                           "X": [
                                             0.0,
-                                            0.01,
-                                            10.0,
-                                            20.0,
-                                            30.0,
-                                            60.0,
-                                            90.0,
-                                            100.0,
-                                            150.0
+                                            1.0,
+                                            10.0
                                           ],
                                           "Y": [
                                             0.0,
-                                            0.0,
-                                            0.233,
-                                            0.466,
-                                            0.699,
-                                            1.398,
-                                            2.097,
-                                            2.33,
-                                            2.8
+                                            0.0018,
+                                            0.018
                                           ],
                                           "Name": "XYPairs",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.MinimumFunction, Models",
-                                      "Name": "TmeanRainTotFlow",
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.MultiplyFunction, Models",
-                                          "Name": "MultiplyFunction",
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Functions.Constant, Models",
-                                              "FixedValue": 0.000987,
-                                              "Units": null,
-                                              "Name": "Constant",
-                                              "Children": [],
-                                              "IncludeInDocumentation": true,
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            },
-                                            {
-                                              "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Berry].MetFactors.BM_TmeanFlow",
-                                              "Name": "Tmean",
-                                              "Children": [],
-                                              "IncludeInDocumentation": true,
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            },
-                                            {
-                                              "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Berry].MetFactors.BM_RainTotFlow",
-                                              "Name": "RainTotFlow",
-                                              "Children": [],
-                                              "IncludeInDocumentation": true,
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 2.0,
-                                          "Units": null,
-                                          "Name": "Constant",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.MaximumFunction, Models",
-                                      "Name": "RadRainTotVer",
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.MultiplyFunction, Models",
-                                          "Name": "MultiplyFunction",
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Functions.Constant, Models",
-                                              "FixedValue": -0.000898,
-                                              "Units": null,
-                                              "Name": "Constant",
-                                              "Children": [],
-                                              "IncludeInDocumentation": true,
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            },
-                                            {
-                                              "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Berry].MetFactors.BM_RadFlow",
-                                              "Name": "RadFlow",
-                                              "Children": [],
-                                              "IncludeInDocumentation": true,
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            },
-                                            {
-                                              "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Berry].MetFactors.BM_RainTotVer",
-                                              "Name": "RainTotVer",
-                                              "Children": [],
-                                              "IncludeInDocumentation": true,
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": -2.4246,
-                                          "Units": null,
-                                          "Name": "Constant",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
                                           "Enabled": true,
@@ -5784,9 +5737,9 @@
                                 },
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
+                                  "FixedValue": 1.7,
                                   "Units": null,
-                                  "Name": "zero",
+                                  "Name": "LowerLimit",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -5799,7 +5752,7 @@
                             },
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 2.5,
+                              "FixedValue": 3.0,
                               "Units": null,
                               "Name": "UpperLimit",
                               "Children": [],
@@ -15616,7 +15569,7 @@
                           "YFieldName": "Predicted.BerryNum",
                           "X2FieldName": null,
                           "Y2FieldName": null,
-                          "ShowInLegend": false,
+                          "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
                           "CumulativeX": false,
@@ -16230,6 +16183,320 @@
                       "Name": "Obs",
                       "Children": [],
                       "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "ShowPageOfGraphs": true,
+                  "Name": "Phenology",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "BudBurstPredic",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Climate",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "PredictedObserved",
+                          "XFieldName": "Observed.BudBurstDOY",
+                          "YFieldName": "Predicted.BudBurstDOY",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Series",
+                          "Children": [
+                            {
+                              "$type": "Models.Regression, Models",
+                              "ForEachSeries": true,
+                              "showOneToOne": true,
+                              "showEquation": true,
+                              "Name": "Regression",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "FloweringPred",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -1663232,
+                          "FactorToVaryColours": "Climate",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "PredictedObserved",
+                          "XFieldName": "Observed.FloweringDOY",
+                          "YFieldName": "Predicted.FloweringDOY",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Series",
+                          "Children": [
+                            {
+                              "$type": "Models.Regression, Models",
+                              "ForEachSeries": true,
+                              "showOneToOne": true,
+                              "showEquation": true,
+                              "Name": "Regression",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "VeraisonPred",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -1663232,
+                          "FactorToVaryColours": "Climate",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "PredictedObserved",
+                          "XFieldName": "Observed.VeraisonDOY",
+                          "YFieldName": "Predicted.VeraisonDOY",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Series",
+                          "Children": [
+                            {
+                              "$type": "Models.Regression, Models",
+                              "ForEachSeries": false,
+                              "showOneToOne": true,
+                              "showEquation": true,
+                              "Name": "Regression",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": 2000.0,
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "BudBurstPredic1",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Climate",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "CurrentSeason",
+                          "YFieldName": "FloweringDOY",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Series",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -46230,6 +46497,73 @@
                   "TableName": "Report",
                   "XFieldName": "Clock.Today.Year",
                   "YFieldName": "bunch.no.vine",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": false,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 3,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 0,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "BunchesTmaxIni21",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "Climate",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "BM_TmeanFlow",
+                  "YFieldName": "berry.fw.mean",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": false,
