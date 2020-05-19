@@ -356,8 +356,7 @@
         /// <param name="maxCover">The maximum cover.</param>
         /// <param name="budNumber">The bud number.</param>
         /// <param name="rowConfig">SkipRow configuration.</param>
-        /// <param name="emergenceDate">dd-mmm, date for emergence to occur.  Modeled from sowing date and depth if EmergenceDate not specified</param>
-        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 0, string emergenceDate = "")
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 0)
         {
             SowingDate = Clock.Today;
 
@@ -415,11 +414,6 @@
             // Invoke a sowing event.
             if (PlantSowing != null)
                 PlantSowing.Invoke(this, SowingData);
-
-            if(emergenceDate!="")
-            {
-                Phenology.EmergenceDate = emergenceDate;
-            }
 
             Summary.WriteMessage(this, string.Format("A crop of " + CropType + " (cultivar = " + cultivar + ") was sown today at a population of " + Population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"));
         }

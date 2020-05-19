@@ -791,9 +791,8 @@ namespace Models.PMF.OilPalm
         /// <param name="maxCover">The maximum cover.</param>
         /// <param name="budNumber">The bud number.</param>
         /// <param name="rowConfig">The row configuration.</param>
-        /// /// <param name="emergenceDate">The date of emergence</param>
         /// <exception cref="System.Exception">Cultivar not specified on sow line.</exception>
-        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1, string emergenceDate="")
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1)
         {
             SowingData = new SowPlant2Type();
             SowingData.Population = population;

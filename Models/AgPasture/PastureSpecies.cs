@@ -262,14 +262,13 @@
         /// <param name="maxCover">The maximum ground cover (optional)</param>
         /// <param name="budNumber">The number of buds (optional)</param>
         /// <param name="rowConfig">The row configuration.</param>
-        /// /// <param name="emergenceDate">The date of emergence</param>
         /// <remarks>
         /// For AgPasture species the sow parameters are not used, the command to sow simply enables the plant to grow. This is done
         /// by setting the plant status to 'alive'. From this point germination processes takes place and eventually emergence occurs.
         /// At emergence, plant DM is set to its default minimum value, allocated according to EmergenceFractions and with
         /// optimum N concentration. Plant height and root depth are set to their minimum values.
         /// </remarks>
-        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1, string emergenceDate="")
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1)
         {
             if (isAlive)
                 mySummary.WriteWarning(this, " Cannot sow the pasture species \"" + Name + "\", as it is already growing");
