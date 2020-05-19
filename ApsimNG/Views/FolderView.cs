@@ -75,7 +75,6 @@
                         gview.ShowControls(false);
                         gview.Refresh();
                         gview.SingleClick += OnGraphClick;
-                        gview.IsLegendVisible = false;
                         gview.MainWidget.SetSizeRequest(400, 400);
                         gview.ShowControls(false);
                         table.Attach(gview.MainWidget, col, col + 1, row, row + 1);
