@@ -30,6 +30,7 @@ namespace Models.PMF.Phen
 
         // 2. Private and protected fields
         //-----------------------------------------------------------------------------------------------------------------
+        private bool forceEmergence = false;
 
         /// <summary>The soil layer in which the seed is sown.</summary>
         private int SowLayer = 0;
@@ -58,16 +59,23 @@ namespace Models.PMF.Phen
         {
             bool proceedToNextPhase = false;
 
-            if (!phenology.OnStartDayOf("Sowing") && soil.Water[SowLayer] > soil.LL15mm[SowLayer])
+            if(forceEmergence==true)
+            {
+                proceedToNextPhase = true;
+                propOfDayToUse = 0;
+            }
+
+            else if (!phenology.OnStartDayOf("Sowing") && soil.Water[SowLayer] > soil.LL15mm[SowLayer])
             {
                 proceedToNextPhase = true;
                 propOfDayToUse = 1;
             }
+
             return proceedToNextPhase;
         }
 
         /// <summary>Resets the phase.</summary>
-        public virtual void ResetPhase() { }
+        public virtual void ResetPhase() { forceEmergence = false; }
 
         // 5. Private methods
         //-----------------------------------------------------------------------------------------------------------------
@@ -77,6 +85,12 @@ namespace Models.PMF.Phen
         private void OnPlantSowing(object sender, SowPlant2Type data)
         {
             SowLayer = soil.LayerIndexOfDepth(plant.SowingData.Depth);
+        }
+
+        /// <summary>Will trigger emergence on the day it is called</summary>
+        public void ForceGermination()
+        {
+            forceEmergence = true;
         }
 
         /// <summary>Writes documentation for this class by adding to the list of documentation tags.</summary>
