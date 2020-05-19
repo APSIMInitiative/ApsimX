@@ -79,6 +79,19 @@
         public int ActiveTabIndex { get; set; }
 
         /// <summary>
+        /// Update script parameters at the start of the simulation.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        [EventSubscribe("Commencing")]
+        private void OnCommencing(object sender, EventArgs e)
+        {
+            // Need to ensure script parameters are up to date.
+            if (Children.Count > 0)
+                SetParametersInObject(Children[0]);
+        }
+
+        /// <summary>
         /// Called when the model has been newly created in memory whether from 
         /// cloning or deserialisation.
         /// </summary>
