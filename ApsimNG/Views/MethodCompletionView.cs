@@ -301,5 +301,10 @@
             lblArgumentSummaries.WidthChars = Math.Max(completion.Signature.Length, completion.Summary.Length);
             lblOverloadIndex.Text = string.Format("{0} of {1}", visibleCompletionIndex + 1, completions.Count);
         }
+
+        public void Destroy()
+        {
+            mainWindow.Destroy();
+        }
     }
 }
