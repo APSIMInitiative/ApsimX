@@ -1,0 +1,4480 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 0,
+  "Version": 100,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.PMF.Plant, Models",
+      "CropType": "Pinus",
+      "IsEnding": false,
+      "DaysAfterEnding": 0,
+      "ResourceName": null,
+      "Name": "Pinus",
+      "Children": [
+        {
+          "$type": "Models.Memo, Models",
+          "Text": "Root:shoot ratio, and allometric relationships for height (Ht, m), stem diameter (DBH, cm, over bark at 1.3 m height), and their derivatives (stem volume Vol, and mean annual increment MAI) were developed as a function of above-ground biomass from [almeida2003application], [almeida2004parameterisation], [borges2009parametrizaccao], [cromer1993response], and [norgueira2005estadonutricional]. Similarly, above-ground biomass as a function of stem weight or wood weight was developed from the same datasets plus [turner1986organic], [byrne1989above], [bradstock1981biomass], [polglase1995mineralization], [snow1999nitrogen], [snow1999modelling], [myers1996growth], [myers1998response], and [melo2015responses]. \r\n\r\n",
+          "Name": "Memo",
+          "Children": [],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.AccumulateFunction, Models",
+          "StartStageName": "Emergence",
+          "EndStageName": "Old",
+          "ResetStageName": null,
+          "FractionRemovedOnCut": 0.0,
+          "FractionRemovedOnHarvest": 0.0,
+          "FractionRemovedOnGraze": 0.0,
+          "FractionRemovedOnPrune": 0.0,
+          "Name": "Age",
+          "Children": [
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0027397260273972603,
+              "Units": "years",
+              "Name": "day",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "This converts days of growth to age in years.\r\n\r\n",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PMF.Phen.Phenology, Models",
+          "Name": "Phenology",
+          "Children": [
+            {
+              "$type": "Models.Functions.StageBasedInterpolation, Models",
+              "Stages": [
+                "Emergence",
+                "EndJuvenile",
+                "Maturity",
+                "Old"
+              ],
+              "Codes": [
+                1.0,
+                2.0,
+                3.0,
+                4.0
+              ],
+              "Proportional": true,
+              "Name": "StageCode",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 1.0,
+              "Units": "^od",
+              "Name": "ThermalTime",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Phen.GerminatingPhase, Models",
+              "Start": "Sowing",
+              "End": "Germination",
+              "Name": "Germinating",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "We make no distinction between sowing and transplanting in this model, but all sites used transplants not sown seeds. Initial weights are specified for leaf (1 g/plant) and fine root (0.2 g/plant), which implies these are transplants. Germinating and emerging phenology phases are included in case they are needed by later users. No planting shock is included, but this could be considered in future versions, e.g. delay in commencement of root downward growth. \r\n \r\n",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Phen.EmergingPhase, Models",
+              "ShootLag": 1.0,
+              "ShootRate": 0.0,
+              "Start": "Germination",
+              "End": "Emergence",
+              "TTForTimeStep": 0.0,
+              "Name": "Emerging",
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].ThermalTime",
+                  "Name": "ThermalTime",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Phen.GenericPhase, Models",
+              "Start": "Emergence",
+              "End": "EndJuvenile",
+              "Name": "Juvenile",
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": "^od",
+                  "Name": "Progression",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 365.0,
+                  "Units": "^o",
+                  "Name": "Target",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Phen.GenericPhase, Models",
+              "Start": "EndJuvenile",
+              "End": "Maturity",
+              "Name": "Mature",
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": "^od",
+                  "Name": "Progression",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1825.0,
+                  "Units": "^o",
+                  "Name": "Target",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Phen.GenericPhase, Models",
+              "Start": "Maturity",
+              "End": "Old",
+              "Name": "Declining",
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": "^od",
+                  "Name": "Progression",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 27010.0,
+                  "Units": "^o",
+                  "Name": "Target",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Phen.EndPhase, Models",
+              "Start": "Old",
+              "End": "Unused",
+              "Name": "Old",
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": "^od",
+                  "Name": "ThermalTime",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PMF.OrganArbitrator, Models",
+          "Name": "Arbitrator",
+          "Children": [
+            {
+              "$type": "Models.PMF.BiomassTypeArbitrator, Models",
+              "Name": "DMArbitration",
+              "Children": [
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "Name": "PotentialPartitioningMethods",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Arbitrator.ReallocationMethod, Models",
+                      "Name": "ReallocationMethod"
+                    },
+                    {
+                      "$type": "Models.PMF.Arbitrator.AllocateFixationMethod, Models",
+                      "Name": "AllocateFixationMethod"
+                    },
+                    {
+                      "$type": "Models.PMF.Arbitrator.RetranslocationMethod, Models",
+                      "Name": "RetranslocationMethod"
+                    },
+                    {
+                      "$type": "Models.PMF.Arbitrator.SendPotentialDMAllocationsMethod, Models",
+                      "Name": "SendPotentialDMAllocationsMethod"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "Name": "AllocationMethods",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Arbitrator.NutrientConstrainedAllocationMethod, Models",
+                      "Name": "NutrientConstrainedAllocationMethod"
+                    },
+                    {
+                      "$type": "Models.PMF.Arbitrator.DryMatterAllocationsMethod, Models",
+                      "Name": "DryMatterAllocationsMethod"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.PMF.RelativeAllocation, Models",
+                  "Name": "ArbitrationMethod",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ]
+            },
+            {
+              "$type": "Models.PMF.BiomassTypeArbitrator, Models",
+              "Name": "NArbitration",
+              "Children": [
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "Name": "PotentialPartitioningMethods",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Arbitrator.ReallocationMethod, Models",
+                      "Name": "ReallocationMethod"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "Name": "ActualPartitioningMethods",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Arbitrator.AllocateFixationMethod, Models",
+                      "Name": "AllocateFixationMethod"
+                    },
+                    {
+                      "$type": "Models.PMF.Arbitrator.RetranslocationMethod, Models",
+                      "Name": "RetranslocationMethod"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "Name": "AllocationMethods",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Arbitrator.NitrogenAllocationsMethod, Models",
+                      "Name": "NitrogenAllocationsMethod"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.PMF.RelativeAllocation, Models",
+                  "Name": "ArbitrationMethod",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Arbitrator.AllocateUptakesMethod, Models",
+                  "Name": "AllocateUptakesMethod"
+                }
+              ]
+            },
+            {
+              "$type": "Models.PMF.Arbitrator.WaterUptakeMethod, Models",
+              "Name": "WaterUptakeMethod"
+            },
+            {
+              "$type": "Models.PMF.Arbitrator.NitrogenUptakeMethod, Models",
+              "Name": "NitrogenUptakeMethod"
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PMF.CompositeBiomass, Models",
+          "Propertys": [
+            "[Branch].Live",
+            "[Branch].Dead",
+            "[Leaf].Live",
+            "[Leaf].Dead",
+            "[Stem].Live",
+            "[Stem].Dead"
+          ],
+          "DMDOfStructural": 0.6,
+          "Name": "AboveGround",
+          "Children": [],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PMF.CompositeBiomass, Models",
+          "Propertys": [
+            "[FineRoot].Live",
+            "[FineRoot].Dead",
+            "[CoarseRoot].Live",
+            "[CoarseRoot].Dead"
+          ],
+          "DMDOfStructural": 0.6,
+          "Name": "BelowGround",
+          "Children": [],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PMF.CompositeBiomass, Models",
+          "Propertys": [
+            "[Stem].Live",
+            "[Stem].Dead",
+            "[Branch].Live",
+            "[Branch].Dead"
+          ],
+          "DMDOfStructural": 0.6,
+          "Name": "Wood",
+          "Children": [],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PMF.CompositeBiomass, Models",
+          "Propertys": [
+            "[Leaf].Live",
+            "[Leaf].Dead",
+            "[Stem].Live",
+            "[Stem].Dead",
+            "[FineRoot].Live",
+            "[FineRoot].Dead",
+            "[CoarseRoot].Live",
+            "[CoarseRoot].Dead"
+          ],
+          "DMDOfStructural": 0.6,
+          "Name": "Total",
+          "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "Note that this  property does not include branches. \r\n\r\n",
+              "Name": "Memo",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PMF.CompositeBiomass, Models",
+          "Propertys": [
+            "[Leaf].Live",
+            "[Stem].Live",
+            "[FineRoot].Live",
+            "[CoarseRoot].Live",
+            "[Branch].Live"
+          ],
+          "DMDOfStructural": 0.6,
+          "Name": "TotalLive",
+          "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "Note that this  property does not include branches, and it is used to calculate IndividualTreeLiveWt.  \r\n\r\n",
+              "Name": "Memo",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PMF.CompositeBiomass, Models",
+          "Propertys": [
+            "[Leaf].Dead",
+            "[Stem].Dead",
+            "[FineRoot].Dead",
+            "[CoarseRoot].Dead"
+          ],
+          "DMDOfStructural": 0.6,
+          "Name": "TotalDead",
+          "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "Note that this  property does not include branches.  \r\n\r\n",
+              "Name": "Memo",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.DivideFunction, Models",
+          "Name": "IndividualTreeLiveWt",
+          "Children": [
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Pinus].TotalLive.Wt",
+              "Name": "LiveWt",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Pinus].Population",
+              "Name": "Population",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "Note that this  property does not include branches. It is used in calculating DM Demands of several plant components.  \r\n\r\n",
+              "Name": "Memo",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.DivideFunction, Models",
+          "Name": "IndividualTreeStemWt",
+          "Children": [
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Pinus].Stem.Wt",
+              "Name": "LiveWt",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Pinus].Population",
+              "Name": "Population",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PMF.Organs.PerennialLeaf, Models",
+          "DMSupply": null,
+          "NSupply": null,
+          "DMDemand": null,
+          "NDemand": null,
+          "MaintenanceRespiration": 0.0,
+          "GrowthRespiration": 0.0,
+          "ApicalCohortNo": 0,
+          "CohortsInitialised": false,
+          "TipsAtEmergence": 0,
+          "CohortsAtInitialisation": 0,
+          "AppearedCohortNo": 0,
+          "PlantAppearedLeafNo": 0.0,
+          "InitialisedCohortNo": 0,
+          "Albedo": 0.15,
+          "Gsmax350": 0.005,
+          "R50": 200.0,
+          "Height": 0.0,
+          "FRGR": 0.0,
+          "PotentialEP": 0.0,
+          "WaterDemand": 0.0,
+          "MicroClimatePresent": true,
+          "LightProfile": null,
+          "potentialDMAllocation": null,
+          "Name": "Leaf",
+          "Children": [
+            {
+              "$type": "Models.Functions.ExpressionFunction, Models",
+              "Expression": "(163 - [IWeather].MeanT)/(5 - 0.1*[IWeather].MeanT)",
+              "Name": "CO2internal",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.DivideFunction, Models",
+              "Name": "StomatalConductanceCO2Modifier",
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].Photosynthesis.FCO2",
+                  "Name": "FCO2",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Expression": "([IWeather].CO2 - [Leaf].CO2internal)/(350 - [Leaf].CO2internal)",
+                  "Name": "RelativeCO2Gradient",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.MultiplyFunction, Models",
+              "Name": "InitialWtFunction",
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": "g/plant",
+                  "Name": "InitialPlantWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This value is nominally low to reflect the dry weight of leaves on a transplanted seedling. \r\n\r\n",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Plant].Population",
+                  "Name": "Population",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": "m^2/m^2",
+              "Name": "LaiDeadFunction",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.MinimumFunction, Models",
+              "Name": "FRGRFunction",
+              "Children": [
+                {
+                  "$type": "Models.Functions.AirTemperatureFunction, Models",
+                  "Name": "FRGRFunctionTemp",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        5.0,
+                        20.0,
+                        25.0,
+                        35.0
+                      ],
+                      "Y": [
+                        0.0,
+                        1.0,
+                        1.0,
+                        0.0
+                      ],
+                      "Name": "TemperatureResponse",
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "This is an assumed temperature response function.\r\n\r\n",
+                          "Name": "Memo",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ThreeHourSin, Models",
+                      "Name": "InterpolationMethod",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false,
+                  "agregationMethod": "0"
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.ExpressionFunction, Models",
+              "Expression": "([ExtinctionCoefficient].KMatureTrees+([ExtinctionCoefficient].KYoungTrees-[ExtinctionCoefficient].KMatureTrees)*Exp((0-2)*([Pinus].Leaf.LAI/[ExtinctionCoefficient].LAIIntermediateK)^[ExtinctionCoefficient].ShapeCurve))",
+              "Name": "ExtinctionCoefficient",
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.5,
+                  "Units": null,
+                  "Name": "KYoungTrees",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.5,
+                  "Units": null,
+                  "Name": "KMatureTrees",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.7,
+                  "Units": null,
+                  "Name": "LAIIntermediateK",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 2.0,
+                  "Units": null,
+                  "Name": "ShapeCurve",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "A value of 0.50 is commonly used for Pinus ([macfarlane2007estimation]).\r\n",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.5,
+              "Units": null,
+              "Name": "ExtinctionCoefficientDead",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.03,
+              "Units": "g/g",
+              "Name": "MaximumNConc",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Foliar N concentrations are based on [leuning1991spatial]. ",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.01,
+              "Units": "g/g",
+              "Name": "MinimumNConc",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "This is an assumed value.\r\n\r\n",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": "/d",
+              "Name": "NReallocationFactor",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "A value of zero assumes there is no N reallocation.\r\n\r\n",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.WeightedTemperatureFunction, Models",
+              "MaximumTemperatureWeighting": 0.0,
+              "Name": "SenescenceRate",
+              "Children": [
+                {
+                  "$type": "Models.Functions.XYPairs, Models",
+                  "X": [
+                    -5.0,
+                    -2.0,
+                    0.0,
+                    2.0,
+                    2.1
+                  ],
+                  "Y": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "Name": "XYPairs",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Library.BiomassRemoval, Models",
+              "Name": "BiomassRemovalDefaults",
+              "Children": [
+                {
+                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                  "FractionLiveToRemove": 0.0,
+                  "FractionDeadToRemove": 0.0,
+                  "FractionLiveToResidue": 0.99,
+                  "FractionDeadToResidue": 0.99,
+                  "Name": "Harvest",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                  "FractionLiveToRemove": 0.8,
+                  "FractionDeadToRemove": 0.0,
+                  "FractionLiveToResidue": 0.0,
+                  "FractionDeadToResidue": 0.0,
+                  "Name": "Cut",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                  "FractionLiveToRemove": 0.0,
+                  "FractionDeadToRemove": 0.0,
+                  "FractionLiveToResidue": 0.6,
+                  "FractionDeadToResidue": 0.0,
+                  "Name": "Prune",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Values in this table reflect the live and dead fractions that are either removed from the system or transferred to the residue pool. Harvest, Cut and Prune methods will affect these values, but default values assume for Harvest assume delimbing at the stump. \r\n\r\n",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 1.0,
+              "Units": "g/g",
+              "Name": "DMConversionEfficiency",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 14.0,
+              "Units": "d",
+              "Name": "LeafDetachmentTime",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "A value here is the number of days between senseence and detachment. A value of 14 days is assumed. \r\n\r\n",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": "/d",
+              "Name": "DetachmentRateFunction",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "A value for DetachmentRateFunction is required in Leaf, Branch, Stem and CoarseRoot components of the model, but a zero value means that immediate detachment has been triggered. A non-zero option might be useful in the future for defining some genotypes.  \r\n\r\nThe same explanation applies to zero values below for retranslocation factors.\r\n",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": "/d",
+              "Name": "DMRetranslocationFactor",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": "/d",
+              "Name": "NRetranslocationFactor",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.SupplyFunctions.RUEModel, Models",
+              "Name": "Photosynthesis",
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.4,
+                  "Units": "g/MJ",
+                  "Name": "RUE",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Aboveground RUE for Gliricidia was measured as 1.06 g/MJ by [harrington1995radiation]. Adding c. 0.3 for belowground allocation provides a value of 1.4 g/MJ.\r\n  ",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MinimumFunction, Models",
+                  "Name": "FT",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.WeightedTemperatureFunction, Models",
+                      "MaximumTemperatureWeighting": 0.75,
+                      "Name": "FTDaytime",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            5.0,
+                            20.0,
+                            25.0,
+                            35.0
+                          ],
+                          "Y": [
+                            0.0,
+                            1.0,
+                            1.0,
+                            0.0
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.WeightedTemperatureFunction, Models",
+                      "MaximumTemperatureWeighting": 0.0,
+                      "Name": "FTFrost",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            -5.0,
+                            0.0,
+                            2.0
+                          ],
+                          "Y": [
+                            1.0,
+                            1.0,
+                            1.0
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "FVPD",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        10.0,
+                        50.0
+                      ],
+                      "Y": [
+                        1.0,
+                        1.0,
+                        0.0
+                      ],
+                      "Name": "XYPairs",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 0,
+                              "Title": "Y",
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 3,
+                              "Title": "X",
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 3,
+                          "DisabledSeries": null,
+                          "Name": "Graph",
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -65536,
+                              "FactorToVaryColours": null,
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "Checkpoint": "Current",
+                              "TableName": null,
+                              "XFieldName": "[XYPairs].X",
+                              "YFieldName": "[XYPairs].Y",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "FVPD",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Photosynthesis.VPD",
+                      "Name": "XValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "FN",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        1.0,
+                        1.5
+                      ],
+                      "Y": [
+                        0.0,
+                        1.0,
+                        1.0
+                      ],
+                      "Name": "XYPairs",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 0,
+                              "Title": "Y",
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 3,
+                              "Title": "X",
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 3,
+                          "DisabledSeries": null,
+                          "Name": "Graph",
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -65536,
+                              "FactorToVaryColours": null,
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "Checkpoint": "Current",
+                              "TableName": null,
+                              "XFieldName": "[XYPairs].X",
+                              "YFieldName": "[XYPairs].Y",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "FN",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Fn",
+                      "Name": "XValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "FW",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        1.0,
+                        1.5
+                      ],
+                      "Y": [
+                        0.0,
+                        1.0,
+                        1.0
+                      ],
+                      "Name": "XYPairs",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 0,
+                              "Title": "Y",
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 3,
+                              "Title": "X",
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 3,
+                          "DisabledSeries": null,
+                          "Name": "Graph",
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -65536,
+                              "FactorToVaryColours": null,
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "Checkpoint": "Current",
+                              "TableName": null,
+                              "XFieldName": "[XYPairs].X",
+                              "YFieldName": "[XYPairs].Y",
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "FW",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Fw",
+                      "Name": "XValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.SupplyFunctions.RUECO2Function, Models",
+                  "PhotosyntheticPathway": "C3",
+                  "Name": "FCO2",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].RadIntTot",
+                  "Name": "RadnInt",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": "0-1",
+              "Name": "LeafKillFraction",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "A value of zero assumes that no leaves are killed initially, but this value could be reset in an Operation to reflect, for example, an insect browsing attack, frost kill of foliage, or a pruning operation that removes leaves.\r\n\r\n",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.01,
+              "Units": "m^2/m^2",
+              "Name": "MinimumLAI",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.MultiplyFunction, Models",
+              "Name": "SpecificLeafAreaFunction",
+              "Children": [
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "SpecificLeafAreaPot",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        1.0,
+                        2.0,
+                        3.0,
+                        8.0
+                      ],
+                      "Y": [
+                        0.016,
+                        0.0105,
+                        0.0089,
+                        0.0085,
+                        0.0073
+                      ],
+                      "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "\r\nData for SLA (m^2/g)came from [borges2009parametrizaccao] and [almeida2003comparison]. Values and trends were similar. A generalised pattern should suffice for many applicatinos, but cultivar-specific patterns are available for some cultivars and could be used to slighly refine their simulation. These data are also similar to those in [rance2014assessment]. \n\n    \r\n",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Pinus].Age",
+                      "Name": "XValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "CO2Modifier",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        350.0,
+                        850.0
+                      ],
+                      "Y": [
+                        1.0,
+                        0.8
+                      ],
+                      "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "  \r\n",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[IWeather].CO2",
+                      "Name": "XValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+              "Name": "LeafResidenceTime",
+              "Children": [
+                {
+                  "$type": "Models.Functions.XYPairs, Models",
+                  "X": [
+                    0.0,
+                    1.0,
+                    2.0,
+                    3.0,
+                    8.0
+                  ],
+                  "Y": [
+                    100.0,
+                    140.0,
+                    180.0,
+                    220.0,
+                    280.0
+                  ],
+                  "Name": "XYPairs",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "This function specifies that lead residence time increases with age. Values are based on [laclau2009influence].\r\n\r\n\r\n    \r\n",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Pinus].Age",
+                  "Name": "XValue",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.MultiplyFunction, Models",
+              "Name": "LeafDevelopmentRate",
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": "0-1",
+                  "Name": "LDR",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.WeightedTemperatureFunction, Models",
+                  "MaximumTemperatureWeighting": 1.0,
+                  "Name": "FT",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        10.0,
+                        26.0,
+                        33.0,
+                        34.0
+                      ],
+                      "Y": [
+                        0.0,
+                        1.0,
+                        1.0,
+                        0.0
+                      ],
+                      "Name": "XYPairs",
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "This is an assumed and tuned function of leaf development rate in relation to weighted air temperature.\r\n\r\n",
+                          "Name": "Memo",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.45,
+              "Units": "g/g",
+              "Name": "CarbonConcentration",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "This value is based on [ribeiro2015aboveground].\r\n\r\n",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.ExpressionFunction, Models",
+              "Expression": "[Stem].Ht*1000",
+              "Name": "HeightFunction",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "This converts stem height in m to mm for use else where in the model.\r\n\r\n",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.BiomassDemand, Models",
+              "Name": "DMDemands",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "DM demands are set in a similar ways for each organ, but with different values: structural (default specified), metabolic (value = 0), and storage functions (1 - structural). Values measured range from about 5 to 50% for eucalyptus leaves ([quentin2015non]), which also covers the range of 1-20% for other species and plant parts ([hoch2003non]). Metabolic demand is set to zero, because RUE is a value for net growth for which a respiration calculation is not needed. These values may become an important focus if one attempts to use the model for coppicing, as is already the case in several other APSIM models, e.g. lucerne and gliricidia.  \r\n\r\n",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "Structural",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
+                      "Name": "DMDemandFunction",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "Name": "PartitionFraction",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                0.0,
+                                1000.0,
+                                10000.0
+                              ],
+                              "Y": [
+                                0.19,
+                                0.19,
+                                0.2
+                              ],
+                              "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Pinus].IndividualTreeLiveWt",
+                              "Name": "XValue",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.99,
+                      "Units": "0-1",
+                      "Name": "StructuralFraction",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "Metabolic",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "Storage",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.BiomassDemand, Models",
+              "Name": "NDemands",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "N demands are set in a similar ways to DM demands, which are described above.  \r\n\r\n",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "Structural",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].minimumNconc",
+                      "Name": "MinNconc",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].potentialDMAllocation.Structural",
+                      "Name": "PotentialDMAllocation",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "Metabolic",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.DemandFunctions.StorageNDemandFunction, Models",
+                  "Name": "Storage",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].MaximumNconc",
+                      "Name": "MaxNconc",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "NitrogenDemandSwitch",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PMF.Organs.GenericOrgan, Models",
+          "StartLive": null,
+          "DMSupply": null,
+          "NSupply": null,
+          "DMDemand": null,
+          "NDemand": null,
+          "potentialDMAllocation": null,
+          "Name": "Branch",
+          "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "For many of the parameters in this organ, see comments for similar parameters in the leaf organ.  \r\n\r\n",
+              "Name": "Memo",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": "/d",
+              "Name": "NReallocationFactor",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.05,
+              "Units": "/d",
+              "Name": "NRetranslocationFactor",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.PhaseBasedSwitch, Models",
+              "Start": "Emergence",
+              "End": "Old",
+              "Name": "NitrogenDemandSwitch",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": "/d",
+              "Name": "DMRetranslocationFactor",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": "/d",
+              "Name": "SenescenceRate",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.01,
+              "Units": "g/g",
+              "Name": "MaximumNConc",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0014,
+              "Units": "g/g",
+              "Name": "MinimumNConc",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": "/d",
+              "Name": "DetachmentRateFunction",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": "0-1",
+              "Name": "MaintenanceRespirationFunction",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 1.0,
+              "Units": "0-1",
+              "Name": "DMConversionEfficiency",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Library.BiomassRemoval, Models",
+              "Name": "BiomassRemovalDefaults",
+              "Children": [
+                {
+                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                  "FractionLiveToRemove": 0.0,
+                  "FractionDeadToRemove": 0.0,
+                  "FractionLiveToResidue": 1.0,
+                  "FractionDeadToResidue": 1.0,
+                  "Name": "Harvest",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                  "FractionLiveToRemove": 0.8,
+                  "FractionDeadToRemove": 0.0,
+                  "FractionLiveToResidue": 0.0,
+                  "FractionDeadToResidue": 0.0,
+                  "Name": "Cut",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                  "FractionLiveToRemove": 0.0,
+                  "FractionDeadToRemove": 0.0,
+                  "FractionLiveToResidue": 0.6,
+                  "FractionDeadToResidue": 0.0,
+                  "Name": "Prune",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                  "FractionLiveToRemove": 0.0,
+                  "FractionDeadToRemove": 0.0,
+                  "FractionLiveToResidue": 0.05,
+                  "FractionDeadToResidue": 0.0,
+                  "Name": "Thin",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": "/d",
+              "Name": "DMReallocationFactor",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Branch].MinimumNConc",
+              "Name": "CriticalNConc",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "RemobilisationCost",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.45,
+              "Units": "g/g",
+              "Name": "CarbonConcentration",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.BiomassDemand, Models",
+              "Name": "DMDemands",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "DM or N demands here are set in a similar way to those described above for the leaf organ.  \r\n\r\n",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "Structural",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
+                      "Name": "DMDemandFunction",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "Name": "PartitionFraction",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                0.0,
+                                1000.0,
+                                10000.0
+                              ],
+                              "Y": [
+                                0.06,
+                                0.06,
+                                0.06
+                              ],
+                              "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Pinus].IndividualTreeLiveWt",
+                              "Name": "XValue",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.99,
+                      "Units": "0-1",
+                      "Name": "StructuralFraction",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "Metabolic",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.DemandFunctions.StorageDMDemandFunction, Models",
+                  "Name": "Storage",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.SubtractFunction, Models",
+                      "Name": "StorageFraction",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1.0,
+                          "Units": null,
+                          "Name": "One",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Branch].DMDemands.Structural.StructuralFraction",
+                          "Name": "StructuralFraction",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.BiomassDemand, Models",
+              "Name": "NDemands",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "DM or N demands here are set in a similar way to those described above for the leaf organ.  \r\n\r\n",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "Structural",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Branch].minimumNconc",
+                      "Name": "MinNconc",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Branch].potentialDMAllocation.Structural",
+                      "Name": "PotentialDMAllocation",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "Metabolic",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.SubtractFunction, Models",
+                      "Name": "MetabolicNconc",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Branch].criticalNConc",
+                          "Name": "CritNconc",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Branch].minimumNconc",
+                          "Name": "MinNconc",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Branch].potentialDMAllocation.Structural",
+                      "Name": "PotentialDMAllocation",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.DemandFunctions.StorageNDemandFunction, Models",
+                  "Name": "Storage",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Branch].nitrogenDemandSwitch",
+                      "Name": "NitrogenDemandSwitch",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Branch].maximumNconc",
+                      "Name": "MaxNconc",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.RetranslocateNonStructural, Models",
+              "Name": "RetranslocateNitrogen",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.BiomassDemand, Models",
+              "Name": "InitialWt",
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "g",
+                  "Name": "Structural",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Metabolic",
+                  "FixedValue": "0.0"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Storage",
+                  "FixedValue": "0.0"
+                }
+              ]
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PMF.Organs.GenericOrgan, Models",
+          "StartLive": null,
+          "DMSupply": null,
+          "NSupply": null,
+          "DMDemand": null,
+          "NDemand": null,
+          "potentialDMAllocation": null,
+          "Name": "Stem",
+          "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "For many of the parameters in this organ, see comments for similar parameters in the leaf organ.  \r\n\r\n",
+              "Name": "Memo",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": "/d",
+              "Name": "NReallocationFactor",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.05,
+              "Units": "/d",
+              "Name": "NRetranslocationFactor",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.PhaseBasedSwitch, Models",
+              "Start": "Emergence",
+              "End": "Old",
+              "Name": "NitrogenDemandSwitch",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": "/d",
+              "Name": "DMRetranslocationFactor",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": "/d",
+              "Name": "SenescenceRate",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.01,
+              "Units": "g/g",
+              "Name": "MaximumNConc",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Branch, stem and coarse root minimum N concentrations are based on [raymond2000effect]. ",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0014,
+              "Units": "g/g",
+              "Name": "MinimumNConc",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": "/d",
+              "Name": "DetachmentRateFunction",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": "0-1",
+              "Name": "MaintenanceRespirationFunction",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 1.0,
+              "Units": "0-1",
+              "Name": "DMConversionEfficiency",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Library.BiomassRemoval, Models",
+              "Name": "BiomassRemovalDefaults",
+              "Children": [
+                {
+                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                  "FractionLiveToRemove": 1.0,
+                  "FractionDeadToRemove": 1.0,
+                  "FractionLiveToResidue": 0.0,
+                  "FractionDeadToResidue": 0.0,
+                  "Name": "Harvest",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                  "FractionLiveToRemove": 0.8,
+                  "FractionDeadToRemove": 0.0,
+                  "FractionLiveToResidue": 0.0,
+                  "FractionDeadToResidue": 0.0,
+                  "Name": "Cut",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                  "FractionLiveToRemove": 0.0,
+                  "FractionDeadToRemove": 0.0,
+                  "FractionLiveToResidue": 0.6,
+                  "FractionDeadToResidue": 0.0,
+                  "Name": "Prune",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                  "FractionLiveToRemove": 0.0,
+                  "FractionDeadToRemove": 0.0,
+                  "FractionLiveToResidue": 0.05,
+                  "FractionDeadToResidue": 0.0,
+                  "Name": "Thin",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": "/d",
+              "Name": "DMReallocationFactor",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Stem].MinimumNConc",
+              "Name": "CriticalNConc",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.45,
+              "Units": "g/g",
+              "Name": "CarbonConcentration",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "RemobilisationCost",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.ExpressionFunction, Models",
+              "Expression": "0.685*([Pinus].AboveGround.Wt^0.3262)",
+              "Name": "DBH",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.MaximumFunction, Models",
+              "Name": "Ht",
+              "Children": [
+                {
+                  "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Expression": "0.5201*([Pinus].Stem.DBH^1.3604)",
+                  "Name": "HeightFunction",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.1,
+                  "Units": "m",
+                  "Name": "MinimumHeight",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.LessThanFunction, Models",
+              "Name": "Vol",
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Stem].Ht",
+                  "Name": "Height",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 2.0,
+                  "Units": null,
+                  "Name": "MinimumHeight",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "Zero",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Expression": "(((((([Pinus].Stem.DBH)/2)^2)*3.14159)/3)*([Pinus].Stem.Ht*100))*[Pinus].Population*10000/1000000",
+                  "Name": "VolumeEquation",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Stem volume is calculated as concical volume with the base of the cone the same diameter as at breast height (1.3 m height). Units are m3 stem/ha.\r\n\r\n",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.ExpressionFunction, Models",
+              "Expression": "[Pinus].Stem.Vol/[Pinus].Age",
+              "Name": "MAI",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "MAI = Mean Annual Increment (m3/ha/year) of stem\r\n\r\nMAI, which is based on stem volume, depends entirely on the allometric equation used for DBH, and on which Ht in-turn is direclty based. The Brazilian dataset on which these relationships were based did not include large trees. It is likely that the relationships over-predict DBH, Ht, Vol and MAI at larger sizes than included in the calibration dataset, which may have been a problem for the Gympie and Coffs sites. Although Coffs in the validation dataset included large trees, DBH and Ht data were not avialable from that site to include in the calibration. The developers of this model encourage redefinition of the DBH, Ht and Vol functions for specific future applications that include large trees.        \r\n\r\n",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.BiomassDemand, Models",
+              "Name": "DMDemands",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "DM or N demands here are set in a similar way to those described above for the leaf organ.  \r\n\r\n",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "Structural",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
+                      "Name": "DMDemandFunction",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "Name": "PartitionFraction",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                0.0,
+                                2000.0,
+                                10000.0
+                              ],
+                              "Y": [
+                                0.35,
+                                0.45,
+                                0.58
+                              ],
+                              "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Pinus].IndividualTreeLiveWt",
+                              "Name": "XValue",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.99,
+                      "Units": "0-1",
+                      "Name": "StructuralFraction",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "Metabolic",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.DemandFunctions.StorageDMDemandFunction, Models",
+                  "Name": "Storage",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.SubtractFunction, Models",
+                      "Name": "StorageFraction",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1.0,
+                          "Units": null,
+                          "Name": "One",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Stem].DMDemands.Structural.StructuralFraction",
+                          "Name": "StructuralFraction",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.BiomassDemand, Models",
+              "Name": "NDemands",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "DM or N demands here are set in a similar way to those described above for the leaf organ.  \r\n\r\n",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "Structural",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Stem].minimumNconc",
+                      "Name": "MinNconc",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Stem].potentialDMAllocation.Structural",
+                      "Name": "PotentialDMAllocation",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "Metabolic",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.SubtractFunction, Models",
+                      "Name": "MetabolicNconc",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Stem].criticalNConc",
+                          "Name": "CritNconc",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Stem].minimumNconc",
+                          "Name": "MinNconc",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Stem].potentialDMAllocation.Structural",
+                      "Name": "PotentialDMAllocation",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.DemandFunctions.StorageNDemandFunction, Models",
+                  "Name": "Storage",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Stem].nitrogenDemandSwitch",
+                      "Name": "NitrogenDemandSwitch",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Stem].maximumNconc",
+                      "Name": "MaxNconc",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.RetranslocateNonStructural, Models",
+              "Name": "RetranslocateNitrogen",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.BiomassDemand, Models",
+              "Name": "InitialWt",
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "g",
+                  "Name": "Structural",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Metabolic",
+                  "FixedValue": "0.0"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Storage",
+                  "FixedValue": "0.0"
+                }
+              ]
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PMF.Organs.GenericOrgan, Models",
+          "StartLive": null,
+          "DMSupply": null,
+          "NSupply": null,
+          "DMDemand": null,
+          "NDemand": null,
+          "potentialDMAllocation": null,
+          "Name": "CoarseRoot",
+          "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "For many of the parameters in this organ, see comments for similar parameters in the leaf organ.  \r\n\r\n",
+              "Name": "Memo",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": "/d",
+              "Name": "NReallocationFactor",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.05,
+              "Units": "/d",
+              "Name": "NRetranslocationFactor",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.PhaseBasedSwitch, Models",
+              "Start": "Emergence",
+              "End": "Old",
+              "Name": "NitrogenDemandSwitch",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": "0-1",
+              "Name": "DMRetranslocationFactor",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": "/d",
+              "Name": "SenescenceRate",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.01,
+              "Units": "g/g",
+              "Name": "MaximumNConc",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0014,
+              "Units": "g/g",
+              "Name": "MinimumNConc",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": "/d",
+              "Name": "DetachmentRateFunction",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": "0-1",
+              "Name": "MaintenanceRespirationFunction",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 1.0,
+              "Units": "0-1",
+              "Name": "DMConversionEfficiency",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Library.BiomassRemoval, Models",
+              "Name": "BiomassRemovalDefaults",
+              "Children": [
+                {
+                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                  "FractionLiveToRemove": 0.0,
+                  "FractionDeadToRemove": 0.0,
+                  "FractionLiveToResidue": 1.0,
+                  "FractionDeadToResidue": 1.0,
+                  "Name": "Harvest",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                  "FractionLiveToRemove": 0.8,
+                  "FractionDeadToRemove": 0.0,
+                  "FractionLiveToResidue": 0.0,
+                  "FractionDeadToResidue": 0.0,
+                  "Name": "Cut",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                  "FractionLiveToRemove": 0.0,
+                  "FractionDeadToRemove": 0.0,
+                  "FractionLiveToResidue": 0.6,
+                  "FractionDeadToResidue": 0.0,
+                  "Name": "Prune",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                  "FractionLiveToRemove": 0.0,
+                  "FractionDeadToRemove": 0.0,
+                  "FractionLiveToResidue": 0.05,
+                  "FractionDeadToResidue": 0.0,
+                  "Name": "Thin",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": "0-1",
+              "Name": "DMReallocationFactor",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Stem].MinimumNConc",
+              "Name": "CriticalNConc",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "RemobilisationCost",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.45,
+              "Units": "g/g",
+              "Name": "CarbonConcentration",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.BiomassDemand, Models",
+              "Name": "DMDemands",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "DM or N demands here are set in a similar way to those described above for the leaf organ.  \r\n\r\n",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "Structural",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
+                      "Name": "DMDemandFunction",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "Name": "PartitionFraction",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                0.0,
+                                1000.0,
+                                10000.0
+                              ],
+                              "Y": [
+                                0.01,
+                                0.03,
+                                0.05
+                              ],
+                              "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Pinus].IndividualTreeLiveWt",
+                              "Name": "XValue",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.99,
+                      "Units": "0-1",
+                      "Name": "StructuralFraction",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "Metabolic",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.DemandFunctions.StorageDMDemandFunction, Models",
+                  "Name": "Storage",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.SubtractFunction, Models",
+                      "Name": "StorageFraction",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1.0,
+                          "Units": null,
+                          "Name": "One",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[CoarseRoot].DMDemands.Structural.StructuralFraction",
+                          "Name": "StructuralFraction",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.BiomassDemand, Models",
+              "Name": "NDemands",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "DM or N demands here are set in a similar way to those described above for the leaf organ.  \r\n\r\n",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "Structural",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[CoarseRoot].minimumNconc",
+                      "Name": "MinNconc",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[CoarseRoot].potentialDMAllocation.Structural",
+                      "Name": "PotentialDMAllocation",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "Metabolic",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.SubtractFunction, Models",
+                      "Name": "MetabolicNconc",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[CoarseRoot].criticalNConc",
+                          "Name": "CritNconc",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[CoarseRoot].minimumNconc",
+                          "Name": "MinNconc",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[CoarseRoot].potentialDMAllocation.Structural",
+                      "Name": "PotentialDMAllocation",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.DemandFunctions.StorageNDemandFunction, Models",
+                  "Name": "Storage",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[CoarseRoot].nitrogenDemandSwitch",
+                      "Name": "NitrogenDemandSwitch",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[CoarseRoot].maximumNconc",
+                      "Name": "MaxNconc",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.RetranslocateNonStructural, Models",
+              "Name": "RetranslocateNitrogen",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.BiomassDemand, Models",
+              "Name": "InitialWt",
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "g",
+                  "Name": "Structural",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Metabolic",
+                  "FixedValue": "0.0"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Storage",
+                  "FixedValue": "0.0"
+                }
+              ]
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PMF.Organs.Root, Models",
+          "DMSupply": null,
+          "NSupply": null,
+          "DMDemand": null,
+          "NDemand": null,
+          "potentialDMAllocation": null,
+          "GrowthRespiration": 0.0,
+          "MaintenanceRespiration": 0.0,
+          "RootAngle": 45.0,
+          "SWAvailabilityRatio": 0.0,
+          "Name": "FineRoot",
+          "Children": [
+            {
+              "$type": "Models.Functions.RootShape.RootShapeCylindre, Models",
+              "Name": "RootShape",
+              "Children": []
+            },
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "For many of the parameters in this organ, see comments for similar parameters in the leaf organ.  \r\n\r\n",
+              "Name": "Memo",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.PhaseBasedSwitch, Models",
+              "Start": "Emergence",
+              "End": "Old",
+              "Name": "NitrogenDemandSwitch",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 10.0,
+              "Units": "mm/d",
+              "Name": "RootFrontVelocity",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "[huth_managing_2008] measured a constant root front velocity of 24.3 mm/d down to 1.4 m depth under favourable growing conditions, which was similar to wheat. [goncalves2013integrating] report eucalypt root front velocities averaging 19 mm/day for the first 1.5 years to 12 mm/day by 3.5 years in conditions of little impedence to root growth. The value of 10 mm/d used here is lower to reflect more common limiting conditions.\r\n\r\n",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.005,
+              "Units": "/d",
+              "Name": "SenescenceRate",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 6.0,
+              "Units": "kg/ha/d",
+              "Name": "MaxDailyNUptake",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.01,
+              "Units": "g/g",
+              "Name": "MaximumNConc",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Fine root N concentrations are based on [gordon2000nutrient]. ",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.003,
+              "Units": "g/g",
+              "Name": "MinimumNConc",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 10000.0,
+              "Units": "mm",
+              "Name": "MaximumRootDepth",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 1.0,
+              "Units": null,
+              "Name": "KLModifier",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.03,
+              "Units": null,
+              "Name": "KNO3",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 3E-06,
+              "Units": null,
+              "Name": "KNH4",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+              "Name": "NUptakeSWFactor",
+              "Children": [
+                {
+                  "$type": "Models.Functions.XYPairs, Models",
+                  "X": [
+                    0.0,
+                    1.0
+                  ],
+                  "Y": [
+                    0.0,
+                    1.0
+                  ],
+                  "Name": "XYPairs",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Root].RWC",
+                  "Name": "XValue",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 40.0,
+              "Units": "m/g",
+              "Name": "SpecificRootLength",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Specific root length was based on [jourdan2008fine]. ",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Library.BiomassRemoval, Models",
+              "Name": "BiomassRemovalDefaults",
+              "Children": [
+                {
+                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                  "FractionLiveToRemove": 0.0,
+                  "FractionDeadToRemove": 0.0,
+                  "FractionLiveToResidue": 1.0,
+                  "FractionDeadToResidue": 1.0,
+                  "Name": "Harvest",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                  "FractionLiveToRemove": 0.8,
+                  "FractionDeadToRemove": 0.0,
+                  "FractionLiveToResidue": 0.0,
+                  "FractionDeadToResidue": 0.0,
+                  "Name": "Cut",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                  "FractionLiveToRemove": 0.0,
+                  "FractionDeadToRemove": 0.0,
+                  "FractionLiveToResidue": 0.6,
+                  "FractionDeadToResidue": 0.0,
+                  "Name": "Prune",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 1.0,
+              "Units": "0-1",
+              "Name": "DMConversionEfficiency",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": "0-1",
+              "Name": "MaintenanceRespirationFunction",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "RemobilisationCost",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.45,
+              "Units": "g/g",
+              "Name": "CarbonConcentration",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.BiomassDemand, Models",
+              "Name": "DMDemands",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "DM or N demands here are set in a similar way to those described above for the leaf organ.  \r\n\r\n",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "Structural",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
+                      "Name": "DMDemandFunction",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.25,
+                          "Units": null,
+                          "Name": "PartitionFraction",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "StructuralFraction",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "Metabolic",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.DemandFunctions.StorageDMDemandFunction, Models",
+                  "Name": "Storage",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.SubtractFunction, Models",
+                      "Name": "StorageFraction",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1.0,
+                          "Units": null,
+                          "Name": "One",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[FineRoot].DMDemands.Structural.StructuralFraction",
+                          "Name": "StructuralFraction",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.BiomassDemand, Models",
+              "Name": "NDemands",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "DM or N demands here are set in a similar way to those described above for the leaf organ.  \r\n\r\n",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "Structural",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[FineRoot].minimumNconc",
+                      "Name": "MinNconc",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[FineRoot].potentialDMAllocation.Structural",
+                      "Name": "PotentialDMAllocation",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "Metabolic",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.SubtractFunction, Models",
+                      "Name": "MetabolicNconc",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[FineRoot].criticalNConc",
+                          "Name": "CritNconc",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[FineRoot].minimumNconc",
+                          "Name": "MinNconc",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[FineRoot].potentialDMAllocation.Structural",
+                      "Name": "PotentialDMAllocation",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.DemandFunctions.StorageNDemandFunction, Models",
+                  "Name": "Storage",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[FineRoot].nitrogenDemandSwitch",
+                      "Name": "NitrogenDemandSwitch",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[FineRoot].maximumNconc",
+                      "Name": "MaxNconc",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Root].MinimumNConc",
+              "Name": "CriticalNConc",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.BiomassDemand, Models",
+              "Name": "InitialWt",
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.2,
+                  "Units": "g/plant",
+                  "Name": "Structural",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Metabolic",
+                  "FixedValue": "0.0"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Storage",
+                  "FixedValue": "0.0"
+                }
+              ]
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.DivideFunction, Models",
+          "Name": "RootShootRatio",
+          "Children": [
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Pinus].BelowGround.Wt",
+              "Name": "Numerator",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Pinus].AboveGround.Wt",
+              "Name": "Denominator",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PMF.CultivarFolder, Models",
+          "Name": "grandis",
+          "Children": [
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                ""
+              ],
+              "Name": "grandis",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "This genotype specification was originally planned to be for the species E. grandis in general, but we did not actually provide any specific parameters. As no parameter values were changed here, generic Pinus parameters were used where this genotype was specified in a simulation.\r\n\r\n    \r\n",
+                  "Name": "Genotype note",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                ""
+              ],
+              "Name": "grandisCoffsHarbour",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "This genotype specification is for a Coffs Harbour provenance of E. grandis, but as no actually genotype-specific parameters are specified, simulations using this genotype use the unchanged parameter set of the main Pinus model. \r\n\r\n  \r\n",
+                  "Name": "Genotype note",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,1000,10000",
+                "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0,0.03,0.04",
+                "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,1000,10000,20000,50000,80000",
+                "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.24,0.2,0.2,.23,0.2,.12",
+                "[Branch].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,1000,10000,20000,50000,80000",
+                "[Branch].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=.06,.06,.06,.05,.04,.03",
+                "[FineRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.FixedValue=0.2",
+                "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,1000,10000,20000,30000,80000",
+                "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.2,0.45,0.7,0.99,0.99,.99"
+              ],
+              "Name": "grandisC15",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "This genotype specification was used to specifiy partitioning to for the C15 clone used by the Aracruz company (now Fibria), in order to approximate the root:shoot ratios reported in [almeida]. \r\n\r\n    \r\n",
+                  "Name": "Genotype note",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,1000,10000",
+                "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0,0.08,0.08",
+                "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,1000,10000,20000,50000,80000",
+                "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.22,0.2,0.19,0.13,0.10,.06"
+              ],
+              "Name": "grandisC22",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "This genotype specification was used to specifiy partitioning to for the C22 clone used by the Aracruz company (now Fibria), in order to approximate the root:shoot ratios reported in [almeida]. \r\n\r\n    \r\n",
+                  "Name": "Genotype note",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PMF.CultivarFolder, Models",
+          "Name": "grandisXurophylla",
+          "Children": [
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                ""
+              ],
+              "Name": "grandisXurophylla",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "This genotype specification was originally planned to be for a cline of grandisXurophylla, but we did not actually provide any specific parameters. As no parameter values were changed here, generic Pinus parameters were used where this genotype was specified in a simulation.\r\n\r\n    \r\n",
+                  "Name": "Genotype note",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                ""
+              ],
+              "Name": "grandisXurophyllaC3334",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "This genotype specification was originally planned to be for the clone C3334, but we did not actually provide any specific parameters. As no parameter values were changed here, generic Pinus parameters were used where this genotype was specified in a simulation.\r\n\r\n    \r\n",
+                  "Name": "Genotype note",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                ""
+              ],
+              "Name": "grandisXurophyllaC3336",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "This genotype specification was originally planned to be for the clone C3336, but we did not actually provide any specific parameters. As no parameter values were changed here, generic Pinus parameters were used where this genotype was specified in a simulation.\r\n\r\n    \r\n",
+                  "Name": "Genotype note",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PMF.CultivarFolder, Models",
+          "Name": "urophyllaXglobulus",
+          "Children": [
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                ""
+              ],
+              "Name": "urophyllaXglobulus",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "This genotype specification was originally planned to be for the urophyllaXglobulus hybird of E. grandis, but we did not actually provide any specific parameters. As no parameter values were changed here, generic Pinus parameters were used where this genotype was specified in a simulation.\r\n\r\n    \r\n",
+                  "Name": "Genotype note",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PMF.CultivarFolder, Models",
+          "Name": "BrazilClones",
+          "Children": [
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Leaf].Photosynthesis.RUE.FixedValue = 1.51",
+                "",
+                "[Leaf].ExtinctionCoefficient.KYoungTrees.FixedValue = 0.34",
+                "",
+                "[Leaf].ExtinctionCoefficient.KMatureTrees.FixedValue = 0.60",
+                "",
+                "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
+                "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.15, 0.39, 0.61",
+                "",
+                "[Branch].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
+                "[Branch].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.09,0.09,0.09",
+                "",
+                "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
+                "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y= 0.2, 0.17, 0.15",
+                "",
+                "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.X=  8, 18, 23, 40",
+                "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.Y 0, 1, 1, 0",
+                "",
+                "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.X= -5, -2, -1, 0, 1, 2, 2.1 ",
+                "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.Y = 0, 0, 0, 0, 0, 0.9, 1",
+                "",
+                "[Leaf].SenescenceRate.XYPairs.X=  -5,  -2,  0,    2,  2.1 ",
+                "[Leaf].SenescenceRate.XYPairs.Y = 0.7, 0.5, 0.2, 0.1, 0",
+                "",
+                "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
+                "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.005,0.03,0.04",
+                "",
+                "[FineRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.FixedValue = 0.26"
+              ],
+              "Name": "BrazilPlasticClone",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Leaf].Photosynthesis.RUE.FixedValue = 1.69",
+                "",
+                "[Leaf].ExtinctionCoefficient.KYoungTrees.FixedValue = 0.30",
+                "",
+                "[Leaf].ExtinctionCoefficient.KMatureTrees.FixedValue = 0.56",
+                "",
+                "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
+                "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.15,0.40, 0.64",
+                "",
+                "[Branch].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
+                "[Branch].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.08,0.08,0.08",
+                "",
+                "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
+                "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y= 0.19, 0.17, 0.17",
+                "",
+                "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.X=  8, 18, 23, 40",
+                "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.Y 0, 1, 1, 0",
+                "",
+                "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.X= -5, -2, -1, 0, 1, 2, 2.1 ",
+                "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.Y = 0, 0, 0, 0, 0, 0.9, 1",
+                "",
+                "[Leaf].SenescenceRate.XYPairs.X=  -5,  -2,  0,    2,  2.1 ",
+                "[Leaf].SenescenceRate.XYPairs.Y = 0.7, 0.5, 0.2, 0.1, 0",
+                "",
+                "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
+                "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.03,0.1,0.1",
+                "",
+                "[FineRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.FixedValue = 0.35",
+                "",
+                "[Leaf].SpecificLeafAreaFunction.SpecificLeafAreaPot.XYPairs.X= 0, 1, 2, 3, 4, 80",
+                "[Leaf].SpecificLeafAreaFunction.SpecificLeafAreaPot.XYPairs.Y= 0.018, 0.014, 0.011, 0.009, 0.008, 0.007"
+              ],
+              "Name": "BrazilTropicalClone",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Leaf].Photosynthesis.RUE.FixedValue = 1.57",
+                "",
+                "[Leaf].ExtinctionCoefficient.KYoungTrees.FixedValue = 0.26",
+                "",
+                "[Leaf].ExtinctionCoefficient.KMatureTrees.FixedValue = 0.55",
+                "",
+                "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
+                "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.15, 0.30, 0.57",
+                "",
+                "[Branch].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
+                "[Branch].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.09,0.09,0.09",
+                "",
+                "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
+                "[Leaf].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y= 0.20, 0.16, 0.15",
+                "",
+                "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.X=  6, 17, 22, 38",
+                "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.Y 0, 1, 1, 0",
+                "",
+                "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.X= -5, -2, -1, 0, 1, 2, 2.1  ",
+                "[Leaf].Photosynthesis.FT.FTFrost.XYPairs.Y = 0.5, 1, 1, 1, 1, 1, 1",
+                "",
+                "[Leaf].SenescenceRate.XYPairs.X=  -5,  -2,  0,    2,  2.1 ",
+                "[Leaf].SenescenceRate.XYPairs.Y = 0.7, 0.5, 0.2, 0.1, 0",
+                "",
+                "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.X=0,2000,10000",
+                "[CoarseRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y=0.02,0.05,0.06",
+                "",
+                "[FineRoot].DMDemands.Structural.DMDemandFunction.PartitionFraction.FixedValue = 0.24",
+                "",
+                "[Leaf].SpecificLeafAreaFunction.SpecificLeafAreaPot.XYPairs.X= 0, 1, 2, 3, 4, 80",
+                "[Leaf].SpecificLeafAreaFunction.SpecificLeafAreaPot.XYPairs.Y= 0.015, 0.013, 0.009, 0.008, 0.007, 0.007"
+              ],
+              "Name": "BrazilSubTropicalClone",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PMF.CultivarFolder, Models",
+          "Name": "saligna",
+          "Children": [
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                ""
+              ],
+              "Name": "saligna",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "This genotype specification was originally planned to be for the species E. saligna, but we did not actually provide any specific parameters. As no parameter values were changed here, generic Pinus parameters were used where this genotype was specified in a simulation.\r\n\r\n    \r\n",
+                  "Name": "Genotype note",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+}

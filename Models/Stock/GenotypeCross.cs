@@ -165,7 +165,7 @@
             Genotype newGenotype;
             if (!string.IsNullOrEmpty(PureBredBreed))
             {
-                newGenotype = stock.Genotypes.Get(PureBredBreed).Parameters;
+                newGenotype = stock.Genotypes.Get(PureBredBreed);
                 newGenotype.Name = Name;
                 stock.Genotypes.Add(newGenotype);
             }
@@ -195,16 +195,10 @@
             if (damProportion + sireProportion != 1)
                 throw new Exception("When creating a cross breed the total proportions must be equal to one.");
 
-            var damBreedGenotype = stock.Genotypes.Get(damBreedName);
-            if (damBreedGenotype == null)
-                throw new Exception($"Cannot find a stock genotype named {damBreedName}");
-            var damBreed = damBreedGenotype.Parameters;
-            damBreed.DeriveParams();
+            var damBreed = stock.Genotypes.Get(damBreedName);
             damBreed.Initialise();
 
-            var sireBreedGenotype = stock.Genotypes.Get(sireBreedName);
-            var sireBreed = damBreedGenotype.Parameters;
-            sireBreed.DeriveParams();
+            var sireBreed = stock.Genotypes.Get(sireBreedName);
             sireBreed.Initialise();
 
             Genotype newGenotype = new Genotype(nameOfNewGenotype, damBreed, sireBreed, damProportion, sireProportion);

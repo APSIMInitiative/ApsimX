@@ -394,6 +394,7 @@
     <Compile Include="Views\TitleView.cs" />
     <Compile Include="Views\TreeProxyView.cs" />
     <Compile Include="Views\ViewBase.cs" />
+    <Compile Include="Views\WindowView.cs" />
     <Compile Include="Views\XYPairsView.cs" />
     <Compile Include="Utility\MacUtilities.cs" />
   </ItemGroup>
@@ -473,6 +474,7 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\Draft.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Grapevine.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\HourlySinPpAdjusted.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\ThreeHourSin.png" />
