@@ -194,7 +194,7 @@
             // Get a friesian genotype.
             var stock = new Stock
             {
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Clock(),
                     new Weather(),
@@ -206,7 +206,7 @@
                     },
                     new Soil()
                     { 
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         { 
                             new Physical()
                             {
@@ -279,7 +279,7 @@
             // Get a friesian genotype.
             var stock = new Stock
             {
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Clock()
                     {
@@ -300,7 +300,7 @@
                     },
                     new Soil()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Physical() { Thickness = new double[] { 100, 100, 100 } }
                         }
@@ -354,7 +354,7 @@
             // Get a friesian genotype.
             var stock = new Stock
             {
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Clock()
                     {
@@ -367,28 +367,28 @@
                     {
                         Name = "Field1",
                         Area = 100,
-                        Children = new List<Model>() { new MockForage(300) }
+                        Children = new List<IModel>() { new MockForage(300) }
                     },
                     new Zone()
                     {
                         Name = "Field2",
                         Area = 50,
-                        Children = new List<Model>() { new MockForage(100) }
+                        Children = new List<IModel>() { new MockForage(100) }
                     },
                     new Zone()
                     {
                         Name = "Field3",
                         Area = 150,
-                        Children = new List<Model>() { new MockForage(500) }
+                        Children = new List<IModel>() { new MockForage(500) }
                     },
                     new Zone()
                     {
                         Name = "Field4",
                         Area = 75,
-                        Children = new List<Model>() { new MockForage(500) }
+                        Children = new List<IModel>() { new MockForage(500) }
                     },                    new Soil()
                     {
-                        Children = new List<Model>() { new Physical() { Thickness = new double[] { 100, 100, 100 } } }
+                        Children = new List<IModel>() { new Physical() { Thickness = new double[] { 100, 100, 100 } } }
                     },
                     new Animals()
                     {

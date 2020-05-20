@@ -24,7 +24,7 @@
         {
             var soil = new Soil
             {
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Physical()
                     {
@@ -35,7 +35,7 @@
                         DUL = new double[] { 0.365, 0.461, 0.43, 0.412, 0.402, 0.404 },
                         SAT = new double[] { 0.400, 0.481, 0.45, 0.432, 0.422, 0.424 },
 
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new SoilCrop
                             {

@@ -22,7 +22,7 @@ namespace Models.Core
         /// <summary>
         /// Gets of sets the child models. Can be empty array but never null.
         /// </summary>
-        List<Model> Children { get; set; }
+        List<IModel> Children { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether a model is hidden from the user.
@@ -49,6 +49,5 @@ namespace Models.Core
         /// cloning or deserialisation.
         /// </summary>
         void OnCreated();
-
     }
 }
