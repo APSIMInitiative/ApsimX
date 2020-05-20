@@ -59,18 +59,18 @@
         /// resource model's children. A match is defined as having the same name and
         /// type.
         /// </remarks>
-        public List<Model> ChildrenToSerialize
+        public List<IModel> ChildrenToSerialize
         {
             get
             {
                 if (string.IsNullOrEmpty(ResourceName))
                     return Children;
 
-                List<Model> officialChildren = GetResourceModel()?.Children;
+                List<IModel> officialChildren = GetResourceModel()?.Children;
                 if (officialChildren == null)
                     return Children;
 
-                List<Model> toReturn = new List<Model>();
+                List<IModel> toReturn = new List<IModel>();
                 foreach (Model child in Children)
                     if (!officialChildren.Any(m => m.GetType() == child.GetType() && string.Equals(m.Name, child.Name, StringComparison.InvariantCultureIgnoreCase)))
                         toReturn.Add(child);
@@ -237,14 +237,14 @@
         /// Class used to compare models. The models are considered equal iff they have
         /// the same name and type.
         /// </summary>
-        private class ModelComparer : IEqualityComparer<Model>
+        private class ModelComparer : IEqualityComparer<IModel>
         {
-            public bool Equals(Model x, Model y)
+            public bool Equals(IModel x, IModel y)
             {
                 return x.GetType() == y.GetType() && string.Equals(x.Name, y.Name, StringComparison.InvariantCultureIgnoreCase);
             }
 
-            public int GetHashCode(Model obj)
+            public int GetHashCode(IModel obj)
             {
                 return obj.GetHashCode();
             }
