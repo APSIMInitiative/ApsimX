@@ -79,6 +79,19 @@
         public int ActiveTabIndex { get; set; }
 
         /// <summary>
+        /// Update script parameters at the start of the simulation.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        [EventSubscribe("Commencing")]
+        private void OnCommencing(object sender, EventArgs e)
+        {
+            // Need to ensure script parameters are up to date.
+            if (Children.Count > 0)
+                SetParametersInObject(Children[0]);
+        }
+
+        /// <summary>
         /// Called when the model has been newly created in memory whether from 
         /// cloning or deserialisation.
         /// </summary>
@@ -106,16 +119,6 @@
 
             isCreated = true;
             RebuildScriptModel();
-        }
-
-        /// <summary>At simulation commencing time, rebuild the script assembly if required.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            RebuildScriptModel();
-            SetParametersInObject(Apsim.Child(this, "Script") as Model);
         }
 
         /// <summary>Rebuild the script model and return error message if script cannot be compiled.</summary>
