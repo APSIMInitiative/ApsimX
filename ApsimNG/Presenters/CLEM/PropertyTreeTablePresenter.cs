@@ -229,7 +229,7 @@ namespace UserInterface.Presenters
         {
             if (model != null)
             {
-                Model firstChild = model.Children.FirstOrDefault();
+                IModel firstChild = model.Children.FirstOrDefault();
                 if (firstChild != null)
                 {
                     List<IModel> sameTypeChildren = Apsim.Children(model, firstChild.GetType());

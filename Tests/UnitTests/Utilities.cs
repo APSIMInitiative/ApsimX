@@ -147,12 +147,12 @@ namespace UnitTests
             Simulations sims = new Simulations()
             {
                 FileName = Path.ChangeExtension(Path.GetTempFileName(), ".apsimx"),
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new DataStore(),
                     new Simulation()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Clock()
                             {
@@ -163,7 +163,7 @@ namespace UnitTests
                             new Zone()
                             {
                                 Area = 1,
-                                Children = new List<Model>()
+                                Children = new List<IModel>()
                                 {
                                     new Models.Report()
                                     {
