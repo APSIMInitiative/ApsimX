@@ -7,6 +7,9 @@ pipeline {
 					agent {
 						label "windows && midweight"
 					}
+					environment {
+						GRAPEVINE_PASSWORD = credentials('grapevine-validation-password')
+					}
 					steps {
 						bat '''
 							@echo off

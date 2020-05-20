@@ -96,6 +96,12 @@ namespace Models.PMF.Phen
             ProgressThroughPhase = 0;
             Target = 0;
         }
+
+        /// <summary>Will trigger emergence on the day it is called</summary>
+        public void ForceEmergence()
+        {
+            ProgressThroughPhase = Target;
+        }
         
         // 4. Private method
         //-----------------------------------------------------------------------------------------------------------------

@@ -11,7 +11,7 @@
     using System.Timers;
     using Utility;
 
-    class RunCommand : ICommand
+    public class RunCommand : ICommand
     {
         /// <summary>The name of the job</summary>
         private string jobName;
@@ -52,11 +52,14 @@
             IsRunning = true;
             jobRunner.Run();
 
-            timer = new Timer();
-            timer.Interval = 1000;
-            timer.AutoReset = true;
-            timer.Elapsed += OnTimerTick;
-            timer.Start();
+            if (IsRunning)
+            {
+                timer = new Timer();
+                timer.Interval = 1000;
+                timer.AutoReset = true;
+                timer.Elapsed += OnTimerTick;
+                timer.Start();
+            }
         }
 
         /// <summary>Undo the command</summary>
@@ -65,6 +68,10 @@
         /// <summary>All jobs have completed</summary>
         private void OnAllJobsCompleted(object sender, Runner.AllJobsCompletedArgs e)
         {
+            IsRunning = false;
+            if (timer != null)
+                timer.Elapsed -= OnTimerTick;
+
             if (e.AllExceptionsThrown != null)
                 errors.AddRange(e.AllExceptionsThrown);
             try
@@ -126,7 +133,11 @@
         private void Stop()
         {
             this.explorerPresenter.MainPresenter.RemoveStopHandler(OnStopSimulation);
-            timer?.Stop();
+            if (timer != null)
+            {
+                timer.Stop();
+                timer.Elapsed -= OnTimerTick;
+            }
             jobRunner?.Stop();
             jobRunner = null;
             IsRunning = false;
@@ -140,7 +151,10 @@
         private void OnTimerTick(object sender, ElapsedEventArgs e)
         {
             if (jobRunner == null)
+            {
                 timer?.Stop();
+                timer.Elapsed -= OnTimerTick;
+            }
             else if (jobRunner?.TotalNumberOfSimulations > 0)
             {
                 explorerPresenter.MainPresenter.ShowMessage(jobName + " running (" +
