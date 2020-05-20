@@ -62,13 +62,16 @@
         /// <returns>The absolute path</returns>
         public static string GetAbsolutePath(string path, string relativePath)
         {
-            if (string.IsNullOrEmpty(path) || string.IsNullOrEmpty(relativePath))
+            if (string.IsNullOrEmpty(path))
                 return path;
 
-            // Remove any %root% macro.
+            // Remove any %root% macro (even if relative path is null).
             string apsimxDirectory = Directory.GetParent(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)).FullName;
             path = path.Replace("%root%", apsimxDirectory);
-            
+
+            if (string.IsNullOrEmpty(relativePath))
+                return path;
+
             // Make sure we have a relative directory 
             string relativeDirectory = Path.GetDirectoryName(relativePath);
             if (relativeDirectory != null)
