@@ -35,7 +35,7 @@
         {
             simulation = new Simulation()
             {
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new MockStorage(),
                     new MockSummary(),

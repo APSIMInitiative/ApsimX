@@ -23,19 +23,19 @@
             // Create a simulation
             var simulation = new Simulation()
             {
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Clock(),
                     new MockSummary(),
                     new Zone()
                     {
                         Name = "zone1",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Soil(),
                             new Plant()
                             {
-                                Children = new List<Model>()
+                                Children = new List<IModel>()
                                 {
                                     new Leaf() { Name = "leaf1" },
                                     new GenericOrgan() { Name = "stem1" }
@@ -43,7 +43,7 @@
                             },
                             new Plant()
                             {
-                                Children = new List<Model>()
+                                Children = new List<IModel>()
                                 {
                                     new Leaf() { Name = "leaf2" },
                                     new GenericOrgan() { Name = "stem2" }

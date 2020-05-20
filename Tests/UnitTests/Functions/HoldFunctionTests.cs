@@ -53,12 +53,12 @@
             {
                 WhenToHold = "B",
 
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new MockFunctionThatThrows() { Name = "ValueToHold" },
                     new Phenology()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Zone(),
                             new Clock(),

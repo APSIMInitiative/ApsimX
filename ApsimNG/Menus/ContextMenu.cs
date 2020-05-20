@@ -757,9 +757,15 @@
                 IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
                 if (model != null)
                 {
-                    model.Enabled = !model.Enabled;
+                    List<ChangeProperty.Property> changes = new List<ChangeProperty.Property>();
+                    changes.Add(new ChangeProperty.Property(model, nameof(model.Enabled), !model.Enabled));
+
                     foreach (IModel child in Apsim.ChildrenRecursively(model))
-                        child.Enabled = model.Enabled;
+                        changes.Add(new ChangeProperty.Property(child, nameof(model.Enabled), !model.Enabled));
+
+                    ChangeProperty command = new ChangeProperty(changes);
+                    explorerPresenter.CommandHistory.Add(command);
+
                     explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
                     explorerPresenter.Refresh();
                 }
@@ -790,9 +796,9 @@
                 List<ChangeProperty.Property> changes = new List<ChangeProperty.Property>();
                 
                 // Toggle read-only on the model and all descendants.
-                changes.Add(new ChangeProperty.Property(model, "ReadOnly", readOnly));
+                changes.Add(new ChangeProperty.Property(model, nameof(model.ReadOnly), readOnly));
                 foreach (IModel child in Apsim.ChildrenRecursively(model))
-                    changes.Add(new ChangeProperty.Property(child, "ReadOnly", readOnly));
+                    changes.Add(new ChangeProperty.Property(child, nameof(child.ReadOnly), readOnly));
 
                 // Apply changes.
                 ChangeProperty command = new ChangeProperty(changes);

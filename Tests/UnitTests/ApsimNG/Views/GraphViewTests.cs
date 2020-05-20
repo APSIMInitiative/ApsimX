@@ -31,7 +31,7 @@ namespace UnitTests.ApsimNG.Views
             return new Simulations()
             {
                 Name = "Simulation",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new DataStore()
                     {
@@ -40,7 +40,7 @@ namespace UnitTests.ApsimNG.Views
                     new Simulation()
                     {
                         Name = "Sim",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Clock()
                             {
@@ -56,7 +56,7 @@ namespace UnitTests.ApsimNG.Views
                             {
                                 Name = "Field",
                                 Area = 1,
-                                Children = new List<Model>()
+                                Children = new List<IModel>()
                                 {
                                     new Models.Report()
                                     {

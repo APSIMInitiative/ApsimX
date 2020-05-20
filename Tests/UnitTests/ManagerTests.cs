@@ -27,7 +27,7 @@ namespace UnitTests
             {
                 Name = "Sim",
                 FileName = Path.GetTempFileName(),
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Clock()
                     {

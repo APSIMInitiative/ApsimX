@@ -153,7 +153,7 @@ namespace Models.CLEM.Activities
         /// <param name="activity"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        private IModel SearchForNameInActivity(Model activity, string name)
+        private IModel SearchForNameInActivity(IModel activity, string name)
         {
             IModel found = activity.Children.Find(x => x.Name == name);
             if (found != null)

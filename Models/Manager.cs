@@ -138,7 +138,7 @@
 
                     // Create a new script model.
                     Model script = compiledAssembly.CreateInstance("Models.Script") as Model;
-                    script.Children = new List<Model>();
+                    script.Children = new List<IModel>();
                     script.Name = "Script";
                     script.IsHidden = true;
 
@@ -249,7 +249,7 @@
         /// <summary>Get all parameters from the script model and store in our parameters list.</summary>
         /// <param name="script">The script.</param>
         /// <returns></returns>
-        private void GetParametersFromScriptModel(Model script)
+        private void GetParametersFromScriptModel(IModel script)
         {
             if (Parameters == null)
                 Parameters = new List<KeyValuePair<string, string>>();
