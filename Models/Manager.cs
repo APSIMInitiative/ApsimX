@@ -79,6 +79,19 @@
         public int ActiveTabIndex { get; set; }
 
         /// <summary>
+        /// Update script parameters at the start of the simulation.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        [EventSubscribe("Commencing")]
+        private void OnCommencing(object sender, EventArgs e)
+        {
+            // Need to ensure script parameters are up to date.
+            if (Children.Count > 0)
+                SetParametersInObject(Children[0]);
+        }
+
+        /// <summary>
         /// Called when the model has been newly created in memory whether from 
         /// cloning or deserialisation.
         /// </summary>
@@ -108,16 +121,6 @@
             RebuildScriptModel();
         }
 
-        /// <summary>At simulation commencing time, rebuild the script assembly if required.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            RebuildScriptModel();
-            SetParametersInObject(Apsim.Child(this, "Script") as Model);
-        }
-
         /// <summary>Rebuild the script model and return error message if script cannot be compiled.</summary>
         public void RebuildScriptModel()
         {
@@ -138,7 +141,7 @@
 
                     // Create a new script model.
                     Model script = compiledAssembly.CreateInstance("Models.Script") as Model;
-                    script.Children = new List<Model>();
+                    script.Children = new List<IModel>();
                     script.Name = "Script";
                     script.IsHidden = true;
 
@@ -209,7 +212,7 @@
 
         /// <summary>Set the scripts parameters from the 'xmlElement' passed in.</summary>
         /// <param name="script">The script.</param>
-        private void SetParametersInObject(Model script)
+        private void SetParametersInObject(IModel script)
         {
             if (Parameters != null)
             {
@@ -249,7 +252,7 @@
         /// <summary>Get all parameters from the script model and store in our parameters list.</summary>
         /// <param name="script">The script.</param>
         /// <returns></returns>
-        private void GetParametersFromScriptModel(Model script)
+        private void GetParametersFromScriptModel(IModel script)
         {
             if (Parameters == null)
                 Parameters = new List<KeyValuePair<string, string>>();

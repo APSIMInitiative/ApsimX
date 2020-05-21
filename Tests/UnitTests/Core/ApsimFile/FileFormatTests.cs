@@ -127,7 +127,7 @@
             sim.Children.Add(new ModelWithIDontSerialiseChildren()
             {
                 Name = "ModelImplementingIDontSerialiseChildren",
-                Children = new List<Model>() { new Clock() }
+                Children = new List<IModel>() { new Clock() }
             });
 
             Simulations simulations = new Simulations();

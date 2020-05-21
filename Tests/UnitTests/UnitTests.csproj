@@ -177,6 +177,7 @@
     <Compile Include="SummaryTests.cs" />
     <Compile Include="TextStorageReader.cs" />
     <Compile Include="APSIMShared\DBMergerTests.cs" />
+    <Compile Include="UtilityTests\PathUtilitiesTests.cs" />
     <Compile Include="Weather\WeatherSamplerTests.cs" />
     <Compile Include="Weather\WeatherTests.cs" />
     <Compile Include="Core\ApsimFile\XMLToJSONTests.cs" />
@@ -236,6 +237,7 @@
     <EmbeddedResource Include="ApsimNG\Resources\SampleFiles\BasicSimulation.apsimx" />
     <EmbeddedResource Include="BasicFile.apsimx" />
     <EmbeddedResource Include="ApsimNG\Resources\SampleFiles\NullSample.apsimx" />
+    <EmbeddedResource Include="bork.apsimx" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Core\ApsimFile\FileFormatTestsReadFromString.json" />
     <EmbeddedResource Include="Core\ApsimFile\FileFormatTestsCheckThatModelsCanThrowExceptionsDuringCreation.json" />

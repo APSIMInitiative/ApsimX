@@ -20,7 +20,7 @@
         {
             this.Name = GetType().Name;
             this.IsHidden = false;
-            this.Children = new List<Model>();
+            this.Children = new List<IModel>();
             IncludeInDocumentation = true;
             Enabled = true;
         }
@@ -33,7 +33,7 @@
         /// <summary>
         /// Gets or sets a list of child models.   
         /// </summary>
-        public List<Model> Children { get; set; }
+        public List<IModel> Children { get; set; }
 
         /// <summary>
         /// Gets or sets the parent of the model.

@@ -69,7 +69,7 @@ namespace UnitTests.ApsimNG.Presenters
         {
             var simulations = new Simulations()
             {
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Models.GrazPlan.Stock()
                 }

@@ -357,7 +357,7 @@ namespace UserInterface.Presenters
         /// new crop has been selecled.
         /// </summary>
         /// <param name="model">The new model</param>
-        public void UpdateModel(Model model)
+        public void UpdateModel(IModel model)
         {
             this.model = model;
             if (this.model != null)

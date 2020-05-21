@@ -37,7 +37,7 @@
                         Simulations sims = new Simulations()
                         {
                             Name = "Simulations",
-                            Children = new List<Model>()
+                            Children = new List<IModel>()
                             {
                                 new Storage.DataStore()
                                 {
