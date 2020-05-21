@@ -105,7 +105,7 @@
                             currentLine = currentLine.Remove(index, 2).Trim();
                     }
 
-                    int pos = currentLine.IndexOf(' ');
+                    int pos = currentLine.IndexOfAny(" \t".ToCharArray());
                     if (pos != -1)
                     {
                         Operation operation = new Operation();
