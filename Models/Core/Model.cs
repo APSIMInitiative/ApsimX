@@ -98,9 +98,6 @@
         /// <typeparam name="T">Type of the sibling.</typeparam>
         public T Sibling<T>() where T : IModel
         {
-            if (Parent == null || Parent.Children == null)
-                return default(T);
-
             return Siblings<T>().FirstOrDefault();
         }
 
