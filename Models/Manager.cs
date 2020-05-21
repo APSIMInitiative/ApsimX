@@ -212,7 +212,7 @@
 
         /// <summary>Set the scripts parameters from the 'xmlElement' passed in.</summary>
         /// <param name="script">The script.</param>
-        private void SetParametersInObject(Model script)
+        private void SetParametersInObject(IModel script)
         {
             if (Parameters != null)
             {
