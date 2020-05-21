@@ -45,6 +45,79 @@ namespace Models.Core
         bool ReadOnly { get; set; }
 
         /// <summary>
+        /// Full path to the model.
+        /// </summary>
+        string FullPath { get; }
+
+        /// <summary>
+        /// Find a sibling of a given type.
+        /// </summary>
+        /// <typeparam name="T">Type of the sibling.</typeparam>
+        T Sibling<T>() where T : IModel;
+
+        /// <summary>
+        /// Find a descendant of a given type.
+        /// </summary>
+        /// <typeparam name="T">Type of the descendant.</typeparam>
+        T Descendant<T>() where T : IModel;
+
+        /// <summary>
+        /// Find an ancestor of a given type.
+        /// </summary>
+        /// <typeparam name="T">Type of the ancestor.</typeparam>
+        T Ancestor<T>() where T : IModel;
+
+        /// <summary>
+        /// Find a model of a given type in scope.
+        /// </summary>
+        /// <typeparam name="T">Type of model to find.</typeparam>
+        T Find<T>() where T : IModel;
+
+        /// <summary>
+        /// Find all siblings of the given type.
+        /// </summary>
+        /// <typeparam name="T">Type of siblings to return.</typeparam>
+        IEnumerable<T> Siblings<T>() where T : IModel;
+
+        /// <summary>
+        /// Find all descendants of the given type and name.
+        /// </summary>
+        /// <typeparam name="T">Type of descendants to return.</typeparam>
+        IEnumerable<T> Descendants<T>() where T : IModel;
+
+        /// <summary>
+        /// Find all ancestors of the given type.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        IEnumerable<T> Ancestors<T>() where T : IModel;
+
+        /// <summary>
+        /// Find all models of a given type in scope.
+        /// </summary>
+        /// <typeparam name="T">Type of models to find.</typeparam>
+        IEnumerable<T> FindAll<T>() where T : IModel;
+
+        /// <summary>
+        /// Returns all ancestor models.
+        /// </summary>
+        IEnumerable<IModel> Ancestors();
+
+        /// <summary>
+        /// Returns all descendant models.
+        /// </summary>
+        IEnumerable<IModel> Descendants();
+
+        /// <summary>
+        /// Returns all sibling models.
+        /// </summary>
+        IEnumerable<IModel> Siblings();
+
+        /// <summary>
+        /// Returns all models which are in scope.
+        /// </summary>
+        IEnumerable<IModel> FindAll();
+
+        /// <summary>
         /// Called when the model has been newly created in memory whether from 
         /// cloning or deserialisation.
         /// </summary>

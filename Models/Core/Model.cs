@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Xml.Serialization;
 
     /// <summary>
@@ -71,6 +72,153 @@
         /// Controls whether the model can be modified.
         /// </summary>
         public bool ReadOnly { get; set; }
+
+        /// <summary>
+        /// Full path to the model.
+        /// </summary>
+        public string FullPath
+        {
+            get
+            {
+                string fullPath = "." + Name;
+                IModel parent = Parent;
+                while (parent != null)
+                {
+                    fullPath = fullPath.Insert(0, "." + parent.Name);
+                    parent = parent.Parent;
+                }
+
+                return fullPath;
+            }
+        }
+
+        /// <summary>
+        /// Find a sibling of a given type.
+        /// </summary>
+        /// <typeparam name="T">Type of the sibling.</typeparam>
+        public T Sibling<T>() where T : IModel
+        {
+            if (Parent == null || Parent.Children == null)
+                return default(T);
+
+            return Siblings<T>().FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Performs a depth-first search for a descendant of a given type.
+        /// </summary>
+        /// <typeparam name="T">Type of the descendant.</typeparam>
+        public T Descendant<T>() where T : IModel
+        {
+            return Descendants<T>().FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Find an ancestor of a given type.
+        /// </summary>
+        /// <typeparam name="T">Type of the ancestor.</typeparam>
+        public T Ancestor<T>() where T : IModel
+        {
+            return Ancestors<T>().FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Find a model of a given type in scope.
+        /// </summary>
+        /// <typeparam name="T">Type of model to find.</typeparam>
+        public T Find<T>() where T : IModel
+        {
+            return FindAll<T>().FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Find all ancestors of the given type.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public IEnumerable<T> Ancestors<T>() where T : IModel
+        {
+            return Ancestors().OfType<T>();
+        }
+
+        /// <summary>
+        /// Find all descendants of the given type and name.
+        /// </summary>
+        /// <typeparam name="T">Type of descendants to return.</typeparam>
+        public IEnumerable<T> Descendants<T>() where T : IModel
+        {
+            return Descendants().OfType<T>();
+        }
+
+        /// <summary>
+        /// Find all siblings of the given type.
+        /// </summary>
+        /// <typeparam name="T">Type of siblings to return.</typeparam>
+        public IEnumerable<T> Siblings<T>() where T : IModel
+        {
+            return Siblings().OfType<T>();
+        }
+
+        /// <summary>
+        /// Find all models of a given type in scope.
+        /// </summary>
+        /// <typeparam name="T">Type of models to find.</typeparam>
+        public IEnumerable<T> FindAll<T>() where T : IModel
+        {
+            return FindAll().OfType<T>();
+        }
+
+        /// <summary>
+        /// Returns all ancestor models.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<IModel> Ancestors()
+        {
+            IModel parent = Parent;
+            while (parent != null)
+            {
+                yield return parent;
+                parent = parent.Parent;
+            }
+        }
+
+        /// <summary>
+        /// Returns all descendant models.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<IModel> Descendants()
+        {
+            foreach (IModel child in Children)
+            {
+                yield return child;
+
+                foreach (IModel descendant in child.Descendants())
+                    yield return descendant;
+            }
+        }
+
+        /// <summary>
+        /// Returns all sibling models.
+        /// </summary>
+        public IEnumerable<IModel> Siblings()
+        {
+            if (Parent == null || Parent.Children == null)
+                yield break;
+
+            foreach (IModel sibling in Parent.Children)
+                if (sibling != this)
+                    yield return sibling;
+        }
+
+        /// <summary>
+        /// Returns all models which are in scope.
+        /// </summary>
+        public IEnumerable<IModel> FindAll()
+        {
+            Simulation sim = Ancestor<Simulation>();
+            ScopingRules scope = sim?.Scope ?? new ScopingRules();
+            foreach (IModel result in scope.FindAll(this))
+                yield return result;
+        }
 
         /// <summary>
         /// Called when the model has been newly created in memory whether from 
