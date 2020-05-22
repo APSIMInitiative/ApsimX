@@ -144,6 +144,16 @@ namespace APSIM.Shared.Utilities
             /// </summary>
             public bool WriteToConsole { get; private set; }
 
+            /// <summary>
+            /// Invoked whenever the R process writes to standard output.
+            /// </summary>
+            public event EventHandler<DataReceivedEventArgs> OutputReceived;
+
+            /// <summary>
+            /// Invoked whenever the R process writes to standard error.
+            /// </summary>
+            public event EventHandler<DataReceivedEventArgs> ErrorReceived;
+
             /// <summary>Run the specified executable with the specified arguments and working directory.</summary>
             /// <param name="executable">Path to the executable.</param>
             /// <param name="arguments">Arguments which will be passed to the executable.</param>
@@ -223,6 +233,8 @@ namespace APSIM.Shared.Utilities
 
                 else if (!string.IsNullOrWhiteSpace(outLine.Data))
                 {
+                    OutputReceived?.Invoke(this, outLine);
+
                     output.Append(outLine.Data + Environment.NewLine);
                     if (WriteToConsole)
                         Console.WriteLine(outLine.Data);
@@ -236,6 +248,8 @@ namespace APSIM.Shared.Utilities
             {
                 if (!string.IsNullOrWhiteSpace(outLine.Data))
                 {
+                    ErrorReceived?.Invoke(this, outLine);
+
                     error.Append(outLine.Data + Environment.NewLine);
                     if (WriteToConsole)
                         Console.Error.WriteLine(outLine.Data);

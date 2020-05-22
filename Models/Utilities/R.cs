@@ -94,6 +94,16 @@ namespace Models.Utilities
         public Action OnDownloadCompleted;
 
         /// <summary>
+        /// Invoked whenever the R process writes to standard output.
+        /// </summary>
+        public event EventHandler<DataReceivedEventArgs> OutputReceived;
+
+        /// <summary>
+        /// Invoked whenever the R process writes to standard error.
+        /// </summary>
+        public event EventHandler<DataReceivedEventArgs> ErrorReceived;
+
+        /// <summary>
         /// Starts the execution of an R script.
         /// </summary>
         /// <param name="fileName">Path to an R script. May be a file on disk, or an embedded resource.</param>
@@ -119,6 +129,12 @@ namespace Models.Utilities
 
             proc = new ProcessUtilities.ProcessWithRedirectedOutput();
             proc.Exited += OnExited;
+
+            if (OutputReceived != null)
+                proc.OutputReceived += OutputReceived;
+            if (ErrorReceived != null)
+                proc.ErrorReceived += ErrorReceived;
+
             proc.Start(rScript, "\"" + scriptName + "\" " + args, workingDirectory, true);
         }
 
@@ -241,6 +257,11 @@ namespace Models.Utilities
         private void OnExited(object sender, EventArgs e)
         {
             Finished?.Invoke(sender, e);
+
+            if (OutputReceived != null)
+                proc.OutputReceived -= OutputReceived;
+            if (ErrorReceived != null)
+                proc.ErrorReceived -= ErrorReceived;
         }
 
         /// <summary>

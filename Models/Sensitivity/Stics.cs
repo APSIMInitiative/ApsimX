@@ -10,10 +10,12 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace Models.Sensitivity
@@ -148,14 +150,35 @@ namespace Models.Sensitivity
             }
         }
 
+        /// <summary>
+        /// Returns the job's progress as a real number in range [0, 1].
+        /// </summary>
+        [JsonIgnore]
+        public double Progress { get; private set; } = 0;
+
         /// <summary>Gets a list of simulation descriptions.</summary>
         public void Run()
         {
+            Progress = 0;
             string fileName = GetTempFileName($"parameter_estimation_{id}", ".r");
             GenerateRScript(fileName);
             R r = new R();
+            r.OutputReceived += OnOutputReceivedFromR;
             string stdout = r.Run(fileName);
+            r.OutputReceived -= OnOutputReceivedFromR;
             WriteMessage(stdout);
+        }
+
+        private void OnOutputReceivedFromR(object sender, DataReceivedEventArgs e)
+        {
+            if (e.Data.Contains("Working:"))
+            {
+                // Update progress.
+                Match match = Regex.Match(e.Data, @"Working: ([^%]+)%");
+                string progressString = match.Groups[1].Value;
+                if (double.TryParse(progressString, NumberStyles.Float, CultureInfo.CurrentCulture, out double progress))
+                    Progress = progress / 100; // The R script reports progress as percent
+            }
         }
 
         private void GenerateRScript(string fileName)
