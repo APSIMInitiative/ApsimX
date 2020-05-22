@@ -184,9 +184,8 @@ namespace Models.Sensitivity
         private void GenerateRScript(string fileName)
         {
             // tbi: package installation. Need to test on a clean VM.
-            //R r = new R();
-            //r.InstallPackages("devtools");
-            //r.InstallPackages("ApsimOnR", "CroptimizR", "dplyr", "nloptr", "DiceDesign", "RSQLite", "DBI");
+            R r = new R();
+            r.InstallPackages("devtools", "ApsimOnR", "CroptimizR", "dplyr", "nloptr", "DiceDesign", "RSQLite", "DBI");
             StringBuilder contents = new StringBuilder();
             string apsimxFileName = GenerateApsimXFile();
 
