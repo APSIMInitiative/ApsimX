@@ -10660,8 +10660,8 @@
                     },
                     {
                       "$type": "Models.Clock, Models",
-                      "Start": "2003-01-01T00:00:00",
-                      "End": "2017-07-01T00:00:00",
+                      "Start": "2003-02-25T00:00:00",
+                      "End": "2020-05-01T00:00:00",
                       "Name": "Clock",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -10742,9 +10742,9 @@
                             "[Grapevine].Phenology.CurrentSeason as CurrentSeason",
                             "[Grapevine].Phenology.Stage",
                             "[Grapevine].Phenology.AccumulatedEmergedTT",
-                            "[Grapevine].Phenology.BudBurstDOY as BudBurstDOY",
-                            "[Grapevine].Phenology.FloweringDOY as FloweringDOY",
-                            "[Grapevine].Phenology.VeraisonDOY as VeraisonDOY",
+                            "[Grapevine].Phenology.BudBurstDOY as BudBurstDAWS",
+                            "[Grapevine].Phenology.FloweringDOY as FloweringDAWS",
+                            "[Grapevine].Phenology.VeraisonDOY as VeraisonDAWS",
                             "[Grapevine].Phenology.CurrentStageName as CurrentStageName",
                             "[Grapevine].Phenology.AccChillBefPrune",
                             "[Grapevine].Structure.PrimaryBudNo",
@@ -10832,7 +10832,7 @@
                             },
                             {
                               "Key": "SowingDate",
-                              "Value": "01/01/2003 00:00:00"
+                              "Value": "02/25/2003 00:00:00"
                             },
                             {
                               "Key": "VineDistance",
@@ -11663,7 +11663,7 @@
                             },
                             {
                               "Key": "SowingDate",
-                              "Value": "01/01/2003 00:00:00"
+                              "Value": "02/25/2003 00:00:00"
                             },
                             {
                               "Key": "RootDepth",
@@ -12362,8 +12362,8 @@
                           "Line": 4,
                           "LineThickness": 0,
                           "TableName": "PredictedObserved",
-                          "XFieldName": "Observed.BudBurstDOY",
-                          "YFieldName": "Predicted.BudBurstDOY",
+                          "XFieldName": "Observed.BudBurstDAWS",
+                          "YFieldName": "Predicted.BudBurstDAWS",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -12441,8 +12441,8 @@
                           "Line": 4,
                           "LineThickness": 0,
                           "TableName": "PredictedObserved",
-                          "XFieldName": "Observed.FloweringDOY",
-                          "YFieldName": "Predicted.FloweringDOY",
+                          "XFieldName": "Observed.FloweringDAWS",
+                          "YFieldName": "Predicted.FloweringDAWS",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -12520,8 +12520,8 @@
                           "Line": 4,
                           "LineThickness": 0,
                           "TableName": "PredictedObserved",
-                          "XFieldName": "Observed.VeraisonDOY",
-                          "YFieldName": "Predicted.VeraisonDOY",
+                          "XFieldName": "Observed.VeraisonDAWS",
+                          "YFieldName": "Predicted.VeraisonDAWS",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -12543,73 +12543,6 @@
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph, Models",
-                      "Caption": null,
-                      "Axis": [
-                        {
-                          "$type": "Models.Axis, Models",
-                          "Type": 3,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": 2000.0,
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        },
-                        {
-                          "$type": "Models.Axis, Models",
-                          "Type": 0,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        }
-                      ],
-                      "LegendPosition": 0,
-                      "LegendOrientation": 0,
-                      "DisabledSeries": [],
-                      "LegendOutsideGraph": false,
-                      "Name": "BudBurstPredic1",
-                      "Children": [
-                        {
-                          "$type": "Models.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Climate",
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 0,
-                          "MarkerSize": 0,
-                          "Line": 4,
-                          "LineThickness": 0,
-                          "TableName": "Report",
-                          "XFieldName": "CurrentSeason",
-                          "YFieldName": "BudBurstDOY",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
-                          "ShowInLegend": false,
-                          "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "Series",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -13784,8 +13717,8 @@
                     },
                     {
                       "$type": "Models.Clock, Models",
-                      "Start": "2003-01-01T00:00:00",
-                      "End": "2017-07-01T00:00:00",
+                      "Start": "2003-02-25T00:00:00",
+                      "End": "2020-05-01T00:00:00",
                       "Name": "Clock",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -13866,9 +13799,9 @@
                             "[Grapevine].Phenology.CurrentSeason as CurrentSeason",
                             "[Grapevine].Phenology.Stage",
                             "[Grapevine].Phenology.AccumulatedEmergedTT",
-                            "[Grapevine].Phenology.BudBurstDOY as BudBurstDOY",
-                            "[Grapevine].Phenology.FloweringDOY as FloweringDOY",
-                            "[Grapevine].Phenology.VeraisonDOY as VeraisonDOY",
+                            "[Grapevine].Phenology.BudBurstDOY as BudBurstDAWS",
+                            "[Grapevine].Phenology.FloweringDOY as FloweringDAWS",
+                            "[Grapevine].Phenology.VeraisonDOY as VeraisonDAWS",
                             "[Grapevine].Phenology.CurrentStageName as CurrentStageName",
                             "[Grapevine].Phenology.AccChillBefPrune",
                             "[Grapevine].Structure.PrimaryBudNo",
@@ -13956,7 +13889,7 @@
                             },
                             {
                               "Key": "SowingDate",
-                              "Value": "01/01/2003 00:00:00"
+                              "Value": "02/25/2003 00:00:00"
                             },
                             {
                               "Key": "VineDistance",
@@ -16139,7 +16072,7 @@
                       "FactorToVaryLines": "Climate",
                       "Marker": 11,
                       "MarkerSize": 0,
-                      "Line": 0,
+                      "Line": 4,
                       "LineThickness": 0,
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
@@ -16162,13 +16095,13 @@
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
-                      "ColourArgb": -16736653,
+                      "ColourArgb": -990142,
                       "FactorToVaryColours": "Climate",
                       "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "Climate",
-                      "Marker": 11,
+                      "FactorToVaryLines": null,
+                      "Marker": 4,
                       "MarkerSize": 0,
-                      "Line": 0,
+                      "Line": 4,
                       "LineThickness": 0,
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
@@ -16183,320 +16116,6 @@
                       "Name": "Obs",
                       "Children": [],
                       "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Core.Folder, Models",
-                  "ShowPageOfGraphs": true,
-                  "Name": "Phenology",
-                  "Children": [
-                    {
-                      "$type": "Models.Graph, Models",
-                      "Caption": null,
-                      "Axis": [
-                        {
-                          "$type": "Models.Axis, Models",
-                          "Type": 3,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        },
-                        {
-                          "$type": "Models.Axis, Models",
-                          "Type": 0,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        }
-                      ],
-                      "LegendPosition": 0,
-                      "LegendOrientation": 0,
-                      "DisabledSeries": [],
-                      "LegendOutsideGraph": false,
-                      "Name": "BudBurstPredic",
-                      "Children": [
-                        {
-                          "$type": "Models.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Climate",
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 0,
-                          "MarkerSize": 0,
-                          "Line": 4,
-                          "LineThickness": 0,
-                          "TableName": "PredictedObserved",
-                          "XFieldName": "Observed.BudBurstDOY",
-                          "YFieldName": "Predicted.BudBurstDOY",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
-                          "ShowInLegend": false,
-                          "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "Series",
-                          "Children": [
-                            {
-                              "$type": "Models.Regression, Models",
-                              "ForEachSeries": true,
-                              "showOneToOne": true,
-                              "showEquation": true,
-                              "Name": "Regression",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph, Models",
-                      "Caption": null,
-                      "Axis": [
-                        {
-                          "$type": "Models.Axis, Models",
-                          "Type": 3,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        },
-                        {
-                          "$type": "Models.Axis, Models",
-                          "Type": 0,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        }
-                      ],
-                      "LegendPosition": 0,
-                      "LegendOrientation": 0,
-                      "DisabledSeries": [],
-                      "LegendOutsideGraph": false,
-                      "Name": "FloweringPred",
-                      "Children": [
-                        {
-                          "$type": "Models.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -1663232,
-                          "FactorToVaryColours": "Climate",
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 0,
-                          "MarkerSize": 0,
-                          "Line": 4,
-                          "LineThickness": 0,
-                          "TableName": "PredictedObserved",
-                          "XFieldName": "Observed.FloweringDOY",
-                          "YFieldName": "Predicted.FloweringDOY",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
-                          "ShowInLegend": true,
-                          "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "Series",
-                          "Children": [
-                            {
-                              "$type": "Models.Regression, Models",
-                              "ForEachSeries": true,
-                              "showOneToOne": true,
-                              "showEquation": true,
-                              "Name": "Regression",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph, Models",
-                      "Caption": null,
-                      "Axis": [
-                        {
-                          "$type": "Models.Axis, Models",
-                          "Type": 3,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        },
-                        {
-                          "$type": "Models.Axis, Models",
-                          "Type": 0,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        }
-                      ],
-                      "LegendPosition": 0,
-                      "LegendOrientation": 0,
-                      "DisabledSeries": [],
-                      "LegendOutsideGraph": false,
-                      "Name": "VeraisonPred",
-                      "Children": [
-                        {
-                          "$type": "Models.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -1663232,
-                          "FactorToVaryColours": "Climate",
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 0,
-                          "MarkerSize": 0,
-                          "Line": 4,
-                          "LineThickness": 0,
-                          "TableName": "PredictedObserved",
-                          "XFieldName": "Observed.VeraisonDOY",
-                          "YFieldName": "Predicted.VeraisonDOY",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
-                          "ShowInLegend": true,
-                          "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "Series",
-                          "Children": [
-                            {
-                              "$type": "Models.Regression, Models",
-                              "ForEachSeries": false,
-                              "showOneToOne": true,
-                              "showEquation": true,
-                              "Name": "Regression",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph, Models",
-                      "Caption": null,
-                      "Axis": [
-                        {
-                          "$type": "Models.Axis, Models",
-                          "Type": 3,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": 2000.0,
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        },
-                        {
-                          "$type": "Models.Axis, Models",
-                          "Type": 0,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        }
-                      ],
-                      "LegendPosition": 0,
-                      "LegendOrientation": 0,
-                      "DisabledSeries": [],
-                      "LegendOutsideGraph": false,
-                      "Name": "BudBurstPredic1",
-                      "Children": [
-                        {
-                          "$type": "Models.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Climate",
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 0,
-                          "MarkerSize": 0,
-                          "Line": 4,
-                          "LineThickness": 0,
-                          "TableName": "Report",
-                          "XFieldName": "CurrentSeason",
-                          "YFieldName": "FloweringDOY",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
-                          "ShowInLegend": false,
-                          "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "Series",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -18739,7 +18358,7 @@
                   "Children": [
                     {
                       "$type": "Models.Clock, Models",
-                      "Start": "2001-01-01T00:00:00",
+                      "Start": "2001-02-25T00:00:00",
                       "End": "2007-07-01T00:00:00",
                       "Name": "Clock",
                       "Children": [],
@@ -18831,9 +18450,9 @@
                             "[Grapevine].Phenology.CurrentSeason as CurrentSeason",
                             "[Grapevine].Phenology.Stage",
                             "[Grapevine].Phenology.AccumulatedEmergedTT",
-                            "[Grapevine].Phenology.BudBurstDOY as BudBurstDOY",
-                            "[Grapevine].Phenology.FloweringDOY as FloweringDOY",
-                            "[Grapevine].Phenology.VeraisonDOY as VeraisonDOY",
+                            "[Grapevine].Phenology.BudBurstDOY as BudBurstDAWS",
+                            "[Grapevine].Phenology.FloweringDOY as FloweringDAWS",
+                            "[Grapevine].Phenology.VeraisonDOY as VeraisonDAWS",
                             "[Grapevine].Phenology.CurrentStageName as CurrentStageName",
                             "[Grapevine].Phenology.AccChillBefPrune",
                             "[Grapevine].Structure.PrimaryBudNo",
@@ -18921,7 +18540,7 @@
                             },
                             {
                               "Key": "SowingDate",
-                              "Value": "01/01/2001 00:00:00"
+                              "Value": "02/25/2001 00:00:00"
                             },
                             {
                               "Key": "VineDistance",
@@ -19758,7 +19377,7 @@
                             },
                             {
                               "Key": "SowingDate",
-                              "Value": "01/01/2001 00:00:00"
+                              "Value": "02/25/2001 00:00:00"
                             },
                             {
                               "Key": "RootDepth",
@@ -26636,7 +26255,7 @@
                   "Children": [
                     {
                       "$type": "Models.Clock, Models",
-                      "Start": "2003-01-01T00:00:00",
+                      "Start": "2003-02-25T00:00:00",
                       "End": "2006-07-01T00:00:00",
                       "Name": "Clock",
                       "Children": [],
@@ -26728,9 +26347,9 @@
                             "[Grapevine].Phenology.CurrentSeason as CurrentSeason",
                             "[Grapevine].Phenology.Stage",
                             "[Grapevine].Phenology.AccumulatedEmergedTT",
-                            "[Grapevine].Phenology.BudBurstDOY as BudBurstDOY",
-                            "[Grapevine].Phenology.FloweringDOY as FloweringDOY",
-                            "[Grapevine].Phenology.VeraisonDOY as VeraisonDOY",
+                            "[Grapevine].Phenology.BudBurstDOY as BudBurstDAWS",
+                            "[Grapevine].Phenology.FloweringDOY as FloweringDAWS",
+                            "[Grapevine].Phenology.VeraisonDOY as VeraisonDAWS",
                             "[Grapevine].Phenology.CurrentStageName as CurrentStageName",
                             "[Grapevine].Phenology.AccChillBefPrune",
                             "[Grapevine].Structure.PrimaryBudNo",
@@ -26843,7 +26462,7 @@
                             },
                             {
                               "Key": "SowingDate",
-                              "Value": "01/01/2003 00:00:00"
+                              "Value": "02/25/2003 00:00:00"
                             },
                             {
                               "Key": "RowSpacing",
@@ -27629,7 +27248,7 @@
                             },
                             {
                               "Key": "SowingDate",
-                              "Value": "01/01/2003 00:00:00"
+                              "Value": "02/25/2003 00:00:00"
                             },
                             {
                               "Key": "RootDepth",
@@ -30920,7 +30539,7 @@
                   "Children": [
                     {
                       "$type": "Models.Clock, Models",
-                      "Start": "2003-01-01T00:00:00",
+                      "Start": "2003-02-25T00:00:00",
                       "End": "2007-07-01T00:00:00",
                       "Name": "Clock",
                       "Children": [],
@@ -31012,9 +30631,9 @@
                             "[Grapevine].Phenology.CurrentSeason as CurrentSeason",
                             "[Grapevine].Phenology.Stage",
                             "[Grapevine].Phenology.AccumulatedEmergedTT",
-                            "[Grapevine].Phenology.BudBurstDOY as BudBurstDOY",
-                            "[Grapevine].Phenology.FloweringDOY as FloweringDOY",
-                            "[Grapevine].Phenology.VeraisonDOY as VeraisonDOY",
+                            "[Grapevine].Phenology.BudBurstDOY as BudBurstDAWS",
+                            "[Grapevine].Phenology.FloweringDOY as FloweringDAWS",
+                            "[Grapevine].Phenology.VeraisonDOY as VeraisonDAWS",
                             "[Grapevine].Phenology.CurrentStageName as CurrentStageName",
                             "[Grapevine].Phenology.AccChillBefPrune",
                             "[Grapevine].Structure.PrimaryBudNo",
@@ -31102,7 +30721,7 @@
                             },
                             {
                               "Key": "SowingDate",
-                              "Value": "01/01/2003 00:00:00"
+                              "Value": "02/25/2003 00:00:00"
                             },
                             {
                               "Key": "VineDistance",
@@ -31948,7 +31567,7 @@
                             },
                             {
                               "Key": "SowingDate",
-                              "Value": "01/01/2001 00:00:00"
+                              "Value": "02/25/2001 00:00:00"
                             },
                             {
                               "Key": "RootDepth",
@@ -35006,7 +34625,7 @@
               "Children": [
                 {
                   "$type": "Models.Clock, Models",
-                  "Start": "2006-01-01T00:00:00",
+                  "Start": "2006-02-25T00:00:00",
                   "End": "2007-07-01T00:00:00",
                   "Name": "Clock",
                   "Children": [],
@@ -35098,9 +34717,9 @@
                         "[Grapevine].Phenology.CurrentSeason as CurrentSeason",
                         "[Grapevine].Phenology.Stage",
                         "[Grapevine].Phenology.AccumulatedEmergedTT",
-                        "[Grapevine].Phenology.BudBurstDOY as BudBurstDOY",
-                        "[Grapevine].Phenology.FloweringDOY as FloweringDOY",
-                        "[Grapevine].Phenology.VeraisonDOY as VeraisonDOY",
+                        "[Grapevine].Phenology.BudBurstDOY as BudBurstDAWS",
+                        "[Grapevine].Phenology.FloweringDOY as FloweringDAWS",
+                        "[Grapevine].Phenology.VeraisonDOY as VeraisonDAWS",
                         "[Grapevine].Phenology.CurrentStageName as CurrentStageName",
                         "[Grapevine].Phenology.AccChillBefPrune",
                         "[Grapevine].Structure.PrimaryBudNo",
@@ -35188,7 +34807,7 @@
                         },
                         {
                           "Key": "SowingDate",
-                          "Value": "01/01/2006 00:00:00"
+                          "Value": "02/25/2006 00:00:00"
                         },
                         {
                           "Key": "VineDistance",
@@ -36016,7 +35635,7 @@
                         },
                         {
                           "Key": "SowingDate",
-                          "Value": "01/01/2006 00:00:00"
+                          "Value": "02/25/2006 00:00:00"
                         },
                         {
                           "Key": "RootDepth",
@@ -37445,381 +37064,6 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": true,
-                      "CrossesAtZero": false
-                    },
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "Biomass",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -2793984,
-                      "FactorToVaryColours": null,
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "SimpleFruitTree.Fruit.Total.Wt",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Fruit",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16736653,
-                      "FactorToVaryColours": null,
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "SimpleFruitTree.Leaf.Total.Wt",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Leaf",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -1663232,
-                      "FactorToVaryColours": null,
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "SimpleFruitTree.Trunk.Total.Wt",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Trunk",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16777216,
-                      "FactorToVaryColours": null,
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "SimpleFruitTree.Root.Total.Wt",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Root",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": true,
-                      "CrossesAtZero": false
-                    },
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "DM supply",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16736653,
-                      "FactorToVaryColours": "Zone",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "SimpleFruitTree.Leaf.DMSupply.Fixation",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Series",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": true,
-                      "CrossesAtZero": false
-                    },
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "Nitrogen",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -2793984,
-                      "FactorToVaryColours": null,
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "SimpleFruitTree.Fruit.Total.N",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Fruit",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16736653,
-                      "FactorToVaryColours": null,
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "SimpleFruitTree.Leaf.Total.N",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Leaf",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -1663232,
-                      "FactorToVaryColours": null,
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "SimpleFruitTree.Trunk.Total.N",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Trunk",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16777216,
-                      "FactorToVaryColours": null,
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "SimpleFruitTree.Root.Total.N",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Root",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": false,
@@ -37832,7 +37076,7 @@
               "Children": [
                 {
                   "$type": "Models.Clock, Models",
-                  "Start": "2006-01-01T00:00:00",
+                  "Start": "2006-02-25T00:00:00",
                   "End": "2007-07-01T00:00:00",
                   "Name": "Clock",
                   "Children": [],
@@ -37924,9 +37168,9 @@
                         "[Grapevine].Phenology.CurrentSeason as CurrentSeason",
                         "[Grapevine].Phenology.Stage",
                         "[Grapevine].Phenology.AccumulatedEmergedTT",
-                        "[Grapevine].Phenology.BudBurstDOY as BudBurstDOY",
-                        "[Grapevine].Phenology.FloweringDOY as FloweringDOY",
-                        "[Grapevine].Phenology.VeraisonDOY as VeraisonDOY",
+                        "[Grapevine].Phenology.BudBurstDOY as BudBurstDAWS",
+                        "[Grapevine].Phenology.FloweringDOY as FloweringDAWS",
+                        "[Grapevine].Phenology.VeraisonDOY as VeraisonDAWS",
                         "[Grapevine].Phenology.CurrentStageName as CurrentStageName",
                         "[Grapevine].Phenology.AccChillBefPrune",
                         "[Grapevine].Structure.PrimaryBudNo",
@@ -38014,7 +37258,7 @@
                         },
                         {
                           "Key": "SowingDate",
-                          "Value": "01/01/2006 00:00:00"
+                          "Value": "02/25/2006 00:00:00"
                         },
                         {
                           "Key": "VineDistance",
@@ -38842,7 +38086,7 @@
                         },
                         {
                           "Key": "SowingDate",
-                          "Value": "01/01/2006 00:00:00"
+                          "Value": "02/25/2006 00:00:00"
                         },
                         {
                           "Key": "RootDepth",
@@ -40658,7 +39902,7 @@
               "Children": [
                 {
                   "$type": "Models.Clock, Models",
-                  "Start": "2007-01-01T00:00:00",
+                  "Start": "2007-02-25T00:00:00",
                   "End": "2008-07-01T00:00:00",
                   "Name": "Clock",
                   "Children": [],
@@ -40750,9 +39994,9 @@
                         "[Grapevine].Phenology.CurrentSeason as CurrentSeason",
                         "[Grapevine].Phenology.Stage",
                         "[Grapevine].Phenology.AccumulatedEmergedTT",
-                        "[Grapevine].Phenology.BudBurstDOY as BudBurstDOY",
-                        "[Grapevine].Phenology.FloweringDOY as FloweringDOY",
-                        "[Grapevine].Phenology.VeraisonDOY as VeraisonDOY",
+                        "[Grapevine].Phenology.BudBurstDOY as BudBurstDAWS",
+                        "[Grapevine].Phenology.FloweringDOY as FloweringDAWS",
+                        "[Grapevine].Phenology.VeraisonDOY as VeraisonDAWS",
                         "[Grapevine].Phenology.CurrentStageName as CurrentStageName",
                         "[Grapevine].Phenology.AccChillBefPrune",
                         "[Grapevine].Structure.PrimaryBudNo",
@@ -40840,7 +40084,7 @@
                         },
                         {
                           "Key": "SowingDate",
-                          "Value": "01/01/2007 00:00:00"
+                          "Value": "02/25/2007 00:00:00"
                         },
                         {
                           "Key": "VineDistance",
@@ -41668,7 +40912,7 @@
                         },
                         {
                           "Key": "SowingDate",
-                          "Value": "01/01/2007 00:00:00"
+                          "Value": "02/25/2007 00:00:00"
                         },
                         {
                           "Key": "RootDepth",
