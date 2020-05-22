@@ -1,4 +1,5 @@
-﻿using APSIM.Shared.Utilities;
+﻿using APSIM.Shared.JobRunning;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.Run;
 using Models.Factorial;
@@ -13,6 +14,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace Models.Sensitivity
 {
@@ -28,7 +30,7 @@ namespace Models.Sensitivity
     [ViewName("UserInterface.Views.DualGridView")]
     [PresenterName("UserInterface.Presenters.PropertyAndTablePresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
-    public class Stics : Model, ICustomDocumentation, IModelAsTable
+    public class Stics : Model, ICustomDocumentation, IModelAsTable, IRunnable
     {
         //[Link]
         //private IDataStore storage = null;
@@ -158,17 +160,16 @@ namespace Models.Sensitivity
 
         private void GenerateRScript(string fileName)
         {
-            Simulations sims = Apsim.Find(this, typeof(Simulations)) as Simulations;
-
             // tbi: package installation. Need to test on a clean VM.
-            R r = new R();
-            r.InstallPackages("devtools");
-            r.InstallPackages("ApsimOnR", "CroptimizR", "dplyr", "nloptr", "DiceDesign", "RSQLite", "DBI");
+            //R r = new R();
+            //r.InstallPackages("devtools");
+            //r.InstallPackages("ApsimOnR", "CroptimizR", "dplyr", "nloptr", "DiceDesign", "RSQLite", "DBI");
             StringBuilder contents = new StringBuilder();
+            string apsimxFileName = GenerateApsimXFile();
 
             contents.AppendLine($"variable_names <- c('{VariableName}')");
             contents.AppendLine($"apsimx_path <- '{typeof(IModel).Assembly.Location.Replace(@"\", @"\\")}'");
-            contents.AppendLine($"apsimx_file <- '{sims.FileName.Replace(@"\", @"\\")}'");//GetTempFileName($"parameter_estimation_{id}", ".apsimx");
+            contents.AppendLine($"apsimx_file <- '{apsimxFileName.Replace(@"\", @"\\")}'");
             contents.AppendLine($"simulation_names <- {GetSimulationNames()}");
             contents.AppendLine($"predicted_table_name <- '{PredictedTableName}'");
             contents.AppendLine($"observed_table_name <- '{ObservedTableName}'");
@@ -180,6 +181,44 @@ namespace Models.Sensitivity
             contents.Append(ReflectionUtilities.GetResourceAsString("Models.Resources.RScripts.OptimizR.r"));
 
             File.WriteAllText(fileName, contents.ToString());
+        }
+
+        private string GenerateApsimXFile()
+        {
+            Simulations rootNode = (Apsim.Parent(this, typeof(Simulations)) as Simulations);
+            string apsimxFileName = GetTempFileName($"apsimx_file_{id}", ".apsimx");
+
+            Simulations sims = new Simulations();
+            sims.Children.AddRange(Children.Select(c => Apsim.Clone(c)));
+
+            IModel replacements = Apsim.Find(this, typeof(Replacements));
+            if (replacements != null)
+                sims.Children.Add(Apsim.Clone(replacements));
+
+            IModel storage = Apsim.Find(this, typeof(IDataStore));
+            if (storage != null && File.Exists((storage as IDataStore).FileName))
+                File.Copy((storage as IDataStore).FileName, Path.ChangeExtension(apsimxFileName, ".db"), true);
+
+            IModel newDataStore = new DataStore();
+            if (storage != null)
+                newDataStore.Children.AddRange(storage.Children.Select(c => Apsim.Clone(c)));
+
+            sims.Children.Add(newDataStore);
+            Apsim.ParentAllChildren(sims);
+
+            sims.Write(apsimxFileName);
+
+            // Copy files across.
+            foreach (IReferenceExternalFiles fileReference in Apsim.ChildrenRecursively(sims, typeof(IReferenceExternalFiles)).Cast<IReferenceExternalFiles>())
+                foreach (string file in fileReference.GetReferencedFileNames())
+                {
+                    string absoluteFileName = PathUtilities.GetAbsolutePath(file, rootNode.FileName);
+                    string fileName = Path.GetFileName(absoluteFileName);
+                    string newPath = Path.GetDirectoryName(sims.FileName);
+                    File.Copy(absoluteFileName, Path.Combine(newPath, fileName), true);
+                }
+
+            return apsimxFileName;
         }
 
         private void WriteMessage(string message)
@@ -261,6 +300,15 @@ namespace Models.Sensitivity
                     if (!(child is Simulation) && !(child is Factors)) // why do we have this check?
                         AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
             }
+        }
+
+        /// <summary>
+        /// Fixme
+        /// </summary>
+        /// <param name="cancelToken"></param>
+        public void Run(CancellationTokenSource cancelToken)
+        {
+            Run();
         }
     }
 }

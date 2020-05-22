@@ -326,6 +326,7 @@
     <Compile Include="Plant\Structure\CulmParams.cs" />
     <Compile Include="Plant\Structure\LeafCulms.cs" />
     <Compile Include="Report\VariableGroup.cs" />
+    <Compile Include="Sensitivity\Stics.cs" />
     <Compile Include="Soils\Nutrients\INutrientPool.cs" />
     <Compile Include="Soils\SoilTemp\SoilTemperature.cs" />
     <Compile Include="Soils\Standardiser\Layers.cs" />
