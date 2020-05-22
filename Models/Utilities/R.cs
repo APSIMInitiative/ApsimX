@@ -224,6 +224,16 @@ namespace Models.Utilities
         }
 
         /// <summary>
+        /// Install multiple packages.
+        /// </summary>
+        /// <param name="packages">Packages to be installed.</param>
+        public void InstallPackages(params string[] packages)
+        {
+            foreach (string package in packages)
+                InstallPackage(package);
+        }
+
+        /// <summary>
         /// Runs when the script has finished running.
         /// </summary>
         /// <param name="sender">Sender object.</param>
