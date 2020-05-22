@@ -9,8 +9,8 @@ using Models.Core;
 namespace Models
 {
     [Serializable]
-	public class Script : Model, IFunction
-	{
+    public class Script : Model, IFunction
+    {
         [Link] Clock Clock;
 
         /// <summary>Gets the value of the function.</summary>

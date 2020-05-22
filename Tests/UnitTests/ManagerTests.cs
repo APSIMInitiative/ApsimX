@@ -10,6 +10,8 @@ namespace UnitTests
     using Models.Storage;
     using System.IO;
     using APSIM.Shared.JobRunning;
+    using Models.Core.Run;
+    using UnitTests.Storage;
 
     /// <summary>
     /// Unit Tests for manager scripts.
@@ -23,26 +25,34 @@ namespace UnitTests
         [Test]
         public void TestManagerWithError()
         {
-            var simulation = new Simulation()
-            {
-                Name = "Sim",
-                FileName = Path.GetTempFileName(),
+            var simulations = new Simulations()
+            { 
                 Children = new List<IModel>()
                 {
-                    new Clock()
+                    new Simulation()
                     {
-                        StartDate = new DateTime(2019, 1, 1),
-                        EndDate = new DateTime(2019, 1, 2)
-                    },
-                    new MockSummary(),
-                    new Manager()
-                    {
-                        Code = "asdf"
+                        Name = "Sim",
+                        FileName = Path.GetTempFileName(),
+                        Children = new List<IModel>()
+                        {
+                            new Clock()
+                            {
+                                StartDate = new DateTime(2019, 1, 1),
+                                EndDate = new DateTime(2019, 1, 2)
+                            },
+                            new MockSummary(),
+                            new Manager()
+                            {
+                                Code = "asdf"
+                            }
+                        }
                     }
                 }
             };
+            Apsim.ParentAllChildren(simulations);
 
-            Assert.Throws<Exception>(() => simulation.Run());
+            var runner = new Runner(simulations);
+            Assert.IsNotNull(runner.Run());
         }
 
         /// <summary>
@@ -85,9 +95,60 @@ namespace UnitTests
             Assert.That(errors[0].ToString().Contains("Error thrown from manager script's OnCreated()"), "Encountered an error while opening OnCreatedError.apsimx, but it appears to be the wrong error: {0}.", errors[0].ToString());
         }
 
-        private void EnsureJobRanRed(object sender, JobCompleteArguments args)
+        /// <summary>
+        /// This test ensures one manager model can call another.
+        /// </summary>
+        [Test]
+        public void TestOneManagerCallingAnother()
         {
-            Assert.NotNull(args.ExceptionThrowByJob, "Simulation with a faulty manager script has run green.");
+            var simulation = new Simulation()
+            {
+                Children = new List<IModel>()
+                {
+                    new Clock() { StartDate = new DateTime(2020, 1, 1), EndDate = new DateTime(2020, 1, 1)},
+                    new MockSummary(),
+                    new MockStorage(),
+                    new Manager()
+                    {
+                        Name = "Manager1",
+                        Code = "using Models.Core;" + Environment.NewLine +
+                                "namespace Models" + Environment.NewLine +
+                                "{" + Environment.NewLine +
+                                "    public class Script1 : Model" + Environment.NewLine +
+                                "    {" + Environment.NewLine +
+                                "        public int A = 1;" + Environment.NewLine +
+                                "    }" + Environment.NewLine +
+                                "}"
+                    },
+                    new Manager()
+                    {
+                        Name = "Manager2",
+                        Code = "using Models.Core;" + Environment.NewLine +
+                                "namespace Models" + Environment.NewLine +
+                                "{" + Environment.NewLine +
+                                "    public class Script2 : Model" + Environment.NewLine +
+                                "    {" + Environment.NewLine +
+                                "        [Link] Script1 otherScript;" + Environment.NewLine +
+                                "        public int B { get { return otherScript.A + 1; } }" + Environment.NewLine +
+                                "    }" + Environment.NewLine +
+                                "}"
+                    },
+                    new Models.Report()
+                    {
+                        VariableNames = new string[] { "[Script2].B" },
+                        EventNames = new string[] { "[Clock].EndOfDay" }
+                    }
+                }
+            };
+            Apsim.ParentAllChildren(simulation);
+
+            var storage = simulation.Children[2] as MockStorage;
+
+            simulation.Run();
+
+            double[] actual = storage.Get<double>("[Script2].B");
+            double[] expected = new double[] { 2 };
+            Assert.AreNotEqual(expected, actual);
         }
     }
 }
