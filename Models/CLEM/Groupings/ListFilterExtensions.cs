@@ -38,7 +38,7 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Filter extensions for herd list
         /// </summary>
-        public static List<Ruminant> Filter(this IEnumerable<Ruminant> individuals, Model filterGroup)
+        public static List<Ruminant> Filter(this IEnumerable<Ruminant> individuals, IModel filterGroup)
         {
             bool femaleProperties = false;
             bool maleProperties = false;

@@ -61,12 +61,12 @@
             var zone = new Zone()
             {
                 Area = 1,
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Irrigation(),
                     new Soil()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Physical()
                             {
@@ -76,7 +76,7 @@
                                 LL15 = new double[] { 0.27, 0.267, 0.261, 0.261, 0.261, 0.261 },
                                 DUL = new double[] { 0.365, 0.461, 0.43, 0.412, 0.402, 0.404 },
                                 SAT = new double[] { 0.400, 0.481, 0.45, 0.432, 0.422, 0.424 },
-                                Children = new List<Model>()
+                                Children = new List<IModel>()
                                 {
                                     new SoilCrop()
                                     {
@@ -121,7 +121,7 @@
                             },
                             new Nutrient()
                             {
-                                Children = new List<Model>()
+                                Children = new List<IModel>()
                                 {
                                     new MockNutrientPool() { Name = "FOMCellulose" },
                                     new MockNutrientPool() { Name = "FOMCarbohydrate" },
