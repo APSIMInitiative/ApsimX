@@ -32,7 +32,7 @@ namespace Models.Sensitivity
     [ViewName("UserInterface.Views.DualGridView")]
     [PresenterName("UserInterface.Presenters.PropertyAndTablePresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
-    public class Stics : Model, ICustomDocumentation, IModelAsTable, IRunnable
+    public class CroptimizR : Model, ICustomDocumentation, IModelAsTable, IRunnable
     {
         //[Link]
         //private IDataStore storage = null;

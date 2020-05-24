@@ -9229,7 +9229,7 @@
       "ReadOnly": false
     },
     {
-      "$type": "Models.Sensitivity.Stics, Models",
+      "$type": "Models.Sensitivity.CroptimizR, Models",
       "Parameters": [
         {
           "$type": "Models.Sensitivity.Parameter, Models",
@@ -9252,7 +9252,7 @@
       "NoRepetitions": 3,
       "Tolerance": 1E-05,
       "MaxEval": 2,
-      "Name": "Stics",
+      "Name": "CroptimizR",
       "Children": [
         {
           "$type": "Models.Core.Folder, Models",
