@@ -93,6 +93,42 @@
         }
 
         /// <summary>
+        /// Find a sibling with a given name.
+        /// </summary>
+        /// <param name="name">Name of the sibling.</param>
+        public IModel Sibling(string name)
+        {
+            return Siblings().FirstOrDefault(s => s.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+        }
+
+        /// <summary>
+        /// Find a descendant with a given name.
+        /// </summary>
+        /// <param name="name">Name of the descendant.</param>
+        public IModel Descendant(string name)
+        {
+            return Descendants().FirstOrDefault(d => d.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+        }
+
+        /// <summary>
+        /// Find an ancestor with a given name.
+        /// </summary>
+        /// <param name="name">Name of the ancestor.</param>
+        public IModel Ancestor(string name)
+        {
+            return Ancestors().FirstOrDefault(a => a.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+        }
+
+        /// <summary>
+        /// Find a model in scope with a given name.
+        /// </summary>
+        /// <param name="name">Name of the model.</param>
+        public IModel InScope(string name)
+        {
+            return InScopeAll().FirstOrDefault(m => m.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+        }
+
+        /// <summary>
         /// Find a sibling of a given type.
         /// </summary>
         /// <typeparam name="T">Type of the sibling.</typeparam>
@@ -123,9 +159,49 @@
         /// Find a model of a given type in scope.
         /// </summary>
         /// <typeparam name="T">Type of model to find.</typeparam>
-        public T Find<T>() where T : IModel
+        public T InScope<T>() where T : IModel
         {
-            return FindAll<T>().FirstOrDefault();
+            return InScopeAll<T>().FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Find a sibling with a given type and name.
+        /// </summary>
+        /// <param name="name">Name of the sibling.</param>
+        /// <typeparam name="T">Type of the sibling.</typeparam>
+        public T Sibling<T>(string name) where T : IModel
+        {
+            return Siblings<T>().FirstOrDefault(s => s.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+        }
+
+        /// <summary>
+        /// Find a descendant model with a given type and name.
+        /// </summary>
+        /// <param name="name">Name of the descendant.</param>
+        /// <typeparam name="T">Type of the descendant.</typeparam>
+        public T Descendant<T>(string name) where T : IModel
+        {
+            return Descendants<T>().FirstOrDefault(d => d.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+        }
+
+        /// <summary>
+        /// Find an ancestor with a given type and name.
+        /// </summary>
+        /// <param name="name">Name of the ancestor.</param>
+        /// <typeparam name="T">Type of the ancestor.</typeparam>
+        public T Ancestor<T>(string name) where T : IModel
+        {
+            return Ancestors<T>().FirstOrDefault(a => a.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+        }
+
+        /// <summary>
+        /// Find a model in scope with a given type and name.
+        /// </summary>
+        /// <param name="name">Name of the model.</param>
+        /// <typeparam name="T">Type of model to find.</typeparam>
+        public T InScope<T>(string name) where T : IModel
+        {
+            return InScopeAll<T>().FirstOrDefault(m => m.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
         }
 
         /// <summary>
@@ -159,9 +235,9 @@
         /// Find all models of a given type in scope.
         /// </summary>
         /// <typeparam name="T">Type of models to find.</typeparam>
-        public IEnumerable<T> FindAll<T>() where T : IModel
+        public IEnumerable<T> InScopeAll<T>() where T : IModel
         {
-            return FindAll().OfType<T>();
+            return InScopeAll().OfType<T>();
         }
 
         /// <summary>
@@ -209,7 +285,7 @@
         /// <summary>
         /// Returns all models which are in scope.
         /// </summary>
-        public IEnumerable<IModel> FindAll()
+        public IEnumerable<IModel> InScopeAll()
         {
             Simulation sim = Ancestor<Simulation>();
             ScopingRules scope = sim?.Scope ?? new ScopingRules();
