@@ -47,7 +47,7 @@
                 {
                     newlyCompiled = true;
 
-                    var assemblies = GetReferenceAssemblies(referencedAssemblies);
+                    var assemblies = GetReferenceAssemblies(referencedAssemblies, model.Name);
 
                     // We haven't compiled the code so do it now.
                     var result = CompileTextToAssembly(code, assemblies);
@@ -84,7 +84,7 @@
                 if (compilation != null)
                 {
                     // We have a compiled assembly so get the class name.
-                    var regEx = new Regex(@"class\s(\w+)\s");
+                    var regEx = new Regex(@"class\s+(\w+)\s");
                     var match = regEx.Match(code);
                     if (!match.Success)
                         throw new Exception($"Cannot find a class declaration in script:{Environment.NewLine}{code}");
@@ -114,7 +114,8 @@
 
         /// <summary>Gets a list of assembly names that are needed for compiling.</summary>
         /// <param name="referencedAssemblies"></param>
-        private IEnumerable<string> GetReferenceAssemblies(IEnumerable<string> referencedAssemblies)
+        /// <param name="modelName">Name of model.</param>
+        private IEnumerable<string> GetReferenceAssemblies(IEnumerable<string> referencedAssemblies, string modelName)
         {
             IEnumerable<string> references = new string[] 
             {
@@ -124,13 +125,14 @@
                 "System.Data.dll", 
                 "System.Core.dll", 
                 Assembly.GetExecutingAssembly().Location,
-                Assembly.GetCallingAssembly().Location,
+                Assembly.GetEntryAssembly().Location,
                 typeof(MathNet.Numerics.Fit).Assembly.Location,
                 typeof(APSIM.Shared.Utilities.MathUtilities).Assembly.Location,
             };
 
             if (previousCompilations != null)
-                references = references.Concat(previousCompilations.Select(p => p.CompiledAssembly.Location));
+                references = references.Concat(previousCompilations.Where(p => !p.ModelFullPath.Contains($".{modelName}"))
+                                                                   .Select(p => p.CompiledAssembly.Location));
             if (referencedAssemblies != null)
                 references = references.Concat(referencedAssemblies);
             

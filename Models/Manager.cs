@@ -42,14 +42,27 @@
         /// </summary>
         private ScriptCompiler Compiler()
         {
+            if (TryGetCompiler())
+                return scriptCompiler;
+            else
+                throw new Exception("Cannot find a script compiler in manager.");
+        }
+
+        /// <summary>
+        /// At design time the [Link] above will be null. In that case search for a 
+        /// Simulations object and get its compiler.
+        /// </summary>
+        /// <returns>True if compiler was found.</returns>
+        private bool TryGetCompiler()
+        {
             if (scriptCompiler == null)
             {
                 var simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
                 if (simulations == null)
-                    throw new Exception("Cannot find a script compiler in manager.");
+                    return false;
                 scriptCompiler = simulations.ScriptCompiler;
             }
-            return scriptCompiler;
+            return true;
         }
 
         /// <summary>Gets or sets the code to compile.</summary>
@@ -108,7 +121,12 @@
         public override void OnCreated()
         {
             afterCreation = true;
-            RebuildScriptModel();
+
+            // During ModelReplacement.cs, OnCreated is called. When this happens links haven't yet been
+            // resolved and there is no parent Simulations object which leads to no ScriptCompiler
+            // instance. This needs to be fixed.
+            if (TryGetCompiler())
+                RebuildScriptModel();
         }
 
         /// <summary>Rebuild the script model and return error message if script cannot be compiled.</summary>
