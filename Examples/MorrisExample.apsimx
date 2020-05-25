@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 80,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-06",
+  "Version": 100,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -17,2758 +17,6 @@
     },
     {
       "$type": "Models.Morris, Models",
-      "ParameterValues": [
-        {
-          "ResidueWt": 1000.0,
-          "CN2": 84.25,
-          "Cona": 5.4,
-          "U": 3.4,
-          "OC": 1.85,
-          "ResidueCNR": 56.0,
-          "SWCon": 0.3,
-          "DiffusConst": 20.0,
-          "DiffusSlope": 14.0
-        },
-        {
-          "ResidueWt": 3500.0,
-          "CN2": 84.25,
-          "Cona": 5.4,
-          "U": 3.4,
-          "OC": 1.85,
-          "ResidueCNR": 56.0,
-          "SWCon": 0.3,
-          "DiffusConst": 20.0,
-          "DiffusSlope": 14.0
-        },
-        {
-          "ResidueWt": 3500.0,
-          "CN2": 84.25,
-          "Cona": 8.4,
-          "U": 3.4,
-          "OC": 1.85,
-          "ResidueCNR": 56.0,
-          "SWCon": 0.3,
-          "DiffusConst": 20.0,
-          "DiffusSlope": 14.0
-        },
-        {
-          "ResidueWt": 3500.0,
-          "CN2": 84.25,
-          "Cona": 8.4,
-          "U": 3.4,
-          "OC": 1.85,
-          "ResidueCNR": 56.0,
-          "SWCon": 0.5,
-          "DiffusConst": 20.0,
-          "DiffusSlope": 14.0
-        },
-        {
-          "ResidueWt": 3500.0,
-          "CN2": 84.25,
-          "Cona": 8.4,
-          "U": 3.4,
-          "OC": 1.85,
-          "ResidueCNR": 56.0,
-          "SWCon": 0.5,
-          "DiffusConst": 40.0,
-          "DiffusSlope": 14.0
-        },
-        {
-          "ResidueWt": 3500.0,
-          "CN2": 84.25,
-          "Cona": 8.4,
-          "U": 7.4,
-          "OC": 1.85,
-          "ResidueCNR": 56.0,
-          "SWCon": 0.5,
-          "DiffusConst": 40.0,
-          "DiffusSlope": 14.0
-        },
-        {
-          "ResidueWt": 3500.0,
-          "CN2": 84.25,
-          "Cona": 8.4,
-          "U": 7.4,
-          "OC": 1.1,
-          "ResidueCNR": 56.0,
-          "SWCon": 0.5,
-          "DiffusConst": 40.0,
-          "DiffusSlope": 14.0
-        },
-        {
-          "ResidueWt": 3500.0,
-          "CN2": 84.25,
-          "Cona": 8.4,
-          "U": 7.4,
-          "OC": 1.1,
-          "ResidueCNR": 96.0,
-          "SWCon": 0.5,
-          "DiffusConst": 40.0,
-          "DiffusSlope": 14.0
-        },
-        {
-          "ResidueWt": 3500.0,
-          "CN2": 84.25,
-          "Cona": 8.4,
-          "U": 7.4,
-          "OC": 1.1,
-          "ResidueCNR": 96.0,
-          "SWCon": 0.5,
-          "DiffusConst": 40.0,
-          "DiffusSlope": 19.0
-        },
-        {
-          "ResidueWt": 3500.0,
-          "CN2": 76.75,
-          "Cona": 8.4,
-          "U": 7.4,
-          "OC": 1.1,
-          "ResidueCNR": 96.0,
-          "SWCon": 0.5,
-          "DiffusConst": 40.0,
-          "DiffusSlope": 19.0
-        },
-        {
-          "ResidueWt": 3500.0,
-          "CN2": 70.75,
-          "Cona": 8.4,
-          "U": 8.2,
-          "OC": 0.95,
-          "ResidueCNR": 68.0,
-          "SWCon": 0.38,
-          "DiffusConst": 22.0,
-          "DiffusSlope": 15.5
-        },
-        {
-          "ResidueWt": 3500.0,
-          "CN2": 70.75,
-          "Cona": 8.4,
-          "U": 4.2,
-          "OC": 0.95,
-          "ResidueCNR": 68.0,
-          "SWCon": 0.38,
-          "DiffusConst": 22.0,
-          "DiffusSlope": 15.5
-        },
-        {
-          "ResidueWt": 3500.0,
-          "CN2": 70.75,
-          "Cona": 5.4,
-          "U": 4.2,
-          "OC": 0.95,
-          "ResidueCNR": 68.0,
-          "SWCon": 0.38,
-          "DiffusConst": 22.0,
-          "DiffusSlope": 15.5
-        },
-        {
-          "ResidueWt": 1000.0,
-          "CN2": 70.75,
-          "Cona": 5.4,
-          "U": 4.2,
-          "OC": 0.95,
-          "ResidueCNR": 68.0,
-          "SWCon": 0.38,
-          "DiffusConst": 22.0,
-          "DiffusSlope": 15.5
-        },
-        {
-          "ResidueWt": 1000.0,
-          "CN2": 70.75,
-          "Cona": 5.4,
-          "U": 4.2,
-          "OC": 1.7,
-          "ResidueCNR": 68.0,
-          "SWCon": 0.38,
-          "DiffusConst": 22.0,
-          "DiffusSlope": 15.5
-        },
-        {
-          "ResidueWt": 1000.0,
-          "CN2": 78.25,
-          "Cona": 5.4,
-          "U": 4.2,
-          "OC": 1.7,
-          "ResidueCNR": 68.0,
-          "SWCon": 0.38,
-          "DiffusConst": 22.0,
-          "DiffusSlope": 15.5
-        },
-        {
-          "ResidueWt": 1000.0,
-          "CN2": 78.25,
-          "Cona": 5.4,
-          "U": 4.2,
-          "OC": 1.7,
-          "ResidueCNR": 68.0,
-          "SWCon": 0.18,
-          "DiffusConst": 22.0,
-          "DiffusSlope": 15.5
-        },
-        {
-          "ResidueWt": 1000.0,
-          "CN2": 78.25,
-          "Cona": 5.4,
-          "U": 4.2,
-          "OC": 1.7,
-          "ResidueCNR": 68.0,
-          "SWCon": 0.18,
-          "DiffusConst": 22.0,
-          "DiffusSlope": 10.5
-        },
-        {
-          "ResidueWt": 1000.0,
-          "CN2": 78.25,
-          "Cona": 5.4,
-          "U": 4.2,
-          "OC": 1.7,
-          "ResidueCNR": 108.0,
-          "SWCon": 0.18,
-          "DiffusConst": 22.0,
-          "DiffusSlope": 10.5
-        },
-        {
-          "ResidueWt": 1000.0,
-          "CN2": 78.25,
-          "Cona": 5.4,
-          "U": 4.2,
-          "OC": 1.7,
-          "ResidueCNR": 108.0,
-          "SWCon": 0.18,
-          "DiffusConst": 42.0,
-          "DiffusSlope": 10.5
-        },
-        {
-          "ResidueWt": 500.0,
-          "CN2": 76.75,
-          "Cona": 6.0,
-          "U": 8.2,
-          "OC": 1.175,
-          "ResidueCNR": 100.0,
-          "SWCon": 0.34,
-          "DiffusConst": 28.0,
-          "DiffusSlope": 11.0
-        },
-        {
-          "ResidueWt": 500.0,
-          "CN2": 76.75,
-          "Cona": 6.0,
-          "U": 8.2,
-          "OC": 1.175,
-          "ResidueCNR": 100.0,
-          "SWCon": 0.34,
-          "DiffusConst": 48.0,
-          "DiffusSlope": 11.0
-        },
-        {
-          "ResidueWt": 500.0,
-          "CN2": 76.75,
-          "Cona": 6.0,
-          "U": 8.2,
-          "OC": 1.925,
-          "ResidueCNR": 100.0,
-          "SWCon": 0.34,
-          "DiffusConst": 48.0,
-          "DiffusSlope": 11.0
-        },
-        {
-          "ResidueWt": 500.0,
-          "CN2": 76.75,
-          "Cona": 6.0,
-          "U": 4.2,
-          "OC": 1.925,
-          "ResidueCNR": 100.0,
-          "SWCon": 0.34,
-          "DiffusConst": 48.0,
-          "DiffusSlope": 11.0
-        },
-        {
-          "ResidueWt": 500.0,
-          "CN2": 76.75,
-          "Cona": 9.0,
-          "U": 4.2,
-          "OC": 1.925,
-          "ResidueCNR": 100.0,
-          "SWCon": 0.34,
-          "DiffusConst": 48.0,
-          "DiffusSlope": 11.0
-        },
-        {
-          "ResidueWt": 3000.0,
-          "CN2": 76.75,
-          "Cona": 9.0,
-          "U": 4.2,
-          "OC": 1.925,
-          "ResidueCNR": 100.0,
-          "SWCon": 0.34,
-          "DiffusConst": 48.0,
-          "DiffusSlope": 11.0
-        },
-        {
-          "ResidueWt": 3000.0,
-          "CN2": 76.75,
-          "Cona": 9.0,
-          "U": 4.2,
-          "OC": 1.925,
-          "ResidueCNR": 100.0,
-          "SWCon": 0.14,
-          "DiffusConst": 48.0,
-          "DiffusSlope": 11.0
-        },
-        {
-          "ResidueWt": 3000.0,
-          "CN2": 76.75,
-          "Cona": 9.0,
-          "U": 4.2,
-          "OC": 1.925,
-          "ResidueCNR": 60.0,
-          "SWCon": 0.14,
-          "DiffusConst": 48.0,
-          "DiffusSlope": 11.0
-        },
-        {
-          "ResidueWt": 3000.0,
-          "CN2": 76.75,
-          "Cona": 9.0,
-          "U": 4.2,
-          "OC": 1.925,
-          "ResidueCNR": 60.0,
-          "SWCon": 0.14,
-          "DiffusConst": 48.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 3000.0,
-          "CN2": 84.25,
-          "Cona": 9.0,
-          "U": 4.2,
-          "OC": 1.925,
-          "ResidueCNR": 60.0,
-          "SWCon": 0.14,
-          "DiffusConst": 48.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 3750.0,
-          "CN2": 76.0,
-          "Cona": 5.4,
-          "U": 3.0,
-          "OC": 1.625,
-          "ResidueCNR": 120.0,
-          "SWCon": 0.16,
-          "DiffusConst": 38.0,
-          "DiffusSlope": 12.5
-        },
-        {
-          "ResidueWt": 1250.0,
-          "CN2": 76.0,
-          "Cona": 5.4,
-          "U": 3.0,
-          "OC": 1.625,
-          "ResidueCNR": 120.0,
-          "SWCon": 0.16,
-          "DiffusConst": 38.0,
-          "DiffusSlope": 12.5
-        },
-        {
-          "ResidueWt": 1250.0,
-          "CN2": 76.0,
-          "Cona": 5.4,
-          "U": 3.0,
-          "OC": 1.625,
-          "ResidueCNR": 80.0,
-          "SWCon": 0.16,
-          "DiffusConst": 38.0,
-          "DiffusSlope": 12.5
-        },
-        {
-          "ResidueWt": 1250.0,
-          "CN2": 83.5,
-          "Cona": 5.4,
-          "U": 3.0,
-          "OC": 1.625,
-          "ResidueCNR": 80.0,
-          "SWCon": 0.16,
-          "DiffusConst": 38.0,
-          "DiffusSlope": 12.5
-        },
-        {
-          "ResidueWt": 1250.0,
-          "CN2": 83.5,
-          "Cona": 5.4,
-          "U": 3.0,
-          "OC": 1.625,
-          "ResidueCNR": 80.0,
-          "SWCon": 0.16,
-          "DiffusConst": 58.0,
-          "DiffusSlope": 12.5
-        },
-        {
-          "ResidueWt": 1250.0,
-          "CN2": 83.5,
-          "Cona": 5.4,
-          "U": 7.0,
-          "OC": 1.625,
-          "ResidueCNR": 80.0,
-          "SWCon": 0.16,
-          "DiffusConst": 58.0,
-          "DiffusSlope": 12.5
-        },
-        {
-          "ResidueWt": 1250.0,
-          "CN2": 83.5,
-          "Cona": 8.4,
-          "U": 7.0,
-          "OC": 1.625,
-          "ResidueCNR": 80.0,
-          "SWCon": 0.16,
-          "DiffusConst": 58.0,
-          "DiffusSlope": 12.5
-        },
-        {
-          "ResidueWt": 1250.0,
-          "CN2": 83.5,
-          "Cona": 8.4,
-          "U": 7.0,
-          "OC": 0.875,
-          "ResidueCNR": 80.0,
-          "SWCon": 0.16,
-          "DiffusConst": 58.0,
-          "DiffusSlope": 12.5
-        },
-        {
-          "ResidueWt": 1250.0,
-          "CN2": 83.5,
-          "Cona": 8.4,
-          "U": 7.0,
-          "OC": 0.875,
-          "ResidueCNR": 80.0,
-          "SWCon": 0.16,
-          "DiffusConst": 58.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 1250.0,
-          "CN2": 83.5,
-          "Cona": 8.4,
-          "U": 7.0,
-          "OC": 0.875,
-          "ResidueCNR": 80.0,
-          "SWCon": 0.36,
-          "DiffusConst": 58.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 4250.0,
-          "CN2": 85.0,
-          "Cona": 6.3,
-          "U": 1.4,
-          "OC": 0.5,
-          "ResidueCNR": 116.0,
-          "SWCon": 0.28,
-          "DiffusConst": 46.0,
-          "DiffusSlope": 20.0
-        },
-        {
-          "ResidueWt": 4250.0,
-          "CN2": 85.0,
-          "Cona": 6.3,
-          "U": 1.4,
-          "OC": 0.5,
-          "ResidueCNR": 116.0,
-          "SWCon": 0.28,
-          "DiffusConst": 46.0,
-          "DiffusSlope": 15.0
-        },
-        {
-          "ResidueWt": 4250.0,
-          "CN2": 85.0,
-          "Cona": 6.3,
-          "U": 5.4,
-          "OC": 0.5,
-          "ResidueCNR": 116.0,
-          "SWCon": 0.28,
-          "DiffusConst": 46.0,
-          "DiffusSlope": 15.0
-        },
-        {
-          "ResidueWt": 1750.0,
-          "CN2": 85.0,
-          "Cona": 6.3,
-          "U": 5.4,
-          "OC": 0.5,
-          "ResidueCNR": 116.0,
-          "SWCon": 0.28,
-          "DiffusConst": 46.0,
-          "DiffusSlope": 15.0
-        },
-        {
-          "ResidueWt": 1750.0,
-          "CN2": 85.0,
-          "Cona": 6.3,
-          "U": 5.4,
-          "OC": 0.5,
-          "ResidueCNR": 116.0,
-          "SWCon": 0.28,
-          "DiffusConst": 26.0,
-          "DiffusSlope": 15.0
-        },
-        {
-          "ResidueWt": 1750.0,
-          "CN2": 85.0,
-          "Cona": 6.3,
-          "U": 5.4,
-          "OC": 1.25,
-          "ResidueCNR": 116.0,
-          "SWCon": 0.28,
-          "DiffusConst": 26.0,
-          "DiffusSlope": 15.0
-        },
-        {
-          "ResidueWt": 1750.0,
-          "CN2": 85.0,
-          "Cona": 6.3,
-          "U": 5.4,
-          "OC": 1.25,
-          "ResidueCNR": 76.0,
-          "SWCon": 0.28,
-          "DiffusConst": 26.0,
-          "DiffusSlope": 15.0
-        },
-        {
-          "ResidueWt": 1750.0,
-          "CN2": 85.0,
-          "Cona": 3.3,
-          "U": 5.4,
-          "OC": 1.25,
-          "ResidueCNR": 76.0,
-          "SWCon": 0.28,
-          "DiffusConst": 26.0,
-          "DiffusSlope": 15.0
-        },
-        {
-          "ResidueWt": 1750.0,
-          "CN2": 77.5,
-          "Cona": 3.3,
-          "U": 5.4,
-          "OC": 1.25,
-          "ResidueCNR": 76.0,
-          "SWCon": 0.28,
-          "DiffusConst": 26.0,
-          "DiffusSlope": 15.0
-        },
-        {
-          "ResidueWt": 1750.0,
-          "CN2": 77.5,
-          "Cona": 3.3,
-          "U": 5.4,
-          "OC": 1.25,
-          "ResidueCNR": 76.0,
-          "SWCon": 0.48,
-          "DiffusConst": 26.0,
-          "DiffusSlope": 15.0
-        },
-        {
-          "ResidueWt": 4000.0,
-          "CN2": 72.25,
-          "Cona": 5.7,
-          "U": 5.0,
-          "OC": 0.875,
-          "ResidueCNR": 68.0,
-          "SWCon": 0.32,
-          "DiffusConst": 60.0,
-          "DiffusSlope": 14.5
-        },
-        {
-          "ResidueWt": 4000.0,
-          "CN2": 72.25,
-          "Cona": 5.7,
-          "U": 5.0,
-          "OC": 0.875,
-          "ResidueCNR": 68.0,
-          "SWCon": 0.12,
-          "DiffusConst": 60.0,
-          "DiffusSlope": 14.5
-        },
-        {
-          "ResidueWt": 4000.0,
-          "CN2": 72.25,
-          "Cona": 8.7,
-          "U": 5.0,
-          "OC": 0.875,
-          "ResidueCNR": 68.0,
-          "SWCon": 0.12,
-          "DiffusConst": 60.0,
-          "DiffusSlope": 14.5
-        },
-        {
-          "ResidueWt": 4000.0,
-          "CN2": 72.25,
-          "Cona": 8.7,
-          "U": 5.0,
-          "OC": 0.875,
-          "ResidueCNR": 68.0,
-          "SWCon": 0.12,
-          "DiffusConst": 40.0,
-          "DiffusSlope": 14.5
-        },
-        {
-          "ResidueWt": 4000.0,
-          "CN2": 72.25,
-          "Cona": 8.7,
-          "U": 5.0,
-          "OC": 1.625,
-          "ResidueCNR": 68.0,
-          "SWCon": 0.12,
-          "DiffusConst": 40.0,
-          "DiffusSlope": 14.5
-        },
-        {
-          "ResidueWt": 4000.0,
-          "CN2": 72.25,
-          "Cona": 8.7,
-          "U": 5.0,
-          "OC": 1.625,
-          "ResidueCNR": 68.0,
-          "SWCon": 0.12,
-          "DiffusConst": 40.0,
-          "DiffusSlope": 19.5
-        },
-        {
-          "ResidueWt": 4000.0,
-          "CN2": 79.75,
-          "Cona": 8.7,
-          "U": 5.0,
-          "OC": 1.625,
-          "ResidueCNR": 68.0,
-          "SWCon": 0.12,
-          "DiffusConst": 40.0,
-          "DiffusSlope": 19.5
-        },
-        {
-          "ResidueWt": 4000.0,
-          "CN2": 79.75,
-          "Cona": 8.7,
-          "U": 5.0,
-          "OC": 1.625,
-          "ResidueCNR": 108.0,
-          "SWCon": 0.12,
-          "DiffusConst": 40.0,
-          "DiffusSlope": 19.5
-        },
-        {
-          "ResidueWt": 1500.0,
-          "CN2": 79.75,
-          "Cona": 8.7,
-          "U": 5.0,
-          "OC": 1.625,
-          "ResidueCNR": 108.0,
-          "SWCon": 0.12,
-          "DiffusConst": 40.0,
-          "DiffusSlope": 19.5
-        },
-        {
-          "ResidueWt": 1500.0,
-          "CN2": 79.75,
-          "Cona": 8.7,
-          "U": 1.0,
-          "OC": 1.625,
-          "ResidueCNR": 108.0,
-          "SWCon": 0.12,
-          "DiffusConst": 40.0,
-          "DiffusSlope": 19.5
-        },
-        {
-          "ResidueWt": 3500.0,
-          "CN2": 82.75,
-          "Cona": 6.0,
-          "U": 1.0,
-          "OC": 1.85,
-          "ResidueCNR": 112.0,
-          "SWCon": 0.32,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 19.5
-        },
-        {
-          "ResidueWt": 3500.0,
-          "CN2": 82.75,
-          "Cona": 6.0,
-          "U": 1.0,
-          "OC": 1.85,
-          "ResidueCNR": 112.0,
-          "SWCon": 0.32,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 14.5
-        },
-        {
-          "ResidueWt": 3500.0,
-          "CN2": 82.75,
-          "Cona": 9.0,
-          "U": 1.0,
-          "OC": 1.85,
-          "ResidueCNR": 112.0,
-          "SWCon": 0.32,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 14.5
-        },
-        {
-          "ResidueWt": 1000.0,
-          "CN2": 82.75,
-          "Cona": 9.0,
-          "U": 1.0,
-          "OC": 1.85,
-          "ResidueCNR": 112.0,
-          "SWCon": 0.32,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 14.5
-        },
-        {
-          "ResidueWt": 1000.0,
-          "CN2": 75.25,
-          "Cona": 9.0,
-          "U": 1.0,
-          "OC": 1.85,
-          "ResidueCNR": 112.0,
-          "SWCon": 0.32,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 14.5
-        },
-        {
-          "ResidueWt": 1000.0,
-          "CN2": 75.25,
-          "Cona": 9.0,
-          "U": 1.0,
-          "OC": 1.85,
-          "ResidueCNR": 112.0,
-          "SWCon": 0.32,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 14.5
-        },
-        {
-          "ResidueWt": 1000.0,
-          "CN2": 75.25,
-          "Cona": 9.0,
-          "U": 1.0,
-          "OC": 1.85,
-          "ResidueCNR": 72.0,
-          "SWCon": 0.32,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 14.5
-        },
-        {
-          "ResidueWt": 1000.0,
-          "CN2": 75.25,
-          "Cona": 9.0,
-          "U": 5.0,
-          "OC": 1.85,
-          "ResidueCNR": 72.0,
-          "SWCon": 0.32,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 14.5
-        },
-        {
-          "ResidueWt": 1000.0,
-          "CN2": 75.25,
-          "Cona": 9.0,
-          "U": 5.0,
-          "OC": 1.85,
-          "ResidueCNR": 72.0,
-          "SWCon": 0.12,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 14.5
-        },
-        {
-          "ResidueWt": 1000.0,
-          "CN2": 75.25,
-          "Cona": 9.0,
-          "U": 5.0,
-          "OC": 1.1,
-          "ResidueCNR": 72.0,
-          "SWCon": 0.12,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 14.5
-        },
-        {
-          "ResidueWt": 4250.0,
-          "CN2": 72.25,
-          "Cona": 6.9,
-          "U": 5.4,
-          "OC": 0.875,
-          "ResidueCNR": 40.0,
-          "SWCon": 0.28,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 12.5
-        },
-        {
-          "ResidueWt": 4250.0,
-          "CN2": 72.25,
-          "Cona": 3.9,
-          "U": 5.4,
-          "OC": 0.875,
-          "ResidueCNR": 40.0,
-          "SWCon": 0.28,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 12.5
-        },
-        {
-          "ResidueWt": 4250.0,
-          "CN2": 72.25,
-          "Cona": 3.9,
-          "U": 5.4,
-          "OC": 1.625,
-          "ResidueCNR": 40.0,
-          "SWCon": 0.28,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 12.5
-        },
-        {
-          "ResidueWt": 4250.0,
-          "CN2": 72.25,
-          "Cona": 3.9,
-          "U": 5.4,
-          "OC": 1.625,
-          "ResidueCNR": 40.0,
-          "SWCon": 0.28,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 4250.0,
-          "CN2": 72.25,
-          "Cona": 3.9,
-          "U": 1.4,
-          "OC": 1.625,
-          "ResidueCNR": 40.0,
-          "SWCon": 0.28,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 4250.0,
-          "CN2": 72.25,
-          "Cona": 3.9,
-          "U": 1.4,
-          "OC": 1.625,
-          "ResidueCNR": 80.0,
-          "SWCon": 0.28,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 4250.0,
-          "CN2": 72.25,
-          "Cona": 3.9,
-          "U": 1.4,
-          "OC": 1.625,
-          "ResidueCNR": 80.0,
-          "SWCon": 0.28,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 4250.0,
-          "CN2": 79.75,
-          "Cona": 3.9,
-          "U": 1.4,
-          "OC": 1.625,
-          "ResidueCNR": 80.0,
-          "SWCon": 0.28,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 4250.0,
-          "CN2": 79.75,
-          "Cona": 3.9,
-          "U": 1.4,
-          "OC": 1.625,
-          "ResidueCNR": 80.0,
-          "SWCon": 0.48,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 1750.0,
-          "CN2": 79.75,
-          "Cona": 3.9,
-          "U": 1.4,
-          "OC": 1.625,
-          "ResidueCNR": 80.0,
-          "SWCon": 0.48,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 2750.0,
-          "CN2": 82.75,
-          "Cona": 6.3,
-          "U": 7.8,
-          "OC": 1.325,
-          "ResidueCNR": 60.0,
-          "SWCon": 0.5,
-          "DiffusConst": 32.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 2750.0,
-          "CN2": 82.75,
-          "Cona": 6.3,
-          "U": 7.8,
-          "OC": 1.325,
-          "ResidueCNR": 100.0,
-          "SWCon": 0.5,
-          "DiffusConst": 32.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 2750.0,
-          "CN2": 75.25,
-          "Cona": 6.3,
-          "U": 7.8,
-          "OC": 1.325,
-          "ResidueCNR": 100.0,
-          "SWCon": 0.5,
-          "DiffusConst": 32.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 250.0,
-          "CN2": 75.25,
-          "Cona": 6.3,
-          "U": 7.8,
-          "OC": 1.325,
-          "ResidueCNR": 100.0,
-          "SWCon": 0.5,
-          "DiffusConst": 32.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 250.0,
-          "CN2": 75.25,
-          "Cona": 6.3,
-          "U": 7.8,
-          "OC": 0.575,
-          "ResidueCNR": 100.0,
-          "SWCon": 0.5,
-          "DiffusConst": 32.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 250.0,
-          "CN2": 75.25,
-          "Cona": 6.3,
-          "U": 3.8,
-          "OC": 0.575,
-          "ResidueCNR": 100.0,
-          "SWCon": 0.5,
-          "DiffusConst": 32.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 250.0,
-          "CN2": 75.25,
-          "Cona": 6.3,
-          "U": 3.8,
-          "OC": 0.575,
-          "ResidueCNR": 100.0,
-          "SWCon": 0.5,
-          "DiffusConst": 52.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 250.0,
-          "CN2": 75.25,
-          "Cona": 6.3,
-          "U": 3.8,
-          "OC": 0.575,
-          "ResidueCNR": 100.0,
-          "SWCon": 0.5,
-          "DiffusConst": 52.0,
-          "DiffusSlope": 12.5
-        },
-        {
-          "ResidueWt": 250.0,
-          "CN2": 75.25,
-          "Cona": 6.3,
-          "U": 3.8,
-          "OC": 0.575,
-          "ResidueCNR": 100.0,
-          "SWCon": 0.3,
-          "DiffusConst": 52.0,
-          "DiffusSlope": 12.5
-        },
-        {
-          "ResidueWt": 250.0,
-          "CN2": 75.25,
-          "Cona": 3.3,
-          "U": 3.8,
-          "OC": 0.575,
-          "ResidueCNR": 100.0,
-          "SWCon": 0.3,
-          "DiffusConst": 52.0,
-          "DiffusSlope": 12.5
-        },
-        {
-          "ResidueWt": 0.0,
-          "CN2": 81.25,
-          "Cona": 4.8,
-          "U": 8.2,
-          "OC": 2.0,
-          "ResidueCNR": 104.0,
-          "SWCon": 0.3,
-          "DiffusConst": 42.0,
-          "DiffusSlope": 18.0
-        },
-        {
-          "ResidueWt": 0.0,
-          "CN2": 81.25,
-          "Cona": 7.8,
-          "U": 8.2,
-          "OC": 2.0,
-          "ResidueCNR": 104.0,
-          "SWCon": 0.3,
-          "DiffusConst": 42.0,
-          "DiffusSlope": 18.0
-        },
-        {
-          "ResidueWt": 0.0,
-          "CN2": 81.25,
-          "Cona": 7.8,
-          "U": 8.2,
-          "OC": 2.0,
-          "ResidueCNR": 104.0,
-          "SWCon": 0.5,
-          "DiffusConst": 42.0,
-          "DiffusSlope": 18.0
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 81.25,
-          "Cona": 7.8,
-          "U": 8.2,
-          "OC": 2.0,
-          "ResidueCNR": 104.0,
-          "SWCon": 0.5,
-          "DiffusConst": 42.0,
-          "DiffusSlope": 18.0
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 81.25,
-          "Cona": 7.8,
-          "U": 8.2,
-          "OC": 2.0,
-          "ResidueCNR": 104.0,
-          "SWCon": 0.5,
-          "DiffusConst": 22.0,
-          "DiffusSlope": 18.0
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 81.25,
-          "Cona": 7.8,
-          "U": 8.2,
-          "OC": 2.0,
-          "ResidueCNR": 64.0,
-          "SWCon": 0.5,
-          "DiffusConst": 22.0,
-          "DiffusSlope": 18.0
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 81.25,
-          "Cona": 7.8,
-          "U": 8.2,
-          "OC": 1.25,
-          "ResidueCNR": 64.0,
-          "SWCon": 0.5,
-          "DiffusConst": 22.0,
-          "DiffusSlope": 18.0
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 81.25,
-          "Cona": 7.8,
-          "U": 4.2,
-          "OC": 1.25,
-          "ResidueCNR": 64.0,
-          "SWCon": 0.5,
-          "DiffusConst": 22.0,
-          "DiffusSlope": 18.0
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 81.25,
-          "Cona": 7.8,
-          "U": 4.2,
-          "OC": 1.25,
-          "ResidueCNR": 64.0,
-          "SWCon": 0.5,
-          "DiffusConst": 22.0,
-          "DiffusSlope": 13.0
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 73.75,
-          "Cona": 7.8,
-          "U": 4.2,
-          "OC": 1.25,
-          "ResidueCNR": 64.0,
-          "SWCon": 0.5,
-          "DiffusConst": 22.0,
-          "DiffusSlope": 13.0
-        },
-        {
-          "ResidueWt": 0.0,
-          "CN2": 81.25,
-          "Cona": 7.5,
-          "U": 5.8,
-          "OC": 1.925,
-          "ResidueCNR": 100.0,
-          "SWCon": 0.14,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 11.0
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 81.25,
-          "Cona": 7.5,
-          "U": 5.8,
-          "OC": 1.925,
-          "ResidueCNR": 100.0,
-          "SWCon": 0.14,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 11.0
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 81.25,
-          "Cona": 7.5,
-          "U": 5.8,
-          "OC": 1.175,
-          "ResidueCNR": 100.0,
-          "SWCon": 0.14,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 11.0
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 81.25,
-          "Cona": 7.5,
-          "U": 5.8,
-          "OC": 1.175,
-          "ResidueCNR": 100.0,
-          "SWCon": 0.14,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 81.25,
-          "Cona": 4.5,
-          "U": 5.8,
-          "OC": 1.175,
-          "ResidueCNR": 100.0,
-          "SWCon": 0.14,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 81.25,
-          "Cona": 4.5,
-          "U": 1.8,
-          "OC": 1.175,
-          "ResidueCNR": 100.0,
-          "SWCon": 0.14,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 81.25,
-          "Cona": 4.5,
-          "U": 1.8,
-          "OC": 1.175,
-          "ResidueCNR": 100.0,
-          "SWCon": 0.14,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 81.25,
-          "Cona": 4.5,
-          "U": 1.8,
-          "OC": 1.175,
-          "ResidueCNR": 100.0,
-          "SWCon": 0.34,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 73.75,
-          "Cona": 4.5,
-          "U": 1.8,
-          "OC": 1.175,
-          "ResidueCNR": 100.0,
-          "SWCon": 0.34,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 73.75,
-          "Cona": 4.5,
-          "U": 1.8,
-          "OC": 1.175,
-          "ResidueCNR": 60.0,
-          "SWCon": 0.34,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 76.0,
-          "Cona": 3.3,
-          "U": 2.2,
-          "OC": 0.5,
-          "ResidueCNR": 104.0,
-          "SWCon": 0.1,
-          "DiffusConst": 36.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 76.0,
-          "Cona": 3.3,
-          "U": 2.2,
-          "OC": 0.5,
-          "ResidueCNR": 104.0,
-          "SWCon": 0.3,
-          "DiffusConst": 36.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 76.0,
-          "Cona": 3.3,
-          "U": 6.2,
-          "OC": 0.5,
-          "ResidueCNR": 104.0,
-          "SWCon": 0.3,
-          "DiffusConst": 36.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 76.0,
-          "Cona": 3.3,
-          "U": 6.2,
-          "OC": 0.5,
-          "ResidueCNR": 64.0,
-          "SWCon": 0.3,
-          "DiffusConst": 36.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 83.5,
-          "Cona": 3.3,
-          "U": 6.2,
-          "OC": 0.5,
-          "ResidueCNR": 64.0,
-          "SWCon": 0.3,
-          "DiffusConst": 36.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 5000.0,
-          "CN2": 83.5,
-          "Cona": 3.3,
-          "U": 6.2,
-          "OC": 0.5,
-          "ResidueCNR": 64.0,
-          "SWCon": 0.3,
-          "DiffusConst": 36.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 5000.0,
-          "CN2": 83.5,
-          "Cona": 6.3,
-          "U": 6.2,
-          "OC": 0.5,
-          "ResidueCNR": 64.0,
-          "SWCon": 0.3,
-          "DiffusConst": 36.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 5000.0,
-          "CN2": 83.5,
-          "Cona": 6.3,
-          "U": 6.2,
-          "OC": 1.25,
-          "ResidueCNR": 64.0,
-          "SWCon": 0.3,
-          "DiffusConst": 36.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 5000.0,
-          "CN2": 83.5,
-          "Cona": 6.3,
-          "U": 6.2,
-          "OC": 1.25,
-          "ResidueCNR": 64.0,
-          "SWCon": 0.3,
-          "DiffusConst": 56.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 5000.0,
-          "CN2": 83.5,
-          "Cona": 6.3,
-          "U": 6.2,
-          "OC": 1.25,
-          "ResidueCNR": 64.0,
-          "SWCon": 0.3,
-          "DiffusConst": 56.0,
-          "DiffusSlope": 11.0
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 70.75,
-          "Cona": 5.1,
-          "U": 2.2,
-          "OC": 1.25,
-          "ResidueCNR": 68.0,
-          "SWCon": 0.26,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 15.0
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 70.75,
-          "Cona": 5.1,
-          "U": 2.2,
-          "OC": 0.5,
-          "ResidueCNR": 68.0,
-          "SWCon": 0.26,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 15.0
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 78.25,
-          "Cona": 5.1,
-          "U": 2.2,
-          "OC": 0.5,
-          "ResidueCNR": 68.0,
-          "SWCon": 0.26,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 15.0
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 78.25,
-          "Cona": 5.1,
-          "U": 2.2,
-          "OC": 0.5,
-          "ResidueCNR": 68.0,
-          "SWCon": 0.26,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 15.0
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 78.25,
-          "Cona": 8.1,
-          "U": 2.2,
-          "OC": 0.5,
-          "ResidueCNR": 68.0,
-          "SWCon": 0.26,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 15.0
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 78.25,
-          "Cona": 8.1,
-          "U": 2.2,
-          "OC": 0.5,
-          "ResidueCNR": 68.0,
-          "SWCon": 0.46,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 15.0
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 78.25,
-          "Cona": 8.1,
-          "U": 2.2,
-          "OC": 0.5,
-          "ResidueCNR": 68.0,
-          "SWCon": 0.46,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 10.0
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 78.25,
-          "Cona": 8.1,
-          "U": 6.2,
-          "OC": 0.5,
-          "ResidueCNR": 68.0,
-          "SWCon": 0.46,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 10.0
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 78.25,
-          "Cona": 8.1,
-          "U": 6.2,
-          "OC": 0.5,
-          "ResidueCNR": 108.0,
-          "SWCon": 0.46,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 10.0
-        },
-        {
-          "ResidueWt": 0.0,
-          "CN2": 78.25,
-          "Cona": 8.1,
-          "U": 6.2,
-          "OC": 0.5,
-          "ResidueCNR": 108.0,
-          "SWCon": 0.46,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 10.0
-        },
-        {
-          "ResidueWt": 2250.0,
-          "CN2": 79.0,
-          "Cona": 5.1,
-          "U": 7.0,
-          "OC": 2.0,
-          "ResidueCNR": 116.0,
-          "SWCon": 0.42,
-          "DiffusConst": 28.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 2250.0,
-          "CN2": 79.0,
-          "Cona": 8.1,
-          "U": 7.0,
-          "OC": 2.0,
-          "ResidueCNR": 116.0,
-          "SWCon": 0.42,
-          "DiffusConst": 28.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 2250.0,
-          "CN2": 71.5,
-          "Cona": 8.1,
-          "U": 7.0,
-          "OC": 2.0,
-          "ResidueCNR": 116.0,
-          "SWCon": 0.42,
-          "DiffusConst": 28.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 2250.0,
-          "CN2": 71.5,
-          "Cona": 8.1,
-          "U": 7.0,
-          "OC": 2.0,
-          "ResidueCNR": 116.0,
-          "SWCon": 0.22,
-          "DiffusConst": 28.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 4750.0,
-          "CN2": 71.5,
-          "Cona": 8.1,
-          "U": 7.0,
-          "OC": 2.0,
-          "ResidueCNR": 116.0,
-          "SWCon": 0.22,
-          "DiffusConst": 28.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 4750.0,
-          "CN2": 71.5,
-          "Cona": 8.1,
-          "U": 7.0,
-          "OC": 2.0,
-          "ResidueCNR": 116.0,
-          "SWCon": 0.22,
-          "DiffusConst": 48.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 4750.0,
-          "CN2": 71.5,
-          "Cona": 8.1,
-          "U": 7.0,
-          "OC": 1.25,
-          "ResidueCNR": 116.0,
-          "SWCon": 0.22,
-          "DiffusConst": 48.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 4750.0,
-          "CN2": 71.5,
-          "Cona": 8.1,
-          "U": 3.0,
-          "OC": 1.25,
-          "ResidueCNR": 116.0,
-          "SWCon": 0.22,
-          "DiffusConst": 48.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 4750.0,
-          "CN2": 71.5,
-          "Cona": 8.1,
-          "U": 3.0,
-          "OC": 1.25,
-          "ResidueCNR": 76.0,
-          "SWCon": 0.22,
-          "DiffusConst": 48.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 4750.0,
-          "CN2": 71.5,
-          "Cona": 8.1,
-          "U": 3.0,
-          "OC": 1.25,
-          "ResidueCNR": 76.0,
-          "SWCon": 0.22,
-          "DiffusConst": 48.0,
-          "DiffusSlope": 12.5
-        },
-        {
-          "ResidueWt": 4500.0,
-          "CN2": 80.5,
-          "Cona": 8.7,
-          "U": 8.6,
-          "OC": 1.625,
-          "ResidueCNR": 120.0,
-          "SWCon": 0.5,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 16.5
-        },
-        {
-          "ResidueWt": 4500.0,
-          "CN2": 80.5,
-          "Cona": 8.7,
-          "U": 8.6,
-          "OC": 1.625,
-          "ResidueCNR": 120.0,
-          "SWCon": 0.5,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 11.5
-        },
-        {
-          "ResidueWt": 4500.0,
-          "CN2": 80.5,
-          "Cona": 8.7,
-          "U": 8.6,
-          "OC": 1.625,
-          "ResidueCNR": 120.0,
-          "SWCon": 0.3,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 11.5
-        },
-        {
-          "ResidueWt": 4500.0,
-          "CN2": 80.5,
-          "Cona": 8.7,
-          "U": 8.6,
-          "OC": 0.875,
-          "ResidueCNR": 120.0,
-          "SWCon": 0.3,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 11.5
-        },
-        {
-          "ResidueWt": 4500.0,
-          "CN2": 73.0,
-          "Cona": 8.7,
-          "U": 8.6,
-          "OC": 0.875,
-          "ResidueCNR": 120.0,
-          "SWCon": 0.3,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 11.5
-        },
-        {
-          "ResidueWt": 4500.0,
-          "CN2": 73.0,
-          "Cona": 8.7,
-          "U": 8.6,
-          "OC": 0.875,
-          "ResidueCNR": 120.0,
-          "SWCon": 0.3,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 11.5
-        },
-        {
-          "ResidueWt": 2000.0,
-          "CN2": 73.0,
-          "Cona": 8.7,
-          "U": 8.6,
-          "OC": 0.875,
-          "ResidueCNR": 120.0,
-          "SWCon": 0.3,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 11.5
-        },
-        {
-          "ResidueWt": 2000.0,
-          "CN2": 73.0,
-          "Cona": 8.7,
-          "U": 8.6,
-          "OC": 0.875,
-          "ResidueCNR": 80.0,
-          "SWCon": 0.3,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 11.5
-        },
-        {
-          "ResidueWt": 2000.0,
-          "CN2": 73.0,
-          "Cona": 5.7,
-          "U": 8.6,
-          "OC": 0.875,
-          "ResidueCNR": 80.0,
-          "SWCon": 0.3,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 11.5
-        },
-        {
-          "ResidueWt": 2000.0,
-          "CN2": 73.0,
-          "Cona": 5.7,
-          "U": 4.6,
-          "OC": 0.875,
-          "ResidueCNR": 80.0,
-          "SWCon": 0.3,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 11.5
-        },
-        {
-          "ResidueWt": 500.0,
-          "CN2": 85.0,
-          "Cona": 6.0,
-          "U": 6.6,
-          "OC": 1.25,
-          "ResidueCNR": 56.0,
-          "SWCon": 0.32,
-          "DiffusConst": 24.0,
-          "DiffusSlope": 11.0
-        },
-        {
-          "ResidueWt": 500.0,
-          "CN2": 77.5,
-          "Cona": 6.0,
-          "U": 6.6,
-          "OC": 1.25,
-          "ResidueCNR": 56.0,
-          "SWCon": 0.32,
-          "DiffusConst": 24.0,
-          "DiffusSlope": 11.0
-        },
-        {
-          "ResidueWt": 500.0,
-          "CN2": 77.5,
-          "Cona": 6.0,
-          "U": 6.6,
-          "OC": 1.25,
-          "ResidueCNR": 56.0,
-          "SWCon": 0.12,
-          "DiffusConst": 24.0,
-          "DiffusSlope": 11.0
-        },
-        {
-          "ResidueWt": 500.0,
-          "CN2": 77.5,
-          "Cona": 6.0,
-          "U": 6.6,
-          "OC": 2.0,
-          "ResidueCNR": 56.0,
-          "SWCon": 0.12,
-          "DiffusConst": 24.0,
-          "DiffusSlope": 11.0
-        },
-        {
-          "ResidueWt": 500.0,
-          "CN2": 77.5,
-          "Cona": 6.0,
-          "U": 6.6,
-          "OC": 2.0,
-          "ResidueCNR": 56.0,
-          "SWCon": 0.12,
-          "DiffusConst": 24.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 500.0,
-          "CN2": 77.5,
-          "Cona": 6.0,
-          "U": 6.6,
-          "OC": 2.0,
-          "ResidueCNR": 56.0,
-          "SWCon": 0.12,
-          "DiffusConst": 44.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 500.0,
-          "CN2": 77.5,
-          "Cona": 6.0,
-          "U": 6.6,
-          "OC": 2.0,
-          "ResidueCNR": 96.0,
-          "SWCon": 0.12,
-          "DiffusConst": 44.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 3000.0,
-          "CN2": 77.5,
-          "Cona": 6.0,
-          "U": 6.6,
-          "OC": 2.0,
-          "ResidueCNR": 96.0,
-          "SWCon": 0.12,
-          "DiffusConst": 44.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 3000.0,
-          "CN2": 77.5,
-          "Cona": 6.0,
-          "U": 2.6,
-          "OC": 2.0,
-          "ResidueCNR": 96.0,
-          "SWCon": 0.12,
-          "DiffusConst": 44.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 3000.0,
-          "CN2": 77.5,
-          "Cona": 9.0,
-          "U": 2.6,
-          "OC": 2.0,
-          "ResidueCNR": 96.0,
-          "SWCon": 0.12,
-          "DiffusConst": 44.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 5000.0,
-          "CN2": 79.0,
-          "Cona": 4.8,
-          "U": 5.0,
-          "OC": 1.175,
-          "ResidueCNR": 104.0,
-          "SWCon": 0.1,
-          "DiffusConst": 44.0,
-          "DiffusSlope": 12.5
-        },
-        {
-          "ResidueWt": 5000.0,
-          "CN2": 79.0,
-          "Cona": 4.8,
-          "U": 5.0,
-          "OC": 1.175,
-          "ResidueCNR": 104.0,
-          "SWCon": 0.1,
-          "DiffusConst": 44.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 5000.0,
-          "CN2": 79.0,
-          "Cona": 7.8,
-          "U": 5.0,
-          "OC": 1.175,
-          "ResidueCNR": 104.0,
-          "SWCon": 0.1,
-          "DiffusConst": 44.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 79.0,
-          "Cona": 7.8,
-          "U": 5.0,
-          "OC": 1.175,
-          "ResidueCNR": 104.0,
-          "SWCon": 0.1,
-          "DiffusConst": 44.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 79.0,
-          "Cona": 7.8,
-          "U": 5.0,
-          "OC": 1.175,
-          "ResidueCNR": 104.0,
-          "SWCon": 0.3,
-          "DiffusConst": 44.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 79.0,
-          "Cona": 7.8,
-          "U": 5.0,
-          "OC": 1.175,
-          "ResidueCNR": 104.0,
-          "SWCon": 0.3,
-          "DiffusConst": 24.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 79.0,
-          "Cona": 7.8,
-          "U": 9.0,
-          "OC": 1.175,
-          "ResidueCNR": 104.0,
-          "SWCon": 0.3,
-          "DiffusConst": 24.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 79.0,
-          "Cona": 7.8,
-          "U": 9.0,
-          "OC": 1.925,
-          "ResidueCNR": 104.0,
-          "SWCon": 0.3,
-          "DiffusConst": 24.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 79.0,
-          "Cona": 7.8,
-          "U": 9.0,
-          "OC": 1.925,
-          "ResidueCNR": 64.0,
-          "SWCon": 0.3,
-          "DiffusConst": 24.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 2500.0,
-          "CN2": 71.5,
-          "Cona": 7.8,
-          "U": 9.0,
-          "OC": 1.925,
-          "ResidueCNR": 64.0,
-          "SWCon": 0.3,
-          "DiffusConst": 24.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 2750.0,
-          "CN2": 82.0,
-          "Cona": 3.9,
-          "U": 8.2,
-          "OC": 1.7,
-          "ResidueCNR": 64.0,
-          "SWCon": 0.2,
-          "DiffusConst": 60.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 250.0,
-          "CN2": 82.0,
-          "Cona": 3.9,
-          "U": 8.2,
-          "OC": 1.7,
-          "ResidueCNR": 64.0,
-          "SWCon": 0.2,
-          "DiffusConst": 60.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 250.0,
-          "CN2": 82.0,
-          "Cona": 3.9,
-          "U": 8.2,
-          "OC": 1.7,
-          "ResidueCNR": 64.0,
-          "SWCon": 0.2,
-          "DiffusConst": 60.0,
-          "DiffusSlope": 12.5
-        },
-        {
-          "ResidueWt": 250.0,
-          "CN2": 82.0,
-          "Cona": 3.9,
-          "U": 8.2,
-          "OC": 1.7,
-          "ResidueCNR": 104.0,
-          "SWCon": 0.2,
-          "DiffusConst": 60.0,
-          "DiffusSlope": 12.5
-        },
-        {
-          "ResidueWt": 250.0,
-          "CN2": 82.0,
-          "Cona": 3.9,
-          "U": 8.2,
-          "OC": 1.7,
-          "ResidueCNR": 104.0,
-          "SWCon": 0.4,
-          "DiffusConst": 60.0,
-          "DiffusSlope": 12.5
-        },
-        {
-          "ResidueWt": 250.0,
-          "CN2": 82.0,
-          "Cona": 3.9,
-          "U": 4.2,
-          "OC": 1.7,
-          "ResidueCNR": 104.0,
-          "SWCon": 0.4,
-          "DiffusConst": 60.0,
-          "DiffusSlope": 12.5
-        },
-        {
-          "ResidueWt": 250.0,
-          "CN2": 82.0,
-          "Cona": 3.9,
-          "U": 4.2,
-          "OC": 1.7,
-          "ResidueCNR": 104.0,
-          "SWCon": 0.4,
-          "DiffusConst": 40.0,
-          "DiffusSlope": 12.5
-        },
-        {
-          "ResidueWt": 250.0,
-          "CN2": 82.0,
-          "Cona": 6.9,
-          "U": 4.2,
-          "OC": 1.7,
-          "ResidueCNR": 104.0,
-          "SWCon": 0.4,
-          "DiffusConst": 40.0,
-          "DiffusSlope": 12.5
-        },
-        {
-          "ResidueWt": 250.0,
-          "CN2": 74.5,
-          "Cona": 6.9,
-          "U": 4.2,
-          "OC": 1.7,
-          "ResidueCNR": 104.0,
-          "SWCon": 0.4,
-          "DiffusConst": 40.0,
-          "DiffusSlope": 12.5
-        },
-        {
-          "ResidueWt": 250.0,
-          "CN2": 74.5,
-          "Cona": 6.9,
-          "U": 4.2,
-          "OC": 0.95,
-          "ResidueCNR": 104.0,
-          "SWCon": 0.4,
-          "DiffusConst": 40.0,
-          "DiffusSlope": 12.5
-        },
-        {
-          "ResidueWt": 1000.0,
-          "CN2": 78.25,
-          "Cona": 3.6,
-          "U": 4.6,
-          "OC": 0.575,
-          "ResidueCNR": 96.0,
-          "SWCon": 0.4,
-          "DiffusConst": 36.0,
-          "DiffusSlope": 18.5
-        },
-        {
-          "ResidueWt": 3500.0,
-          "CN2": 78.25,
-          "Cona": 3.6,
-          "U": 4.6,
-          "OC": 0.575,
-          "ResidueCNR": 96.0,
-          "SWCon": 0.4,
-          "DiffusConst": 36.0,
-          "DiffusSlope": 18.5
-        },
-        {
-          "ResidueWt": 3500.0,
-          "CN2": 78.25,
-          "Cona": 3.6,
-          "U": 4.6,
-          "OC": 1.325,
-          "ResidueCNR": 96.0,
-          "SWCon": 0.4,
-          "DiffusConst": 36.0,
-          "DiffusSlope": 18.5
-        },
-        {
-          "ResidueWt": 3500.0,
-          "CN2": 78.25,
-          "Cona": 6.6,
-          "U": 4.6,
-          "OC": 1.325,
-          "ResidueCNR": 96.0,
-          "SWCon": 0.4,
-          "DiffusConst": 36.0,
-          "DiffusSlope": 18.5
-        },
-        {
-          "ResidueWt": 3500.0,
-          "CN2": 70.75,
-          "Cona": 6.6,
-          "U": 4.6,
-          "OC": 1.325,
-          "ResidueCNR": 96.0,
-          "SWCon": 0.4,
-          "DiffusConst": 36.0,
-          "DiffusSlope": 18.5
-        },
-        {
-          "ResidueWt": 3500.0,
-          "CN2": 70.75,
-          "Cona": 6.6,
-          "U": 4.6,
-          "OC": 1.325,
-          "ResidueCNR": 96.0,
-          "SWCon": 0.4,
-          "DiffusConst": 56.0,
-          "DiffusSlope": 18.5
-        },
-        {
-          "ResidueWt": 3500.0,
-          "CN2": 70.75,
-          "Cona": 6.6,
-          "U": 8.6,
-          "OC": 1.325,
-          "ResidueCNR": 96.0,
-          "SWCon": 0.4,
-          "DiffusConst": 56.0,
-          "DiffusSlope": 18.5
-        },
-        {
-          "ResidueWt": 3500.0,
-          "CN2": 70.75,
-          "Cona": 6.6,
-          "U": 8.6,
-          "OC": 1.325,
-          "ResidueCNR": 56.0,
-          "SWCon": 0.4,
-          "DiffusConst": 56.0,
-          "DiffusSlope": 18.5
-        },
-        {
-          "ResidueWt": 3500.0,
-          "CN2": 70.75,
-          "Cona": 6.6,
-          "U": 8.6,
-          "OC": 1.325,
-          "ResidueCNR": 56.0,
-          "SWCon": 0.4,
-          "DiffusConst": 56.0,
-          "DiffusSlope": 13.5
-        },
-        {
-          "ResidueWt": 3500.0,
-          "CN2": 70.75,
-          "Cona": 6.6,
-          "U": 8.6,
-          "OC": 1.325,
-          "ResidueCNR": 56.0,
-          "SWCon": 0.2,
-          "DiffusConst": 56.0,
-          "DiffusSlope": 13.5
-        },
-        {
-          "ResidueWt": 4250.0,
-          "CN2": 85.0,
-          "Cona": 3.0,
-          "U": 6.2,
-          "OC": 0.875,
-          "ResidueCNR": 76.0,
-          "SWCon": 0.3,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 14.0
-        },
-        {
-          "ResidueWt": 4250.0,
-          "CN2": 85.0,
-          "Cona": 3.0,
-          "U": 6.2,
-          "OC": 1.625,
-          "ResidueCNR": 76.0,
-          "SWCon": 0.3,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 14.0
-        },
-        {
-          "ResidueWt": 4250.0,
-          "CN2": 77.5,
-          "Cona": 3.0,
-          "U": 6.2,
-          "OC": 1.625,
-          "ResidueCNR": 76.0,
-          "SWCon": 0.3,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 14.0
-        },
-        {
-          "ResidueWt": 4250.0,
-          "CN2": 77.5,
-          "Cona": 3.0,
-          "U": 2.2,
-          "OC": 1.625,
-          "ResidueCNR": 76.0,
-          "SWCon": 0.3,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 14.0
-        },
-        {
-          "ResidueWt": 4250.0,
-          "CN2": 77.5,
-          "Cona": 3.0,
-          "U": 2.2,
-          "OC": 1.625,
-          "ResidueCNR": 76.0,
-          "SWCon": 0.3,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 19.0
-        },
-        {
-          "ResidueWt": 4250.0,
-          "CN2": 77.5,
-          "Cona": 3.0,
-          "U": 2.2,
-          "OC": 1.625,
-          "ResidueCNR": 76.0,
-          "SWCon": 0.1,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 19.0
-        },
-        {
-          "ResidueWt": 4250.0,
-          "CN2": 77.5,
-          "Cona": 6.0,
-          "U": 2.2,
-          "OC": 1.625,
-          "ResidueCNR": 76.0,
-          "SWCon": 0.1,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 19.0
-        },
-        {
-          "ResidueWt": 4250.0,
-          "CN2": 77.5,
-          "Cona": 6.0,
-          "U": 2.2,
-          "OC": 1.625,
-          "ResidueCNR": 76.0,
-          "SWCon": 0.1,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 19.0
-        },
-        {
-          "ResidueWt": 1750.0,
-          "CN2": 77.5,
-          "Cona": 6.0,
-          "U": 2.2,
-          "OC": 1.625,
-          "ResidueCNR": 76.0,
-          "SWCon": 0.1,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 19.0
-        },
-        {
-          "ResidueWt": 1750.0,
-          "CN2": 77.5,
-          "Cona": 6.0,
-          "U": 2.2,
-          "OC": 1.625,
-          "ResidueCNR": 116.0,
-          "SWCon": 0.1,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 19.0
-        },
-        {
-          "ResidueWt": 3000.0,
-          "CN2": 70.75,
-          "Cona": 9.0,
-          "U": 2.2,
-          "OC": 1.775,
-          "ResidueCNR": 40.0,
-          "SWCon": 0.1,
-          "DiffusConst": 26.0,
-          "DiffusSlope": 12.5
-        },
-        {
-          "ResidueWt": 3000.0,
-          "CN2": 70.75,
-          "Cona": 9.0,
-          "U": 2.2,
-          "OC": 1.775,
-          "ResidueCNR": 40.0,
-          "SWCon": 0.3,
-          "DiffusConst": 26.0,
-          "DiffusSlope": 12.5
-        },
-        {
-          "ResidueWt": 3000.0,
-          "CN2": 70.75,
-          "Cona": 9.0,
-          "U": 2.2,
-          "OC": 1.775,
-          "ResidueCNR": 80.0,
-          "SWCon": 0.3,
-          "DiffusConst": 26.0,
-          "DiffusSlope": 12.5
-        },
-        {
-          "ResidueWt": 3000.0,
-          "CN2": 70.75,
-          "Cona": 9.0,
-          "U": 6.2,
-          "OC": 1.775,
-          "ResidueCNR": 80.0,
-          "SWCon": 0.3,
-          "DiffusConst": 26.0,
-          "DiffusSlope": 12.5
-        },
-        {
-          "ResidueWt": 500.0,
-          "CN2": 70.75,
-          "Cona": 9.0,
-          "U": 6.2,
-          "OC": 1.775,
-          "ResidueCNR": 80.0,
-          "SWCon": 0.3,
-          "DiffusConst": 26.0,
-          "DiffusSlope": 12.5
-        },
-        {
-          "ResidueWt": 500.0,
-          "CN2": 70.75,
-          "Cona": 6.0,
-          "U": 6.2,
-          "OC": 1.775,
-          "ResidueCNR": 80.0,
-          "SWCon": 0.3,
-          "DiffusConst": 26.0,
-          "DiffusSlope": 12.5
-        },
-        {
-          "ResidueWt": 500.0,
-          "CN2": 78.25,
-          "Cona": 6.0,
-          "U": 6.2,
-          "OC": 1.775,
-          "ResidueCNR": 80.0,
-          "SWCon": 0.3,
-          "DiffusConst": 26.0,
-          "DiffusSlope": 12.5
-        },
-        {
-          "ResidueWt": 500.0,
-          "CN2": 78.25,
-          "Cona": 6.0,
-          "U": 6.2,
-          "OC": 1.025,
-          "ResidueCNR": 80.0,
-          "SWCon": 0.3,
-          "DiffusConst": 26.0,
-          "DiffusSlope": 12.5
-        },
-        {
-          "ResidueWt": 500.0,
-          "CN2": 78.25,
-          "Cona": 6.0,
-          "U": 6.2,
-          "OC": 1.025,
-          "ResidueCNR": 80.0,
-          "SWCon": 0.3,
-          "DiffusConst": 46.0,
-          "DiffusSlope": 12.5
-        },
-        {
-          "ResidueWt": 500.0,
-          "CN2": 78.25,
-          "Cona": 6.0,
-          "U": 6.2,
-          "OC": 1.025,
-          "ResidueCNR": 80.0,
-          "SWCon": 0.3,
-          "DiffusConst": 46.0,
-          "DiffusSlope": 17.5
-        },
-        {
-          "ResidueWt": 2000.0,
-          "CN2": 77.5,
-          "Cona": 7.2,
-          "U": 7.8,
-          "OC": 1.1,
-          "ResidueCNR": 104.0,
-          "SWCon": 0.32,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 11.5
-        },
-        {
-          "ResidueWt": 2000.0,
-          "CN2": 70.0,
-          "Cona": 7.2,
-          "U": 7.8,
-          "OC": 1.1,
-          "ResidueCNR": 104.0,
-          "SWCon": 0.32,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 11.5
-        },
-        {
-          "ResidueWt": 2000.0,
-          "CN2": 70.0,
-          "Cona": 7.2,
-          "U": 7.8,
-          "OC": 1.85,
-          "ResidueCNR": 104.0,
-          "SWCon": 0.32,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 11.5
-        },
-        {
-          "ResidueWt": 2000.0,
-          "CN2": 70.0,
-          "Cona": 7.2,
-          "U": 7.8,
-          "OC": 1.85,
-          "ResidueCNR": 104.0,
-          "SWCon": 0.32,
-          "DiffusConst": 30.0,
-          "DiffusSlope": 16.5
-        },
-        {
-          "ResidueWt": 2000.0,
-          "CN2": 70.0,
-          "Cona": 7.2,
-          "U": 7.8,
-          "OC": 1.85,
-          "ResidueCNR": 104.0,
-          "SWCon": 0.32,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 16.5
-        },
-        {
-          "ResidueWt": 2000.0,
-          "CN2": 70.0,
-          "Cona": 7.2,
-          "U": 7.8,
-          "OC": 1.85,
-          "ResidueCNR": 64.0,
-          "SWCon": 0.32,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 16.5
-        },
-        {
-          "ResidueWt": 4500.0,
-          "CN2": 70.0,
-          "Cona": 7.2,
-          "U": 7.8,
-          "OC": 1.85,
-          "ResidueCNR": 64.0,
-          "SWCon": 0.32,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 16.5
-        },
-        {
-          "ResidueWt": 4500.0,
-          "CN2": 70.0,
-          "Cona": 7.2,
-          "U": 7.8,
-          "OC": 1.85,
-          "ResidueCNR": 64.0,
-          "SWCon": 0.12,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 16.5
-        },
-        {
-          "ResidueWt": 4500.0,
-          "CN2": 70.0,
-          "Cona": 7.2,
-          "U": 3.8,
-          "OC": 1.85,
-          "ResidueCNR": 64.0,
-          "SWCon": 0.12,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 16.5
-        },
-        {
-          "ResidueWt": 4500.0,
-          "CN2": 70.0,
-          "Cona": 4.2,
-          "U": 3.8,
-          "OC": 1.85,
-          "ResidueCNR": 64.0,
-          "SWCon": 0.12,
-          "DiffusConst": 50.0,
-          "DiffusSlope": 16.5
-        },
-        {
-          "ResidueWt": 1750.0,
-          "CN2": 73.75,
-          "Cona": 4.2,
-          "U": 1.0,
-          "OC": 0.875,
-          "ResidueCNR": 96.0,
-          "SWCon": 0.44,
-          "DiffusConst": 34.0,
-          "DiffusSlope": 13.0
-        },
-        {
-          "ResidueWt": 4250.0,
-          "CN2": 73.75,
-          "Cona": 4.2,
-          "U": 1.0,
-          "OC": 0.875,
-          "ResidueCNR": 96.0,
-          "SWCon": 0.44,
-          "DiffusConst": 34.0,
-          "DiffusSlope": 13.0
-        },
-        {
-          "ResidueWt": 4250.0,
-          "CN2": 73.75,
-          "Cona": 4.2,
-          "U": 1.0,
-          "OC": 0.875,
-          "ResidueCNR": 96.0,
-          "SWCon": 0.44,
-          "DiffusConst": 54.0,
-          "DiffusSlope": 13.0
-        },
-        {
-          "ResidueWt": 4250.0,
-          "CN2": 73.75,
-          "Cona": 4.2,
-          "U": 1.0,
-          "OC": 0.875,
-          "ResidueCNR": 96.0,
-          "SWCon": 0.44,
-          "DiffusConst": 54.0,
-          "DiffusSlope": 18.0
-        },
-        {
-          "ResidueWt": 4250.0,
-          "CN2": 73.75,
-          "Cona": 4.2,
-          "U": 1.0,
-          "OC": 1.625,
-          "ResidueCNR": 96.0,
-          "SWCon": 0.44,
-          "DiffusConst": 54.0,
-          "DiffusSlope": 18.0
-        },
-        {
-          "ResidueWt": 4250.0,
-          "CN2": 73.75,
-          "Cona": 4.2,
-          "U": 1.0,
-          "OC": 1.625,
-          "ResidueCNR": 56.0,
-          "SWCon": 0.44,
-          "DiffusConst": 54.0,
-          "DiffusSlope": 18.0
-        },
-        {
-          "ResidueWt": 4250.0,
-          "CN2": 81.25,
-          "Cona": 4.2,
-          "U": 1.0,
-          "OC": 1.625,
-          "ResidueCNR": 56.0,
-          "SWCon": 0.44,
-          "DiffusConst": 54.0,
-          "DiffusSlope": 18.0
-        },
-        {
-          "ResidueWt": 4250.0,
-          "CN2": 81.25,
-          "Cona": 7.2,
-          "U": 1.0,
-          "OC": 1.625,
-          "ResidueCNR": 56.0,
-          "SWCon": 0.44,
-          "DiffusConst": 54.0,
-          "DiffusSlope": 18.0
-        },
-        {
-          "ResidueWt": 4250.0,
-          "CN2": 81.25,
-          "Cona": 7.2,
-          "U": 5.0,
-          "OC": 1.625,
-          "ResidueCNR": 56.0,
-          "SWCon": 0.44,
-          "DiffusConst": 54.0,
-          "DiffusSlope": 18.0
-        },
-        {
-          "ResidueWt": 4250.0,
-          "CN2": 81.25,
-          "Cona": 7.2,
-          "U": 5.0,
-          "OC": 1.625,
-          "ResidueCNR": 56.0,
-          "SWCon": 0.24,
-          "DiffusConst": 54.0,
-          "DiffusSlope": 18.0
-        },
-        {
-          "ResidueWt": 3500.0,
-          "CN2": 85.0,
-          "Cona": 3.3,
-          "U": 8.6,
-          "OC": 1.175,
-          "ResidueCNR": 80.0,
-          "SWCon": 0.2,
-          "DiffusConst": 26.0,
-          "DiffusSlope": 11.0
-        },
-        {
-          "ResidueWt": 3500.0,
-          "CN2": 85.0,
-          "Cona": 3.3,
-          "U": 4.6,
-          "OC": 1.175,
-          "ResidueCNR": 80.0,
-          "SWCon": 0.2,
-          "DiffusConst": 26.0,
-          "DiffusSlope": 11.0
-        },
-        {
-          "ResidueWt": 3500.0,
-          "CN2": 77.5,
-          "Cona": 3.3,
-          "U": 4.6,
-          "OC": 1.175,
-          "ResidueCNR": 80.0,
-          "SWCon": 0.2,
-          "DiffusConst": 26.0,
-          "DiffusSlope": 11.0
-        },
-        {
-          "ResidueWt": 3500.0,
-          "CN2": 77.5,
-          "Cona": 6.3,
-          "U": 4.6,
-          "OC": 1.175,
-          "ResidueCNR": 80.0,
-          "SWCon": 0.2,
-          "DiffusConst": 26.0,
-          "DiffusSlope": 11.0
-        },
-        {
-          "ResidueWt": 3500.0,
-          "CN2": 77.5,
-          "Cona": 6.3,
-          "U": 4.6,
-          "OC": 1.175,
-          "ResidueCNR": 80.0,
-          "SWCon": 0.2,
-          "DiffusConst": 46.0,
-          "DiffusSlope": 11.0
-        },
-        {
-          "ResidueWt": 3500.0,
-          "CN2": 77.5,
-          "Cona": 6.3,
-          "U": 4.6,
-          "OC": 1.175,
-          "ResidueCNR": 80.0,
-          "SWCon": 0.2,
-          "DiffusConst": 46.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 3500.0,
-          "CN2": 77.5,
-          "Cona": 6.3,
-          "U": 4.6,
-          "OC": 1.175,
-          "ResidueCNR": 80.0,
-          "SWCon": 0.4,
-          "DiffusConst": 46.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 3500.0,
-          "CN2": 77.5,
-          "Cona": 6.3,
-          "U": 4.6,
-          "OC": 1.925,
-          "ResidueCNR": 80.0,
-          "SWCon": 0.4,
-          "DiffusConst": 46.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 1000.0,
-          "CN2": 77.5,
-          "Cona": 6.3,
-          "U": 4.6,
-          "OC": 1.925,
-          "ResidueCNR": 80.0,
-          "SWCon": 0.4,
-          "DiffusConst": 46.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 1000.0,
-          "CN2": 77.5,
-          "Cona": 6.3,
-          "U": 4.6,
-          "OC": 1.925,
-          "ResidueCNR": 120.0,
-          "SWCon": 0.4,
-          "DiffusConst": 46.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 2000.0,
-          "CN2": 79.75,
-          "Cona": 7.2,
-          "U": 5.0,
-          "OC": 1.1,
-          "ResidueCNR": 88.0,
-          "SWCon": 0.16,
-          "DiffusConst": 44.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 2000.0,
-          "CN2": 79.75,
-          "Cona": 7.2,
-          "U": 5.0,
-          "OC": 1.1,
-          "ResidueCNR": 48.0,
-          "SWCon": 0.16,
-          "DiffusConst": 44.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 2000.0,
-          "CN2": 79.75,
-          "Cona": 7.2,
-          "U": 1.0,
-          "OC": 1.1,
-          "ResidueCNR": 48.0,
-          "SWCon": 0.16,
-          "DiffusConst": 44.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 2000.0,
-          "CN2": 79.75,
-          "Cona": 7.2,
-          "U": 1.0,
-          "OC": 1.1,
-          "ResidueCNR": 48.0,
-          "SWCon": 0.36,
-          "DiffusConst": 44.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 2000.0,
-          "CN2": 79.75,
-          "Cona": 7.2,
-          "U": 1.0,
-          "OC": 1.85,
-          "ResidueCNR": 48.0,
-          "SWCon": 0.36,
-          "DiffusConst": 44.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 2000.0,
-          "CN2": 79.75,
-          "Cona": 7.2,
-          "U": 1.0,
-          "OC": 1.85,
-          "ResidueCNR": 48.0,
-          "SWCon": 0.36,
-          "DiffusConst": 24.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 2000.0,
-          "CN2": 72.25,
-          "Cona": 7.2,
-          "U": 1.0,
-          "OC": 1.85,
-          "ResidueCNR": 48.0,
-          "SWCon": 0.36,
-          "DiffusConst": 24.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 4500.0,
-          "CN2": 72.25,
-          "Cona": 7.2,
-          "U": 1.0,
-          "OC": 1.85,
-          "ResidueCNR": 48.0,
-          "SWCon": 0.36,
-          "DiffusConst": 24.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 4500.0,
-          "CN2": 72.25,
-          "Cona": 4.2,
-          "U": 1.0,
-          "OC": 1.85,
-          "ResidueCNR": 48.0,
-          "SWCon": 0.36,
-          "DiffusConst": 24.0,
-          "DiffusSlope": 16.0
-        },
-        {
-          "ResidueWt": 4500.0,
-          "CN2": 72.25,
-          "Cona": 4.2,
-          "U": 1.0,
-          "OC": 1.85,
-          "ResidueCNR": 48.0,
-          "SWCon": 0.36,
-          "DiffusConst": 24.0,
-          "DiffusSlope": 11.0
-        }
-      ],
       "NumPaths": 25,
       "NumIntervals": 20,
       "Jump": 10,
@@ -2874,7 +122,7 @@
               "Name": "Field",
               "Children": [
                 {
-                  "$type": "Models.Report.Report, Models",
+                  "$type": "Models.Report, Models",
                   "VariableNames": [
                     "[Clock].Today",
                     "[Clock].Today.Year",
@@ -2891,6 +139,7 @@
                   "EventNames": [
                     "[ResetAndOutput].Script.Reporting"
                   ],
+                  "GroupByVariableName": null,
                   "Name": "Report",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -3055,7 +304,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.SoilWater, Models",
+                      "$type": "Models.WaterModel.WaterBalance, Models",
                       "SummerDate": "1-Nov",
                       "SummerU": 5.0,
                       "SummerCona": 5.0,
@@ -3068,23 +317,18 @@
                       "CN2Bare": 73.0,
                       "CNRed": 20.0,
                       "CNCov": 0.8,
-                      "slope": "NaN",
-                      "discharge_width": "NaN",
-                      "catchment_area": "NaN",
-                      "max_pond": 0.0,
+                      "Slope": "NaN",
+                      "DischargeWidth": "NaN",
+                      "CatchmentArea": "NaN",
                       "Thickness": [
                         1800.0
-                      ],
-                      "Depth": [
-                        "0-180"
                       ],
                       "SWCON": [
                         0.3
                       ],
                       "KLAT": null,
-                      "PrecipitationInterception": 0.0,
+                      "ResourceName": "WaterBalance",
                       "Name": "SoilWater",
-                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -3324,213 +568,6 @@
                     },
                     {
                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
-                      "DirectedGraphInfo": {
-                        "$type": "Models.Graph.DirectedGraph, Models",
-                        "Nodes": [
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "Inert",
-                            "Location": "656, 254",
-                            "Colour": "0, 114, 178",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "SurfaceResidue",
-                            "Location": "566, 69",
-                            "Colour": "0, 114, 178",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "FOMLignin",
-                            "Location": "261, 69",
-                            "Colour": "0, 114, 178",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "FOMCellulose",
-                            "Location": "397, 70",
-                            "Colour": "0, 114, 178",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "FOMCarbohydrate",
-                            "Location": "123, 70",
-                            "Colour": "0, 114, 178",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "Microbial",
-                            "Location": "218, 299",
-                            "Colour": "0, 114, 178",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "Humic",
-                            "Location": "458, 293",
-                            "Colour": "0, 114, 178",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "Urea",
-                            "Location": "529, 419",
-                            "Colour": "0, 158, 115",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "NO3",
-                            "Location": "185, 435",
-                            "Colour": "0, 158, 115",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "NH4",
-                            "Location": "357, 422",
-                            "Colour": "0, 158, 115",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "Atmosphere",
-                            "Location": "48, 338",
-                            "Colour": "White",
-                            "OutlineColour": "White",
-                            "Transparent": true
-                          }
-                        ],
-                        "Arcs": [
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "SurfaceResidue",
-                            "DestinationName": "Microbial",
-                            "Location": "415, 173",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "SurfaceResidue",
-                            "DestinationName": "Humic",
-                            "Location": "499, 172",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "FOMLignin",
-                            "DestinationName": "Microbial",
-                            "Location": "259, 221",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "FOMLignin",
-                            "DestinationName": "Humic",
-                            "Location": "255, 105",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "FOMCellulose",
-                            "DestinationName": "Microbial",
-                            "Location": "370, 184",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "FOMCellulose",
-                            "DestinationName": "Humic",
-                            "Location": "463, 224",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "FOMCarbohydrate",
-                            "DestinationName": "Microbial",
-                            "Location": "141, 131",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "FOMCarbohydrate",
-                            "DestinationName": "Humic",
-                            "Location": "204, 215",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "Microbial",
-                            "DestinationName": "Microbial",
-                            "Location": "335, 301",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "Microbial",
-                            "DestinationName": "Humic",
-                            "Location": "319, 278",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "Humic",
-                            "DestinationName": "Microbial",
-                            "Location": "334, 340",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "Urea",
-                            "DestinationName": "NH4",
-                            "Location": "433, 416",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "NO3",
-                            "DestinationName": "Atmosphere",
-                            "Location": "1, 319",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "NH4",
-                            "DestinationName": "NO3",
-                            "Location": "243, 409",
-                            "Colour": "Black",
-                            "Text": null
-                          }
-                        ]
-                      },
                       "ResourceName": "Nutrient",
                       "Name": "Nutrient",
                       "IncludeInDocumentation": true,
@@ -3544,14 +581,12 @@
                 },
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                  "Canopies": [],
                   "InitialResidueName": "wheat_stubble",
                   "InitialResidueType": "wheat",
                   "InitialResidueMass": 500.0,
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 100.0,
-                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": true,
@@ -3577,7 +612,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Interfaces;\r\nusing Models.Utilities;\r\nusing Models.Surface;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Report;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] SoilWater SoilWater = null;\r\n        [Link] INutrient Nutrient = null;\r\n        [Link] SurfaceOrganicMatter SOM = null;\r\n        [Link] Summary Summary;\r\n        [Link] Report.Report Report;\r\n\r\n        [Description(\"Date for output:\")]\r\n        public string OutputDate {get;set;}\r\n\r\n        [Description(\"Date for reset:\")]\r\n        public string ResetDate {get;set;}\r\n\r\n        [Description(\"Reset Water?\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Nitrogen?\")]\r\n        public string ResetN {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter?\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n                /// <summary>Occurs when a plant is about to be harvested.</summary>\r\n        public event EventHandler Reseting;\r\n                /// <summary>Occurs when a plant is about to be harvested.</summary>\r\n        public event EventHandler Reporting;\r\n\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(OutputDate, Clock.Today, OutputDate))\r\n            {\r\n               Reporting.Invoke(this, new EventArgs());\r\n               //Report.DoOutput();\r\n            }\r\n\r\n            if (DateUtilities.WithinDates(ResetDate, Clock.Today, ResetDate))\r\n            {\r\n                if (ResetWater == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Water\");\r\n                    SoilWater.Reset();\r\n                }\r\n                if (ResetN == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Nitrogen\");\r\n                    Nutrient.Reset();\r\n                }\r\n                if (ResetSOM == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Surface OM\");\r\n                    SOM.Reset();\r\n                }\r\n\r\n                Reseting.Invoke(this, new EventArgs());\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                  "Code": "using Models;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Surface;\r\nusing Models.Utilities;\r\nusing Models.Interfaces;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private ISoilWater SoilWater;\r\n        [Link] private INutrient Nutrient;\r\n        [Link] private SurfaceOrganicMatter SOM;\r\n        [Link] private Summary Summary;\r\n        [Link] private Report Report;\r\n        public  event EventHandler Reseting;\r\n        public  event EventHandler Reporting;\r\n\r\n        [Description(\"Date for output:\")]\r\n        public string OutputDate {get;set;}\r\n\r\n        [Description(\"Date for reset:\")]\r\n        public string ResetDate {get;set;}\r\n\r\n        [Description(\"Reset Water?\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Nitrogen?\")]\r\n        public string ResetN {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter?\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n                /// <summary>Occurs when a plant is about to be harvested.</summary>\r\n                /// <summary>Occurs when a plant is about to be harvested.</summary>\r\n\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(OutputDate, Clock.Today, OutputDate))\r\n            {\r\n               Reporting.Invoke(this, new EventArgs());\r\n               //Report.DoOutput();\r\n            }\r\n\r\n            if (DateUtilities.WithinDates(ResetDate, Clock.Today, ResetDate))\r\n            {\r\n                if (ResetWater == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Water\");\r\n                    SoilWater.Reset();\r\n                }\r\n                if (ResetN == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Nitrogen\");\r\n                    Nutrient.Reset();\r\n                }\r\n                if (ResetSOM == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Surface OM\");\r\n                    SOM.Reset();\r\n                }\r\n\r\n                Reseting.Invoke(this, new EventArgs());\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
                       "Key": "OutputDate",
@@ -3630,11 +665,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -3645,7 +680,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -3663,7 +698,7 @@
               "Name": "TotalSW",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -3675,7 +710,6 @@
                   "MarkerSize": 0,
                   "Line": 4,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "FallowSensitivityStatistics",
                   "XFieldName": "TotalSW.MuStar",
                   "YFieldName": "TotalSW.Sigma",
@@ -3698,11 +732,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -3713,7 +747,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -3731,7 +765,7 @@
               "Name": "TotalSW Ranking vs Year",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -3743,7 +777,6 @@
                   "MarkerSize": 0,
                   "Line": 1,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "FallowSensitivityStatistics",
                   "XFieldName": "Clock.Today.Year",
                   "YFieldName": "TotalSW.MuStar",
@@ -3766,11 +799,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -3781,7 +814,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -3799,7 +832,7 @@
               "Name": "Runoff",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -3811,7 +844,6 @@
                   "MarkerSize": 0,
                   "Line": 4,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "FallowSensitivityStatistics",
                   "XFieldName": "FallowRunoff.MuStar",
                   "YFieldName": "FallowRunoff.Sigma",
@@ -3834,11 +866,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -3849,7 +881,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -3867,7 +899,7 @@
               "Name": "Runoff Ranking vs Year",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -3879,7 +911,6 @@
                   "MarkerSize": 0,
                   "Line": 1,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "FallowSensitivityStatistics",
                   "XFieldName": "Clock.Today.Year",
                   "YFieldName": "FallowRunoff.MuStar",
@@ -3921,11 +952,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -3936,7 +967,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -3954,7 +985,7 @@
               "Name": "Year 1981",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -3966,7 +997,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "FallowSensitivityPathAnalysis",
                   "XFieldName": "Path",
                   "YFieldName": "TotalSW.MuStar",
@@ -3989,11 +1019,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -4004,7 +1034,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -4022,7 +1052,7 @@
               "Name": "Year 1982",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -4034,7 +1064,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "FallowSensitivityPathAnalysis",
                   "XFieldName": "Path",
                   "YFieldName": "TotalSW.MuStar",
@@ -4057,11 +1086,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -4072,7 +1101,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -4090,7 +1119,7 @@
               "Name": "Year 1983",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -4102,7 +1131,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "FallowSensitivityPathAnalysis",
                   "XFieldName": "Path",
                   "YFieldName": "TotalSW.MuStar",
@@ -4125,11 +1153,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -4140,7 +1168,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -4158,7 +1186,7 @@
               "Name": "Year 1984",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -4170,7 +1198,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "FallowSensitivityPathAnalysis",
                   "XFieldName": "Path",
                   "YFieldName": "TotalSW.MuStar",
@@ -4193,11 +1220,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -4208,7 +1235,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -4226,7 +1253,7 @@
               "Name": "Year 1985",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -4238,7 +1265,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "FallowSensitivityPathAnalysis",
                   "XFieldName": "Path",
                   "YFieldName": "TotalSW.MuStar",
@@ -4261,11 +1287,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -4276,7 +1302,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -4294,7 +1320,7 @@
               "Name": "Year 1986",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -4306,7 +1332,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "FallowSensitivityPathAnalysis",
                   "XFieldName": "Path",
                   "YFieldName": "TotalSW.MuStar",
@@ -4348,11 +1373,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -4363,7 +1388,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -4381,7 +1406,7 @@
               "Name": "TotalSW MuStar vs Rainfall",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -4393,7 +1418,6 @@
                   "MarkerSize": 0,
                   "Line": 4,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "FallowSensitivityStatistics",
                   "XFieldName": "FallowRainfall",
                   "YFieldName": "TotalSW.MuStar",
@@ -4407,7 +1431,7 @@
                   "Name": "series 1",
                   "Children": [
                     {
-                      "$type": "Models.Graph.Regression, Models",
+                      "$type": "Models.Regression, Models",
                       "ForEachSeries": true,
                       "showOneToOne": false,
                       "showEquation": false,
@@ -4428,11 +1452,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -4443,7 +1467,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -4461,7 +1485,7 @@
               "Name": "TotalSW Sigma vs Ranfall",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -4473,7 +1497,6 @@
                   "MarkerSize": 0,
                   "Line": 4,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "FallowSensitivityStatistics",
                   "XFieldName": "FallowRainfall",
                   "YFieldName": "TotalSW.Sigma",
@@ -4487,7 +1510,7 @@
                   "Name": "series 1",
                   "Children": [
                     {
-                      "$type": "Models.Graph.Regression, Models",
+                      "$type": "Models.Regression, Models",
                       "ForEachSeries": true,
                       "showOneToOne": false,
                       "showEquation": false,
@@ -4508,11 +1531,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -4523,7 +1546,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -4541,7 +1564,7 @@
               "Name": "Runoff MuStar vs Rainfall",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -4553,7 +1576,6 @@
                   "MarkerSize": 0,
                   "Line": 4,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "FallowSensitivityStatistics",
                   "XFieldName": "FallowRainfall",
                   "YFieldName": "FallowRunoff.MuStar",
@@ -4567,7 +1589,7 @@
                   "Name": "series 1",
                   "Children": [
                     {
-                      "$type": "Models.Graph.Regression, Models",
+                      "$type": "Models.Regression, Models",
                       "ForEachSeries": true,
                       "showOneToOne": false,
                       "showEquation": false,
@@ -4588,11 +1610,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -4603,7 +1625,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -4621,7 +1643,7 @@
               "Name": "Runoff Sigma vs Ranfall",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -4633,7 +1655,6 @@
                   "MarkerSize": 0,
                   "Line": 4,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "FallowSensitivityStatistics",
                   "XFieldName": "FallowRainfall",
                   "YFieldName": "FallowRunoff.Sigma",
@@ -4647,7 +1668,7 @@
                   "Name": "series 1",
                   "Children": [
                     {
-                      "$type": "Models.Graph.Regression, Models",
+                      "$type": "Models.Regression, Models",
                       "ForEachSeries": true,
                       "showOneToOne": false,
                       "showEquation": false,
@@ -4668,11 +1689,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -4683,7 +1704,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -4701,7 +1722,7 @@
               "Name": "Evaporation MuStar vs Rainfall",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -4713,7 +1734,6 @@
                   "MarkerSize": 0,
                   "Line": 4,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "FallowSensitivityStatistics",
                   "XFieldName": "FallowRainfall",
                   "YFieldName": "FallowEvaporation.MuStar",
@@ -4727,7 +1747,7 @@
                   "Name": "series 1",
                   "Children": [
                     {
-                      "$type": "Models.Graph.Regression, Models",
+                      "$type": "Models.Regression, Models",
                       "ForEachSeries": true,
                       "showOneToOne": false,
                       "showEquation": false,
@@ -4748,11 +1768,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -4763,7 +1783,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -4781,7 +1801,7 @@
               "Name": "Evaporation Sigma vs Rainfall",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -4793,7 +1813,6 @@
                   "MarkerSize": 0,
                   "Line": 4,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "FallowSensitivityStatistics",
                   "XFieldName": "FallowRainfall",
                   "YFieldName": "FallowEvaporation.Sigma",
@@ -4807,7 +1826,7 @@
                   "Name": "series 1",
                   "Children": [
                     {
-                      "$type": "Models.Graph.Regression, Models",
+                      "$type": "Models.Regression, Models",
                       "ForEachSeries": true,
                       "showOneToOne": false,
                       "showEquation": false,
