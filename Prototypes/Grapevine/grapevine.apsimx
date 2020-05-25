@@ -1925,7 +1925,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.05,
+                      "FixedValue": 0.001,
                       "Units": "g/g",
                       "Name": "MaximumNConc",
                       "Children": [],
@@ -1935,7 +1935,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.01,
+                      "FixedValue": 0.0001,
                       "Units": "g/g",
                       "Name": "MinimumNConc",
                       "Children": [],
@@ -2018,7 +2018,7 @@
                               ],
                               "LegendPosition": 3,
                               "LegendOrientation": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
@@ -2284,7 +2284,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 1.3,
+                              "FixedValue": 0.0,
                               "Units": "g/MJ",
                               "Name": "Constant",
                               "Children": [],
@@ -2305,7 +2305,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 1.7,
+                              "FixedValue": 0.0,
                               "Units": "g/MJ",
                               "Name": "Constant",
                               "Children": [],
@@ -2796,46 +2796,20 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "MaximumNConc",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        3.0,
-                        4.0,
-                        5.3
-                      ],
-                      "Y": [
-                        0.06,
-                        0.05,
-                        0.025
-                      ],
-                      "Name": "XYPairs",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].Stage",
-                      "Name": "XValue",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "g/g",
+                  "Name": "MinimumNConc",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.006,
-                  "Units": "g/g",
-                  "Name": "MinimumNConc",
+                  "FixedValue": 0.0001,
+                  "Units": null,
+                  "Name": "MaximumNConc",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -3447,46 +3421,20 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "MaximumNConc",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        3.0,
-                        4.0,
-                        5.3
-                      ],
-                      "Y": [
-                        0.06,
-                        0.05,
-                        0.025
-                      ],
-                      "Name": "XYPairs",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].Stage",
-                      "Name": "XValue",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "g/g",
+                  "Name": "MinimumNConc",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.006,
-                  "Units": "g/g",
-                  "Name": "MinimumNConc",
+                  "FixedValue": 0.0001,
+                  "Units": null,
+                  "Name": "MaximumNConc",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -4206,46 +4154,20 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "MaximumNConc",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        3.0,
-                        4.0,
-                        5.3
-                      ],
-                      "Y": [
-                        0.06,
-                        0.05,
-                        0.025
-                      ],
-                      "Name": "XYPairs",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].Stage",
-                      "Name": "XValue",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "MinimumNConc",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.006,
+                  "FixedValue": 0.0001,
                   "Units": null,
-                  "Name": "MinimumNConc",
+                  "Name": "MaximumNConc",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -5222,6 +5144,230 @@
                   "ShowPageOfGraphs": true,
                   "Name": "YieldComponent",
                   "Children": [
+                    {
+                      "$type": "Models.Functions.OnEventFunction, Models",
+                      "SetEvent": "BudBurst",
+                      "ReSetEvent": "Ecodormancy",
+                      "Name": "BunchesPerShoot",
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "here we use a trigger function for bunches per shoot as the value of mean bunch initiation temperature in the previous season \r\n\r\nNumbers were guessed based on Eltom 2013 Fig. 7.7. y=0.0981*Ta + 0.35\r\n\r\n\r\n Bunches per shoot is affected by the temperature and CHO during initiation, it is further affected by the CHO during bud burst. The later decided whether the potential initiated inflorescence can grow out successfully or been realized. \r\n\r\nFor simiplicity, right now, the CHO effect during bud burst is expressed as a function of number of buds retained.",
+                          "Name": "Memo",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 65.0,
+                          "Units": null,
+                          "Name": "PreEventValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.MaximumFunction, Models",
+                          "Name": "PostEventValue",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.AddFunction, Models",
+                              "Name": "MetFun",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": -43.43,
+                                  "Units": null,
+                                  "Name": "Constant",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                  "Name": "TmaxIni",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.XYPairs, Models",
+                                      "X": [
+                                        0.0,
+                                        0.5,
+                                        10.0,
+                                        20.0,
+                                        25.0
+                                      ],
+                                      "Y": [
+                                        0.0,
+                                        0.0,
+                                        46.0,
+                                        92.0,
+                                        115.0
+                                      ],
+                                      "Name": "XYPairs",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.LessThanFunction, Models",
+                                      "Name": "XValue",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Berry].MetFactors.BUN_TmaxIni1",
+                                          "Name": "XValue",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 10.0,
+                                          "Units": null,
+                                          "Name": "Constant",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 20.0,
+                                          "Units": null,
+                                          "Name": "GuessValue",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Berry].MetFactors.BUN_TmaxIni1",
+                                          "Name": "TmaxIni1",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                  "Name": "RadIni",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.XYPairs, Models",
+                                      "X": [
+                                        0.0,
+                                        0.1,
+                                        10.0,
+                                        20.0,
+                                        25.0
+                                      ],
+                                      "Y": [
+                                        0.0,
+                                        0.0,
+                                        4.2,
+                                        8.4,
+                                        10.5
+                                      ],
+                                      "Name": "XYPairs",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.LessThanFunction, Models",
+                                      "Name": "XValue",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Berry].MetFactors.BUN_RadIni1",
+                                          "Name": "XValue",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 10.0,
+                                          "Units": null,
+                                          "Name": "Constant",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 25.0,
+                                          "Units": null,
+                                          "Name": "GuessValue",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Berry].MetFactors.BUN_RadIni1",
+                                          "Name": "TmaxIni1",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 10.0,
+                              "Units": null,
+                              "Name": "zero",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
                     {
                       "$type": "Models.Functions.OnEventFunction, Models",
                       "SetEvent": "BudBurst",
@@ -6844,7 +6990,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.01,
+                  "FixedValue": 0.0,
                   "Units": "g/g",
                   "Name": "MinimumNConc",
                   "Children": [],
@@ -6854,7 +7000,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.01,
+                  "FixedValue": 0.0001,
                   "Units": "g/g",
                   "Name": "MaximumNConc",
                   "Children": [],
@@ -43008,7 +43154,7 @@
                 {
                   "$type": "Models.Clock, Models",
                   "Start": "2008-02-25T00:00:00",
-                  "End": "2012-07-01T00:00:00",
+                  "End": "2019-07-01T00:00:00",
                   "Name": "Clock",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -43262,10 +43408,10 @@
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
                       "InitialResidueName": "wheat_stubble",
                       "InitialResidueType": "wheat",
-                      "InitialResidueMass": 500.0,
+                      "InitialResidueMass": 10000.0,
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
-                      "InitialCNR": 100.0,
+                      "InitialCNR": 20.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,
@@ -43397,7 +43543,7 @@
                         },
                         {
                           "Key": "Amount",
-                          "Value": "50"
+                          "Value": "200"
                         },
                         {
                           "Key": "totalIrrigation",
@@ -43802,9 +43948,9 @@
                             300.0
                           ],
                           "Carbon": [
-                            1.82,
-                            1.47,
-                            1.2,
+                            5.0,
+                            4.0,
+                            2.0,
                             1.03,
                             0.47,
                             0.47
@@ -43865,10 +44011,31 @@
                             300.0,
                             300.0
                           ],
-                          "NO3N": null,
-                          "NH4N": null,
+                          "NO3N": [
+                            1000.0,
+                            500.0,
+                            300.0,
+                            200.0,
+                            100.0,
+                            0.0
+                          ],
+                          "NH4N": [
+                            50.0,
+                            40.0,
+                            30.0,
+                            20.0,
+                            10.0,
+                            0.0
+                          ],
                           "SW": null,
-                          "OC": null,
+                          "OC": [
+                            "NaN",
+                            "NaN",
+                            "NaN",
+                            "NaN",
+                            "NaN",
+                            "NaN"
+                          ],
                           "EC": null,
                           "CL": null,
                           "ESP": null,
