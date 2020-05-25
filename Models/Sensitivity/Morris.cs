@@ -42,6 +42,7 @@
         private List<List<CompositeFactor>> allCombinations = new List<List<CompositeFactor>>();
 
         /// <summary>Parameter values coming back from R</summary>
+        [JsonIgnore]
         public DataTable ParameterValues { get; set; }
 
         /// <summary>The number of paths to run</summary>
