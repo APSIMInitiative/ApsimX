@@ -115,11 +115,11 @@
                 {
                     newSimulation = Apsim.Clone(baseSimulation) as Simulation;
 
-                //    // After a binary clone, we need to force all managers to
-                //    // recompile their scripts. This is to work around an issue
-                //    // where scripts will change during deserialization. See issue
-                //    // #4463 and the TestMultipleChildren test inside ReportTests.
-                //    Apsim.ChildrenRecursively(newSimulation, typeof(Manager)).ForEach(m => m.OnCreated());
+                    // After a binary clone, we need to force all managers to
+                    // recompile their scripts. This is to work around an issue
+                    // where scripts will change during deserialization. See issue
+                    // #4463 and the TestMultipleChildren test inside ReportTests.
+                    Apsim.ChildrenRecursively(newSimulation, typeof(Manager)).ForEach(m => m.OnCreated());
                 }
                 else
                     newSimulation = baseSimulation;

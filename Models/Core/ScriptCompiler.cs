@@ -24,7 +24,10 @@
             provider = CodeDomProvider.CreateProvider(CodeDomProvider.GetLanguageFromExtension(".cs"));
 
             // This looks weird but I'm trying to avoid having to call lock
-            // everytime we come through here.
+            // everytime we come through here. If I remove this locking then
+            // Jenkins runs very slowly (5 times slower for each sim). Presumably
+            // this is because each simulation being run (from APSIMRunner) does the 
+            // cleanup below.
             if (!haveTrappedAssemblyResolveEvent)
             {
                 lock (haveTrappedAssemblyResolveEventLock)
@@ -141,7 +144,7 @@
                 "System.Data.dll", 
                 "System.Core.dll", 
                 Assembly.GetExecutingAssembly().Location,
-                Assembly.GetEntryAssembly().Location,
+                Assembly.GetEntryAssembly()?.Location,             // Not sure why this can be null in unit tests.
                 typeof(MathNet.Numerics.Fit).Assembly.Location,
                 typeof(APSIM.Shared.Utilities.MathUtilities).Assembly.Location,
             };
@@ -152,7 +155,7 @@
             if (referencedAssemblies != null)
                 references = references.Concat(referencedAssemblies);
             
-            return references;
+            return references.Where(r => r != null);
         }
 
         /// <summary>
