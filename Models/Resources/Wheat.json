@@ -1349,6 +1349,45 @@
             },
             {
               "$type": "Models.Functions.OnEventFunction, Models",
+              "SetEvent": "Heading",
+              "ReSetEvent": "never",
+              "Name": "HeadingDAS",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "\nA function is used to provide heading date as days after sowing(DAS).\n",
+                  "Name": "memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "PreEventValue",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].DaysAfterSowing",
+                  "Name": "PostEventValue",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.OnEventFunction, Models",
               "SetEvent": "Flowering",
               "ReSetEvent": "never",
               "Name": "FloweringDAS",
