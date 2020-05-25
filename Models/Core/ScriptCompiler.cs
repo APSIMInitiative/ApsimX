@@ -58,7 +58,7 @@
             if (code != null)
             {
                 // See if we have compiled the code already. If so then no need to compile again.
-                var compilation = previousCompilations.Find(c => c.ModelFullPath == Apsim.FullPath(model));
+                var compilation = previousCompilations.Find(c => c.Code == code);
 
                 bool newlyCompiled;
                 if (compilation == null || compilation.Code != code)

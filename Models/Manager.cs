@@ -113,6 +113,11 @@
             // instance. This needs to be fixed.
             if (TryGetCompiler())
                 RebuildScriptModel();
+            else if (Children.Count != 0)
+            {
+                GetParametersFromScriptModel();
+                SetParametersInScriptModel();
+            }
         }
 
         /// <summary>Rebuild the script model and return error message if script cannot be compiled.</summary>
