@@ -12,6 +12,8 @@
     [Serializable]
     public class ScriptCompiler
     {
+        private static bool haveTrappedAssemblyResolveEvent = false;
+        private static object haveTrappedAssemblyResolveEventLock = new object();
         private const string tempFileNamePrefix = "APSIM";
         private readonly CodeDomProvider provider;
         private List<PreviousCompilation> previousCompilations = new List<PreviousCompilation>();
@@ -21,11 +23,25 @@
         {
             provider = CodeDomProvider.CreateProvider(CodeDomProvider.GetLanguageFromExtension(".cs"));
 
-            // Trap the assembly resolve event.
-            AppDomain.CurrentDomain.AssemblyResolve -= new ResolveEventHandler(ResolveManagerAssemblies);
-            AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(ResolveManagerAssemblies);
+            // This looks weird but I'm trying to avoid having to call lock
+            // everytime we come through here.
+            if (!haveTrappedAssemblyResolveEvent)
+            {
+                lock (haveTrappedAssemblyResolveEventLock)
+                {
+                    if (!haveTrappedAssemblyResolveEvent)
+                    {
+                        haveTrappedAssemblyResolveEvent = true;
 
-            Cleanup();
+                        // Trap the assembly resolve event.
+                        AppDomain.CurrentDomain.AssemblyResolve -= new ResolveEventHandler(ResolveManagerAssemblies);
+                        AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(ResolveManagerAssemblies);
+
+                        // Clean up apsimx manager .dll files.
+                        Cleanup();
+                    }
+                }
+            }
         }
 
         /// <summary>Compile a c# script.</summary>
