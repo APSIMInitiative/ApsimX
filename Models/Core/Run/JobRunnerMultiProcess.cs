@@ -203,7 +203,19 @@
                 (job.JobSentToClient as Simulation).Services = null;
             }
             else
+            {
                 job.JobSentToClient = job.RunnableJob;
+                job.JobSentToClient = Apsim.Clone(job.JobSentToClient as IModel) as IRunnable;
+                if (job.RunnableJob is IModel model)
+                {
+                    IModel replacements = Apsim.Find(model, typeof(Replacements));
+                    if (replacements != null)
+                        (job.JobSentToClient as IModel).Children.Add(Apsim.Clone(replacements));
+                    job.DataStore = Apsim.Find(model, typeof(IDataStore)) as IDataStore;
+                    if (job.DataStore != null)
+                        (job.JobSentToClient as IModel).Children.Add(Apsim.Clone(job.DataStore as IModel));
+                }
+            }
 
             return job;
         }

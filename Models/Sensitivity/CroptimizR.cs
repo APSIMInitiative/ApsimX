@@ -164,6 +164,7 @@ namespace Models.Sensitivity
             GenerateRScript(fileName);
             R r = new R();
             r.OutputReceived += OnOutputReceivedFromR;
+            // todo - capture stderr as well
             string stdout = r.Run(fileName);
             r.OutputReceived -= OnOutputReceivedFromR;
             WriteMessage(stdout);
@@ -212,15 +213,13 @@ namespace Models.Sensitivity
 
             Simulations sims = new Simulations();
             sims.Children.AddRange(Children.Select(c => Apsim.Clone(c)));
+            sims.Children.RemoveAll(c => c is IDataStore);
 
             IModel replacements = Apsim.Find(this, typeof(Replacements));
-            if (replacements != null)
+            if (replacements != null && !sims.Children.Any(c => c is Replacements))
                 sims.Children.Add(Apsim.Clone(replacements));
 
             IModel storage = Apsim.Find(this, typeof(IDataStore));
-            if (storage != null && File.Exists((storage as IDataStore).FileName))
-                File.Copy((storage as IDataStore).FileName, Path.ChangeExtension(apsimxFileName, ".db"), true);
-
             IModel newDataStore = new DataStore();
             if (storage != null)
                 newDataStore.Children.AddRange(storage.Children.Select(c => Apsim.Clone(c)));
@@ -230,11 +229,14 @@ namespace Models.Sensitivity
 
             sims.Write(apsimxFileName);
 
+            string originalFile = rootNode?.FileName;
+            if (string.IsNullOrEmpty(originalFile))
+                originalFile = (storage as IDataStore)?.FileName;
             // Copy files across.
             foreach (IReferenceExternalFiles fileReference in Apsim.ChildrenRecursively(sims, typeof(IReferenceExternalFiles)).Cast<IReferenceExternalFiles>())
                 foreach (string file in fileReference.GetReferencedFileNames())
                 {
-                    string absoluteFileName = PathUtilities.GetAbsolutePath(file, rootNode.FileName);
+                    string absoluteFileName = PathUtilities.GetAbsolutePath(file, originalFile);
                     string fileName = Path.GetFileName(absoluteFileName);
                     string newPath = Path.GetDirectoryName(sims.FileName);
                     File.Copy(absoluteFileName, Path.Combine(newPath, fileName), true);
@@ -286,9 +288,8 @@ namespace Models.Sensitivity
 
         private string GetSimulationNames()
         {
-            Simulations sims = Apsim.Find(this, typeof(Simulations)) as Simulations;
             List<string> simulationNames = new List<string>();
-            foreach (ISimulationDescriptionGenerator generator in Apsim.ChildrenRecursively(sims, typeof(ISimulationDescriptionGenerator)))
+            foreach (ISimulationDescriptionGenerator generator in Apsim.ChildrenRecursively(this, typeof(ISimulationDescriptionGenerator)))
                 if (!(generator is Simulation sim && sim.Parent is ISimulationDescriptionGenerator))
                     simulationNames.AddRange(generator.GenerateSimulationDescriptions().Select(s => $"'{s.Name}'"));
 
