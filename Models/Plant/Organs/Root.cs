@@ -677,6 +677,9 @@
             GrowthRespiration = (Allocated.StructuralWt + Allocated.StorageWt + Allocated.MetabolicWt) * growthRespFactor;
             if (TotalRAw == 0 && Allocated.Wt > 0)
                 throw new Exception("Error trying to partition root biomass");
+            
+            if (dryMatter.Retranslocation > 0 | dryMatter.Reallocation > 0)
+                throw new Exception("Error Root class can not handle Retranslocation or Reallocation > 0");
 
             foreach (ZoneState Z in Zones)
                 Z.PartitionRootMass(TotalRAw, Allocated);
