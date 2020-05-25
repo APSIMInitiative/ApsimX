@@ -65,9 +65,6 @@
     [ValidParent(ParentType = typeof(Plant))]
     public class Root : Model, IWaterNitrogenUptake, IArbitration, IOrgan, IOrganDamage
     {
-        /// <summary>Tolerance for biomass comparisons</summary>
-        private double BiomassToleranceValue = 0.0000000001;
-
         /// <summary>The plant</summary>
         [Link]
         protected Plant parentPlant = null;
@@ -123,26 +120,6 @@
         /// <summary>The nitrogen root calc switch</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         public IFunction RootFrontCalcSwitch = null;
-
-        /// <summary>The N retranslocation factor</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        [Units("/d")]
-        private IFunction nRetranslocationFactor = null;
-
-        /// <summary>The N reallocation factor</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        [Units("/d")]
-        private IFunction nReallocationFactor = null;
-
-        /// <summary>The DM retranslocation factor</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        [Units("/d")]
-        private IFunction dmRetranslocationFactor = null;
-
-        /// <summary>The DM reallocation factor</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        [Units("/d")]
-        private IFunction dmReallocationFactor = null;
 
         /// <summary>The biomass senescence rate</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -818,6 +795,9 @@
 
             if (!MathUtilities.FloatsAreEqual(NAllocated - Allocated.N, 0.0))
                 throw new Exception("Error in N Allocation: " + Name);
+
+            if (nitrogen.Retranslocation > 0)
+                throw new Exception("Error Root class can not handle Retranslocation > 0");
         }
 
         /// <summary>Remove maintenance respiration from live component of organs.</summary>
@@ -993,11 +973,7 @@
 
         /// <summary>Computes the DM and N amounts that are made available for new growth</summary>
         private void DoSupplyCalculations()
-        {
-            dmMReallocationSupply = AvailableDMReallocation();
-            dmRetranslocationSupply = AvailableDMRetranslocation();
-            nReallocationSupply = AvailableNReallocation();
-            nRetranslocationSupply = AvailableNRetranslocation();
+        {         
         }
 
         /// <summary>Computes root total water supply.</summary>
@@ -1063,93 +1039,6 @@
                 }
             }
             return supplyTotal;
-        }
-
-        /// <summary>Computes the amount of DM available for reallocation.</summary>
-        private double AvailableDMReallocation()
-        {
-            if (dmReallocationFactor != null)
-            {
-                double rootLiveStorageWt = 0.0;
-                foreach (ZoneState Z in Zones)
-                    for (int i = 0; i < Z.LayerLive.Length; i++)
-                        rootLiveStorageWt += Z.LayerLive[i].StorageWt;
-
-                double availableDM = rootLiveStorageWt * senescenceRate.Value() * dmReallocationFactor.Value();
-                if (availableDM < -BiomassToleranceValue)
-                    throw new Exception("Negative DM reallocation value computed for " + Name);
-                return availableDM;
-            }
-            // By default reallocation is turned off!!!!
-            return 0.0;
-        }
-
-        /// <summary>Computes the N amount available for retranslocation.</summary>
-        /// <remarks>This is limited to ensure Nconc does not go below MinimumNConc</remarks>
-        private double AvailableNRetranslocation()
-        {
-            if (nRetranslocationFactor != null)
-            {
-                double labileN = 0.0;
-                double minNConc = minimumNConc.Value();
-                foreach (ZoneState Z in Zones)
-                    for (int i = 0; i < Z.LayerLive.Length; i++)
-                        labileN += Math.Max(0.0, Z.LayerLive[i].StorageN - Z.LayerLive[i].StorageWt * minNConc);
-
-                double availableN = Math.Max(0.0, labileN - nReallocationSupply) * nRetranslocationFactor.Value();
-                if (availableN < -BiomassToleranceValue)
-                    throw new Exception("Negative N retranslocation value computed for " + Name);
-
-                return availableN;
-            }
-            else
-            {  // By default retranslocation is turned off!!!!
-                return 0.0;
-            }
-        }
-
-        /// <summary>Computes the N amount available for reallocation.</summary>
-        private double AvailableNReallocation()
-        {
-            if (nReallocationFactor != null)
-            {
-                double rootLiveStorageN = 0.0;
-                foreach (ZoneState Z in Zones)
-                    for (int i = 0; i < Z.LayerLive.Length; i++)
-                        rootLiveStorageN += Z.LayerLive[i].StorageN;
-
-                double availableN = rootLiveStorageN * senescenceRate.Value() * nReallocationFactor.Value();
-                if (availableN < -BiomassToleranceValue)
-                    throw new Exception("Negative N reallocation value computed for " + Name);
-
-                return availableN;
-            }
-            else
-            {  // By default reallocation is turned off!!!!
-                return 0.0;
-            }
-        }
-
-        /// <summary>Computes the amount of DM available for retranslocation.</summary>
-        private double AvailableDMRetranslocation()
-        {
-            if (dmRetranslocationFactor != null)
-            {
-                double rootLiveStorageWt = 0.0;
-                foreach (ZoneState Z in Zones)
-                    for (int i = 0; i < Z.LayerLive.Length; i++)
-                        rootLiveStorageWt += Z.LayerLive[i].StorageWt;
-
-                double availableDM = Math.Max(0.0, rootLiveStorageWt - dmMReallocationSupply) * dmRetranslocationFactor.Value();
-                if (availableDM < -BiomassToleranceValue)
-                    throw new Exception("Negative DM retranslocation value computed for " + Name);
-
-                return availableDM;
-            }
-            else
-            { // By default retranslocation is turned off!!!!
-                return 0.0;
-            }
         }
 
         /// <summary>Called when [simulation commencing].</summary>

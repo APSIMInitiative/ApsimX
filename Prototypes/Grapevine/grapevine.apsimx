@@ -6586,7 +6586,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.1,
+                  "FixedValue": 0.0,
                   "Units": null,
                   "Name": "DMRetranslocationFactor",
                   "Children": [],
