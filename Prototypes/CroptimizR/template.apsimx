@@ -9415,7 +9415,7 @@
                     },
                     {
                       "$type": "Models.Weather, Models",
-                      "FileName": "%root%\\Examples\\Stics\\Gatton2011.met",
+                      "FileName": "%root%\\Prototypes\\CroptimizR\\Gatton2011.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
                       "Children": [],
@@ -10668,7 +10668,7 @@
                     },
                     {
                       "$type": "Models.Weather, Models",
-                      "FileName": "%root%\\Examples\\Stics\\APS6.met",
+                      "FileName": "%root%\\Prototypes\\CroptimizR\\APS6.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
                       "Children": [],
