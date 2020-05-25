@@ -7586,6 +7586,14 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Alias, Models",
+                      "Name": "Suneca",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -7738,14 +7746,6 @@
                     {
                       "$type": "Models.Core.Alias, Models",
                       "Name": "Silverstar",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Suneca",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -8252,6 +8252,20 @@
                       "ReadOnly": false
                     }
                   ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 7",
+                    "[Phenology].VrnSensitivity.FixedValue = 0",
+                    "[Phenology].PpSensitivity.FixedValue = 5",
+                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                  ],
+                  "Name": "Batavia",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
