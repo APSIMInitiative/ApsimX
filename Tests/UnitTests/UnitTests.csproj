@@ -384,7 +384,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Core\ApsimFile\ConverterTestsVersion59 before.json" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="ApsimXFiles\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ApsimXFiles\*.apsimx" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
