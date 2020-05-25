@@ -131,7 +131,12 @@
                     {
                         if (Children.Count != 0)
                             Children.Clear();
-                        Structure.Add(results.Instance as IModel, this);
+                        var newModel = results.Instance as IModel;
+                        if (newModel != null)
+                        {
+                            newModel.IsHidden = true;
+                            Structure.Add(newModel, this);
+                        }
                     }
                 }
                 else

@@ -49,7 +49,6 @@ namespace UnitTests
                     }
                 }
             };
-            Apsim.ParentAllChildren(simulations);
 
             var runner = new Runner(simulations);
             Assert.IsNotNull(runner.Run());
@@ -101,50 +100,61 @@ namespace UnitTests
         [Test]
         public void TestOneManagerCallingAnother()
         {
-            var simulation = new Simulation()
-            {
+            var simulations = new Simulations()
+            { 
                 Children = new List<IModel>()
                 {
-                    new Clock() { StartDate = new DateTime(2020, 1, 1), EndDate = new DateTime(2020, 1, 1)},
-                    new MockSummary(),
-                    new MockStorage(),
-                    new Manager()
+                    new Simulation()
                     {
-                        Name = "Manager1",
-                        Code = "using Models.Core;" + Environment.NewLine +
-                                "namespace Models" + Environment.NewLine +
-                                "{" + Environment.NewLine +
-                                "    public class Script1 : Model" + Environment.NewLine +
-                                "    {" + Environment.NewLine +
-                                "        public int A = 1;" + Environment.NewLine +
-                                "    }" + Environment.NewLine +
-                                "}"
-                    },
-                    new Manager()
-                    {
-                        Name = "Manager2",
-                        Code = "using Models.Core;" + Environment.NewLine +
-                                "namespace Models" + Environment.NewLine +
-                                "{" + Environment.NewLine +
-                                "    public class Script2 : Model" + Environment.NewLine +
-                                "    {" + Environment.NewLine +
-                                "        [Link] Script1 otherScript;" + Environment.NewLine +
-                                "        public int B { get { return otherScript.A + 1; } }" + Environment.NewLine +
-                                "    }" + Environment.NewLine +
-                                "}"
-                    },
-                    new Models.Report()
-                    {
-                        VariableNames = new string[] { "[Script2].B" },
-                        EventNames = new string[] { "[Clock].EndOfDay" }
+                        Children = new List<IModel>()
+                        {
+                            new Clock() { StartDate = new DateTime(2020, 1, 1), EndDate = new DateTime(2020, 1, 1)},
+                            new MockSummary(),
+                            new MockStorage(),
+                            new Manager()
+                            {
+                                Name = "Manager1",
+                                Code = "using Models.Core;" + Environment.NewLine +
+                                       "using System;" + Environment.NewLine +
+                                       "namespace Models" + Environment.NewLine +
+                                       "{" + Environment.NewLine +
+                                       "    [Serializable]" + Environment.NewLine +
+                                       "    public class Script1 : Model" + Environment.NewLine +
+                                       "    {" + Environment.NewLine +
+                                       "        public int A = 1;" + Environment.NewLine +
+                                       "    }" + Environment.NewLine +
+                                       "}"
+                            },
+                            new Manager()
+                            {
+                                Name = "Manager2",
+                                Code = "using Models.Core;" + Environment.NewLine +
+                                       "using System;" + Environment.NewLine +
+                                       "namespace Models" + Environment.NewLine +
+                                       "{" + Environment.NewLine +
+                                       "    [Serializable]" + Environment.NewLine +
+                                       "    public class Script2 : Model" + Environment.NewLine +
+                                       "    {" + Environment.NewLine +
+                                       "        [Link] Script1 otherScript;" + Environment.NewLine +
+                                       "        public int B { get { return otherScript.A + 1; } }" + Environment.NewLine +
+                                       "    }" + Environment.NewLine +
+                                       "}"
+                            },
+                            new Models.Report()
+                            {
+                                VariableNames = new string[] { "[Script2].B" },
+                                EventNames = new string[] { "[Clock].EndOfDay" }
+                            }
+                        }
                     }
                 }
             };
-            Apsim.ParentAllChildren(simulation);
+            //Apsim.InitialiseModel(simulations);
 
-            var storage = simulation.Children[2] as MockStorage;
+            var storage = simulations.Children[0].Children[2] as MockStorage;
 
-            simulation.Run();
+            var runner = new Runner(simulations);
+            runner.Run();
 
             double[] actual = storage.Get<double>("[Script2].B");
             double[] expected = new double[] { 2 };

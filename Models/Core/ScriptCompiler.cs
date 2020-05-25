@@ -15,14 +15,13 @@
         private static bool haveTrappedAssemblyResolveEvent = false;
         private static object haveTrappedAssemblyResolveEventLock = new object();
         private const string tempFileNamePrefix = "APSIM";
-        private readonly CodeDomProvider provider;
+        [NonSerialized]
+        private CodeDomProvider provider;
         private List<PreviousCompilation> previousCompilations = new List<PreviousCompilation>();
 
         /// <summary>Constructor.</summary>
         public ScriptCompiler()
         {
-            provider = CodeDomProvider.CreateProvider(CodeDomProvider.GetLanguageFromExtension(".cs"));
-
             // This looks weird but I'm trying to avoid having to call lock
             // everytime we come through here. If I remove this locking then
             // Jenkins runs very slowly (5 times slower for each sim). Presumably
@@ -167,6 +166,9 @@
         /// <returns>Any compile errors or null if compile was successful.</returns>
         private CompilerResults CompileTextToAssembly(string code, IEnumerable<string> referencedAssemblies = null)
         {
+            if (provider == null)
+                provider = CodeDomProvider.CreateProvider(CodeDomProvider.GetLanguageFromExtension(".cs"));
+
             var assemblyFileNameToCreate = Path.ChangeExtension(Path.Combine(Path.GetTempPath(), tempFileNamePrefix + Guid.NewGuid().ToString()), ".dll");
 
             CompilerParameters parameters = new CompilerParameters
