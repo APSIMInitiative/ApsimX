@@ -12,6 +12,7 @@ namespace APSIM.Shared.Utilities
     using System.Threading;
     using System.Text;
     using System.Globalization;
+    using System.Collections.Generic;
 
     /// <summary>
     /// A collection of utilities for dealing with processes (threads)
@@ -159,11 +160,12 @@ namespace APSIM.Shared.Utilities
             /// <param name="arguments">Arguments which will be passed to the executable.</param>
             /// <param name="workingDirectory">Directory in which the executable will be run.</param>
             /// <param name="redirectOutput">If true, standard error/output will be collected.</param>
+            /// <param name="environment">Environment variables to be set in the process' environment.</param>
             /// <param name="writeToConsole">
             /// If true, the child process' standard error/output will be written to this process' standard error/output.
             /// This has no effect if redirectOutput is false!
             /// </param>
-            public void Start(string executable, string arguments, string workingDirectory, bool redirectOutput, bool writeToConsole = false)
+            public void Start(string executable, string arguments, string workingDirectory, bool redirectOutput, Dictionary<string, string> environment = null, bool writeToConsole = false)
             {
                 Executable = executable;
                 Arguments = arguments;
@@ -182,6 +184,10 @@ namespace APSIM.Shared.Utilities
                     process.StartInfo.RedirectStandardError = redirectOutput;
                 }
                 process.StartInfo.WorkingDirectory = workingDirectory;
+
+                if (environment != null)
+                    foreach (KeyValuePair<string, string> variable in environment)
+                        process.StartInfo.Environment.Add(variable);
 
                 // Set our event handler to asynchronously read the output.
                 if (redirectOutput)
