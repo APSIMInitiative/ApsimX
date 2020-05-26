@@ -262,6 +262,7 @@
     <Compile Include="Core\Run\PropertyReplacement.cs" />
     <Compile Include="Core\Run\Runner.cs" />
     <Compile Include="Core\Run\SimulationDescription.cs" />
+    <Compile Include="Core\ScriptCompiler.cs" />
     <Compile Include="Factorial\Permutation.cs" />
     <Compile Include="Functions\AccumulateResetAtStage.cs" />
     <Compile Include="Functions\RootShape\RootShapeSemiCircleSorghum.cs" />
@@ -329,6 +330,7 @@
     <Compile Include="Plant\Structure\Culm.cs" />
     <Compile Include="Plant\Structure\CulmParams.cs" />
     <Compile Include="Plant\Structure\LeafCulms.cs" />
+    <Compile Include="PostSimulationTools\SimulationStats.cs" />
     <Compile Include="Report\VariableGroup.cs" />
     <Compile Include="Soils\Nutrients\INutrientPool.cs" />
     <Compile Include="Soils\SoilTemp\SoilTemperature.cs" />

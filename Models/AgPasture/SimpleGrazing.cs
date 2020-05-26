@@ -28,6 +28,7 @@
         [Link(ByName = true)] ISolute Urea = null;
         [Link] Soil soil = null;
         [Link] SurfaceOrganicMatter surfaceOrganicMatter = null;
+        [Link] ScriptCompiler compiler = null;
 
         private double residualBiomass;
         private CSharpExpressionFunction expressionFunction;
@@ -320,6 +321,7 @@
                 expressionFunction = new CSharpExpressionFunction();
                 expressionFunction.Parent = this;
                 expressionFunction.Expression = "Convert.ToDouble(" + FlexibleExpressionForTimingOfGrazing + ")";
+                expressionFunction.SetCompiler(compiler);
                 expressionFunction.CompileExpression();
             }
 

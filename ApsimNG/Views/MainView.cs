@@ -158,10 +158,18 @@
             hbox1.HeightRequest = 20;            
 
             TextTag tag = new TextTag("error");
-            tag.Foreground = "red";
+            // Make errors orange-ish in dark mode.
+            if (Utility.Configuration.Settings.DarkTheme)
+                tag.ForegroundGdk = Utility.Colour.ToGdk(ColourUtilities.ChooseColour(1));
+            else
+                tag.Foreground = "red";
             statusWindow.Buffer.TagTable.Add(tag);
             tag = new TextTag("warning");
-            tag.Foreground = "brown";
+            // Make warnings yellow in dark mode.
+            if (Utility.Configuration.Settings.DarkTheme)
+                tag.ForegroundGdk = Utility.Colour.ToGdk(ColourUtilities.ChooseColour(7));
+            else
+                tag.Foreground = "brown";
             statusWindow.Buffer.TagTable.Add(tag);
             tag = new TextTag("normal");
             tag.Foreground = "blue";
