@@ -5,6 +5,7 @@ using System.Xml.Serialization;
 using System.IO;
 using Models.Soils;
 using Models.Functions;
+using APSIM.Shared.Utilities;
 
 
 namespace Models.PMF.Phen
@@ -28,10 +29,12 @@ namespace Models.PMF.Phen
         [Link]
         private Phenology phenology = null;
 
+        [Link]
+        private Clock clock = null;
+
         // 2. Private and protected fields
         //-----------------------------------------------------------------------------------------------------------------
-        private bool forceEmergence = false;
-
+        
         /// <summary>The soil layer in which the seed is sown.</summary>
         private int SowLayer = 0;
 
@@ -54,6 +57,12 @@ namespace Models.PMF.Phen
         [XmlIgnore]
         public double FractionComplete { get { return 0.999; } }
 
+        /// <summary>
+        /// Date for germination to occur.  null by default so model is used
+        /// </summary>
+        [XmlIgnore]
+        public string GerminationDate { get; set; }
+
         // 4. Public method
         //-----------------------------------------------------------------------------------------------------------------
 
@@ -63,10 +72,13 @@ namespace Models.PMF.Phen
         {
             bool proceedToNextPhase = false;
 
-            if(forceEmergence==true)
+            if (GerminationDate != null)
             {
-                proceedToNextPhase = true;
-                propOfDayToUse = 0;
+                if (DateUtilities.DatesEqual(GerminationDate, clock.Today))
+                {
+                    proceedToNextPhase = true;
+                    propOfDayToUse = 1;
+                }
             }
 
             else if (!phenology.OnStartDayOf("Sowing") && soil.Water[SowLayer] > soil.LL15mm[SowLayer])
@@ -82,7 +94,7 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>Resets the phase.</summary>
-        public virtual void ResetPhase() { forceEmergence = false; }
+        public virtual void ResetPhase() { }
 
         // 5. Private methods
         //-----------------------------------------------------------------------------------------------------------------
@@ -92,12 +104,6 @@ namespace Models.PMF.Phen
         private void OnPlantSowing(object sender, SowPlant2Type data)
         {
             SowLayer = soil.LayerIndexOfDepth(plant.SowingData.Depth);
-        }
-
-        /// <summary>Will trigger emergence on the day it is called</summary>
-        public void ForceGermination()
-        {
-            forceEmergence = true;
         }
 
         /// <summary>Writes documentation for this class by adding to the list of documentation tags.</summary>
