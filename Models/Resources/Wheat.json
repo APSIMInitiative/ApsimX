@@ -8315,7 +8315,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 7",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 5",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 90"
                   ],
                   "Name": "Egret",
                   "Children": [],
