@@ -45,7 +45,7 @@
                     while (PipeUtilities.GetObjectFromPipe(pipeRead) is IRunnable runnable)
                     {
                         Exception error = null;
-                        StorageViaSockets storage = null;
+                        StorageViaSockets storage = new StorageViaSockets();
                         try
                         {
                             if (runnable is Simulation sim)
@@ -75,8 +75,6 @@
                                 IDataStore oldStorage = Apsim.Find(model, typeof(IDataStore)) as IDataStore;
                                 if (oldStorage != null)
                                     storage = new StorageViaSockets(oldStorage.FileName);
-                                else
-                                    storage = new StorageViaSockets();
 
                                 storage.Parent = model;
                                 storage.Children.AddRange(model.Children.OfType<DataStore>().SelectMany(d => d.Children).Select(m => Apsim.Clone(m)));
@@ -85,8 +83,6 @@
 
                                 Apsim.ParentAllChildren(model);
                             }
-                            else
-                                throw new Exception($"Unknown job type: {runnable.GetType().FullName}");
 
                             // Run the job.
                             runnable.Run(new CancellationTokenSource());

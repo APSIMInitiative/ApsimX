@@ -205,7 +205,8 @@
             else
             {
                 job.JobSentToClient = job.RunnableJob;
-                job.JobSentToClient = Apsim.Clone(job.JobSentToClient as IModel) as IRunnable;
+                if (job.JobSentToClient is IModel m)
+                    job.JobSentToClient = Apsim.Clone(m) as IRunnable;
                 if (job.RunnableJob is IModel model)
                 {
                     IModel replacements = Apsim.Find(model, typeof(Replacements));
