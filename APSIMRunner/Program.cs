@@ -41,8 +41,6 @@
                 using (var pipeRead = new AnonymousPipeClientStream(PipeDirection.In, pipeReadHandle))
                 using (var pipeWrite = new AnonymousPipeClientStream(PipeDirection.Out, pipeWriteHandle))
                 {
-                    //while (args.Length > 0)
-                    //    Thread.Sleep(200);
 
                     while (PipeUtilities.GetObjectFromPipe(pipeRead) is IRunnable runnable)
                     {
@@ -52,10 +50,6 @@
                         {
                             if (runnable is Simulation sim)
                             {
-                                // Need to create a Simulations object and make simulation a child of it 
-                                // so that managers can find a ScriptCompiler instance (from Simulations)
-                                // during a call to their OnCreate. The problem is that during OnCreate
-                                // links are not resolved. Need a better way to do this!!
                                 storage = new StorageViaSockets(sim.FileName);
 
                                 // Remove existing DataStore
