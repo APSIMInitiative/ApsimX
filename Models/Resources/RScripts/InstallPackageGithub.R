@@ -4,7 +4,13 @@
 #' @param pkgpath Path where package is to be installed.
 #' @return Nothing.
 getPackage <- function(pkg, pkgpath) {
-    if (!pkg %in% rownames(installed.packages(lib.loc = pkgpath))) {
+    pkgName <- pkg
+    if (grepl('/', pkgName, fixed = TRUE)) {
+        # if pkg looks like owner/repo, we want pkgName to
+        # be just "repo"
+        pkgName <- unlist(strsplit(pkgName, '/'))[2]
+	}
+    if (!pkgName %in% rownames(installed.packages(lib.loc = pkgpath))) {
         if (!dir.exists(pkgpath)) {
             dir.create(pkgpath)
         }
