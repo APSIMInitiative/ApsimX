@@ -21,6 +21,7 @@
     [TestFixture]
     public class ReportTests
     {
+        private Simulations simulations;
         private Simulation simulation;
         private Clock clock;
         private Report report;
@@ -33,26 +34,33 @@
         [SetUp]
         public void Setup()
         {
-            simulation = new Simulation()
+            simulations = new Simulations()
             {
                 Children = new List<IModel>()
                 {
-                    new MockStorage(),
-                    new MockSummary(),
-                    new Clock()
+                    new Simulation()
                     {
-                        StartDate = new DateTime(2017, 1, 1),
-                        EndDate = new DateTime(2017, 1, 10)
-                    },
-                    new Report()
-                    {
-                        VariableNames = new string[] { },
-                        EventNames = new string[] { "[Clock].EndOfDay" },
+                        Children = new List<IModel>()
+                        {
+                            new MockStorage(),
+                            new MockSummary(),
+                            new Clock()
+                            {
+                                StartDate = new DateTime(2017, 1, 1),
+                                EndDate = new DateTime(2017, 1, 10)
+                            },
+                            new Report()
+                            {
+                                VariableNames = new string[] { },
+                                EventNames = new string[] { "[Clock].EndOfDay" },
+                            }
+                        }
                     }
                 }
             };
 
-            Apsim.InitialiseModel(simulation);
+            Apsim.InitialiseModel(simulations);
+            simulation = simulations.Children[0] as Simulation;
             runner = new Runner(simulation);
             storage = simulation.Children[0] as MockStorage;
             clock = simulation.Children[2] as Clock;
@@ -69,7 +77,7 @@
             {
                 Name = "Manager1",
                 Code = "using System;\r\nusing Models.Core;\r\nnamespace Models\r\n{\r\n[Serializable]\r\n" +
-                            "public class Script : Model\r\n {\r\n " +
+                            "public class Script1 : Model\r\n {\r\n " +
                             "public double A { get { return (1); } set { } }\r\n" +
                             "public double B { get { return (2); } set { } }\r\n }\r\n}\r\n"
             };
@@ -77,20 +85,24 @@
             {
                 Name = "Manager2",
                 Code = "using System;\r\nusing Models.Core;\r\nnamespace Models\r\n{\r\n[Serializable]\r\n" + "" +
-                            "    public class Script : Model\r\n {\r\n" +
+                            "    public class Script2 : Model\r\n {\r\n" +
                             " public double A { get { return (3); } set { } }\r\n" +
                             " public double B { get { return (4); } set { } }\r\n }\r\n}\r\n"
             };
             report.VariableNames = new[]
             {
-                "[Manager1].Script.A as M1A",
-                "[Manager2].Script.A as M2A"
+                "[Manager1].Script1.A as M1A",
+                "[Manager2].Script2.A as M2A"
             };
             report.EventNames = new[]
             {
                 "[Clock].DoReport"
             };
             simulation.Children.AddRange(new[] { m1, m2 });
+            Apsim.ParentAllChildren(simulation);
+            m1.OnCreated();
+            m2.OnCreated();
+
             var runners = new[]
             {
                 new Runner(simulation, runType: Runner.RunTypeEnum.MultiThreaded),

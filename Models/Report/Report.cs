@@ -198,7 +198,7 @@ namespace Models
             if (dataToWriteToDb == null)
             {
                 string folderName = null;
-                var folderDescriptor = simulation.Descriptors.Find(d => d.Name == "FolderName");
+                var folderDescriptor = simulation.Descriptors?.Find(d => d.Name == "FolderName");
                 if (folderDescriptor != null)
                     folderName = folderDescriptor.Value;
                 dataToWriteToDb = new ReportData()
