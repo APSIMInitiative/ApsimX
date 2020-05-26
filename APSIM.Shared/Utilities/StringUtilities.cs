@@ -180,20 +180,20 @@ namespace APSIM.Shared.Utilities
         ///         Bits[1]=Leaves[Leaf.CurrentRank]
         ///         Bits[2]=CoverAbove
         /// </summary>
-        public static string[] SplitStringHonouringBrackets(string text, char delimiter, char openBracket, char closeBracket)
+        public static string[] SplitStringHonouringBrackets(string text, string delimiters, char openBracket, char closeBracket)
         {
             List<string> ReturnStrings = new List<string>();
             if (text.Trim() == "")
                 return ReturnStrings.ToArray();
             //if no delimiters in the string then return the original
-            if (!text.Contains("."))
+            if (text.IndexOfAny(delimiters.ToCharArray()) < 0)
             {
                 ReturnStrings.Add(text.Trim());
                 return ReturnStrings.ToArray();
             }
 
             bool InsideBracket = false;
-            int Start = IndexNotOfAny(text, delimiter.ToString().ToCharArray());
+            int Start = IndexNotOfAny(text, delimiters.ToCharArray());
             for (int i = Start; i < text.Length; i++)
             {
                 if (text[i] == openBracket)
@@ -202,7 +202,7 @@ namespace APSIM.Shared.Utilities
                     InsideBracket = false;
                 else if (!InsideBracket)
                 {
-                    if (text[i] == delimiter)
+                    if (delimiters.IndexOf(text[i]) != -1)
                     {
                         // Found a word - store it.
                         if (Start != i)

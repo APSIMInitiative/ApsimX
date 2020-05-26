@@ -62,7 +62,7 @@
             DeleteRunners();
             CreateRunners();
 
-            AppDomain.CurrentDomain.AssemblyResolve += Manager.ResolveManagerAssembliesEventHandler;
+            AppDomain.CurrentDomain.AssemblyResolve += ScriptCompiler.ResolveManagerAssemblies;
 
             SpinWait.SpinUntil(() => allStopped);
 

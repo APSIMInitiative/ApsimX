@@ -29,8 +29,12 @@
                 string pipeWriteHandle = args[0];
                 string pipeReadHandle = args[1];
 
+                // Let in for debugging purposes.
+                //while (pipeReadHandle != null) 
+                //    Thread.Sleep(500);
+
                 // Add hook for manager assembly resolve method.
-                AppDomain.CurrentDomain.AssemblyResolve += Manager.ResolveManagerAssembliesEventHandler;
+                AppDomain.CurrentDomain.AssemblyResolve += ScriptCompiler.ResolveManagerAssemblies;
 
                 // Create 2 anonymous pipes (read and write) for duplex communications
                 // (each pipe is one-way)
@@ -48,6 +52,10 @@
                         {
                             if (runnable is Simulation sim)
                             {
+                                // Need to create a Simulations object and make simulation a child of it 
+                                // so that managers can find a ScriptCompiler instance (from Simulations)
+                                // during a call to their OnCreate. The problem is that during OnCreate
+                                // links are not resolved. Need a better way to do this!!
                                 storage = new StorageViaSockets(sim.FileName);
 
                                 // Remove existing DataStore
@@ -61,6 +69,12 @@
                                     sim.Services.RemoveAll(s => s is Models.Storage.IDataStore);
                                     sim.Services.Add(storage);
                                 }
+
+                                // Initialise the model so that Simulation.Run doesn't call OnCreated.
+                                // We don't need to recompile any manager scripts and a simulation
+                                // should be ready to run at this point following a binary 
+                                // deserialisation.
+                                Apsim.ParentAllChildren(sim);
                             }
                             else if (runnable is IModel model)
                             {
@@ -108,7 +122,7 @@
             }
             finally
             {
-                AppDomain.CurrentDomain.AssemblyResolve -= Manager.ResolveManagerAssembliesEventHandler;
+                AppDomain.CurrentDomain.AssemblyResolve -= ScriptCompiler.ResolveManagerAssemblies;
             }
             return 0;
         }
