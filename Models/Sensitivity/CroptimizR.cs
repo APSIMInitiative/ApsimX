@@ -186,7 +186,7 @@ namespace Models.Sensitivity
         {
             // tbi: package installation. Need to test on a clean VM.
             R r = new R();
-            r.InstallPackages("devtools", "dplyr", "nloptr", "DiceDesign", "RSQLite", "DBI");
+            r.InstallPackages("devtools", "dplyr", "nloptr", "DiceDesign", "RSQLite", "DBI", "cli");
             r.InstallFromGithub("hol430/ApsimOnR", "SticsRPacks/CroptimizR");
             StringBuilder contents = new StringBuilder();
             string apsimxFileName = GenerateApsimXFile();
