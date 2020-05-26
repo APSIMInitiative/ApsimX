@@ -168,7 +168,7 @@
     <Compile Include="Storage\DataStoreReaderTests.cs" />
     <Compile Include="Report\ReportDataTests.cs" />
     <Compile Include="Core\ApsimFile\JsonUtilitiesTests.cs" />
-    <Compile Include="ManagerTests.cs" />
+    <Compile Include="Manager\ManagerTests.cs" />
     <Compile Include="Sensitivity\MorrisTests.cs" />
     <Compile Include="APSIMShared\RegressionTests.cs" />
     <Compile Include="Core\ApsimFile\StructureTests.cs" />
@@ -385,6 +385,9 @@
     <EmbeddedResource Include="Core\ApsimFile\ConverterTestsVersion59 before.json" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Manager\ManagerOverrides.apsimx" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
