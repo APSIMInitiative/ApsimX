@@ -227,8 +227,8 @@
             r.InstallPackage("sensitivity");
             if (ParametersHaveChanged)
             {
-                allCombinations.Clear();
-                ParameterValues.Clear();
+                allCombinations?.Clear();
+                ParameterValues?.Clear();
             }
         }
 

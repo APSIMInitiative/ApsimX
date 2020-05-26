@@ -192,8 +192,8 @@
             r.InstallPackage("sensitivity");
             if (ParametersHaveChanged)
             {
-                allCombinations.Clear();
-                ParameterValues.Clear();
+                allCombinations?.Clear();
+                ParameterValues?.Clear();
             }
         }
 
@@ -204,7 +204,7 @@
         {
             if (allCombinations.Count == 0)
             {
-                if (ParameterValues.Rows.Count == 0)
+                if (ParameterValues == null || ParameterValues.Rows.Count == 0)
                 {
                     // Write a script to get random numbers from R.
                     string script = string.Format
