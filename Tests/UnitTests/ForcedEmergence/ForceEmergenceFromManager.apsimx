@@ -17,6 +17,7 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
       "Name": "NormalEmergence",
       "Children": [
         {
@@ -647,6 +648,7 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
       "Name": "ForceEmergence",
       "Children": [
         {
@@ -1237,11 +1239,11 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Wheat;\r\n        [Link] Soil Soil; \r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string SowDate { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName, PlantName = \"Wheat\")]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.DatesEqual(SowDate,Clock.Today))\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Wheat;\r\n        [Link] Soil Soil; \r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Date to sow on (d-mmm)\")]\r\n        public string SowDate { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName, PlantName = \"Wheat\")]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;} \r\n        [Description(\"Emergence Date (d-mmm)\")]\r\n        public string EmergeDate {get; set;}       \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.DatesEqual(SowDate,Clock.Today))\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n               Wheat.EmergenceDate = EmergeDate;\r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "SowDate",
-                  "Value": "2-Jan"
+                  "Value": "2-jan"
                 },
                 {
                   "Key": "CultivarName",
@@ -1249,7 +1251,11 @@
                 },
                 {
                   "Key": "SowingDepth",
-                  "Value": "60"
+                  "Value": "30"
+                },
+                {
+                  "Key": "EmergeDate",
+                  "Value": "6-jan"
                 },
                 {
                   "Key": "RowSpacing",
@@ -1261,20 +1267,6 @@
                 }
               ],
               "Name": "SowingRule",
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Interfaces;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System.Collections.Generic;\r\nusing System;\r\nusing Models.PMF;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Plant plant;\r\n\r\n        [Description(\"date for Emergence (dmmm)\")]\r\n        public string EmergeDate { get; set;}\r\n\r\n        [EventSubscribe(\"PrePhenology\")]\r\n        private void OnPrePhenology(object sender, EventArgs e)\r\n        {\r\n             if(DateUtilities.DatesEqual(EmergeDate,clock.Today))\r\n             {\r\n             plant.ForceEmergence();\r\n             }\r\n        }\r\n    }\r\n}\r\n",
-              "Parameters": [
-                {
-                  "Key": "EmergeDate",
-                  "Value": "6-Jan"
-                }
-              ],
-              "Name": "ForceEmergence",
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -1291,7 +1283,8 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
-      "Name": "ForceEmergenceDryStart",
+      "IsRunning": false,
+      "Name": "ForceGermination",
       "Children": [
         {
           "$type": "Models.Clock, Models",
@@ -1881,8 +1874,12 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Wheat;\r\n        [Link] Soil Soil; \r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string SowDate { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName, PlantName = \"Wheat\")]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.DatesEqual(SowDate,Clock.Today))\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Wheat;\r\n        [Link] Soil Soil; \r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Sowing Date (d-mmm)\")]\r\n        public string SowDate { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName, PlantName = \"Wheat\")]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;} \r\n        [Description(\"Germination Date (d-mmm)\")]\r\n        public string GermDate { get; set;} \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.DatesEqual(SowDate,Clock.Today))\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n               Wheat.GerminationDate = GermDate;\r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
               "Parameters": [
+                {
+                  "Key": "SowDate",
+                  "Value": "2-Jan"
+                },
                 {
                   "Key": "CultivarName",
                   "Value": "Hartog"
@@ -1892,16 +1889,16 @@
                   "Value": "60"
                 },
                 {
+                  "Key": "GermDate",
+                  "Value": "10-jan"
+                },
+                {
                   "Key": "RowSpacing",
                   "Value": "250"
                 },
                 {
                   "Key": "Population",
                   "Value": "120"
-                },
-                {
-                  "Key": "SowDate",
-                  "Value": "2-Jan"
                 }
               ],
               "Name": "SowingRule",
@@ -1924,20 +1921,6 @@
               ],
               "Name": "MakeStartDry",
               "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Interfaces;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System.Collections.Generic;\r\nusing System;\r\nusing Models.PMF;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Plant plant;\r\n\r\n        [Description(\"date for Emergence (dmmm)\")]\r\n        public string EmergeDate { get; set;}\r\n\r\n        [EventSubscribe(\"PrePhenology\")]\r\n        private void OnPrePhenology(object sender, EventArgs e)\r\n        {\r\n             if(DateUtilities.DatesEqual(EmergeDate,clock.Today))\r\n             {\r\n             plant.ForceGermination();\r\n             plant.ForceEmergence();\r\n             }\r\n        }\r\n    }\r\n}\r\n",
-              "Parameters": [
-                {
-                  "Key": "EmergeDate",
-                  "Value": "12-Jan"
-                }
-              ],
-              "Name": "ForceEmergence",
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
