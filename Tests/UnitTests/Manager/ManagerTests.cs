@@ -1,16 +1,14 @@
-﻿using System;
+﻿using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
-using APSIM.Shared.Utilities;
 using NUnit.Framework;
-namespace UnitTests
+using System;
+namespace UnitTests.ManagerTests
 {
-    using System.Collections.Generic;
     using Models.Core.ApsimFile;
-    using Models.Storage;
-    using System.IO;
-    using APSIM.Shared.JobRunning;
     using Models.Core.Run;
+    using System.Collections.Generic;
+    using System.IO;
     using UnitTests.Storage;
 
     /// <summary>
@@ -94,10 +92,15 @@ namespace UnitTests
             Assert.That(errors[0].ToString().Contains("Error thrown from manager script's OnCreated()"), "Encountered an error while opening OnCreatedError.apsimx, but it appears to be the wrong error: {0}.", errors[0].ToString());
         }
 
+        /// <summary>
+        /// Reproduces issue #5202. This appears to be due to a bug where manager script parameters are not being 
+        /// correctly overwritten by factors of an experiment (more precisely, they are overwritten, and then the 
+        /// overwritten values are themselves being overwritten by the original values).
+        /// </summary>
         [Test]
         public void TestManagerOverrides()
         {
-            string json = ReflectionUtilities.GetResourceAsString("UnitTests.ApsimXFiles.ManagerOverrides.apsimx");
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Manager.ManagerOverrides.apsimx");
             Simulations sims = FileFormat.ReadFromString<Simulations>(json, out List<Exception> errors);
             if (errors != null && errors.Count > 0)
                 throw errors[0];
@@ -110,7 +113,7 @@ namespace UnitTests
                     throw errors[0];
             }
         }
-		
+
         /// <summary>
         /// This test ensures one manager model can call another.
         /// </summary>

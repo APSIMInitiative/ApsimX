@@ -113,7 +113,17 @@
             // instance. This needs to be fixed.
             if (TryGetCompiler())
                 RebuildScriptModel();
-            else if (Children.Count != 0)
+        }
+
+        /// <summary>
+        /// Invoked at start of simulation.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            if (Children.Count != 0)
             {
                 GetParametersFromScriptModel();
                 SetParametersInScriptModel();
