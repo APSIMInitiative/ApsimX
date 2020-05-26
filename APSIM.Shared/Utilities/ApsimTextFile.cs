@@ -485,7 +485,8 @@ namespace APSIM.Shared.Utilities
                 else
                 {
                     Headings = StringUtilities.SplitStringHonouringQuotes(HeadingLines[0], " \t");
-                    Units = StringUtilities.SplitStringHonouringQuotes(HeadingLines[1], " \t");
+                    Units = new StringCollection();
+                    Units.AddRange(StringUtilities.SplitStringHonouringBrackets(HeadingLines[1], " \t", '(', ')'));
                 }
                 TitleFound = TitleFound || StringUtilities.IndexOfCaseInsensitive(Headings, "title") != -1;
                 if (Headings.Count != Units.Count)
