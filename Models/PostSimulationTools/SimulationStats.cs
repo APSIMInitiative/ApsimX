@@ -83,15 +83,15 @@
                         newRow[$"{ columnName}Max"] = MathUtilities.Max(values);
                         newRow[$"{ columnName}StdDev"] = MathUtilities.SampleStandardDeviation(values);
 
-                        newRow[$"{ columnName}Percentile10"] = MathUtilities.Percentile(values, 10);
-                        newRow[$"{ columnName}Percentile20"] = MathUtilities.Percentile(values, 20);
-                        newRow[$"{ columnName}Percentile30"] = MathUtilities.Percentile(values, 30);
-                        newRow[$"{ columnName}Percentile40"] = MathUtilities.Percentile(values, 40);
-                        newRow[$"{ columnName}Percentile50"] = MathUtilities.Percentile(values, 50);
-                        newRow[$"{ columnName}Percentile60"] = MathUtilities.Percentile(values, 60);
-                        newRow[$"{ columnName}Percentile70"] = MathUtilities.Percentile(values, 70);
-                        newRow[$"{ columnName}Percentile80"] = MathUtilities.Percentile(values, 80);
-                        newRow[$"{ columnName}Percentile90"] = MathUtilities.Percentile(values, 90);
+                        newRow[$"{ columnName}Percentile10"] = MathUtilities.Percentile(values, 0.1);
+                        newRow[$"{ columnName}Percentile20"] = MathUtilities.Percentile(values, 0.2);
+                        newRow[$"{ columnName}Percentile30"] = MathUtilities.Percentile(values, 0.3);
+                        newRow[$"{ columnName}Percentile40"] = MathUtilities.Percentile(values, 0.4);
+                        newRow[$"{ columnName}Percentile50"] = MathUtilities.Percentile(values, 0.5);
+                        newRow[$"{ columnName}Percentile60"] = MathUtilities.Percentile(values, 0.6);
+                        newRow[$"{ columnName}Percentile70"] = MathUtilities.Percentile(values, 0.7);
+                        newRow[$"{ columnName}Percentile80"] = MathUtilities.Percentile(values, 0.8);
+                        newRow[$"{ columnName}Percentile90"] = MathUtilities.Percentile(values, 0.9);
                     }
                     statsData.Rows.Add(newRow);
                 }
