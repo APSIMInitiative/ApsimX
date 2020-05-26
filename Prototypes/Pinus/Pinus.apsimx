@@ -2,7 +2,7 @@
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
   "Version": 100,
-  "ApsimVersion": "2020.5.15.5142",
+  "ApsimVersion": "2020.5.26.5191",
   "Name": "Simulations",
   "Children": [
     {
