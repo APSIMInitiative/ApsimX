@@ -2,7 +2,7 @@
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
   "Version": 100,
-  "ApsimVersion": "2020.5.26.5191",
+  "ApsimVersion": "2020.5.26.5107",
   "Name": "Simulations",
   "Children": [
     {
@@ -4722,7 +4722,7 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
-            "C:\\Users\\sme016\\OneDrive - CSIRO\\1. FWPA Next Gen Resource Assessment\\APSIM Pinus\\Pinus\\Observed.xlsx"
+            "C:\\APSIMxSourceTree\\Prototypes\\Pinus\\Observed.xlsx"
           ],
           "SheetNames": [
             "Observed"
@@ -9239,6 +9239,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "GympieBase",
               "Children": [
                 {
