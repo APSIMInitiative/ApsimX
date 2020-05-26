@@ -149,7 +149,7 @@ namespace Models.Utilities
             if (ErrorReceived != null)
                 proc.ErrorReceived += ErrorReceived;
 
-            proc.Start(rScript, "\"" + scriptName + "\" " + args, workingDirectory, true, environment);
+            proc.Start(rScript, "\"" + scriptName + "\" " + args, workingDirectory, true, environment: environment);
         }
 
         /// <summary>

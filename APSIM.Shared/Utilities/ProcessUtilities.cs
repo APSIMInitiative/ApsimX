@@ -165,7 +165,7 @@ namespace APSIM.Shared.Utilities
             /// If true, the child process' standard error/output will be written to this process' standard error/output.
             /// This has no effect if redirectOutput is false!
             /// </param>
-            public void Start(string executable, string arguments, string workingDirectory, bool redirectOutput, Dictionary<string, string> environment = null, bool writeToConsole = false)
+            public void Start(string executable, string arguments, string workingDirectory, bool redirectOutput, bool writeToConsole = false, Dictionary<string, string> environment = null)
             {
                 Executable = executable;
                 Arguments = arguments;
