@@ -62,7 +62,7 @@
             DeleteRunners();
             CreateRunners();
 
-            AppDomain.CurrentDomain.AssemblyResolve += Manager.ResolveManagerAssembliesEventHandler;
+            AppDomain.CurrentDomain.AssemblyResolve += ScriptCompiler.ResolveManagerAssemblies;
 
             SpinWait.SpinUntil(() => allStopped);
 
@@ -255,7 +255,7 @@
             public IRunnable JobSentToClient { get; set; }
 
             /// <summary>The data store relating to the job</summary>
-            public DataStore DataStore { get; set; }
+            public IDataStore DataStore { get; set; }
         }
     }
 }

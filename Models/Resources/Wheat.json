@@ -1310,6 +1310,45 @@
             },
             {
               "$type": "Models.Functions.OnEventFunction, Models",
+              "SetEvent": "TerminalSpikelet",
+              "ReSetEvent": "never",
+              "Name": "TerminalSpikeletDAS",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "\nA function is used to provide flowering date as days after sowing(DAS).\n",
+                  "Name": "memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "PreEventValue",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].DaysAfterSowing",
+                  "Name": "PostEventValue",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+			            {
+              "$type": "Models.Functions.OnEventFunction, Models",
               "SetEvent": "FlagLeaf",
               "ReSetEvent": "never",
               "Name": "FlagLeafDAS",
@@ -1317,6 +1356,45 @@
                 {
                   "$type": "Models.Memo, Models",
                   "Text": "\nA function is used to provide flowering date as days after sowing(DAS).\n",
+                  "Name": "memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "PreEventValue",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].DaysAfterSowing",
+                  "Name": "PostEventValue",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.OnEventFunction, Models",
+              "SetEvent": "Heading",
+              "ReSetEvent": "never",
+              "Name": "HeadingDAS",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "\nA function is used to provide heading date as days after sowing(DAS).\n",
                   "Name": "memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -7547,6 +7625,14 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Alias, Models",
+                      "Name": "Suneca",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -7699,14 +7785,6 @@
                     {
                       "$type": "Models.Core.Alias, Models",
                       "Name": "Silverstar",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Suneca",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -8213,6 +8291,34 @@
                       "ReadOnly": false
                     }
                   ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 7",
+                    "[Phenology].VrnSensitivity.FixedValue = 0",
+                    "[Phenology].PpSensitivity.FixedValue = 5",
+                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                  ],
+                  "Name": "Batavia",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 7",
+                    "[Phenology].VrnSensitivity.FixedValue = 0",
+                    "[Phenology].PpSensitivity.FixedValue = 5",
+                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 90"
+                  ],
+                  "Name": "Egret",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false

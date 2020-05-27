@@ -624,6 +624,28 @@
         }
 
         /// <summary>
+        /// Force emergence on the date called if emergence has not occured already
+        /// </summary>
+        public void ForceEmergence()
+        {
+            foreach (EmergingPhase ep in Apsim.ChildrenRecursively(this, typeof(EmergingPhase)))
+            {
+                ep.ForceEmergence();
+            }
+        }
+
+        /// <summary>
+        /// Force germination on the date called if germination has not occured already
+        /// </summary>
+        public void ForceGermination()
+        {
+            foreach (GerminatingPhase gp in Apsim.ChildrenRecursively(this, typeof(GerminatingPhase)))
+            {
+                gp.ForceGermination();
+            }
+        }
+
+        /// <summary>
         /// Reduce the plant population.
         /// </summary>
         /// <param name="newPlantPopulation">The new plant population.</param>

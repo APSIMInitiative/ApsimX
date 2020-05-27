@@ -58,7 +58,7 @@
                 {
                     Name = "Sim",
                     FileName = Path.GetTempFileName(),
-                    Children = new List<Model>()
+                    Children = new List<IModel>()
                     {
                         new Clock()
                         {
@@ -103,14 +103,14 @@
                 // Create a folder of 2 simulations.
                 var folder = new Folder()
                 {
-                    Children = new List<Model>()
+                    Children = new List<IModel>()
                     {
                         new DataStore(database),
                         new Simulation()
                         {
                             Name = "Sim1",
                             FileName = Path.GetTempFileName(),
-                            Children = new List<Model>()
+                            Children = new List<IModel>()
                             {
                                 new Clock()
                                 {
@@ -130,7 +130,7 @@
                         {
                             Name = "Sim2",
                             FileName = Path.GetTempFileName(),
-                            Children = new List<Model>()
+                            Children = new List<IModel>()
                             {
                                 new Clock()
                                 {
@@ -188,14 +188,14 @@
                 // Create a folder of 2 simulations.
                 var folder = new Folder()
                 {
-                    Children = new List<Model>()
+                    Children = new List<IModel>()
                     {
                         new DataStore(database),
                         new Simulation()
                         {
                             Name = "Sim1",
                             FileName = Path.GetTempFileName(),
-                            Children = new List<Model>()
+                            Children = new List<IModel>()
                             {
                                 new Clock()
                                 {
@@ -215,7 +215,7 @@
                         {
                             Name = "Sim2",
                             FileName = Path.GetTempFileName(),
-                            Children = new List<Model>()
+                            Children = new List<IModel>()
                             {
                                 new Clock()
                                 {
@@ -273,7 +273,7 @@
                 {
                     Name = "Sim",
                     FileName = Path.GetTempFileName(),
-                    Children = new List<Model>()
+                    Children = new List<IModel>()
                     {
                         new Clock()
                         {
@@ -307,37 +307,43 @@
                 database = new SQLite();
                 database.OpenDatabase(":memory:", readOnly: false);
 
-                var simulation = new Simulation()
+                var simulations = new Simulations()
                 {
-                    Name = "Sim",
-                    FileName = Path.GetTempFileName(),
-                    Children = new List<Model>()
+                    Children = new List<IModel>()
                     {
-                        new Clock()
+                        new Simulation()
                         {
-                            StartDate = new DateTime(1980, 1, 3),
-                            EndDate = new DateTime(1980, 1, 4)
-                        },
-                        new MockSummary(),
-                        new DataStore(database),
-                        new Manager()
-                        {
-                            Code =  "using System;\r\n" +
-                                    "using Models.Core;\r\n" +
-                                    "namespace Models\r\n" +
-                                    "{\r\n" +
-                                    "   [Serializable]\r\n" +
-                                    "   public class Script : Model, ITest\r\n" +
-                                    "   {\r\n" +
-                                    "      public void Run() { throw new Exception(\"Test has failed.\"); }\r\n" +
-                                    "   }\r\n" +
-                                    "}"
+                            Name = "Sim",
+                            FileName = Path.GetTempFileName(),
+                            Children = new List<IModel>()
+                            {
+                                new Clock()
+                                {
+                                    StartDate = new DateTime(1980, 1, 3),
+                                    EndDate = new DateTime(1980, 1, 4)
+                                },
+                                new MockSummary(),
+                                new DataStore(database),
+                                new Manager()
+                                {
+                                    Code =  "using System;\r\n" +
+                                            "using Models.Core;\r\n" +
+                                            "namespace Models\r\n" +
+                                            "{\r\n" +
+                                            "   [Serializable]\r\n" +
+                                            "   public class Script : Model, ITest\r\n" +
+                                            "   {\r\n" +
+                                            "      public void Run() { throw new Exception(\"Test has failed.\"); }\r\n" +
+                                            "   }\r\n" +
+                                            "}"
+                                }
+                            }
                         }
                     }
                 };
 
                 // Run simulations.
-                Runner runner = new Runner(simulation, runType: typeOfRun, runTests: true);
+                Runner runner = new Runner(simulations, runType: typeOfRun, runTests: true);
                 var exceptions = runner.Run();
 
                 // Make sure an exception is returned.
@@ -357,39 +363,45 @@
                 database = new SQLite();
                 database.OpenDatabase(":memory:", readOnly: false);
 
-                var simulation = new Simulation()
+                var simulations = new Simulations()
                 {
-                    Name = "Sim",
-                    FileName = Path.GetTempFileName(),
-                    Children = new List<Model>()
+                    Children = new List<IModel>()
                     {
-                        new Clock()
+                        new Simulation()
                         {
-                            StartDate = new DateTime(1980, 1, 3),
-                            EndDate = new DateTime(1980, 1, 4)
-                        },
-                        new MockSummary(),
-                        new DataStore(database),
-                        new Manager()
-                        {
-                            Code =  "using System;\r\n" +
-                                    "using Models.Core;\r\n" +
-                                    "namespace Models\r\n" +
-                                    "{\r\n" +
-                                    "   [Serializable]\r\n" +
-                                    "   public class Script : Model, ITest\r\n" +
-                                    "   {\r\n" +
-                                    "      [Link]\r\n" +
-                                    "      ISummary summary = null;\r\n" +
-                                    "      public void Run() { summary.WriteMessage(this, \"Passed Test\"); }\r\n" +
-                                    "   }\r\n" +
-                                    "}"
+                            Name = "Sim",
+                            FileName = Path.GetTempFileName(),
+                            Children = new List<IModel>()
+                            {
+                                new Clock()
+                                {
+                                    StartDate = new DateTime(1980, 1, 3),
+                                    EndDate = new DateTime(1980, 1, 4)
+                                },
+                                new MockSummary(),
+                                new DataStore(database),
+                                new Manager()
+                                {
+                                    Code =  "using System;\r\n" +
+                                            "using Models.Core;\r\n" +
+                                            "namespace Models\r\n" +
+                                            "{\r\n" +
+                                            "   [Serializable]\r\n" +
+                                            "   public class Script : Model, ITest\r\n" +
+                                            "   {\r\n" +
+                                            "      [Link]\r\n" +
+                                            "      ISummary summary = null;\r\n" +
+                                            "      public void Run() { summary.WriteMessage(this, \"Passed Test\"); }\r\n" +
+                                            "   }\r\n" +
+                                            "}"
+                                }
+                            }
                         }
                     }
                 };
 
                 // Run simulations.
-                Runner runner = new Runner(simulation, runType: typeOfRun, runTests:true);
+                Runner runner = new Runner(simulations, runType: typeOfRun, runTests:true);
                 Assert.IsNull(runner.Run());
 
                 // Make sure an exception is returned.
@@ -413,7 +425,7 @@
                 {
                     Name = "Sim",
                     FileName = Path.GetTempFileName(),
-                    Children = new List<Model>()
+                    Children = new List<IModel>()
                     {
                         new Clock()
                         {
@@ -456,7 +468,7 @@
                 {
                     Name = "Sim",
                     FileName = Path.GetTempFileName(),
-                    Children = new List<Model>()
+                    Children = new List<IModel>()
                     {
                         new Clock()
                         {
@@ -508,7 +520,7 @@
                 {
                     Name = "Sim",
                     FileName = Path.GetTempFileName(),
-                    Children = new List<Model>()
+                    Children = new List<IModel>()
                     {
                         new Clock()
                         {
@@ -558,13 +570,13 @@
             {
                 Name = "Simulations",
                 Version = Converter.LatestVersion,
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Simulation()
                     {
                         Name = "Sim1",
                         FileName = Path.GetTempFileName(),
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Clock()
                             {

@@ -37,6 +37,16 @@
             modelToAdd.OnCreated();
             Apsim.ChildrenRecursively(modelToAdd).ForEach(m => m.OnCreated());
 
+            // If the model is being added at runtime then need to resolve links and events.
+            var parentSimulation = Apsim.Parent(parent, typeof(Simulation)) as Simulation;
+            if (parentSimulation != null && parentSimulation.IsRunning)
+            {
+                var links = new Links(parentSimulation.Services);
+                links.Resolve(modelToAdd, true);
+                var events = new Events(modelToAdd);
+                events.ConnectEvents();
+            }
+
             Apsim.ClearCaches(modelToAdd);
             return modelToAdd;
         }

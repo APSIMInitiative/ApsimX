@@ -131,7 +131,7 @@ namespace Models.CLEM.Resources
         /// <param name="missingResourceAction">Action to take if requested resource group not found</param>
         /// <param name="missingResourceTypeAction">Action to take if requested resource type not found</param>
         /// <returns>A reference to the item of type Model</returns>
-        public Model GetResourceItem(ResourceRequest request, OnMissingResourceActionTypes missingResourceAction, OnMissingResourceActionTypes missingResourceTypeAction)
+        public IModel GetResourceItem(ResourceRequest request, OnMissingResourceActionTypes missingResourceAction, OnMissingResourceActionTypes missingResourceTypeAction)
         {
             if (request.FilterDetails != null)
             {
@@ -210,13 +210,13 @@ namespace Models.CLEM.Resources
         /// <param name="missingResourceAction">Action to take if requested resource group not found</param>
         /// <param name="missingResourceTypeAction">Action to take if requested resource type not found</param>
         /// <returns>A reference to the item of type object</returns>
-        public Model GetResourceItem(Model requestingModel, Type resourceGroupType, string resourceItemName, OnMissingResourceActionTypes missingResourceAction, OnMissingResourceActionTypes missingResourceTypeAction)
+        public IModel GetResourceItem(Model requestingModel, Type resourceGroupType, string resourceItemName, OnMissingResourceActionTypes missingResourceAction, OnMissingResourceActionTypes missingResourceTypeAction)
         {
             // locate specified resource
             Model resourceGroup = Apsim.Children(this, resourceGroupType).FirstOrDefault() as Model;
             if (resourceGroup != null)
             {
-                Model resource = resourceGroup.Children.Where(a => a.Name == resourceItemName & a.Enabled).FirstOrDefault();
+                IModel resource = resourceGroup.Children.Where(a => a.Name == resourceItemName & a.Enabled).FirstOrDefault();
                 if (resource == null)
                 {
                     string errorMsg = String.Format("@error:Unable to locate resources item [r={0}] in resources [r={1}] for [a={2}]", resourceItemName, resourceGroupType.ToString(), requestingModel.Name);
@@ -260,7 +260,7 @@ namespace Models.CLEM.Resources
         /// <param name="missingResourceAction">Action to take if requested resource group not found</param>
         /// <param name="missingResourceTypeAction">Action to take if requested resource type not found</param>
         /// <returns>A reference to the item of type object</returns>
-        public Model GetResourceItem(Model requestingModel, string resourceGroupAndItem, OnMissingResourceActionTypes missingResourceAction, OnMissingResourceActionTypes missingResourceTypeAction)
+        public IModel GetResourceItem(Model requestingModel, string resourceGroupAndItem, OnMissingResourceActionTypes missingResourceAction, OnMissingResourceActionTypes missingResourceTypeAction)
         {
             if(resourceGroupAndItem == null)
             {
@@ -278,7 +278,7 @@ namespace Models.CLEM.Resources
             Model resourceGroup = this.GetResourceGroupByName(names[0]) as Model;
             if (resourceGroup != null)
             {
-                Model resource = resourceGroup.Children.Where(a => a.Name == names[1] & a.Enabled).FirstOrDefault();
+                IModel resource = resourceGroup.Children.Where(a => a.Name == names[1] & a.Enabled).FirstOrDefault();
                 if (resource == null)
                 {
                     string errorMsg = String.Format("@error:Unable to locate resources item [r={0}] in resources [r={1}] for [a={2}]", names[1], names[0], requestingModel.Name);

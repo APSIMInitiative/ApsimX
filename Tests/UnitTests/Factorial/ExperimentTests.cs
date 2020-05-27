@@ -19,12 +19,12 @@
             var experiment = new Experiment()
             {
                 Name = "Exp1",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Simulation()
                     {
                         Name = "BaseSimulation",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockWeather()
                             {
@@ -36,7 +36,7 @@
                     },
                     new Factors()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Factor()
                             {
@@ -70,12 +70,12 @@
             var experiment = new Experiment()
             {
                 Name = "Exp1",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Simulation()
                     {
                         Name = "BaseSimulation",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockWeather()
                             {
@@ -87,7 +87,7 @@
                     },
                     new Factors()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Factor()
                             {
@@ -126,12 +126,12 @@
             var experiment = new Experiment()
             {
                 Name = "Exp1",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Simulation()
                     {
                         Name = "BaseSimulation",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockWeather()
                             {
@@ -143,13 +143,13 @@
                     },
                     new Factors()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Factor()
                             {
                                 Name = "Factor",
                                 Specification = "[Weather]",
-                                Children = new List<Model>()
+                                Children = new List<IModel>()
                                 {
                                     new MockWeather()
                                     {
@@ -194,12 +194,12 @@
             var experiment = new Experiment()
             {
                 Name = "Exp1",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Simulation()
                     {
                         Name = "BaseSimulation",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockWeather()
                             {
@@ -218,7 +218,7 @@
                     },
                     new Factors()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new CompositeFactor()
                             {
@@ -269,12 +269,12 @@
             var experiment = new Experiment()
             {
                 Name = "Exp1",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Simulation()
                     {
                         Name = "BaseSimulation",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockWeather()
                             {
@@ -293,12 +293,12 @@
                     },
                     new Factors()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Factor()
                             {
                                 Name = "Site",
-                                Children = new List<Model>()
+                                Children = new List<IModel>()
                                 {
                                     new CompositeFactor()
                                     {
@@ -306,7 +306,7 @@
                                         Specifications = new List<string>() { "[Weather].MaxT = 10",
                                                                               "[Weather].MinT = 20",
                                                                               "[Clock]"},
-                                        Children = new List<Model>()
+                                        Children = new List<IModel>()
                                         {
                                             new MockClock()
                                             {
@@ -322,7 +322,7 @@
                                         Specifications = new List<string>() { "[Weather].MaxT = 100",
                                                                               "[Weather].MinT = 200",
                                                                               "[Clock]"},
-                                        Children = new List<Model>()
+                                        Children = new List<IModel>()
                                         {
                                             new MockClock()
                                             {
@@ -371,12 +371,12 @@
             var experiment = new Experiment()
             {
                 Name = "Exp1",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Simulation()
                     {
                         Name = "BaseSimulation",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Models.Operations()
                             {
@@ -405,19 +405,19 @@
                     },
                     new Factors()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Factor()
                             {
                                 Name = "Site",
-                                Children = new List<Model>()
+                                Children = new List<IModel>()
                                 {
                                     new CompositeFactor()
                                     {
                                         Name = "1",
                                         Specifications = new List<string>() { "[Sowing]",
                                                                               "[Cutting]"},
-                                        Children = new List<Model>()
+                                        Children = new List<IModel>()
                                         {
                                             new Models.Operations()
                                             {
@@ -468,12 +468,12 @@
             var experiment = new Experiment()
             {
                 Name = "Exp1",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Simulation()
                     {
                         Name = "BaseSimulation",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockWeather()
                             {
@@ -485,7 +485,7 @@
                     },
                     new Factors()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Factor()
                             {
@@ -528,12 +528,12 @@
             var experiment = new Experiment()
             {
                 Name = "Exp1",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Simulation()
                     {
                         Name = "BaseSimulation",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockWeather()
                             {
@@ -547,11 +547,11 @@
                     },
                     new Factors()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Permutation()
                             {
-                                Children = new List<Model>()
+                                Children = new List<IModel>()
                                 {
                                     new Factor()
                                     {
@@ -623,12 +623,12 @@
             var experiment = new Experiment()
             {
                 Name = "Exp1",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Simulation()
                     {
                         Name = "BaseSimulation",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockModel()
                             {
@@ -642,11 +642,11 @@
                     },
                     new Factors()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Permutation()
                             {
-                                Children = new List<Model>()
+                                Children = new List<IModel>()
                                 {
                                     new Factor()
                                     {
@@ -662,7 +662,7 @@
                             },
                             new Permutation()
                             {
-                                Children = new List<Model>()
+                                Children = new List<IModel>()
                                 {
                                     new Factor()
                                     {
@@ -774,12 +774,12 @@
             var experiment = new Experiment()
             {
                 Name = "Exp1",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Simulation()
                     {
                         Name = "BaseSimulation",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockWeather()
                             {
@@ -793,11 +793,11 @@
                     },
                     new Factors()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Permutation()
                             {
-                                Children = new List<Model>()
+                                Children = new List<IModel>()
                                 {
                                     new Factor()
                                     {

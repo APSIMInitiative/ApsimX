@@ -15,7 +15,7 @@ namespace Models.GrazPlan
     /// Enterprise type init
     /// </summary>
     [Serializable]
-    public class AgeInfo
+    public class EnterpriseAgeInfo
     {
         /// <summary>
         /// Age description
@@ -44,7 +44,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// age lamb,weaner, x-n
         /// </summary>
-        public AgeInfo[] Ages;
+        public EnterpriseAgeInfo[] Ages;
     }
 
     /// <summary>

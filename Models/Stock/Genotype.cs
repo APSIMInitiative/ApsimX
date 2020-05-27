@@ -710,7 +710,7 @@ namespace Models.GrazPlan
                         ComputeConception(ConceiveSigs[1], 1, ref fCR1);
                     PR = ComputeConception(Sigs, N, ref fCR1);                          // Search algorithm begins.  Only a little  
                     if (PR > SeekPR)                                                    //   search, so coded for size not speed    
-                        Scale = Math.Abs(InitScale[Idx]);
+                        Scale = InitScale[Idx];
                     else
                         Scale = -InitScale[Idx];
 

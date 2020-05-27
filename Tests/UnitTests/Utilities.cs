@@ -5,6 +5,7 @@ namespace UnitTests
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
+    using Models.GrazPlan;
     using Models.Storage;
     using System;
     using System.Collections.Generic;
@@ -146,12 +147,12 @@ namespace UnitTests
             Simulations sims = new Simulations()
             {
                 FileName = Path.ChangeExtension(Path.GetTempFileName(), ".apsimx"),
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new DataStore(),
                     new Simulation()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Clock()
                             {
@@ -162,7 +163,7 @@ namespace UnitTests
                             new Zone()
                             {
                                 Area = 1,
-                                Children = new List<Model>()
+                                Children = new List<IModel>()
                                 {
                                     new Models.Report()
                                     {
@@ -184,6 +185,17 @@ namespace UnitTests
             Apsim.ParentAllChildren(sims);
             sims.Write(sims.FileName);
             return sims;
+        }
+
+        /// <summary>
+        /// Call OnCreated in a model and all child models.
+        /// </summary>
+        /// <param name="model"></param>
+        public static void CallOnCreated(IModel model)
+        {
+            model.OnCreated();
+            foreach (var child in model.Children)
+                CallOnCreated(child);
         }
     }
 }
