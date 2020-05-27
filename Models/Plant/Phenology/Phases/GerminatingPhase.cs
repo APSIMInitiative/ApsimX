@@ -94,7 +94,7 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>Resets the phase.</summary>
-        public virtual void ResetPhase() { }
+        public virtual void ResetPhase() { GerminationDate = null; }
 
         // 5. Private methods
         //-----------------------------------------------------------------------------------------------------------------
