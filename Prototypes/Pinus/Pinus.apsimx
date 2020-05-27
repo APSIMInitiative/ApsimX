@@ -2,7 +2,7 @@
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
   "Version": 100,
-  "ApsimVersion": "2020.5.26.5107",
+  "ApsimVersion": "2020.5.26.4859",
   "Name": "Simulations",
   "Children": [
     {
@@ -4722,7 +4722,7 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
-            "C:\\APSIMxSourceTree\\Prototypes\\Pinus\\Observed.xlsx"
+            "Observed.xlsx"
           ],
           "SheetNames": [
             "Observed"
