@@ -6077,8 +6077,8 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.AccumulateByNumericPhase, Models",
-                          "StartStageName": 3.3,
-                          "EndStageName": 4.2,
+                          "StartStageName": 3.6,
+                          "EndStageName": 6.0,
                           "ResetStageName": "BudBurst",
                           "FractionRemovedOnCut": 0.0,
                           "FractionRemovedOnHarvest": 0.0,
@@ -6102,8 +6102,8 @@
                         },
                         {
                           "$type": "Models.Functions.AccumulateByNumericPhase, Models",
-                          "StartStageName": 3.3,
-                          "EndStageName": 4.2,
+                          "StartStageName": 3.6,
+                          "EndStageName": 6.0,
                           "ResetStageName": "BudBurst",
                           "FractionRemovedOnCut": 0.0,
                           "FractionRemovedOnHarvest": 0.0,
@@ -6137,8 +6137,8 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.AccumulateByNumericPhase, Models",
-                          "StartStageName": 3.5,
-                          "EndStageName": 4.1,
+                          "StartStageName": 3.7,
+                          "EndStageName": 6.0,
                           "ResetStageName": "BudBurst",
                           "FractionRemovedOnCut": 0.0,
                           "FractionRemovedOnHarvest": 0.0,
@@ -6162,8 +6162,8 @@
                         },
                         {
                           "$type": "Models.Functions.AccumulateByNumericPhase, Models",
-                          "StartStageName": 3.5,
-                          "EndStageName": 4.1,
+                          "StartStageName": 3.7,
+                          "EndStageName": 6.0,
                           "ResetStageName": "BudBurst",
                           "FractionRemovedOnCut": 0.0,
                           "FractionRemovedOnHarvest": 0.0,
@@ -6680,7 +6680,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 65.0,
+                          "FixedValue": 1.7,
                           "Units": null,
                           "Name": "PreEventValue",
                           "Children": [],
@@ -6698,7 +6698,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": -43.43,
+                                  "FixedValue": -0.80962,
                                   "Units": null,
                                   "Name": "Constant",
                                   "Children": [],
@@ -6714,17 +6714,13 @@
                                       "$type": "Models.Functions.XYPairs, Models",
                                       "X": [
                                         0.0,
-                                        0.5,
-                                        10.0,
-                                        20.0,
-                                        25.0
+                                        1.0,
+                                        10.0
                                       ],
                                       "Y": [
                                         0.0,
-                                        0.0,
-                                        46.0,
-                                        92.0,
-                                        115.0
+                                        0.08024,
+                                        0.8024
                                       ],
                                       "Name": "XYPairs",
                                       "Children": [],
@@ -6792,17 +6788,13 @@
                                       "$type": "Models.Functions.XYPairs, Models",
                                       "X": [
                                         0.0,
-                                        0.1,
-                                        10.0,
-                                        20.0,
-                                        25.0
+                                        1.0,
+                                        10.0
                                       ],
                                       "Y": [
                                         0.0,
-                                        0.0,
-                                        4.2,
-                                        8.4,
-                                        10.5
+                                        0.03093,
+                                        0.3093
                                       ],
                                       "Name": "XYPairs",
                                       "Children": [],
@@ -6869,7 +6861,7 @@
                             },
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 10.0,
+                              "FixedValue": 0.0,
                               "Units": null,
                               "Name": "zero",
                               "Children": [],
@@ -6889,13 +6881,13 @@
                     },
                     {
                       "$type": "Models.Functions.OnEventFunction, Models",
-                      "SetEvent": "BudBurst",
-                      "ReSetEvent": "Ecodormancy",
+                      "SetEvent": "Flowering",
+                      "ReSetEvent": "BudBurst",
                       "Name": "BunchesPerVine",
                       "Children": [
                         {
                           "$type": "Models.Memo, Models",
-                          "Text": "here we use a trigger function for bunches per shoot as the value of mean flowering temperature Y0 is updating itself during the growing season, which would cause inconvience if we directly correlates the bunches per shoot and mean flowering temperature Y0. \r\n\r\nNumbers were guessed based on Eltom 2013 Fig. 7.7. y=0.0981*Ta + 0.35\r\n\r\n\r\n Bunches per shoot is affected by the temperature and CHO during initiation, it is further affected by the CHO during bud burst. The later decided whether the potential initiated inflorescence can grow out successfully or been realized. \r\n\r\nFor simiplicity, right now, the CHO effect during bud burst is expressed as a function of number of buds retained.",
+                          "Text": "Trigger the calculation after the determination of bunches per shoot\n\n",
                           "Name": "Memo",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -6904,7 +6896,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 65.0,
+                          "FixedValue": 50.0,
                           "Units": null,
                           "Name": "PreEventValue",
                           "Children": [],
@@ -6917,166 +6909,46 @@
                           "Name": "PostEventValue",
                           "Children": [
                             {
-                              "$type": "Models.Functions.AddFunction, Models",
-                              "Name": "MetFun",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 10.0,
+                              "Units": null,
+                              "Name": "zero",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "NumberFunction",
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": -43.43,
-                                  "Units": null,
-                                  "Name": "Constant",
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Berry].YieldComponent.BunchesPerShoot",
+                                  "Name": "BunchesPerShoot",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                  "Name": "TmaxIni",
+                                  "$type": "Models.Functions.DivideFunction, Models",
+                                  "Name": "ShootsNum",
                                   "Children": [
                                     {
-                                      "$type": "Models.Functions.XYPairs, Models",
-                                      "X": [
-                                        0.0,
-                                        0.5,
-                                        10.0,
-                                        20.0,
-                                        25.0
-                                      ],
-                                      "Y": [
-                                        0.0,
-                                        0.0,
-                                        46.0,
-                                        92.0,
-                                        115.0
-                                      ],
-                                      "Name": "XYPairs",
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Grapevine].Structure.MainStemPopn",
+                                      "Name": "StemPopulation",
                                       "Children": [],
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.LessThanFunction, Models",
-                                      "Name": "XValue",
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Berry].MetFactors.BUN_TmaxIni1",
-                                          "Name": "XValue",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 10.0,
-                                          "Units": null,
-                                          "Name": "Constant",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 20.0,
-                                          "Units": null,
-                                          "Name": "GuessValue",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Berry].MetFactors.BUN_TmaxIni1",
-                                          "Name": "TmaxIni1",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                  "Name": "RadIni",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.XYPairs, Models",
-                                      "X": [
-                                        0.0,
-                                        0.1,
-                                        10.0,
-                                        20.0,
-                                        25.0
-                                      ],
-                                      "Y": [
-                                        0.0,
-                                        0.0,
-                                        4.2,
-                                        8.4,
-                                        10.5
-                                      ],
-                                      "Name": "XYPairs",
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Grapevine].Population",
+                                      "Name": "Population",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.LessThanFunction, Models",
-                                      "Name": "XValue",
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Berry].MetFactors.BUN_RadIni1",
-                                          "Name": "XValue",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 10.0,
-                                          "Units": null,
-                                          "Name": "Constant",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 25.0,
-                                          "Units": null,
-                                          "Name": "GuessValue",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Berry].MetFactors.BUN_RadIni1",
-                                          "Name": "TmaxIni1",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -7087,16 +6959,6 @@
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 10.0,
-                              "Units": null,
-                              "Name": "zero",
-                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -7674,8 +7536,17 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Berry].YieldComponent.BunchesPerVine",
-                      "Name": "BunchesPerVine",
+                      "VariableName": "[Grapevine].Structure.MainStemPopn",
+                      "Name": "StemPopulation",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Berry].YieldComponent.BunchesPerShoot",
+                      "Name": "BunchesPerShoot",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7685,15 +7556,6 @@
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Berry].YieldComponent.BerryNum",
                       "Name": "BerriesPerBunch",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Grapevine].Population",
-                      "Name": "Population",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -12086,6 +11948,7 @@
                             "[Grapevine].Berry.MetFactors.BM_RainTotVer as BM_RainTotVer",
                             "[Grapevine].Berry.MetFactors.BM_TmeanFlow as BM_TmeanFlow",
                             "",
+                            "[Grapevine].Berry.YieldComponent.BunchesPerShoot as bunch.no.shoot",
                             "[Grapevine].Berry.YieldComponent.BunchesPerVine as bunch.no.vine",
                             "[Grapevine].Berry.YieldComponent.BerryNum as BerryNum",
                             "[Grapevine].Berry.YieldComponent.BerryMass as berry.fw.mean"
@@ -14169,6 +14032,73 @@
                               "ReadOnly": false
                             }
                           ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "BunchesPerVine1",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Climate",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today.Year",
+                          "YFieldName": "bunch.no.shoot",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Series",
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
