@@ -39,12 +39,15 @@
         private int _numPaths = 1000;
 
         /// <summary>Parameter values coming back from R</summary>
+        [JsonIgnore]
         public DataTable ParameterValues { get; set; }
 
         /// <summary>X1 values coming back from R</summary>
+        [JsonIgnore]
         public DataTable X1 { get; set; }
 
         /// <summary>X2 values coming back from R</summary>
+        [JsonIgnore]
         public DataTable X2 { get; set; }
 
         /// <summary>The number of paths to run</summary>
@@ -189,8 +192,8 @@
             r.InstallPackage("sensitivity");
             if (ParametersHaveChanged)
             {
-                allCombinations.Clear();
-                ParameterValues.Clear();
+                allCombinations?.Clear();
+                ParameterValues?.Clear();
             }
         }
 
@@ -201,7 +204,7 @@
         {
             if (allCombinations.Count == 0)
             {
-                if (ParameterValues.Rows.Count == 0)
+                if (ParameterValues == null || ParameterValues.Rows.Count == 0)
                 {
                     // Write a script to get random numbers from R.
                     string script = string.Format
