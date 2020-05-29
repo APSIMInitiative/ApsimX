@@ -98,7 +98,7 @@
         /// <param name="name">Name of the sibling.</param>
         public IModel Sibling(string name)
         {
-            return Siblings().FirstOrDefault(s => s.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+            return Siblings(name).FirstOrDefault();
         }
 
         /// <summary>
@@ -107,7 +107,7 @@
         /// <param name="name">Name of the descendant.</param>
         public IModel Descendant(string name)
         {
-            return Descendants().FirstOrDefault(d => d.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+            return Descendants(name).FirstOrDefault();
         }
 
         /// <summary>
@@ -116,7 +116,7 @@
         /// <param name="name">Name of the ancestor.</param>
         public IModel Ancestor(string name)
         {
-            return Ancestors().FirstOrDefault(a => a.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+            return Ancestors(name).FirstOrDefault();
         }
 
         /// <summary>
@@ -125,7 +125,7 @@
         /// <param name="name">Name of the model.</param>
         public IModel InScope(string name)
         {
-            return InScopeAll().FirstOrDefault(m => m.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+            return InScopeAll(name).FirstOrDefault();
         }
 
         /// <summary>
@@ -171,7 +171,7 @@
         /// <typeparam name="T">Type of the sibling.</typeparam>
         public T Sibling<T>(string name) where T : IModel
         {
-            return Siblings<T>().FirstOrDefault(s => s.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+            return Siblings<T>(name).FirstOrDefault();
         }
 
         /// <summary>
@@ -181,7 +181,7 @@
         /// <typeparam name="T">Type of the descendant.</typeparam>
         public T Descendant<T>(string name) where T : IModel
         {
-            return Descendants<T>().FirstOrDefault(d => d.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+            return Descendants<T>(name).FirstOrDefault();
         }
 
         /// <summary>
@@ -191,7 +191,7 @@
         /// <typeparam name="T">Type of the ancestor.</typeparam>
         public T Ancestor<T>(string name) where T : IModel
         {
-            return Ancestors<T>().FirstOrDefault(a => a.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+            return Ancestors<T>(name).FirstOrDefault();
         }
 
         /// <summary>
@@ -201,7 +201,7 @@
         /// <typeparam name="T">Type of model to find.</typeparam>
         public T InScope<T>(string name) where T : IModel
         {
-            return InScopeAll<T>().FirstOrDefault(m => m.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+            return InScopeAll<T>(name).FirstOrDefault();
         }
 
         /// <summary>
@@ -238,6 +238,82 @@
         public IEnumerable<T> InScopeAll<T>() where T : IModel
         {
             return InScopeAll().OfType<T>();
+        }
+
+        /// <summary>
+        /// Find all siblings with the given type and name.
+        /// </summary>
+        /// <typeparam name="T">Type of siblings to return.</typeparam>
+        /// <param name="name">Name of the siblings.</param>
+        public IEnumerable<T> Siblings<T>(string name) where T : IModel
+        {
+            return Siblings(name).OfType<T>();
+        }
+
+        /// <summary>
+        /// Find all descendants with the given type and name.
+        /// </summary>
+        /// <typeparam name="T">Type of descendants to return.</typeparam>
+        /// <param name="name">Name of the descendants.</param>
+        public IEnumerable<T> Descendants<T>(string name) where T : IModel
+        {
+            return Descendants(name).OfType<T>();
+        }
+
+        /// <summary>
+        /// Find all ancestors of the given type.
+        /// </summary>
+        /// <typeparam name="T">Type of ancestors to return.</typeparam>
+        /// <param name="name">Name of the ancestors.</param>
+        public IEnumerable<T> Ancestors<T>(string name) where T : IModel
+        {
+            return Ancestors(name).OfType<T>();
+        }
+
+        /// <summary>
+        /// Find all models of a given type in scope.
+        /// </summary>
+        /// <typeparam name="T">Type of models to find.</typeparam>
+        /// <param name="name">Name of the models.</param>
+        public IEnumerable<T> InScopeAll<T>(string name) where T : IModel
+        {
+            return InScopeAll(name).OfType<T>();
+        }
+
+        /// <summary>
+        /// Find all siblings with a given name.
+        /// </summary>
+        /// <param name="name">Name of the siblings.</param>
+        public IEnumerable<IModel> Siblings(string name)
+        {
+            return Siblings().Where(s => s.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+        }
+
+        /// <summary>
+        /// Find all descendants with a given name.
+        /// </summary>
+        /// <param name="name">Name of the descendants.</param>
+        public IEnumerable<IModel> Descendants(string name)
+        {
+            return Descendants().Where(d => d.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+        }
+
+        /// <summary>
+        /// Find all ancestors with a given name.
+        /// </summary>
+        /// <param name="name">Name of the ancestors.</param>
+        public IEnumerable<IModel> Ancestors(string name)
+        {
+            return Ancestors().Where(a => a.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+        }
+
+        /// <summary>
+        /// Find all model in scope with a given name.
+        /// </summary>
+        /// <param name="name">Name of the models.</param>
+        public IEnumerable<IModel> InScopeAll(string name)
+        {
+            return InScopeAll().Where(m => m.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
         }
 
         /// <summary>
