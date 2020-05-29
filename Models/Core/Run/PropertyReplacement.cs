@@ -33,6 +33,12 @@
                 throw new Exception("No path specified for property replacement.");
 
             Apsim.Set(simulation, path, replacement);
+            foreach (Zone paddock in Apsim.Children(simulation, typeof(Zone)))
+            {
+                IVariable variable = Apsim.GetVariableObject(paddock, path);
+                if (variable != null)
+                    variable.Value = replacement;
+            }
         }
     }
 }
