@@ -234,6 +234,14 @@ namespace Models.Core
         void ParentAllDescendants();
 
         /// <summary>
+        /// Get the underlying variable object for the given path.
+        /// Note that this can be a variable/property or a model.
+        /// Returns null if not found.
+        /// </summary>
+        /// <param name="path">The path of the variable/model.</param>
+        IVariable FindInPath(string path);
+
+        /// <summary>
         /// Called when the model has been newly created in memory whether from 
         /// cloning or deserialisation.
         /// </summary>

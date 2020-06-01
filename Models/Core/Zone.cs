@@ -75,23 +75,6 @@
             Locator().Set(namePath, this, value);
         }
 
-
-        /// <summary>Gets the locater model for the specified model.</summary>
-        /// <returns>The an instance of a locater class for the specified model. Never returns null.</returns>
-        public Locater Locator()
-        {
-            var simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
-            if (simulation == null)
-            {
-                // Simulation can be null if this model is not under a simulation e.g. DataStore.
-                return new Locater();
-            }
-            else
-            {
-                return simulation.Locater;
-            }
-        }
-
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>

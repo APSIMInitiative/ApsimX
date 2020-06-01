@@ -297,5 +297,13 @@ namespace Models.Core
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
             }
         }
+
+        /// <summary>
+        /// Gets the locater model.
+        /// </summary>
+        protected override Locater Locator()
+        {
+            return Locater;
+        }
     }
 }

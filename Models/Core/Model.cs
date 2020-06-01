@@ -417,6 +417,20 @@
         }
 
         /// <summary>
+        /// Get the underlying variable object for the given path.
+        /// Note that this can be a variable/property or a model.
+        /// Returns null if not found.
+        /// </summary>
+        /// <param name="path">The path of the variable/model.</param>
+        /// <remarks>
+        /// See <see cref="Locater"/> for more info about paths.
+        /// </remarks>
+        public IVariable FindInPath(string path)
+        {
+            return Locator().GetInternal(path, this);
+        }
+
+        /// <summary>
         /// Parent all descendant models.
         /// </summary>
         public void ParentAllDescendants()
@@ -426,6 +440,22 @@
                 child.Parent = this;
                 child.ParentAllDescendants();
             }
+        }
+
+        /// <summary>
+        /// Gets the locater model.
+        /// </summary>
+        /// <remarks>
+        /// This is overriden in class Simulation.
+        /// </remarks>
+        protected virtual Locater Locator()
+        {
+            Simulation sim = Ancestor<Simulation>();
+            if (sim != null)
+                return sim.Locater;
+
+            // Simulation can be null if this model is not under a simulation e.g. DataStore.
+            return new Locater();
         }
     }
 }
