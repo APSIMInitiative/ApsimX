@@ -415,5 +415,17 @@
             }
             return false;
         }
+
+        /// <summary>
+        /// Parent all descendant models.
+        /// </summary>
+        public void ParentAllDescendants()
+        {
+            foreach (IModel child in Children)
+            {
+                child.Parent = this;
+                child.ParentAllDescendants();
+            }
+        }
     }
 }
