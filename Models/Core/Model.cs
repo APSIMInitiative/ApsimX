@@ -1,5 +1,7 @@
 ﻿namespace Models.Core
 {
+    using APSIM.Shared.Utilities;
+    using Models.Factorial;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -9,6 +11,10 @@
     /// Base class for all models
     /// </summary>
     [Serializable]
+    [ValidParent(typeof(Folder))]
+    [ValidParent(typeof(Replacements))]
+    [ValidParent(typeof(Factor))]
+    [ValidParent(typeof(CompositeFactor))]
     public class Model : IModel
     {
         [NonSerialized]
@@ -374,5 +380,40 @@
         /// cloning or deserialisation.
         /// </summary>
         public virtual void OnCreated() { }
+    
+        /// <summary>
+        /// Return true iff a model with the given type can be added to the model.
+        /// </summary>
+        /// <param name="type">The child type.</param>
+        public bool IsChildAllowable(Type type)
+        {
+            // Simulations objects cannot be added to any other models.
+            if (typeof(Simulations).IsAssignableFrom(type))
+                return false;
+
+            // If it's not an IModel, it's not a valid child.
+            if (!typeof(IModel).IsAssignableFrom(type))
+                return false;
+
+            // Functions are currently allowable anywhere
+            // Note - IFunction does have a [ValidParent(DropAnywhere = true)]
+            // attribute, but the GetAttributes method doesn't look in interfaces.
+            if (type.GetInterface("IFunction") != null)
+                return true;
+
+            // Is allowable if one of the valid parents of this type (t) matches the parent type.
+            foreach (ValidParentAttribute validParent in ReflectionUtilities.GetAttributes(type, typeof(ValidParentAttribute), true))
+            {
+                if (validParent != null)
+                {
+                    if (validParent.DropAnywhere)
+                        return true;
+
+                    if (validParent.ParentType != null && validParent.ParentType.IsAssignableFrom(GetType()))
+                        return true;
+                }
+            }
+            return false;
+        }
     }
 }

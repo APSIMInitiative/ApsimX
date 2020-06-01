@@ -12,6 +12,7 @@ using Models;
 using Models.Factorial;
 using Models.PMF;
 using Models.PMF.Organs;
+using Models.Functions;
 
 namespace UnitTests.Core
 {
@@ -1089,6 +1090,113 @@ namespace UnitTests.Core
             Assert.AreEqual(new[] { managerFolder, scopedSimulation, clock }, plant1.InScopeAll<IModel>("asdf").ToArray());
             Assert.AreEqual(new[] { scopedSimulation, clock, managerFolder }, summary.InScopeAll<IModel>("asdf").ToArray());
             Assert.AreEqual(new[] { managerFolder, scopedSimulation, clock }, plant2.InScopeAll<IModel>("asdf").ToArray());
+        }
+
+        // Note - this class actually has several valid parents as defined in class Model.
+        private class NoValidParents : Model { }
+
+        [ValidParent(typeof(Simulations))]
+        private class DropOnSimulations : Model { }
+
+        [ValidParent(typeof(Folder))]
+        private class DropOnFolder : Model { }
+
+        [ValidParent(DropAnywhere = true)]
+        private class DropAnywhere : Model { }
+
+        [ValidParent(DropAnywhere = true)]
+        [ValidParent(DropAnywhere = false)]
+        private class ConflictingDirectives : Model { }
+
+        [ValidParent(DropAnywhere = false)]
+        [ValidParent(DropAnywhere = true)]
+        private class ConflictedButReversed : Model { }
+
+        [ValidParent(DropAnywhere = true)]
+        private class NotAModel { }
+
+        [ValidParent(typeof(NoValidParents))]
+        private class CanAddToNoValidParents : Model { }
+
+        private class SomeFunction : Model, IFunction
+        {
+            public double Value(int arrayIndex = -1)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        // Don't expect to ever see something like this in the wild...
+        private class SimsIFunction : Simulations, IFunction
+        {
+            public double Value(int arrayIndex = -1)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        /// <summary>
+        /// Tests for the <see cref="IModel.IsChildAllowable(Type)"/> method.
+        /// </summary>
+        [Test]
+        public void TestIsChildAllowable()
+        {
+            IModel[] allowAnyChild = new IModel[]
+            {
+                new Folder(),
+                new Factor(),
+                new CompositeFactor(),
+                new Replacements(),
+            };
+
+            foreach (IModel anyChild in allowAnyChild)
+            {
+                // Any Model can be added to a folder
+                Assert.True(anyChild.IsChildAllowable(typeof(DropOnSimulations)));
+                Assert.True(anyChild.IsChildAllowable(typeof(DropOnFolder)));
+                Assert.True(anyChild.IsChildAllowable(typeof(MockModel1)));
+                Assert.True(anyChild.IsChildAllowable(typeof(DropAnywhere)));
+                Assert.True(anyChild.IsChildAllowable(typeof(ConflictingDirectives)));
+                Assert.True(anyChild.IsChildAllowable(typeof(ConflictedButReversed)));
+                Assert.True(anyChild.IsChildAllowable(typeof(NoValidParents)));
+                Assert.True(anyChild.IsChildAllowable(typeof(SomeFunction)));
+                Assert.True(anyChild.IsChildAllowable(typeof(SomeFunction)));
+
+                // If it's not a model it cannot be added as a child.
+                Assert.False(anyChild.IsChildAllowable(typeof(object)));
+
+                // Even if it has a ValidParent attribute.
+                Assert.False(anyChild.IsChildAllowable(typeof(NotAModel)));
+
+                // Even if it's also an IFunction.
+                Assert.False(anyChild.IsChildAllowable(typeof(SimsIFunction)));
+
+                // Simulations object also cannot be added to anything.
+                Assert.False(anyChild.IsChildAllowable(typeof(Simulations)));
+            }
+
+            // Simulations object cannot be added to anything.
+            Assert.False(container.IsChildAllowable(typeof(Simulations)));
+            Assert.False(folder2.IsChildAllowable(typeof(Simulations)));
+            Assert.False(simpleModel.IsChildAllowable(typeof(Simulations)));
+            Assert.False(new Simulations().IsChildAllowable(typeof(Simulations)));
+            Assert.False(new SomeFunction().IsChildAllowable(typeof(Simulations)));
+
+            // IFunctions can be added to anything.
+            Assert.True(simpleModel.IsChildAllowable(typeof(SomeFunction)));
+            Assert.True(new Simulations().IsChildAllowable(typeof(SomeFunction)));
+            Assert.True(new Model().IsChildAllowable(typeof(SomeFunction)));
+
+            // Otherwise, the validity of a child model depends on it sspecific
+            // valid parents, as defined in its valid parent attributes.
+            Assert.True(new NoValidParents().IsChildAllowable(typeof(CanAddToNoValidParents)));
+            Assert.True(new NoValidParents().IsChildAllowable(typeof(DropAnywhere)));
+            Assert.True(new Model().IsChildAllowable(typeof(DropAnywhere)));
+            Assert.False(new NoValidParents().IsChildAllowable(typeof(NoValidParents)));
+            Assert.False(new Model().IsChildAllowable(typeof(NoValidParents)));
+            Assert.False(new CanAddToNoValidParents().IsChildAllowable(typeof(CanAddToNoValidParents)));
+            Assert.True(new CanAddToNoValidParents().IsChildAllowable(typeof(DropAnywhere)));
+            Assert.True(new Model().IsChildAllowable(typeof(DropAnywhere)));
         }
     }
 }
