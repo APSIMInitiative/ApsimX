@@ -189,7 +189,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the depth.</summary>
         [Units("mm")]
-        public double Depth { get { return Structure.Height; } }
+        public double Depth { get; set; }
 
         /// <summary>Gets the width of the canopy (mm).</summary>
         public double Width { get; set; }
@@ -494,9 +494,12 @@ namespace Models.PMF.Organs
         IFunction FrostFraction = null;
 
         /// <summary>The width of the canopy</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction WidthFunction = null;
 
+        /// <summary>The depth of the canopy</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        IFunction DepthFunction = null;
 
         /// <summary>The structural fraction</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -1235,10 +1238,10 @@ namespace Models.PMF.Organs
         {
             if (!parentPlant.IsEmerged)
                 return;
-            if (WidthFunction != null)
-                Width = WidthFunction.Value();
-            else
-                Width = 0;
+            
+            Width = WidthFunction.Value();
+
+            Depth = DepthFunction.Value();
 
             if (FrostFraction.Value() > 0)
                 foreach (LeafCohort l in Leaves)
