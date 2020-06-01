@@ -192,7 +192,7 @@ namespace Models.PMF.Organs
         public double Depth { get { return Structure.Height; } }
 
         /// <summary>Gets the width of the canopy (mm).</summary>
-        public double Width { get { return 0; } }
+        public double Width { get; set; }
 
         /// <summary>Gets  FRGR.</summary>
         [Description("Relative growth rate for calculating stomata conductance which fed the Penman-Monteith function")]
@@ -492,6 +492,11 @@ namespace Models.PMF.Organs
         /// <summary>The frost fraction</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction FrostFraction = null;
+
+        /// <summary>The width of the canopy</summary>
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        IFunction WidthFunction = null;
+
 
         /// <summary>The structural fraction</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -1230,6 +1235,10 @@ namespace Models.PMF.Organs
         {
             if (!parentPlant.IsEmerged)
                 return;
+            if (WidthFunction != null)
+                Width = WidthFunction.Value();
+            else
+                Width = 0;
 
             if (FrostFraction.Value() > 0)
                 foreach (LeafCohort l in Leaves)
