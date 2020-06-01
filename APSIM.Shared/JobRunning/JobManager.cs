@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Threading;
+    using System.Linq;
 
     /// <summary>
     /// Manages a collection of jobs.
@@ -16,6 +17,20 @@
 
         /// <summary>Invoked when this job manager has finished everything.</summary>
         public event EventHandler Completed;
+
+        /// <summary>
+        /// Returns aggregate progress of all jobs as a real number in range [0, 1].
+        /// </summary>
+        public double Progress
+        {
+            get
+            {
+                if (jobs == null || jobs.Count == 0)
+                    return 0;
+
+                return jobs.Sum(j => j.Progress) / jobs.Count;
+            }
+        }
 
         /// <summary>
         /// 

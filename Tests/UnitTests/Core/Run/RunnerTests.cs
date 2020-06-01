@@ -555,7 +555,7 @@
                 Assert.AreEqual(runner.PercentComplete(), 0);
 
                 // Make sure the expected exception was sent through the all completed jobs event.
-                Assert.AreEqual(argsOfAllCompletedJobs.AllExceptionsThrown.Count, 1);
+                Assert.AreEqual(1, argsOfAllCompletedJobs.AllExceptionsThrown.Count);
                 Assert.IsTrue(argsOfAllCompletedJobs.AllExceptionsThrown[0].ToString().Contains("Intentional exception"));
 
                 database.CloseDatabase();

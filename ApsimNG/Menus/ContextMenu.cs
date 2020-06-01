@@ -139,7 +139,8 @@
                                               typeof(Experiment),
                                               typeof(Folder),
                                               typeof(Morris),
-                                              typeof(Sobol)},
+                                              typeof(Sobol),
+                                              typeof(APSIM.Shared.JobRunning.IRunnable)},
                      ShortcutKey = "F5")]
         public void RunAPSIM(object sender, EventArgs e)
         {
@@ -163,7 +164,8 @@
                                               typeof(Simulations),
                                               typeof(Experiment),
                                               typeof(Folder),
-                                              typeof(Morris)},
+                                              typeof(Morris),
+                                              typeof(APSIM.Shared.JobRunning.IRunnable)},
                      ShortcutKey = "F6")]
         public void RunAPSIMMultiProcess(object sender, EventArgs e)
         {

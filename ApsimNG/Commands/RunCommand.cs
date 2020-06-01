@@ -163,6 +163,8 @@
 
                 explorerPresenter.MainPresenter.ShowProgress(Convert.ToInt32(jobRunner?.PercentComplete(), CultureInfo.InvariantCulture));
             }
+            else if (jobRunner != null)
+                explorerPresenter.MainPresenter.ShowProgress(Convert.ToInt32(jobRunner.Progress * 100, CultureInfo.InvariantCulture));
         }
     }
 }
