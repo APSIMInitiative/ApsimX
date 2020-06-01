@@ -54,173 +54,173 @@ namespace Models.Core
         /// Find a sibling with a given name.
         /// </summary>
         /// <param name="name">Name of the sibling.</param>
-        IModel Sibling(string name);
+        IModel FindSibling(string name);
 
         /// <summary>
         /// Find a descendant with a given name.
         /// </summary>
         /// <param name="name">Name of the descendant.</param>
-        IModel Descendant(string name);
+        IModel FindDescendant(string name);
 
         /// <summary>
         /// Find an ancestor with a given name.
         /// </summary>
         /// <param name="name">Name of the ancestor.</param>
-        IModel Ancestor(string name);
+        IModel FindAncestor(string name);
 
         /// <summary>
         /// Find a model in scope with a given name.
         /// </summary>
         /// <param name="name">Name of the model.</param>
-        IModel InScope(string name);
+        IModel FindInScope(string name);
 
         /// <summary>
         /// Find a sibling with a given type.
         /// </summary>
         /// <typeparam name="T">Type of the sibling.</typeparam>
-        T Sibling<T>() where T : IModel;
+        T FindSibling<T>() where T : IModel;
 
         /// <summary>
         /// Find a descendant with a given type.
         /// </summary>
         /// <typeparam name="T">Type of the descendant.</typeparam>
-        T Descendant<T>() where T : IModel;
+        T FindDescendant<T>() where T : IModel;
 
         /// <summary>
         /// Find an ancestor with a given type.
         /// </summary>
         /// <typeparam name="T">Type of the ancestor.</typeparam>
-        T Ancestor<T>() where T : IModel;
+        T FindAncestor<T>() where T : IModel;
 
         /// <summary>
         /// Find a model in scope with a given type in scope.
         /// </summary>
         /// <typeparam name="T">Type of model to find.</typeparam>
-        T InScope<T>() where T : IModel;
+        T FindInScope<T>() where T : IModel;
 
         /// <summary>
         /// Find a sibling with a given type and name.
         /// </summary>
         /// <param name="name">Name of the sibling.</param>
         /// <typeparam name="T">Type of the sibling.</typeparam>
-        T Sibling<T>(string name) where T : IModel;
+        T FindSibling<T>(string name) where T : IModel;
 
         /// <summary>
         /// Find a descendant model with a given type and name.
         /// </summary>
         /// <param name="name">Name of the descendant.</param>
         /// <typeparam name="T">Type of the descendant.</typeparam>
-        T Descendant<T>(string name) where T : IModel;
+        T FindDescendant<T>(string name) where T : IModel;
 
         /// <summary>
         /// Find an ancestor with a given type and name.
         /// </summary>
         /// <param name="name">Name of the ancestor.</param>
         /// <typeparam name="T">Type of the ancestor.</typeparam>
-        T Ancestor<T>(string name) where T : IModel;
+        T FindAncestor<T>(string name) where T : IModel;
 
         /// <summary>
         /// Find a model in scope with a given type and name.
         /// </summary>
         /// <param name="name">Name of the model.</param>
         /// <typeparam name="T">Type of model to find.</typeparam>
-        T InScope<T>(string name) where T : IModel;
+        T FindInScope<T>(string name) where T : IModel;
 
         /// <summary>
         /// Find all siblings with a given name.
         /// </summary>
         /// <param name="name">Name of the siblings.</param>
-        IEnumerable<IModel> Siblings(string name);
+        IEnumerable<IModel> FindAllSiblings(string name);
 
         /// <summary>
         /// Find all descendants with a given name.
         /// </summary>
         /// <param name="name">Name of the descendants.</param>
-        IEnumerable<IModel> Descendants(string name);
+        IEnumerable<IModel> FindAllDescendants(string name);
 
         /// <summary>
         /// Find all ancestors with a given name.
         /// </summary>
         /// <param name="name">Name of the ancestors.</param>
-        IEnumerable<IModel> Ancestors(string name);
+        IEnumerable<IModel> FindAllAncestors(string name);
 
         /// <summary>
         /// Find all models in scope with a given name.
         /// </summary>
         /// <param name="name">Name of the models.</param>
-        IEnumerable<IModel> InScopeAll(string name);
+        IEnumerable<IModel> FindAllInScope(string name);
 
         /// <summary>
         /// Find all siblings of the given type.
         /// </summary>
         /// <typeparam name="T">Type of siblings to return.</typeparam>
-        IEnumerable<T> Siblings<T>() where T : IModel;
+        IEnumerable<T> FindAllSiblings<T>() where T : IModel;
 
         /// <summary>
         /// Find all descendants of the given type.
         /// </summary>
         /// <typeparam name="T">Type of descendants to return.</typeparam>
-        IEnumerable<T> Descendants<T>() where T : IModel;
+        IEnumerable<T> FindAllDescendants<T>() where T : IModel;
 
         /// <summary>
         /// Find all ancestors of the given type.
         /// </summary>
         /// <typeparam name="T">Type of siblings to return.</typeparam>
-        IEnumerable<T> Ancestors<T>() where T : IModel;
+        IEnumerable<T> FindAllAncestors<T>() where T : IModel;
 
         /// <summary>
         /// Find all models of the given type in scope.
         /// </summary>
         /// <typeparam name="T">Type of siblings to return.</typeparam>
-        IEnumerable<T> InScopeAll<T>() where T : IModel;
+        IEnumerable<T> FindAllInScope<T>() where T : IModel;
 
         /// <summary>
         /// Find all siblings with the given type and name.
         /// </summary>
         /// <typeparam name="T">Type of siblings to return.</typeparam>
         /// <param name="name">Name of the siblings.</param>
-        IEnumerable<T> Siblings<T>(string name) where T : IModel;
+        IEnumerable<T> FindAllSiblings<T>(string name) where T : IModel;
 
         /// <summary>
         /// Find all descendants with the given type and name.
         /// </summary>
         /// <typeparam name="T">Type of descendants to return.</typeparam>
         /// <param name="name">Name of the descendants.</param>
-        IEnumerable<T> Descendants<T>(string name) where T : IModel;
+        IEnumerable<T> FindAllDescendants<T>(string name) where T : IModel;
 
         /// <summary>
         /// Find all ancestors with the given type and name.
         /// </summary>
         /// <typeparam name="T">Type of ancestors to return.</typeparam>
         /// <param name="name">Name of the ancestors.</param>
-        IEnumerable<T> Ancestors<T>(string name) where T : IModel;
+        IEnumerable<T> FindAllAncestors<T>(string name) where T : IModel;
 
         /// <summary>
         /// Find all models with the given type and name in scope.
         /// </summary>
         /// <typeparam name="T">Type of models to find.</typeparam>
         /// <param name="name">Name of the models.</param>
-        IEnumerable<T> InScopeAll<T>(string name) where T : IModel;
+        IEnumerable<T> FindAllInScope<T>(string name) where T : IModel;
 
         /// <summary>
         /// Returns all ancestor models.
         /// </summary>
-        IEnumerable<IModel> Ancestors();
+        IEnumerable<IModel> FindAllAncestors();
 
         /// <summary>
         /// Returns all descendant models.
         /// </summary>
-        IEnumerable<IModel> Descendants();
+        IEnumerable<IModel> FindAllDescendants();
 
         /// <summary>
         /// Returns all sibling models.
         /// </summary>
-        IEnumerable<IModel> Siblings();
+        IEnumerable<IModel> FindAllSiblings();
 
         /// <summary>
         /// Returns all models which are in scope.
         /// </summary>
-        IEnumerable<IModel> InScopeAll();
+        IEnumerable<IModel> FindAllInScope();
 
         /// <summary>
         /// Return true iff a model with the given type can be added to the model.
