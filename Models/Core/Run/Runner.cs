@@ -46,6 +46,23 @@
             MultiProcess
         }
 
+        /// <summary>
+        /// Gets the aggregate progress of all jobs as a real number in range [0, 1].
+        /// </summary>
+        public double Progress
+        {
+            get
+            {
+                if (jobRunner != null)
+                    return jobRunner.Progress;
+
+                if (jobs == null || jobs.Count == 0)
+                    return 0;
+
+                return jobs.Sum(j => j.Progress) / jobs.Count;
+            }
+        }
+
         /// <summary>Constructor</summary>
         /// <param name="relativeTo">The model to use to search for simulations to run.</param>
         /// <param name="runSimulations">Run simulations?</param>
@@ -211,7 +228,7 @@
                         foreach (IRunnable runningSim in jobRunner.SimsRunning)
                         {
                             Simulation sim = (runningSim as SimulationDescription)?.SimulationToRun;
-                            nComplete += sim?.FractionComplete ?? 0;
+                            nComplete += sim?.Progress ?? 0;
                         }
                     }
                 }

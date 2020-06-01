@@ -188,6 +188,7 @@
             foreach (PropertyInfo property in from.GetType().GetProperties())
             {
                 if (property.CanWrite &&
+                    property.CanRead &&
                     property.Name != "Name" &&
                     property.Name != "Parent" &&
                     property.Name != "Children" &&
