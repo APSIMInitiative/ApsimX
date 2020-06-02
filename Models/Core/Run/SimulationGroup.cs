@@ -95,12 +95,6 @@
         /// <summary>Name of file where the jobs came from.</summary>
         public string FileName { get; set; }
 
-        /// <summary>The number of simulations to run.</summary>
-        public int TotalNumberOfSimulations { get; private set; }
-
-        /// <summary>The number of simulations completed running.</summary>
-        public int NumberOfSimulationsCompleted { get; private set; }
-
         /// <summary>A list of exceptions thrown before and after the simulation runs. Will be null when no exceptions found.</summary>
         public List<Exception> PrePostExceptionsThrown { get; private set; }
 
@@ -129,16 +123,6 @@
         {
             if (!initialised)
                 SpinWait.SpinUntil(() => initialised);
-        }
-
-        /// <summary>Called once when all jobs have completed running. Should throw on error.</summary>
-        protected override void PostRun(JobCompleteArguments args)
-        {
-            lock (this)
-            {
-                if(!(args.Job is EmptyJob))
-                    NumberOfSimulationsCompleted++;
-            }
         }
 
         /// <summary>Called once when all jobs have completed running. Should throw on error.</summary>
@@ -240,19 +224,13 @@
             if (relativeTo is Simulation)
             {
                 if (SimulationNameIsMatched(relativeTo.Name))
-                {
                     Add(new SimulationDescription(relativeTo as Simulation));
-                    TotalNumberOfSimulations++;
-                }
             }
             else if (relativeTo is ISimulationDescriptionGenerator)
             {
                 foreach (var description in (relativeTo as ISimulationDescriptionGenerator).GenerateSimulationDescriptions())
                     if (SimulationNameIsMatched(description.Name))
-                    {
                         Add(description);
-                        TotalNumberOfSimulations++;
-                    }
             }
             else if (relativeTo is Folder || relativeTo is Simulations)
             {

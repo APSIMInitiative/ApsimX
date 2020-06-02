@@ -16,7 +16,7 @@
     public class Runner
     {
         /// <summary>The descriptions of simulations that we are going to run.</summary>
-        private List<SimulationGroup> jobs = new List<SimulationGroup>();
+        private List<IJobManager> jobs = new List<IJobManager>();
         
         /// <summary>The job runner being used.</summary>
         private JobRunner jobRunner = null;
@@ -53,13 +53,30 @@
         {
             get
             {
-                if (jobRunner != null)
-                    return jobRunner.Progress;
-
-                if (jobs == null || jobs.Count == 0)
+                if (jobRunner == null || jobs == null)
                     return 0;
 
-                return jobs.Sum(j => j.Progress) / jobs.Count;
+                int numJobs = jobs.Select(j => j.NumJobs).Sum();
+                if (numJobs == 0)
+                    return 0;
+
+                return (jobRunner.NumJobsCompleted + jobRunner.SimsRunning.Sum(j => j.Progress)) / numJobs;
+            }
+        }
+
+        /// <summary>
+        /// Current status of the running jobs.
+        /// </summary>
+        public string Status
+        {
+            get
+            {
+                int numComplete = jobRunner.NumJobsCompleted;
+                int numJobs = jobs.Select(j => j.NumJobs).Sum();
+
+                // if progress == 1 show job manager status
+                // else
+                return $"{numComplete} of {numJobs} completed";
             }
         }
 
@@ -136,10 +153,12 @@
         public event EventHandler<AllJobsCompletedArgs> AllSimulationsCompleted;
 
         /// <summary>The number of simulations to run.</summary>
-        public int TotalNumberOfSimulations { get { return jobs.Sum(j => j.TotalNumberOfSimulations); } }
-
+        /// <remarks>This should probably be removed. Is only retained.</remarks>
+        public int TotalNumberOfJobs { get { return jobs.Select(j => j.NumJobs).Sum(); } }
+        
         /// <summary>The number of simulations completed running.</summary>
-        public int NumberOfSimulationsCompleted { get { return jobs.Sum(j => j.NumberOfSimulationsCompleted); } }
+        /// <remarks>This should eventually be rendered obsolete by the new progress property.</remarks>
+        public int NumberOfJobsCompleted { get { return jobRunner.NumJobsCompleted; } }
 
         /// <summary>A list of exceptions thrown during simulation runs. Will be null when no exceptions found.</summary>
         public List<Exception> ExceptionsThrown { get; private set; }
@@ -212,30 +231,6 @@
             }
         }
 
-        /// <summary>Calculate a percentage complete.</summary>
-        public double PercentComplete()
-        {
-            if (TotalNumberOfSimulations == 0)
-                return 0;
-            else
-            {
-                // return 100.0 * NumberOfSimulationsCompleted / TotalNumberOfSimulations;
-                double nComplete = NumberOfSimulationsCompleted;
-                if (jobRunner != null)
-                {
-                    lock (jobRunner.runningLock)
-                    {
-                        foreach (IRunnable runningSim in jobRunner.SimsRunning)
-                        {
-                            Simulation sim = (runningSim as SimulationDescription)?.SimulationToRun;
-                            nComplete += sim?.Progress ?? 0;
-                        }
-                    }
-                }
-                return 100.0 * Math.Min(1.0, nComplete / TotalNumberOfSimulations);
-            }
-        }
-
         /// <summary>
         /// Ignore the specified path when looking for files to run?
         /// </summary>
@@ -281,7 +276,7 @@
 
             AddException(e.ExceptionThrowByRunner);
 
-            foreach (var job in jobs)
+            foreach (var job in jobs.OfType<SimulationGroup>())
                 if (job.PrePostExceptionsThrown != null)
                     job.PrePostExceptionsThrown.ForEach(ex => AddException(ex));
 
