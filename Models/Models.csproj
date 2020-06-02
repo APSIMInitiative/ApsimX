@@ -184,6 +184,7 @@
     <Compile Include="CLEM\WarningLog.cs" />
     <Compile Include="Core\Apsim710File\Importer.cs" />
     <Compile Include="Core\ApsimFile\ConverterReturnType.cs" />
+    <Compile Include="Core\ApsimFile\EditFile.cs" />
     <Compile Include="Core\ApsimFile\JsonUtilities.cs" />
     <Compile Include="Core\ApsimFile\Structure.cs" />
     <Compile Include="Core\ApsimFile\XmlConverters.cs" />
