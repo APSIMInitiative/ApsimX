@@ -1242,7 +1242,6 @@ namespace Models.PMF.Organs
                 return;
             
             Width = WidthFunction.Value();
-
             Depth = DepthFunction.Value();
 
             if (FrostFraction.Value() > 0)

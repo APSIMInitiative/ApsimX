@@ -1145,95 +1145,33 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "LinearInterpolationFunction",
+                      "Name": "SeasonalHeightPattern",
                       "Children": [
                         {
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
-                            58.0
+                            90.0,
+                            230.0,
+                            320.0,
+                            361.0
                           ],
                           "Y": [
                             1200.0,
-                            2200.0
+                            1200.0,
+                            2300.0,
+                            2300.0,
+                            1200.0
                           ],
                           "Name": "XYPairs",
-                          "Children": [
-                            {
-                              "$type": "Models.Graph, Models",
-                              "Caption": null,
-                              "Axis": [
-                                {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 0,
-                                  "Title": "Y",
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": false,
-                                  "CrossesAtZero": false
-                                },
-                                {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 3,
-                                  "Title": "X",
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": false,
-                                  "CrossesAtZero": false
-                                }
-                              ],
-                              "LegendPosition": 3,
-                              "LegendOrientation": 0,
-                              "DisabledSeries": [],
-                              "LegendOutsideGraph": false,
-                              "Name": "Graph",
-                              "Children": [
-                                {
-                                  "$type": "Models.Series, Models",
-                                  "Type": 1,
-                                  "XAxis": 3,
-                                  "YAxis": 0,
-                                  "ColourArgb": -65536,
-                                  "FactorToVaryColours": null,
-                                  "FactorToVaryMarkers": null,
-                                  "FactorToVaryLines": null,
-                                  "Marker": 11,
-                                  "MarkerSize": 0,
-                                  "Line": 0,
-                                  "LineThickness": 0,
-                                  "TableName": null,
-                                  "XFieldName": ".Simulations.Replacements.Grapevine.Structure.HeightModel.LinearInterpolationFunction.XYPairs.X",
-                                  "YFieldName": ".Simulations.Replacements.Grapevine.Structure.HeightModel.LinearInterpolationFunction.XYPairs.Y",
-                                  "X2FieldName": "",
-                                  "Y2FieldName": "",
-                                  "ShowInLegend": false,
-                                  "IncludeSeriesNameInLegend": false,
-                                  "Cumulative": false,
-                                  "CumulativeX": false,
-                                  "Filter": null,
-                                  "Name": "Series",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Grapevine].Phenology.AccumulatedEmergedTT",
+                          "VariableName": "[Weather].DaysSinceWinterSolstice",
                           "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2654,6 +2592,48 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "SeasonalDepthPattern",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            90.0,
+                            230.0,
+                            310.0,
+                            314.0,
+                            365.0
+                          ],
+                          "Y": [
+                            1.0,
+                            1.0,
+                            1100.0,
+                            1100.0,
+                            1.0,
+                            1.0
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Weather].DaysSinceWinterSolstice",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
                       "Name": "AgeFactor",
                       "Children": [
                         {
@@ -2679,108 +2659,6 @@
                         {
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Phenology].Age.Years",
-                          "Name": "XValue",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "SeasonalDepthPattern",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            58.0
-                          ],
-                          "Y": [
-                            0.0,
-                            1100.0
-                          ],
-                          "Name": "XYPairs",
-                          "Children": [
-                            {
-                              "$type": "Models.Graph, Models",
-                              "Caption": null,
-                              "Axis": [
-                                {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 0,
-                                  "Title": "Y",
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": false,
-                                  "CrossesAtZero": false
-                                },
-                                {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 3,
-                                  "Title": "X",
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": false,
-                                  "CrossesAtZero": false
-                                }
-                              ],
-                              "LegendPosition": 3,
-                              "LegendOrientation": 0,
-                              "DisabledSeries": [],
-                              "LegendOutsideGraph": false,
-                              "Name": "Graph",
-                              "Children": [
-                                {
-                                  "$type": "Models.Series, Models",
-                                  "Type": 1,
-                                  "XAxis": 3,
-                                  "YAxis": 0,
-                                  "ColourArgb": -65536,
-                                  "FactorToVaryColours": null,
-                                  "FactorToVaryMarkers": null,
-                                  "FactorToVaryLines": null,
-                                  "Marker": 11,
-                                  "MarkerSize": 0,
-                                  "Line": 0,
-                                  "LineThickness": 0,
-                                  "TableName": null,
-                                  "XFieldName": ".Simulations.Replacements.Grapevine.Structure.HeightModel.LinearInterpolationFunction.XYPairs.X",
-                                  "YFieldName": ".Simulations.Replacements.Grapevine.Structure.HeightModel.LinearInterpolationFunction.XYPairs.Y",
-                                  "X2FieldName": "",
-                                  "Y2FieldName": "",
-                                  "ShowInLegend": false,
-                                  "IncludeSeriesNameInLegend": false,
-                                  "Cumulative": false,
-                                  "CumulativeX": false,
-                                  "Filter": null,
-                                  "Name": "Series",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Weather].DaysSinceWinterSolstice",
                           "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,
