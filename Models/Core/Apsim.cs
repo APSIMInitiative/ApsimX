@@ -26,7 +26,7 @@
         /// <returns>The found object or null if not found</returns>
         public static object Get(IModel model, string namePath, bool ignoreCase = false)
         {
-            return Locator(model).Get(namePath, model as Model, ignoreCase);
+            return model.FindInPath(namePath)?.Value;
         }
 
         /// <summary>
@@ -37,7 +37,7 @@
         /// <returns>The found object or null if not found</returns>
         public static IVariable GetVariableObject(IModel model, string namePath)
         {
-            return Locator(model).GetInternal(namePath, model as Model);
+            return model.FindInPath(namePath);
         }
 
         /// <summary>
