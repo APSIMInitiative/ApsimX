@@ -10,10 +10,15 @@
     using System.IO;
     using System.Linq;
 
+    [Serializable]
     class StorageViaSockets : Model, IDataStore, IStorageWriter
     {
         public List<ReportData> reportDataThatNeedsToBeWritten = new List<ReportData>();
         public List<DataTable> dataTablesThatNeedToBeWritten = new List<DataTable>();
+
+        public StorageViaSockets()
+        {
+        }
 
         public StorageViaSockets(string filename)
         {

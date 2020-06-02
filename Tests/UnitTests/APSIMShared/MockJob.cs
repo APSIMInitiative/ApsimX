@@ -8,6 +8,7 @@
     {
         private bool doThrow;
         public bool HasRun { get; set; } = false;
+        public double Progress { get; set; }
 
         public MockJob(bool throws = false)
         {
