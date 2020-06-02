@@ -2,7 +2,7 @@
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 281,
   "Version": 100,
-  "ApsimVersion": "2020.5.29.5108",
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -1188,76 +1188,9 @@
                               ],
                               "LegendPosition": 3,
                               "LegendOrientation": 0,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "LegendOutsideGraph": false,
                               "Name": "Graph",
-                              "Children": [
-                                {
-                                  "$type": "Models.Series, Models",
-                                  "Type": 1,
-                                  "XAxis": 3,
-                                  "YAxis": 0,
-                                  "ColourArgb": -65536,
-                                  "FactorToVaryColours": null,
-                                  "FactorToVaryMarkers": null,
-                                  "FactorToVaryLines": null,
-                                  "Marker": 11,
-                                  "MarkerSize": 0,
-                                  "Line": 0,
-                                  "LineThickness": 0,
-                                  "TableName": null,
-                                  "XFieldName": ".Simulations.Replacements.Grapevine.Structure.HeightModel.LinearInterpolationFunction.XYPairs.X",
-                                  "YFieldName": ".Simulations.Replacements.Grapevine.Structure.HeightModel.LinearInterpolationFunction.XYPairs.Y",
-                                  "X2FieldName": "",
-                                  "Y2FieldName": "",
-                                  "ShowInLegend": false,
-                                  "IncludeSeriesNameInLegend": false,
-                                  "Cumulative": false,
-                                  "CumulativeX": false,
-                                  "Filter": null,
-                                  "Name": "Series",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Graph, Models",
-                              "Caption": null,
-                              "Axis": [
-                                {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 0,
-                                  "Title": "Y",
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": false,
-                                  "CrossesAtZero": false
-                                },
-                                {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 3,
-                                  "Title": "X",
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": false,
-                                  "CrossesAtZero": false
-                                }
-                              ],
-                              "LegendPosition": 3,
-                              "LegendOrientation": 0,
-                              "DisabledSeries": null,
-                              "LegendOutsideGraph": false,
-                              "Name": "Graph1",
                               "Children": [
                                 {
                                   "$type": "Models.Series, Models",
@@ -1444,6 +1377,8 @@
               "Gsmax350": 0.01,
               "R50": 200.0,
               "LAI": 0.0,
+              "Depth": 0.0,
+              "Width": 0.0,
               "FRGR": 0.0,
               "PotentialEP": 0.0,
               "WaterDemand": 0.0,
@@ -1939,108 +1874,6 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "ExpansionStress",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            1.0
-                          ],
-                          "Y": [
-                            1.0,
-                            1.0
-                          ],
-                          "Name": "XYPairs",
-                          "Children": [
-                            {
-                              "$type": "Models.Graph, Models",
-                              "Caption": null,
-                              "Axis": [
-                                {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 0,
-                                  "Title": "Y",
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": false,
-                                  "CrossesAtZero": false
-                                },
-                                {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 3,
-                                  "Title": "X",
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": false,
-                                  "CrossesAtZero": false
-                                }
-                              ],
-                              "LegendPosition": 3,
-                              "LegendOrientation": 0,
-                              "DisabledSeries": [],
-                              "LegendOutsideGraph": false,
-                              "Name": "Graph",
-                              "Children": [
-                                {
-                                  "$type": "Models.Series, Models",
-                                  "Type": 1,
-                                  "XAxis": 3,
-                                  "YAxis": 0,
-                                  "ColourArgb": -65536,
-                                  "FactorToVaryColours": null,
-                                  "FactorToVaryMarkers": null,
-                                  "FactorToVaryLines": null,
-                                  "Marker": 11,
-                                  "MarkerSize": 0,
-                                  "Line": 0,
-                                  "LineThickness": 0,
-                                  "TableName": null,
-                                  "XFieldName": ".Simulations.Replacements.Grapevine.Leaf.CohortParameters.ExpansionStress.XYPairs.X",
-                                  "YFieldName": ".Simulations.Replacements.Grapevine.Leaf.CohortParameters.ExpansionStress.XYPairs.Y",
-                                  "X2FieldName": "",
-                                  "Y2FieldName": "",
-                                  "ShowInLegend": false,
-                                  "IncludeSeriesNameInLegend": false,
-                                  "Cumulative": false,
-                                  "CumulativeX": false,
-                                  "Filter": null,
-                                  "Name": "Series",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Grapevine].Leaf.Fw",
-                          "Name": "XValue",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 0.03,
                       "Units": "g/g",
@@ -2227,6 +2060,16 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "ExpansionStress",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -2386,42 +2229,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "FW",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            1.0,
-                            1.5
-                          ],
-                          "Y": [
-                            1.0,
-                            1.0,
-                            1.0
-                          ],
-                          "Name": "XYPairs",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].Fw",
-                          "Name": "XValue",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
                       "Name": "FVPD",
                       "Children": [
                         {
@@ -2457,9 +2264,60 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].RadIntTot",
+                      "$type": "Models.Functions.PhaseLookup, Models",
                       "Name": "RadnInt",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "Start": "Endodormancy",
+                          "End": "BudBurst",
+                          "Name": "BefBudburst",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.001,
+                              "Units": "MJ",
+                              "Name": "Constant",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "Start": "BudBurst",
+                          "End": "LeafFall",
+                          "Name": "AftBudBurst",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].RadIntTot",
+                              "Name": "RadnInt",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "FW",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -2521,7 +2379,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.5,
+                      "FixedValue": 0.6,
                       "Units": null,
                       "Name": "Constant",
                       "Children": [],
@@ -2774,6 +2632,155 @@
                         {
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Phenology].Age.Years",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "DepthFunction",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "AgeFactor",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            5.0,
+                            10.0,
+                            20.0
+                          ],
+                          "Y": [
+                            0.4,
+                            1.0,
+                            1.0,
+                            1.0
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].Age.Years",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "SeasonalDepthPattern",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            58.0
+                          ],
+                          "Y": [
+                            0.0,
+                            1100.0
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [
+                            {
+                              "$type": "Models.Graph, Models",
+                              "Caption": null,
+                              "Axis": [
+                                {
+                                  "$type": "Models.Axis, Models",
+                                  "Type": 0,
+                                  "Title": "Y",
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                },
+                                {
+                                  "$type": "Models.Axis, Models",
+                                  "Type": 3,
+                                  "Title": "X",
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                }
+                              ],
+                              "LegendPosition": 3,
+                              "LegendOrientation": 0,
+                              "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
+                              "Name": "Graph",
+                              "Children": [
+                                {
+                                  "$type": "Models.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -65536,
+                                  "FactorToVaryColours": null,
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": null,
+                                  "Marker": 11,
+                                  "MarkerSize": 0,
+                                  "Line": 0,
+                                  "LineThickness": 0,
+                                  "TableName": null,
+                                  "XFieldName": ".Simulations.Replacements.Grapevine.Structure.HeightModel.LinearInterpolationFunction.XYPairs.X",
+                                  "YFieldName": ".Simulations.Replacements.Grapevine.Structure.HeightModel.LinearInterpolationFunction.XYPairs.Y",
+                                  "X2FieldName": "",
+                                  "Y2FieldName": "",
+                                  "ShowInLegend": false,
+                                  "IncludeSeriesNameInLegend": false,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Series",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Weather].DaysSinceWinterSolstice",
                           "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,
