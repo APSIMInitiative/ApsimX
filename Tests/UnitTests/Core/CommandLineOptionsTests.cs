@@ -56,10 +56,22 @@ namespace UnitTests.Core
             proc.Start(models, args, Directory.GetCurrentDirectory(), true);
             proc.WaitForExit();
 
+            Assert.Null(proc.StdErr);
             Assert.True(proc.StdOut.Contains("sim1"));
             Assert.False(proc.StdOut.Contains("sim2"));
             Assert.False(proc.StdOut.Contains("simulation3"));
             Assert.False(proc.StdOut.Contains("Base"));
+
+            args = $@"{apsimxFileName} /Verbose /SimulationNameRegexPattern:(simulation3)|(Base)";
+            proc = new ProcessUtilities.ProcessWithRedirectedOutput();
+            proc.Start(models, args, Directory.GetCurrentDirectory(), true);
+            proc.WaitForExit();
+
+            Assert.Null(proc.StdErr);
+            Assert.False(proc.StdOut.Contains("sim1"));
+            Assert.False(proc.StdOut.Contains("sim2"));
+            Assert.True(proc.StdOut.Contains("simulation3"));
+            Assert.True(proc.StdOut.Contains("Base"));
         }
     }
 }
