@@ -278,16 +278,33 @@
                     else if (File.Exists(absoluteFileName))
                         ReplaceModelFromFile(file, factor.Paths[0], absoluteFileName, modelPath);
                     else
-                        variable.Value = ReflectionUtilities.StringToObject(variable.DataType, value);
+                        ChangeVariableValue(variable, value);
                 }
                 else if (File.Exists(value) && variable.Value is IModel)
                     ReplaceModelFromFile(file, factor.Paths[0], value, null);
                 else if (File.Exists(absolutePath) && variable.Value is IModel)
                     ReplaceModelFromFile(file, factor.Paths[0], absolutePath, null);
                 else
-                    variable.Value = ReflectionUtilities.StringToObject(variable.DataType, value);
+                    ChangeVariableValue(variable, value);
             }
             file.Write(apsimxFileName);
+        }
+
+        private static void ChangeVariableValue(IVariable variable, string value)
+        {
+            variable.Value = ReflectionUtilities.StringToObject(variable.DataType, value);
+            if (variable is VariableComposite composite)
+            {
+                IModel model = composite.Variables.FirstOrDefault(v => v is VariableObject obj && obj.Value is IModel)?.Value as IModel;
+                if (model != null)
+                {
+                    ModelCollectionFromResource resourceModel = Apsim.Ancestor<ModelCollectionFromResource>(model);
+                    if (resourceModel != null)
+                    {
+                        resourceModel.ResourceName = null;
+                    }
+                }
+            }
         }
 
         /// <summary>
