@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 358,
-  "Version": 88,
+  "Version": 100,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -333,6 +333,9 @@
                 },
                 {
                   "$type": "Models.Functions.AirTemperatureFunction, Models",
+                  "SubDailyTemperatures": null,
+                  "SubDailyResponse": null,
+                  "agregationMethod": 0,
                   "Name": "ThermalTime",
                   "Children": [
                     {
@@ -347,7 +350,7 @@
                         26.0,
                         0.0
                       ],
-                      "Name": "XYPairs",
+                      "Name": "TemperatureResponse",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
@@ -359,6 +362,15 @@
                       "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ThreeHourSin, Models",
+                      "TempRangeFactors": null,
+                      "Name": "InterpolationMethod",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -391,6 +403,9 @@
                     },
                     {
                       "$type": "Models.Functions.AirTemperatureFunction, Models",
+                      "SubDailyTemperatures": null,
+                      "SubDailyResponse": null,
+                      "agregationMethod": 0,
                       "Name": "TempResponseProfile",
                       "Children": [
                         {
@@ -445,9 +460,18 @@
                             0.0,
                             -0.5
                           ],
-                          "Name": "XYPairs",
+                          "Name": "TemperatureResponse",
                           "Children": [],
                           "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.ThreeHourSin, Models",
+                          "TempRangeFactors": null,
+                          "Name": "InterpolationMethod",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -2027,6 +2051,7 @@
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "DMSupply": null,
               "NSupply": null,
@@ -2570,13 +2595,21 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
-              "RootAngle": 45.0,
               "Name": "Root",
               "Children": [
+                {
+                  "$type": "Models.Functions.RootShape.RootShapeCylindre, Models",
+                  "Name": "RootShape",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 1.0,
@@ -2761,16 +2794,6 @@
                   "FixedValue": 0.01,
                   "Units": null,
                   "Name": "KNH4",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.005,
-                  "Units": "g/plant",
-                  "Name": "InitialDM",
                   "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
@@ -3287,6 +3310,45 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "InitialWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.005,
+                      "Units": "g/plant",
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": false,
@@ -3305,12 +3367,14 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "Albedo": 0.25,
               "Gsmax350": 0.011,
               "R50": 150.0,
               "LAI": 0.0,
+              "Width": 0.0,
               "FRGR": 0.0,
               "PotentialEP": 0.0,
               "WaterDemand": 0.0,
@@ -4828,6 +4892,7 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "IsAboveGround": true,
@@ -5078,16 +5143,6 @@
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "g/m^2",
-                  "Name": "InitialWtFunction",
-                  "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
@@ -5535,6 +5590,45 @@
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "InitialWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": "g/m^2",
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": false,
@@ -5547,6 +5641,7 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
+              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "IsAboveGround": true,
@@ -5862,16 +5957,6 @@
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "g/m^2",
-                  "Name": "InitialWtFunction",
-                  "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
@@ -6311,6 +6396,45 @@
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "InitialWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": "g/m^2",
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": false,
@@ -6507,6 +6631,7 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
       "Name": "Tutorial_1_1_PseudoAphid_AgeBasedDevt",
       "Children": [
         {
@@ -7081,7 +7206,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -7536,6 +7660,7 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
       "Name": "Tutorial_1_2_PseudoAphid_AgeBasedDevtResults",
       "Children": [
         {
@@ -8104,7 +8229,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -8805,6 +8929,7 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
       "Name": "Tutorial_2_1_PseudoAphid_ConstantMetTempDevt",
       "Children": [
         {
@@ -9373,7 +9498,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -10029,6 +10153,7 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
       "Name": "Tutorial_2_2_PseudoAphid_ConstantTempDevt",
       "Children": [
         {
@@ -10607,7 +10732,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -11205,6 +11329,7 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
       "Name": "Tutorial_2_3_PseudoAphid_MeanFieldTempDevt",
       "Children": [
         {
@@ -11773,7 +11898,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -12371,6 +12495,7 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
       "Name": "Tutorial_3_1_PseudoAphid_DegreeDayDevt",
       "Children": [
         {
@@ -12937,7 +13062,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -13382,6 +13506,7 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
       "Name": "Tutorial_4_1_PseudoAphid_3HrlyDevt",
       "Children": [
         {
@@ -13940,7 +14065,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -13978,6 +14102,9 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.AirTemperatureFunction, Models",
+                          "SubDailyTemperatures": null,
+                          "SubDailyResponse": null,
+                          "agregationMethod": 0,
                           "Name": "ThermalTimeDevelopment",
                           "Children": [
                             {
@@ -13996,7 +14123,16 @@
                                 0.2,
                                 0.0
                               ],
-                              "Name": "XYPairs",
+                              "Name": "TemperatureResponse",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.ThreeHourSin, Models",
+                              "TempRangeFactors": null,
+                              "Name": "InterpolationMethod",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -14413,6 +14549,7 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
       "Name": "Tutorial_5_1_PseudoAphid_TempDepMortality",
       "Children": [
         {
@@ -14980,7 +15117,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -15009,6 +15145,9 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.AirTemperatureFunction, Models",
+                          "SubDailyTemperatures": null,
+                          "SubDailyResponse": null,
+                          "agregationMethod": 0,
                           "Name": "ThermalTimeDevelopment",
                           "Children": [
                             {
@@ -15027,7 +15166,16 @@
                                 0.2,
                                 0.0
                               ],
-                              "Name": "XYPairs",
+                              "Name": "TemperatureResponse",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.ThreeHourSin, Models",
+                              "TempRangeFactors": null,
+                              "Name": "InterpolationMethod",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -15768,6 +15916,7 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
       "Name": "Tutorial_6_1_PseudoAphid_DensityDepMortality",
       "Children": [
         {
@@ -16337,7 +16486,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -16375,6 +16523,9 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.AirTemperatureFunction, Models",
+                          "SubDailyTemperatures": null,
+                          "SubDailyResponse": null,
+                          "agregationMethod": 0,
                           "Name": "ThermalTimeDevelopment",
                           "Children": [
                             {
@@ -16393,7 +16544,16 @@
                                 0.2,
                                 0.0
                               ],
-                              "Name": "XYPairs",
+                              "Name": "TemperatureResponse",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.ThreeHourSin, Models",
+                              "TempRangeFactors": null,
+                              "Name": "InterpolationMethod",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -17314,6 +17474,7 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
       "Name": "Tutorial_7_1_PseudoAphid_DrynessDepMortalityRain",
       "Children": [
         {
@@ -17883,7 +18044,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -17921,6 +18081,9 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.AirTemperatureFunction, Models",
+                          "SubDailyTemperatures": null,
+                          "SubDailyResponse": null,
+                          "agregationMethod": 0,
                           "Name": "ThermalTimeDevelopment",
                           "Children": [
                             {
@@ -17939,7 +18102,7 @@
                                 0.2,
                                 0.0
                               ],
-                              "Name": "XYPairs",
+                              "Name": "TemperatureResponse",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -17949,6 +18112,15 @@
                               "$type": "Models.Memo, Models",
                               "Text": "Thermal time determines the rate of developmental progress through many of the crops phases and is used by organs to determing potential growth rates.",
                               "Name": "Memo",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.ThreeHourSin, Models",
+                              "TempRangeFactors": null,
+                              "Name": "InterpolationMethod",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -19153,6 +19325,7 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
       "Name": "Tutorial_8_1_PseudoAphid_DrynessDepMortalitySoil",
       "Children": [
         {
@@ -19713,7 +19886,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -19751,6 +19923,9 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.AirTemperatureFunction, Models",
+                          "SubDailyTemperatures": null,
+                          "SubDailyResponse": null,
+                          "agregationMethod": 0,
                           "Name": "ThermalTimeDevelopment",
                           "Children": [
                             {
@@ -19769,7 +19944,7 @@
                                 0.2,
                                 0.0
                               ],
-                              "Name": "XYPairs",
+                              "Name": "TemperatureResponse",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -19779,6 +19954,15 @@
                               "$type": "Models.Memo, Models",
                               "Text": "Thermal time determines the rate of developmental progress through many of the crops phases and is used by organs to determing potential growth rates.",
                               "Name": "Memo",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.ThreeHourSin, Models",
+                              "TempRangeFactors": null,
+                              "Name": "InterpolationMethod",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -20823,6 +21007,7 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
       "Name": "Wheat_rust",
       "Children": [
         {
@@ -20905,7 +21090,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -21473,7 +21657,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Wheat;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Wheat.IsReadyForHarvesting)\r\n            {\r\n               Wheat.Harvest();\r\n               Wheat.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Wheat;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Wheat.IsReadyForHarvesting)\r\n            {\r\n               Wheat.Harvest();\r\n               Wheat.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
               "Parameters": [],
               "Name": "Harvest",
               "IncludeInDocumentation": true,
@@ -21482,7 +21666,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Wheat;\r\n        [Link] Soil Soil; \r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&\r\n                !Wheat.IsAlive &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link(ByName = true)] Plant Wheat;\r\n        [Link] Soil Soil; \r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&\r\n                !Wheat.IsAlive &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "StartDate",
@@ -22397,6 +22581,7 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
       "Name": "SeedBank_TimeBasedTranferToNonDormant",
       "Children": [
         {
@@ -23333,7 +23518,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -23386,6 +23570,7 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
       "Name": "SeedBank_TimeBasedTranferToNonDormantAndMortality",
       "Children": [
         {
@@ -24424,7 +24609,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -24477,6 +24661,7 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
       "Name": "SeedBank_3PoolsDormancy_toGermitable",
       "Children": [
         {
@@ -26218,7 +26403,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -26323,6 +26507,7 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
       "Name": "a_WildRadishSeedBank_2000",
       "Children": [
         {
@@ -27911,7 +28096,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -27964,6 +28148,7 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
       "Name": "b__WildRadishSeedBank_2001",
       "Children": [
         {
@@ -29522,7 +29707,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Wheat",
               "ResourceName": "Wheat",
               "Name": "Wheat",
               "IncludeInDocumentation": true,
@@ -29531,7 +29715,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "CropType": "Weed",
               "ResourceName": "Weed",
               "Name": "Weed",
               "IncludeInDocumentation": true,
