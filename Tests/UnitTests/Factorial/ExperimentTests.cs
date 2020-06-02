@@ -7,6 +7,8 @@
     using System;
     using System.Collections.Generic;
     using UnitTests.Weather;
+    using APSIM.Shared.Utilities;
+    using Models.Core.ApsimFile;
 
     /// <summary>This is a test class for the Experiment class</summary>
     [TestFixture]
@@ -765,6 +767,23 @@
             Assert.AreEqual(irr.Amount, 150);
             Assert.AreEqual(fert.Amount, 20);
 
+        }
+
+        /// <summary>
+        /// Ensure that property/model overrides apply to all paddocks.
+        /// </summary>
+        [Test]
+        public void TestOverridingInMultiplePaddocks()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Factorial.MultiPaddockFactorOverride.apsimx");
+            Simulations sims = FileFormat.ReadFromString<Simulations>(json, out List<Exception> errors);
+            if (errors != null && errors.Count > 0)
+                throw errors[0];
+
+            Runner runner = new Runner(sims);
+            errors = runner.Run();
+            if (errors != null && errors.Count > 0)
+                throw errors[0];
         }
 
         /// <summary>Ensure a permutation correctly multiplies child factor with composite factor models.</summary>

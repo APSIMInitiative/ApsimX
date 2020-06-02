@@ -39,6 +39,14 @@ namespace Models.Utilities
         private string rScript;
 
         /// <summary>
+        /// Holds the path to an .RProfile file which is used to
+        /// attempt to load and install packages from a special
+        /// APSIM-specific directory, so as not to interfere with
+        /// other user/system packages.
+        /// </summary>
+        private string startupFile;
+
+        /// <summary>
         /// Directory to which packages will be installed.
         /// On Windows, this is %appdata%\ApsimInitiative\ApsimX\rpackages.
         /// On Linux, this is ~/.config/ApsimInitiative/ApsimX/rpackages.
@@ -62,8 +70,9 @@ namespace Models.Utilities
             if (!Directory.Exists(workingDirectory)) // I would be very suprised if it did already exist
                 Directory.CreateDirectory(workingDirectory);
 
-            string startupCommand = $".libPaths(c(.libPaths(), '{PackagesDirectory}'))";
-            string startupFile = Path.Combine(workingDirectory, ".Rprofile");
+            string startupCommand = $".libPaths(c('{PackagesDirectory}', .libPaths()))";
+            startupCommand += Environment.NewLine;
+            startupFile = Path.Combine(workingDirectory, ".Rprofile");
             if (!File.Exists(startupFile))
                 File.WriteAllText(startupFile, startupCommand);
         }
@@ -94,6 +103,16 @@ namespace Models.Utilities
         public Action OnDownloadCompleted;
 
         /// <summary>
+        /// Invoked whenever the R process writes to standard output.
+        /// </summary>
+        public event EventHandler<DataReceivedEventArgs> OutputReceived;
+
+        /// <summary>
+        /// Invoked whenever the R process writes to standard error.
+        /// </summary>
+        public event EventHandler<DataReceivedEventArgs> ErrorReceived;
+
+        /// <summary>
         /// Starts the execution of an R script.
         /// </summary>
         /// <param name="fileName">Path to an R script. May be a file on disk, or an embedded resource.</param>
@@ -117,9 +136,20 @@ namespace Models.Utilities
             if (arguments.Length > 0)
                 args = arguments.Aggregate((x, y) => $"\"{x}\" \"{y}\"");
 
+            // Don't load the user's .RProfile. Load a custom APSIM-specific
+            // one instead, by setting the R_PROFILE_USER environment variable.
+            Dictionary<string, string> environment = new Dictionary<string, string>();
+            environment["R_PROFILE_USER"] = startupFile;
+
             proc = new ProcessUtilities.ProcessWithRedirectedOutput();
             proc.Exited += OnExited;
-            proc.Start(rScript, "\"" + scriptName + "\" " + args, workingDirectory, true);
+
+            if (OutputReceived != null)
+                proc.OutputReceived += OutputReceived;
+            if (ErrorReceived != null)
+                proc.ErrorReceived += ErrorReceived;
+
+            proc.Start(rScript, "\"" + scriptName + "\" " + args, workingDirectory, true, environment: environment);
         }
 
         /// <summary>
@@ -136,14 +166,15 @@ namespace Models.Utilities
             string message;
             if (proc.ExitCode != 0)
             {
-                StringBuilder error = new StringBuilder("Error from R:");
+                StringBuilder error = new StringBuilder();
+                error.AppendLine("Error from R:");
                 error.AppendLine($"Script path: '{fileName}'");
-                error.AppendLine("Script contents:");
-                error.AppendLine(File.ReadAllText(fileName));
                 error.AppendLine("StdErr:");
                 error.AppendLine(proc.StdErr);
                 error.AppendLine("StdOut:");
                 error.AppendLine(proc.StdOut);
+                error.AppendLine("Script contents:");
+                error.AppendLine(File.ReadAllText(fileName));
 
                 message = error.ToString();
                 if (throwOnError)
@@ -224,6 +255,39 @@ namespace Models.Utilities
         }
 
         /// <summary>
+        /// Installs an R package if it is not already installed.
+        /// </summary>
+        /// <param name="package">Name of the package to be installed.</param>
+        public void InstallPackageFromGithub(string package)
+        {
+            string script = ReflectionUtilities.GetResourceAsString("Models.Resources.RScripts.InstallPackageGithub.R");
+            string tempFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + "-InstallGithubPackage.r");
+            File.WriteAllText(tempFileName, script);
+
+            Run(tempFileName, true, package, PackagesDirectory);
+        }
+
+        /// <summary>
+        /// Install multiple packages from github.
+        /// </summary>
+        /// <param name="packages">Packages to be installed.</param>
+        public void InstallFromGithub(params string[] packages)
+        {
+            foreach (string package in packages)
+                InstallPackageFromGithub(package);
+        }
+
+        /// <summary>
+        /// Install multiple packages.
+        /// </summary>
+        /// <param name="packages">Packages to be installed.</param>
+        public void InstallPackages(params string[] packages)
+        {
+            foreach (string package in packages)
+                InstallPackage(package);
+        }
+
+        /// <summary>
         /// Runs when the script has finished running.
         /// </summary>
         /// <param name="sender">Sender object.</param>
@@ -231,6 +295,11 @@ namespace Models.Utilities
         private void OnExited(object sender, EventArgs e)
         {
             Finished?.Invoke(sender, e);
+
+            if (OutputReceived != null)
+                proc.OutputReceived -= OutputReceived;
+            if (ErrorReceived != null)
+                proc.ErrorReceived -= ErrorReceived;
         }
 
         /// <summary>

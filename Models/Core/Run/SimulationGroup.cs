@@ -260,6 +260,8 @@
                 foreach (var child in relativeTo.Children)
                     FindListOfSimulationsToRun(child, simulationNamesToRun);
             }
+            else if (relativeTo is IRunnable runnable)
+                Add(runnable);
         }
 
         /// <summary>Return true if simulation name is a match.</summary>

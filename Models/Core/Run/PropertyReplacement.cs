@@ -33,6 +33,15 @@
                 throw new Exception("No path specified for property replacement.");
 
             Apsim.Set(simulation, path, replacement);
+
+            // In a multi-paddock context, we want to attempt to
+            // change the property value in all paddocks.
+            foreach (Zone paddock in Apsim.Children(simulation, typeof(Zone)))
+            {
+                IVariable variable = Apsim.GetVariableObject(paddock, path);
+                if (variable != null)
+                    variable.Value = replacement;
+            }
         }
     }
 }
