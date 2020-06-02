@@ -1288,6 +1288,8 @@ namespace Models.PMF.Organs
             PotentialEP = 0;
             WaterDemand = 0;
             LightProfile = null;
+            Width = WidthFunction.Value();
+            Depth = DepthFunction.Value();
         }
         /// <summary>Initialises the cohorts.</summary>
         [EventSubscribe("InitialiseLeafCohorts")]
