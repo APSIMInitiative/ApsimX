@@ -311,7 +311,7 @@
         /// <param name="alley"></param>
         private void DoTreeRowCropShortWaveRadiation(ref MicroClimateZone tree, ref MicroClimateZone alley)
         {
-            if (MathUtilities.Sum(tree.DeltaZ) > 0)  // Don't perform calculations if layers are empty
+            if (MathUtilities.Sum(tree.DeltaZ) > 0 && MathUtilities.Sum(alley.DeltaZ) > 0)  // Don't perform calculations if layers are empty
             {
                 double Ht = MathUtilities.Sum(tree.DeltaZ);                // Height of tree canopy
                 double CDt = 0;//tree.Canopies[0].Canopy.Depth / 1000;         // Depth of tree canopy

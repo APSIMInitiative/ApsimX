@@ -19,7 +19,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 100; } }
+        public static int LatestVersion { get { return 101; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -2239,6 +2239,24 @@
             }
         }
 
+        /// <summary>
+        /// Add canopy width Function.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion101(JObject root, string fileName)
+        {
+            foreach (JObject Leaf in JsonUtilities.ChildrenOfType(root, "Leaf"))
+            {
+                JsonUtilities.AddConstantFunctionIfNotExists(Leaf, "WidthFunction", "0");
+
+                VariableReference varRef = new VariableReference();
+                varRef.Name = "DepthFunction";
+                varRef.VariableName = "[Leaf].Height";
+
+                JsonUtilities.AddModel(Leaf, varRef);
+            }
+        }
         /// <summary>
         /// Add progeny destination phase and mortality function.
         /// </summary>
