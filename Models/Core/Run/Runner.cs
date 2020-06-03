@@ -71,6 +71,9 @@
         {
             get
             {
+                if (jobRunner == null || jobs == null)
+                    return null;
+
                 int numComplete = jobRunner.NumJobsCompleted;
                 int numJobs = jobs.Select(j => j.NumJobs).Sum();
 

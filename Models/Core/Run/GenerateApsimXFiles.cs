@@ -4,10 +4,16 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
 
     /// <summary>
     /// This class generates individual .apsimx files for each simulation in a runner.
     /// </summary>
+    /// <remarks>
+    /// Should this class implement IJobManager so that its interaction with the
+    /// job runner is more explicit? It seems very odd to have to pass a Runner
+    /// instance into the Generate method...
+    /// </remarks>
     public class GenerateApsimXFiles
     {
         /// <summary>A delegate that gets called to indicate progress during an operation.</summary>
@@ -28,7 +34,8 @@
             Directory.CreateDirectory(path);
 
             int i = 0;
-            foreach (var simulation in runner.Simulations())
+            List<Simulation> simulations = runner.Simulations().ToList();
+            foreach (var simulation in simulations)
             {
                 try
                 {
@@ -54,8 +61,8 @@
                     errors.Add(err);
                 }
 
+                progressCallBack?.Invoke(Convert.ToInt32(100 * (i + 1) / simulations.Count));
                 i++;
-                progressCallBack?.Invoke(100 * Convert.ToInt32(runner.Progress));
             }
             return errors;
         }
