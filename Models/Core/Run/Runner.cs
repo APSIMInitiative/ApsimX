@@ -74,8 +74,18 @@
                 int numComplete = jobRunner.NumJobsCompleted;
                 int numJobs = jobs.Select(j => j.NumJobs).Sum();
 
-                // if progress == 1 show job manager status
-                // else
+                // If progress is at 100% (ie all jobs have finished running), and the job manager supports
+                // status reporting, allow the job manager to provide a status message. This lets the user
+                // know why the job is still running even though progress is at 100%.
+                if (MathUtilities.FloatsAreEqual(Progress, 1) && jobs.Count == 1 && jobs[0] is IReportsStatus jobManager)
+                    return jobManager.Status;
+
+                // If there's only one job to be run, and that job is specifically designed
+                // to provide status reports, return that job's status message.
+                if (numJobs == 1 && jobRunner.SimsRunning.Count == 1 && jobRunner.SimsRunning[0] is IReportsStatus statusReporter)
+                    return statusReporter.Status;
+
+                // Otherwise, return the generic "x of y completed" message.
                 return $"{numComplete} of {numJobs} completed";
             }
         }

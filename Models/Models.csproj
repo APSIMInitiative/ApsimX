@@ -256,6 +256,7 @@
     <Compile Include="Core\Run\EmptyJob.cs" />
     <Compile Include="Core\Run\GenerateApsimXFiles.cs" />
     <Compile Include="Core\Run\IReplacement.cs" />
+    <Compile Include="Core\Run\IReportsStatus.cs" />
     <Compile Include="Core\Run\ISimulationDescriptionGenerator.cs" />
     <Compile Include="Core\Run\SimulationGroup.cs" />
     <Compile Include="Core\Run\ModelReplacement.cs" />
