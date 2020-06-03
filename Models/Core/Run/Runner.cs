@@ -165,14 +165,6 @@
         /// <summary>Invoked when all jobs are completed.</summary>
         public event EventHandler<AllJobsCompletedArgs> AllSimulationsCompleted;
 
-        /// <summary>The number of simulations to run.</summary>
-        /// <remarks>This should probably be removed. Is only retained.</remarks>
-        public int TotalNumberOfJobs { get { return jobs.Select(j => j.NumJobs).Sum(); } }
-        
-        /// <summary>The number of simulations completed running.</summary>
-        /// <remarks>This should eventually be rendered obsolete by the new progress property.</remarks>
-        public int NumberOfJobsCompleted { get { return jobRunner.NumJobsCompleted; } }
-
         /// <summary>A list of exceptions thrown during simulation runs. Will be null when no exceptions found.</summary>
         public List<Exception> ExceptionsThrown { get; private set; }
 
