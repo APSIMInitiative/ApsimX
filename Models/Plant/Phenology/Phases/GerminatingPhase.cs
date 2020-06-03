@@ -38,8 +38,12 @@ namespace Models.PMF.Phen
         /// <summary>The soil layer in which the seed is sown.</summary>
         private int SowLayer = 0;
 
+
         // 3. Public properties
         //-----------------------------------------------------------------------------------------------------------------
+
+        /// <summary>Occurs when a plant is about to be sown.</summary>
+        public event EventHandler SeedImbibed;
 
         /// <summary>The phenological stage at the start of this phase.</summary>
         [Description("Start")]
@@ -79,6 +83,9 @@ namespace Models.PMF.Phen
 
             else if (!phenology.OnStartDayOf("Sowing") && soil.Water[SowLayer] > soil.LL15mm[SowLayer])
             {
+                // Invoke an AboutToSow event.
+                if (SeedImbibed != null)
+                    SeedImbibed.Invoke(this, new EventArgs());
                 proceedToNextPhase = true;
                 propOfDayToUse = 1;
             }
@@ -87,7 +94,7 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>Resets the phase.</summary>
-        public virtual void ResetPhase() { }
+        public virtual void ResetPhase() { GerminationDate = null; }
 
         // 5. Private methods
         //-----------------------------------------------------------------------------------------------------------------

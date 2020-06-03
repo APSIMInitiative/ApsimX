@@ -2208,6 +2208,15 @@
                       "ReadOnly": false
                     },
                     {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Photosynthesis.FT",
+                      "Name": "RUE Temp factor",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": true
+                    },
+                    {
                       "$type": "Models.Memo, Models",
                       "Text": "Multiply Radn (MJ/m2/d) by 4.57 to convert to mol/m2/day and divide by 2 to convert to mol PAR/m2/d",
                       "Name": "Memo",
@@ -7628,7 +7637,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 6",
                     "[Phenology].VrnSensitivity.FixedValue = 1",
                     "[Phenology].PpSensitivity.FixedValue = 4",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 85"
                   ],
                   "Name": "Gregory",
                   "Children": [
@@ -8140,6 +8149,21 @@
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 3.5",
+                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 70"
+                  ],
+                  "Name": "Wills",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 7",
+                    "[Phenology].VrnSensitivity.FixedValue = 0",
+                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 3.5",
                     "[Structure].Phyllochron.BasePhyllochron.FixedValue = 80"
                   ],
                   "Name": "Mercury",
@@ -8295,14 +8319,6 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Wills",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -8329,7 +8345,7 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 7",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 5",
-                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 90"
+                    "[Structure].Phyllochron.BasePhyllochron.FixedValue =80"
                   ],
                   "Name": "Egret",
                   "Children": [],
@@ -8535,6 +8551,174 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Alias, Models",
+                      "Name": "Bennett",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Alias, Models",
+                      "Name": "Adv08_0008",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Alias, Models",
+                      "Name": "CSIROW002",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Alias, Models",
+                      "Name": "CSIROW003",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Alias, Models",
+                      "Name": "CSIROW005",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Alias, Models",
+                      "Name": "CSIROW011",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Alias, Models",
+                      "Name": "CSIROW018",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Alias, Models",
+                      "Name": "CSIROW021",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Alias, Models",
+                      "Name": "CSIROW027",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Alias, Models",
+                      "Name": "CSIROW029",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Alias, Models",
+                      "Name": "CSIROW077",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Alias, Models",
+                      "Name": "CSIROW087",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Alias, Models",
+                      "Name": "CSIROW102",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Alias, Models",
+                      "Name": "CSIROW105",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Alias, Models",
+                      "Name": "Emu_Rock",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Alias, Models",
+                      "Name": "Kittyhawk",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Alias, Models",
+                      "Name": "Nighthawk",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Alias, Models",
+                      "Name": "Manning",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Alias, Models",
+                      "Name": "Sunbee",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Alias, Models",
+                      "Name": "Sunlamb",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Alias, Models",
+                      "Name": "Illabo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -8689,6 +8873,20 @@
                     "[Phenology].MinimumLeafNumber.FixedValue = 8",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 90"
+                  ],
+                  "Name": "Eaglehawk",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 8",
+                    "[Phenology].VrnSensitivity.FixedValue = 0",
+                    "[Phenology].PpSensitivity.FixedValue = 4",
                     "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
                   ],
                   "Name": "Wedgetail",
@@ -8720,14 +8918,6 @@
                     {
                       "$type": "Models.Core.Alias, Models",
                       "Name": "Wylah",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Eaglehawk",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
