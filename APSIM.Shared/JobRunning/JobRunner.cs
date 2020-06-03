@@ -36,8 +36,7 @@
         /// <summary>
         /// Lock object controlling access to SimsRunning list
         /// </summary>
-        
-        public readonly object runningLock = new object();
+        protected readonly object runningLock = new object();
 
         /// <summary>The number of jobs that are currently running.</summary>
         protected int numberJobsRunning;
@@ -46,7 +45,7 @@
         protected CancellationTokenSource cancelToken;
 
         /// <summary>The number of jobs which have finished running.</summary>
-        public int NumJobsCompleted { get; private set; }
+        public int NumJobsCompleted { get; protected set; }
 
         /// <summary>Constructor.</summary>
         /// <param name="numProcessors">Number of processors to use.</param>
