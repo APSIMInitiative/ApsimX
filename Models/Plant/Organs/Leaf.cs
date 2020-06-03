@@ -1240,7 +1240,7 @@ namespace Models.PMF.Organs
         {
             if (!parentPlant.IsEmerged)
                 return;
-            
+            Structure.UpdateHeight();
             Width = WidthFunction.Value();
             Depth = DepthFunction.Value();
 
@@ -1287,6 +1287,7 @@ namespace Models.PMF.Organs
             PotentialEP = 0;
             WaterDemand = 0;
             LightProfile = null;
+            Structure.UpdateHeight();
             Width = WidthFunction.Value();
             Depth = DepthFunction.Value();
         }
