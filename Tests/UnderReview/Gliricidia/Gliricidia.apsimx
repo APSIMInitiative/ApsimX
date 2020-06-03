@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 96,
+  "Version": 101,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -900,6 +900,9 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.AirTemperatureFunction, Models",
+                      "SubDailyTemperatures": null,
+                      "SubDailyResponse": null,
+                      "agregationMethod": 0,
                       "Name": "FRGRFunctionTemp",
                       "Children": [
                         {
@@ -916,9 +919,18 @@
                             1.0,
                             0.0
                           ],
-                          "Name": "XYPairs",
+                          "Name": "TemperatureResponse",
                           "Children": [],
                           "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.ThreeHourSin, Models",
+                          "TempRangeFactors": null,
+                          "Name": "InterpolationMethod",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -3257,6 +3269,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "HamakuapokoBase",
               "Children": [
                 {
@@ -4636,6 +4649,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "GuadeloupeBase",
               "Children": [
                 {
@@ -6567,6 +6581,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "GuadeloupeGodetBase",
               "Children": [
                 {
@@ -9204,6 +9219,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "MakokaBase",
               "Children": [
                 {
@@ -12605,6 +12621,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "MakokaStripCrop",
               "Children": [
                 {
@@ -14066,6 +14083,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "MakokaSoleCrop",
               "Children": [
                 {
@@ -14835,6 +14853,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "MakokaSoleCropFertilised",
               "Children": [
                 {
@@ -29856,6 +29875,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
                   "Name": "GuatemalaTransect",
                   "Children": [
                     {
@@ -49863,6 +49883,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
                   "Name": "Rwanda Transect",
                   "Children": [
                     {
@@ -53063,6 +53084,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
                   "Name": "MakokaDugumaBase",
                   "Children": [
                     {
