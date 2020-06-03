@@ -23,13 +23,13 @@
             // Create a folder of 2 simulations.
             var folder = new Folder()
             {
-                Children = new List<Model>()
+                Children = new List<IModel>()
                     {
                         new Simulation()
                         {
                             Name = "Sim1",
                             FileName = Path.GetTempFileName(),
-                            Children = new List<Model>()
+                            Children = new List<IModel>()
                             {
                                 new Clock()
                                 {
@@ -43,7 +43,7 @@
                         {
                             Name = "Sim2",
                             FileName = Path.GetTempFileName(),
-                            Children = new List<Model>()
+                            Children = new List<IModel>()
                             {
                                 new Clock()
                                 {

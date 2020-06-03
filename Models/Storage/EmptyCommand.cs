@@ -13,6 +13,11 @@
     {
         private IDatabaseConnection database;
 
+        /// <summary>
+        /// Returns the job's progress as a real number in range [0, 1].
+        /// </summary>
+        public double Progress { get { return 0; } }
+
         /// <summary>Constructor</summary>
         /// <param name="databaseConnection">The database to cleanup.</param>
         public EmptyCommand(IDatabaseConnection databaseConnection)

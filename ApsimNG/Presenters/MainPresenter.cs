@@ -170,24 +170,18 @@
                 typeof(GLib.Log).Assembly.Location,
             };
 
-            Assembly compiledAssembly = Manager.CompileTextToAssembly(code, Path.GetTempFileName(), assemblies.ToArray());
-
-            // Get the script 'Type' from the compiled assembly.
-            Type scriptType = compiledAssembly.GetType("Script");
-            if (scriptType == null)
-            {
-                throw new Exception("Cannot find a public class called 'Script'");
-            }
-
-            // Look for a method called Execute
-            MethodInfo executeMethod = scriptType.GetMethod("Execute");
-            if (executeMethod == null)
-            {
-                throw new Exception("Cannot find a method Script.Execute");
-            }
+            var compiler = new ScriptCompiler();
+            var results = compiler.Compile(code, new Model(), assemblies);
+            if (results.ErrorMessages != null)
+                throw new Exception($"Script compile errors: {results.ErrorMessages}");
 
             // Create a new script model.
-            object script = compiledAssembly.CreateInstance("Script");
+            object script = results.Instance;
+
+            // Look for a method called Execute
+            MethodInfo executeMethod = script.GetType().GetMethod("Execute");
+            if (executeMethod == null)
+                throw new Exception("Cannot find a method Script.Execute");
 
             // Call Execute on our newly created script instance.
             object[] arguments = new object[] { this };

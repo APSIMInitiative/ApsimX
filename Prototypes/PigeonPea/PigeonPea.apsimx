@@ -2,9 +2,60 @@
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
   "Version": 100,
-  "ApsimVersion": "0.0.0.0",
+  "ApsimVersion": "2020.5.28.4288",
   "Name": "Simulations",
   "Children": [
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "Children": [
+        {
+          "$type": "Models.PostSimulationTools.ExcelInput, Models",
+          "FileNames": [
+            "Observed.xlsx"
+          ],
+          "SheetNames": [
+            "Observed"
+          ],
+          "Name": "Observed",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.PredictedObserved, Models",
+          "PredictedTableName": "DailyReport",
+          "ObservedTableName": "Observed",
+          "FieldNameUsedForMatch": "Clock.Today",
+          "FieldName2UsedForMatch": "SimulationID",
+          "FieldName3UsedForMatch": null,
+          "Name": "PredictedObserved",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.PredictedObserved, Models",
+          "PredictedTableName": "HarvestReport",
+          "ObservedTableName": "Observed",
+          "FieldNameUsedForMatch": "SimulationID",
+          "FieldName2UsedForMatch": "PigeonPea.Phenology.CurrentStageName",
+          "FieldName3UsedForMatch": null,
+          "Name": "PredictedObservedHarvest",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
     {
       "$type": "Models.Memo, Models",
       "Text": "# The APSIM PigeonPea Model\r\n\r\nThe APSIM PigeonPea model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.\r\n\r\nThe model consists of:\r\n\r\n* a phenology model to simulate development between growth phases  \r\n* a structure model to simulate plant morphology  \r\n* a collection of organs to simulate the various plant parts  \r\n* an arbitrator to allocate resources (N, biomass) to the various plant organs ",
@@ -6627,9 +6678,11 @@
           "$type": "Models.Report, Models",
           "VariableNames": [
             "[Clock].Today",
+            "[Clock].Today as Date",
             "[Clock].Today.DayOfYear",
             "[PigeonPea].Phenology.DaysAfterSowing",
             "[PigeonPea].Phenology.Stage",
+            "[PigeonPea].Phenology.CurrentStageName",
             "[PigeonPea].Phenology.VegetativeThermalTime",
             "[PigeonPea].Phenology.ReproductiveThermalTime",
             "[Weather].MeanT",
@@ -6641,7 +6694,6 @@
             "[PigeonPea].Arbitrator.DM.TotalPlantDemand",
             "[PigeonPea].Arbitrator.WDemand",
             "[PigeonPea].Arbitrator.WSupply",
-            "[PigeonPea].Phenology.CurrentStageName",
             "[PigeonPea].Phenology.Photoperiod",
             "[PigeonPea].AboveGround.Wt",
             "[PigeonPea].AboveGround.N",
@@ -6688,8 +6740,8 @@
             "[PigeonPea].Pod.NConc",
             "[PigeonPea].Nodule.NFixed",
             "[PigeonPea].Root.Wt",
-            "sum([Soil].Nutrient.NO3.kgha) as TotalSoilNO3",
-            "sum([Soil].Nutrient.NH4.kgha) as TotalSoilNH4",
+            "//sum([Soil].Nutrient.NO3.kgha) as TotalSoilNO3",
+            "//sum([Soil].Nutrient.NH4.kgha) as TotalSoilNH4",
             "sum([Soil].SoilWater.SWmm) as TotalSW",
             "[Soil].SoilWater.SW[1:3]",
             "[PigeonPea].Leaf.Height",
@@ -6710,6 +6762,7 @@
           "$type": "Models.Report, Models",
           "VariableNames": [
             "[Clock].Today",
+            "[Clock].Today as Date",
             "[PigeonPea].Phenology.CurrentStageName",
             "[PigeonPea].Phenology.EmergenceDAS",
             "[PigeonPea].Phenology.FloweringDAS",
@@ -6733,62 +6786,6 @@
       "ReadOnly": false
     },
     {
-      "$type": "Models.Storage.DataStore, Models",
-      "useFirebird": false,
-      "CustomFileName": null,
-      "Name": "DataStore",
-      "Children": [
-        {
-          "$type": "Models.PostSimulationTools.ExcelInput, Models",
-          "FileNames": [
-            "Observed.xlsx"
-          ],
-          "SheetNames": [
-            "Observed",
-            "ObservedET",
-            "ObservedFACTSSW",
-            "ObservedFACTSST",
-            "ObservedLeafSize",
-            "ObservedFACTSSoilN"
-          ],
-          "Name": "Observed",
-          "Children": [],
-          "IncludeInDocumentation": false,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.PostSimulationTools.PredictedObserved, Models",
-          "PredictedTableName": "DailyReport",
-          "ObservedTableName": "Observed",
-          "FieldNameUsedForMatch": "Clock.Today",
-          "FieldName2UsedForMatch": null,
-          "FieldName3UsedForMatch": null,
-          "Name": "PredictedObserved",
-          "Children": [],
-          "IncludeInDocumentation": false,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.PostSimulationTools.PredictedObserved, Models",
-          "PredictedTableName": "HarvestReport",
-          "ObservedTableName": "Observed",
-          "FieldNameUsedForMatch": "PigeonPea.Phenology.CurrentStageName",
-          "FieldName2UsedForMatch": null,
-          "FieldName3UsedForMatch": null,
-          "Name": "PredictedObservedHarvest",
-          "Children": [],
-          "IncludeInDocumentation": false,
-          "Enabled": true,
-          "ReadOnly": false
-        }
-      ],
-      "IncludeInDocumentation": false,
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
       "$type": "Models.Core.Folder, Models",
       "ShowPageOfGraphs": true,
       "Name": "Validation",
@@ -6806,8 +6803,8 @@
           "$type": "Models.Map, Models",
           "Center": {
             "$type": "Models.Map+Coordinate, Models",
-            "Latitude": 58.81374171570782,
-            "Longitude": 19.687500000000004
+            "Latitude": 1.4061088354351594,
+            "Longitude": 153.28125
           },
           "Zoom": 2.0,
           "Name": "Map",
@@ -6953,1407 +6950,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowPageOfGraphs": true,
-          "Name": "Australia",
-          "Children": [
-            {
-              "$type": "Models.Core.Folder, Models",
-              "ShowPageOfGraphs": true,
-              "Name": "Griffith",
-              "Children": [
-                {
-                  "$type": "Models.Memo, Models",
-                  "Text": "These data [Timsina2007] were obtained from a field experiment conducted in 1999–2000 on a Hanwood loam soil at CSIRO Land and Water, Griffith, Australia.  Two indeterminate PigeonPea cultivars (Hooper and Stephens belonging to late maturity group [MG] 3 or early MG 4) were on 15 November, 8 December, and 6 January.",
-                  "Name": "Memo",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Experiment, Models",
-                  "DisabledSimNames": null,
-                  "Name": "Griffith",
-                  "Children": [
-                    {
-                      "$type": "Models.Factorial.Factors, Models",
-                      "Name": "Factors",
-                      "Children": [
-                        {
-                          "$type": "Models.Factorial.Permutation, Models",
-                          "Name": "Permutation",
-                          "Children": [
-                            {
-                              "$type": "Models.Factorial.Factor, Models",
-                              "Specification": "",
-                              "Name": "Sow",
-                              "Children": [
-                                {
-                                  "$type": "Models.Factorial.CompositeFactor, Models",
-                                  "Specifications": [
-                                    "[SowingRule].Script.SowingDate=1999-11-15",
-                                    "[SowingRule].Script.SowingDepth=50",
-                                    "[HarvestRule].Script.HarvestDate=2000-04-06"
-                                  ],
-                                  "Paths": null,
-                                  "Values": null,
-                                  "Name": "Nov15",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Factorial.CompositeFactor, Models",
-                                  "Specifications": [
-                                    "[SowingRule].Script.SowingDate=1999-12-08",
-                                    "[SowingRule].Script.SowingDepth=50",
-                                    "[HarvestRule].Script.HarvestDate=2000-04-12"
-                                  ],
-                                  "Paths": null,
-                                  "Values": null,
-                                  "Name": "Dec08",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Factorial.CompositeFactor, Models",
-                                  "Specifications": [
-                                    "[SowingRule].Script.SowingDate=2000-01-06",
-                                    "[SowingRule].Script.SowingDepth=50",
-                                    "[HarvestRule].Script.HarvestDate=2000-04-27"
-                                  ],
-                                  "Paths": null,
-                                  "Values": null,
-                                  "Name": "Jan06",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Factorial.Factor, Models",
-                              "Specification": "[SowingRule].Script.CultivarName=Hooper_MG40,Stephens_MG40",
-                              "Name": "Cv",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Simulation, Models",
-                      "Name": "GriffithBase",
-                      "Children": [
-                        {
-                          "$type": "Models.Clock, Models",
-                          "Start": "1999-11-10T00:00:00",
-                          "End": "2000-05-31T00:00:00",
-                          "Name": "clock",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Summary, Models",
-                          "CaptureErrors": true,
-                          "CaptureWarnings": true,
-                          "CaptureSummaryText": true,
-                          "Name": "summaryfile",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Weather, Models",
-                          "FileName": "Griffith.met",
-                          "ExcelWorkSheetName": null,
-                          "Name": "Weather",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
-                          "Name": "Soil Arbitrator",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Core.Zone, Models",
-                          "Area": 1.0,
-                          "Slope": 0.0,
-                          "AspectAngle": 0.0,
-                          "Altitude": 50.0,
-                          "Name": "paddock",
-                          "Children": [
-                            {
-                              "$type": "Models.MicroClimate, Models",
-                              "a_interception": 0.0,
-                              "b_interception": 1.0,
-                              "c_interception": 0.0,
-                              "d_interception": 0.0,
-                              "soil_albedo": 0.23,
-                              "SoilHeatFluxFraction": 0.4,
-                              "MinimumHeightDiffForNewLayer": 0.0,
-                              "NightInterceptionFraction": 0.5,
-                              "ReferenceHeight": 2.0,
-                              "Name": "MicroClimate",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Irrigation, Models",
-                              "Name": "Irrigation",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        [Link] Zone zone;\r\n        [Link] Irrigation irrigation;\r\n        [Link] Soil soil;\r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (AutoIrrigationOn)\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = 10;\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)\r\n                              - excess_fr * soil.Water[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = soil.ThicknessCumulative;\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
-                              "Parameters": [
-                                {
-                                  "Key": "FASW",
-                                  "Value": "0"
-                                },
-                                {
-                                  "Key": "WaterDeficit",
-                                  "Value": "0"
-                                },
-                                {
-                                  "Key": "AutoIrrigationOn",
-                                  "Value": "True"
-                                },
-                                {
-                                  "Key": "FASWThreshold",
-                                  "Value": "0.9"
-                                },
-                                {
-                                  "Key": "FASWDepth",
-                                  "Value": "900"
-                                }
-                              ],
-                              "Name": "Automatic irrigation based on water deficit",
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Fertiliser, Models",
-                              "Name": "fertiliser",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                              "InitialResidueName": "maize",
-                              "InitialResidueType": "maize",
-                              "InitialResidueMass": 4500.0,
-                              "InitialStandingFraction": 0.0,
-                              "InitialCPR": 0.0,
-                              "InitialCNR": 55.0,
-                              "ResourceName": "SurfaceOrganicMatter",
-                              "Name": "SurfaceOrganicMatter",
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Report, Models",
-                              "VariableNames": [
-                                "[Clock].Today",
-                                "[DiagnosticsVariables].Script.AccumPlantN",
-                                "[DiagnosticsVariables].Script.AccumMineralisation",
-                                "[DiagnosticsVariables].Script.AccumDenit",
-                                "[DiagnosticsVariables].Script.AccumFert",
-                                "[DiagnosticsVariables].Script.AccumLeach",
-                                "[DiagnosticsVariables].Script.AccumDetach",
-                                "[DiagnosticsVariables].Script.DeltaSoilOMN",
-                                "[DiagnosticsVariables].Script.DeltaSurfaceOMN",
-                                "[DiagnosticsVariables].Script.DeltaSoilMineralN",
-                                "[PigeonPea].Root.NSupply",
-                                "[Soil].SoilWater.Eo",
-                                "[Soil].SoilWater.Es",
-                                "[DiagnosticsVariables].Script.SWC",
-                                "[DiagnosticsVariables].Script.DUL",
-                                "[Soil].SoilWater.Drainage",
-                                "[Soil].SoilWater.Runoff",
-                                "[DiagnosticsVariables].Script.OutFlowLat",
-                                "[Soil].SoilWater.pond",
-                                "[DiagnosticsVariables].Script.AccumEO",
-                                "[DiagnosticsVariables].Script.AccumEP",
-                                "[DiagnosticsVariables].Script.AccumES",
-                                "[DiagnosticsVariables].Script.AccumDrainage",
-                                "[DiagnosticsVariables].Script.AccumRunoff",
-                                "[DiagnosticsVariables].Script.AccumRainfall",
-                                "[DiagnosticsVariables].Script.AccumIrrigation",
-                                "[DiagnosticsVariables].Script.AccumOutflowLat",
-                                "[DiagnosticsVariables].Script.SoilWaterDeficit",
-                                "[PigeonPea].Grain.Live.Wt",
-                                "[PigeonPea].Shell.Live.Wt",
-                                "[PigeonPea].Stem.Live.Wt",
-                                "[PigeonPea].Stem.Live.Wt",
-                                "[PigeonPea].Grain.Live.N",
-                                "[PigeonPea].Shell.Live.N",
-                                "[PigeonPea].Leaf.Live.Wt",
-                                "[PigeonPea].Root.Live.Wt",
-                                "[PigeonPea].Leaf.Live.N",
-                                "[PigeonPea].Root.Live.N",
-                                "[PigeonPea].Leaf.Live.NConc",
-                                "[PigeonPea].Root.Live.NConc",
-                                "[PigeonPea].Root.WaterSupply",
-                                "[PigeonPea].Root.WaterUptake",
-                                "[PigeonPea].Leaf.Transpiration",
-                                "[PigeonPea].Leaf.WaterDemand",
-                                "[PigeonPea].Root.Depth",
-                                "[PigeonPea].Leaf.CoverTotal",
-                                "[PigeonPea].Leaf.CoverDead",
-                                "[PigeonPea].Leaf.LAI",
-                                "[PigeonPea].Leaf.Height",
-                                "[PigeonPea].Leaf.PotentialBiomass",
-                                "[Soil].SoilWater.SWmm",
-                                "[Soil].Nutrient.NO3.kgha",
-                                "[DiagnosticsVariables].Script.SoilNitrogenContent",
-                                "[PigeonPea].Arbitrator.N.TotalPlantDemand",
-                                "[MicroClimate].net_radn",
-                                "[MicroClimate].peta",
-                                "[MicroClimate].petr",
-                                "[DiagnosticsVariables].Script.FomN",
-                                "[DiagnosticsVariables].Script.HumN",
-                                "[DiagnosticsVariables].Script.BiomN",
-                                "[DiagnosticsVariables].Script.DltNMinRes",
-                                "[DiagnosticsVariables].Script.DltNMinTot",
-                                "[PigeonPea].Leaf.Fw",
-                                "[PigeonPea].Leaf.Fn",
-                                "[PigeonPea].Phenology.CurrentPhaseName",
-                                "[PigeonPea].Phenology.Stage",
-                                "[PigeonPea].Pod.Wt",
-                                "[PigeonPea].Pod.N",
-                                "[PigeonPea].Structure.LeafTipsAppeared",
-                                "[PigeonPea].Structure.MainStemPrimordiaNo",
-                                "[PigeonPea].Leaf.CohortArea[1]",
-                                "[PigeonPea].Leaf.CohortArea[2]",
-                                "[PigeonPea].Leaf.CohortArea[3]",
-                                "[PigeonPea].Leaf.CohortArea[4]",
-                                "[PigeonPea].Leaf.CohortArea[5]",
-                                "[PigeonPea].Leaf.CohortArea[6]",
-                                "[PigeonPea].Leaf.CohortArea[7]",
-                                "[PigeonPea].Leaf.CohortArea[8]",
-                                "[PigeonPea].Leaf.CohortArea[9]",
-                                "[PigeonPea].Leaf.CohortArea[10]",
-                                "[PigeonPea].Leaf.CohortArea[11]",
-                                "[PigeonPea].Leaf.CohortArea[12]",
-                                "[PigeonPea].Leaf.CohortArea[13]",
-                                "[PigeonPea].Leaf.CohortArea[14]",
-                                "[PigeonPea].Leaf.CohortArea[15]",
-                                "[PigeonPea].Leaf.AppearedCohortNo",
-                                "[PigeonPea].Leaf.DeadCohortNo",
-                                "[PigeonPea].AboveGround.Wt",
-                                "[PigeonPea].Phenology.Stage",
-                                "[PigeonPea].Structure.MainStemPrimordiaNo",
-                                "[PigeonPea].Phenology.NFF",
-                                "[SoybeanHarvestRule].Script.FinalTag",
-                                "[PigeonPea].Grain.NumberFunction",
-                                "[PigeonPea].Shell.PodNumber",
-                                "[PigeonPea].Phenology.FN",
-                                "[PigeonPea].Phenology.FN.TotalNodes",
-                                "[PigeonPea].Phenology.FN.VegetativeNodes"
-                              ],
-                              "EventNames": [
-                                "[Clock].DoReport"
-                              ],
-                              "GroupByVariableName": null,
-                              "Name": "DailyReport",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Manager, Models",
-                              "Code": "\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n        \r\n        namespace Models\r\n        {\r\n           [Serializable] \r\n           [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n            public class Script : Model\r\n            {      \r\n               [Link] Plant PigeonPea;\r\n               [Link] Clock Clock;\r\n\r\n               [Description(\"Spacing (mm) between rows\")]\r\n               public double RowSpacing { get; set; }\r\n               [Description(\"Depth (mm) Grains are planted\")]\r\n               public double SowingDepth { get; set; }\r\n               [Description(\"Seeds sown (/m2)\")]\r\n               public double SowingRate { get; set; }\r\n               [Description(\"Cultivar\")]\r\n               [Display(Type=DisplayType.CultivarName)]\r\n               public string CultivarName { get; set; }\r\n               [Description(\"Sowing Date\")]\r\n               public DateTime SowingDate { get; set; }\r\n\r\n               [EventSubscribe(\"DoManagement\")]\r\n               private void OnDoManagement(object sender, EventArgs e)\r\n               {\r\n                if (Clock.Today.Date == SowingDate)\r\n                    PigeonPea.Sow(population:SowingRate, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing, budNumber:1);\r\n               }\r\n            }\r\n        }\r\n                \r\n",
-                              "Parameters": [
-                                {
-                                  "Key": "RowSpacing",
-                                  "Value": "760"
-                                },
-                                {
-                                  "Key": "SowingDepth",
-                                  "Value": "50"
-                                },
-                                {
-                                  "Key": "SowingRate",
-                                  "Value": "30"
-                                },
-                                {
-                                  "Key": "CultivarName",
-                                  "Value": "Ames_P932T16R_32MG"
-                                },
-                                {
-                                  "Key": "SowingDate",
-                                  "Value": "06/10/2001 00:00:00"
-                                }
-                              ],
-                              "Name": "SowingRule",
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {      \r\n        [Link] Plant PigeonPea;          \r\n        [Link] Clock Clock;\r\n\r\n                    \r\n        [Description(\"Harvest Date\")]\r\n        public DateTime HarvestDate { get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n        }       \r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n           if (Clock.Today.Date == HarvestDate)\r\n           {\r\n           PigeonPea.Harvest();\r\n           PigeonPea.EndCrop();\r\n           }\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            \r\n        }\r\n    }\r\n}\r\n       \r\n",
-                              "Parameters": [
-                                {
-                                  "Key": "HarvestDate",
-                                  "Value": "2000-04-04"
-                                }
-                              ],
-                              "Name": "HarvestRule",
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Report, Models",
-                              "VariableNames": [
-                                "[Clock].Today",
-                                "[PigeonPea].Structure.MainStemPrimordiaNo",
-                                "[PigeonPea].Phenology.NFF",
-                                "[PigeonPea].Script.FinalTag"
-                              ],
-                              "EventNames": [
-                                "[PigeonPea].Harvesting"
-                              ],
-                              "GroupByVariableName": null,
-                              "Name": "HarvestReport",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.PMF.Plant, Models",
-                              "ResourceName": "PigeonPea",
-                              "Name": "PigeonPea",
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.Soil, Models",
-                              "RecordNumber": 0,
-                              "ASCOrder": null,
-                              "ASCSubOrder": null,
-                              "SoilType": null,
-                              "LocalName": "Clarion (near Newell)",
-                              "Site": null,
-                              "NearestTown": "Ames",
-                              "Region": null,
-                              "State": "Iowa",
-                              "Country": "US",
-                              "NaturalVegetation": null,
-                              "ApsoilNumber": "34",
-                              "Latitude": 0.0,
-                              "Longitude": 0.0,
-                              "LocationAccuracy": null,
-                              "DataSource": "for Mahli al-Kaisi paper (Marsden Research farm), tes file , long term PigeonPea",
-                              "Comments": "all data only from WSS",
-                              "Name": "Soil",
-                              "Children": [
-                                {
-                                  "$type": "Models.Soils.Physical, Models",
-                                  "Depth": [
-                                    "0-18",
-                                    "18-30",
-                                    "30-46",
-                                    "46-66",
-                                    "66-91",
-                                    "91-132",
-                                    "132-152"
-                                  ],
-                                  "Thickness": [
-                                    180.0,
-                                    120.0,
-                                    160.0,
-                                    200.0,
-                                    250.0,
-                                    410.0,
-                                    200.0
-                                  ],
-                                  "ParticleSizeClay": null,
-                                  "ParticleSizeSand": null,
-                                  "ParticleSizeSilt": null,
-                                  "BD": [
-                                    1.425,
-                                    1.425,
-                                    1.425,
-                                    1.6,
-                                    1.6,
-                                    1.6,
-                                    1.6
-                                  ],
-                                  "AirDry": [
-                                    0.144,
-                                    0.132,
-                                    0.147,
-                                    0.165,
-                                    0.165,
-                                    0.105,
-                                    0.105
-                                  ],
-                                  "LL15": [
-                                    0.16,
-                                    0.147,
-                                    0.147,
-                                    0.165,
-                                    0.165,
-                                    0.105,
-                                    0.105
-                                  ],
-                                  "DUL": [
-                                    0.297,
-                                    0.289,
-                                    0.289,
-                                    0.293,
-                                    0.293,
-                                    0.25,
-                                    0.25
-                                  ],
-                                  "SAT": [
-                                    0.412,
-                                    0.412,
-                                    0.412,
-                                    0.346,
-                                    0.346,
-                                    0.346,
-                                    0.346
-                                  ],
-                                  "KS": null,
-                                  "BDMetadata": null,
-                                  "AirDryMetadata": null,
-                                  "LL15Metadata": null,
-                                  "DULMetadata": null,
-                                  "SATMetadata": null,
-                                  "KSMetadata": null,
-                                  "Name": "Physical",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Soils.SoilCrop, Models",
-                                      "LL": [
-                                        0.16,
-                                        0.147,
-                                        0.147,
-                                        0.165,
-                                        0.165,
-                                        0.105,
-                                        0.105
-                                      ],
-                                      "KL": [
-                                        0.08,
-                                        0.08,
-                                        0.08,
-                                        0.08,
-                                        0.08,
-                                        0.06,
-                                        0.03
-                                      ],
-                                      "XF": [
-                                        1.0,
-                                        1.0,
-                                        1.0,
-                                        1.0,
-                                        1.0,
-                                        0.09,
-                                        0.05
-                                      ],
-                                      "LLMetadata": null,
-                                      "KLMetadata": null,
-                                      "XFMetadata": null,
-                                      "Name": "PigeonPeaSoil",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.WaterModel.WaterBalance, Models",
-                                  "SummerDate": "1-jun",
-                                  "SummerU": 7.975,
-                                  "SummerCona": 3.675,
-                                  "WinterDate": "1-dec",
-                                  "WinterU": 3.975,
-                                  "WinterCona": 3.675,
-                                  "DiffusConst": 40.0,
-                                  "DiffusSlope": 16.0,
-                                  "Salb": 0.13,
-                                  "CN2Bare": 73.0,
-                                  "CNRed": 20.0,
-                                  "CNCov": 0.8,
-                                  "Slope": "NaN",
-                                  "DischargeWidth": "NaN",
-                                  "CatchmentArea": "NaN",
-                                  "Thickness": [
-                                    180.0,
-                                    120.0,
-                                    160.0,
-                                    200.0,
-                                    250.0,
-                                    410.0,
-                                    200.0
-                                  ],
-                                  "SWCON": [
-                                    0.358,
-                                    0.375,
-                                    0.375,
-                                    0.261,
-                                    0.261,
-                                    0.369,
-                                    0.369
-                                  ],
-                                  "KLAT": null,
-                                  "ResourceName": "WaterBalance",
-                                  "Name": "SoilWater",
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.Organic, Models",
-                                  "Depth": [
-                                    "0-18",
-                                    "18-30",
-                                    "30-46",
-                                    "46-66",
-                                    "66-91",
-                                    "91-132",
-                                    "132-152"
-                                  ],
-                                  "FOMCNRatio": 45.0,
-                                  "Thickness": [
-                                    180.0,
-                                    120.0,
-                                    160.0,
-                                    200.0,
-                                    250.0,
-                                    410.0,
-                                    200.0
-                                  ],
-                                  "Carbon": [
-                                    2.035,
-                                    1.453,
-                                    1.453,
-                                    0.727,
-                                    0.727,
-                                    0.145,
-                                    0.145
-                                  ],
-                                  "SoilCNRatio": [
-                                    14.0,
-                                    14.0,
-                                    14.0,
-                                    14.0,
-                                    14.0,
-                                    14.0,
-                                    14.0
-                                  ],
-                                  "FBiom": [
-                                    0.035,
-                                    0.018,
-                                    0.014,
-                                    0.01,
-                                    0.01,
-                                    0.01,
-                                    0.01
-                                  ],
-                                  "FInert": [
-                                    0.4,
-                                    0.512,
-                                    0.624,
-                                    0.768,
-                                    0.8,
-                                    0.8,
-                                    0.874
-                                  ],
-                                  "FOM": [
-                                    315.90850001573676,
-                                    249.28841254411395,
-                                    181.78433934162214,
-                                    122.49671259828915,
-                                    74.788426050332291,
-                                    33.296510934160352,
-                                    22.437098515745213
-                                  ],
-                                  "Name": "Organic",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.Chemical, Models",
-                                  "Depth": [
-                                    "0-18",
-                                    "18-30",
-                                    "30-46",
-                                    "46-66",
-                                    "66-91",
-                                    "91-132",
-                                    "132-152"
-                                  ],
-                                  "Thickness": [
-                                    180.0,
-                                    120.0,
-                                    160.0,
-                                    200.0,
-                                    250.0,
-                                    410.0,
-                                    200.0
-                                  ],
-                                  "NO3N": [
-                                    10.526315789473685,
-                                    5.8479532163742682,
-                                    1.3157894736842111,
-                                    0.0,
-                                    0.0,
-                                    0.0,
-                                    0.0
-                                  ],
-                                  "NH4N": [
-                                    4.6783625730994149,
-                                    1.7543859649122804,
-                                    0.43859649122806987,
-                                    0.0,
-                                    0.0,
-                                    0.0,
-                                    0.0
-                                  ],
-                                  "PH": [
-                                    6.317,
-                                    6.317,
-                                    6.317,
-                                    6.582,
-                                    6.582,
-                                    7.96,
-                                    7.96
-                                  ],
-                                  "CL": null,
-                                  "EC": null,
-                                  "ESP": null,
-                                  "Name": "Chemical",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.Sample, Models",
-                                  "Depth": [
-                                    "0-18",
-                                    "18-30",
-                                    "30-46",
-                                    "46-66",
-                                    "66-91",
-                                    "91-132",
-                                    "132-152"
-                                  ],
-                                  "Thickness": [
-                                    180.0,
-                                    120.0,
-                                    160.0,
-                                    200.0,
-                                    250.0,
-                                    410.0,
-                                    200.0
-                                  ],
-                                  "NO3N": null,
-                                  "NH4N": null,
-                                  "SW": [
-                                    0.0,
-                                    "NaN",
-                                    "NaN",
-                                    "NaN",
-                                    "NaN",
-                                    "NaN",
-                                    "NaN"
-                                  ],
-                                  "OC": null,
-                                  "EC": null,
-                                  "CL": null,
-                                  "ESP": null,
-                                  "PH": null,
-                                  "SWUnits": 0,
-                                  "OCUnits": 0,
-                                  "PHUnits": 0,
-                                  "Name": "Initial nitrogen",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.InitialWater, Models",
-                                  "PercentMethod": 0,
-                                  "FractionFull": 0.0,
-                                  "DepthWetSoil": "NaN",
-                                  "RelativeTo": null,
-                                  "Name": "InitialWater",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.CERESSoilTemperature, Models",
-                                  "Name": "CERESSoilTemperature",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
-                                  "ResourceName": "Nutrient",
-                                  "Name": "Nutrient",
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Folder, Models",
-                      "ShowPageOfGraphs": true,
-                      "Name": "Biomass",
-                      "Children": [
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": true,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "LegendOrientation": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "Biomass",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": -16777216,
-                              "FactorToVaryColours": "Sow",
-                              "FactorToVaryMarkers": null,
-                              "FactorToVaryLines": "Cv",
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 0,
-                              "LineThickness": 0,
-                              "TableName": "DailyReport",
-                              "XFieldName": "Clock.Today",
-                              "YFieldName": "PigeonPea.AboveGround.Wt",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": false,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Predicted",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": -16777216,
-                              "FactorToVaryColours": "Sow",
-                              "FactorToVaryMarkers": "Cv",
-                              "FactorToVaryLines": null,
-                              "Marker": 0,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "Observed",
-                              "XFieldName": "Clock.Today",
-                              "YFieldName": "PigeonPea.AboveGround.Wt",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": false,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Observed",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": true,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "LegendOrientation": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "PodWt",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": -16777216,
-                              "FactorToVaryColours": "Sow",
-                              "FactorToVaryMarkers": null,
-                              "FactorToVaryLines": "Cv",
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 0,
-                              "LineThickness": 0,
-                              "TableName": "DailyReport",
-                              "XFieldName": "Clock.Today",
-                              "YFieldName": "PigeonPea.Pod.Wt",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": false,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Predicted",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": -16777216,
-                              "FactorToVaryColours": "Sow",
-                              "FactorToVaryMarkers": "Cv",
-                              "FactorToVaryLines": null,
-                              "Marker": 0,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "Observed",
-                              "XFieldName": "Clock.Today",
-                              "YFieldName": "PigeonPea.Pod.Wt",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": false,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Observed",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": true,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "LegendOrientation": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "GrainWt",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": -16777216,
-                              "FactorToVaryColours": "Sow",
-                              "FactorToVaryMarkers": null,
-                              "FactorToVaryLines": "Cv",
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 0,
-                              "LineThickness": 0,
-                              "TableName": "DailyReport",
-                              "XFieldName": "Clock.Today",
-                              "YFieldName": "PigeonPea.Grain.Wt",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": false,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Predicted",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": -16777216,
-                              "FactorToVaryColours": "Sow",
-                              "FactorToVaryMarkers": "Cv",
-                              "FactorToVaryLines": null,
-                              "Marker": 0,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "Observed",
-                              "XFieldName": "Clock.Today",
-                              "YFieldName": "PigeonPea.Grain.Wt",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": false,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Observed",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Folder, Models",
-                      "ShowPageOfGraphs": true,
-                      "Name": "Phenology",
-                      "Children": [
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 3,
-                          "LegendOrientation": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "Pred vs Obs FloweringDAS",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": -16777216,
-                              "FactorToVaryColours": "Sow",
-                              "FactorToVaryMarkers": null,
-                              "FactorToVaryLines": null,
-                              "Marker": 0,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "PredictedObservedHarvest",
-                              "XFieldName": "Observed.PigeonPea.Phenology.FloweringDAS",
-                              "YFieldName": "Predicted.PigeonPea.Phenology.FloweringDAS",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Pre vs Obs",
-                              "Children": [
-                                {
-                                  "$type": "Models.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 3,
-                          "LegendOrientation": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "Pred vs Obs MaturityDAS",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": -16777216,
-                              "FactorToVaryColours": "Sow",
-                              "FactorToVaryMarkers": null,
-                              "FactorToVaryLines": null,
-                              "Marker": 0,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "PredictedObservedHarvest",
-                              "XFieldName": "Observed.PigeonPea.Phenology.MaturityDAS",
-                              "YFieldName": "Predicted.PigeonPea.Phenology.MaturityDAS",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Pre vs Obs",
-                              "Children": [
-                                {
-                                  "$type": "Models.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Folder, Models",
-                      "ShowPageOfGraphs": true,
-                      "Name": "Canopy",
-                      "Children": [
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": true,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "LegendOrientation": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "LAI",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": -16777216,
-                              "FactorToVaryColours": "Sow",
-                              "FactorToVaryMarkers": null,
-                              "FactorToVaryLines": "Cv",
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 0,
-                              "LineThickness": 0,
-                              "TableName": "DailyReport",
-                              "XFieldName": "Clock.Today",
-                              "YFieldName": "PigeonPea.Leaf.LAI",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": false,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Predicted",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": -16777216,
-                              "FactorToVaryColours": "Sow",
-                              "FactorToVaryMarkers": "Cv",
-                              "FactorToVaryLines": null,
-                              "Marker": 0,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "Observed",
-                              "XFieldName": "Clock.Today",
-                              "YFieldName": "PigeonPea.Leaf.LAI",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": false,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Observed",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Core.Folder, Models",
-          "ShowPageOfGraphs": true,
           "Name": "Combined Results",
           "Children": [
             {
@@ -8362,85 +6958,6 @@
               "Name": "Combined Results",
               "Children": [],
               "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                }
-              ],
-              "LegendPosition": 3,
-              "LegendOrientation": 0,
-              "DisabledSeries": [],
-              "LegendOutsideGraph": false,
-              "Name": "Pred vs Obs EmergenceDAS",
-              "Children": [
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Experiment",
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 0,
-                  "MarkerSize": 0,
-                  "Line": 4,
-                  "LineThickness": 0,
-                  "TableName": "PredictedObservedHarvest",
-                  "XFieldName": "Observed.PigeonPea.Phenology.EmergenceDAS",
-                  "YFieldName": "Predicted.PigeonPea.Phenology.EmergenceDAS",
-                  "X2FieldName": "",
-                  "Y2FieldName": "",
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Pre vs Obs",
-                  "Children": [
-                    {
-                      "$type": "Models.Regression, Models",
-                      "ForEachSeries": false,
-                      "showOneToOne": true,
-                      "showEquation": true,
-                      "Name": "Regression",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -8611,7 +7128,7 @@
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
-                  "Minimum": "NaN",
+                  "Minimum": 0.0,
                   "Maximum": "NaN",
                   "Interval": "NaN",
                   "DateTimeAxis": false,
@@ -8622,251 +7139,14 @@
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
-                  "Minimum": "NaN",
+                  "Minimum": 0.0,
                   "Maximum": "NaN",
                   "Interval": "NaN",
                   "DateTimeAxis": false,
                   "CrossesAtZero": false
                 }
               ],
-              "LegendPosition": 3,
-              "LegendOrientation": 0,
-              "DisabledSeries": [],
-              "LegendOutsideGraph": false,
-              "Name": "LAI",
-              "Children": [
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Experiment",
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 0,
-                  "MarkerSize": 0,
-                  "Line": 4,
-                  "LineThickness": 0,
-                  "TableName": "PredictedObserved",
-                  "XFieldName": "Observed.PigeonPea.Leaf.LAI",
-                  "YFieldName": "Predicted.PigeonPea.Leaf.LAI",
-                  "X2FieldName": "",
-                  "Y2FieldName": "",
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Series1",
-                  "Children": [
-                    {
-                      "$type": "Models.Regression, Models",
-                      "ForEachSeries": false,
-                      "showOneToOne": true,
-                      "showEquation": true,
-                      "Name": "Regression",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                }
-              ],
-              "LegendPosition": 3,
-              "LegendOrientation": 0,
-              "DisabledSeries": [],
-              "LegendOutsideGraph": false,
-              "Name": "Biomass",
-              "Children": [
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Experiment",
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 0,
-                  "MarkerSize": 0,
-                  "Line": 4,
-                  "LineThickness": 0,
-                  "TableName": "PredictedObserved",
-                  "XFieldName": "Observed.PigeonPea.AboveGround.Wt",
-                  "YFieldName": "Predicted.PigeonPea.AboveGround.Wt",
-                  "X2FieldName": "",
-                  "Y2FieldName": "",
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Series1",
-                  "Children": [
-                    {
-                      "$type": "Models.Regression, Models",
-                      "ForEachSeries": false,
-                      "showOneToOne": true,
-                      "showEquation": true,
-                      "Name": "Regression",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                }
-              ],
-              "LegendPosition": 3,
-              "LegendOrientation": 0,
-              "DisabledSeries": [],
-              "LegendOutsideGraph": false,
-              "Name": "BiomassN",
-              "Children": [
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Experiment",
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 0,
-                  "MarkerSize": 0,
-                  "Line": 4,
-                  "LineThickness": 0,
-                  "TableName": "PredictedObserved",
-                  "XFieldName": "Observed.PigeonPea.AboveGround.N",
-                  "YFieldName": "Predicted.PigeonPea.AboveGround.N",
-                  "X2FieldName": "",
-                  "Y2FieldName": "",
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Series1",
-                  "Children": [
-                    {
-                      "$type": "Models.Regression, Models",
-                      "ForEachSeries": false,
-                      "showOneToOne": true,
-                      "showEquation": true,
-                      "Name": "Regression",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                }
-              ],
-              "LegendPosition": 3,
+              "LegendPosition": 5,
               "LegendOrientation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
@@ -8878,7 +7158,7 @@
                   "XAxis": 3,
                   "YAxis": 0,
                   "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryColours": "SimulationName",
                   "FactorToVaryMarkers": null,
                   "FactorToVaryLines": null,
                   "Marker": 0,
@@ -8917,309 +7197,906 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
-            },
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Folder, Models",
+          "ShowPageOfGraphs": true,
+          "Name": "India",
+          "Children": [
             {
-              "$type": "Models.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                }
-              ],
-              "LegendPosition": 3,
-              "LegendOrientation": 0,
-              "DisabledSeries": [],
-              "LegendOutsideGraph": false,
-              "Name": "Pred vs Obs Harvest Index",
+              "$type": "Models.Core.Folder, Models",
+              "ShowPageOfGraphs": true,
+              "Name": "Patancheru",
               "Children": [
                 {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Experiment",
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 0,
-                  "MarkerSize": 0,
-                  "Line": 4,
-                  "LineThickness": 0,
-                  "TableName": "PredictedObserved",
-                  "XFieldName": "Observed.PigeonPea.Grain.HarvestIndex",
-                  "YFieldName": "Predicted.PigeonPea.Grain.HarvestIndex",
-                  "X2FieldName": "",
-                  "Y2FieldName": "",
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Pre vs Obs",
-                  "Children": [
-                    {
-                      "$type": "Models.Regression, Models",
-                      "ForEachSeries": false,
-                      "showOneToOne": true,
-                      "showEquation": true,
-                      "Name": "Regression",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
+                  "$type": "Models.Memo, Models",
+                  "Text": "These data [Timsina2007] were obtained from a field experiment conducted in 1999–2000 on a Hanwood loam soil at CSIRO Land and Water, Griffith, Australia.  Two indeterminate PigeonPea cultivars (Hooper and Stephens belonging to late maturity group [MG] 3 or early MG 4) were on 15 November, 8 December, and 6 January.",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                }
-              ],
-              "LegendPosition": 3,
-              "LegendOrientation": 0,
-              "DisabledSeries": [],
-              "LegendOutsideGraph": false,
-              "Name": "Evapotranspiration",
-              "Children": [
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Experiment",
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 0,
-                  "MarkerSize": 0,
-                  "Line": 4,
-                  "LineThickness": 0,
-                  "TableName": "PredictedObservedET",
-                  "XFieldName": "Observed.ET",
-                  "YFieldName": "Predicted.ET",
-                  "X2FieldName": "",
-                  "Y2FieldName": "",
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Series1",
+                  "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
+                  "Name": "PATANCHERUs742v4",
                   "Children": [
                     {
-                      "$type": "Models.Regression, Models",
-                      "ForEachSeries": false,
-                      "showOneToOne": true,
-                      "showEquation": true,
-                      "Name": "Regression",
+                      "$type": "Models.Clock, Models",
+                      "Start": "1974-05-27T00:00:00",
+                      "End": "1974-10-23T00:00:00",
+                      "Name": "clock",
                       "Children": [],
-                      "IncludeInDocumentation": false,
+                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                }
-              ],
-              "LegendPosition": 3,
-              "LegendOrientation": 0,
-              "DisabledSeries": [],
-              "LegendOutsideGraph": false,
-              "Name": "RootDepth",
-              "Children": [
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Experiment",
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 0,
-                  "MarkerSize": 0,
-                  "Line": 4,
-                  "LineThickness": 0,
-                  "TableName": "PredictedObserved",
-                  "XFieldName": "Observed.PigeonPea.Root.Depth",
-                  "YFieldName": "Predicted.PigeonPea.Root.Depth",
-                  "X2FieldName": "",
-                  "Y2FieldName": "",
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Series1",
-                  "Children": [
+                    },
                     {
-                      "$type": "Models.Regression, Models",
-                      "ForEachSeries": false,
-                      "showOneToOne": true,
-                      "showEquation": true,
-                      "Name": "Regression",
+                      "$type": "Models.Summary, Models",
+                      "CaptureErrors": true,
+                      "CaptureWarnings": true,
+                      "CaptureSummaryText": true,
+                      "Name": "summaryfile",
                       "Children": [],
-                      "IncludeInDocumentation": false,
+                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                }
-              ],
-              "LegendPosition": 3,
-              "LegendOrientation": 0,
-              "DisabledSeries": [],
-              "LegendOutsideGraph": false,
-              "Name": "PodWt",
-              "Children": [
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "Experiment",
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 0,
-                  "MarkerSize": 0,
-                  "Line": 4,
-                  "LineThickness": 0,
-                  "TableName": "PredictedObserved",
-                  "XFieldName": "Observed.PigeonPea.Pod.Wt",
-                  "YFieldName": "Predicted.PigeonPea.Pod.Wt",
-                  "X2FieldName": "",
-                  "Y2FieldName": "",
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Series1",
-                  "Children": [
+                    },
                     {
-                      "$type": "Models.Regression, Models",
-                      "ForEachSeries": false,
-                      "showOneToOne": true,
-                      "showEquation": true,
-                      "Name": "Regression",
+                      "$type": "Models.Weather, Models",
+                      "FileName": "Patancheru.met",
+                      "ExcelWorkSheetName": "",
+                      "Name": "Weather",
                       "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
+                      "Name": "Soil Arbitrator",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Zone, Models",
+                      "Area": 1.0,
+                      "Slope": 0.0,
+                      "AspectAngle": 0.0,
+                      "Altitude": 50.0,
+                      "Name": "paddock",
+                      "Children": [
+                        {
+                          "$type": "Models.Soils.Soil, Models",
+                          "RecordNumber": -1,
+                          "ASCOrder": "NA",
+                          "ASCSubOrder": "NA",
+                          "SoilType": "Haplic Luvisols",
+                          "LocalName": null,
+                          "Site": "NA",
+                          "NearestTown": "NA",
+                          "Region": "NA",
+                          "State": "NA",
+                          "Country": "India",
+                          "NaturalVegetation": "NA",
+                          "ApsoilNumber": "9999",
+                          "Latitude": 17.625,
+                          "Longitude": 78.375,
+                          "LocationAccuracy": "+- 250 m",
+                          "DataSource": "ISRIC SoilGrids",
+                          "Comments": "",
+                          "Name": "s742v4",
+                          "Children": [
+                            {
+                              "$type": "Models.Soils.Sample, Models",
+                              "Depth": [
+                                "0-15",
+                                "15-30",
+                                "30-60",
+                                "60-90",
+                                "90-120",
+                                "120-150",
+                                "150-180"
+                              ],
+                              "Thickness": [
+                                150.0,
+                                150.0,
+                                300.0,
+                                300.0,
+                                300.0,
+                                300.0,
+                                300.0
+                              ],
+                              "NO3N": [
+                                5.0,
+                                3.0,
+                                2.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                0.5
+                              ],
+                              "NH4N": [
+                                2.5,
+                                2.5,
+                                1.5,
+                                1.0,
+                                0.5,
+                                0.5,
+                                0.5
+                              ],
+                              "SW": [
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN"
+                              ],
+                              "OC": null,
+                              "EC": null,
+                              "CL": null,
+                              "ESP": null,
+                              "PH": null,
+                              "SWUnits": 0,
+                              "OCUnits": 0,
+                              "PHUnits": 0,
+                              "Name": "Initial nitrogen",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.InitialWater, Models",
+                              "PercentMethod": 1,
+                              "FractionFull": 0.1,
+                              "DepthWetSoil": "NaN",
+                              "RelativeTo": null,
+                              "Name": "Initial water",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Physical, Models",
+                              "Depth": [
+                                "0-15",
+                                "15-30",
+                                "30-60",
+                                "60-90",
+                                "90-120",
+                                "120-150",
+                                "150-180"
+                              ],
+                              "Thickness": [
+                                150.0,
+                                150.0,
+                                300.0,
+                                300.0,
+                                300.0,
+                                300.0,
+                                300.0
+                              ],
+                              "ParticleSizeClay": [
+                                30.0,
+                                34.5,
+                                37.5,
+                                38.5,
+                                39.0,
+                                39.0,
+                                38.8
+                              ],
+                              "ParticleSizeSand": [
+                                44.8,
+                                41.5,
+                                38.7,
+                                38.2,
+                                38.0,
+                                38.0,
+                                38.2
+                              ],
+                              "ParticleSizeSilt": [
+                                25.0,
+                                24.5,
+                                23.8,
+                                23.2,
+                                23.2,
+                                23.8,
+                                23.9
+                              ],
+                              "BD": [
+                                1.2,
+                                1.2,
+                                1.2,
+                                1.2,
+                                1.2,
+                                1.2,
+                                1.2
+                              ],
+                              "AirDry": [
+                                0.1,
+                                0.2,
+                                0.246,
+                                0.246,
+                                0.247,
+                                0.256,
+                                0.256
+                              ],
+                              "LL15": [
+                                0.224,
+                                0.245,
+                                0.246,
+                                0.246,
+                                0.247,
+                                0.256,
+                                0.256
+                              ],
+                              "DUL": [
+                                0.39,
+                                0.417,
+                                0.417,
+                                0.401,
+                                0.403,
+                                0.43,
+                                0.43
+                              ],
+                              "SAT": [
+                                0.44,
+                                0.467,
+                                0.467,
+                                0.451,
+                                0.453,
+                                0.48,
+                                0.48
+                              ],
+                              "KS": [
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN"
+                              ],
+                              "BDMetadata": null,
+                              "AirDryMetadata": null,
+                              "LL15Metadata": null,
+                              "DULMetadata": null,
+                              "SATMetadata": null,
+                              "KSMetadata": null,
+                              "Name": "Physical",
+                              "Children": [
+                                {
+                                  "$type": "Models.Soils.SoilCrop, Models",
+                                  "LL": [
+                                    0.224,
+                                    0.245,
+                                    0.246,
+                                    0.246,
+                                    0.247,
+                                    0.256,
+                                    0.256
+                                  ],
+                                  "KL": [
+                                    0.12,
+                                    0.08,
+                                    0.05,
+                                    0.05,
+                                    0.05,
+                                    0.05,
+                                    0.05
+                                  ],
+                                  "XF": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "LLMetadata": null,
+                                  "KLMetadata": null,
+                                  "XFMetadata": null,
+                                  "Name": "PigeonPeaSoil",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.WaterModel.WaterBalance, Models",
+                              "SummerDate": "1-may",
+                              "SummerU": 6.0,
+                              "SummerCona": 6.0,
+                              "WinterDate": "1-oct",
+                              "WinterU": 6.0,
+                              "WinterCona": 6.0,
+                              "DiffusConst": 4453.16,
+                              "DiffusSlope": 8.8,
+                              "Salb": 0.13,
+                              "CN2Bare": 73.0,
+                              "CNRed": 20.0,
+                              "CNCov": 0.0,
+                              "Slope": 0.5,
+                              "DischargeWidth": 5.0,
+                              "CatchmentArea": 10.0,
+                              "Thickness": [
+                                150.0,
+                                150.0,
+                                300.0,
+                                300.0,
+                                300.0,
+                                300.0,
+                                300.0,
+                                "NaN",
+                                "NaN",
+                                "NaN"
+                              ],
+                              "SWCON": [
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1,
+                                "NaN",
+                                "NaN",
+                                "NaN"
+                              ],
+                              "KLAT": null,
+                              "ResourceName": "WaterBalance",
+                              "Name": "SoilWater",
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilNitrogen, Models",
+                              "fom_types": [
+                                "default",
+                                "manure",
+                                "mucuna",
+                                "lablab",
+                                "shemp",
+                                "stable"
+                              ],
+                              "fract_carb": [
+                                0.2,
+                                0.3,
+                                0.54,
+                                0.57,
+                                0.45,
+                                0.0
+                              ],
+                              "fract_cell": [
+                                0.7,
+                                0.3,
+                                0.37,
+                                0.37,
+                                0.47,
+                                0.1
+                              ],
+                              "fract_lign": [
+                                0.1,
+                                0.4,
+                                0.09,
+                                0.06,
+                                0.08,
+                                0.9
+                              ],
+                              "Name": "SoilNitrogen",
+                              "Children": [
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "Name": "NO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "Name": "NH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "Name": "Urea",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                                  "Name": "PlantAvailableNO3",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                                  "Name": "PlantAvailableNH4",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.CERESSoilTemperature, Models",
+                              "Name": "CERESSoilTemperature",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Organic, Models",
+                              "Depth": [
+                                "0-15",
+                                "15-30",
+                                "30-60",
+                                "60-90",
+                                "90-120",
+                                "120-150",
+                                "150-180"
+                              ],
+                              "FOMCNRatio": 45.0,
+                              "Thickness": [
+                                150.0,
+                                150.0,
+                                300.0,
+                                300.0,
+                                300.0,
+                                300.0,
+                                300.0
+                              ],
+                              "Carbon": [
+                                0.96,
+                                0.87,
+                                0.69,
+                                0.63,
+                                0.6,
+                                0.53,
+                                0.3
+                              ],
+                              "SoilCNRatio": [
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5,
+                                14.5
+                              ],
+                              "FBiom": [
+                                0.04,
+                                0.02,
+                                0.015,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01
+                              ],
+                              "FInert": [
+                                0.39,
+                                0.47,
+                                0.52,
+                                0.62,
+                                0.74,
+                                0.83,
+                                0.93
+                              ],
+                              "FOM": [
+                                500.0,
+                                200.0,
+                                100.0,
+                                50.0,
+                                50.0,
+                                50.0,
+                                50.0
+                              ],
+                              "Name": "Organic",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Chemical, Models",
+                              "Depth": [
+                                "0-15",
+                                "15-30",
+                                "30-60",
+                                "60-90",
+                                "90-120",
+                                "120-150",
+                                "150-180"
+                              ],
+                              "Thickness": [
+                                150.0,
+                                150.0,
+                                300.0,
+                                300.0,
+                                300.0,
+                                300.0,
+                                300.0
+                              ],
+                              "NO3N": [
+                                5.0,
+                                3.0,
+                                2.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                0.5
+                              ],
+                              "NH4N": [
+                                2.5,
+                                2.5,
+                                1.5,
+                                1.0,
+                                0.5,
+                                0.5,
+                                0.5
+                              ],
+                              "PH": [
+                                7.5,
+                                8.0,
+                                8.0,
+                                8.0,
+                                8.0,
+                                8.0,
+                                8.0
+                              ],
+                              "CL": null,
+                              "EC": null,
+                              "ESP": null,
+                              "Name": "Chemical",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.MicroClimate, Models",
+                          "a_interception": 0.0,
+                          "b_interception": 1.0,
+                          "c_interception": 0.0,
+                          "d_interception": 0.0,
+                          "soil_albedo": 0.23,
+                          "SoilHeatFluxFraction": 0.4,
+                          "MinimumHeightDiffForNewLayer": 0.0,
+                          "NightInterceptionFraction": 0.5,
+                          "ReferenceHeight": 2.0,
+                          "Name": "MicroClimate",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Irrigation, Models",
+                          "Name": "Irrigation",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Fertiliser, Models",
+                          "Name": "fertiliser",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                          "InitialResidueName": "pigeonpea",
+                          "InitialResidueType": "pigeonpea",
+                          "InitialResidueMass": 1000.0,
+                          "InitialStandingFraction": 0.0,
+                          "InitialCPR": 0.0,
+                          "InitialCNR": 55.0,
+                          "ResourceName": "SurfaceOrganicMatter",
+                          "Name": "SurfaceOrganicMatter",
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.PMF.Plant, Models",
+                          "ResourceName": "PigeonPea",
+                          "Name": "PigeonPea",
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Manager, Models",
+                          "Code": "\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n        \r\n        namespace Models\r\n        {\r\n           [Serializable] \r\n           [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n            public class Script : Model\r\n            {      \r\n               [Link] Plant PigeonPea;\r\n               [Link] Clock Clock;\r\n\r\n               [Description(\"Spacing (mm) between rows\")]\r\n               public double RowSpacing { get; set; }\r\n               [Description(\"Depth (mm) Grains are planted\")]\r\n               public double SowingDepth { get; set; }\r\n               [Description(\"Seeds sown (/m2)\")]\r\n               public double SowingRate { get; set; }\r\n               [Description(\"Cultivar\")]\r\n               [Display(Type=DisplayType.CultivarName)]\r\n               public string CultivarName { get; set; }\r\n               [Description(\"Sowing Date\")]\r\n               public DateTime SowingDate { get; set; }\r\n\r\n               [EventSubscribe(\"DoManagement\")]\r\n               private void OnDoManagement(object sender, EventArgs e)\r\n               {\r\n                if (Clock.Today.Date == SowingDate)\r\n                    PigeonPea.Sow(population:SowingRate, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing, budNumber:1);\r\n               }\r\n            }\r\n        }\r\n                \r\n",
+                          "Parameters": [
+                            {
+                              "Key": "RowSpacing",
+                              "Value": "750"
+                            },
+                            {
+                              "Key": "SowingDepth",
+                              "Value": "30"
+                            },
+                            {
+                              "Key": "SowingRate",
+                              "Value": "4.44"
+                            },
+                            {
+                              "Key": "CultivarName",
+                              "Value": "Generic_MG5"
+                            },
+                            {
+                              "Key": "SowingDate",
+                              "Value": "06/26/1974 00:00:00"
+                            }
+                          ],
+                          "Name": "SowingRule",
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Manager, Models",
+                          "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public IPlant Crop { get; set; }\r\n\r\n        [Description(\"Type of fertiliser to apply? \")] \r\n        public Fertiliser.Types FertiliserType { get; set; }\r\n    \r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n            Model crop = sender as Model;\r\n            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())\r\n                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n        }\r\n    }\r\n}\r\n",
+                          "Parameters": [
+                            {
+                              "Key": "Crop",
+                              "Value": "[PigeonPea]"
+                            },
+                            {
+                              "Key": "FertiliserType",
+                              "Value": "NH4NO3N"
+                            },
+                            {
+                              "Key": "Amount",
+                              "Value": "100"
+                            }
+                          ],
+                          "Name": "Fertilise at sowing",
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Manager, Models",
+                          "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        \r\n        [Separator(\"A component to apply fertiliser on one or more dates on every year of the simulation\")]\r\n\r\n        [Description(\"Type of fertiliser to apply? \")] \r\n        public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n        [Description(\"Enter the fertilisation dates as dd-mmm with comma separation (any year information entered will be ignored): \")] \r\n        public string[] FertiliserDates { get; set; } \r\n\r\n        [Description(\"Amount of fertiliser to be applied (kg /ha)\")] \r\n        public double Amount { get; set; }\r\n\r\n        [Description(\"Is the above amount to be applied each time? (yes/ticked)? Or is it the total annual amount across all dates (no/unticked)\")] \r\n        public bool AmountType { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            foreach (string ddMMM in FertiliserDates)\r\n            {\r\n                if (DateUtilities.DatesEqual(ddMMM, Clock.Today))\r\n                {\r\n                    if (AmountType)\r\n                        Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n                    else\r\n                        Fertiliser.Apply(Amount: Amount / FertiliserDates.Length, Type: FertiliserType);\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                          "Parameters": [
+                            {
+                              "Key": "FertiliserType",
+                              "Value": "NO3N"
+                            },
+                            {
+                              "Key": "FertiliserDates",
+                              "Value": "30-may"
+                            },
+                            {
+                              "Key": "Amount",
+                              "Value": "60"
+                            },
+                            {
+                              "Key": "AmountType",
+                              "Value": "True"
+                            }
+                          ],
+                          "Name": "Fertilise on fixed dates",
+                          "IncludeInDocumentation": true,
+                          "Enabled": false,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Manager, Models",
+                          "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        [Link] Zone zone;\r\n        [Link] Irrigation irrigation;\r\n        [Link] Soil soil;\r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (AutoIrrigationOn)\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = 10;\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)\r\n                              - excess_fr * soil.Water[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = soil.ThicknessCumulative;\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
+                          "Parameters": [
+                            {
+                              "Key": "FASW",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "WaterDeficit",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "AutoIrrigationOn",
+                              "Value": "True"
+                            },
+                            {
+                              "Key": "FASWThreshold",
+                              "Value": "0.9"
+                            },
+                            {
+                              "Key": "FASWDepth",
+                              "Value": "900"
+                            }
+                          ],
+                          "Name": "Automatic irrigation based on water deficit",
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Report, Models",
+                          "VariableNames": [
+                            "[Clock].Today",
+                            "[DiagnosticsVariables].Script.AccumPlantN",
+                            "[DiagnosticsVariables].Script.AccumMineralisation",
+                            "[DiagnosticsVariables].Script.AccumDenit",
+                            "[DiagnosticsVariables].Script.AccumFert",
+                            "[DiagnosticsVariables].Script.AccumLeach",
+                            "[DiagnosticsVariables].Script.AccumDetach",
+                            "[DiagnosticsVariables].Script.DeltaSoilOMN",
+                            "[DiagnosticsVariables].Script.DeltaSurfaceOMN",
+                            "[DiagnosticsVariables].Script.DeltaSoilMineralN",
+                            "[PigeonPea].Root.NSupply",
+                            "[Soil].SoilWater.Eo",
+                            "[Soil].SoilWater.Es",
+                            "[DiagnosticsVariables].Script.SWC",
+                            "[DiagnosticsVariables].Script.DUL",
+                            "[Soil].SoilWater.Drainage",
+                            "[Soil].SoilWater.Runoff",
+                            "[DiagnosticsVariables].Script.OutFlowLat",
+                            "[Soil].SoilWater.pond",
+                            "[DiagnosticsVariables].Script.AccumEO",
+                            "[DiagnosticsVariables].Script.AccumEP",
+                            "[DiagnosticsVariables].Script.AccumES",
+                            "[DiagnosticsVariables].Script.AccumDrainage",
+                            "[DiagnosticsVariables].Script.AccumRunoff",
+                            "[DiagnosticsVariables].Script.AccumRainfall",
+                            "[DiagnosticsVariables].Script.AccumIrrigation",
+                            "[DiagnosticsVariables].Script.AccumOutflowLat",
+                            "[DiagnosticsVariables].Script.SoilWaterDeficit",
+                            "[PigeonPea].Grain.Live.Wt",
+                            "[PigeonPea].Shell.Live.Wt",
+                            "[PigeonPea].Stem.Live.Wt",
+                            "[PigeonPea].Stem.Live.Wt",
+                            "[PigeonPea].Grain.Live.N",
+                            "[PigeonPea].Shell.Live.N",
+                            "[PigeonPea].Leaf.Live.Wt",
+                            "[PigeonPea].Root.Live.Wt",
+                            "[PigeonPea].Leaf.Live.N",
+                            "[PigeonPea].Root.Live.N",
+                            "[PigeonPea].Leaf.Live.NConc",
+                            "[PigeonPea].Root.Live.NConc",
+                            "[PigeonPea].Root.WaterSupply",
+                            "[PigeonPea].Root.WaterUptake",
+                            "[PigeonPea].Leaf.Transpiration",
+                            "[PigeonPea].Leaf.WaterDemand",
+                            "[PigeonPea].Root.Depth",
+                            "[PigeonPea].Leaf.CoverTotal",
+                            "[PigeonPea].Leaf.CoverDead",
+                            "[PigeonPea].Leaf.LAI",
+                            "[PigeonPea].Leaf.Height",
+                            "[PigeonPea].Leaf.PotentialBiomass",
+                            "[Soil].SoilWater.SWmm",
+                            "[Soil].Nutrient.NO3.kgha",
+                            "[DiagnosticsVariables].Script.SoilNitrogenContent",
+                            "[PigeonPea].Arbitrator.N.TotalPlantDemand",
+                            "[MicroClimate].net_radn",
+                            "[MicroClimate].peta",
+                            "[MicroClimate].petr",
+                            "[DiagnosticsVariables].Script.FomN",
+                            "[DiagnosticsVariables].Script.HumN",
+                            "[DiagnosticsVariables].Script.BiomN",
+                            "[DiagnosticsVariables].Script.DltNMinRes",
+                            "[DiagnosticsVariables].Script.DltNMinTot",
+                            "[PigeonPea].Leaf.Fw",
+                            "[PigeonPea].Leaf.Fn",
+                            "[PigeonPea].Phenology.CurrentPhaseName",
+                            "[PigeonPea].Phenology.Stage",
+                            "[PigeonPea].Pod.Wt",
+                            "[PigeonPea].Pod.N",
+                            "[PigeonPea].Structure.LeafTipsAppeared",
+                            "[PigeonPea].Structure.MainStemPrimordiaNo",
+                            "[PigeonPea].Leaf.CohortArea[1]",
+                            "[PigeonPea].Leaf.CohortArea[2]",
+                            "[PigeonPea].Leaf.CohortArea[3]",
+                            "[PigeonPea].Leaf.CohortArea[4]",
+                            "[PigeonPea].Leaf.CohortArea[5]",
+                            "[PigeonPea].Leaf.CohortArea[6]",
+                            "[PigeonPea].Leaf.CohortArea[7]",
+                            "[PigeonPea].Leaf.CohortArea[8]",
+                            "[PigeonPea].Leaf.CohortArea[9]",
+                            "[PigeonPea].Leaf.CohortArea[10]",
+                            "[PigeonPea].Leaf.CohortArea[11]",
+                            "[PigeonPea].Leaf.CohortArea[12]",
+                            "[PigeonPea].Leaf.CohortArea[13]",
+                            "[PigeonPea].Leaf.CohortArea[14]",
+                            "[PigeonPea].Leaf.CohortArea[15]",
+                            "[PigeonPea].Leaf.AppearedCohortNo",
+                            "[PigeonPea].Leaf.DeadCohortNo",
+                            "[PigeonPea].AboveGround.Wt",
+                            "[PigeonPea].Phenology.Stage",
+                            "[PigeonPea].Structure.MainStemPrimordiaNo",
+                            "[PigeonPea].Phenology.NFF",
+                            "[SoybeanHarvestRule].Script.FinalTag",
+                            "[PigeonPea].Grain.NumberFunction",
+                            "[PigeonPea].Shell.PodNumber",
+                            "[PigeonPea].Phenology.FN",
+                            "[PigeonPea].Phenology.FN.TotalNodes",
+                            "[PigeonPea].Phenology.FN.VegetativeNodes"
+                          ],
+                          "EventNames": [
+                            "[Clock].DoReport"
+                          ],
+                          "GroupByVariableName": null,
+                          "Name": "DailyReport",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Report, Models",
+                          "VariableNames": [
+                            "[Clock].Today",
+                            "[PigeonPea].Structure.MainStemPrimordiaNo",
+                            "[PigeonPea].Phenology.NFF",
+                            "[PigeonPea].Script.FinalTag"
+                          ],
+                          "EventNames": [
+                            "[PigeonPea].Harvesting"
+                          ],
+                          "GroupByVariableName": null,
+                          "Name": "HarvestReport",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Manager, Models",
+                          "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Description(\"Crop\")]\r\n        public IPlant Crop { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Crop.IsReadyForHarvesting)\r\n            {\r\n                Crop.Harvest();\r\n                Crop.EndCrop();\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                          "Parameters": [
+                            {
+                              "Key": "Crop",
+                              "Value": "[PigeonPea]"
+                            }
+                          ],
+                          "Name": "Harvesting",
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -9227,6 +8104,578 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "ShowPageOfGraphs": true,
+                  "Name": "Biomass",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "Biomass",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "HarvestReport",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "PigeonPea.AboveGround.Wt",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": false,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -1663232,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 4,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "Observed",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "PigeonPea.AboveGround.Wt",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Observed",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": false,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": false,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "PodWt",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Sow",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "Cv",
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "DailyReport",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "PigeonPea.Pod.Wt",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": false,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Sow",
+                          "FactorToVaryMarkers": "Cv",
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "Observed",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "PigeonPea.Pod.Wt",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Observed",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": false,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": false,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "GrainWt",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -2793984,
+                          "FactorToVaryColours": "Graph series",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "HarvestReport",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "PigeonPea.Grain.Wt",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -2793984,
+                          "FactorToVaryColours": "Graph series",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Observed",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "PigeonPea.Grain.Wt",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Observed",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "ShowPageOfGraphs": true,
+                  "Name": "Phenology",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 3,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "Pred vs Obs FloweringDAS",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Sow",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "PredictedObservedHarvest",
+                          "XFieldName": "Observed.PigeonPea.Phenology.FloweringDAS",
+                          "YFieldName": "Predicted.PigeonPea.Phenology.FloweringDAS",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Pre vs Obs",
+                          "Children": [
+                            {
+                              "$type": "Models.Regression, Models",
+                              "ForEachSeries": false,
+                              "showOneToOne": true,
+                              "showEquation": true,
+                              "Name": "Regression",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": false,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": false,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": false,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 3,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "Pred vs Obs MaturityDAS",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Sow",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "PredictedObservedHarvest",
+                          "XFieldName": "Observed.PigeonPea.Phenology.MaturityDAS",
+                          "YFieldName": "Predicted.PigeonPea.Phenology.MaturityDAS",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Pre vs Obs",
+                          "Children": [
+                            {
+                              "$type": "Models.Regression, Models",
+                              "ForEachSeries": false,
+                              "showOneToOne": true,
+                              "showEquation": true,
+                              "Name": "Regression",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": false,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": false,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": false,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "ShowPageOfGraphs": true,
+                  "Name": "Canopy",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "LAI",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Sow",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "Cv",
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "DailyReport",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "PigeonPea.Leaf.LAI",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": false,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Sow",
+                          "FactorToVaryMarkers": "Cv",
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "Observed",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "PigeonPea.Leaf.LAI",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Observed",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": false,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": false,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
@@ -9240,15 +8689,6 @@
           "ReadOnly": false
         }
       ],
-      "IncludeInDocumentation": true,
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
-      "$type": "Models.Core.Folder, Models",
-      "ShowPageOfGraphs": true,
-      "Name": "Sensibility",
-      "Children": [],
       "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false

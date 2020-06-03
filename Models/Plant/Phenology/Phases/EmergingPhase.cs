@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Models.Core;
 using System.Xml.Serialization;
 using Models.Functions;
+using APSIM.Shared.Utilities;
 using System.IO;
 
 namespace Models.PMF.Phen
@@ -19,6 +20,12 @@ namespace Models.PMF.Phen
 
         [Link]
         Phenology phenology = null;
+
+        [Link]
+        Clock clock = null;
+
+        [Link]
+        Plant plant = null;
 
         // 2. Public properties
         //-----------------------------------------------------------------------------------------------------------------
@@ -65,6 +72,12 @@ namespace Models.PMF.Phen
         [XmlIgnore]
         public double ProgressThroughPhase { get; set; }
 
+        /// <summary>
+        /// Date for emergence to occur.  null by default so model is used
+        /// </summary>
+        [XmlIgnore]
+        public string EmergenceDate { get; set; }
+
         // 3. Public methods
         //-----------------------------------------------------------------------------------------------------------------
 
@@ -74,19 +87,28 @@ namespace Models.PMF.Phen
         {
             bool proceedToNextPhase = false;
             TTForTimeStep = phenology.thermalTime.Value() * propOfDayToUse;
-            ProgressThroughPhase += TTForTimeStep;
-
-            if (ProgressThroughPhase > Target)
+            if (EmergenceDate != null)
             {
-                if (TTForTimeStep > 0.0)
+                Target = (DateUtilities.GetDate(EmergenceDate, clock.Today) - plant.SowingDate).TotalDays;
+                ProgressThroughPhase += 1;
+                if (DateUtilities.DatesEqual(EmergenceDate, clock.Today))
                 {
                     proceedToNextPhase = true;
-                    propOfDayToUse = (ProgressThroughPhase - Target) / TTForTimeStep;
-                    TTForTimeStep *= (1 - propOfDayToUse);
                 }
-                ProgressThroughPhase = Target;
             }
-            
+            else {
+                ProgressThroughPhase += TTForTimeStep;
+                if (ProgressThroughPhase > Target)
+                {
+                    if (TTForTimeStep > 0.0)
+                    {
+                        proceedToNextPhase = true;
+                        propOfDayToUse = (ProgressThroughPhase - Target) / TTForTimeStep;
+                        TTForTimeStep *= (1 - propOfDayToUse);
+                    }
+                    ProgressThroughPhase = Target;
+                }
+            }
             return proceedToNextPhase;
         }
 
@@ -96,7 +118,7 @@ namespace Models.PMF.Phen
             ProgressThroughPhase = 0;
             Target = 0;
         }
-        
+
         // 4. Private method
         //-----------------------------------------------------------------------------------------------------------------
 

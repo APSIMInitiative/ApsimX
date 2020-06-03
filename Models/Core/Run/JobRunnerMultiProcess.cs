@@ -62,7 +62,7 @@
             DeleteRunners();
             CreateRunners();
 
-            AppDomain.CurrentDomain.AssemblyResolve += Manager.ResolveManagerAssembliesEventHandler;
+            AppDomain.CurrentDomain.AssemblyResolve += ScriptCompiler.ResolveManagerAssemblies;
 
             SpinWait.SpinUntil(() => allStopped);
 
@@ -203,7 +203,20 @@
                 (job.JobSentToClient as Simulation).Services = null;
             }
             else
+            {
                 job.JobSentToClient = job.RunnableJob;
+                if (job.JobSentToClient is IModel m)
+                    job.JobSentToClient = Apsim.Clone(m) as IRunnable;
+                if (job.RunnableJob is IModel model)
+                {
+                    IModel replacements = Apsim.Find(model, typeof(Replacements));
+                    if (replacements != null)
+                        (job.JobSentToClient as IModel).Children.Add(Apsim.Clone(replacements));
+                    job.DataStore = Apsim.Find(model, typeof(IDataStore)) as IDataStore;
+                    if (job.DataStore != null)
+                        (job.JobSentToClient as IModel).Children.Add(Apsim.Clone(job.DataStore as IModel));
+                }
+            }
 
             return job;
         }
@@ -255,7 +268,7 @@
             public IRunnable JobSentToClient { get; set; }
 
             /// <summary>The data store relating to the job</summary>
-            public DataStore DataStore { get; set; }
+            public IDataStore DataStore { get; set; }
         }
     }
 }

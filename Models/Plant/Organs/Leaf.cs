@@ -192,7 +192,7 @@ namespace Models.PMF.Organs
         public double Depth { get { return Structure.Height; } }
 
         /// <summary>Gets the width of the canopy (mm).</summary>
-        public double Width { get { return 0; } }
+        public double Width { get; set; }
 
         /// <summary>Gets  FRGR.</summary>
         [Description("Relative growth rate for calculating stomata conductance which fed the Penman-Monteith function")]
@@ -492,6 +492,11 @@ namespace Models.PMF.Organs
         /// <summary>The frost fraction</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction FrostFraction = null;
+
+        /// <summary>The width of the canopy</summary>
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        IFunction WidthFunction = null;
+
 
         /// <summary>The structural fraction</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -1230,6 +1235,10 @@ namespace Models.PMF.Organs
         {
             if (!parentPlant.IsEmerged)
                 return;
+            if (WidthFunction != null)
+                Width = WidthFunction.Value();
+            else
+                Width = 0;
 
             if (FrostFraction.Value() > 0)
                 foreach (LeafCohort l in Leaves)
@@ -1386,6 +1395,7 @@ namespace Models.PMF.Organs
         public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType amountToRemove)
         {
             bool writeToSummary = false;
+            double totalBiomass = Live.Wt + Dead.Wt;
             foreach (LeafCohort leaf in Leaves)
             {
                 if (leaf.IsInitialised)
@@ -1400,16 +1410,17 @@ namespace Models.PMF.Organs
                 needToRecalculateLiveDead = true;
             }
 
-            if (amountToRemove != null)
+            if (amountToRemove != null && totalBiomass != 0.0)
             {
-                var toResidue = Detached.Wt / Total.Wt * 100;
-                var removedOff = Removed.Wt / Total.Wt * 100;
-                double totalFractionToRemove = amountToRemove.FractionLiveToRemove + amountToRemove.FractionLiveToResidue +
-                                               amountToRemove.FractionDeadToRemove + amountToRemove.FractionDeadToResidue;
-                Summary.WriteMessage(Parent, "Removing " + totalFractionToRemove.ToString("0.0")
+                double totalFractionToRemove = (Removed.Wt + Detached.Wt) * 100.0 / totalBiomass;
+                double toResidue = Detached.Wt * 100.0 / (Removed.Wt + Detached.Wt);
+                double removedOff = Removed.Wt * 100.0 / (Removed.Wt + Detached.Wt);
+                Summary.WriteMessage(this, "Removing " + totalFractionToRemove.ToString("0.0")
                              + "% of " + Name.ToLower() + " biomass from " + parentPlant.Name
                              + ". Of this " + removedOff.ToString("0.0") + "% is removed from the system and "
                              + toResidue.ToString("0.0") + "% is returned to the surface organic matter.");
+                Summary.WriteMessage(this, "Removed " + Removed.Wt.ToString("0.0") + " g/m2 of dry matter weight and "
+                                         + Removed.N.ToString("0.0") + " g/m2 of N.");
             }
         }
 

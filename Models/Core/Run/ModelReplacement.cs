@@ -53,12 +53,22 @@
                 if (match == null)
                     throw new Exception("Cannot find a model on path: " + path);
                 ReplaceModel(match);
+
+                // In a multi-paddock context, we want to attempt to
+                // replace the model in all paddocks.
+                foreach (IModel paddock in Apsim.Children(simulation, typeof(Zone)))
+                {
+                    match = Apsim.Get(paddock, path) as IModel;
+                    if (match != null)
+                        ReplaceModel(match);
+                }
             }
         }
 
         /// <summary>Perform the actual replacement.</summary>
         private void ReplaceModel(IModel match)
         {
+            // Fixme - this code should be in Structure.cs.
             IModel newModel = Apsim.Clone(replacement);
             int index = match.Parent.Children.IndexOf(match as Model);
             match.Parent.Children.Insert(index, newModel as Model);
@@ -66,6 +76,7 @@
             newModel.Name = match.Name;
             newModel.Enabled = match.Enabled;
             match.Parent.Children.Remove(match as Model);
+            Apsim.ClearCaches(match);
 
             // Don't call newModel.Parent.OnCreated(), because if we're replacing
             // a child of a resource model, the resource model's OnCreated event

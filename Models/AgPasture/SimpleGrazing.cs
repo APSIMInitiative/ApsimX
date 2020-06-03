@@ -28,6 +28,7 @@
         [Link(ByName = true)] ISolute Urea = null;
         [Link] Soil soil = null;
         [Link] SurfaceOrganicMatter surfaceOrganicMatter = null;
+        [Link] ScriptCompiler compiler = null;
 
         private double residualBiomass;
         private CSharpExpressionFunction expressionFunction;
@@ -137,12 +138,8 @@
         /// <summary></summary>
         [Separator("Urine and Dung.")]
 
-        [Description("Fraction of defoliated N going to soil (0-1): ")]
+        [Description("Fraction of defoliated N going to soil. Remainder is exported as animal product or to lanes/camps (0-1).")]
         public double[] FractionDefoliatedNToSoil { get; set; }   
-
-        /// <summary>Fraction Defoliated N Transferred / Exported To Lanes Camps and structures (can be monthly values)</summary>
-        [Description("Fraction Defoliated N Transferred / Exported To Lanes Camps and structures (can be monthly values)")]
-        public double[] FractionDefoliatedNLostToCamps { get; set; } = new double[] { 0.25 };
 
         /// <summary></summary>
         [Description("Proportion of excreted N going to dung (0-1). Yearly or 12 monthly values. Blank means use C:N ratio of dung.")]
@@ -320,6 +317,7 @@
                 expressionFunction = new CSharpExpressionFunction();
                 expressionFunction.Parent = this;
                 expressionFunction.Expression = "Convert.ToDouble(" + FlexibleExpressionForTimingOfGrazing + ")";
+                expressionFunction.SetCompiler(compiler);
                 expressionFunction.CompileExpression();
             }
 
@@ -333,9 +331,6 @@
 
             if (FractionDefoliatedNToSoil == null || FractionDefoliatedNToSoil.Length == 0)
                 FractionDefoliatedNToSoil = new double[] { 0 };
-
-            if (FractionDefoliatedNLostToCamps == null || FractionDefoliatedNLostToCamps.Length == 0)
-                FractionDefoliatedNLostToCamps = new double[] { 0 };
 
             // Initialise the days since grazing.
             if (GrazingRotationType == GrazingRotationTypeEnum.SimpleRotation)
