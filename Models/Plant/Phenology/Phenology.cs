@@ -54,6 +54,9 @@ namespace Models.PMF.Phen
         /// <summary>Occurs when phase is set externally.</summary>
         public event EventHandler StageWasReset;
 
+        /// <summary>Occurs when emergence phase completed</summary>
+        public event EventHandler PlantEmerged;
+
         /// <summary>Occurs when daily phenology timestep completed</summary>
         public event EventHandler PostPhenology;
 
@@ -380,6 +383,7 @@ namespace Models.PMF.Phen
                     if ((CurrentPhase is EmergingPhase) || (CurrentPhase.End == structure?.LeafInitialisationStage)|| (CurrentPhase is DAWSPhase))
                     {
                          Emerged = true;
+                        PlantEmerged?.Invoke(this, new EventArgs());
                     }
 
                     stagesPassedToday.Add(CurrentPhase.End);

@@ -32,7 +32,7 @@ namespace Models.Sensitivity
     [ViewName("UserInterface.Views.DualGridView")]
     [PresenterName("UserInterface.Presenters.PropertyAndTablePresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
-    public class CroptimizR : Model, ICustomDocumentation, IModelAsTable, IRunnable
+    public class CroptimizR : Model, ICustomDocumentation, IModelAsTable, IRunnable, IReportsStatus
     {
         //[Link]
         //private IDataStore storage = null;
@@ -156,15 +156,30 @@ namespace Models.Sensitivity
         [JsonIgnore]
         public double Progress { get; private set; } = 0;
 
+        /// <summary>
+        /// Returns the job's status.
+        /// </summary>
+        [JsonIgnore]
+        public string Status { get; private set; }
+
         /// <summary>Gets a list of simulation descriptions.</summary>
         public void Run()
         {
             Progress = 0;
+            Status = "Installing R Packages";
+
+            R r = new R();
+            r.InstallPackages("devtools", "dplyr", "nloptr", "DiceDesign", "RSQLite", "DBI", "cli");
+            r.InstallFromGithub("hol430/ApsimOnR", "SticsRPacks/CroptimizR");
+
+            Status = "Generating R Script";
             string fileName = GetTempFileName($"parameter_estimation_{id}", ".r");
             GenerateRScript(fileName);
-            R r = new R();
+
+            // todo - capture stderr as well?
             r.OutputReceived += OnOutputReceivedFromR;
-            // todo - capture stderr as well
+
+            Status = "Running Parameter Optimization";
             string stdout = r.Run(fileName);
             r.OutputReceived -= OnOutputReceivedFromR;
             WriteMessage(stdout);
@@ -185,9 +200,6 @@ namespace Models.Sensitivity
         private void GenerateRScript(string fileName)
         {
             // tbi: package installation. Need to test on a clean VM.
-            R r = new R();
-            r.InstallPackages("devtools", "dplyr", "nloptr", "DiceDesign", "RSQLite", "DBI", "cli");
-            r.InstallFromGithub("hol430/ApsimOnR", "SticsRPacks/CroptimizR");
             StringBuilder contents = new StringBuilder();
             string apsimxFileName = GenerateApsimXFile();
 
