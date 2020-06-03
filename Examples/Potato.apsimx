@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 259,
-  "Version": 100,
-  "ApsimVersion": "0.0.0.0",
+  "Version": 80,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-06",
   "Name": "Simulations",
   "Children": [
     {
@@ -26,7 +26,6 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
-      "IsRunning": false,
       "Name": "RussetBurbank",
       "Children": [
         {
@@ -208,7 +207,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.WaterModel.WaterBalance, Models",
+                  "$type": "Models.Soils.SoilWater, Models",
                   "SummerDate": "1-Nov",
                   "SummerU": 9.0,
                   "SummerCona": 4.4,
@@ -221,9 +220,10 @@
                   "CN2Bare": 0.0,
                   "CNRed": -9E-05,
                   "CNCov": 0.0,
-                  "Slope": 0.0,
-                  "DischargeWidth": 0.0,
-                  "CatchmentArea": 0.0,
+                  "slope": 0.0,
+                  "discharge_width": 0.0,
+                  "catchment_area": 0.0,
+                  "max_pond": 0.0,
                   "Thickness": [
                     100.0,
                     200.0,
@@ -231,6 +231,14 @@
                     300.0,
                     300.0,
                     300.0
+                  ],
+                  "Depth": [
+                    "0-10",
+                    "10-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150"
                   ],
                   "SWCON": [
                     0.55,
@@ -248,8 +256,9 @@
                     0.0,
                     0.0
                   ],
-                  "ResourceName": "WaterBalance",
+                  "PrecipitationInterception": 0.0,
                   "Name": "SoilWater",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -427,6 +436,213 @@
                 },
                 {
                   "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                  "DirectedGraphInfo": {
+                    "$type": "Models.Graph.DirectedGraph, Models",
+                    "Nodes": [
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "Inert",
+                        "Location": "656, 254",
+                        "Colour": "0, 114, 178",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "SurfaceResidue",
+                        "Location": "566, 69",
+                        "Colour": "0, 114, 178",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "FOMLignin",
+                        "Location": "261, 69",
+                        "Colour": "0, 114, 178",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "FOMCellulose",
+                        "Location": "397, 70",
+                        "Colour": "0, 114, 178",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "FOMCarbohydrate",
+                        "Location": "123, 70",
+                        "Colour": "0, 114, 178",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "Microbial",
+                        "Location": "218, 299",
+                        "Colour": "0, 114, 178",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "Humic",
+                        "Location": "458, 293",
+                        "Colour": "0, 114, 178",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "Urea",
+                        "Location": "529, 419",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "NO3",
+                        "Location": "185, 435",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "NH4",
+                        "Location": "357, 422",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "Atmosphere",
+                        "Location": "48, 338",
+                        "Colour": "White",
+                        "OutlineColour": "White",
+                        "Transparent": true
+                      }
+                    ],
+                    "Arcs": [
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "SurfaceResidue",
+                        "DestinationName": "Microbial",
+                        "Location": "415, 173",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "SurfaceResidue",
+                        "DestinationName": "Humic",
+                        "Location": "499, 172",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "FOMLignin",
+                        "DestinationName": "Microbial",
+                        "Location": "259, 221",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "FOMLignin",
+                        "DestinationName": "Humic",
+                        "Location": "255, 105",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "FOMCellulose",
+                        "DestinationName": "Microbial",
+                        "Location": "370, 184",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "FOMCellulose",
+                        "DestinationName": "Humic",
+                        "Location": "463, 224",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "FOMCarbohydrate",
+                        "DestinationName": "Microbial",
+                        "Location": "141, 131",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "FOMCarbohydrate",
+                        "DestinationName": "Humic",
+                        "Location": "204, 215",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "Microbial",
+                        "DestinationName": "Microbial",
+                        "Location": "335, 301",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "Microbial",
+                        "DestinationName": "Humic",
+                        "Location": "319, 278",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "Humic",
+                        "DestinationName": "Microbial",
+                        "Location": "334, 340",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "Urea",
+                        "DestinationName": "NH4",
+                        "Location": "433, 416",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "NO3",
+                        "DestinationName": "Atmosphere",
+                        "Location": "1, 319",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "NH4",
+                        "DestinationName": "NO3",
+                        "Location": "243, 409",
+                        "Colour": "Black",
+                        "Text": null
+                      }
+                    ]
+                  },
                   "ResourceName": "Nutrient",
                   "Name": "Nutrient",
                   "IncludeInDocumentation": true,
@@ -440,12 +656,14 @@
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "Canopies": [],
               "InitialResidueName": "Wheat",
               "InitialResidueType": "Wheat",
               "InitialResidueMass": 2000.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 80.0,
+              "FractionFaecesAdded": 1.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
               "IncludeInDocumentation": true,
@@ -487,6 +705,10 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
+              "CropType": "Potato",
+              "IsAlive": false,
+              "IsEnding": false,
+              "DaysAfterEnding": 0,
               "ResourceName": "Potato",
               "Name": "Potato",
               "IncludeInDocumentation": true,
@@ -571,7 +793,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Potato;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Summary Summary;\r\n        [Description(\"Planting Date\")]\r\n        public DateTime PlantingDate { get; set; }\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName, PlantName = \"Potato\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Spacing (mm) between plants on rows\")]\r\n        public double PlantSpacing { get; set; }\r\n        [Description(\"Spacing (mm) between rows\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Depth (mm) tubers are planted\")]\r\n        public double PlantingDepth { get; set; }\r\n        [Description(\"Number of stems per seed piece\")]\r\n        public double StemNumberPerSeedTuber { get; set; }\r\n        [Description(\"Final leaf number.  Leave at 0 if not known\")]\r\n        public double SetFinalLeafNumber { get; set; }\r\n        [Description(\"HarvestDate Date\")]\r\n        public DateTime HarvestDate { get; set; }\r\n        [XmlIgnore] public string FinalTag { get; set; }\r\n        [XmlIgnore] public bool Harvested { get; set; }\r\n        [XmlIgnore] public bool ReadyForHarvest { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / ((RowSpacing / 1000) * (PlantSpacing / 1000));\r\n\r\n            if (Clock.Today.Date == PlantingDate)\r\n                Potato.Sow(population: PlantPopulation, cultivar: CultivarName, depth: PlantingDepth, rowSpacing: RowSpacing, budNumber: StemNumberPerSeedTuber);\r\n            if (Clock.Today.Date == HarvestDate && Potato.IsAlive)\r\n            {\r\n                Potato.Harvest();\r\n                Potato.EndCrop();\r\n            }\r\n            if (SetFinalLeafNumber > 0)\r\n                zone.Set(\"Potato.Structure.FinalLeafNumber.FixedValue\", SetFinalLeafNumber);\r\n            if (SetFinalLeafNumber > 46)\r\n                throw new Exception(\"The model will fail with leaf numbers > 46.  Reduce Final leaf number.\");\r\n        }\r\n    }\r\n}\r\n                \r\n",
+              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Potato;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Summary Summary;\r\n        [Description(\"Planting Date\")]\r\n        public DateTime PlantingDate { get; set; }\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName, PlantName = \"Potato\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Spacing (mm) between plants on rows\")]\r\n        public double PlantSpacing { get; set; }\r\n        [Description(\"Spacing (mm) between rows\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Depth (mm) tubers are planted\")]\r\n        public double PlantingDepth { get; set; }\r\n        [Description(\"Number of stems per seed piece\")]\r\n        public double StemNumberPerSeedTuber { get; set; }\r\n        [Description(\"Final leaf number.  Leave at 0 if not known\")]\r\n        public double SetFinalLeafNumber { get; set; }\r\n        [Description(\"HarvestDate Date\")]\r\n        public DateTime HarvestDate { get; set; }\r\n        [XmlIgnore] public string FinalTag { get; set; }\r\n        [XmlIgnore] public bool Harvested { get; set; }\r\n        [XmlIgnore] public bool ReadyForHarvest { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / ((RowSpacing / 1000) * (PlantSpacing / 1000));\r\n\r\n            if (Clock.Today.Date == PlantingDate)\r\n                Potato.Sow(population: PlantPopulation, cultivar: CultivarName, depth: PlantingDepth, rowSpacing: RowSpacing, budNumber: StemNumberPerSeedTuber);\r\n            if (Clock.Today.Date == HarvestDate && Potato.IsAlive)\r\n            {\r\n                Potato.Harvest();\r\n                Potato.EndCrop();\r\n            }\r\n            if (SetFinalLeafNumber > 0)\r\n                zone.Set(\"Potato.Structure.FinalLeafNumber.FixedValue\", SetFinalLeafNumber);\r\n            if (SetFinalLeafNumber > 46)\r\n                throw new Exception(\"The model will fail with leaf numbers > 46.  Reduce Final leaf number.\");\r\n        }\r\n    }\r\n}\r\n                \r\n",
               "Parameters": [
                 {
                   "Key": "PlantingDate",
@@ -580,14 +802,6 @@
                 {
                   "Key": "CultivarName",
                   "Value": "RussetBurbank"
-                },
-                {
-                  "Key": "PlantSpacing",
-                  "Value": "280"
-                },
-                {
-                  "Key": "RowSpacing",
-                  "Value": "770"
                 },
                 {
                   "Key": "PlantingDepth",
@@ -604,6 +818,14 @@
                 {
                   "Key": "HarvestDate",
                   "Value": "05/01/2004 00:00:00"
+                },
+                {
+                  "Key": "PlantSpacing",
+                  "Value": "280"
+                },
+                {
+                  "Key": "RowSpacing",
+                  "Value": "770"
                 }
               ],
               "Name": "PotatoPlantAndHarvest",
@@ -612,7 +834,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Report, Models",
+              "$type": "Models.Report.Report, Models",
               "VariableNames": [
                 "[Clock].Today",
                 "[Soil].Nutrient.NO3.kgha",
@@ -711,7 +933,6 @@
               "EventNames": [
                 "[Clock].DoReport"
               ],
-              "GroupByVariableName": null,
               "Name": "Report",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -724,11 +945,11 @@
               "Name": "Graphs",
               "Children": [
                 {
-                  "$type": "Models.Graph, Models",
+                  "$type": "Models.Graph.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 3,
                       "Title": "X axis title 2",
                       "Inverted": false,
@@ -739,7 +960,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 0,
                       "Title": "Accumulated N changes (kg/ha)",
                       "Inverted": false,
@@ -757,7 +978,7 @@
                   "Name": "N balance components",
                   "Children": [
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -769,6 +990,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "ExtraVariables.Script.AccumPlantN",
@@ -786,7 +1008,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -798,6 +1020,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "ExtraVariables.Script.AccumMineralisation",
@@ -815,7 +1038,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -827,6 +1050,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "ExtraVariables.Script.AccumDenit",
@@ -844,7 +1068,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -856,6 +1080,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "ExtraVariables.Script.AccumFert",
@@ -873,7 +1098,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -885,6 +1110,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "ExtraVariables.Script.AccumLeach",
@@ -902,7 +1128,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -914,6 +1140,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "ExtraVariables.Script.DeltaSoilOMN",
@@ -931,7 +1158,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -943,6 +1170,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "ExtraVariables.Script.DeltaSurfaceOMN",
@@ -960,7 +1188,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -972,6 +1200,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "ExtraVariables.Script.DeltaSoilMineralN",
@@ -994,11 +1223,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph, Models",
+                  "$type": "Models.Graph.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 0,
                       "Title": "Accumulated Water Changes (mm)",
                       "Inverted": false,
@@ -1009,7 +1238,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 3,
                       "Title": null,
                       "Inverted": false,
@@ -1027,7 +1256,7 @@
                   "Name": "WaterBalanceComponents",
                   "Children": [
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1039,6 +1268,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "ExtraVariables.Script.AccumEO",
@@ -1056,7 +1286,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1068,6 +1298,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "ExtraVariables.Script.AccumEP",
@@ -1085,7 +1316,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1097,6 +1328,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "ExtraVariables.Script.AccumES",
@@ -1114,7 +1346,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1126,6 +1358,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "ExtraVariables.Script.AccumDrainage",
@@ -1143,7 +1376,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1155,6 +1388,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "ExtraVariables.Script.AccumRunoff",
@@ -1172,7 +1406,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1184,6 +1418,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "ExtraVariables.Script.AccumRainfall",
@@ -1201,7 +1436,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1213,6 +1448,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "ExtraVariables.Script.AccumIrrigation",
@@ -1230,7 +1466,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1242,6 +1478,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "ExtraVariables.Script.AccumOutflowLat",
@@ -1259,7 +1496,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1271,6 +1508,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "ExtraVariables.Script.SoilWaterDeficit",
@@ -1293,11 +1531,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph, Models",
+                  "$type": "Models.Graph.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 0,
                       "Title": "Crop Biomass (g/m2)",
                       "Inverted": false,
@@ -1308,7 +1546,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 3,
                       "Title": null,
                       "Inverted": false,
@@ -1326,7 +1564,7 @@
                   "Name": "Plant Biomass components",
                   "Children": [
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1338,6 +1576,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Leaf.Live.Wt",
@@ -1355,7 +1594,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1367,6 +1606,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Stem.Live.Wt",
@@ -1384,7 +1624,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1396,6 +1636,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Tuber.Live.Wt",
@@ -1413,7 +1654,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1425,6 +1666,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Root.Live.Wt",
@@ -1442,7 +1684,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1454,6 +1696,7 @@
                       "MarkerSize": 0,
                       "Line": 1,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Leaf.Dead.Wt",
@@ -1471,7 +1714,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1483,6 +1726,7 @@
                       "MarkerSize": 0,
                       "Line": 1,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Stem.Dead.Wt",
@@ -1500,7 +1744,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1512,6 +1756,7 @@
                       "MarkerSize": 0,
                       "Line": 1,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Tuber.Dead.Wt",
@@ -1529,7 +1774,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1541,6 +1786,7 @@
                       "MarkerSize": 0,
                       "Line": 1,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Root.Dead.Wt",
@@ -1558,7 +1804,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1570,6 +1816,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.AboveGround.Wt",
@@ -1587,7 +1834,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1599,6 +1846,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.BelowGround.Wt",
@@ -1616,7 +1864,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1628,6 +1876,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Total.Wt",
@@ -1650,11 +1899,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph, Models",
+                  "$type": "Models.Graph.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 0,
                       "Title": "Crop Nitrogen (g/m2)",
                       "Inverted": false,
@@ -1665,7 +1914,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 3,
                       "Title": null,
                       "Inverted": false,
@@ -1683,7 +1932,7 @@
                   "Name": "Plant Nitrogen components",
                   "Children": [
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1695,6 +1944,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Leaf.Live.N",
@@ -1712,7 +1962,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1724,6 +1974,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Stem.Live.N",
@@ -1741,7 +1992,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1753,6 +2004,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Tuber.Live.N",
@@ -1770,7 +2022,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1782,6 +2034,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Root.Live.N",
@@ -1799,7 +2052,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1811,6 +2064,7 @@
                       "MarkerSize": 0,
                       "Line": 1,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Leaf.Dead.N",
@@ -1828,7 +2082,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1840,6 +2094,7 @@
                       "MarkerSize": 0,
                       "Line": 1,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Stem.Dead.N",
@@ -1857,7 +2112,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1869,6 +2124,7 @@
                       "MarkerSize": 0,
                       "Line": 1,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Tuber.Dead.N",
@@ -1886,7 +2142,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1898,6 +2154,7 @@
                       "MarkerSize": 0,
                       "Line": 1,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Root.Dead.N",
@@ -1915,7 +2172,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1927,6 +2184,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.AboveGround.N",
@@ -1944,7 +2202,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1956,6 +2214,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.BelowGround.N",
@@ -1973,7 +2232,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1985,6 +2244,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Total.N",
@@ -2002,7 +2262,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -2014,6 +2274,7 @@
                       "MarkerSize": 0,
                       "Line": 1,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.TotalLive.N",
@@ -2036,11 +2297,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph, Models",
+                  "$type": "Models.Graph.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 0,
                       "Title": "Stress factors (0-1)",
                       "Inverted": false,
@@ -2051,7 +2312,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 3,
                       "Title": null,
                       "Inverted": false,
@@ -2069,7 +2330,7 @@
                   "Name": "Stress factors",
                   "Children": [
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -2081,6 +2342,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Leaf.Photosynthesis.FT",
@@ -2098,7 +2360,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -2110,6 +2372,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Leaf.Fn",
@@ -2127,7 +2390,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -2139,6 +2402,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Leaf.Fw",
@@ -2156,7 +2420,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -2168,6 +2432,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Leaf.Photosynthesis.FVPD",
@@ -2190,11 +2455,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph, Models",
+                  "$type": "Models.Graph.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 0,
                       "Title": "Water (mm)",
                       "Inverted": false,
@@ -2205,7 +2470,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 3,
                       "Title": null,
                       "Inverted": false,
@@ -2216,7 +2481,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 2,
                       "Title": "Length (mm)",
                       "Inverted": false,
@@ -2234,7 +2499,7 @@
                   "Name": "Water supply and demand",
                   "Children": [
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -2246,6 +2511,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Root.WaterUptake",
@@ -2263,7 +2529,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -2275,6 +2541,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Leaf.PotentialEP",
@@ -2292,7 +2559,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -2304,6 +2571,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Leaf.Transpiration",
@@ -2321,7 +2589,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -2333,6 +2601,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Soil.SoilWater.Eo",
@@ -2350,7 +2619,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 2,
@@ -2362,6 +2631,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Root.Depth",
@@ -2379,7 +2649,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 2,
@@ -2391,6 +2661,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Structure.Height",
@@ -2413,11 +2684,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph, Models",
+                  "$type": "Models.Graph.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 0,
                       "Title": "Cover ",
                       "Inverted": false,
@@ -2428,7 +2699,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 3,
                       "Title": null,
                       "Inverted": false,
@@ -2439,7 +2710,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 2,
                       "Title": "LAI (m2/m2)",
                       "Inverted": false,
@@ -2457,7 +2728,7 @@
                   "Name": "Canopy structure",
                   "Children": [
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -2469,6 +2740,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Leaf.CoverDead",
@@ -2486,7 +2758,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -2498,6 +2770,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Leaf.CoverGreen",
@@ -2515,7 +2788,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -2527,6 +2800,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Leaf.CoverTotal",
@@ -2544,7 +2818,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 2,
@@ -2556,6 +2830,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Leaf.LAI",
@@ -2573,7 +2848,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 2,
@@ -2585,6 +2860,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Leaf.LAIDead",
@@ -2607,11 +2883,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph, Models",
+                  "$type": "Models.Graph.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 0,
                       "Title": "Crop Biomass (g/m2)",
                       "Inverted": false,
@@ -2622,7 +2898,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 3,
                       "Title": null,
                       "Inverted": false,
@@ -2640,7 +2916,7 @@
                   "Name": "LeafCohorts",
                   "Children": [
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -2652,6 +2928,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Leaf.SenescingCohortNo",
@@ -2669,7 +2946,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -2681,6 +2958,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Structure.TotalStemPopn",
@@ -2698,7 +2976,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -2710,6 +2988,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Leaf.ExpandingCohortNo",
@@ -2727,7 +3006,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -2739,6 +3018,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Structure.PlantTotalNodeNo",
@@ -2756,7 +3036,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -2768,6 +3048,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Leaf.DeadCohortNo",
@@ -2785,7 +3066,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -2797,6 +3078,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Leaf.AppearedCohortNo",
@@ -2814,7 +3096,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -2826,6 +3108,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Leaf.PlantAppearedGreenLeafNo",
@@ -2843,7 +3126,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -2855,6 +3138,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Leaf.ExpandedCohortNo",
@@ -2877,11 +3161,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph, Models",
+                  "$type": "Models.Graph.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 0,
                       "Title": "Nitrogen Content (g/g)",
                       "Inverted": false,
@@ -2892,7 +3176,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 3,
                       "Title": null,
                       "Inverted": false,
@@ -2903,7 +3187,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 2,
                       "Title": null,
                       "Inverted": false,
@@ -2921,7 +3205,7 @@
                   "Name": "Leaf Nitrogen %",
                   "Children": [
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -2933,6 +3217,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Leaf.Live.NConc",
@@ -2950,7 +3235,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -2962,6 +3247,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Leaf.Dead.NConc",
@@ -2979,7 +3265,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -2991,6 +3277,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Leaf.CohortParameters.MaximumNConc",
@@ -3008,7 +3295,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -3020,6 +3307,7 @@
                       "MarkerSize": 0,
                       "Line": 1,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Leaf.CohortParameters.MinimumNConc",
@@ -3037,7 +3325,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 2,
@@ -3049,6 +3337,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Phenology.Stage",
@@ -3071,11 +3360,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph, Models",
+                  "$type": "Models.Graph.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 0,
                       "Title": "Nitrogen Content (g/g)",
                       "Inverted": false,
@@ -3086,7 +3375,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 3,
                       "Title": null,
                       "Inverted": false,
@@ -3097,7 +3386,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 2,
                       "Title": null,
                       "Inverted": false,
@@ -3115,7 +3404,7 @@
                   "Name": "Stem Nitrogen %",
                   "Children": [
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -3127,6 +3416,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Stem.Live.NConc",
@@ -3144,7 +3434,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -3156,6 +3446,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Stem.Dead.NConc",
@@ -3173,7 +3464,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -3185,6 +3476,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Stem.MaximumNConc",
@@ -3202,7 +3494,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -3214,6 +3506,7 @@
                       "MarkerSize": 0,
                       "Line": 1,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Stem.MinimumNConc",
@@ -3231,7 +3524,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 2,
@@ -3243,6 +3536,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Phenology.Stage",
@@ -3265,11 +3559,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph, Models",
+                  "$type": "Models.Graph.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 0,
                       "Title": "Nitrogen Content (g/g)",
                       "Inverted": false,
@@ -3280,7 +3574,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 3,
                       "Title": null,
                       "Inverted": false,
@@ -3291,7 +3585,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 2,
                       "Title": null,
                       "Inverted": false,
@@ -3309,7 +3603,7 @@
                   "Name": "Tuber Nitrogen %",
                   "Children": [
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -3321,6 +3615,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Tuber.Live.NConc",
@@ -3338,7 +3633,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -3350,6 +3645,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Tuber.Dead.NConc",
@@ -3367,7 +3663,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -3379,6 +3675,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Tuber.MaximumNConc",
@@ -3396,7 +3693,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -3408,6 +3705,7 @@
                       "MarkerSize": 0,
                       "Line": 1,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Tuber.MinimumNConc",
@@ -3425,7 +3723,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 2,
@@ -3437,6 +3735,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Phenology.Stage",
@@ -3459,11 +3758,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph, Models",
+                  "$type": "Models.Graph.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 0,
                       "Title": "Nitrogen Content (g/g)",
                       "Inverted": false,
@@ -3474,7 +3773,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 3,
                       "Title": null,
                       "Inverted": false,
@@ -3492,7 +3791,7 @@
                   "Name": "Root Nitrogen %",
                   "Children": [
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -3504,6 +3803,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Root.Live.NConc",
@@ -3521,7 +3821,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -3533,6 +3833,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Root.Dead.NConc",
@@ -3550,7 +3851,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -3562,6 +3863,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Root.MaximumNConc",
@@ -3579,7 +3881,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -3591,6 +3893,7 @@
                       "MarkerSize": 0,
                       "Line": 1,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Root.MinimumNConc",
@@ -3613,11 +3916,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph, Models",
+                  "$type": "Models.Graph.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 0,
                       "Title": "number",
                       "Inverted": false,
@@ -3628,7 +3931,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 3,
                       "Title": null,
                       "Inverted": false,
@@ -3646,7 +3949,7 @@
                   "Name": "Leafappearance",
                   "Children": [
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -3658,6 +3961,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Leaf.ExpandedCohortNo",
@@ -3675,7 +3979,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -3687,6 +3991,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Leaf.AppearedCohortNo",
@@ -3704,7 +4009,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -3716,6 +4021,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Leaf.DeadCohortNo",
@@ -3733,7 +4039,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -3745,6 +4051,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Leaf.InitialisedCohortNo",
@@ -3762,7 +4069,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -3774,6 +4081,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Structure.FinalLeafNumber",
@@ -3791,7 +4099,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -3803,6 +4111,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Structure.LeafTipsAppeared",
@@ -3825,11 +4134,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph, Models",
+                  "$type": "Models.Graph.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 0,
                       "Title": "DM (g/m2/d)",
                       "Inverted": false,
@@ -3840,7 +4149,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 3,
                       "Title": null,
                       "Inverted": false,
@@ -3858,7 +4167,7 @@
                   "Name": "DM Allocation",
                   "Children": [
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -3870,6 +4179,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Arbitrator.DM.TotalFixationSupply",
@@ -3887,7 +4197,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -3899,6 +4209,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Arbitrator.DM.TotalPlantDemand",
@@ -3916,7 +4227,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -3928,6 +4239,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Arbitrator.DM.Allocated",
@@ -3945,7 +4257,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -3957,6 +4269,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Arbitrator.DM.SinkLimitation",
@@ -3974,7 +4287,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -3986,6 +4299,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Arbitrator.DM.NutrientLimitation",
@@ -4008,11 +4322,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph, Models",
+                  "$type": "Models.Graph.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 0,
                       "Title": "DM (g/m2/d)",
                       "Inverted": false,
@@ -4023,7 +4337,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Axis, Models",
+                      "$type": "Models.Graph.Axis, Models",
                       "Type": 3,
                       "Title": null,
                       "Inverted": false,
@@ -4041,7 +4355,7 @@
                   "Name": "N Allocation",
                   "Children": [
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -4053,6 +4367,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Arbitrator.N.TotalPlantSupply",
@@ -4070,7 +4385,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -4082,6 +4397,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Arbitrator.N.TotalPlantDemand",
@@ -4099,7 +4415,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Series, Models",
+                      "$type": "Models.Graph.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -4111,6 +4427,7 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
+                      "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
                       "YFieldName": "Potato.Arbitrator.N.Allocated",

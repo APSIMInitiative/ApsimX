@@ -20,7 +20,7 @@
         /// <summary>
         /// The list of variables to be evaluated
         /// </summary>
-        public List<IVariable> Variables { get; set; }
+        private List<IVariable> variables;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VariableComposite" /> class.
@@ -30,7 +30,7 @@
         public VariableComposite(string name, List<IVariable> variables)
         {
             this.name = name;
-            this.Variables = variables;
+            this.variables = variables;
         }
 
         /// <summary>
@@ -57,7 +57,7 @@
             get
             {
                 object relativeTo = null;
-                foreach (IVariable variable in this.Variables)
+                foreach (IVariable variable in this.variables)
                 {
                     if (relativeTo != null)
                     {
@@ -78,22 +78,22 @@
             {
                 object relativeTo = null;
                 int i;
-                for (i = 0; i < this.Variables.Count-1; i++)
+                for (i = 0; i < this.variables.Count-1; i++)
                 {
                     if (relativeTo != null)
                     {
-                        Variables[i].Object = relativeTo;
+                        variables[i].Object = relativeTo;
                     }
 
-                    relativeTo = Variables[i].Value;
+                    relativeTo = variables[i].Value;
                     if (relativeTo == null)
                     {
                         return;
                     }
                 }
 
-                Variables[i].Object = relativeTo;
-                Variables[i].Value = value;
+                variables[i].Object = relativeTo;
+                variables[i].Value = value;
             }
         }
 
@@ -126,10 +126,10 @@
         {
             get
             {
-                if (this.Variables.Count == 0)
+                if (this.variables.Count == 0)
                     return string.Empty;
 
-                return Variables[Variables.Count - 1].Units;
+                return variables[variables.Count - 1].Units;
             }
 
             set
@@ -145,10 +145,10 @@
         {
             get
             {
-                if (this.Variables.Count == 0)
+                if (this.variables.Count == 0)
                     return string.Empty;
 
-                return Variables[Variables.Count - 1].UnitsLabel;
+                return variables[variables.Count - 1].UnitsLabel;
             }
         }
 
@@ -167,8 +167,8 @@
                 if (Object != null)
                     return Object.GetType();
 
-                if (Variables != null && Variables.Count > 0)
-                    return Variables.Last().DataType;
+                if (variables != null && variables.Count > 0)
+                    return variables.Last().DataType;
 
                 throw new Exception("Variable is null");
             }
@@ -202,8 +202,8 @@
         { 
             get 
             {
-                if (Variables.Last() is VariableProperty)
-                    return (Variables.Last() as VariableProperty).Summary;
+                if (variables.Last() is VariableProperty)
+                    return (variables.Last() as VariableProperty).Summary;
                 else
                     return null; 
             } 
@@ -214,8 +214,8 @@
         {
             get
             {
-                if (Variables.Last() is VariableProperty)
-                    return (Variables.Last() as VariableProperty).Remarks;
+                if (variables.Last() is VariableProperty)
+                    return (variables.Last() as VariableProperty).Remarks;
                 else
                     return null;
             }

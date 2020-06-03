@@ -56,7 +56,7 @@
 
                 // In a multi-paddock context, we want to attempt to
                 // replace the model in all paddocks.
-                foreach (IModel paddock in Apsim.ChildrenRecursively(simulation, typeof(Zone)))
+                foreach (IModel paddock in Apsim.Children(simulation, typeof(Zone)))
                 {
                     match = Apsim.Get(paddock, path) as IModel;
                     if (match != null)

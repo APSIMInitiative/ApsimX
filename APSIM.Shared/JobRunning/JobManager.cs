@@ -19,10 +19,18 @@
         public event EventHandler Completed;
 
         /// <summary>
-        /// Returns total number of jobs. This includes jobs which
-        /// have not yet run, and jobs which have already run.
+        /// Returns aggregate progress of all jobs as a real number in range [0, 1].
         /// </summary>
-        public int NumJobs { get; protected set; }
+        public double Progress
+        {
+            get
+            {
+                if (jobs == null || jobs.Count == 0)
+                    return 0;
+
+                return jobs.Sum(j => j.Progress) / jobs.Count;
+            }
+        }
 
         /// <summary>
         /// 
@@ -31,7 +39,6 @@
         public void Add(IRunnable job)
         {
             jobs.Enqueue(job);
-            NumJobs++;
             Interlocked.Increment(ref numJobsToRun);
         }
 

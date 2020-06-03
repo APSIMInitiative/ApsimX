@@ -4,16 +4,10 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
 
     /// <summary>
     /// This class generates individual .apsimx files for each simulation in a runner.
     /// </summary>
-    /// <remarks>
-    /// Should this class implement IJobManager so that its interaction with the
-    /// job runner is more explicit? It seems very odd to have to pass a Runner
-    /// instance into the Generate method...
-    /// </remarks>
     public class GenerateApsimXFiles
     {
         /// <summary>A delegate that gets called to indicate progress during an operation.</summary>
@@ -31,38 +25,40 @@
         public static List<Exception> Generate(Runner runner, string path, OnProgress progressCallBack)
         {
             List<Exception> errors = null;
-            Directory.CreateDirectory(path);
-
-            int i = 0;
-            List<Simulation> simulations = runner.Simulations().ToList();
-            foreach (var simulation in simulations)
+            if (runner.TotalNumberOfSimulations > 0)
             {
-                try
-                {
-                    Simulations sims = new Simulations()
-                    {
-                        Name = "Simulations",
-                        Children = new List<IModel>()
-                        {
-                            new Storage.DataStore()
-                            {
-                                Name = "DataStore"
-                            },
-                            simulation
-                        }
-                    };
-                    string st = FileFormat.WriteToString(sims);
-                    File.WriteAllText(Path.Combine(path, simulation.Name + ".apsimx"), st);
-                }
-                catch (Exception err)
-                {
-                    if (errors == null)
-                        errors = new List<Exception>();
-                    errors.Add(err);
-                }
+                Directory.CreateDirectory(path);
 
-                progressCallBack?.Invoke(Convert.ToInt32(100 * (i + 1) / simulations.Count));
-                i++;
+                int i = 0;
+                foreach (var simulation in runner.Simulations())
+                {
+                    try
+                    {
+                        Simulations sims = new Simulations()
+                        {
+                            Name = "Simulations",
+                            Children = new List<IModel>()
+                            {
+                                new Storage.DataStore()
+                                {
+                                    Name = "DataStore"
+                                },
+                                simulation
+                            }
+                        };
+                        string st = FileFormat.WriteToString(sims);
+                        File.WriteAllText(Path.Combine(path, simulation.Name + ".apsimx"), st);
+                    }
+                    catch (Exception err)
+                    {
+                        if (errors == null)
+                            errors = new List<Exception>();
+                        errors.Add(err);
+                    }
+
+                    i++;
+                    progressCallBack?.Invoke(100 * i / runner.TotalNumberOfSimulations);
+                }
             }
             return errors;
         }

@@ -151,8 +151,17 @@
 
                 Runner runner = new Runner(folder, runType: typeOfRun);
 
+                // Ensure number of simulations is correct before any are run.
+                Assert.AreEqual(runner.TotalNumberOfSimulations, 2);
+                Assert.AreEqual(runner.NumberOfSimulationsCompleted, 0);
+
                 // Run simulations.
                 Assert.IsNull(runner.Run());
+
+                // Ensure number of simulations is correct after all simulations are run.
+                Assert.AreEqual(runner.TotalNumberOfSimulations, 2);
+                Assert.AreEqual(runner.NumberOfSimulationsCompleted, 2);
+                Assert.AreEqual(runner.PercentComplete(), 100);
 
                 // Check that data was written to database.
                 Assert.AreEqual(Utilities.TableToStringUsingSQL(database, "SELECT [Clock.Today] FROM Report ORDER BY [Clock.Today]"),
@@ -214,7 +223,7 @@
                                     EndDate = new DateTime(1980, 1, 4)
                                 },
                                 new MockSummary(),
-                                new Report()
+                                new Models.Report()
                                 {
                                     Name = "Report",
                                     VariableNames = new string[] {"[Clock].Today"},
@@ -227,8 +236,17 @@
 
                 Runner runner = new Runner(folder, runType: typeOfRun, simulationNamesToRun: new string[] { "Sim1" });
 
+                // Ensure number of simulations is correct before any are run.
+                Assert.AreEqual(runner.TotalNumberOfSimulations, 1);
+                Assert.AreEqual(runner.NumberOfSimulationsCompleted, 0);
+
                 // Run simulations.
                 Assert.IsNull(runner.Run());
+
+                // Ensure number of simulations is correct after all simulations are run.
+                Assert.AreEqual(runner.TotalNumberOfSimulations, 1);
+                Assert.AreEqual(runner.NumberOfSimulationsCompleted, 1);
+                Assert.AreEqual(runner.PercentComplete(), 100);
 
                 // Check that data was written to database.
                 Assert.AreEqual(Utilities.TableToStringUsingSQL(database, "SELECT [Clock.Today] FROM Report ORDER BY [Clock.Today]"),
@@ -465,11 +483,20 @@
 
                 Runner runner = new Runner(simulation, runType: typeOfRun);
 
+                // Ensure number of simulations is correct before any are run.
+                Assert.AreEqual(runner.TotalNumberOfSimulations, 1);
+                Assert.AreEqual(runner.NumberOfSimulationsCompleted, 0);
+
                 AllJobsCompletedArgs argsOfAllCompletedJobs = null;
                 runner.AllSimulationsCompleted += (sender, e) => { argsOfAllCompletedJobs = e; };
 
                 // Run simulations.
                 runner.Run();
+
+                // Ensure number of simulations is correct after all have been run.
+                Assert.AreEqual(runner.TotalNumberOfSimulations, 1);
+                Assert.AreEqual(runner.NumberOfSimulationsCompleted, 1);
+                Assert.AreEqual(runner.PercentComplete(), 100);
 
                 // Make sure the expected exception was sent through the all completed jobs event.
                 Assert.AreEqual(argsOfAllCompletedJobs.AllExceptionsThrown.Count, 1);
@@ -508,6 +535,10 @@
 
                 Runner runner = new Runner(simulation, runType:typeOfRun, runSimulations:false);
 
+                // Ensure number of simulations is correct before any are run.
+                Assert.AreEqual(runner.TotalNumberOfSimulations, 0);
+                Assert.AreEqual(runner.NumberOfSimulationsCompleted, 0);
+
                 AllJobsCompletedArgs argsOfAllCompletedJobs = null;
                 runner.AllSimulationsCompleted += (sender, e) => { argsOfAllCompletedJobs = e; };
 
@@ -518,7 +549,10 @@
                 // sure there is NOT a 'Simulation completed' message.
                 Assert.AreEqual(MockSummary.messages.Count, 0);
 
-                Assert.AreEqual(runner.Progress, 0);
+                // Ensure number of simulations is correct after all have been run.
+                Assert.AreEqual(runner.TotalNumberOfSimulations, 0);
+                Assert.AreEqual(runner.NumberOfSimulationsCompleted, 0);
+                Assert.AreEqual(runner.PercentComplete(), 0);
 
                 // Make sure the expected exception was sent through the all completed jobs event.
                 Assert.AreEqual(1, argsOfAllCompletedJobs.AllExceptionsThrown.Count);

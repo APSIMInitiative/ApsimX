@@ -15,7 +15,7 @@
     /// Encapsulates a collection of jobs that are to be run. A job can be a simulation run or 
     /// a class instance that implements IRunnable e.g. EXCEL input run.
     /// </summary>
-    public class SimulationGroup : JobManager, IReportsStatus
+    public class SimulationGroup : JobManager
     {
         /// <summary>The model to use to search for simulations to run.</summary>
         private IModel relativeTo;
@@ -95,17 +95,14 @@
         /// <summary>Name of file where the jobs came from.</summary>
         public string FileName { get; set; }
 
+        /// <summary>The number of simulations to run.</summary>
+        public int TotalNumberOfSimulations { get; private set; }
+
+        /// <summary>The number of simulations completed running.</summary>
+        public int NumberOfSimulationsCompleted { get; private set; }
+
         /// <summary>A list of exceptions thrown before and after the simulation runs. Will be null when no exceptions found.</summary>
         public List<Exception> PrePostExceptionsThrown { get; private set; }
-
-        /// <summary>
-        /// Status of the jobs.
-        /// </summary>
-        /// <remarks>
-        /// I'm not sure that this really belongs here, but since this class
-        /// handles the running of post-simulation tools, it kind of has to be here.
-        /// </remarks>
-        public string Status { get; private set; }
 
         /// <summary>Find and return a list of duplicate simulation names.</summary>
         private List<string> FindDuplicateSimulationNames()
@@ -135,9 +132,18 @@
         }
 
         /// <summary>Called once when all jobs have completed running. Should throw on error.</summary>
+        protected override void PostRun(JobCompleteArguments args)
+        {
+            lock (this)
+            {
+                if(!(args.Job is EmptyJob))
+                    NumberOfSimulationsCompleted++;
+            }
+        }
+
+        /// <summary>Called once when all jobs have completed running. Should throw on error.</summary>
         protected override void PostAllRuns()
         {
-            Status = "Waiting for datastore to finish writing";
             storage?.Writer.Stop();
             storage?.Reader.Refresh();
 
@@ -156,7 +162,6 @@
         private void Initialise()
         {
             startTime = DateTime.Now;
-            Status = "Finding simulations to run";
 
             List<Exception> exceptions = null;
             try
@@ -235,13 +240,19 @@
             if (relativeTo is Simulation)
             {
                 if (SimulationNameIsMatched(relativeTo.Name))
+                {
                     Add(new SimulationDescription(relativeTo as Simulation));
+                    TotalNumberOfSimulations++;
+                }
             }
             else if (relativeTo is ISimulationDescriptionGenerator)
             {
                 foreach (var description in (relativeTo as ISimulationDescriptionGenerator).GenerateSimulationDescriptions())
                     if (SimulationNameIsMatched(description.Name))
+                    {
                         Add(description);
+                        TotalNumberOfSimulations++;
+                    }
             }
             else if (relativeTo is Folder || relativeTo is Simulations)
             {
@@ -281,10 +292,7 @@
                     if (rootModel is Simulations)
                         (rootModel as Simulations).Links.Resolve(tool as IModel);
                     if ((tool as IModel).Enabled)
-                    {
-                        Status = $"Running post-simulation tool {(tool as IModel).Name}";
                         tool.Run();
-                    }
                 }
                 catch (Exception err)
                 {
@@ -333,7 +341,6 @@
                 Exception exception = null;
                 try
                 {
-                    Status = "Running tests";
                     test.Run();
                 }
                 catch (Exception err)

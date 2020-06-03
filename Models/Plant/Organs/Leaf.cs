@@ -189,7 +189,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the depth.</summary>
         [Units("mm")]
-        public double Depth { get; set; }
+        public double Depth { get { return Structure.Height; } }
 
         /// <summary>Gets the width of the canopy (mm).</summary>
         public double Width { get; set; }
@@ -494,12 +494,9 @@ namespace Models.PMF.Organs
         IFunction FrostFraction = null;
 
         /// <summary>The width of the canopy</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         IFunction WidthFunction = null;
 
-        /// <summary>The depth of the canopy</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        IFunction DepthFunction = null;
 
         /// <summary>The structural fraction</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -767,9 +764,7 @@ namespace Models.PMF.Organs
                 {
                     double TotalRadn = 0;
                     for (int i = 0; i < LightProfile.Length; i++)
-                        if(Double.IsNaN(LightProfile[i].amount)) 
-                            TotalRadn += 0;
-                    else TotalRadn += LightProfile[i].amount;
+                        TotalRadn += LightProfile[i].amount;
                     return TotalRadn;                    
                 }
                 else
@@ -1240,9 +1235,10 @@ namespace Models.PMF.Organs
         {
             if (!parentPlant.IsEmerged)
                 return;
-            Structure.UpdateHeight();
-            Width = WidthFunction.Value();
-            Depth = DepthFunction.Value();
+            if (WidthFunction != null)
+                Width = WidthFunction.Value();
+            else
+                Width = 0;
 
             if (FrostFraction.Value() > 0)
                 foreach (LeafCohort l in Leaves)
@@ -1287,9 +1283,6 @@ namespace Models.PMF.Organs
             PotentialEP = 0;
             WaterDemand = 0;
             LightProfile = null;
-            Structure.UpdateHeight();
-            Width = WidthFunction.Value();
-            Depth = DepthFunction.Value();
         }
         /// <summary>Initialises the cohorts.</summary>
         [EventSubscribe("InitialiseLeafCohorts")]

@@ -117,7 +117,6 @@ namespace Models.PMF.Phen
         {
             ProgressThroughPhase = 0;
             Target = 0;
-            EmergenceDate = null;
         }
 
         // 4. Private method
