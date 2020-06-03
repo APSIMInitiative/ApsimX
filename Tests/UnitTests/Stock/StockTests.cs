@@ -1,5 +1,6 @@
 ﻿namespace UnitTests.Stock
 {
+    using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
     using Models.GrazPlan;
@@ -189,7 +190,7 @@
 
         /// <summary>Ensure a user can add an animal group to STOCK.</summary>
         [Test]
-        public void AddAnimalGroupToStock()
+        public void AddAnimalGroupByDroppingOntoStock()
         {
             // Get a friesian genotype.
             var stock = new Stock
@@ -466,5 +467,396 @@
             Assert.AreEqual(animalGroup3.PaddOccupied.Name, "Field4");
         }
 
+        /// <summary>Ensure a user can call Stock.Add method creating a cohort of animals.</summary>
+        [Test]
+        public void AddAnimalCohort()
+        {
+            var stock = new Stock
+            {
+                Children = new List<IModel>()
+                {
+                    new Clock() { StartDate = new DateTime(2020, 1, 1), EndDate = new DateTime(2020, 1, 2) },
+                    new Weather(),
+                    new MockSummary(),
+                    new Zone()
+                    {
+                        Name = "Field1",
+                        Area = 100
+                    },
+                    new Soil()
+                    {
+                        Children = new List<IModel>() { new Physical() { Thickness = new double[] { 100, 100, 100 } } }
+                    },
+                }
+            };
+            Utilities.ResolveLinks(stock);
+            var clock = stock.Children[0] as Clock;
+
+            // Invoke start of simulation event. This should add the animal group to stock.
+            Utilities.CallEvent(stock, "StartOfSimulation");
+            Utilities.CallEvent(clock, "StartOfSimulation");
+
+            // Add the animal group
+            stock.Add(
+                new StockAdd()
+                {
+                    Genotype = "Small Merino",
+                    Number = 10,
+                    MinYears = 1,
+                    MaxYears = 3,
+                    CondScore = 0,   // default condition score.
+                    BirthDay = 200,  // doy
+                    MatedTo = "Small Merino",
+                    MeanWeight = 300,
+                    Offspring = 2,
+                    Sex = ReproductiveType.Female,
+                    Pregnant = 20,
+                    Foetuses = 2,
+                    MeanFleeceWt = 10,
+                    ShearDay = 200,
+                    YoungCondScore = 1.98,
+                    YoungWt = 40
+                });
+            Assert.AreEqual(stock.AnimalList.Animals.Count, 7);  // stock.AnimalList.Animals[0] is a temporary animal group.
+
+            var json = ReflectionUtilities.JsonSerialise(stock.AnimalList.Animals, false);
+            var expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Stock.AddAnimalCohort.json");
+
+            Assert.AreEqual(expectedJson, json);
+        }
+
+        /// <summary>Ensure a user can sell animals by tag.</summary>
+        [Test]
+        public void SellTaggedAnimals()
+        {
+            var stock = new Stock
+            {
+                Children = new List<IModel>()
+                {
+                    new Clock() { StartDate = new DateTime(2020, 1, 1), EndDate = new DateTime(2020, 1, 2) },
+                    new Weather(),
+                    new MockSummary(),
+                    new Zone() { Name = "Field1", Area = 100 },
+                    new Soil() { Children = new List<IModel>() { new Physical() { Thickness = new double[] { 100, 100, 100 } } } },
+                    new Animals()
+                    {
+                        Name = "MyGroup",
+                        Sex = GrazType.ReproType.Empty,
+                        Genotype = "Jersey",
+                        MatedTo = "Friesian",
+                        Paddock = "Zone",
+                        MaxPrevWt = 300,
+                        Number = 50,
+                        AgeDays = 100,
+                        Weight = 290,
+                        Tag = 1
+                    },
+                    new Animals()
+                    {
+                        Name = "MyGroup",
+                        Sex = GrazType.ReproType.Empty,
+                        Genotype = "Jersey",
+                        MatedTo = "Friesian",
+                        Paddock = "Zone",
+                        MaxPrevWt = 700,
+                        Number = 150,
+                        AgeDays = 500,
+                        Weight = 600,
+                        Tag = 2
+                    },
+                },
+            };
+            Utilities.ResolveLinks(stock);
+            Utilities.CallEventAll(stock, "StartOfSimulation");
+
+            // Sell animals that are tagged 2
+            var tag2Animals = stock.ByTag(2);
+            stock.Sell(50, tag2Animals);
+
+            var groups = stock.AnimalGroups;
+            Assert.AreEqual(groups.First().NoAnimals, 50);
+            Assert.AreEqual(groups.Last().NoAnimals, 100);
+
+            // Make sure summary file was written to.
+            Assert.AreEqual(MockSummary.messages[0], "Selling 50 animals");
+        }
+
+        /// <summary>Ensure a user can sell animals by weight.</summary>
+        [Test]
+        public void SellHeavyAnimals()
+        {
+            var stock = new Stock
+            {
+                Children = new List<IModel>()
+                {
+                    new Clock() { StartDate = new DateTime(2020, 1, 1), EndDate = new DateTime(2020, 1, 2) },
+                    new Weather(),
+                    new MockSummary(),
+                    new Zone() { Name = "Field1", Area = 100 },
+                    new Soil() { Children = new List<IModel>() { new Physical() { Thickness = new double[] { 100, 100, 100 } } } },
+                    new Animals()
+                    {
+                        Name = "MyGroup",
+                        Sex = GrazType.ReproType.Empty,
+                        Genotype = "Jersey",
+                        MatedTo = "Friesian",
+                        Paddock = "Zone",
+                        MaxPrevWt = 300,
+                        Number = 50,
+                        AgeDays = 100,
+                        Weight = 290,
+                        Tag = 1
+                    },
+                    new Animals()
+                    {
+                        Name = "MyGroup",
+                        Sex = GrazType.ReproType.Male,
+                        Genotype = "Jersey",
+                        MatedTo = "Friesian",
+                        Paddock = "Zone",
+                        MaxPrevWt = 700,
+                        Number = 150,
+                        AgeDays = 500,
+                        Weight = 600,
+                        Tag = 2
+                    },
+                },
+            };
+            Utilities.ResolveLinks(stock);
+            Utilities.CallEventAll(stock, "StartOfSimulation");
+
+            // Sell males
+            var males = stock.AnimalGroups.Where(group => group.ReproState == GrazType.ReproType.Male);
+            stock.Sell(50, males);
+
+            var groups = stock.AnimalGroups;
+            Assert.AreEqual(groups.First().NoAnimals, 50);
+            Assert.AreEqual(groups.Last().NoAnimals, 100);
+
+            // Make sure summary file was written to.
+            Assert.AreEqual(MockSummary.messages[0], "Selling 50 animals");
+        }
+
+        /// <summary>Ensure a user can shear animals.</summary>
+        [Test]
+        public void ShearAnimals()
+        {
+            var stock = new Stock
+            {
+                Children = new List<IModel>()
+                {
+                    new Clock() { StartDate = new DateTime(2020, 1, 1), EndDate = new DateTime(2020, 1, 2) },
+                    new Weather(),
+                    new MockSummary(),
+                    new Zone() { Name = "Field1", Area = 100 },
+                    new Soil() { Children = new List<IModel>() { new Physical() { Thickness = new double[] { 100, 100, 100 } } } },
+                    new Animals()
+                    {
+                        Name = "MyGroup",
+                        Sex = GrazType.ReproType.Empty,
+                        Genotype = "Small Merino",
+                        MatedTo = "Small Merino",
+                        Paddock = "Zone",
+                        MaxPrevWt = 300,
+                        Number = 50,
+                        AgeDays = 100,
+                        Weight = 290,
+                        FleeceWt = 100,
+                        Tag = 1
+                    },
+                    new Animals()
+                    {
+                        Name = "MyGroup",
+                        Sex = GrazType.ReproType.Male,
+                        Genotype = "Jersey",
+                        MatedTo = "Friesian",
+                        Paddock = "Zone",
+                        MaxPrevWt = 700,
+                        Number = 150,
+                        AgeDays = 500,
+                        Weight = 600,
+                        Tag = 2
+                    },
+                },
+            };
+            Utilities.ResolveLinks(stock);
+            Utilities.CallEventAll(stock, "StartOfSimulation");
+
+            // Shear all animals
+            var cfw = stock.Shear(true, true);
+            Assert.AreEqual(cfw, 70);
+
+            // Make sure summary file was written to.
+            Assert.AreEqual(MockSummary.messages[0], "Shearing animals");
+        }
+
+        /// <summary>Ensure a user can move animals between paddocks.</summary>
+        [Test]
+        public void MoveAnimals()
+        {
+            var stock = new Stock
+            {
+                Children = new List<IModel>()
+                {
+                    new Clock() { StartDate = new DateTime(2020, 1, 1), EndDate = new DateTime(2020, 1, 2) },
+                    new Weather(),
+                    new MockSummary(),
+                    new Zone() { Name = "Field1", Area = 100 },
+                    new Zone() { Name = "Field2", Area = 100 },
+                    new Soil() { Children = new List<IModel>() { new Physical() { Thickness = new double[] { 100, 100, 100 } } } },
+                    new Animals()
+                    {
+                        Name = "MyGroup",
+                        Sex = GrazType.ReproType.Empty,
+                        Genotype = "Small Merino",
+                        MatedTo = "Small Merino",
+                        Paddock = "Field1",
+                        MaxPrevWt = 300,
+                        Number = 50,
+                        AgeDays = 100,
+                        Weight = 290,
+                        FleeceWt = 100,
+                        Tag = 1
+                    },
+                    new Animals()
+                    {
+                        Name = "MyGroup",
+                        Sex = GrazType.ReproType.Male,
+                        Genotype = "Jersey",
+                        MatedTo = "Friesian",
+                        Paddock = "Field1",
+                        MaxPrevWt = 700,
+                        Number = 150,
+                        AgeDays = 500,
+                        Weight = 600,
+                        Tag = 2
+                    },
+                },
+            };
+            Utilities.ResolveLinks(stock);
+            Utilities.CallEventAll(stock, "StartOfSimulation");
+
+            // Move the cattle into field 2
+            var cattle = stock.AnimalGroups.Where(group => group.Genotype.Animal == GrazType.AnimalType.Cattle);
+            stock.Move("Field2", cattle);
+            Assert.AreEqual(cattle.First().PaddOccupied.Name, "Field2");
+        }
+
+        /// <summary>Ensure a user can mate animals.</summary>
+        [Test]
+        public void JoinAnimals()
+        {
+            var stock = new Stock
+            {
+                Children = new List<IModel>()
+                {
+                    new Clock() { StartDate = new DateTime(2020, 1, 1), EndDate = new DateTime(2020, 1, 2) },
+                    new Weather(),
+                    new MockSummary(),
+                    new Zone() { Name = "Field1", Area = 100 },
+                    new Zone() { Name = "Field2", Area = 100 },
+                    new Soil() { Children = new List<IModel>() { new Physical() { Thickness = new double[] { 100, 100, 100 } } } },
+                    new Animals()
+                    {
+                        Name = "MyGroup",
+                        Sex = GrazType.ReproType.Empty,
+                        Genotype = "Small Merino",
+                        MatedTo = "Small Merino",
+                        Paddock = "Field1",
+                        MaxPrevWt = 300,
+                        Number = 50,
+                        AgeDays = 200,
+                        Weight = 290,
+                        FleeceWt = 100,
+                        Tag = 1
+                    },
+                    new Animals()
+                    {
+                        Name = "MyGroup",
+                        Sex = GrazType.ReproType.Male,
+                        Genotype = "Jersey",
+                        MatedTo = "Friesian",
+                        Paddock = "Field1",
+                        MaxPrevWt = 700,
+                        Number = 150,
+                        AgeDays = 500,
+                        Weight = 600,
+                        Tag = 2
+                    },
+                },
+            };
+            Utilities.ResolveLinks(stock);
+            Utilities.CallEventAll(stock, "StartOfSimulation");
+
+            // Mate the ewes.
+            var ewes = stock.AnimalGroups.Where(group => group.Genotype.Animal == GrazType.AnimalType.Sheep);
+            stock.Join("Small Merino", 30, ewes);
+
+            List<AnimalGroup> newGroups = new List<AnimalGroup>();
+            for (int i = 0; i < 10; i++)
+                ewes.First().Age(1, ref newGroups);
+
+            // Ewes should now be pregnant.
+            Assert.AreEqual(newGroups.Count, 3);
+            Assert.IsTrue(newGroups[2].Pregnancy == 1);
+        }
+
+        /// <summary>Ensure a user can castrate animals.</summary>
+        [Test]
+        public void CastrateAnimals()
+        {
+            var stock = new Stock
+            {
+                Children = new List<IModel>()
+                {
+                    new Clock() { StartDate = new DateTime(2020, 1, 1), EndDate = new DateTime(2020, 1, 2) },
+                    new Weather(),
+                    new MockSummary(),
+                    new Zone() { Name = "Field1", Area = 100 },
+                    new Zone() { Name = "Field2", Area = 100 },
+                    new Soil() { Children = new List<IModel>() { new Physical() { Thickness = new double[] { 100, 100, 100 } } } },
+                    new Animals()
+                    {
+                        Name = "MyGroup",
+                        Sex = GrazType.ReproType.Empty,
+                        Genotype = "Small Merino",
+                        MatedTo = "Small Merino",
+                        Paddock = "Field1",
+                        MaxPrevWt = 300,
+                        Number = 50,
+                        AgeDays = 200,
+                        Weight = 290,
+                        FleeceWt = 100,
+                        Tag = 1
+                    },
+                    new Animals()
+                    {
+                        Name = "MyGroup",
+                        Sex = GrazType.ReproType.Empty,
+                        Genotype = "Jersey",
+                        MatedTo = "Friesian",
+                        Paddock = "Field1",
+                        MaxPrevWt = 700,
+                        Number = 150,
+                        NumSuckling = 1,
+                        Lactating = 160,
+                        AgeDays = 500,
+                        Weight = 600,
+                        YoungWt = 100,
+                        Tag = 2
+                    },
+                },
+            };
+            Utilities.ResolveLinks(stock);
+            Utilities.CallEventAll(stock, "StartOfSimulation");
+
+            // Castrate the cattle young.
+            var cattle = stock.AnimalGroups.Where(group => group.Genotype.Animal == GrazType.AnimalType.Cattle);
+
+            stock.Castrate(100, cattle);
+
+            // Young should now be castrated.
+            Assert.AreEqual(cattle.First().Young.ReproState, GrazType.ReproType.Castrated);
+        }
     }
 }

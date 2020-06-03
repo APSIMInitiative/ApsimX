@@ -238,40 +238,6 @@
     }
 
     /// <summary>
-    /// Removes animals from the simulation.  sell without parameters will remove all sheep in the stock sub-model
-    /// </summary>
-    public class StockSell : IStockEvent
-    {
-        /// <summary>
-        /// Gets or sets the index number of the animal group from which animals are to be removed. 
-        /// A value of zero denotes that each animal group should be processed in turn until the nominated number of animals has been removed.
-        /// </summary>
-        public int Group { get; set; }
-
-        /// <summary>
-        /// Gets or sets the number of animals to remove.
-        /// </summary>
-        public int Number { get; set; }
-    }
-
-    /// <summary>
-    /// Castrate event
-    /// </summary>
-    public class StockCastrate : IStockEvent
-    {
-        /// <summary>
-        /// Gets or sets the index number of the animal group, the lambs or calves of which are to be castrated. 
-        /// A value of zero denotes that each animal group should be processed in turn until the nominated number of offspring has been castrated.
-        /// </summary>
-        public int Group { get; set; }
-
-        /// <summary>
-        /// Gets or sets the number of male lambs or calves to be castrated.
-        /// </summary>
-        public int Number { get; set; }
-    }
-
-    /// <summary>
     /// Dryoff event
     /// </summary>
     public class StockDryoff : IStockEvent
@@ -286,81 +252,6 @@
         /// Gets or sets the number of females for which lactation is to end.
         /// </summary>
         public int Number { get; set; }
-    }
-
-    /// <summary>
-    /// Removes animals from the simulation by tag number.
-    /// </summary>
-    public class StockSellTag : IStockEvent
-    {
-        /// <summary>
-        /// Gets or sets the tag number of the animals from which animals are to be removed. 
-        /// Animals are removed starting from the group with the smallest index.
-        /// </summary>
-        public int Tag { get; set; }
-
-        /// <summary>
-        /// Gets or sets the number of animals to remove.
-        /// </summary>
-        public int Number { get; set; }
-    }
-
-    /// <summary>
-    /// Shears sheep. The event has no effect on cattle.
-    /// </summary>
-    public class StockShear : IStockEvent
-    {
-        /// <summary>
-        /// Gets or sets the index number of the animal group to be shorn. 
-        /// A value of zero denotes that all animal groups should be processed.
-        /// </summary>
-        public int Group { get; set; }
-
-        /// <summary>
-        /// Gets or sets the subgroup. Denotes whether the main group of animals, suckling lambs, or both should be shorn. 
-        /// Feasible values are the null string (main group), ‘adults’ (main group), ‘lambs’ (suckling lambs), ‘both’ (both).
-        /// </summary>
-        public string SubGroup { get; set; }
-    }
-
-    /// <summary>
-    /// Changes the paddock to which an animal group is assigned
-    /// </summary>
-    public class StockMove : IStockEvent
-    {
-        /// <summary>
-        /// Gets or sets the index number of the animal group to be moved.
-        /// </summary>
-        public int Group { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of the paddock to which the animal group is to be moved.
-        /// </summary>
-        public string Paddock { get; set; }
-    }
-
-    /// <summary>
-    /// Stock joining
-    /// </summary>
-    public class StockJoin : IStockEvent
-    {
-        /// <summary>
-        /// Gets or sets the index number of the animal group for which mating is to commence. 
-        /// A value of zero denotes that all empty females of sufficient age should be mated 
-        /// </summary>
-        public int Group { get; set; }
-
-        /// <summary>
-        /// Gets or sets the genotype of the rams or bulls with which the animals are mated. 
-        /// Must match the name field of a member of the genotypes property.
-        /// </summary>
-        public string MateTo { get; set; }
-
-        /// <summary>
-        /// Gets or sets the length of the mating period.
-        /// </summary>
-        [Units("d")]
-        public int MateDays { get; set; }
     }
 
     /// <summary>
@@ -470,36 +361,10 @@
     }
 
     /// <summary>
-    /// Sets the "priority" of an animal group for later use in a draft event. It is usual practice to use positive values for priorities.
-    /// </summary>
-    public class StockPrioritise : IStockEvent
-    {
-        /// <summary>
-        /// Gets or sets the index number of the animal group for which priority is to be set.
-        /// </summary>
-        public int Group { get; set; }
-
-        /// <summary>
-        /// Gets or sets the new priority value for the group.
-        /// </summary>
-        public int Value { get; set; }
-    }
-
-    /// <summary>
     /// For the sort event.
     /// </summary>
     public class StockSort : IStockEvent
     {
     }
 
-    /// <summary>
-    /// Draft event
-    /// </summary>
-    public class StockDraft : IStockEvent
-    {
-        /// <summary>
-        /// Gets or sets the names of paddocks to be excluded from consideration as possible destinations
-        /// </summary>
-        public string[] Closed { get; set; }
-    }
 }

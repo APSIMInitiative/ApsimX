@@ -41,12 +41,6 @@
     [Serializable]
     public class StockList
     {
-
-        // checking paddock for grazing move
-        private const int MAX_CRITERIA = 1;
-        private const int DRAFT_MOVE = 0;
-        private string[] CRITERIA = new string[MAX_CRITERIA] { "draft" };   // used in radiogroup on dialog
-
         /// <summary>
         /// Conversion factor for months to days
         /// </summary>
@@ -83,7 +77,6 @@
             parentStockModel = stockModel;
             ForagesAll = new ForageProviders();
             Enterprises = new List<EnterpriseInfo>();
-            GrazingPeriods = new GrazingList();
             clock = clockModel;
             weather = weatherModel;
 
@@ -116,11 +109,6 @@
         /// Gets the enterprise list
         /// </summary>
         public List<EnterpriseInfo> Enterprises { get; }
-
-        /// <summary>
-        /// Gets the grazing periods
-        /// </summary>
-        public GrazingList GrazingPeriods { get; }
 
         /// <summary>
         /// Gets all the forage providers
@@ -448,221 +436,7 @@
             if (stock[posIdx].Young != null)
                 stock[posIdx].Young.CompleteGrowth(this.stock[posIdx].RDPFactor[1]);
         }
-
-        /// <summary>
-        /// Get the paddock rank value
-        /// </summary>
-        /// <param name="paddock">The paddock</param>
-        /// <param name="animalGroup">The animal group</param>
-        /// <returns>The paddock rank</returns>
-        private double GetPaddockRank(PaddockInfo paddock, AnimalGroup animalGroup)
-        {
-            double result;
-            GrazType.GrazingInputs forageInputs;
-            GrazType.GrazingInputs paddockInputs;
-            double[] herbageRI = new double[GrazType.DigClassNo + 1];
-            double[,] seedRI = new double[GrazType.MaxPlantSpp + 1, GrazType.RIPE + 1];
-            double dummy = 0.0;
-            int jdx;
-            int classIdx;
-
-            animalGroup.PaddSteep = paddock.Steepness;
-            animalGroup.WaterLogging = paddock.Waterlog;
-            animalGroup.RationFed.Assign(paddock.SuppInPadd);
-            animalGroup.RationFed.TotalAmount = 0.0;                                        // No supplementary feed here            
-
-            paddockInputs = new GrazType.GrazingInputs();
-            for (jdx = 0; jdx <= paddock.Forages.Count() - 1; jdx++)
-            {
-                forageInputs = paddock.Forages.ByIndex(jdx).AvailForage();
-                GrazType.addGrazingInputs(jdx + 1, forageInputs, ref paddockInputs);
-            }
-            animalGroup.Herbage = paddockInputs;
-
-            animalGroup.CalculateRelIntake(animalGroup, 1.0, false, 1.0, ref herbageRI, ref seedRI, ref dummy);
-
-            // Function result is DMDI/pot. intake   
-            result = 0.0;
-            for (classIdx = 1; classIdx <= GrazType.DigClassNo; classIdx++)                                             
-                result = result + (herbageRI[classIdx] * GrazType.ClassDig[classIdx]);
-            return result;
-        }
-
-        /// <summary>
-        /// Do daily tasks
-        /// </summary>
-        /// <param name="currentDay">Todays date</param>
-        /// <param name="curEnt">Current enterprise</param>
-        protected void ManageDailyTasks(int currentDay, EnterpriseInfo curEnt)
-        {
-        }
  
-        /// <summary>
-        /// Process the reproduction logic specified by the dialog.
-        /// Mating, Castrating, Weaning.
-        /// </summary>
-        /// <param name="currentDay">The current day</param>
-        /// <param name="curEnt">Current enterprise</param>
-        protected void ManageReproduction(int currentDay, EnterpriseInfo curEnt)
-        {
-            int g;
-            int t;
-            int tagNo;
-            int groups;
-            int birthDOY;
-            int gestation;
-            bool found;
-
-            // Mating day
-            if (curEnt.MateDay == currentDay)
-            {
-                // only mate the groups in this enterprise
-                g = 1;
-                groups = this.Count();
-                while (g <= groups)                                                 
-                {
-                    // for each tag that needs to be mated
-                    for (t = 1; t <= curEnt.MateTagCount; t++)                      
-                    {
-                        tagNo = curEnt.GetMateTag(t);
-
-                        // if mate this group and this group belongs to this ent
-                        if ((tagNo == stock[g].Tag) && (curEnt.ContainsTag(stock[g].Tag)))    
-                        {
-                            if (stock[g].AgeDays >= (365 * curEnt.MateYears))
-                            {
-                                this.Join(g, curEnt.MateWith, 42);
-                                stock[g].Tag = curEnt.JoinedTag;                        // retag the ewes that are mated into a ewe tag group
-                            }
-                        }
-                    }
-                    g++;
-                }
-            }
-
-            // Castrate day
-            if (curEnt.Castrate)
-            {
-                if (curEnt.IsCattle)
-                    gestation = EnterpriseInfo.COWGESTATION;
-                else
-                    gestation = EnterpriseInfo.EWEGESTATION;
-                birthDOY = StdDate.DateShift(curEnt.MateDay, gestation, 0, 0);
-
-                // if 30 days after birth (??)
-                if (StdDate.DateShift(birthDOY, 30, 0, 0) == currentDay)     
-                {
-                    g = 1;
-                    groups = this.Count();
-                    while (g <= groups)                             
-                    {
-                        // if this group belongs to this ent
-                        if (curEnt.ContainsTag(stock[g].Tag))          
-                        {
-                            this.Castrate(g, stock[g].NoAnimals); // castrate all male young in the group
-                        }
-                        g++;
-                    }
-                }
-            }
-
-            // Weaning day
-            if (curEnt.WeanDay == currentDay)
-            {
-                g = 1;
-                groups = this.Count();                              // store the group count because it changes
-                while (g <= groups)                         
-                {
-                    // if this group belongs to this ent
-                    if (curEnt.ContainsTag(stock[g].Tag))              
-                    {
-                        this.Wean(g, stock[g].NoAnimals, true, true);  // wean all young in the group
-                        if (curEnt.IsCattle)
-                            this.DryOff(g, stock[g].NoAnimals);   // ## may be possible to include option in user interface
-                                                                  // retag the mothers into dry ewes tag group
-                        stock[g].Tag = curEnt.DryTag;
-                    }
-                    g++;
-                }
-
-                // go through all the new groups and determine the new weaner tag for them
-                for (g = groups + 1; g <= this.Count(); g++)
-                {
-                    found = false;
-                    t = 1;
-                    while (!found && (t <= curEnt.MateTagCount))
-                    {
-                        if (stock[g].Tag == curEnt.GetMateTag(t))
-                            found = true;                           // this tag belongs to a mated group
-                        t++;
-                    }
-                    if (found)
-                    {
-                        // retag the weaners
-                        if (stock[g].MaleNo > 0)
-                        {
-                            stock[g].Tag = curEnt.WeanerMTag;
-                        }
-
-                        // the new group will be retagged M/F
-                        if (stock[g].FemaleNo > 0)
-                        {
-                            stock[g].Tag = curEnt.WeanerFTag;
-                        }
-                    }
-                }
-            }
-        }
-
-         /// <summary>
-        /// Find the index of the paddock that this tag group is currently grazing
-        /// </summary>
-        /// <param name="tagNo">The tag number</param>
-        /// <returns>The paddock index</returns>
-        protected int PaddockIndexStockedByTagNo(int tagNo)
-        {
-            int i;
-            int posIdx;
-            bool found;
-
-            int result = -1;
-            found = false;
-            for (posIdx = 1; posIdx <= this.Count(); posIdx++)
-            {
-                if (this.stock[posIdx].Tag == tagNo)
-                {
-                    i = 1;
-                    while (!found && (i < this.Paddocks.Count()))
-                    {
-                        if (this.Paddocks[i].Name == this.stock[posIdx].PaddOccupied.Name)
-                        {
-                            result = i;
-                            found = true;
-                        }
-                        i++;
-                    }
-                }
-            }  // next animal index
-
-            return result;
-        }
-
-        /// <summary>
-        /// Check date to see if it is in this range - handles 1 Jan wrapping.
-        /// </summary>
-        /// <param name="currentDay">The date to test</param>
-        /// <param name="periodstart">Start of the period</param>
-        /// <param name="periodfinish">End of the period</param>
-        /// <returns>True if the date is in the period</returns>
-        public bool TodayIsInPeriod(int currentDay, int periodstart, int periodfinish)
-        {
-            bool result = false;
-            if (((periodstart <= currentDay) && (periodfinish >= currentDay))
-              || ((periodstart > periodfinish) && ((periodfinish >= currentDay) || (periodstart <= currentDay))))
-                result = true;
-            return result;
-        }
-
         /// <summary>
         /// Add a group of animals to the list                                           
         /// Returns the group index of the group that was added. 0->n                    
@@ -1678,137 +1452,6 @@
         }
 
         /// <summary>
-        /// If groupIdx=0, work through all groups, removing animals until Number        
-        /// animals (not including unweaned lambs/calves) have been removed.  If         
-        /// GroupIdx>0, then remove the lesser of Number animals and all animals in      
-        /// the group                                                                    
-        /// </summary>
-        /// <param name="groupIdx">The animal group index</param>
-        /// <param name="number">The number to sell</param>
-        public void Sell(int groupIdx, int number)
-        {
-            int numToSell;
-            int idx;
-
-            idx = 1;
-
-            // A negative number is construed as zero
-            while ((idx <= this.Count()) && (number > 0))                                   
-            {
-                // Does this call apply to group I?      
-                if (((groupIdx == 0) || (groupIdx == idx)) && (stock[idx] != null))       
-                {
-                    numToSell = Math.Min(number, stock[idx].NoAnimals);
-                    stock[idx].NoAnimals = stock[idx].NoAnimals - numToSell;
-                    if (groupIdx == 0)
-                        number = number - numToSell;
-                    else
-                        number = 0;
-                }
-                idx++;
-            }
-        }
-
-        /// <summary>
-        /// Sell the animals that have this tag. Sells firstly from the group with the
-        /// smallest index.
-        /// </summary>
-        /// <param name="tagNo">The tag number</param>
-        /// <param name="number">Number to sell</param>
-        public void SellTag(int tagNo, int number)
-        {
-            int numToSell;
-            int idx;
-            int remainToSell;
-
-            remainToSell = number;                                                          // count down the numbers for sale in a group
-            idx = 1;
-
-            // A negative number is construed as zero
-            while ((idx <= this.Count()) && (remainToSell > 0))                             
-            {
-                // Does this call apply to group I? 
-                if ((tagNo == stock[idx].Tag) && (stock[idx] != null))                            
-                {
-                    numToSell = Math.Min(remainToSell, stock[idx].NoAnimals);             // only sell what is possible from this group
-                    stock[idx].NoAnimals = stock[idx].NoAnimals - numToSell;
-                    remainToSell = remainToSell - numToSell;
-                }
-                idx++;
-            }
-        }
-
-        /// <summary>
-        /// If groupIdx=0, shear all groups; otherwise shear the nominated group.        
-        /// Unweaned lambs are not shorn.                                                
-        /// </summary>
-        /// <param name="groupIdx">The animal group index</param>
-        /// <param name="adults">Do adults</param>
-        /// <param name="lambs">Do lambs</param>
-        public void Shear(int groupIdx, bool adults, bool lambs)
-        {
-            double dummy = 0;
-            int idx;
-
-            for (idx = 1; idx <= this.Count(); idx++)
-            {
-                if (((groupIdx == 0) || (groupIdx == idx)) && (stock[idx] != null))
-                {
-                    if (adults)
-                        stock[idx].Shear(ref dummy);
-                    if (lambs && (stock[idx].Young != null))
-                        stock[idx].Young.Shear(ref dummy);
-                }
-            }
-        }
-
-        /// <summary>
-        /// If groupIdx=0, commence joining of all groups; otherwise commence joining    
-        /// of the nominated group.                                                      
-        /// </summary>
-        /// <param name="groupIdx">The animal group index</param>
-        /// <param name="mateTo">Mate to these animals</param>
-        /// <param name="mateDays">Mating period</param>
-        public void Join(int groupIdx, string mateTo, int mateDays)
-        {
-            int idx;
-
-            for (idx = 1; idx <= this.Count(); idx++)
-                if (((groupIdx == 0) || (groupIdx == idx)) && (stock[idx] != null))
-                    stock[idx].Join(parentStockModel.Genotypes.Get(mateTo), mateDays);
-        }
-
-        /// <summary>
-        /// The castration routine is complicated somewhat by the fact that the          
-        /// parameter refers to the number of male lambs or calves to castrate.          
-        /// When this number is less than the number of male lambs or calves in a        
-        /// group, the excess must be split off.                                         
-        /// </summary>
-        /// <param name="groupIdx">The animal grou index</param>
-        /// <param name="number">Number of animals</param>
-        public void Castrate(int groupIdx, int number)
-        {
-            int numToCastrate;
-            int idx, n;
-
-            n = this.Count();                                                                   // Store the initial list size so that groups which are split off aren't processed twice
-            for (idx = 1; idx <= n; idx++)                                                                                         
-            {
-                if (((groupIdx == 0) || (groupIdx == idx)) && (stock[idx] != null))               
-                {
-                    if ((stock[idx].Young != null) && (stock[idx].Young.MaleNo > 0) && (number > 0))
-                    {
-                        numToCastrate = Math.Min(number, stock[idx].Young.MaleNo);
-                        if (numToCastrate < stock[idx].Young.MaleNo)
-                            this.Split(idx, Convert.ToInt32(Math.Round((double)number / numToCastrate * stock[idx].NoAnimals), CultureInfo.InvariantCulture));  // TODO: check this conversion
-                        stock[idx].Young.Castrate();
-                        number = number - numToCastrate;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         /// See the notes to the Castrate method; but weaning is even further         
         /// complicated because males and/or females may be weaned.                   
         /// </summary>
@@ -1908,18 +1551,30 @@
         /// </summary>
         /// <param name="groupIdx">The animal group index</param>
         /// <param name="numToKeep">Number to keep</param>
-        public void Split(int groupIdx, int numToKeep)
+        public int Split(int groupIdx, int numToKeep)
         {
-            AnimalGroup srcGroup;
-            int numToSplit;
+            return Split(stock[groupIdx], numToKeep);
+        }
 
-            srcGroup = stock[groupIdx];
-            if (srcGroup != null)
+        /// <summary>
+        /// Break an animal group up in various ways; by number, by age, by weight    
+        /// or by sex of lambs/calves.  The new group(s) have the same priority and   
+        /// paddock as the original.  SplitWeight assumes a distribution of weights   
+        /// around the group average.                                                 
+        /// </summary>
+        /// <param name="group">The animal group to split.</param>
+        /// <param name="numToKeep">Number of animals to keep.</param>
+        public int Split(AnimalGroup group, int numToKeep)
+        {
+            int numToSplit = 0;
+            if (group != null)
             {
-                numToSplit = Math.Max(0, srcGroup.NoAnimals - Math.Max(numToKeep, 0));
+                numToSplit = Math.Max(0, group.NoAnimals - Math.Max(numToKeep, 0));
                 if (numToSplit > 0)
-                    this.Add(srcGroup.Split(numToSplit, false, srcGroup.NODIFF, srcGroup.NODIFF), stock[groupIdx].PaddOccupied, stock[groupIdx].Tag);
+                    this.Add(group.Split(numToSplit, false, group.NODIFF, group.NODIFF), group.PaddOccupied, group.Tag);
             }
+
+            return numToSplit;
         }
 
         /// <summary>
@@ -2237,7 +1892,7 @@
                     animalList[idx] = null;                           // Detach the animal group from the TAnimalList                              
                 }
         }
-        
+
         /// <summary>
         /// The main stock management function that handles a number of events.
         /// </summary>
@@ -2313,49 +1968,6 @@
                             model.Animals[model.Count()].Tag = tagNo;
                     }
                 } 
-                else if (stockEvent.GetType() == typeof(StockSell))
-                {
-                    // sell a number from a group of animals
-                    StockSell stockInfo = (StockSell)stockEvent;
-                    model.Sell(stockInfo.Group, stockInfo.Number);
-                }
-                else if (stockEvent.GetType() == typeof(StockSellTag))
-                {
-                    // sell a number of animals tagged with a specific tag 
-                    StockSellTag stockInfo = (StockSellTag)stockEvent;
-                    model.SellTag(stockInfo.Tag, stockInfo.Number);
-                }
-                else if (stockEvent.GetType() == typeof(StockShear))
-                {
-                    StockShear stockInfo = (StockShear)stockEvent;
-                    strParam = stockInfo.SubGroup.ToLower();
-                    model.Shear(stockInfo.Group, ((strParam == "adults") || (strParam == "both") || (strParam == string.Empty)), ((strParam == "lambs") || (strParam == "both")));
-                }
-                else if (stockEvent.GetType() == typeof(StockMove))
-                {
-                    StockMove stockInfo = (StockMove)stockEvent;
-                    param1 = stockInfo.Group;
-                    if ((param1 >= 1) && (param1 <= model.Count()))
-                    {
-                        var paddockToMoveTo = this.Paddocks.Find(p => p.Name.Equals(stockInfo.Paddock, StringComparison.InvariantCultureIgnoreCase));
-                        if (paddockToMoveTo == null)
-                            throw new Exception("Stock: attempt to place animals in non-existent paddock: " + stockInfo.Paddock);
-
-                        stock[param1].PaddOccupied = paddockToMoveTo;
-                    }
-                    else
-                        throw new Exception("Invalid group number in MOVE event");
-                }
-                else if (stockEvent.GetType() == typeof(StockJoin))
-                {
-                    StockJoin stockInfo = (StockJoin)stockEvent;
-                    model.Join(stockInfo.Group, stockInfo.MateTo, stockInfo.MateDays);
-                }
-                else if (stockEvent.GetType() == typeof(StockCastrate))
-                {
-                    StockCastrate stockInfo = (StockCastrate)stockEvent;
-                    model.Castrate(stockInfo.Group, stockInfo.Number);
-                }
                 else if (stockEvent.GetType() == typeof(StockWean))
                 {
                     StockWean stockInfo = (StockWean)stockEvent;

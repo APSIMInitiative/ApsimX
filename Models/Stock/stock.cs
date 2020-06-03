@@ -220,31 +220,12 @@
         /// </summary>
         public StockList AnimalList { get; private set; }
 
-        ///// <summary>
-        ///// Gets or sets the livestock enterprises and their management options
-        ///// </summary>
-        //[Description("Livestock enterprises and their management options")]
-        //public EnterpriseInfo[] EnterpriseList
-        //{
-        //    get
-        //    {
-        //        EnterpriseInfo[] ents = new EnterpriseInfo[this.stockModel.Enterprises.Count];
-        //        for (int i = 0; i < this.stockModel.Enterprises.Count; i++)
-        //            ents[i] = this.stockModel.Enterprises.byIndex(i);
-        //        return ents;
-        //    }
+        /// <summary>List of animal groups.</summary>
+        public IEnumerable<AnimalGroup> AnimalGroups { get { return AnimalList.Animals.Skip(1); } }
 
-        //    set
-        //    {
-        //        if (value != null && this.stockModel.Enterprises != null)
-        //        {
-        //            while (this.stockModel.Enterprises.Count > 0)
-        //                this.stockModel.Enterprises.Delete(this.stockModel.Enterprises.Count - 1);
-        //            for (int i = 0; i < value.Length; i++)
-        //                this.stockModel.Enterprises.Add(value[i]);
-        //        }
-        //    }
-        //}
+        /// <summary>Return animal groups that have a specific tag number.</summary>
+        /// <param name="tag">Tag number of animal groups to return.</param>
+        public IEnumerable<AnimalGroup> ByTag(int tag) { return AnimalGroups.Where(animalGroup => animalGroup.Tag == tag); }
 
         #endregion
 
@@ -3784,111 +3765,59 @@
         }
 
         /// <summary>
-        /// Assigns animals to paddocks. The process is as follows:
-        /// (a) Animal groups with a positive priority score are removed from their current paddock; groups with a zero or negative priority score remain in their current paddock.
-        /// (b) The set of unoccupied non-excluded paddocks is identified and then ranked according the quality of the pasture(the best paddock is that which would give highest DM intake).
-        /// (c) The unallocated animal groups are ranked by their priority(lowest values first).
-        /// (d) Unallocated animal groups are then assigned to paddocks in rank order(e.g.those with the lowest positive score are placed in the best unoccupied paddock). 
-        ///     Animal groups with the same priority score are placed in the same paddock
+        /// Remove the specified number of animals (not including unweaned lambs/calves)
+        /// Will iterate through the groups specified, removing as many animals from each
+        /// until the specified number has been reached. If groups is null, will iterate
+        /// through all animal groups.
         /// </summary>
-        /// <param name="zonesClosed">Names of paddocks to be excluded from consideration as possible destinations</param>
-        public void Draft(string[] zonesClosed)
+        /// <param name="number">The number of animals to remove.</param>
+        /// <param name="groups">The animal groups to remove animals from.</param>
+        public void Sell(int number, IEnumerable<AnimalGroup> groups = null)
         {
-            StockDraft closedZones = new StockDraft();
-            closedZones.Closed = zonesClosed;
-            this.RequestAvailableToAnimal();
-            this.outputSummary.WriteMessage(this, "Drafting animals. Excluding paddocks: " + string.Join(", ", closedZones.Closed));
-            this.AnimalList.DoStockManagement(this.AnimalList, closedZones);
-        }
-
-        /// <summary>
-        /// Removes animals from the simulation.  sell without parameters will remove all sheep in the stock sub-model.
-        /// </summary>
-        /// <param name="number">Number of animals to sell.</param>
-        /// <param name="group">Index number of the animal group from which animals are to be removed. 
-        /// A value of zero denotes that each animal group should be processed in turn until the nominated number of animals has been removed.</param>
-        public void Sell(double number, int group = 0)
-        {
-            StockSell selling = new StockSell();
-            selling.Group = group;
-            selling.Number = Convert.ToInt32(number, CultureInfo.InvariantCulture);
-            string msg = "Selling " + number.ToString() + " animals ";
-            if (group == 0)
-                msg += "from all groups";
-            else
-                msg += "from group " + group.ToString();
-            this.outputSummary.WriteMessage(this, msg);
-            this.AnimalList.DoStockManagement(this.AnimalList, selling);
-        }
-
-        /// <summary>
-        /// Removes animals from the simulation by tag number.
-        /// </summary>
-        /// <param name="number">Number of animals to sell.</param>
-        /// <param name="tag">Tag number of the animals from which animals are to be removed. 
-        /// Animals are removed starting from the group with the smallest index.</param>
-        public void SellTag(int number, int tag)
-        {
-            StockSellTag selling = new StockSellTag();
-            selling.Tag = tag;
-            selling.Number = number;
-            this.outputSummary.WriteMessage(this, "Selling " + number.ToString() + " animals from tag group " + tag.ToString());
-            this.AnimalList.DoStockManagement(this.AnimalList, selling);
+            outputSummary.WriteMessage(this, $"Selling {number} animals");
+            if (groups == null)
+                groups = AnimalGroups;
+            foreach (var group in groups)
+            {
+                int numToSellFromThisGroup = Math.Min(number, group.NoAnimals);
+                group.NoAnimals -= numToSellFromThisGroup;
+                number -= numToSellFromThisGroup;
+            }
         }
 
         /// <summary>
         /// Shears sheep. The event has no effect on cattle
         /// </summary>
-        /// <param name="subGroup">Denotes whether the main group of animals, suckling lambs, or both should be shorn. 
-        /// Feasible values are the null string (main group), ‘adults’ (main group), ‘lambs’ (suckling lambs), ‘both’ (both).</param>
-        /// <param name="group">Index number of the animal group to be shorn. 
-        /// A value of zero denotes that all animal groups should be processed.</param>
-        public void Shear(string subGroup, int group = 0)
+        /// <param name="shearAdults">Shear adults?</param>
+        /// <param name="shearYoung">Shear lambs?</param>
+        /// <param name="groups">The groups to shear. null = all groups</param>
+        /// <returns>cfw</returns>
+        public double Shear(bool shearAdults, bool shearYoung, IEnumerable<AnimalGroup> groups = null)
         {
-            StockShear shearing = new StockShear();
-            shearing.Group = group;
-            shearing.SubGroup = subGroup;
-            string msg = "Shearing animals ";
-            if (group == 0)
-                msg += "in all groups";
-            else
-                msg += "in group " + group.ToString();
-            this.outputSummary.WriteMessage(this, msg);
-            this.AnimalList.DoStockManagement(this.AnimalList, shearing);
+            this.outputSummary.WriteMessage(this, "Shearing animals");
+            if (groups == null)
+                groups = AnimalGroups;
+            double totalCFW = 0;
+            foreach (var group in groups)
+                totalCFW += group.Shear(shearAdults, shearYoung);
+            return totalCFW;
         }
 
-        /// <summary>
-        /// Changes the paddock to which an animal group is assigned.
-        /// </summary>
-        /// <param name="paddock">Name of the paddock to which the animal group is to be moved.</param>
-        /// <param name="group">Index number of the animal group to be moved.</param>
-        public void Move(string paddock, int group)
+        /// <summary>Moves animals to a specified paddock.</summary>
+        /// <param name="paddockName">Name of the paddock to which the animal group is to be moved.</param>
+        /// <param name="groups">The animal groups to move.</param>
+        public void Move(string paddockName, IEnumerable<AnimalGroup> groups = null)
         {
-            StockMove move = new StockMove();
-            move.Group = group;
-            move.Paddock = paddock;
-            this.outputSummary.WriteMessage(this, "Moving animal group " + group.ToString() + " to " + paddock);
-            this.AnimalList.DoStockManagement(this.AnimalList, move);
-        }
+            this.outputSummary.WriteMessage(this, $"Moving animals to paddock {paddockName}");
+            if (groups == null)
+                groups = AnimalGroups;
 
-        /// <summary>
-        /// Move the animals by tag number
-        /// </summary>
-        /// <param name="paddock">Name of the paddock to which the animals are to be moved.</param>
-        /// <param name="tag">The tag number</param>
-        public void MoveTag(string paddock, int tag)
-        {
-            StockMove move = new StockMove();
-            move.Paddock = paddock;
-            for (int g = 1; g <= this.AnimalList.Animals.Count; g++)
-            {
-                if (AnimalList.Animals[g] != null && tag == AnimalList.Animals[g].Tag)
-                {
-                    move.Group = g;
-                    this.outputSummary.WriteMessage(this, "Moving " + this.AnimalList.Animals[g].NoAnimals.ToString() + " animals tagged " + tag.ToString() + " to " + paddock);
-                    this.AnimalList.DoStockManagement(this.AnimalList, move);
-                }
-            }
+            var paddockToMoveTo = AnimalList.Paddocks.Find(p => p.Name.Equals(paddockName, StringComparison.InvariantCultureIgnoreCase));
+            if (paddockToMoveTo == null)
+                throw new Exception($"Stock: attempt to place animals in non-existent paddock: {paddockName}");
+
+            foreach (var group in groups)
+                group.PaddOccupied = paddockToMoveTo;
         }
 
         /// <summary>
@@ -3897,21 +3826,15 @@
         /// <param name="mateTo">Genotype of the rams or bulls with which the animals are mated. 
         /// Must match the name field of a member of the genotypes property.</param>
         /// <param name="mateDays">Length of the mating period in days.</param>
-        /// <param name="group">Index number of the animal group for which mating is to commence. 
-        /// A value of zero denotes that all empty females of sufficient age should be mated</param>
-        public void Join(string mateTo, int mateDays, int group = 0)
+        /// <param name="groups">The animal groups to mate. null denotes that all empty females of sufficient age should be mated.</param>
+        public void Join(string mateTo, int mateDays, IEnumerable<AnimalGroup> groups = null)
         {
-            StockJoin join = new StockJoin();
-            join.Group = group;
-            join.MateTo = mateTo;
-            join.MateDays = mateDays;
-            string msg = "Joining animals in ";
-            if (group == 0)
-                msg += "all groups to " + mateTo;
-            else
-                msg += "group " + group.ToString() + " to " + mateTo;
-            this.outputSummary.WriteMessage(this, msg);
-            this.AnimalList.DoStockManagement(this.AnimalList, join);
+            outputSummary.WriteMessage(this, $"Joining animals to {mateTo}");
+
+            if (groups == null)
+                groups = AnimalGroups;
+            foreach (var group in groups)
+                group.Join(Genotypes.Get(mateTo), mateDays);
         }
 
         /// <summary>
@@ -3921,47 +3844,53 @@
         /// be added at the end of the set of animal groups.
         /// </summary>
         /// <param name="number">Number of male lambs or calves to be castrated.</param>
-        /// <param name="group">Index number of the animal group, the lambs or calves of which are to be castrated. 
-        /// A value of zero denotes that each animal group should be processed in turn until the nominated number of offspring has been castrated.</param>
-        public void Castrate(int number, int group = 0)
+        /// <param name="groups">The animal groups to castrate. null denotes that each animal group should be processed in turn until the nominated number of offspring has been castrated.</param>
+        public void Castrate(int number, IEnumerable<AnimalGroup> groups = null)
         {
-            StockCastrate castrate = new StockCastrate();
-            castrate.Group = group;
-            castrate.Number = number;
-            string msg = "Castrate " + number.ToString() + " animals ";
-            if (group == 0)
-                msg += "from all groups";
-            else
-                msg += "in group " + group.ToString();
-            this.outputSummary.WriteMessage(this, msg);
-            this.AnimalList.DoStockManagement(this.AnimalList, castrate);
+            this.outputSummary.WriteMessage(this, $"Castrate {number} animals");
+            if (groups == null)
+                groups = AnimalGroups;
+            foreach (var group in groups)
+            {
+                if (group.Young != null && group.Young.MaleNo > 0 && number > 0)
+                {
+                    var numToCastrateFromThisGroup = Math.Min(number, group.Young.MaleNo);
+                    if (numToCastrateFromThisGroup < group.Young.MaleNo)
+                        AnimalList.Split(group, Convert.ToInt32(Math.Round((double)number / numToCastrateFromThisGroup * group.NoAnimals), CultureInfo.InvariantCulture));  // TODO: check this conversion
+                    group.Young.Castrate();
+                    number -= numToCastrateFromThisGroup;
+                }
+            }
         }
 
         /// <summary>
         /// Weans some or all of the lambs or calves from an animal group. 
         /// The newly weaned animals are added to the end of the list of animal groups, with males and females in separate groups.
         /// </summary>
-        /// <param name="sex">The sex to wean.
-        /// Feasible values are:
-        /// ‘all’       Female and male lambs or calves are to be weaned.
-        /// ‘females’   Only female lambs or calves are to be weaned.
-        /// ‘males’     Only male lambs or calves are to be weaned</param>
-        /// <param name="number">The number of lambs or calves to be weaned</param>
-        /// <param name="group">The index number of the animal group from which animals are to be removed. 
-        /// A value of zero denotes that each animal group should be processed in turn until the nominated number of lambs or calves has been weaned</param>
-        public void Wean(string sex, int number, int group = 0)
+        /// <param name="number">The number of lambs or calves to be weaned.</param>
+        /// <param name="weanMales">Wean the male animals?</param>
+        /// <param name="weanFemales">Wean the female animals?</param>
+        /// <param name="groups">The animal groups to wean. null denotes that each animal group should be processed in turn until the nominated number of lambs or calves has been weaned.</param>
+        public void Wean(int number, bool weanMales, bool weanFemales, IEnumerable<AnimalGroup> groups = null)
         {
-            StockWean wean = new StockWean();
-            wean.Sex = sex;
-            wean.Group = group;
-            wean.Number = number;
-            string msg = "Weaning " + wean.Number.ToString() + " " + wean.Sex;
-            if (wean.Group == 0)
-                msg += " from all groups";
+            var msg = "Weaning";
+            if (weanMales && weanFemales)
+                msg += " males and females";
+            else if (weanMales)
+                msg += " males";
             else
-                msg += " from group " + wean.Group.ToString();
+                msg += " females"
             this.outputSummary.WriteMessage(this, msg);
-            this.AnimalList.DoStockManagement(this.AnimalList, wean);
+
+            if (strParam == "males")
+                AnimalList.Wean(param1, param3, false, true);
+            else if (strParam == "females")
+                AnimalList.Wean(param1, param3, true, false);
+            else if ((strParam == "all") || (strParam == "both") || (strParam == string.Empty))
+                AnimalList.Wean(param1, param3, true, true);
+            else
+                throw new Exception("Invalid offspring type \"" + strParam + "\" in WEAN event");
+
         }
 
         /// <summary>
@@ -4026,20 +3955,6 @@
             tag.Value = value;
             this.outputSummary.WriteMessage(this, "Tag animal group " + group.ToString() + " to " + value.ToString());
             this.AnimalList.DoStockManagement(this.AnimalList, tag);
-        }
-
-        /// <summary>
-        /// Sets the "priority" of an animal group for later use in a draft event. It is usual practice to use positive values for priorities.
-        /// </summary>
-        /// <param name="value">New priority value for the group.</param>
-        /// <param name="group">Index number of the animal group for which priority is to be set.</param>
-        public void Prioritise(int value, int group)
-        {
-            StockPrioritise prioritise = new StockPrioritise();
-            prioritise.Group = group;
-            prioritise.Value = value;
-            this.outputSummary.WriteMessage(this, "Prioritise animal group " + group.ToString() + " to " + value.ToString());
-            this.AnimalList.DoStockManagement(this.AnimalList, prioritise);
         }
 
         /// <summary>
