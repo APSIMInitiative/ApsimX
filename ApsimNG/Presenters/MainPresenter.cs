@@ -479,15 +479,22 @@
         /// <param name="e">Event arguments.</param>
         public void OnStandardToolboxClick(object sender, EventArgs e)
         {
-            Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.Toolboxes.StandardToolbox.apsimx");
-            StreamReader streamReader = new StreamReader(s);
-            bool onLeftTabControl = true;
-            if (sender != null)
+            try
             {
-                onLeftTabControl = this.view.IsControlOnLeft(sender);
-            }
+                Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.Toolboxes.StandardToolbox.apsimx");
+                StreamReader streamReader = new StreamReader(s);
+                bool onLeftTabControl = true;
+                if (sender != null)
+                {
+                    onLeftTabControl = this.view.IsControlOnLeft(sender);
+                }
 
-            this.OpenApsimXFromMemoryInTab("Standard toolbox", streamReader.ReadToEnd(), onLeftTabControl);
+                this.OpenApsimXFromMemoryInTab("Standard toolbox", streamReader.ReadToEnd(), onLeftTabControl);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -646,11 +653,18 @@
         /// <param name="args">Event parameters.</param>
         private void OnOpen(object obj, EventArgs args)
         {
-            string fileName = this.view.GetMenuItemFileName(obj);
-            if (fileName != null)
+            try
             {
-                this.OpenApsimXFileInTab(fileName, this.view.IsControlOnLeft(obj));
-                Utility.Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
+                string fileName = this.view.GetMenuItemFileName(obj);
+                if (fileName != null)
+                {
+                    this.OpenApsimXFileInTab(fileName, this.view.IsControlOnLeft(obj));
+                    Utility.Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -661,11 +675,18 @@
         /// <param name="args">Event parameters.</param>
         private void OnRemove(object obj, EventArgs args)
         {
-            string fileName = this.view.GetMenuItemFileName(obj);
-            if (!string.IsNullOrEmpty(fileName))
+            try
             {
-                Utility.Configuration.Settings.DelMruFile(fileName);
-                this.UpdateMRUDisplay();
+                string fileName = this.view.GetMenuItemFileName(obj);
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    Utility.Configuration.Settings.DelMruFile(fileName);
+                    this.UpdateMRUDisplay();
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -676,15 +697,23 @@
         /// <param name="args">Event parameters.</param>
         private void OnClear(object obj, EventArgs args)
         {
-            if (this.AskQuestion("Are you sure you want to completely clear the list of recently used files?") == QuestionResponseEnum.Yes)
+            try
             {
-                string[] mruFiles = Configuration.Settings.MruList.Select(f => f.FileName).ToArray();
-                foreach (string fileName in mruFiles)
+                if (this.AskQuestion("Are you sure you want to completely clear the list of recently used files?") == QuestionResponseEnum.Yes)
                 {
-                    Utility.Configuration.Settings.DelMruFile(fileName);
+                    string[] mruFiles = Configuration.Settings.MruList.Select(f => f.FileName).ToArray();
+                    foreach (string fileName in mruFiles)
+                    {
+                        Utility.Configuration.Settings.DelMruFile(fileName);
+                    }
+
+                    this.UpdateMRUDisplay();
                 }
 
-                this.UpdateMRUDisplay();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -695,23 +724,30 @@
         /// <param name="args">Event parameters.</param>
         private void OnRename(object obj, EventArgs args)
         {
-            string fileName = this.view.GetMenuItemFileName(obj);
-            if (!string.IsNullOrEmpty(fileName))
+            try
             {
-                string newName = this.AskUserForSaveFileName("ApsimX files|*.apsimx", fileName);
-                if (!string.IsNullOrEmpty(newName) && newName != fileName)
+                string fileName = this.view.GetMenuItemFileName(obj);
+                if (!string.IsNullOrEmpty(fileName))
                 {
-                    try
+                    string newName = this.AskUserForSaveFileName("ApsimX files|*.apsimx", fileName);
+                    if (!string.IsNullOrEmpty(newName) && newName != fileName)
                     {
-                        File.Move(fileName, newName);
-                        Utility.Configuration.Settings.RenameMruFile(fileName, newName);
-                        this.UpdateMRUDisplay();
-                    }
-                    catch (Exception e)
-                    {
-                        ShowError(new Exception("Error renaming file!", e));
+                        try
+                        {
+                            File.Move(fileName, newName);
+                            Utility.Configuration.Settings.RenameMruFile(fileName, newName);
+                            this.UpdateMRUDisplay();
+                        }
+                        catch (Exception e)
+                        {
+                            ShowError(new Exception("Error renaming file!", e));
+                        }
                     }
                 }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -722,25 +758,32 @@
         /// <param name="args">Event parameters.</param>
         private void OnCopy(object obj, EventArgs args)
         {
-            string fileName = this.view.GetMenuItemFileName(obj);
-            if (!string.IsNullOrEmpty(fileName))
+            try
             {
-                string newFileName = "Copy of " + Path.GetFileName(fileName);
-                string newFilePath = Path.Combine(Path.GetDirectoryName(fileName), newFileName);
-                string copyName = this.AskUserForSaveFileName("ApsimX files|*.apsimx", newFilePath);
-                if (!string.IsNullOrEmpty(copyName))
+                string fileName = this.view.GetMenuItemFileName(obj);
+                if (!string.IsNullOrEmpty(fileName))
                 {
-                    try
+                    string newFileName = "Copy of " + Path.GetFileName(fileName);
+                    string newFilePath = Path.Combine(Path.GetDirectoryName(fileName), newFileName);
+                    string copyName = this.AskUserForSaveFileName("ApsimX files|*.apsimx", newFilePath);
+                    if (!string.IsNullOrEmpty(copyName))
                     {
-                        File.Copy(fileName, copyName);
-                        Configuration.Settings.AddMruFile(new ApsimFileMetadata(copyName));
-                        this.UpdateMRUDisplay();
-                    }
-                    catch (Exception e)
-                    {
-                        ShowError(new Exception("Error creating copy of file!", e));
+                        try
+                        {
+                            File.Copy(fileName, copyName);
+                            Configuration.Settings.AddMruFile(new ApsimFileMetadata(copyName));
+                            this.UpdateMRUDisplay();
+                        }
+                        catch (Exception e)
+                        {
+                            ShowError(new Exception("Error creating copy of file!", e));
+                        }
                     }
                 }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -751,22 +794,29 @@
         /// <param name="args">Event parameters.</param>
         private void OnDelete(object obj, EventArgs args)
         {
-            string fileName = this.view.GetMenuItemFileName(obj);
-            if (!string.IsNullOrEmpty(fileName))
+            try
             {
-                if (this.AskQuestion("Are you sure you want to completely delete the file " + StringUtilities.PangoString(fileName) + "?") == QuestionResponseEnum.Yes)
+                string fileName = this.view.GetMenuItemFileName(obj);
+                if (!string.IsNullOrEmpty(fileName))
                 {
-                    try
+                    if (this.AskQuestion("Are you sure you want to completely delete the file " + StringUtilities.PangoString(fileName) + "?") == QuestionResponseEnum.Yes)
                     {
-                        File.Delete(fileName);
-                        Utility.Configuration.Settings.DelMruFile(fileName);
-                        this.UpdateMRUDisplay();
-                    }
-                    catch (Exception e)
-                    {
-                        ShowError(new Exception("Error deleting file!", e));
+                        try
+                        {
+                            File.Delete(fileName);
+                            Utility.Configuration.Settings.DelMruFile(fileName);
+                            this.UpdateMRUDisplay();
+                        }
+                        catch (Exception e)
+                        {
+                            ShowError(new Exception("Error deleting file!", e));
+                        }
                     }
                 }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -883,12 +933,19 @@
         /// <param name="e">Event parameters.</param>
         private void OnOpenApsimXFile(object sender, EventArgs e)
         {
-            string fileName = this.AskUserForOpenFileName("*.apsimx|*.apsimx");
-            if (fileName != null)
+            try
             {
-                bool onLeftTabControl = this.view.IsControlOnLeft(sender);
-                OpenApsimXFileInTab(fileName, onLeftTabControl);
-                Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
+                string fileName = this.AskUserForOpenFileName("*.apsimx|*.apsimx");
+                if (fileName != null)
+                {
+                    bool onLeftTabControl = this.view.IsControlOnLeft(sender);
+                    OpenApsimXFileInTab(fileName, onLeftTabControl);
+                    Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -899,12 +956,19 @@
         /// <param name="e">Event arguments.</param>
         private void OnFileDoubleClicked(object sender, EventArgs e)
         {
-            bool onLeftTabControl = this.view.IsControlOnLeft(sender);
-            string fileName = onLeftTabControl ? this.view.StartPage1.List.SelectedValue : this.view.StartPage2.List.SelectedValue;
-            if (fileName != null)
+            try
             {
-                OpenApsimXFileInTab(fileName, onLeftTabControl);
-                Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
+                bool onLeftTabControl = this.view.IsControlOnLeft(sender);
+                string fileName = onLeftTabControl ? this.view.StartPage1.List.SelectedValue : this.view.StartPage2.List.SelectedValue;
+                if (fileName != null)
+                {
+                    OpenApsimXFileInTab(fileName, onLeftTabControl);
+                    Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -955,10 +1019,17 @@
         /// <param name="e">Event arguments.</param>
         private void OnManagementToolboxClick(object sender, EventArgs e)
         {
-            Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.Toolboxes.ManagementToolbox.apsimx");
-            StreamReader streamReader = new StreamReader(s);
-            bool onLeftTabControl = this.view.IsControlOnLeft(sender);
-            this.OpenApsimXFromMemoryInTab("Management toolbox", streamReader.ReadToEnd(), onLeftTabControl);
+            try
+            {
+                Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.Toolboxes.ManagementToolbox.apsimx");
+                StreamReader streamReader = new StreamReader(s);
+                bool onLeftTabControl = this.view.IsControlOnLeft(sender);
+                this.OpenApsimXFromMemoryInTab("Management toolbox", streamReader.ReadToEnd(), onLeftTabControl);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -977,12 +1048,6 @@
             }
             catch (Exception err)
             {
-                string message = err.Message;
-                if (err.InnerException != null)
-                {
-                    message += "\r\n" + err.InnerException.Message;
-                }
-
                 ShowError(err);
             }
         }
@@ -1038,14 +1103,20 @@
         /// <param name="e">Event Arguments.</param>
         public void OnViewCloudJobs(object sender, EventArgs e)
         {
-            bool onLeftTabControl = view.IsControlOnLeft(sender);            
-            // Clear the message window
-            view.ShowMessage(" ", Simulation.ErrorLevel.Information);
-            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-                CreateNewTab("View Cloud Jobs", null, onLeftTabControl, "UserInterface.Views.CloudJobView", "UserInterface.Presenters.CloudJobPresenter");
-            else
-                ShowError("Microsoft Azure functionality is currently only available under Windows.");
-            
+            try
+            {
+                bool onLeftTabControl = view.IsControlOnLeft(sender);
+                // Clear the message window
+                view.ShowMessage(" ", Simulation.ErrorLevel.Information);
+                if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+                    CreateNewTab("View Cloud Jobs", null, onLeftTabControl, "UserInterface.Views.CloudJobView", "UserInterface.Presenters.CloudJobPresenter");
+                else
+                    ShowError("Microsoft Azure functionality is currently only available under Windows.");
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -1100,31 +1171,38 @@
         /// <param name="e">Event arguments.</param>
         private void OnExample(object sender, EventArgs e)
         {
-            string initialPath;
-
-            if ((this.lastExamplesPath != null) && (this.lastExamplesPath.Length > 0) && Directory.Exists(this.lastExamplesPath))
+            try
             {
-                initialPath = this.lastExamplesPath; // use the last used path in this session
+                string initialPath;
+
+                if ((this.lastExamplesPath != null) && (this.lastExamplesPath.Length > 0) && Directory.Exists(this.lastExamplesPath))
+                {
+                    initialPath = this.lastExamplesPath; // use the last used path in this session
+                }
+                else
+                {
+                    // use an examples directory relative to this assembly
+                    initialPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                    initialPath = Path.GetFullPath(Path.Combine(initialPath, "..", "Examples"));
+                }
+
+                string fileName = this.AskUserForOpenFileName("*.apsimx|*.apsimx", initialPath);
+
+                if (fileName != null)
+                {
+                    this.lastExamplesPath = Path.GetDirectoryName(fileName);
+
+                    // ensure that they are saved in another file before running by opening them in memory
+                    StreamReader reader = new StreamReader(fileName);
+                    bool onLeftTabControl = this.view.IsControlOnLeft(sender);
+                    string label = Path.GetFileNameWithoutExtension(fileName) + " (example)";
+                    this.OpenApsimXFromMemoryInTab(label, reader.ReadToEnd(), onLeftTabControl);
+                    reader.Close();
+                }
             }
-            else
+            catch (Exception err)
             {
-                // use an examples directory relative to this assembly
-                initialPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-                initialPath = Path.GetFullPath(Path.Combine(initialPath, "..", "Examples"));
-            }
-
-            string fileName = this.AskUserForOpenFileName("*.apsimx|*.apsimx", initialPath);
-
-            if (fileName != null)
-            {
-                this.lastExamplesPath = Path.GetDirectoryName(fileName);
-
-                // ensure that they are saved in another file before running by opening them in memory
-                StreamReader reader = new StreamReader(fileName);
-                bool onLeftTabControl = this.view.IsControlOnLeft(sender);
-                string label = Path.GetFileNameWithoutExtension(fileName) + " (example)";
-                this.OpenApsimXFromMemoryInTab(label, reader.ReadToEnd(), onLeftTabControl);
-                reader.Close();
+                ShowError(err);
             }
         }
 
