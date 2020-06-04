@@ -774,7 +774,6 @@
                 progressBar.Visible = false;
                 stopButton.Visible = false;
             });
-            while (GLib.MainContext.Iteration()) ;
         }
 
         /// <summary>
