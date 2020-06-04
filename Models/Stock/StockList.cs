@@ -1617,6 +1617,11 @@
                     }
                 }
 
+                // ensure lactating sheep have young. Cattle can be purchased lactating with no calf
+                if ((animalInfo.Lact > 0) && (newGroup.Animal == GrazType.AnimalType.Sheep)) 
+                    animalInfo.NYoung = Math.Max(1, animalInfo.NYoung);
+
+                // females will be empty to this point
                 if (newGroup.ReproState == GrazType.ReproType.Empty)
                 {
                     // Use TAnimalGroup's property interface to set up pregnancy and lactation.  
@@ -1641,11 +1646,11 @@
                             if ((animalInfo.Lact > 0) && (newGroup.Animal == GrazType.AnimalType.Cattle))
                             {
                                 newGroup.NoOffspring = 1;
-                                newGroup.NoFoetuses = Math.Min(2, Math.Max(0, animalInfo.NYoung - 1));
+                                newGroup.NoFoetuses = Math.Min(2, Math.Max(0, animalInfo.NYoung - 1));  // recalculates livewt and sets ReproState
                             }
                             else
                             {
-                                newGroup.NoFoetuses = Math.Min(3, animalInfo.NYoung);                 // recalculates livewt
+                                newGroup.NoFoetuses = Math.Min(3, animalInfo.NYoung);                   // recalculates livewt and sets ReproState
                             }
                         }
                         else
@@ -2293,8 +2298,8 @@
                     purchaseInfo.Preg = stockInfo.Pregnant;
                     purchaseInfo.Lact = stockInfo.Lactating;
                     purchaseInfo.NYoung = stockInfo.NumYoung;
-                    if ((purchaseInfo.Preg > 0) || (purchaseInfo.Lact > 0))
-                        purchaseInfo.NYoung = Math.Max(1, purchaseInfo.NYoung);
+                    if (purchaseInfo.Preg > 0) 
+                        purchaseInfo.NYoung = Math.Max(1, purchaseInfo.NYoung);                                 // ensure a foetus. Take care of lactation in model.Buy()
                     purchaseInfo.YoungWt = stockInfo.YoungWt;
                     if ((purchaseInfo.Lact == 0) || (purchaseInfo.YoungWt == 0.0))                              // Can't use MISSING as default owing    
                         purchaseInfo.YoungWt = StdMath.DMISSING;                                                // to double-to-single conversion      
