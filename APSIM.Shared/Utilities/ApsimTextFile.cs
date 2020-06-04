@@ -146,8 +146,8 @@ namespace APSIM.Shared.Utilities
             _FileName = fileName;
             _SheetName = sheetName;
 
-            IsCSVFile = System.IO.Path.GetExtension(fileName).ToLower() == ".csv";
-            IsExcelFile = System.IO.Path.GetExtension(fileName).ToLower() == ExcelUtilities.ExcelExtension;
+            IsCSVFile = Path.GetExtension(fileName).ToLower() == ".csv";
+            IsExcelFile = ExcelUtilities.IsExcelFile(fileName);
 
             if (IsExcelFile)
             {
