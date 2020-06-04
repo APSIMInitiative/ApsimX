@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 96,
+  "Version": 101,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -900,6 +900,9 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.AirTemperatureFunction, Models",
+                      "SubDailyTemperatures": null,
+                      "SubDailyResponse": null,
+                      "agregationMethod": 0,
                       "Name": "FRGRFunctionTemp",
                       "Children": [
                         {
@@ -916,9 +919,18 @@
                             1.0,
                             0.0
                           ],
-                          "Name": "XYPairs",
+                          "Name": "TemperatureResponse",
                           "Children": [],
                           "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.ThreeHourSin, Models",
+                          "TempRangeFactors": null,
+                          "Name": "InterpolationMethod",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -3257,6 +3269,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "HamakuapokoBase",
               "Children": [
                 {
@@ -4352,8 +4365,8 @@
                       "Type": 3,
                       "Title": null,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
+                      "Minimum": 1980.0,
+                      "Maximum": 2000.0,
                       "Interval": 1.0,
                       "DateTimeAxis": false,
                       "CrossesAtZero": false
@@ -4385,7 +4398,7 @@
                       "FactorToVaryColours": null,
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
-                      "Marker": 11,
+                      "Marker": 0,
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
@@ -4636,6 +4649,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "GuadeloupeBase",
               "Children": [
                 {
@@ -5285,6 +5299,26 @@
                         }
                       ],
                       "Name": "CuttingManagement",
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Report, Models",
+                      "VariableNames": [
+                        "[Clock].Today",
+                        "[Clock].Today.Year",
+                        "[Gliricidia].Age",
+                        "[Gliricidia].LAI",
+                        "sum of [CuttingManagement].Script.TotalRemovalWt from 1-Jan to 31-Dec as AnnualTotalRemovalWt",
+                        "sum of [Gliricidia].Nodule.NFixed from 1-Jan to 31-Dec as NFixedAnnualgpm2"
+                      ],
+                      "EventNames": [
+                        "[Clock].EndOfYear"
+                      ],
+                      "GroupByVariableName": null,
+                      "Name": "GlircidiaAnnualOutput",
+                      "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
@@ -6359,7 +6393,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": 1.0,
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     },
                     {
@@ -6385,8 +6419,8 @@
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
-                      "ColourArgb": -16777216,
-                      "FactorToVaryColours": null,
+                      "ColourArgb": -1663232,
+                      "FactorToVaryColours": "Harvest",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 11,
@@ -6567,6 +6601,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "GuadeloupeGodetBase",
               "Children": [
                 {
@@ -7302,6 +7337,26 @@
                         }
                       ],
                       "Name": "CuttingManagement",
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Report, Models",
+                      "VariableNames": [
+                        "[Clock].Today",
+                        "[Clock].Today.Year",
+                        "[Gliricidia].Age",
+                        "[Gliricidia].LAI",
+                        "sum of [CuttingManagement].Script.TotalRemovalWt from 1-Jan to 31-Dec as AnnualTotalRemovalWt",
+                        "sum of [Gliricidia].Nodule.NFixed from 1-Jan to 31-Dec as NFixedAnnualgpm2"
+                      ],
+                      "EventNames": [
+                        "[Clock].EndOfYear"
+                      ],
+                      "GroupByVariableName": null,
+                      "Name": "GlircidiaAnnualOutput",
+                      "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
@@ -8376,7 +8431,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": 1.0,
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     },
                     {
@@ -8402,8 +8457,8 @@
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
-                      "ColourArgb": -16777216,
-                      "FactorToVaryColours": null,
+                      "ColourArgb": -1663232,
+                      "FactorToVaryColours": "Harvest",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 11,
@@ -9204,6 +9259,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "MakokaBase",
               "Children": [
                 {
@@ -12605,6 +12661,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "MakokaStripCrop",
               "Children": [
                 {
@@ -14066,6 +14123,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "MakokaSoleCrop",
               "Children": [
                 {
@@ -14835,6 +14893,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "MakokaSoleCropFertilised",
               "Children": [
                 {
@@ -29856,6 +29915,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
                   "Name": "GuatemalaTransect",
                   "Children": [
                     {
@@ -49863,6 +49923,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
                   "Name": "Rwanda Transect",
                   "Children": [
                     {
@@ -53063,6 +53124,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
                   "Name": "MakokaDugumaBase",
                   "Children": [
                     {
