@@ -474,12 +474,18 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\Stics.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SimulationStats.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Draft.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Grapevine.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\HourlySinPpAdjusted.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\ThreeHourSin.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\GenotypeCross.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RelationshipTracker.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CalcCAMPVrnRates.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\FinalLeafNumberSet.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\VernalisationPhase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CAMP.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\MigrantDestinationPhase.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\ProgenyDestinationPhase.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Infestation.png" />

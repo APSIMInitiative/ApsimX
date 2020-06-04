@@ -626,22 +626,25 @@
         /// <summary>
         /// Force emergence on the date called if emergence has not occured already
         /// </summary>
-        public void ForceEmergence()
+        public void SetEmergenceDate(string emergencedate)
         {
             foreach (EmergingPhase ep in Apsim.ChildrenRecursively(this, typeof(EmergingPhase)))
-            {
-                ep.ForceEmergence();
-            }
+                {
+                    ep.EmergenceDate=emergencedate;
+                }
+            SetGerminationDate(SowingDate.ToString("d-MMM"));
         }
 
         /// <summary>
         /// Force germination on the date called if germination has not occured already
         /// </summary>
-        public void ForceGermination()
+        public void SetGerminationDate(string germinationdate)
         {
-            foreach (GerminatingPhase gp in Apsim.ChildrenRecursively(this, typeof(GerminatingPhase)))
             {
-                gp.ForceGermination();
+                foreach (GerminatingPhase gp in Apsim.ChildrenRecursively(this, typeof(GerminatingPhase)))
+                {
+                    gp.GerminationDate = germinationdate;
+                }
             }
         }
 

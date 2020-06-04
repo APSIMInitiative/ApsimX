@@ -94,6 +94,11 @@
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public int NumJobs { get { return 0; } }
+
+        /// <summary>
         /// Add rows to a table in the db file. Note that the data isn't written immediately.
         /// </summary>
         /// <param name="data">Name of simulation the values correspond to.</param>

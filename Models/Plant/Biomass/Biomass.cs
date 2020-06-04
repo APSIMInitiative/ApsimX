@@ -218,6 +218,7 @@ namespace Models.PMF
             _StructuralN = from.StructuralN;
             _StorageN = from.StorageN;
             _MetabolicN = from.MetabolicN;
+            _DMDOfStructural = from.DMDOfStructural;
         }
 
         /// <summary>Clears this instance.</summary>
@@ -252,6 +253,7 @@ namespace Models.PMF
             _DMDOfStructural = MathUtilities.Divide(_DMDOfStructural * _StructuralWt - a._DMDOfStructural * a._StructuralWt
                                                     , _StructuralWt - a._StructuralWt
                                                     , 0);
+            _DMDOfStructural = Math.Max(_DMDOfStructural, 0);
             _StructuralWt -= a._StructuralWt;
             _StorageWt -= a._StorageWt;
             _MetabolicWt -= a._MetabolicWt;
@@ -270,6 +272,7 @@ namespace Models.PMF
             _StorageN *= scalar;
             _MetabolicN *= scalar;
             _DMDOfStructural *= scalar;
+            _DMDOfStructural = Math.Max(_DMDOfStructural, 0);
         }
         /// <summary>Sets to.</summary>
         /// <param name="a">a.</param>
@@ -317,11 +320,10 @@ namespace Models.PMF
                 StructuralN = a.StructuralN - b.StructuralN,
                 StorageN = a.StorageN - b.StorageN,
                 MetabolicN = a.MetabolicN - b.MetabolicN,
-                DMDOfStructural = MathUtilities.Divide(a.DMDOfStructural * a.StructuralWt - b.DMDOfStructural * b.StructuralWt
-                                                       , a.StructuralWt - b.StructuralWt
-                                                       , 0)
+                DMDOfStructural = Math.Max(0, MathUtilities.Divide(a.DMDOfStructural * a.StructuralWt - b.DMDOfStructural * b.StructuralWt
+                                                                 , a.StructuralWt - b.StructuralWt
+                                                                 , 0))
             };
-
         }
         /// <summary>Implements the operator *.</summary>
         /// <param name="a">a.</param>
@@ -337,7 +339,7 @@ namespace Models.PMF
                 StructuralN = a.StructuralN * Fraction,
                 StorageN = a.StorageN * Fraction,
                 MetabolicN = a.MetabolicN * Fraction,
-                DMDOfStructural = a.DMDOfStructural * Fraction
+                DMDOfStructural = Math.Max(0, a.DMDOfStructural * Fraction)
             };
         }
     }

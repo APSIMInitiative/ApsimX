@@ -107,6 +107,24 @@ namespace Models.Core
             }
         }
 
+        /// <summary>
+        /// Returns the job's progress as a real number in range [0, 1].
+        /// </summary>
+        public double Progress
+        {
+            get
+            {
+                Clock c = Apsim.Child(this, typeof(Clock)) as Clock;
+                if (c == null)
+                    return 0;
+                else
+                    return c.FractionComplete;
+            }
+        }
+
+        /// <summary>Is the simulation running?</summary>
+        public bool IsRunning { get; private set; } = false;
+
         /// <summary>A list of keyword/value meta data descriptors for this simulation.</summary>
         [JsonIgnore]
         public List<SimulationDescription.Descriptor> Descriptors { get; set; }
@@ -191,6 +209,8 @@ namespace Models.Core
         /// <param name="cancelToken">Is cancellation pending?</param>
         public void Run(CancellationTokenSource cancelToken = null)
         {
+            IsRunning = true;
+
             // If the cancelToken is null then give it a default one. This can happen 
             // when called from the unit tests.
             if (cancelToken == null)
@@ -213,10 +233,17 @@ namespace Models.Core
 
             if (Services == null || Services.Count < 1)
             {
-                Services = new List<object>();
-                IDataStore storage = Apsim.Find(this, typeof(IDataStore)) as IDataStore;
-                if (storage != null)
-                    Services.Add(Apsim.Find(this, typeof(IDataStore)));
+                var simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                if (simulations != null)
+                    Services = simulations.GetServices();
+                else
+                {
+                    Services = new List<object>();
+                    IDataStore storage = Apsim.Find(this, typeof(IDataStore)) as IDataStore;
+                    if (storage != null)
+                        Services.Add(Apsim.Find(this, typeof(IDataStore)));
+                    Services.Add(new ScriptCompiler());
+                }
             }
 
             var links = new Links(Services);
@@ -258,6 +285,8 @@ namespace Models.Core
 
                 // Unresolve all links.
                 links.Unresolve(this, true);
+
+                IsRunning = false;
             }
         }
 
@@ -269,19 +298,6 @@ namespace Models.Core
         {
             model.Children.RemoveAll(child => !child.Enabled);
             model.Children.ForEach(child => RemoveDisabledModels(child));
-        }
-
-        /// <summary>Gets the simulation fraction complete.</summary>
-        public double FractionComplete
-        {
-            get
-            {
-                Clock c = Apsim.Child(this, typeof(Clock)) as Clock;
-                if (c == null)
-                    return 0;
-                else
-                    return c.FractionComplete;
-            }
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
