@@ -58,15 +58,7 @@
         /// <returns>The path</returns>
         public static string FullPath(IModel model)
         {
-            string fullPath = "." + model.Name;
-            IModel parent = model.Parent;
-            while (parent != null)
-            {
-                fullPath = fullPath.Insert(0, "." + parent.Name);
-                parent = parent.Parent;
-            }
-
-            return fullPath;
+            return model.FullPath;
         }
 
         /// <summary>
