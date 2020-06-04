@@ -1,13 +1,13 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 281,
-  "Version": 100,
+  "Version": 101,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
       "$type": "Models.Memo, Models",
-      "Text": "\r\n# The APSIM Grapevine Model\r\n\r\nZHU, J., Brown, H.E., Parker, A.K.,Trought, M.C.T.\r\n\r\n##Building the model.\r\nThe APSIM Grapevine model has been adapted from the potato model [Brown_etal_2011] and developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.\r\n\r\nThe model consists of:\r\n* a phenology model to simulate development between growth phases   \r\n* a structure model to simulate plant morphology  \r\n* a collection of organs to simulate the various plant parts  \r\n* an arbitrator to allocate resources (N, biomass) to the various plant organs  \r\n\r\n##Pecularities of Grapevine\r\nGrapevine is a challenging crop to model because it is a perennial woody plant. \r\nA budding phase was added for simulating the start of the vegetative phase. This budding phase was similar to the emergence phase for annual crop.\r\nThere are an enormous number of Grapevine cultivars and trainning systems. They differ in phenology and vegetative growth. \r\n\r\n##Including a Grapevine crop in an APSIM simulation\r\nTo indluce a Grapevine crop in a simulation the grapevine plant needs to be added to the vineyard, field or zone in which it is to be grown.  This can be done by right clicking on the vineyard, selecting Add from the drop down menu and then selecting Plant from the list that comes up.  \r\n###Setting plant density and bud number (budNumber number and early canopy growth)\r\nThe Grapevine Management script sets the number of stems that will appear from plant.  \r\n###Setting final leaf number (Crop duration)\r\nThe duration of a Grapevine crop is determined by the number of leaves that the mainstem produces and how long it takes for these to appear and seness.",
+      "Text": "\r\n# The APSIM Grapevine Model\r\n\r\n_ZHU, J., Parker, A.K.,Trought, M.C.T., Brown, H.E._\n\nPlant and Food Research, New Zealand\n\ncorrespondance: junqi.zhu@plantandfood.co.nz\n\n##Introduction\nGrapevine is one of the most economically important fruit crops worldwide (Alston and Sambucci, 2019), and its use in wine production has played an important cultural role in many parts of the world. Grapevines are now cultivated in more than 90 countries for wine, distilled liquors, juice, table grapes, and raisin production (Fereres and FAO OIV, 2016). Because of its global economic importance, the climate diversity of the producing regions, and a large amount of studies (from genomics to production practices), grapevine has emerged as a model perennial fruit crop species.\n\n##Objective\nThe model presented here was built to simulate the phenology,light interception, carbon allocation and storage, and yield formation of grapevine (Vitis vinifera) as a model perennial crop. \r\n\r\n##Model construction\n\r\nThe APSIM Grapevine model was developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.\r\n\nA series of development was taken to adapt the source code to simulate the perennial woody plants. The current model including the following features:\n\n• A row strip configuration to represent the vineyard setup.\n\n• An adopted strip light interception model to capture the canopy heterogeneous and to calculate the light interception by grapevine and inter-row cover crops\n\n• A new carbon allocation method to allocate the carbohydrate simultaneously based on sink strength as well as sink priority. The new method capture the dynamics in carbon storage in perennial organ as well.\n \n• An adapted phenology model which starts from endodormancy of the bud instead of emergence and reset to endodormancy by a management method (pruning) in winter to capture the perennial behaviour\n\n• Using bud number per vine as input in the “sowing” method (model initialization) and calculating the number of primary shoots per vine based on fraction of budburst as a function of bud number\n\n• An adopted strip water competition method to calculate water competition between grapevine and inter-row cover crops\n\r\n",
       "Name": "TitlePage",
       "Children": [],
       "IncludeInDocumentation": true,
@@ -87,6 +87,15 @@
               "Name": "Phenology",
               "Children": [
                 {
+                  "$type": "Models.Memo, Models",
+                  "Text": "The phenology model starts from endodormancy instead of emergence in annual crops. \n\nThe phenology model go through phases of Endodormancy,Ecodormancy,BudBurst,Flowering,FruitSet,Veraison, LeafFall. After one cycle, bud goes to dormancy at 314 days after winter solstice by the pruning method.\n\nSarvas (1974) separates bud dormancy in two periods: the \"rest\" period is defined as the period when buds are dormant due to physiological conditions (endodormancy), and the \"quiescence\" period is when buds remain dormant due to unfavourable environmental conditions (ecodormancy). \n\nThe current phenological models assume the Endodormancy starts when a critical photoperiod (~13.1h) is reached. The following developments was regulated by temperature. Ecodormancy is induced when the chilling requirement is satisfied, and then followed by a period with forcing temperatures till bud burst (Chuine et al., 2003).\r\n\r\n\r\n\r\n",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Functions.AirTemperatureFunction, Models",
                   "SubDailyTemperatures": null,
                   "SubDailyResponse": null,
@@ -116,28 +125,6 @@
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Memo, Models",
-                  "Text": "Dormancy sequence: Paradormancy (Apical dominance), Endodormancy(Chilling requirement), Ecodormancy (forcing unit)\r\nSarvas (1974) separates bud dormancy in two periods: the \"rest\" period is defined as the period when buds are dormant due to physiological conditions (endodormancy), and the \"quiescence\" period is when buds remain dormant due to unfavourable environmental conditions (ecodormancy). The current phenological models assume the dormancy starts at March 1st, and budburst is regulated by temperature. Ecodormancy is induced by a period with chilling temperatures, and then followed by a period with forcing temperatures till bud burst (Chuine et al., 2003).\r\n\r\nWe then simulated the time of flowering, fruitSet,veraison, leaf fall. After one cycle, bud goes to dormancy at March 1st. \r\n\r\nParadormancy, which is the suspension of growth caused by factors outside the meristem but within the plant. It is typically an influence of one organ over another, and includes an apical bud preventing outgrowth of a lower bud, which relates to apical dominance (see Martin 1987 for review).\r\n\r\n\r\n",
-                  "Name": "Memo",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.WangEngelTempFunction, Models",
-                  "MinTemp": 4.0,
-                  "OptTemp": 28.0,
-                  "MaxTemp": 40.0,
-                  "RefTemp": 25.0,
-                  "MaximumTemperatureWeighting": 0.5,
-                  "Name": "ThermalTime2",
-                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -459,6 +446,15 @@
                   "Name": "FruitSet",
                   "Children": [
                     {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Fruit set (or the proportion of flowers that are retained as berries) represents a change-over from the static condition of the fully developed flower to the rapidly growing condition of the young fruit (Coombe, 1962).\n\nIn practice the criteria to define this stage is a bit blur. In current, we set the duration from 50% flowering to fruit set is 10 thermal days based on our field experience and the method for determining berry number by meteorology factors. Fruit set phase is used as the time when the berry number is determined in this model.  \r\n\r\n\r\n\r\n",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 10.0,
                       "Units": null,
@@ -651,45 +647,6 @@
                     {
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 176.0,
-                      "Units": null,
-                      "Name": "PreEventValue",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Weather].DaysSinceWinterSolstice",
-                      "Name": "PostEventValue",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.OnEventFunction, Models",
-                  "SetEvent": "Veraison",
-                  "ReSetEvent": "Ecodormancy",
-                  "Name": "VeraisonDOY1",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "\r\nA function is used to provide flowering date as days after sowing(DAS).\r\n",
-                      "Name": "memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
                       "Units": null,
                       "Name": "PreEventValue",
                       "Children": [],
@@ -1188,162 +1145,33 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "LinearInterpolationFunction",
+                      "Name": "SeasonalHeightPattern",
                       "Children": [
                         {
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
-                            58.0
+                            90.0,
+                            230.0,
+                            320.0,
+                            361.0
                           ],
                           "Y": [
                             1200.0,
-                            2200.0
+                            1200.0,
+                            2300.0,
+                            2300.0,
+                            1200.0
                           ],
                           "Name": "XYPairs",
-                          "Children": [
-                            {
-                              "$type": "Models.Graph, Models",
-                              "Caption": null,
-                              "Axis": [
-                                {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 0,
-                                  "Title": "Y",
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": false,
-                                  "CrossesAtZero": false
-                                },
-                                {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 3,
-                                  "Title": "X",
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": false,
-                                  "CrossesAtZero": false
-                                }
-                              ],
-                              "LegendPosition": 3,
-                              "LegendOrientation": 0,
-                              "DisabledSeries": null,
-                              "LegendOutsideGraph": false,
-                              "Name": "Graph",
-                              "Children": [
-                                {
-                                  "$type": "Models.Series, Models",
-                                  "Type": 1,
-                                  "XAxis": 3,
-                                  "YAxis": 0,
-                                  "ColourArgb": -65536,
-                                  "FactorToVaryColours": null,
-                                  "FactorToVaryMarkers": null,
-                                  "FactorToVaryLines": null,
-                                  "Marker": 11,
-                                  "MarkerSize": 0,
-                                  "Line": 0,
-                                  "LineThickness": 0,
-                                  "TableName": null,
-                                  "XFieldName": ".Simulations.Replacements.Grapevine.Structure.HeightModel.LinearInterpolationFunction.XYPairs.X",
-                                  "YFieldName": ".Simulations.Replacements.Grapevine.Structure.HeightModel.LinearInterpolationFunction.XYPairs.Y",
-                                  "X2FieldName": "",
-                                  "Y2FieldName": "",
-                                  "ShowInLegend": false,
-                                  "IncludeSeriesNameInLegend": false,
-                                  "Cumulative": false,
-                                  "CumulativeX": false,
-                                  "Filter": null,
-                                  "Name": "Series",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Graph, Models",
-                              "Caption": null,
-                              "Axis": [
-                                {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 0,
-                                  "Title": "Y",
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": false,
-                                  "CrossesAtZero": false
-                                },
-                                {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 3,
-                                  "Title": "X",
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": false,
-                                  "CrossesAtZero": false
-                                }
-                              ],
-                              "LegendPosition": 3,
-                              "LegendOrientation": 0,
-                              "DisabledSeries": null,
-                              "LegendOutsideGraph": false,
-                              "Name": "Graph1",
-                              "Children": [
-                                {
-                                  "$type": "Models.Series, Models",
-                                  "Type": 1,
-                                  "XAxis": 3,
-                                  "YAxis": 0,
-                                  "ColourArgb": -65536,
-                                  "FactorToVaryColours": null,
-                                  "FactorToVaryMarkers": null,
-                                  "FactorToVaryLines": null,
-                                  "Marker": 11,
-                                  "MarkerSize": 0,
-                                  "Line": 0,
-                                  "LineThickness": 0,
-                                  "TableName": null,
-                                  "XFieldName": ".Simulations.Replacements.Grapevine.Structure.HeightModel.LinearInterpolationFunction.XYPairs.X",
-                                  "YFieldName": ".Simulations.Replacements.Grapevine.Structure.HeightModel.LinearInterpolationFunction.XYPairs.Y",
-                                  "X2FieldName": "",
-                                  "Y2FieldName": "",
-                                  "ShowInLegend": false,
-                                  "IncludeSeriesNameInLegend": false,
-                                  "Cumulative": false,
-                                  "CumulativeX": false,
-                                  "Filter": null,
-                                  "Name": "Series",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Grapevine].Phenology.AccumulatedEmergedTT",
+                          "VariableName": "[Weather].DaysSinceWinterSolstice",
                           "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1487,6 +1315,7 @@
               "Gsmax350": 0.01,
               "R50": 200.0,
               "LAI": 0.0,
+              "Depth": 0.0,
               "Width": 0.0,
               "FRGR": 0.0,
               "PotentialEP": 0.0,
@@ -1983,108 +1812,6 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "ExpansionStress",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            1.0
-                          ],
-                          "Y": [
-                            1.0,
-                            1.0
-                          ],
-                          "Name": "XYPairs",
-                          "Children": [
-                            {
-                              "$type": "Models.Graph, Models",
-                              "Caption": null,
-                              "Axis": [
-                                {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 0,
-                                  "Title": "Y",
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": false,
-                                  "CrossesAtZero": false
-                                },
-                                {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 3,
-                                  "Title": "X",
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": false,
-                                  "CrossesAtZero": false
-                                }
-                              ],
-                              "LegendPosition": 3,
-                              "LegendOrientation": 0,
-                              "DisabledSeries": [],
-                              "LegendOutsideGraph": false,
-                              "Name": "Graph",
-                              "Children": [
-                                {
-                                  "$type": "Models.Series, Models",
-                                  "Type": 1,
-                                  "XAxis": 3,
-                                  "YAxis": 0,
-                                  "ColourArgb": -65536,
-                                  "FactorToVaryColours": null,
-                                  "FactorToVaryMarkers": null,
-                                  "FactorToVaryLines": null,
-                                  "Marker": 11,
-                                  "MarkerSize": 0,
-                                  "Line": 0,
-                                  "LineThickness": 0,
-                                  "TableName": null,
-                                  "XFieldName": ".Simulations.Replacements.Grapevine.Leaf.CohortParameters.ExpansionStress.XYPairs.X",
-                                  "YFieldName": ".Simulations.Replacements.Grapevine.Leaf.CohortParameters.ExpansionStress.XYPairs.Y",
-                                  "X2FieldName": "",
-                                  "Y2FieldName": "",
-                                  "ShowInLegend": false,
-                                  "IncludeSeriesNameInLegend": false,
-                                  "Cumulative": false,
-                                  "CumulativeX": false,
-                                  "Filter": null,
-                                  "Name": "Series",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Grapevine].Leaf.Fw",
-                          "Name": "XValue",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 0.03,
                       "Units": "g/g",
@@ -2271,6 +1998,16 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "ExpansionStress",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -2430,42 +2167,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "FW",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            1.0,
-                            1.5
-                          ],
-                          "Y": [
-                            1.0,
-                            1.0,
-                            1.0
-                          ],
-                          "Name": "XYPairs",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].Fw",
-                          "Name": "XValue",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
                       "Name": "FVPD",
                       "Children": [
                         {
@@ -2501,9 +2202,60 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].RadIntTot",
+                      "$type": "Models.Functions.PhaseLookup, Models",
                       "Name": "RadnInt",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "Start": "Endodormancy",
+                          "End": "BudBurst",
+                          "Name": "BefBudburst",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.001,
+                              "Units": "MJ",
+                              "Name": "Constant",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "Start": "BudBurst",
+                          "End": "LeafFall",
+                          "Name": "AftBudBurst",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].RadIntTot",
+                              "Name": "RadnInt",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "FW",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -2565,7 +2317,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.5,
+                      "FixedValue": 0.6,
                       "Units": null,
                       "Name": "Constant",
                       "Children": [],
@@ -2770,6 +2522,95 @@
                             400.0,
                             400.0,
                             100.0
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Weather].DaysSinceWinterSolstice",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "AgeFactor",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            5.0,
+                            10.0,
+                            20.0
+                          ],
+                          "Y": [
+                            0.4,
+                            1.0,
+                            1.0,
+                            1.0
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].Age.Years",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "DepthFunction",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "SeasonalDepthPattern",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            90.0,
+                            230.0,
+                            310.0,
+                            314.0,
+                            365.0
+                          ],
+                          "Y": [
+                            1.0,
+                            1.0,
+                            1100.0,
+                            1100.0,
+                            1.0,
+                            1.0
                           ],
                           "Name": "XYPairs",
                           "Children": [],
@@ -6995,7 +6836,7 @@
                     },
                     {
                       "$type": "Models.Functions.OnEventFunction, Models",
-                      "SetEvent": "Flowering",
+                      "SetEvent": "FruitSet",
                       "ReSetEvent": "BudBurst",
                       "Name": "BerryNum",
                       "Children": [
@@ -8035,44 +7876,76 @@
                   "Name": "DMDemandFunction",
                   "Children": [
                     {
-                      "$type": "Models.Functions.DeltaFunction, Models",
-                      "StartStageName": null,
-                      "Name": "DeltaFunction",
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "Flowering",
+                      "End": "FruitSet",
+                      "Name": "BeforeFruitSet",
                       "Children": [
                         {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "Integral",
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1.0,
+                          "Units": null,
+                          "Name": "Constant",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "FruitSet",
+                      "End": "LeafFall",
+                      "Name": "AfterFruitSet",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.DeltaFunction, Models",
+                          "StartStageName": null,
+                          "Name": "DeltaFunction",
                           "Children": [
                             {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Berry].NumberFunction",
-                              "Name": "BerryNumber",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.BetaGrowthFunction, Models",
-                              "tm": 53.4,
-                              "te": 79.8,
-                              "Name": "BetaGrowthFunction",
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "Integral",
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.5529,
-                                  "Units": "g",
-                                  "Name": "Ymax",
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Berry].NumberFunction",
+                                  "Name": "BerryNumber",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Berry].ThermalTimeAfterFlowering",
-                                  "Name": "XValue",
-                                  "Children": [],
+                                  "$type": "Models.Functions.BetaGrowthFunction, Models",
+                                  "tm": 53.4,
+                                  "te": 79.8,
+                                  "Name": "BetaGrowthFunction",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 0.5529,
+                                      "Units": "g",
+                                      "Name": "Ymax",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Berry].ThermalTimeAfterFlowering",
+                                      "Name": "XValue",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
