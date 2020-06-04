@@ -45,7 +45,7 @@ namespace APSIM.Shared.Utilities
         public static bool IsExcelFile(string fileName)
         {
             string extension = Path.GetExtension(fileName).ToLower();
-            return openXmlExtensions.Contains(fileName) || oldExcelFormats.Contains(fileName);
+            return openXmlExtensions.Contains(extension) || oldExcelFormats.Contains(extension);
         }
 
         /// <summary>
