@@ -5,7 +5,6 @@
     using System.Data;
     using System.Drawing;
     using System.Globalization;
-    using System.IO;
     using System.Text;
     using APSIM.Shared.Utilities;
     using Models;
@@ -88,7 +87,7 @@
         {
             if (this.weatherData.FullFileName != PathUtilities.GetAbsolutePath(fileName, this.explorerPresenter.ApsimXFile.FileName))
             {
-                if (Path.GetExtension(fileName) == ExcelUtilities.ExcelExtension)
+                if (ExcelUtilities.IsExcelFile(fileName))
                 {
                     //// Extend height of Browse Panel to show Drop Down for Sheet names
                     this.weatherDataView.ShowExcelSheets(true);
@@ -183,7 +182,7 @@
                 this.weatherDataView.Filename = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
                 try
                 {
-                    if (Path.GetExtension(filename) == ExcelUtilities.ExcelExtension)
+                    if (ExcelUtilities.IsExcelFile(filename))
                     {
                         // Extend height of Browse Panel to show Drop Down for Sheet names
                         this.weatherDataView.ShowExcelSheets(true);
