@@ -43,7 +43,7 @@
         },
         {
           "$type": "Models.Weather, Models",
-          "FileName": "C:\\APSIMX\\Examples\\WeatherFiles\\Makoka.met",
+          "FileName": "%root%\\Examples\\WeatherFiles\\Makoka.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "Children": [],
