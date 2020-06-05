@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
 using Models.PMF.Interfaces;
 using System;
 
@@ -26,6 +27,7 @@ namespace Models.PMF.Arbitrator
                         double RelativeSupply = BAT.RetranslocationSupply[i] / BAT.TotalRetranslocationSupply;
                         BAT.Retranslocation[i] += BiomassRetranslocated * RelativeSupply;
                     }
+                BAT.TotalRetranslocation = MathUtilities.Sum(BAT.Retranslocation);
             }
         }
     }
