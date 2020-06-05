@@ -1251,8 +1251,8 @@
                         0.0,
                         90.0,
                         230.0,
-                        313.0,
-                        314.0,
+                        315.0,
+                        316.0,
                         366.0
                       ],
                       "Y": [
@@ -2656,10 +2656,43 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].Height",
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
                   "Name": "DepthFunction",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        90.0,
+                        230.0,
+                        313.0,
+                        314.0,
+                        366.0
+                      ],
+                      "Y": [
+                        1.0,
+                        1.0,
+                        1100.0,
+                        1100.0,
+                        1.0,
+                        1.0
+                      ],
+                      "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Weather].DaysSinceWinterSolstice",
+                      "Name": "XValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -6611,6 +6644,15 @@
                           "Name": "PostEventValue",
                           "Children": [
                             {
+                              "$type": "Models.Memo, Models",
+                              "Text": "Try to ignor the first year, which give TmaxIni 0",
+                              "Name": "Memo",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
                               "$type": "Models.Functions.AddFunction, Models",
                               "Name": "MetFun",
                               "Children": [
@@ -6625,36 +6667,74 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                  "$type": "Models.Functions.LessThanFunction, Models",
                                   "Name": "TmaxIni",
                                   "Children": [
                                     {
-                                      "$type": "Models.Functions.XYPairs, Models",
-                                      "X": [
-                                        0.0,
-                                        1.0,
-                                        10.0,
-                                        20.0,
-                                        30.0
-                                      ],
-                                      "Y": [
-                                        0.0,
-                                        0.08024,
-                                        0.8024,
-                                        1.6048,
-                                        2.5
-                                      ],
-                                      "Name": "XYPairs",
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Berry].MetFactors.BUN_TmaxIni1",
+                                      "Name": "XValue",
                                       "Children": [],
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Berry].MetFactors.BUN_TmaxIni1",
-                                      "Name": "XValue",
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 10.0,
+                                      "Units": null,
+                                      "Name": "Constant",
                                       "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 21.0,
+                                      "Units": null,
+                                      "Name": "PreValue",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                      "Name": "TmaxIni",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.XYPairs, Models",
+                                          "X": [
+                                            0.0,
+                                            1.0,
+                                            10.0,
+                                            20.0,
+                                            30.0
+                                          ],
+                                          "Y": [
+                                            0.0,
+                                            0.08024,
+                                            0.8024,
+                                            1.6048,
+                                            2.5
+                                          ],
+                                          "Name": "XYPairs",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Berry].MetFactors.BUN_TmaxIni1",
+                                          "Name": "XValue",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -6665,36 +6745,74 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                  "$type": "Models.Functions.LessThanFunction, Models",
                                   "Name": "RadIni",
                                   "Children": [
                                     {
-                                      "$type": "Models.Functions.XYPairs, Models",
-                                      "X": [
-                                        0.0,
-                                        1.0,
-                                        10.0,
-                                        20.0,
-                                        30.0
-                                      ],
-                                      "Y": [
-                                        0.0,
-                                        0.03093,
-                                        0.3093,
-                                        0.6186,
-                                        0.93
-                                      ],
-                                      "Name": "XYPairs",
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Berry].MetFactors.BUN_RadIni1",
+                                      "Name": "XValue",
                                       "Children": [],
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Berry].MetFactors.BUN_RadIni1",
-                                      "Name": "XValue",
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 10.0,
+                                      "Units": null,
+                                      "Name": "Constant",
                                       "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 23.0,
+                                      "Units": null,
+                                      "Name": "PreValue",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                      "Name": "RadIni",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.XYPairs, Models",
+                                          "X": [
+                                            0.0,
+                                            1.0,
+                                            10.0,
+                                            20.0,
+                                            30.0
+                                          ],
+                                          "Y": [
+                                            0.0,
+                                            0.03093,
+                                            0.3093,
+                                            0.6186,
+                                            0.93
+                                          ],
+                                          "Name": "XYPairs",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Berry].MetFactors.BUN_RadIni1",
+                                          "Name": "XValue",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
