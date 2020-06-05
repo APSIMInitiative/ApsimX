@@ -92,6 +92,9 @@
         /// <returns></returns>
         public static T Ancestor<T>(IModel model) where T : IModel
         {
+            if (model == null)
+                return default(T);
+
             return model.FindAncestor<T>();
         }
 
