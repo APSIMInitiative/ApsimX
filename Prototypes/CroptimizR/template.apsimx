@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 281,
-  "Version": 101,
+  "Version": 102,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -9546,7 +9546,7 @@
       "ReadOnly": false
     },
     {
-      "$type": "Models.Sensitivity.CroptimizR, Models",
+      "$type": "Models.Optimisation.CroptimizR, Models",
       "Parameters": [
         {
           "$type": "Models.Sensitivity.Parameter, Models",
@@ -9568,23 +9568,11 @@
       "VariableName": "Wheat.Leaf.LAI",
       "OutputPath": null,
       "OptimizationMethod": {
-        "$type": "Models.Sensitivity.DreamZs, Models",
+        "$type": "Models.Optimisation.Simplex, Models",
         "CriticalFunction": 0,
-        "Iterations": 3,
-        "Ncr": 1,
-        "Eps": 0.0,
-        "E": 0.05,
-        "PcrUpdate": false,
-        "UpdateInterval": 10,
-        "BurnIn": 0,
-        "Thin": 1,
-        "Adaptation": 0.2,
-        "Parallel": false,
-        "ZUpdateFrequency": 10,
-        "PSnooker": 0.1,
-        "DEPairs": 2,
-        "ConsoleUpdates": 10,
-        "StartValue": 2
+        "NoRepetitions": 3,
+        "Tolerance": 1E-05,
+        "MaxEval": 2
       },
       "Name": "CroptimizR",
       "Children": [

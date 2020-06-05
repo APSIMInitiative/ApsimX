@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Models.Sensitivity
+namespace Models.Optimisation
 {
     /// <summary>
     /// Encapsulates the simplex algorithm used by <see cref="CroptimizR"/>.

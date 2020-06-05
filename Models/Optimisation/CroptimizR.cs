@@ -17,8 +17,9 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using Models.Sensitivity;
 
-namespace Models.Sensitivity
+namespace Models.Optimisation
 {
     /// <summary>
     /// Enumeration of all suported optimization types.

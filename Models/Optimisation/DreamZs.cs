@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Models.Sensitivity
+namespace Models.Optimisation
 {
     /// <summary>
     /// Encapsulates the DREAM-zs algorithm used by <see cref="CroptimizR"/>. From the CroptimizR doucmentation:
@@ -17,7 +17,7 @@ namespace Models.Sensitivity
     /// 
     /// It provides different types of plots and results including plots of prior and posterior densities, correlation plots, Gelman diagnostic plot, sample of posterior distribution and associated statistics.
     /// 
-    /// An example of application of the method is provided in this vignette.
+    /// https://sticsrpacks.github.io/CroptimizR/articles/Parameter_estimation_DREAM.html
     /// </summary>
     /// <remarks>
     /// Need to add gamma, but no idea what type it is. It's not well documented.
