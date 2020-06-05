@@ -1078,10 +1078,10 @@ namespace Models.GrazPlan
         /// <summary>
         /// Split young
         /// </summary>
-        /// <param name="newGroups">New animal groups</param>
-        public void SplitYoung(ref List<AnimalGroup> newGroups)
+        public List<AnimalGroup> SplitYoung()
         {
             int numToSplit;
+            var newGroups = new List<AnimalGroup>();
 
             if (this.Young != null)
             {
@@ -1100,6 +1100,7 @@ namespace Models.GrazPlan
                     this.SplitNumbers(ref newGroups, numToSplit, 0, 2 * numToSplit);
                 }
             }
+            return newGroups;
         }
 
         /// <summary>
@@ -3175,9 +3176,9 @@ namespace Models.GrazPlan
             //// WITH Young DO
             if ((this.Young.MaleNo > 0) && (this.Young.FemaleNo > 0))
             {
-                DiffRatio = (this.SexAve(this.Genotype.SRWScalars[(int)this.ReproState], nym, nyf)
-                              - this.SexAve(this.Genotype.SRWScalars[(int)this.ReproState], this.Young.MaleNo - nym, this.Young.FemaleNo - nyf))
-                            / this.SexAve(this.Genotype.SRWScalars[(int)this.ReproState], this.Young.MaleNo, this.Young.FemaleNo);
+                DiffRatio = (this.SexAve(this.Genotype.SRWScalars[(int)Young.ReproState], nym, nyf)
+                              - this.SexAve(this.Genotype.SRWScalars[(int)Young.ReproState], this.Young.MaleNo - nym, this.Young.FemaleNo - nyf))
+                            / this.SexAve(this.Genotype.SRWScalars[(int)Young.ReproState], this.Young.MaleNo, this.Young.FemaleNo);
                 YngDiffs.StdRefWt = this.standardReferenceWeight * DiffRatio;
                 YngDiffs.BaseWeight = this.BaseWeight * DiffRatio;
                 YngDiffs.FleeceWt = this.woolWt * DiffRatio;

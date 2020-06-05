@@ -520,6 +520,37 @@
             return this.Add(newGroup, paddock, animalInits.Tag);
         }
 
+        /// <summary>Adds animals.</summary>
+        /// <param name="stockInfo">The info about each animal.</param>
+        public void Add(StockAdd stockInfo)
+        {
+            var cohort = new CohortsInfo
+            {
+                Genotype = stockInfo.Genotype,
+                Number = Math.Max(0, stockInfo.Number),
+                AgeOffsetDays = this.DaysFromDOY365Simple(stockInfo.BirthDay, clock.Today.DayOfYear),
+                MinYears = stockInfo.MinYears,
+                MaxYears = stockInfo.MaxYears,
+                MeanLiveWt = stockInfo.MeanWeight,
+                CondScore = stockInfo.CondScore,
+                MeanGFW = stockInfo.MeanFleeceWt,
+                FleeceDays = this.DaysFromDOY365Simple(stockInfo.ShearDay, clock.Today.DayOfYear),
+                MatedTo = stockInfo.MatedTo,
+                DaysPreg = stockInfo.Pregnant,
+                Foetuses = stockInfo.Foetuses,
+                DaysLact = stockInfo.Lactating,
+                Offspring = stockInfo.Offspring,
+                OffspringWt = stockInfo.YoungWt,
+                OffspringCS = stockInfo.YoungCondScore,
+                LambGFW = stockInfo.YoungFleeceWt
+            };
+            if (!this.ParseRepro(stockInfo.Sex, ref cohort.ReproClass))
+                throw new Exception("Event ADD does not support sex='" + stockInfo.Sex + "'");
+
+            if (cohort.Number > 0)
+                AddCohorts(cohort, clock.Today.DayOfYear, weather.Latitude, null);
+        }
+
         /// <summary>
         ///  * N.B. posn is 1-offset; stock list is effectively also a 1-offset array        
         /// </summary>
@@ -1461,82 +1492,86 @@
         /// <param name="weanMales">Wean the males</param>
         public void Wean(int groupIdx, int number, bool weanFemales, bool weanMales)
         {
-            int numToWean;
-            int mothersToWean;
-            List<AnimalGroup> newGroups;
-            int idx, n;
-
             number = Math.Max(number, 0);
 
             // Only iterate through groups present at the start of the routine            
-            n = this.Count();                                                               
-            for (idx = 1; idx <= n; idx++)                                                  
+            int n = Count();
+            for (int idx = 1; idx <= n; idx++)                                                  
             {
                 // Group Idx, or all groups if 0         
                 if (((groupIdx == 0) || (groupIdx == idx)) && (stock[idx] != null))       
-                {
-                    if (stock[idx].Young != null)
-                    {
-                        // Establish the number of lambs/calves to wean from this group of mothers  
-                        if (weanMales && weanFemales)                                       
-                            numToWean = Math.Min(number, stock[idx].Young.NoAnimals);     
-                        else if (weanMales)
-                            numToWean = Math.Min(number, stock[idx].Young.MaleNo);
-                        else if (weanFemales)
-                            numToWean = Math.Min(number, stock[idx].Young.FemaleNo);
-                        else
-                            numToWean = 0;
-
-                        if (numToWean > 0)
-                        {
-                            if (numToWean == number)
-                            {
-                                // If there are more lambs/calves present than are to be weaned, split the excess off                       
-                                if (weanMales && weanFemales)                                                               
-                                    mothersToWean = Convert.ToInt32(Math.Round((double)numToWean / stock[idx].NoOffspring), CultureInfo.InvariantCulture);
-                                else                                                                                        
-                                    mothersToWean = Convert.ToInt32(Math.Round(numToWean / (stock[idx].NoOffspring / 2.0)), CultureInfo.InvariantCulture);
-                                if (mothersToWean < stock[idx].NoAnimals)
-                                    this.Split(idx, mothersToWean);
-                            }
-                            newGroups = null;                                                           // Carry out the weaning process. N.B.   
-                            stock[idx].Wean(weanFemales, weanMales, ref newGroups, ref newGroups);    // the weaners appear in the same      
-                            this.Add(newGroups, stock[idx].PaddOccupied, stock[idx].Tag);  // paddock as their mothers and with   
-                            newGroups = null;                                                           // the same tag and priority value     
-                        }
-
-                        number = number - numToWean;
-                    } // _ if (Young <> NIL) 
-                }
+                    number = number - Wean(stock[idx], number, weanFemales, weanMales);
             }
         }
 
         /// <summary>
-        /// If groupIdx=0, end lactation of all groups; otherwise end lactation of    
-        /// of the nominated group.                                                   
+        /// Wean animals in an animal group.
         /// </summary>
-        /// <param name="groupIdx">Group index</param>
-        /// <param name="number">Number of animals</param>
-        public void DryOff(int groupIdx, int number)
+        /// <param name="group">The group to wean animals in.</param>
+        /// <param name="number">The number of animals to wean.</param>
+        /// <param name="weanFemales">Wean females?</param>
+        /// <param name="weanMales">Wean males?</param>
+        /// <returns>The number of animals weaned.</returns>
+        public int Wean(AnimalGroup group, int number, bool weanFemales, bool weanMales)
         {
-            int numToDryOff;
-            int idx, n;
+            if (group.Young != null)
+            {
+                // Establish the number of lambs/calves to wean from this group of mothers  
+                int numToWean = 0;
+                if (weanMales && weanFemales)
+                    numToWean = Math.Min(number, group.Young.NoAnimals);
+                else if (weanMales)
+                    numToWean = Math.Min(number, group.Young.MaleNo);
+                else if (weanFemales)
+                    numToWean = Math.Min(number, group.Young.FemaleNo);
 
+                if (numToWean > 0)
+                {
+                    if (numToWean == number)
+                    {
+                        // If there are more lambs/calves present than are to be weaned, split the excess off                       
+                        int mothersToWean;
+                        if (weanMales && weanFemales)
+                            mothersToWean = Convert.ToInt32(Math.Round((double)numToWean / group.NoOffspring), CultureInfo.InvariantCulture);
+                        else
+                            mothersToWean = Convert.ToInt32(Math.Round(numToWean / (group.NoOffspring / 2.0)), CultureInfo.InvariantCulture);
+                        if (mothersToWean < group.NoAnimals)
+                            this.Split(group, mothersToWean);
+                    }
+
+                    // Carry out the weaning process. N.B. the weaners appear in the same      
+                    // paddock as their mothers and with the same tag
+                    List<AnimalGroup> newGroups = null;
+                    group.Wean(weanFemales, weanMales, ref newGroups, ref newGroups);
+                    Add(newGroups, group.PaddOccupied, group.Tag);
+                }
+
+                return numToWean;
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Ends lactation in cows that have already had their calves weaned.  
+        /// The event has no effect on other animals.                                                   
+        /// </summary>
+        /// <param name="groups">Groups</param>
+        /// <param name="number">Number of animals</param>
+        public void DryOff(IEnumerable<AnimalGroup> groups, int number)
+        {
             number = Math.Max(number, 0);
 
             // Only iterate through groups present at the start of the routine   
-            n = this.Count();                                                     
-            for (idx = 1; idx <= n; idx++)                                                          
+            foreach (var group in groups)                                                        
             {
-                // Group I, or all groups if I=0
-                if (((groupIdx == 0) || (groupIdx == idx)) && (stock[idx] != null) && (stock[idx].Lactation > 0))
+                if (group.Lactation > 0)
                 {
-                    numToDryOff = Math.Min(number, stock[idx].FemaleNo);
+                    int numToDryOff = Math.Min(number, group.FemaleNo);
                     if (numToDryOff > 0)
                     {
-                        if (numToDryOff < stock[idx].FemaleNo)
-                            this.Split(idx, numToDryOff);
-                        stock[idx].DryOff();
+                        if (numToDryOff < group.FemaleNo)
+                            this.Split(group, numToDryOff);
+                        group.DryOff();
                     }
                     number = number - numToDryOff;
                 }
@@ -1578,114 +1613,115 @@
         }
 
         /// <summary>
-        /// Split the group by age
+        /// Split the groups by age
         /// </summary>
-        /// <param name="groupIdx">The animal group index</param>
         /// <param name="ageDays">Age in days</param>
-        public void SplitAge(int groupIdx, int ageDays)
+        /// <param name="groups">The animal groups to split.</param>
+        /// <return>The new groups.</return>
+        public IEnumerable<AnimalGroup> SplitByAge(int ageDays, IEnumerable<AnimalGroup> groups)
         {
-            AnimalGroup srcGroup;
-            int numMales = 0;
-            int numFemales = 0;
-
-            srcGroup = stock[groupIdx];
-            if (srcGroup != null)
+            var newGroups = new List<AnimalGroup>();
+            foreach (var group in groups)
             {
-                srcGroup.GetOlder(ageDays, ref numMales, ref numFemales);
+                int numMales = 0;
+                int numFemales = 0;
+
+                group.GetOlder(ageDays, ref numMales, ref numFemales);
                 if (numMales + numFemales > 0)
-                    this.Add(srcGroup.Split(numMales + numFemales, true, srcGroup.NODIFF, srcGroup.NODIFF), stock[groupIdx].PaddOccupied, stock[groupIdx].Tag);
+                {
+                    var newGroup = group.Split(numMales + numFemales, true, group.NODIFF, group.NODIFF);
+                    newGroups.Add(newGroup);
+                    Add(newGroup, group.PaddOccupied, group.Tag);
+                }
             }
+            return newGroups;
         }
 
         /// <summary>
         /// Split the group by weight
         /// </summary>
-        /// <param name="groupIdx">The animal group index</param>
-        /// <param name="splitWt">The weight</param>
-        public void SplitWeight(int groupIdx, double splitWt)
+        /// <param name="splitWt">The weight (kg)</param>
+        /// <param name="groups">The animal groups to split.</param>
+        /// <returns>The new groups that were created.</returns>
+        public IEnumerable<AnimalGroup> SplitByWeight(double splitWt, IEnumerable<AnimalGroup> groups)
         {
-            double varRatio = 0.10;                                                 // Coefficient of variation of LW (0-1)       
-            int NOSTEPS = 20;
+            const double varRatio = 0.10;      // Coefficient of variation of LW (0-1)       
+            const int NOSTEPS = 20;
 
-            AnimalGroup srcGroup;
-            double splitSD;                                                         // Position of the threshold on the live wt   
-                                                                                    //   distribution of the group, in S.D. units 
-            double removePropn;                                                     // Proportion of animals lighter than SplitWt 
-            int numToRemove;                                                        // Number to transfer to TempAnimals          
-            int numAnimals;
-            double liveWt;
-            DifferenceRecord diffs;
-            double rightSD;
-            double stepWidth;
-            double prevCum;
-            double currCum;
-            double removeLW;
-            double diffRatio;
-            int idx;
+            var newGroups = new List<AnimalGroup>();
+            foreach (var srcGroup in groups)
+            { 
+                int numAnimals = srcGroup.NoAnimals;
+                double liveWt = srcGroup.LiveWeight;
 
-            srcGroup = stock[groupIdx];
-            if (srcGroup != null)
-            {
-                numAnimals = srcGroup.NoAnimals;
-                liveWt = srcGroup.LiveWeight;
-                splitSD = (splitWt - liveWt) / (varRatio * liveWt);                 // NB SplitWt is a live weight value     
+                // Calculate the position of the threshold on the live wt
+                // distribution of the group, in S.D. units .
+                // NB SplitWt is a live weight value.
+                double splitSD = (splitWt - liveWt) / (varRatio * liveWt);
 
-                removePropn = StdMath.CumNormal(splitSD);                           // Normal distribution of weights assumed
-                numToRemove = Convert.ToInt32(Math.Round(numAnimals * removePropn), CultureInfo.InvariantCulture);
+                // Calculate proportion of animals lighter than SplitWt .
+                // NB Normal distribution of weights assumed.
+                double removePropn = StdMath.CumNormal(splitSD);
+
+                // Calculate number to transfer to TempAnimals
+                int numToRemove = Convert.ToInt32(Math.Round(numAnimals * removePropn), CultureInfo.InvariantCulture);
 
                 if (numToRemove > 0)
                 {
-                    diffs = new DifferenceRecord() { StdRefWt = srcGroup.NODIFF.StdRefWt, BaseWeight = srcGroup.NODIFF.BaseWeight, FleeceWt = srcGroup.NODIFF.FleeceWt };            
+                    DifferenceRecord diffs = new DifferenceRecord() { StdRefWt = srcGroup.NODIFF.StdRefWt, BaseWeight = srcGroup.NODIFF.BaseWeight, FleeceWt = srcGroup.NODIFF.FleeceWt };            
                     if (numToRemove < numAnimals)
                     {
                         // This computation gives us the mean live weight of animals which are    
                         // lighter than the weight threshold. We are integrating over a truncated 
                         // normal distribution, using the differences between successive      
                         // evaluations of the CumNormal function                            
-                        rightSD = -5.0;                                             
-                        stepWidth = (splitSD - rightSD) / NOSTEPS;                  
-                        removeLW = 0.0;                                             
-                        prevCum = 0.0;                                              
-                        for (idx = 1; idx <= NOSTEPS; idx++)                        
+                        double rightSD = -5.0;                                             
+                        double stepWidth = (splitSD - rightSD) / NOSTEPS;                  
+                        double removeLW = 0.0;                                             
+                        double prevCum = 0.0;                                              
+                        for (int idx = 1; idx <= NOSTEPS; idx++)                        
                         {                                                           
                             rightSD = rightSD + stepWidth;                          
-                            currCum = StdMath.CumNormal(rightSD);
+                            double currCum = StdMath.CumNormal(rightSD);
                             removeLW = removeLW + ((currCum - prevCum) * liveWt * (1.0 + varRatio * (rightSD - 0.5 * stepWidth)));
                             prevCum = currCum;
                         }
                         removeLW = removeLW / removePropn;
 
-                        diffRatio = numAnimals / (numAnimals - numToRemove) * (removeLW / liveWt - 1.0);
+                        double diffRatio = numAnimals / (numAnimals - numToRemove) * (removeLW / liveWt - 1.0);
                         diffs.BaseWeight = diffRatio * srcGroup.BaseWeight;
-                        diffs.StdRefWt = diffRatio * srcGroup.standardReferenceWeight;      // Weight diffs within a group are       
-                        diffs.FleeceWt = diffRatio * srcGroup.FleeceCutWeight;              // assumed genetic!                    
-                    }                       
+                        diffs.StdRefWt = diffRatio * srcGroup.standardReferenceWeight; // Weight diffs within a group are
+                        diffs.FleeceWt = diffRatio * srcGroup.FleeceCutWeight;         // assumed genetic!
+                    }
 
-                    this.Add(
-                         srcGroup.Split(numToRemove, false, diffs, srcGroup.NODIFF),     // Now we have computed Diffs, we split  
-                         stock[groupIdx].PaddOccupied,
-                         stock[groupIdx].Tag);   // up the animals                      
+                    // Now we have computed Diffs, we split up the animals.
+                    var newGroup = srcGroup.Split(numToRemove, false, diffs, srcGroup.NODIFF);
+                    newGroups.Add(newGroup);
+                    Add(newGroup, srcGroup.PaddOccupied, srcGroup.Tag);
                 } 
             }
+
+            return newGroups;
         }
 
         /// <summary>
         /// Split off the young
         /// </summary>
-        /// <param name="groupIdx">The animal group index</param>
-        public void SplitYoung(int groupIdx)
+        /// <param name="groups">The animal groups to split.</param>
+        /// <returns>The newly created animal groups.</returns>
+        public IEnumerable<AnimalGroup> SplitByYoung(IEnumerable<AnimalGroup> groups)
         {
-            AnimalGroup srcGroup;
-            List<AnimalGroup> newGroups;
-
-            srcGroup = stock[groupIdx];
-            if (srcGroup != null)
+            var allNewGroups = new List<AnimalGroup>();
+            foreach (var srcGroup in groups)
             {
-                newGroups = null;
-                srcGroup.SplitYoung(ref newGroups);
-                this.Add(newGroups, stock[groupIdx].PaddOccupied, stock[groupIdx].Tag);
-                newGroups = null;
+                if (srcGroup != null)
+                {
+                    var newGroups = srcGroup.SplitYoung();
+                    Add(newGroups, srcGroup.PaddOccupied, srcGroup.Tag);
+                    allNewGroups.AddRange(newGroups);
+                }
             }
+            return allNewGroups;
         }
 
         /// <summary>
@@ -1693,27 +1729,22 @@
         /// </summary>
         public void Sort()
         {
-            int idx, jdx;
-
-            for (idx = 1; idx <= this.Count() - 1; idx++)
-            {
-                for (jdx = idx + 1; jdx <= this.Count(); jdx++)
-                {
-                    if (this.stock[idx].Tag > this.stock[jdx].Tag)
-                    {
-                        this.stock[0] = this.stock[idx];                                            // stock[0] is temporary storage        
-                        this.stock[idx] = this.stock[jdx];
-                        this.stock[jdx] = this.stock[0];
-                    }
-                }
-            }
+            Array.Sort(stock, new TagComparer());
         }
 
-        // ==============================================================================
-        // Execute user's internally defined tasks for this day
-        // ==============================================================================
-
-        // Paddock rank order ......................................................
+        /// <summary>A stock tag comparer.</summary>
+        private class TagComparer : IComparer<AnimalGroup>
+        {
+            public int Compare(AnimalGroup x, AnimalGroup y) 
+            {
+                if (x == null)
+                    return 0;
+                else if (y == null)
+                    return 1;
+                else 
+                    return x.Tag.CompareTo(y.Tag); 
+            } 
+        }
 
         /// <summary>
         /// Converts a ReproductiveType to a ReproType. 
@@ -1894,190 +1925,39 @@
         }
 
         /// <summary>
-        /// The main stock management function that handles a number of events.
+        /// Buy animals.
         /// </summary>
-        /// <param name="model">The stock model</param>
-        /// <param name="stockEvent">The event parameters</param>
-        public void DoStockManagement(StockList model, IStockEvent stockEvent)
+        /// <param name="stockInfo">Information about the animals.</param>
+        public void Buy(StockBuy stockInfo)
         {
-            CohortsInfo cohort = new CohortsInfo();
-            PurchaseInfo purchaseInfo = new PurchaseInfo();
-            string strParam;
-            int param1;
-            int param3;
-            double value;
-            int tagNo;
-            int numGroups;
-            
-            if (stockEvent != null)
+            var purchaseInfo = new PurchaseInfo
             {
-                // add_animals
-                if (stockEvent.GetType() == typeof(StockAdd))          
-                {
-                    StockAdd stockInfo = (StockAdd)stockEvent;
-                    cohort.Genotype = stockInfo.Genotype;
-                    cohort.Number = Math.Max(0, stockInfo.Number);
-                    if (!this.ParseRepro(stockInfo.Sex, ref cohort.ReproClass))
-                        throw new Exception("Event ADD does not support sex='" + stockInfo.Sex + "'");
-                    cohort.AgeOffsetDays = this.DaysFromDOY365Simple(stockInfo.BirthDay, clock.Today.DayOfYear);
-                    cohort.MinYears = stockInfo.MinYears;
-                    cohort.MaxYears = stockInfo.MaxYears;
-                    cohort.MeanLiveWt = stockInfo.MeanWeight;
-                    cohort.CondScore = stockInfo.CondScore;
-                    cohort.MeanGFW = stockInfo.MeanFleeceWt;
-                    cohort.FleeceDays = this.DaysFromDOY365Simple(stockInfo.ShearDay, clock.Today.DayOfYear);
-                    cohort.MatedTo = stockInfo.MatedTo;
-                    cohort.DaysPreg = stockInfo.Pregnant;
-                    cohort.Foetuses = stockInfo.Foetuses;
-                    cohort.DaysLact = stockInfo.Lactating;
-                    cohort.Offspring = stockInfo.Offspring;
-                    cohort.OffspringWt = stockInfo.YoungWt;
-                    cohort.OffspringCS = stockInfo.YoungCondScore;
-                    cohort.LambGFW = stockInfo.YoungFleeceWt;
+                Genotype = stockInfo.Genotype,
+                Number = Math.Max(0, stockInfo.Number),
+                AgeDays = Convert.ToInt32(Math.Round(MONTH2DAY * stockInfo.Age), CultureInfo.InvariantCulture),  // Age in months
+                LiveWt = stockInfo.Weight,
+                GFW = stockInfo.FleeceWt,
+                CondScore = stockInfo.CondScore,
+                MatedTo = stockInfo.MatedTo,
+                Preg = stockInfo.Pregnant,
+                Lact = stockInfo.Lactating,
+                NYoung = stockInfo.NumYoung,
+                YoungWt = stockInfo.YoungWt,
+                YoungGFW = stockInfo.YoungFleeceWt
+            };
+            if (!this.ParseRepro(stockInfo.Sex, ref purchaseInfo.Repro))
+                throw new Exception("Event BUY does not support sex='" + stockInfo.Sex + "'");
+            if (purchaseInfo.Preg > 0) 
+                purchaseInfo.NYoung = Math.Max(1, purchaseInfo.NYoung);
+            if ((purchaseInfo.Lact == 0) || (purchaseInfo.YoungWt == 0.0))                              // Can't use MISSING as default owing    
+                purchaseInfo.YoungWt = StdMath.DMISSING;                                                // to double-to-single conversion      
 
-                    if (cohort.Number > 0)
-                        model.AddCohorts(cohort, clock.Today.DayOfYear, weather.Latitude, null);
-                }
-                else if (stockEvent.GetType() == typeof(StockBuy))
-                {
-                    StockBuy stockInfo = (StockBuy)stockEvent;
-                    purchaseInfo.Genotype = stockInfo.Genotype;
-                    purchaseInfo.Number = Math.Max(0, stockInfo.Number);
-                    if (!this.ParseRepro(stockInfo.Sex, ref purchaseInfo.Repro))
-                        throw new Exception("Event BUY does not support sex='" + stockInfo.Sex + "'");
-                    purchaseInfo.AgeDays = Convert.ToInt32(Math.Round(MONTH2DAY * stockInfo.Age), CultureInfo.InvariantCulture);  // Age in months
-                    purchaseInfo.LiveWt = stockInfo.Weight;
-                    purchaseInfo.GFW = stockInfo.FleeceWt;
-                    purchaseInfo.CondScore = stockInfo.CondScore;
-                    purchaseInfo.MatedTo = stockInfo.MatedTo;
-                    purchaseInfo.Preg = stockInfo.Pregnant;
-                    purchaseInfo.Lact = stockInfo.Lactating;
-                    purchaseInfo.NYoung = stockInfo.NumYoung;
-                    if (purchaseInfo.Preg > 0) 
-                        purchaseInfo.NYoung = Math.Max(1, purchaseInfo.NYoung);                                 // ensure a foetus. Take care of lactation in model.Buy()
-                    purchaseInfo.YoungWt = stockInfo.YoungWt;
-                    if ((purchaseInfo.Lact == 0) || (purchaseInfo.YoungWt == 0.0))                              // Can't use MISSING as default owing    
-                        purchaseInfo.YoungWt = StdMath.DMISSING;                                                // to double-to-single conversion      
-                    purchaseInfo.YoungGFW = stockInfo.YoungFleeceWt;
-                    tagNo = stockInfo.UseTag;
-
-                    if (purchaseInfo.Number > 0)
-                    {
-                        model.Buy(purchaseInfo);
-                        if (tagNo > 0)
-                            model.Animals[model.Count()].Tag = tagNo;
-                    }
-                } 
-                else if (stockEvent.GetType() == typeof(StockWean))
-                {
-                    StockWean stockInfo = (StockWean)stockEvent;
-                    param1 = stockInfo.Group;
-                    strParam = stockInfo.Sex.ToLower();
-                    param3 = stockInfo.Number;
-
-                    if (strParam == "males")
-                        model.Wean(param1, param3, false, true);
-                    else if (strParam == "females")
-                        model.Wean(param1, param3, true, false);
-                    else if ((strParam == "all") || (strParam == "both") || (strParam == string.Empty))
-                        model.Wean(param1, param3, true, true);
-                    else
-                        throw new Exception("Invalid offspring type \"" + strParam + "\" in WEAN event");
-                }
-                else if (stockEvent.GetType() == typeof(StockDryoff))
-                {
-                    StockDryoff stockInfo = (StockDryoff)stockEvent;
-                    model.DryOff(stockInfo.Group, stockInfo.Number);
-                }
-                else if (stockEvent.GetType() == typeof(StockSplitAll))
-                {
-                    // split off the requested animals from all groups
-                    StockSplitAll stockInfo = (StockSplitAll)stockEvent;
-                    numGroups = model.Count(); // get pre-split count of groups
-                    for (param1 = 1; param1 <= numGroups; param1++)
-                    {
-                        int groups = model.Count();
-                        strParam = stockInfo.Type.ToLower();
-                        value = stockInfo.Value;
-                        tagNo = stockInfo.OtherTag;
-
-                        if (strParam == "age")
-                            model.SplitAge(param1, Convert.ToInt32(Math.Round(value), CultureInfo.InvariantCulture));
-                        else if (strParam == "weight")
-                            model.SplitWeight(param1, value);
-                        else if (strParam == "young")
-                            model.SplitYoung(param1);
-                        else if (strParam == "number")
-                            model.Split(param1, Convert.ToInt32(Math.Round(value), CultureInfo.InvariantCulture));
-                        else
-                            throw new Exception("Stock: invalid keyword (" + strParam + ") in \"split\" event");
-                        if ((tagNo > 0) && (model.Count() > groups))     // if a tag for any new group is given
-                        {
-                            for (int g = groups + 1; g <= model.Count(); g++)
-                                model.Animals[g].Tag = tagNo;
-                        }
-                    }
-                }
-                else if (stockEvent.GetType() == typeof(StockSplit))
-                {
-                    // split off the requested animals from one group
-                    StockSplit stockInfo = (StockSplit)stockEvent;
-                    numGroups = model.Count(); // get pre-split count of groups
-                    param1 = stockInfo.Group;
-                    strParam = stockInfo.Type.ToLower();
-                    value = stockInfo.Value;
-                    tagNo = stockInfo.OtherTag;
-
-                    if ((param1 < 1) && (param1 > model.Count()))
-                        throw new Exception("Invalid group number in SPLIT event");
-                    else if (strParam == "age")
-                        model.SplitAge(param1, Convert.ToInt32(Math.Round(value)));
-                    else if (strParam == "weight")
-                        model.SplitWeight(param1, value);
-                    else if (strParam == "young")
-                        model.SplitYoung(param1);
-                    else if (strParam == "number")
-                        model.Split(param1, Convert.ToInt32(Math.Round(value), CultureInfo.InvariantCulture));
-                    else
-                        throw new Exception("Stock: invalid keyword (" + strParam + ") in \"split\" event");
-                    if ((tagNo > 0) && (model.Count() > numGroups))     // if a tag for the new group is given
-                    {
-                        for (int g = numGroups + 1; g <= model.Count(); g++)
-                            model.Animals[g].Tag = tagNo;
-                    }
-                }
-                else if (stockEvent.GetType() == typeof(StockTag))
-                {
-                    StockTag stockInfo = (StockTag)stockEvent;
-                    param1 = stockInfo.Group;
-                    if ((param1 >= 1) && (param1 <= model.Count()))
-                        model.Animals[param1].Tag = stockInfo.Value;
-                    else
-                        throw new Exception("Invalid group number in TAG event");
-                }
-                else if (stockEvent.GetType() == typeof(StockSort))
-                {
-                    model.Sort();
-                }
-                else
-                    throw new Exception("Event not recognised in STOCK");
+            if (purchaseInfo.Number > 0)
+            {
+                Buy(purchaseInfo);
+                if (stockInfo.UseTag > 0)
+                    Animals[Count()].Tag = stockInfo.UseTag;
             }
         }
-
-        ///// <summary>
-        ///// The reproduction record
-        ///// </summary>
-        //private struct ReproRecord
-        //{
-        //    /// <summary>
-        //    /// The name
-        //    /// </summary>
-        //    public string Name;
-
-        //    /// <summary>
-        //    /// The reproduction record
-        //    /// </summary>
-        //    public GrazType.ReproType Repro;
-        //}
     }
 }

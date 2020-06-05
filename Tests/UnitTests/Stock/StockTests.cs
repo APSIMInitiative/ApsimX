@@ -238,7 +238,7 @@
             Utilities.CallEvent(animals, "StartOfSimulation");
 
             // Get the animal group
-            var animalGroup = stock.AnimalList.Animals[1];
+            var animalGroup = stock.StockModel.Animals[1];
 
             Assert.AreEqual(100, animalGroup.AgeDays);
             Assert.AreEqual(GrazType.AgeType.Weaner, animalGroup.AgeClass);
@@ -343,9 +343,9 @@
             Utilities.CallEvent(grazing, "DoManagement");
 
             // The animal group should have moved to field 2.
-            var animalGroup = stock.AnimalList.Animals[1];
+            var animalGroup = stock.StockModel.Animals[1];
 
-            Assert.AreEqual(animalGroup.PaddOccupied.Name, "Field2");
+            Assert.AreEqual("Field2", animalGroup.PaddOccupied.Name);
         }
 
         /// <summary>Ensure a user can add a draft (flexible) grazing component to a simulation.</summary>
@@ -459,12 +459,12 @@
 
             // The animal group 2 should have moved to field 3 because group 2 is the highest priority and field 3
             // has the most forage available.
-            var animalGroup1 = stock.AnimalList.Animals[1];
-            var animalGroup2 = stock.AnimalList.Animals[2];
-            var animalGroup3 = stock.AnimalList.Animals[3];
-            Assert.AreEqual(animalGroup1.PaddOccupied.Name, "Field1");
-            Assert.AreEqual(animalGroup2.PaddOccupied.Name, "Field3");
-            Assert.AreEqual(animalGroup3.PaddOccupied.Name, "Field4");
+            var animalGroup1 = stock.StockModel.Animals[1];
+            var animalGroup2 = stock.StockModel.Animals[2];
+            var animalGroup3 = stock.StockModel.Animals[3];
+            Assert.AreEqual("Field1", animalGroup1.PaddOccupied.Name);
+            Assert.AreEqual("Field3", animalGroup2.PaddOccupied.Name);
+            Assert.AreEqual("Field4", animalGroup3.PaddOccupied.Name);
         }
 
         /// <summary>Ensure a user can call Stock.Add method creating a cohort of animals.</summary>
@@ -517,9 +517,9 @@
                     YoungCondScore = 1.98,
                     YoungWt = 40
                 });
-            Assert.AreEqual(stock.AnimalList.Animals.Count, 7);  // stock.AnimalList.Animals[0] is a temporary animal group.
+            Assert.AreEqual(7, stock.StockModel.Animals.Count);  // stock.AnimalList.Animals[0] is a temporary animal group.
 
-            var json = ReflectionUtilities.JsonSerialise(stock.AnimalList.Animals, false);
+            var json = ReflectionUtilities.JsonSerialise(stock.StockModel.Animals, false);
             var expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Stock.AddAnimalCohort.json");
 
             Assert.AreEqual(expectedJson, json);
@@ -574,11 +574,11 @@
             stock.Sell(50, tag2Animals);
 
             var groups = stock.AnimalGroups;
-            Assert.AreEqual(groups.First().NoAnimals, 50);
-            Assert.AreEqual(groups.Last().NoAnimals, 100);
+            Assert.AreEqual(50, groups.First().NoAnimals);
+            Assert.AreEqual(100, groups.Last().NoAnimals);
 
             // Make sure summary file was written to.
-            Assert.AreEqual(MockSummary.messages[0], "Selling 50 animals");
+            Assert.AreEqual("Selling 50 animals", MockSummary.messages[0]);
         }
 
         /// <summary>Ensure a user can sell animals by weight.</summary>
@@ -630,11 +630,11 @@
             stock.Sell(50, males);
 
             var groups = stock.AnimalGroups;
-            Assert.AreEqual(groups.First().NoAnimals, 50);
-            Assert.AreEqual(groups.Last().NoAnimals, 100);
+            Assert.AreEqual(50, groups.First().NoAnimals);
+            Assert.AreEqual(100, groups.Last().NoAnimals);
 
             // Make sure summary file was written to.
-            Assert.AreEqual(MockSummary.messages[0], "Selling 50 animals");
+            Assert.AreEqual("Selling 50 animals", MockSummary.messages[0]);
         }
 
         /// <summary>Ensure a user can shear animals.</summary>
@@ -684,10 +684,10 @@
 
             // Shear all animals
             var cfw = stock.Shear(true, true);
-            Assert.AreEqual(cfw, 70);
+            Assert.AreEqual(70, cfw);
 
             // Make sure summary file was written to.
-            Assert.AreEqual(MockSummary.messages[0], "Shearing animals");
+            Assert.AreEqual("Shearing animals", MockSummary.messages[0]);
         }
 
         /// <summary>Ensure a user can move animals between paddocks.</summary>
@@ -739,7 +739,7 @@
             // Move the cattle into field 2
             var cattle = stock.AnimalGroups.Where(group => group.Genotype.Animal == GrazType.AnimalType.Cattle);
             stock.Move("Field2", cattle);
-            Assert.AreEqual(cattle.First().PaddOccupied.Name, "Field2");
+            Assert.AreEqual("Field2", cattle.First().PaddOccupied.Name);
         }
 
         /// <summary>Ensure a user can mate animals.</summary>
@@ -797,8 +797,8 @@
                 ewes.First().Age(1, ref newGroups);
 
             // Ewes should now be pregnant.
-            Assert.AreEqual(newGroups.Count, 3);
-            Assert.IsTrue(newGroups[2].Pregnancy == 1);
+            Assert.AreEqual(3, newGroups.Count, 3);
+            Assert.AreEqual(1, newGroups[2].Pregnancy);
         }
 
         /// <summary>Ensure a user can castrate animals.</summary>
@@ -856,7 +856,319 @@
             stock.Castrate(100, cattle);
 
             // Young should now be castrated.
-            Assert.AreEqual(cattle.First().Young.ReproState, GrazType.ReproType.Castrated);
+            Assert.AreEqual(GrazType.ReproType.Castrated, cattle.First().Young.ReproState);
+        }
+
+        /// <summary>Ensure a user can wean animals.</summary>
+        [Test]
+        public void WeanAnimals()
+        {
+            var stock = new Stock
+            {
+                Children = new List<IModel>()
+                {
+                    new Clock() { StartDate = new DateTime(2020, 1, 1), EndDate = new DateTime(2020, 1, 2) },
+                    new Weather(),
+                    new MockSummary(),
+                    new Zone() { Name = "Field1", Area = 100 },
+                    new Zone() { Name = "Field2", Area = 100 },
+                    new Soil() { Children = new List<IModel>() { new Physical() { Thickness = new double[] { 100, 100, 100 } } } },
+                    new Animals()
+                    {
+                        Name = "MyGroup",
+                        Sex = GrazType.ReproType.Empty,
+                        Genotype = "Small Merino",
+                        MatedTo = "Small Merino",
+                        Paddock = "Field1",
+                        MaxPrevWt = 300,
+                        Number = 50,
+                        AgeDays = 200,
+                        Weight = 290,
+                        FleeceWt = 100,
+                        Tag = 1
+                    },
+                    new Animals()
+                    {
+                        Name = "MyGroup",
+                        Sex = GrazType.ReproType.Empty,
+                        Genotype = "Jersey",
+                        MatedTo = "Friesian",
+                        Paddock = "Field1",
+                        MaxPrevWt = 700,
+                        Number = 150,
+                        NumSuckling = 1,
+                        Lactating = 160,
+                        AgeDays = 500,
+                        Weight = 600,
+                        YoungWt = 100,
+                        Tag = 2
+                    },
+                },
+            };
+            Utilities.ResolveLinks(stock);
+            Utilities.CallEventAll(stock, "StartOfSimulation");
+
+            // Wean the cattle young.
+            var cattle = stock.AnimalGroups.Where(group => group.Genotype.Animal == GrazType.AnimalType.Cattle);
+
+            stock.Wean(150, weanMales:true, weanFemales:true, cattle);
+
+            // Young should now be weaned
+            Assert.IsNull(cattle.First().Young);
+            Assert.AreEqual(4, stock.AnimalGroups.Count());
+        }
+
+        /// <summary>Ensure a user can dryoff animals.</summary>
+        [Test]
+        public void DryoffAnimals()
+        {
+            var stock = new Stock
+            {
+                Children = new List<IModel>()
+                {
+                    new Clock() { StartDate = new DateTime(2020, 1, 1), EndDate = new DateTime(2020, 1, 2) },
+                    new Weather(),
+                    new MockSummary(),
+                    new Zone() { Name = "Field1", Area = 100 },
+                    new Zone() { Name = "Field2", Area = 100 },
+                    new Soil() { Children = new List<IModel>() { new Physical() { Thickness = new double[] { 100, 100, 100 } } } },
+                    new Animals()
+                    {
+                        Name = "MyGroup",
+                        Sex = GrazType.ReproType.Empty,
+                        Genotype = "Small Merino",
+                        MatedTo = "Small Merino",
+                        Paddock = "Field1",
+                        MaxPrevWt = 300,
+                        Number = 50,
+                        AgeDays = 200,
+                        Weight = 290,
+                        FleeceWt = 100,
+                        Tag = 1
+                    },
+                    new Animals()
+                    {
+                        Name = "MyGroup",
+                        Sex = GrazType.ReproType.Empty,
+                        Genotype = "Jersey",
+                        MatedTo = "Friesian",
+                        Paddock = "Field1",
+                        MaxPrevWt = 700,
+                        Number = 150,
+                        NumSuckling = 0,
+                        Lactating = 160,
+                        AgeDays = 500,
+                        Weight = 600,
+                        Tag = 2
+                    },
+                },
+            };
+            Utilities.ResolveLinks(stock);
+            Utilities.CallEventAll(stock, "StartOfSimulation");
+
+            // Dryoff the cattle young.
+            var cattle = stock.AnimalGroups.Where(group => group.Genotype.Animal == GrazType.AnimalType.Cattle);
+            stock.DryOff(150, cattle);
+
+            // Young should now be weaned
+            Assert.AreEqual(0, cattle.First().Lactation);
+        }
+
+        /// <summary>Ensure a user can split an animal group by age.</summary>
+        [Test]
+        public void SplitByAge()
+        {
+            var stock = new Stock
+            {
+                Children = new List<IModel>()
+                {
+                    new Clock() { StartDate = new DateTime(2020, 1, 1), EndDate = new DateTime(2020, 1, 2) },
+                    new Weather(),
+                    new MockSummary(),
+                    new Zone() { Name = "Field1", Area = 100 },
+                    new Zone() { Name = "Field2", Area = 100 },
+                    new Soil() { Children = new List<IModel>() { new Physical() { Thickness = new double[] { 100, 100, 100 } } } },
+                    new Animals()
+                    {
+                        Name = "MyGroup",
+                        Sex = GrazType.ReproType.Empty,
+                        Genotype = "Jersey",
+                        MatedTo = "Friesian",
+                        Paddock = "Field1",
+                        MaxPrevWt = 700,
+                        Number = 150,
+                        NumSuckling = 0,
+                        Lactating = 160,
+                        AgeDays = 500,
+                        Weight = 600,
+                        Tag = 2
+                    },
+                },
+            };
+            Utilities.ResolveLinks(stock);
+            Utilities.CallEventAll(stock, "StartOfSimulation");
+
+            // Split the cattle group.
+            var cattle = stock.AnimalGroups.Where(group => group.Genotype.Animal == GrazType.AnimalType.Cattle);
+            var newGroups = stock.SplitByAge(100, cattle);
+
+            // One new group should have been created.
+            Assert.AreEqual(1, newGroups.Count());
+
+            // There should now be a second group with all 150 females in it.
+            Assert.AreEqual(2, stock.AnimalGroups.Count());
+            Assert.AreEqual(0, stock.AnimalGroups.First().FemaleNo);
+            Assert.AreEqual(150, stock.AnimalGroups.Last().FemaleNo);
+        }
+
+        /// <summary>Ensure a user can split an animal group by weight.</summary>
+        [Test]
+        public void SplitByWeight()
+        {
+            var stock = new Stock
+            {
+                Children = new List<IModel>()
+                {
+                    new Clock() { StartDate = new DateTime(2020, 1, 1), EndDate = new DateTime(2020, 1, 2) },
+                    new Weather(),
+                    new MockSummary(),
+                    new Zone() { Name = "Field1", Area = 100 },
+                    new Zone() { Name = "Field2", Area = 100 },
+                    new Soil() { Children = new List<IModel>() { new Physical() { Thickness = new double[] { 100, 100, 100 } } } },
+                    new Animals()
+                    {
+                        Name = "MyGroup",
+                        Sex = GrazType.ReproType.Empty,
+                        Genotype = "Jersey",
+                        MatedTo = "Friesian",
+                        Paddock = "Field1",
+                        MaxPrevWt = 700,
+                        Number = 150,
+                        NumSuckling = 0,
+                        Lactating = 160,
+                        AgeDays = 500,
+                        Weight = 600,
+                        Tag = 2
+                    },
+                },
+            };
+            Utilities.ResolveLinks(stock);
+            Utilities.CallEventAll(stock, "StartOfSimulation");
+
+            // Split the cattle group.
+            var cattle = stock.AnimalGroups.Where(group => group.Genotype.Animal == GrazType.AnimalType.Cattle);
+            var newGroups = stock.SplitByWeight(500, cattle);
+
+            // One new group should have been created.
+            Assert.AreEqual(1, newGroups.Count());
+
+            // There should now be a second group with 7 of the females in it.
+            Assert.AreEqual(2, stock.AnimalGroups.Count());
+            Assert.AreEqual(143, stock.AnimalGroups.First().FemaleNo);
+            Assert.AreEqual(7, stock.AnimalGroups.Last().FemaleNo);
+        }
+
+        /// <summary>Ensure a user can split an animal group by young animals.</summary>
+        [Test]
+        public void SplitByYoung()
+        {
+            var stock = new Stock
+            {
+                Children = new List<IModel>()
+                {
+                    new Clock() { StartDate = new DateTime(2020, 1, 1), EndDate = new DateTime(2020, 1, 2) },
+                    new Weather(),
+                    new MockSummary(),
+                    new Zone() { Name = "Field1", Area = 100 },
+                    new Zone() { Name = "Field2", Area = 100 },
+                    new Soil() { Children = new List<IModel>() { new Physical() { Thickness = new double[] { 100, 100, 100 } } } },
+                    new Animals()
+                    {
+                        Name = "MyGroup",
+                        Sex = GrazType.ReproType.Empty,
+                        Genotype = "Friesian",
+                        MatedTo = "Friesian",
+                        Paddock = "Field1",
+                        MaxPrevWt = 700,
+                        Number = 150,
+                        NumSuckling = 1,
+                        Lactating = 160,
+                        AgeDays = 500,
+                        Weight = 600,
+                        Tag = 2
+                    },
+                },
+            };
+            Utilities.ResolveLinks(stock);
+            Utilities.CallEventAll(stock, "StartOfSimulation");
+
+            // Split the cattle group.
+            var cattle = stock.AnimalGroups.Where(group => group.Genotype.Animal == GrazType.AnimalType.Cattle);
+            var newGroups = stock.SplitByYoung(cattle);
+
+            // One new group should have been created.
+            Assert.AreEqual(1, newGroups.Count());
+
+            // There should now be a second group with 7 of the females in it.
+            Assert.AreEqual(2, stock.AnimalGroups.Count());
+            Assert.AreEqual(75, stock.AnimalGroups.First().FemaleNo);
+            Assert.AreEqual(75, stock.AnimalGroups.Last().FemaleNo);
+        }
+
+        /// <summary>Ensure a user can sort animals by tag.</summary>
+        [Test]
+        public void SortAnimalsByTag()
+        {
+            var stock = new Stock
+            {
+                Children = new List<IModel>()
+                {
+                    new Clock() { StartDate = new DateTime(2020, 1, 1), EndDate = new DateTime(2020, 1, 2) },
+                    new Weather(),
+                    new MockSummary(),
+                    new Zone() { Name = "Field1", Area = 100 },
+                    new Zone() { Name = "Field2", Area = 100 },
+                    new Soil() { Children = new List<IModel>() { new Physical() { Thickness = new double[] { 100, 100, 100 } } } },
+                    new Animals()
+                    {
+                        Name = "MyGroup",
+                        Sex = GrazType.ReproType.Empty,
+                        Genotype = "Small Merino",
+                        MatedTo = "Small Merino",
+                        Paddock = "Field1",
+                        MaxPrevWt = 300,
+                        Number = 50,
+                        AgeDays = 200,
+                        Weight = 290,
+                        FleeceWt = 100,
+                        Tag = 2
+                    },
+                    new Animals()
+                    {
+                        Name = "MyGroup",
+                        Sex = GrazType.ReproType.Empty,
+                        Genotype = "Jersey",
+                        MatedTo = "Friesian",
+                        Paddock = "Field1",
+                        MaxPrevWt = 700,
+                        Number = 150,
+                        NumSuckling = 0,
+                        Lactating = 160,
+                        AgeDays = 500,
+                        Weight = 600,
+                        Tag = 1
+                    },
+                },
+            };
+            Utilities.ResolveLinks(stock);
+            Utilities.CallEventAll(stock, "StartOfSimulation");
+
+            // Sort the animals.
+            stock.Sort();
+
+            // Young should now be weaned
+            Assert.AreEqual(1, stock.AnimalGroups.First().Tag);
+            Assert.AreEqual(2, stock.AnimalGroups.Last().Tag);
         }
     }
 }

@@ -3,16 +3,9 @@
     using Models.Core;
 
     /// <summary>
-    /// Common interface for data passed to stock management events.
-    /// </summary>
-    public interface IStockEvent
-    {
-    }
-
-    /// <summary>
     /// Used by the Add() method 
     /// </summary>
-    public class StockAdd : IStockEvent
+    public class StockAdd
     {
         /// <summary>
         /// Gets or sets the genotype of the animals to enter the simulation. 
@@ -140,7 +133,7 @@
     /// <summary>
     /// Used by the Buy() method
     /// </summary>
-    public class StockBuy : IStockEvent
+    public class StockBuy
     {
         /// <summary>
         /// Default constructor
@@ -236,135 +229,4 @@
         /// </summary>
         public int UseTag { get; set; }
     }
-
-    /// <summary>
-    /// Dryoff event
-    /// </summary>
-    public class StockDryoff : IStockEvent
-    {
-        /// <summary>
-        /// Gets or sets the index number of the animal group for which lactation is to end. 
-        /// A value of zero denotes that each animal group should be processed in turn until the nominated number of cows has been dried off.
-        /// </summary>
-        public int Group { get; set; }
-
-        /// <summary>
-        /// Gets or sets the number of females for which lactation is to end.
-        /// </summary>
-        public int Number { get; set; }
-    }
-
-    /// <summary>
-    /// Weans some or all of the lambs or calves from an animal group. 
-    /// The newly weaned animals are added to the end of the list of animal groups, with males and females in separate groups.
-    /// </summary>
-    public class StockWean : IStockEvent
-    {
-        /// <summary>
-        /// Gets or sets the index number of the animal group from which animals are to be removed. 
-        /// A value of zero denotes that each animal group should be processed in turn until the nominated number of lambs or calves has been weaned.
-        /// </summary>
-        public int Group { get; set; }
-
-        /// <summary>
-        /// Gets or sets the sex to wean.
-        /// Feasible values are:
-        /// ‘all’       Female and male lambs or calves are to be weaned.
-        /// ‘females’   Only female lambs or calves are to be weaned.
-        /// ‘males’     Only male lambs or calves are to be weaned
-        /// </summary>
-        public string Sex { get; set; }
-
-        /// <summary>
-        /// Gets or sets the number of lambs or calves to be weaned.
-        /// </summary>
-        public int Number { get; set; }
-    }
-
-    /// <summary>
-    /// Creates new animal groups from all the animal groups.  The new groups are placed at the end of the animal group list. 
-    /// This event is for when splits need to occur over all animal groups. Description of split event also applies.
-    /// </summary>
-    public class StockSplitAll : IStockEvent
-    {
-        /// <summary>
-        /// Gets or sets the type of animal to split.
-        /// Feasible values are:
-        /// ‘age’       All animals older than value days are moved to a new group.
-        /// ‘weight’    All animals with live weight less than value kg are moved to a new group.
-        /// ‘young’     Only animals with suckling offspring are affected.Mothers with different sexes of young are divided, with the group with all male offspring remaining in place.
-        ///             For mothers with twins, three groups are created; a group with two male offspring, a group with two female offspring, and a group with one of each.
-        /// ‘number’    value animals remain in place and the remainder form a new group
-        /// </summary>
-        public string Type { get; set; }
-
-        /// <summary>
-        /// Gets or sets the threshold age or weight, or the number to be split, depending on the value of type. Ignored if type is ‘young’.
-        /// </summary>
-        public double Value { get; set; }
-
-        /// <summary>
-        /// Gets or sets the tag number. If this value is given then the animals moved into the new animal group will have this tag number. 
-        /// </summary>
-        public int OtherTag { get; set; }
-    }
-
-    /// <summary>
-    /// Creates two or more animal groups from the nominated group.
-    /// </summary>
-    public class StockSplit : IStockEvent
-    {
-        /// <summary>
-        /// Gets or sets the index number of the animal group to be split.
-        /// </summary>
-        public int Group { get; set; }
-
-        /// <summary>
-        /// Gets or sets the type of animal.
-        /// Feasible values are:
-        /// ‘age’       All animals older than value days are moved to a new group.
-        /// ‘weight’    All animals with live weight less than value kg are moved to a new group.
-        /// ‘young’     Only animals with suckling offspring are affected.Mothers with different sexes of young are divided, with the group with all male offspring remaining in place.
-        ///             For mothers with twins, three groups are created; a group with two male offspring, a group with two female offspring, and a group with one of each.
-        /// ‘number’    value animals remain in place and the remainder form a new group
-        /// </summary>
-        public string Type { get; set; }
-
-        /// <summary>
-        /// Gets or sets the threshold age or weight, or the number to be split, depending on the value of type. Ignored if type is ‘young’.
-        /// </summary>
-        public double Value { get; set; }
-
-        /// <summary>
-        /// Gets or sets the tag number. If this value is given then the animals moved into the new animal group will have this tag number.
-        /// </summary>
-        public int OtherTag { get; set; }
-    }
-
-    /// <summary>
-    /// Changes the “tag value” associated with an animal group.  
-    /// This value is used to sort animals; it can also be used to group animals for user-defined purposes 
-    /// (e.g. to identify animals that are to be managed as a single mob even though they differ physiologically) 
-    /// and to keep otherwise similar animal groups distinct from one another.
-    /// </summary>
-    public class StockTag : IStockEvent
-    {
-        /// <summary>
-        /// Gets or sets the index number of the animal group to be assigned a tag value.
-        /// </summary>
-        public int Group { get; set; }
-
-        /// <summary>
-        /// Gets or sets the tag value to be assigned.
-        /// </summary>
-        public int Value { get; set; }
-    }
-
-    /// <summary>
-    /// For the sort event.
-    /// </summary>
-    public class StockSort : IStockEvent
-    {
-    }
-
 }
