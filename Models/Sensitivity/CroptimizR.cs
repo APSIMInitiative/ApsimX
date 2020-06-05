@@ -162,29 +162,6 @@ namespace Models.Sensitivity
         [JsonIgnore]
         public string Status { get; private set; }
 
-        /// <summary>Gets a list of simulation descriptions.</summary>
-        public void Run()
-        {
-            Progress = 0;
-            Status = "Installing R Packages";
-
-            R r = new R();
-            r.InstallPackages("devtools", "dplyr", "nloptr", "DiceDesign", "RSQLite", "DBI", "cli");
-            r.InstallFromGithub("hol430/ApsimOnR", "SticsRPacks/CroptimizR");
-
-            Status = "Generating R Script";
-            string fileName = GetTempFileName($"parameter_estimation_{id}", ".r");
-            GenerateRScript(fileName);
-
-            // todo - capture stderr as well?
-            r.OutputReceived += OnOutputReceivedFromR;
-
-            Status = "Running Parameter Optimization";
-            string stdout = r.Run(fileName);
-            r.OutputReceived -= OnOutputReceivedFromR;
-            WriteMessage(stdout);
-        }
-
         private void OnOutputReceivedFromR(object sender, DataReceivedEventArgs e)
         {
             if (e.Data.Contains("Working:"))
@@ -344,7 +321,24 @@ namespace Models.Sensitivity
         /// <param name="cancelToken"></param>
         public void Run(CancellationTokenSource cancelToken)
         {
-            Run();
+            Progress = 0;
+            Status = "Installing R Packages";
+
+            R r = new R(cancelToken.Token);
+            r.InstallPackages("devtools", "dplyr", "nloptr", "DiceDesign", "RSQLite", "DBI", "cli");
+            r.InstallFromGithub("hol430/ApsimOnR", "SticsRPacks/CroptimizR");
+
+            Status = "Generating R Script";
+            string fileName = GetTempFileName($"parameter_estimation_{id}", ".r");
+            GenerateRScript(fileName);
+
+            // todo - capture stderr as well?
+            r.OutputReceived += OnOutputReceivedFromR;
+
+            Status = "Running Parameter Optimization";
+            string stdout = r.Run(fileName);
+            r.OutputReceived -= OnOutputReceivedFromR;
+            WriteMessage(stdout);
         }
     }
 }

@@ -111,6 +111,7 @@
                                     arguments: pipeHandles,
                                     workingDirectory: Directory.GetCurrentDirectory(),
                                     redirectOutput: true,
+                                    cancelToken: cancelToken.Token,
                                     writeToConsole: false);
 
                 // Release the local handles that were created with the above GetClientHandleAsString calls
