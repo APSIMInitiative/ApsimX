@@ -8131,29 +8131,9 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
-              "Units": "/day",
-              "Name": "DMRetranslocationFactor",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
               "FixedValue": 1.0,
               "Units": "/day",
               "Name": "DMReallocationFactor",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
-              "Units": "/day",
-              "Name": "NRetranslocationFactor",
               "Children": [],
               "IncludeInDocumentation": false,
               "Enabled": true,

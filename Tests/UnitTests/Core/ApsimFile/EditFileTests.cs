@@ -124,7 +124,7 @@ namespace UnitTests.Core.ApsimFile
             string args = $"{fileName} /Edit {configFile}";
             
             var proc = new ProcessUtilities.ProcessWithRedirectedOutput();
-            proc.Start(models, args, Path.GetTempPath(), true, true);
+            proc.Start(models, args, Path.GetTempPath(), true, writeToConsole: true);
             proc.WaitForExit();
 
             // Children of simulation are, in order:
