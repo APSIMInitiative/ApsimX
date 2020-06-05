@@ -911,7 +911,7 @@
             // Wean the cattle young.
             var cattle = stock.AnimalGroups.Where(group => group.Genotype.Animal == GrazType.AnimalType.Cattle);
 
-            stock.Wean(150, weanMales:true, weanFemales:true, cattle);
+            stock.Wean(150, weanMales:true, weanFemales:true, groups: cattle);
 
             // Young should now be weaned
             Assert.IsNull(cattle.First().Young);
