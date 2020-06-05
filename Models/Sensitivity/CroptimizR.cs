@@ -21,6 +21,25 @@ using System.Threading;
 namespace Models.Sensitivity
 {
     /// <summary>
+    /// Enumeration of all suported optimization types.
+    /// https://sticsrpacks.github.io/CroptimizR/articles/Available_parameter_estimation_algorithms.html
+    /// </summary>
+    public enum OptimizationTypeEnum
+    {
+        /// <summary>
+        /// Nelder-Meade simplex method implemented in the nloptr package.
+        /// https://sticsrpacks.github.io/CroptimizR/articles/Parameter_estimation_simple_case.html
+        /// </summary>
+        Simplex,
+
+        /// <summary>
+        /// DREAM-zs/Bayesian method implemented in the BayesianTools package.
+        /// https://sticsrpacks.github.io/CroptimizR/articles/Parameter_estimation_DREAM.html
+        /// </summary>
+        Bayesian,
+    }
+
+    /// <summary>
     /// # [Name]
     /// Encapsulates CroptimizR: An R package for parameter estimation, uncertainty analysis and sensitivity analysis for Crop Models
     /// </summary>
@@ -34,12 +53,6 @@ namespace Models.Sensitivity
     [ValidParent(ParentType = typeof(Simulations))]
     public class CroptimizR : Model, ICustomDocumentation, IModelAsTable, IRunnable, IReportsStatus
     {
-        //[Link]
-        //private IDataStore storage = null;
-        //
-        //[Link]
-        //private Simulations sims = null;
-
         /// <summary>
         /// This ID is used to identify temp files used by this tool.
         /// </summary>
@@ -80,25 +93,63 @@ namespace Models.Sensitivity
         public string VariableName { get; set; }
 
         /// <summary>
-        /// Number of times we run the minimisation with different parameters.
+        /// Directory to which output files (graphs, reports, ...) will be saved.
         /// </summary>
-        [Description("Number of repetitions")]
-        [Tooltip("Number of times the we run the minimsation with different parameters.")]
-        public int NoRepetitions { get; set; } = 3;
+        [Description("Output path")]
+        [Tooltip("Path to which output files (graphs, reports, ...) will be saved. If empty, output files will not be saved.")]
+        [Display(Type = DisplayType.DirectoryName)]
+        public string OutputPath { get; set; }
 
         /// <summary>
-        /// Tolerance criterion between two iterations.
+        /// Optimization algorithm to be used. Changing this will change <see cref="OptimizationMethod"/>.
         /// </summary>
-        [Description("Tolerance criterion between two iterations")]
-        [Tooltip("Iterations will cease if the objective variable is changing by less than this amount.")]
-        public double Tolerance { get; set; } = 1e-5;
+        /// <remarks>
+        /// The reason we need both this enum and the IOptimizationMethod property are because
+        /// we want to provide a drop-down in the gui of available optimization methods.
+        /// </remarks>
+        [Description("Optimization algorithm")]
+        [JsonIgnore]
+        public OptimizationTypeEnum OptimizationType
+        {
+            get
+            {
+                return OptimizationMethod.Type;
+            }
+            set
+            {
+                switch (value)
+                {
+                    case OptimizationTypeEnum.Bayesian:
+                        OptimizationMethod = new DreamZs();
+                        break;
+                    case OptimizationTypeEnum.Simplex:
+                        OptimizationMethod = new Simplex();
+                        break;
+                    default:
+                        throw new NotImplementedException($"Unsuported optimization type: {value}");
+                }
+            }
+        }
 
         /// <summary>
-        /// Maximum number of iterations executed by the optimisation algorithm.
+        /// Optimization method to be used.
         /// </summary>
-        [Description("Max number of iterations")]
-        [Tooltip("Maximum number of iterations executed by the optimisation algorithm.")]
-        public int MaxEval { get; set; } = 2;
+        [Description("Optimization method")]
+        [Display(Type = DisplayType.SubModel)]
+        [Separator("Optimization method-specific parameters")]
+        public IOptimizationMethod OptimizationMethod { get; set; } = new Simplex();
+
+        /// <summary>
+        /// Returns the job's progress as a real number in range [0, 1].
+        /// </summary>
+        [JsonIgnore]
+        public double Progress { get; private set; } = 0;
+
+        /// <summary>
+        /// Returns the job's status.
+        /// </summary>
+        [JsonIgnore]
+        public string Status { get; private set; }
 
         /// <summary>
         /// Gets or sets the table of values.
@@ -151,17 +202,10 @@ namespace Models.Sensitivity
         }
 
         /// <summary>
-        /// Returns the job's progress as a real number in range [0, 1].
+        /// Invoked whenever the R process writes to stdout.
         /// </summary>
-        [JsonIgnore]
-        public double Progress { get; private set; } = 0;
-
-        /// <summary>
-        /// Returns the job's status.
-        /// </summary>
-        [JsonIgnore]
-        public string Status { get; private set; }
-
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
         private void OnOutputReceivedFromR(object sender, DataReceivedEventArgs e)
         {
             if (e.Data.Contains("Working:"))
@@ -174,6 +218,10 @@ namespace Models.Sensitivity
             }
         }
 
+        /// <summary>
+        /// Generates the R script which performs the optimization.
+        /// </summary>
+        /// <param name="fileName">File path to which the R code will be saved.</param>
         private void GenerateRScript(string fileName)
         {
             // tbi: package installation. Need to test on a clean VM.
@@ -186,16 +234,23 @@ namespace Models.Sensitivity
             contents.AppendLine($"simulation_names <- {GetSimulationNames()}");
             contents.AppendLine($"predicted_table_name <- '{PredictedTableName}'");
             contents.AppendLine($"observed_table_name <- '{ObservedTableName}'");
-            contents.AppendLine($"nb_rep <- {NoRepetitions}");
-            contents.AppendLine($"xtol_rel <- {Tolerance}");
-            contents.AppendLine($"maxeval <- {MaxEval}");
             contents.AppendLine($"param_info <- {GetParamInfo()}");
+            contents.AppendLine();
+            contents.AppendLine(OptimizationMethod.GenerateOptimizationOptions("optim_options"));
+            contents.AppendLine();
+            contents.AppendLine($"crit_function <- {OptimizationMethod.CritFunction}");
+            contents.AppendLine($"optim_method <- '{OptimizationMethod.ROptimizerName}'");
             contents.AppendLine();
             contents.Append(ReflectionUtilities.GetResourceAsString("Models.Resources.RScripts.OptimizR.r"));
 
             File.WriteAllText(fileName, contents.ToString());
         }
 
+        /// <summary>
+        /// Generates an .apsimx file containing replacements model (if it
+        /// exists), a datastore, and all children of this model. Saves the
+        /// file to disk and returns the absolute path to the file.
+        /// </summary>
         private string GenerateApsimXFile()
         {
             Simulations rootNode = (Apsim.Parent(this, typeof(Simulations)) as Simulations);
@@ -235,6 +290,11 @@ namespace Models.Sensitivity
             return apsimxFileName;
         }
 
+        /// <summary>
+        /// Write a message to the summary table.
+        /// This is currently used to record console output generated by R.
+        /// </summary>
+        /// <param name="message">Message to be written.</param>
         private void WriteMessage(string message)
         {
             IDataStore storage = Apsim.Find(this, typeof(IDataStore)) as IDataStore;
@@ -262,20 +322,24 @@ namespace Models.Sensitivity
             storage.Writer.WriteTable(messages);
         }
 
+        /// <summary>
+        /// Generate an R named list containing the parameter bounds.
+        /// </summary>
+        /// <returns></returns>
         private string GetParamInfo()
         {
-            //param_info=list(lb=c(.Simulations.Replacements.Wheat.Leaf.ExtinctionCoeff.VegetativePhase.FixedValue=0.4,
-            //                           .Simulations.Replacements.Wheat.Leaf.Photosynthesis.RUE.FixedValue=1.4),
-            //ub=c(.Simulations.Replacements.Wheat.Leaf.ExtinctionCoeff.VegetativePhase.FixedValue=0.6,
-            //                           .Simulations.Replacements.Wheat.Leaf.Photosynthesis.RUE.FixedValue=1.6))
-
             string[] lower = Parameters.Select(p => $"{p.Path}={p.LowerBound}").ToArray();
             string[] upper = Parameters.Select(p => $"{p.Path}={p.UpperBound}").ToArray();
             string lowerBounds = string.Join(", ", lower);
             string upperBounds = string.Join(", ", upper);
+
             return $"list(lb=c({lowerBounds}), ub=c({upperBounds}))";
         }
 
+        /// <summary>
+        /// Return all simulation names generated by all descendant models as a
+        /// comma-separated string.
+        /// </summary>
         private string GetSimulationNames()
         {
             List<string> simulationNames = new List<string>();
@@ -316,9 +380,9 @@ namespace Models.Sensitivity
         }
 
         /// <summary>
-        /// Fixme
+        /// Run the optimization (and wait for it to finish).
         /// </summary>
-        /// <param name="cancelToken"></param>
+        /// <param name="cancelToken">Cancellation token.</param>
         public void Run(CancellationTokenSource cancelToken)
         {
             Progress = 0;
