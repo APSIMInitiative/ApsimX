@@ -1608,7 +1608,7 @@ namespace Models.GrazPlan
                     while (transStr != string.Empty)
                     {
                         StringUtilities.TextToken(ref transStr, out language);
-                        if (transStr[0] == ':')
+                        if (transStr.Length > 0 && transStr[0] == ':')
                         {
                             transStr = transStr.Substring(1);
                             StringUtilities.TextToken(ref transStr, out transName, true);
