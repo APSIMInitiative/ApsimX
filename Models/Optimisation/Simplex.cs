@@ -19,6 +19,7 @@ namespace Models.Optimisation
     /// 
     /// A simple example of application of the method is provided in this vignette.
     /// </summary>
+    [Serializable]
     public class Simplex : IOptimizationMethod
     {
         /// <summary>

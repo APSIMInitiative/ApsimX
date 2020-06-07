@@ -22,6 +22,7 @@ namespace Models.Optimisation
     /// <remarks>
     /// Need to add gamma, but no idea what type it is. It's not well documented.
     /// </remarks>
+    [Serializable]
     public class DreamZs : IOptimizationMethod
     {
         /// <summary>
