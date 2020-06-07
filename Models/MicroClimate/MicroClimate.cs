@@ -482,7 +482,7 @@
                 double Wa = (alley.Zone as Zones.RectangularZone).Width;   // Width of alley zone
                 double CWt = vine.Canopies[0].Canopy.Width / 1000;         // Width of the tree canopy
              
-                double WaOl = (CWt+Wt)/2;                                  //adjusted Width of tree canopy, because the tree canopy is smaller than the strip width, so there would be a gap between alley and tree 
+                double WaOl = CWt;                                  //adjusted Width of tree canopy, because the tree canopy is smaller than the strip width, so there would be a gap between alley and tree 
                 double WaOp = Wa +Wt - WaOl;                               // Width of the open alley zone between tree canopies
                 double Ft = WaOl / (Wt + Wa);                              // Fraction of space in tree canopy
                 double Fs = WaOp / (Wt + Wa);                              // Fraction of open space in the alley row
