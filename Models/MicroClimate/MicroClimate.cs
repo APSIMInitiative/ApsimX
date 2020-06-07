@@ -488,8 +488,8 @@
                 double Fs = WaOp / (Wt + Wa);                              // Fraction of open space in the alley row
 
                
-                double LAIt = MathUtilities.Sum(vine.LAItotsum);           // LAI of tallest strip
-                double LAIs = MathUtilities.Sum(alley.LAItotsum);          // LAI of shortest strip
+                double LAIt = MathUtilities.Sum(vine.LAItotsum) * Wt/ WaOl;      // adjusting the LAI of tallest strip based on new width
+                double LAIs = MathUtilities.Sum(alley.LAItotsum)* Wa / WaOp;     // adjusting the LAI of shortest strip based on new width
 
                 double Kt = 0;                                                // Extinction Coefficient of the tallest strip
                 if (vine.Canopies.Count > 0)                                 // If it exists...
@@ -517,8 +517,8 @@
                 if (Math.Abs(1 - EnergyBalanceCheck) > 0.001)
                     throw (new Exception("Energy Balance not maintained in strip crop light interception model"));
 
-                Ft = (Wt) / (Wt + Wa);  // Remove overlap so scaling back to zone ground area works
-                Fs = (Wa) / (Wt + Wa);  // Remove overlap so scaling back to zone ground area works
+                Ft = (Wt) / (Wt + Wa);  // Scaling back to zone ground area works
+                Fs = (Wa) / (Wt + Wa);  // Scaling back to zone ground area works
 
                 if (vine.Canopies.Count > 0)
                     vine.Canopies[0].Rs[0] = weather.Radn * (Intttop + Inttbot) / Ft;
