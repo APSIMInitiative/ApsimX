@@ -3771,52 +3771,60 @@
         /// through all animal groups.
         /// </summary>
         /// <param name="number">The number of animals to remove.</param>
-        /// <param name="groups">The animal groups to remove animals from.</param>
-        public void Sell(int number, IEnumerable<AnimalGroup> groups = null)
+        /// <param name="group">The animal group to remove animals from. Null denotes all groups.</param>
+        public void Sell(int number, AnimalGroup group = null)
         {
             outputSummary.WriteMessage(this, $"Selling {number} animals");
-            if (groups == null)
-                groups = AnimalGroups;
-            foreach (var group in groups)
+            if (group == null)
             {
-                int numToSellFromThisGroup = Math.Min(number, group.NoAnimals);
-                group.NoAnimals -= numToSellFromThisGroup;
-                number -= numToSellFromThisGroup;
+                foreach (var g in AnimalGroups)
+                {
+                    int numToSellFromThisGroup = Math.Min(number, g.NoAnimals);
+                    g.NoAnimals -= numToSellFromThisGroup;
+                    number -= numToSellFromThisGroup;
+                }
             }
+            else
+                group.NoAnimals -= Math.Min(number, group.NoAnimals);
         }
 
         /// <summary>
-        /// Shears sheep. The event has no effect on cattle
+        /// Shears sheep. The event has no effect on cattle.
         /// </summary>
         /// <param name="shearAdults">Shear adults?</param>
         /// <param name="shearYoung">Shear lambs?</param>
-        /// <param name="groups">The groups to shear. null = all groups</param>
+        /// <param name="group">The group to shear. null = all groups</param>
         /// <returns>cfw</returns>
-        public double Shear(bool shearAdults, bool shearYoung, IEnumerable<AnimalGroup> groups = null)
+        public double Shear(bool shearAdults, bool shearYoung, AnimalGroup group = null)
         {
             this.outputSummary.WriteMessage(this, "Shearing animals");
-            if (groups == null)
-                groups = AnimalGroups;
             double totalCFW = 0;
-            foreach (var group in groups)
-                totalCFW += group.Shear(shearAdults, shearYoung);
+            if (group == null)
+            {
+                foreach (var g in AnimalGroups)
+                    totalCFW += g.Shear(shearAdults, shearYoung);
+            }
+            else
+                totalCFW = group.Shear(shearAdults, shearYoung);
+
             return totalCFW;
         }
 
         /// <summary>Moves animals to a specified paddock.</summary>
         /// <param name="paddockName">Name of the paddock to which the animal group is to be moved.</param>
-        /// <param name="groups">The animal groups to move.</param>
-        public void Move(string paddockName, IEnumerable<AnimalGroup> groups = null)
+        /// <param name="group">The animal group to move.</param>
+        public void Move(string paddockName, AnimalGroup group = null)
         {
             this.outputSummary.WriteMessage(this, $"Moving animals to paddock {paddockName}");
-            if (groups == null)
-                groups = AnimalGroups;
-
             var paddockToMoveTo = StockModel.Paddocks.Find(p => p.Name.Equals(paddockName, StringComparison.InvariantCultureIgnoreCase));
             if (paddockToMoveTo == null)
                 throw new Exception($"Stock: attempt to place animals in non-existent paddock: {paddockName}");
-
-            foreach (var group in groups)
+            if (group == null)
+            {
+                foreach (var g in AnimalGroups)
+                    g.PaddOccupied = paddockToMoveTo;
+            }
+            else
                 group.PaddOccupied = paddockToMoveTo;
         }
 
@@ -3826,14 +3834,17 @@
         /// <param name="mateTo">Genotype of the rams or bulls with which the animals are mated. 
         /// Must match the name field of a member of the genotypes property.</param>
         /// <param name="mateDays">Length of the mating period in days.</param>
-        /// <param name="groups">The animal groups to mate. null denotes that all empty females of sufficient age should be mated.</param>
-        public void Join(string mateTo, int mateDays, IEnumerable<AnimalGroup> groups = null)
+        /// <param name="group">The animal group to mate. null denotes that all empty females of sufficient age should be mated.</param>
+        public void Join(string mateTo, int mateDays, AnimalGroup group = null)
         {
             outputSummary.WriteMessage(this, $"Joining animals to {mateTo}");
 
-            if (groups == null)
-                groups = AnimalGroups;
-            foreach (var group in groups)
+            if (group == null)
+            {
+                foreach (var g in AnimalGroups)
+                    g.Join(Genotypes.Get(mateTo), mateDays);
+            }
+            else
                 group.Join(Genotypes.Get(mateTo), mateDays);
         }
 
@@ -3844,22 +3855,30 @@
         /// be added at the end of the set of animal groups.
         /// </summary>
         /// <param name="number">Number of male lambs or calves to be castrated.</param>
-        /// <param name="groups">The animal groups to castrate. null denotes that each animal group should be processed in turn until the nominated number of offspring has been castrated.</param>
-        public void Castrate(int number, IEnumerable<AnimalGroup> groups = null)
+        /// <param name="group">The animal group to castrate. null denotes that each animal group should be processed in turn until the nominated number of offspring has been castrated.</param>
+        public void Castrate(int number, AnimalGroup group = null)
         {
             outputSummary.WriteMessage(this, $"Castrate {number} animals");
-            if (groups == null)
-                groups = AnimalGroups;
-            foreach (var group in groups)
+            if (group == null)
             {
-                if (group.Young != null && group.Young.MaleNo > 0 && number > 0)
+                foreach (var g in AnimalGroups)
                 {
-                    var numToCastrateFromThisGroup = Math.Min(number, group.Young.MaleNo);
-                    if (numToCastrateFromThisGroup < group.Young.MaleNo)
-                        StockModel.Split(group, Convert.ToInt32(Math.Round((double)number / numToCastrateFromThisGroup * group.NoAnimals), CultureInfo.InvariantCulture));  // TODO: check this conversion
-                    group.Young.Castrate();
-                    number -= numToCastrateFromThisGroup;
+                    if (g.Young != null && g.Young.MaleNo > 0 && number > 0)
+                    {
+                        var numToCastrateFromThisGroup = Math.Min(number, g.Young.MaleNo);
+                        if (numToCastrateFromThisGroup < g.Young.MaleNo)
+                            StockModel.Split(g, Convert.ToInt32(Math.Round((double)number / numToCastrateFromThisGroup * g.NoAnimals), CultureInfo.InvariantCulture));  // TODO: check this conversion
+                        g.Young.Castrate();
+                        number -= numToCastrateFromThisGroup;
+                    }
                 }
+            }
+            else
+            {
+                var numToCastrateFromThisGroup = Math.Min(number, group.Young.MaleNo);
+                if (numToCastrateFromThisGroup < group.Young.MaleNo)
+                    StockModel.Split(group, Convert.ToInt32(Math.Round((double)number / numToCastrateFromThisGroup * group.NoAnimals), CultureInfo.InvariantCulture));  // TODO: check this conversion
+                group.Young.Castrate();
             }
         }
 
@@ -3870,8 +3889,8 @@
         /// <param name="number">The number of lambs or calves to be weaned.</param>
         /// <param name="weanMales">Wean the male animals?</param>
         /// <param name="weanFemales">Wean the female animals?</param>
-        /// <param name="groups">The animal groups to wean. null denotes that each animal group should be processed in turn until the nominated number of lambs or calves has been weaned.</param>
-        public void Wean(int number, bool weanMales, bool weanFemales, IEnumerable<AnimalGroup> groups = null)
+        /// <param name="group">The animal group to wean. null denotes that each animal group should be processed in turn until the nominated number of lambs or calves has been weaned.</param>
+        public void Wean(int number, bool weanMales, bool weanFemales, AnimalGroup group = null)
         {
             var msg = "Weaning";
             if (weanMales && weanFemales)
@@ -3881,11 +3900,14 @@
             else
                 msg += " females";
             outputSummary.WriteMessage(this, msg);
-            
-            if (groups == null)
-                groups = AnimalGroups;
-            foreach (var group in groups)
-                number -= StockModel.Wean(group, number, weanFemales, weanMales);
+
+            if (group == null)
+            {
+                foreach (var g in AnimalGroups)
+                    number -= StockModel.Wean(g, number, weanFemales, weanMales);
+            }
+            else
+                StockModel.Wean(group, number, weanFemales, weanMales);
         }
 
         /// <summary>
@@ -3894,54 +3916,58 @@
         /// the sub-group that is no longer lactating will remain at the original index and the sub-group that continues lactating will be added at the end of the set of animal groups
         /// </summary>
         /// <param name="number">Number of females for which lactation is to end.</param>
-        /// <param name="groups">The animal groups for which lactation is to end. Null denotes that each animal group should be processed in turn until the nominated number of cows has been dried off.</param>
-        public void DryOff(int number, IEnumerable<AnimalGroup> groups = null)
+        /// <param name="group">The animal group for which lactation is to end. Null denotes that each animal group should be processed in turn until the nominated number of cows has been dried off.</param>
+        public void DryOff(int number, AnimalGroup group = null)
         {
             outputSummary.WriteMessage(this, $"Drying off {number} animals.");
-            if (groups == null)
-                groups = AnimalGroups;
-            StockModel.DryOff(groups, number);
+            if (group == null)
+                StockModel.DryOff(AnimalGroups, number);
+            else
+                StockModel.DryOff(new AnimalGroup[] { group }, number);
         }
 
         /// <summary>
-        /// Split animal groups by age
+        /// Split animal group by age
         /// </summary>
         /// <param name="age">Age in days</param>
-        /// <param name="groups">The animal groups to split.</param>
+        /// <param name="group">The animal group to split.</param>
         /// <returns>The new animal groups that were created.</returns>
-        public IEnumerable<AnimalGroup> SplitByAge(int age, IEnumerable<AnimalGroup> groups = null)
+        public IEnumerable<AnimalGroup> SplitByAge(int age, AnimalGroup group = null)
         {
             outputSummary.WriteMessage(this, "Split animals by age.");
-            if (groups == null)
-                groups = AnimalGroups;
-            return StockModel.SplitByAge(age, groups);
+            if (group == null)
+                return StockModel.SplitByAge(age, AnimalGroups);
+            else
+                return StockModel.SplitByAge(age, new AnimalGroup[] { group });
         }
 
         /// <summary>
-        /// Split animal groups by weight
+        /// Split animal group by weight
         /// </summary>
         /// <param name="weight">Weight to split on (kg/animal)</param>
-        /// <param name="groups">The animal groups to split.</param>
+        /// <param name="group">The animal group to split.</param>
         /// <returns>The new animal groups that were created.</returns>
-        public IEnumerable<AnimalGroup> SplitByWeight(int weight, IEnumerable<AnimalGroup> groups = null)
+        public IEnumerable<AnimalGroup> SplitByWeight(int weight, AnimalGroup group = null)
         {
             outputSummary.WriteMessage(this, "Split animals by weight.");
-            if (groups == null)
-                groups = AnimalGroups;
-            return StockModel.SplitByWeight(weight, groups);
+            if (group == null)
+                return StockModel.SplitByWeight(weight, AnimalGroups);
+            else
+                return StockModel.SplitByWeight(weight, new AnimalGroup[] { group });
         }
 
         /// <summary>
-        /// Split animal groups by young.
+        /// Split animal group by young.
         /// </summary>
-        /// <param name="groups">The animal groups to split.</param>
+        /// <param name="group">The animal group to split.</param>
         /// <returns>The new animal groups that were created.</returns>
-        public IEnumerable<AnimalGroup> SplitByYoung(IEnumerable<AnimalGroup> groups = null)
+        public IEnumerable<AnimalGroup> SplitByYoung(AnimalGroup group = null)
         {
             outputSummary.WriteMessage(this, "Split young animals off.");
-            if (groups == null)
-                groups = AnimalGroups;
-            return StockModel.SplitByYoung(groups);
+            if (group == null)
+                return StockModel.SplitByYoung(AnimalGroups);
+            else
+                return StockModel.SplitByYoung(new AnimalGroup[] { group });
         }
 
         /// <summary>

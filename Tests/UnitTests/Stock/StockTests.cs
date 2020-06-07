@@ -570,7 +570,7 @@
             Utilities.CallEventAll(stock, "StartOfSimulation");
 
             // Sell animals that are tagged 2
-            var tag2Animals = stock.ByTag(2);
+            var tag2Animals = stock.AnimalGroups.Last();
             stock.Sell(50, tag2Animals);
 
             var groups = stock.AnimalGroups;
@@ -626,7 +626,7 @@
             Utilities.CallEventAll(stock, "StartOfSimulation");
 
             // Sell males
-            var males = stock.AnimalGroups.Where(group => group.ReproState == GrazType.ReproType.Male);
+            var males = stock.AnimalGroups.First(group => group.ReproState == GrazType.ReproType.Male);
             stock.Sell(50, males);
 
             var groups = stock.AnimalGroups;
@@ -737,9 +737,9 @@
             Utilities.CallEventAll(stock, "StartOfSimulation");
 
             // Move the cattle into field 2
-            var cattle = stock.AnimalGroups.Where(group => group.Genotype.Animal == GrazType.AnimalType.Cattle);
+            var cattle = stock.AnimalGroups.First(group => group.Genotype.Animal == GrazType.AnimalType.Cattle);
             stock.Move("Field2", cattle);
-            Assert.AreEqual("Field2", cattle.First().PaddOccupied.Name);
+            Assert.AreEqual("Field2", cattle.PaddOccupied.Name);
         }
 
         /// <summary>Ensure a user can mate animals.</summary>
@@ -789,12 +789,12 @@
             Utilities.CallEventAll(stock, "StartOfSimulation");
 
             // Mate the ewes.
-            var ewes = stock.AnimalGroups.Where(group => group.Genotype.Animal == GrazType.AnimalType.Sheep);
+            var ewes = stock.AnimalGroups.First(group => group.Genotype.Animal == GrazType.AnimalType.Sheep);
             stock.Join("Small Merino", 30, ewes);
 
             List<AnimalGroup> newGroups = new List<AnimalGroup>();
             for (int i = 0; i < 10; i++)
-                ewes.First().Age(1, ref newGroups);
+                ewes.Age(1, ref newGroups);
 
             // Ewes should now be pregnant.
             Assert.AreEqual(3, newGroups.Count, 3);
@@ -851,12 +851,12 @@
             Utilities.CallEventAll(stock, "StartOfSimulation");
 
             // Castrate the cattle young.
-            var cattle = stock.AnimalGroups.Where(group => group.Genotype.Animal == GrazType.AnimalType.Cattle);
+            var cattle = stock.AnimalGroups.First(group => group.Genotype.Animal == GrazType.AnimalType.Cattle);
 
             stock.Castrate(100, cattle);
 
             // Young should now be castrated.
-            Assert.AreEqual(GrazType.ReproType.Castrated, cattle.First().Young.ReproState);
+            Assert.AreEqual(GrazType.ReproType.Castrated, cattle.Young.ReproState);
         }
 
         /// <summary>Ensure a user can wean animals.</summary>
@@ -909,12 +909,12 @@
             Utilities.CallEventAll(stock, "StartOfSimulation");
 
             // Wean the cattle young.
-            var cattle = stock.AnimalGroups.Where(group => group.Genotype.Animal == GrazType.AnimalType.Cattle);
+            var cattle = stock.AnimalGroups.First(group => group.Genotype.Animal == GrazType.AnimalType.Cattle);
 
-            stock.Wean(150, weanMales:true, weanFemales:true, groups: cattle);
+            stock.Wean(150, weanMales:true, weanFemales:true, group: cattle);
 
             // Young should now be weaned
-            Assert.IsNull(cattle.First().Young);
+            Assert.IsNull(cattle.Young);
             Assert.AreEqual(4, stock.AnimalGroups.Count());
         }
 
@@ -967,11 +967,11 @@
             Utilities.CallEventAll(stock, "StartOfSimulation");
 
             // Dryoff the cattle young.
-            var cattle = stock.AnimalGroups.Where(group => group.Genotype.Animal == GrazType.AnimalType.Cattle);
+            var cattle = stock.AnimalGroups.First(group => group.Genotype.Animal == GrazType.AnimalType.Cattle);
             stock.DryOff(150, cattle);
 
             // Young should now be weaned
-            Assert.AreEqual(0, cattle.First().Lactation);
+            Assert.AreEqual(0, cattle.Lactation);
         }
 
         /// <summary>Ensure a user can split an animal group by age.</summary>
@@ -1009,7 +1009,7 @@
             Utilities.CallEventAll(stock, "StartOfSimulation");
 
             // Split the cattle group.
-            var cattle = stock.AnimalGroups.Where(group => group.Genotype.Animal == GrazType.AnimalType.Cattle);
+            var cattle = stock.AnimalGroups.First(group => group.Genotype.Animal == GrazType.AnimalType.Cattle);
             var newGroups = stock.SplitByAge(100, cattle);
 
             // One new group should have been created.
@@ -1056,7 +1056,7 @@
             Utilities.CallEventAll(stock, "StartOfSimulation");
 
             // Split the cattle group.
-            var cattle = stock.AnimalGroups.Where(group => group.Genotype.Animal == GrazType.AnimalType.Cattle);
+            var cattle = stock.AnimalGroups.First(group => group.Genotype.Animal == GrazType.AnimalType.Cattle);
             var newGroups = stock.SplitByWeight(500, cattle);
 
             // One new group should have been created.
@@ -1103,7 +1103,7 @@
             Utilities.CallEventAll(stock, "StartOfSimulation");
 
             // Split the cattle group.
-            var cattle = stock.AnimalGroups.Where(group => group.Genotype.Animal == GrazType.AnimalType.Cattle);
+            var cattle = stock.AnimalGroups.First(group => group.Genotype.Animal == GrazType.AnimalType.Cattle);
             var newGroups = stock.SplitByYoung(cattle);
 
             // One new group should have been created.
