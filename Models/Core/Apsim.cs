@@ -106,8 +106,7 @@
         /// <returns>The found model or null if not found</returns>
         public static IModel Find(IModel model, string namePath)
         {
-            List<IModel> matches = FindAll(model);
-            return matches.Find(match => StringUtilities.StringsAreEqual(match.Name, namePath));
+            return model?.FindInScope(namePath);
         }
 
         /// <summary>
@@ -118,11 +117,10 @@
         /// <returns>The found model or null if not found</returns>
         public static IModel Find(IModel model, Type type)
         {
-            List<IModel> matches = FindAll(model, type);
-            if (matches.Count > 0)
-                return matches[0];
-            else
+            if (model == null)
                 return null;
+
+            return model.GetType().GetMethod("FindInScope").MakeGenericMethod(type).Invoke(model, null) as IModel;
         }
 
         /// <summary>
