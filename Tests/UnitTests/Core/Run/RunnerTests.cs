@@ -10,6 +10,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using UnitTests.Storage;
     using static Models.Core.Run.Runner;
 
@@ -477,6 +478,101 @@
 
                 database.CloseDatabase();
             }
+        }
+
+        [Serializable]
+        private class TestPostSim : Model, IPostSimulationTool
+        {
+            [Link] private IDataStore storage = null;
+            public List<string> TablesModified { get; set; }
+
+            public void Run()
+            {
+                TablesModified = storage.Writer.TablesModified;
+            }
+        }
+
+        /// <summary>
+        /// Tests the TablesModified property of DataStoreWriter.
+        /// This property should contain only the tables which were
+        /// modified during the most recent simulation run.
+        /// </summary>
+        [Test]
+        public void TestTablesModified()
+        {
+            IModel sim1 = new Simulation()
+            {
+                Name = "sim1",
+                Children = new List<IModel>()
+                {
+                    new Report()
+                    {
+                        Name = "Report1",
+                        VariableNames = new[] { "[Clock].Today" },
+                        EventNames = new[] { "[Clock].DoReport" },
+                    },
+                    new MockSummary(),
+                    new Clock()
+                    {
+                        StartDate = new DateTime(2020, 1, 1),
+                        EndDate = new DateTime(2020, 1, 2),
+                    },
+                }
+            };
+
+            IModel sim2 = Apsim.Clone(sim1);
+            sim2.Name = "sim2";
+            sim2.Children[0].Name = "Report2";
+
+            TestPostSim testPostSim = new TestPostSim();
+            sim1.Children.Add(testPostSim);
+
+            Simulations sims = Simulations.Create(new[] { sim1, sim2, new DataStore() });
+            Apsim.InitialiseModel(sims);
+
+            Runner runner = new Runner(sims, simulationNamesToRun: new[] { "sim1" });
+            List<Exception> errors = runner.Run();
+            if (errors != null && errors.Count > 0)
+                throw errors[0];
+
+            List<string> tablesMod = new List<string>()
+            {
+                "_Factors",
+                "Report1",
+                "_Simulations",
+                "_Checkpoints",
+            };
+            Assert.AreEqual(tablesMod.OrderBy(x => x), testPostSim.TablesModified.OrderBy(x => x));
+
+            runner = new Runner(sims, simulationNamesToRun: new[] { "sim2" });
+            errors = runner.Run();
+            if (errors != null && errors.Count > 0)
+                throw errors[0];
+
+            tablesMod = new List<string>()
+            {
+                "_Factors",
+                "Report2",
+                "_Simulations",
+                "_Checkpoints",
+            };
+            Assert.AreEqual(tablesMod.OrderBy(x => x), testPostSim.TablesModified.OrderBy(x => x));
+
+            // Now run both sims
+            runner = new Runner(sims);
+            errors = runner.Run();
+            if (errors != null && errors.Count > 0)
+                throw errors[0];
+
+            tablesMod = new List<string>()
+            {
+                "_Factors",
+                "Report2",
+                "Report1",
+                "_Simulations",
+                "_Checkpoints",
+            };
+            Assert.AreEqual(tablesMod.OrderBy(x => x), testPostSim.TablesModified.OrderBy(x => x));
         }
 
         /// <summary>Ensure only post simulation tools are run when specified.</summary>
