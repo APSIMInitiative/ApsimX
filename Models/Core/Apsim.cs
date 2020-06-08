@@ -439,22 +439,6 @@
             return allowableModels;
         }
 
-        /// <summary>Get a list of allowable child functions for the specified parent.</summary>
-        /// <param name="parent">The parent model.</param>
-        /// <returns>A list of allowable child functions.</returns>
-        public static List<Type> GetAllowableChildFunctions(object parent)
-        {
-            // For now, we allow all functions to be added anywhere
-            List<Type> allowableFunctions = new List<Type>();
-            foreach (Type t in ReflectionUtilities.GetTypesThatHaveInterface(typeof(IFunction)))
-            {
-                allowableFunctions.Add(t);
-            }
-
-            allowableFunctions.Sort(new ReflectionUtilities.TypeComparer());
-            return allowableFunctions;
-        }
-
         /// <summary>
         /// Gets the locater model for the specified model.
         /// </summary>
