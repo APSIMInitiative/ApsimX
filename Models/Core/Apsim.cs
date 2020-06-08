@@ -134,15 +134,15 @@
         /// <returns>The found models or an empty array if not found.</returns>
         public static List<IModel> FindAll(IModel model)
         {
-            var simulation = Apsim.Parent(model, typeof(Simulation)) as Simulation;
-            if (simulation == null)
-            {
-                ScopingRules scope = new ScopingRules();
-                List<IModel>result = scope.FindAll(model).ToList();
-                scope.Clear();
-                return result;
-            }
-            return simulation.Scope.FindAll(model).ToList();
+            if (model == null)
+                return new List<IModel>();
+
+            MethodInfo[] methods = model.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance);
+            MethodInfo find = methods.FirstOrDefault(m => m.Name == "FindAllInScope" && !m.IsGenericMethod && m.GetParameters().Length == 0);
+            if (find == null)
+                throw new Exception($"Unable to find find method");
+
+            return (find.Invoke(model, null) as IEnumerable<IModel>).ToList();
         }
 
         /// <summary>
@@ -179,9 +179,14 @@
         /// <returns>The found models or an empty array if not found.</returns>
         public static List<IModel> FindAll(IModel model, Type typeFilter)
         {
-            List<IModel> matches = FindAll(model);
-            matches.RemoveAll(match => !typeFilter.IsAssignableFrom(match.GetType()));
-            return matches;
+            if (model == null)
+                return null;
+
+            MethodInfo[] methods = model.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance);
+            MethodInfo find = methods.FirstOrDefault(m => m.Name == "FindAllInScope" && m.IsGenericMethod);
+            if (find == null)
+                throw new Exception($"Unable to find find method");
+            return (find.MakeGenericMethod(typeFilter).Invoke(model, null) as IEnumerable<IModel>).ToList();
         }
 
         /// <summary>
