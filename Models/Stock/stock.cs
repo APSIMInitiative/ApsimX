@@ -221,7 +221,7 @@
         public StockList StockModel { get; private set; }
 
         /// <summary>List of animal groups.</summary>
-        public IEnumerable<AnimalGroup> AnimalGroups { get { return StockModel.Animals.Skip(1); } }
+        public IList<AnimalGroup> AnimalGroups { get { return StockModel.Animals.Skip(1).ToList(); } }
 
         /// <summary>Return animal groups that have a specific tag number.</summary>
         /// <param name="tag">Tag number of animal groups to return.</param>
