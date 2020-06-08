@@ -91,8 +91,6 @@ namespace Models.CLEM.Activities
             people = Resources.Labour();
             food = Resources.HumanFoodStore();
             bankAccount = Resources.GetResourceItem(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as FinanceType;
-
-            Market = FindMarket();
         }
 
         /// <summary>
@@ -114,8 +112,7 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            Market market = Apsim.Children(Apsim.Parent(this, typeof(Simulation)), typeof(Market)).FirstOrDefault() as Market;
-            if(market != null & bankAccount is null)
+            if(Resources.FindMarket != null & bankAccount is null)
             {
                 string[] memberNames = new string[] { "AccountName" };
                 results.Add(new ValidationResult($"A valid bank account must be supplied for purchases of food from the market used by [a="+this.Name+"].", memberNames));
@@ -224,9 +221,7 @@ namespace Models.CLEM.Activities
 
             // for each market
             List<HumanFoodParcel> marketFoodParcels = new List<HumanFoodParcel>();
-            foreach (Market market in Apsim.Children(Apsim.Parent(this, typeof(Simulation)), typeof(Market)).Cast<Market>().ToList())
-            {
-                ResourcesHolder resources = Apsim.Child(market, typeof(ResourcesHolder)) as ResourcesHolder;
+                ResourcesHolder resources = Resources.FindMarket.Resources;
                 if (resources != null)
                 {
                     HumanFoodStore food = resources.HumanFoodStore();
@@ -246,8 +241,7 @@ namespace Models.CLEM.Activities
                         }
                     }
                 }
-            }
-            foodParcels.AddRange(marketFoodParcels.OrderBy(a => a.FoodStore.Price.PricePerPacket));
+            foodParcels.AddRange(marketFoodParcels.OrderBy(a => a.FoodStore.Price(PurchaseOrSalePricingStyleType.Purchase).PricePerPacket));
 
             double fundsAvailable = double.PositiveInfinity;
             if (bankAccount != null)
@@ -286,11 +280,12 @@ namespace Models.CLEM.Activities
 
                     foodParcels[parcelIndex].Proportion = Math.Min(propCanBeEaten, propToTarget);
 
-                    // work out if there will be a cost limitation, only if a price structure esists for the resource
+                    // work out if there will be a cost limitation, only if a price structure exists for the resource
                     double propToPrice = 1;
-                    if (foodParcels[parcelIndex].FoodStore.PricingExists)
+                    if (foodParcels[parcelIndex].FoodStore.PricingExists(PurchaseOrSalePricingStyleType.Purchase))
                     {
-                        double cost = (foodParcels[parcelIndex].Pool.Amount * foodParcels[parcelIndex].Proportion) / foodParcels[parcelIndex].FoodStore.Price.PacketSize * foodParcels[parcelIndex].FoodStore.Price.PricePerPacket;
+                        ResourcePricing price = foodParcels[parcelIndex].FoodStore.Price(PurchaseOrSalePricingStyleType.Purchase);
+                        double cost = (foodParcels[parcelIndex].Pool.Amount * foodParcels[parcelIndex].Proportion) / price.PacketSize * price.PricePerPacket;
                         if (cost > 0)
                         {
                             propToPrice = Math.Min(1, fundsAvailable / cost);
@@ -336,13 +331,14 @@ namespace Models.CLEM.Activities
                 {
                     double financeLimit = 1;
                     // if obtained from the market make financial transaction before taking
-                    if(bankAccount != null && item.Key.Parent.Parent.Parent == Market && item.Key.Price.PricePerPacket > 0)
+                    ResourcePricing price = item.Key.Price(PurchaseOrSalePricingStyleType.Sale);
+                    if (bankAccount != null && item.Key.Parent.Parent.Parent == Market && price.PricePerPacket > 0)
                     {
                         // if shortfall reduce purchase
                         ResourceRequest marketRequest = new ResourceRequest
                         {
                             ActivityModel = this,
-                            Required = amount / item.Key.Price.PacketSize * item.Key.Price.PricePerPacket,
+                            Required = amount / price.PacketSize * price.PricePerPacket,
                             AllowTransmutation = false,
                             Reason = "Food purchase",
                             MarketTransactionMultiplier = 1
@@ -616,9 +612,9 @@ namespace Models.CLEM.Activities
                             {
                                 PacketSize = 1
                             }; 
-                            if(foodStore.PricingExists)
+                            if(foodStore.PricingExists(PurchaseOrSalePricingStyleType.Purchase))
                             {
-                                priceToUse = foodStore.Price;
+                                priceToUse = foodStore.Price(PurchaseOrSalePricingStyleType.Purchase);
                             }
 
                             double units = amountSold / priceToUse.PacketSize;
@@ -633,14 +629,22 @@ namespace Models.CLEM.Activities
                                 Required = units * priceToUse.PacketSize,
                                 AllowTransmutation = false,
                                 Reason = "Sell excess",
-                                MarketTransactionMultiplier = 1
+                                MarketTransactionMultiplier = this.FarmMultiplier
                             };
                             foodStore.Remove(purchaseRequest);
 
                             // transfer money earned
                             if (bankAccount != null)
                             {
-                                bankAccount.Add(units * priceToUse.PricePerPacket, this, $"Sales {foodStore.Name}");
+                                ResourceRequest purchaseFinance = new ResourceRequest
+                                {
+                                    ActivityModel = this,
+                                    Required = units * priceToUse.PacketSize,
+                                    AllowTransmutation = false,
+                                    Reason = $"Sales {foodStore.Name}",
+                                    MarketTransactionMultiplier = this.FarmMultiplier
+                                };
+                                bankAccount.Add(purchaseFinance, this, $"Sales {foodStore.Name}");
                             }
                         } 
                     }
@@ -716,15 +720,18 @@ namespace Models.CLEM.Activities
             html += "Hired labour <span class=\"setvalue\">" + ((IncludeHiredLabour) ? "is" : "is not") + "</span> included";
             html += "</div>";
 
-
-            Market marketPlace = FindMarket();
-            if (marketPlace != null)
+            // find a market place if present
+            Simulation sim = Apsim.Parent(this, typeof(Simulation)) as Simulation;
+            if (sim != null)
             {
-                html += "<div class=\"activityentry\">";
-                html += "Food with be bought and sold through the market <span class=\"setvalue\">"+marketPlace.Name+"</span>";
-                html += "</div>";
+                Market marketPlace = Apsim.Child(sim, typeof(Market)) as Market;
+                if (marketPlace != null)
+                {
+                    html += "<div class=\"activityentry\">";
+                    html += "Food with be bought and sold through the market <span class=\"setvalue\">" + marketPlace.Name + "</span>";
+                    html += "</div>";
+                }
             }
-
             return html;
         }
 

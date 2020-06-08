@@ -93,7 +93,12 @@ namespace Models.CLEM.Activities
         /// </summary>
         public ResourceRequest LastShortfallResourceRequest { get; set; }
 
-        private void ActivitiesHolder_ResourceShortfallOccurred(object sender, EventArgs e)
+        /// <summary>
+        /// Hander for shortfall
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void ActivitiesHolder_ResourceShortfallOccurred(object sender, EventArgs e)
         {
             // save resource request
             LastShortfallResourceRequest = (e as ResourceRequestEventArgs).Request;
@@ -148,7 +153,7 @@ namespace Models.CLEM.Activities
         /// <param name="activity"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        private IModel SearchForNameInActivity(Model activity, string name)
+        private IModel SearchForNameInActivity(IModel activity, string name)
         {
             IModel found = activity.Children.Find(x => x.Name == name);
             if (found != null)

@@ -1,16 +1,12 @@
 ﻿using APSIM.Shared.Utilities;
-using Gdk;
 using Models.Core;
+using Models.GrazPlan;
 using Models.PMF;
-using Models.Soils;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using UnitTests.ApsimNG.Utilities;
 using UserInterface.Presenters;
 using UserInterface.Views;
@@ -58,6 +54,46 @@ namespace UnitTests.ApsimNG.Presenters
             Assert.AreEqual(typeof(Plant), paddock.Children[2].GetType());
             Plant wheat = paddock.Children[2] as Plant;
             Assert.AreEqual("Wheat", wheat.ResourceName);
+            Assert.AreEqual("Wheat", wheat.CropType);
+        }
+
+        /// <summary>
+        /// This test ensures that double clicking the folder for the
+        /// Graph namespace doesn't add a Graph model, and that double-
+        /// clicking on the Wheat node adds the wheat model.
+        /// 
+        /// https://github.com/APSIMInitiative/ApsimX/issues/3698#issuecomment-552251467
+        /// </summary>
+        [Test]
+        public void AddStockGenotype()
+        {
+            var simulations = new Simulations()
+            {
+                Children = new List<IModel>()
+                {
+                    new Models.GrazPlan.Stock()
+                }
+            };
+            var fileName = Path.ChangeExtension(Path.GetTempFileName(), ".apsimx");
+            simulations.Write(fileName);
+            var explorerPresenter = UITestsMain.MasterPresenter.OpenApsimXFileInTab(fileName, onLeftTabControl: true);
+            GtkUtilities.WaitForGtkEvents();
+
+            var stock = Apsim.Find(explorerPresenter.ApsimXFile, typeof(Models.GrazPlan.Stock));
+
+            explorerPresenter.SelectNode(stock);
+            explorerPresenter.ContextMenu.AddModel(explorerPresenter, EventArgs.Empty);
+            GtkUtilities.WaitForGtkEvents();
+
+            TreeView addModelsTree = (TreeView)ReflectionUtilities.GetValueOfFieldOrProperty("tree", explorerPresenter.CurrentPresenter);
+
+            // Let's make sure we can add stock genotype resource - e.g. Angus.
+            ActivateNode(addModelsTree, ".Models.GrazPlan.Genotypes.Cattle.Beef.Angus");
+            Assert.AreEqual(1, stock.Children.Count);
+            Assert.AreEqual(typeof(Genotype), stock.Children[0].GetType());
+            var genotype = stock.Children[0] as Genotype;
+            Assert.AreEqual("Angus", genotype.Name);
+            Assert.AreEqual(500, genotype.BreedSRW);
         }
 
         /// <summary>

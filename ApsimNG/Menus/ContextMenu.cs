@@ -20,6 +20,7 @@
     using System.Text;
     using Models.Functions;
     using Models.Soils.Standardiser;
+    using Models.GrazPlan;
 
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -138,7 +139,8 @@
                                               typeof(Experiment),
                                               typeof(Folder),
                                               typeof(Morris),
-                                              typeof(Sobol)},
+                                              typeof(Sobol),
+                                              typeof(APSIM.Shared.JobRunning.IRunnable)},
                      ShortcutKey = "F5")]
         public void RunAPSIM(object sender, EventArgs e)
         {
@@ -162,7 +164,8 @@
                                               typeof(Simulations),
                                               typeof(Experiment),
                                               typeof(Folder),
-                                              typeof(Morris)},
+                                              typeof(Morris),
+                                              typeof(APSIM.Shared.JobRunning.IRunnable)},
                      ShortcutKey = "F6")]
         public void RunAPSIMMultiProcess(object sender, EventArgs e)
         {
@@ -756,9 +759,15 @@
                 IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
                 if (model != null)
                 {
-                    model.Enabled = !model.Enabled;
+                    List<ChangeProperty.Property> changes = new List<ChangeProperty.Property>();
+                    changes.Add(new ChangeProperty.Property(model, nameof(model.Enabled), !model.Enabled));
+
                     foreach (IModel child in Apsim.ChildrenRecursively(model))
-                        child.Enabled = model.Enabled;
+                        changes.Add(new ChangeProperty.Property(child, nameof(model.Enabled), !model.Enabled));
+
+                    ChangeProperty command = new ChangeProperty(changes);
+                    explorerPresenter.CommandHistory.Add(command);
+
                     explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
                     explorerPresenter.Refresh();
                 }
@@ -789,9 +798,9 @@
                 List<ChangeProperty.Property> changes = new List<ChangeProperty.Property>();
                 
                 // Toggle read-only on the model and all descendants.
-                changes.Add(new ChangeProperty.Property(model, "ReadOnly", readOnly));
+                changes.Add(new ChangeProperty.Property(model, nameof(model.ReadOnly), readOnly));
                 foreach (IModel child in Apsim.ChildrenRecursively(model))
-                    changes.Add(new ChangeProperty.Property(child, "ReadOnly", readOnly));
+                    changes.Add(new ChangeProperty.Property(child, nameof(child.ReadOnly), readOnly));
 
                 // Apply changes.
                 ChangeProperty command = new ChangeProperty(changes);

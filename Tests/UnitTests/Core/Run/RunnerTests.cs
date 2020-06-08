@@ -58,7 +58,7 @@
                 {
                     Name = "Sim",
                     FileName = Path.GetTempFileName(),
-                    Children = new List<Model>()
+                    Children = new List<IModel>()
                     {
                         new Clock()
                         {
@@ -103,14 +103,14 @@
                 // Create a folder of 2 simulations.
                 var folder = new Folder()
                 {
-                    Children = new List<Model>()
+                    Children = new List<IModel>()
                     {
                         new DataStore(database),
                         new Simulation()
                         {
                             Name = "Sim1",
                             FileName = Path.GetTempFileName(),
-                            Children = new List<Model>()
+                            Children = new List<IModel>()
                             {
                                 new Clock()
                                 {
@@ -130,7 +130,7 @@
                         {
                             Name = "Sim2",
                             FileName = Path.GetTempFileName(),
-                            Children = new List<Model>()
+                            Children = new List<IModel>()
                             {
                                 new Clock()
                                 {
@@ -151,17 +151,8 @@
 
                 Runner runner = new Runner(folder, runType: typeOfRun);
 
-                // Ensure number of simulations is correct before any are run.
-                Assert.AreEqual(runner.TotalNumberOfSimulations, 2);
-                Assert.AreEqual(runner.NumberOfSimulationsCompleted, 0);
-
                 // Run simulations.
                 Assert.IsNull(runner.Run());
-
-                // Ensure number of simulations is correct after all simulations are run.
-                Assert.AreEqual(runner.TotalNumberOfSimulations, 2);
-                Assert.AreEqual(runner.NumberOfSimulationsCompleted, 2);
-                Assert.AreEqual(runner.PercentComplete(), 100);
 
                 // Check that data was written to database.
                 Assert.AreEqual(Utilities.TableToStringUsingSQL(database, "SELECT [Clock.Today] FROM Report ORDER BY [Clock.Today]"),
@@ -188,14 +179,14 @@
                 // Create a folder of 2 simulations.
                 var folder = new Folder()
                 {
-                    Children = new List<Model>()
+                    Children = new List<IModel>()
                     {
                         new DataStore(database),
                         new Simulation()
                         {
                             Name = "Sim1",
                             FileName = Path.GetTempFileName(),
-                            Children = new List<Model>()
+                            Children = new List<IModel>()
                             {
                                 new Clock()
                                 {
@@ -215,7 +206,7 @@
                         {
                             Name = "Sim2",
                             FileName = Path.GetTempFileName(),
-                            Children = new List<Model>()
+                            Children = new List<IModel>()
                             {
                                 new Clock()
                                 {
@@ -223,7 +214,7 @@
                                     EndDate = new DateTime(1980, 1, 4)
                                 },
                                 new MockSummary(),
-                                new Models.Report()
+                                new Report()
                                 {
                                     Name = "Report",
                                     VariableNames = new string[] {"[Clock].Today"},
@@ -236,17 +227,8 @@
 
                 Runner runner = new Runner(folder, runType: typeOfRun, simulationNamesToRun: new string[] { "Sim1" });
 
-                // Ensure number of simulations is correct before any are run.
-                Assert.AreEqual(runner.TotalNumberOfSimulations, 1);
-                Assert.AreEqual(runner.NumberOfSimulationsCompleted, 0);
-
                 // Run simulations.
                 Assert.IsNull(runner.Run());
-
-                // Ensure number of simulations is correct after all simulations are run.
-                Assert.AreEqual(runner.TotalNumberOfSimulations, 1);
-                Assert.AreEqual(runner.NumberOfSimulationsCompleted, 1);
-                Assert.AreEqual(runner.PercentComplete(), 100);
 
                 // Check that data was written to database.
                 Assert.AreEqual(Utilities.TableToStringUsingSQL(database, "SELECT [Clock.Today] FROM Report ORDER BY [Clock.Today]"),
@@ -273,7 +255,7 @@
                 {
                     Name = "Sim",
                     FileName = Path.GetTempFileName(),
-                    Children = new List<Model>()
+                    Children = new List<IModel>()
                     {
                         new Clock()
                         {
@@ -307,37 +289,43 @@
                 database = new SQLite();
                 database.OpenDatabase(":memory:", readOnly: false);
 
-                var simulation = new Simulation()
+                var simulations = new Simulations()
                 {
-                    Name = "Sim",
-                    FileName = Path.GetTempFileName(),
-                    Children = new List<Model>()
+                    Children = new List<IModel>()
                     {
-                        new Clock()
+                        new Simulation()
                         {
-                            StartDate = new DateTime(1980, 1, 3),
-                            EndDate = new DateTime(1980, 1, 4)
-                        },
-                        new MockSummary(),
-                        new DataStore(database),
-                        new Manager()
-                        {
-                            Code =  "using System;\r\n" +
-                                    "using Models.Core;\r\n" +
-                                    "namespace Models\r\n" +
-                                    "{\r\n" +
-                                    "   [Serializable]\r\n" +
-                                    "   public class Script : Model, ITest\r\n" +
-                                    "   {\r\n" +
-                                    "      public void Run() { throw new Exception(\"Test has failed.\"); }\r\n" +
-                                    "   }\r\n" +
-                                    "}"
+                            Name = "Sim",
+                            FileName = Path.GetTempFileName(),
+                            Children = new List<IModel>()
+                            {
+                                new Clock()
+                                {
+                                    StartDate = new DateTime(1980, 1, 3),
+                                    EndDate = new DateTime(1980, 1, 4)
+                                },
+                                new MockSummary(),
+                                new DataStore(database),
+                                new Manager()
+                                {
+                                    Code =  "using System;\r\n" +
+                                            "using Models.Core;\r\n" +
+                                            "namespace Models\r\n" +
+                                            "{\r\n" +
+                                            "   [Serializable]\r\n" +
+                                            "   public class Script : Model, ITest\r\n" +
+                                            "   {\r\n" +
+                                            "      public void Run() { throw new Exception(\"Test has failed.\"); }\r\n" +
+                                            "   }\r\n" +
+                                            "}"
+                                }
+                            }
                         }
                     }
                 };
 
                 // Run simulations.
-                Runner runner = new Runner(simulation, runType: typeOfRun, runTests: true);
+                Runner runner = new Runner(simulations, runType: typeOfRun, runTests: true);
                 var exceptions = runner.Run();
 
                 // Make sure an exception is returned.
@@ -357,39 +345,45 @@
                 database = new SQLite();
                 database.OpenDatabase(":memory:", readOnly: false);
 
-                var simulation = new Simulation()
+                var simulations = new Simulations()
                 {
-                    Name = "Sim",
-                    FileName = Path.GetTempFileName(),
-                    Children = new List<Model>()
+                    Children = new List<IModel>()
                     {
-                        new Clock()
+                        new Simulation()
                         {
-                            StartDate = new DateTime(1980, 1, 3),
-                            EndDate = new DateTime(1980, 1, 4)
-                        },
-                        new MockSummary(),
-                        new DataStore(database),
-                        new Manager()
-                        {
-                            Code =  "using System;\r\n" +
-                                    "using Models.Core;\r\n" +
-                                    "namespace Models\r\n" +
-                                    "{\r\n" +
-                                    "   [Serializable]\r\n" +
-                                    "   public class Script : Model, ITest\r\n" +
-                                    "   {\r\n" +
-                                    "      [Link]\r\n" +
-                                    "      ISummary summary = null;\r\n" +
-                                    "      public void Run() { summary.WriteMessage(this, \"Passed Test\"); }\r\n" +
-                                    "   }\r\n" +
-                                    "}"
+                            Name = "Sim",
+                            FileName = Path.GetTempFileName(),
+                            Children = new List<IModel>()
+                            {
+                                new Clock()
+                                {
+                                    StartDate = new DateTime(1980, 1, 3),
+                                    EndDate = new DateTime(1980, 1, 4)
+                                },
+                                new MockSummary(),
+                                new DataStore(database),
+                                new Manager()
+                                {
+                                    Code =  "using System;\r\n" +
+                                            "using Models.Core;\r\n" +
+                                            "namespace Models\r\n" +
+                                            "{\r\n" +
+                                            "   [Serializable]\r\n" +
+                                            "   public class Script : Model, ITest\r\n" +
+                                            "   {\r\n" +
+                                            "      [Link]\r\n" +
+                                            "      ISummary summary = null;\r\n" +
+                                            "      public void Run() { summary.WriteMessage(this, \"Passed Test\"); }\r\n" +
+                                            "   }\r\n" +
+                                            "}"
+                                }
+                            }
                         }
                     }
                 };
 
                 // Run simulations.
-                Runner runner = new Runner(simulation, runType: typeOfRun, runTests:true);
+                Runner runner = new Runner(simulations, runType: typeOfRun, runTests:true);
                 Assert.IsNull(runner.Run());
 
                 // Make sure an exception is returned.
@@ -413,7 +407,7 @@
                 {
                     Name = "Sim",
                     FileName = Path.GetTempFileName(),
-                    Children = new List<Model>()
+                    Children = new List<IModel>()
                     {
                         new Clock()
                         {
@@ -456,7 +450,7 @@
                 {
                     Name = "Sim",
                     FileName = Path.GetTempFileName(),
-                    Children = new List<Model>()
+                    Children = new List<IModel>()
                     {
                         new Clock()
                         {
@@ -471,20 +465,11 @@
 
                 Runner runner = new Runner(simulation, runType: typeOfRun);
 
-                // Ensure number of simulations is correct before any are run.
-                Assert.AreEqual(runner.TotalNumberOfSimulations, 1);
-                Assert.AreEqual(runner.NumberOfSimulationsCompleted, 0);
-
                 AllJobsCompletedArgs argsOfAllCompletedJobs = null;
                 runner.AllSimulationsCompleted += (sender, e) => { argsOfAllCompletedJobs = e; };
 
                 // Run simulations.
                 runner.Run();
-
-                // Ensure number of simulations is correct after all have been run.
-                Assert.AreEqual(runner.TotalNumberOfSimulations, 1);
-                Assert.AreEqual(runner.NumberOfSimulationsCompleted, 1);
-                Assert.AreEqual(runner.PercentComplete(), 100);
 
                 // Make sure the expected exception was sent through the all completed jobs event.
                 Assert.AreEqual(argsOfAllCompletedJobs.AllExceptionsThrown.Count, 1);
@@ -508,7 +493,7 @@
                 {
                     Name = "Sim",
                     FileName = Path.GetTempFileName(),
-                    Children = new List<Model>()
+                    Children = new List<IModel>()
                     {
                         new Clock()
                         {
@@ -523,10 +508,6 @@
 
                 Runner runner = new Runner(simulation, runType:typeOfRun, runSimulations:false);
 
-                // Ensure number of simulations is correct before any are run.
-                Assert.AreEqual(runner.TotalNumberOfSimulations, 0);
-                Assert.AreEqual(runner.NumberOfSimulationsCompleted, 0);
-
                 AllJobsCompletedArgs argsOfAllCompletedJobs = null;
                 runner.AllSimulationsCompleted += (sender, e) => { argsOfAllCompletedJobs = e; };
 
@@ -537,13 +518,10 @@
                 // sure there is NOT a 'Simulation completed' message.
                 Assert.AreEqual(MockSummary.messages.Count, 0);
 
-                // Ensure number of simulations is correct after all have been run.
-                Assert.AreEqual(runner.TotalNumberOfSimulations, 0);
-                Assert.AreEqual(runner.NumberOfSimulationsCompleted, 0);
-                Assert.AreEqual(runner.PercentComplete(), 0);
+                Assert.AreEqual(runner.Progress, 0);
 
                 // Make sure the expected exception was sent through the all completed jobs event.
-                Assert.AreEqual(argsOfAllCompletedJobs.AllExceptionsThrown.Count, 1);
+                Assert.AreEqual(1, argsOfAllCompletedJobs.AllExceptionsThrown.Count);
                 Assert.IsTrue(argsOfAllCompletedJobs.AllExceptionsThrown[0].ToString().Contains("Intentional exception"));
 
                 database.CloseDatabase();
@@ -558,13 +536,13 @@
             {
                 Name = "Simulations",
                 Version = Converter.LatestVersion,
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Simulation()
                     {
                         Name = "Sim1",
                         FileName = Path.GetTempFileName(),
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Clock()
                             {

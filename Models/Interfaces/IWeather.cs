@@ -60,5 +60,15 @@
         /// Gets the duration of the day in hours.
         /// </summary>
         double CalculateDayLength(double Twilight);
+
+        /// <summary>
+        /// Gets the time the sun came up.
+        /// </summary>
+        double CalculateSunRise();
+
+        /// <summary>
+        /// Gets the time the sun went down.
+        /// </summary>
+        double CalculateSunSet();
     }
 }

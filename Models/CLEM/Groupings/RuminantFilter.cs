@@ -140,21 +140,6 @@ namespace Models.CLEM.Groupings
         }
 
         /// <summary>
-        /// Create a copy of the current instance
-        /// </summary>
-        /// <returns></returns>
-        public RuminantFilter Clone()
-        {
-            RuminantFilter clone = new RuminantFilter()
-            {
-                Parameter = this.Parameter,
-                Operator = this.Operator,
-                Value = this.Value
-            };
-            return clone;
-        }
-
-        /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
         /// <param name="formatForParentControl">Use full verbose description</param>

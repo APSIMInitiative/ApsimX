@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using Models;
 using Models.Core.ApsimFile;
 using APSIM.Shared.Utilities;
+using Models.PMF;
+using Models.Functions;
 
 namespace UnitTests.Core.ApsimFile
 {
@@ -64,7 +66,13 @@ namespace UnitTests.Core.ApsimFile
             Models.Report report = new Models.Report();
             report.Name = "Report";
             Structure.Add(report, paddock);
-            
+
+            // Add the wheat model.
+            string json = ReflectionUtilities.GetResourceAsString(typeof(IModel).Assembly, "Models.Resources.Wheat.json");
+            Plant wheat = FileFormat.ReadFromString<IModel>(json, out _).Children[0] as Plant;
+            wheat.ResourceName = "Wheat";
+            Structure.Add(wheat, paddock);
+
             basicFile.Write(basicFile.FileName);
             fileName = basicFile.FileName;
 
@@ -107,13 +115,16 @@ namespace UnitTests.Core.ApsimFile
                 // Replace a model with a model from another file.
                 $"[Weather3] = {extFile}",
                 $"[Weather4] = {extFile};[w2]",
+
+                // Change a property of a resource model.
+                "[Wheat].Leaf.Photosynthesis.RUE.FixedValue = 0.4"
             });
 
             string models = typeof(IModel).Assembly.Location;
             string args = $"{fileName} /Edit {configFile}";
             
             var proc = new ProcessUtilities.ProcessWithRedirectedOutput();
-            proc.Start(models, args, Path.GetTempPath(), true, true);
+            proc.Start(models, args, Path.GetTempPath(), true, writeToConsole: true);
             proc.WaitForExit();
 
             // Children of simulation are, in order:
@@ -161,6 +172,11 @@ namespace UnitTests.Core.ApsimFile
             Assert.NotNull(weather4);
             Assert.AreEqual("w2", weather4.Name);
             Assert.AreEqual("w2.met", weather4.FileName);
+
+            // The edit file operation should have changed RUE value to 0.4.
+            var wheat = sim.Children[2].Children[2] as Plant;
+            var rue = wheat.Children[6].Children[5].Children[0] as Constant;
+            Assert.AreEqual(0.4, rue.FixedValue);
         }
     }
 }

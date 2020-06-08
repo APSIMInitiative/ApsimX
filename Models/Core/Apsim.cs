@@ -615,7 +615,7 @@
         public class ModelDescription : IComparable<ModelDescription>
         {
             /// <summary>Name of resource.</summary>
-            public string ResourceString {get; private set; }
+            public string ResourceString {get; set; }
 
             /// <summary>Constructor.</summary>
             public ModelDescription(Type t) 

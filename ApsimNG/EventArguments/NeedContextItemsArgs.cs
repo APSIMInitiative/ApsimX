@@ -338,7 +338,7 @@
 
             // Iterate over the 'child' models/properties.
             // childName is the next child we're looking for. e.g. in "[Wheat].Leaf", the first childName will be "Leaf".
-            string[] namePathBits = StringUtilities.SplitStringHonouringBrackets(objectName, '.', '[', ']');
+            string[] namePathBits = StringUtilities.SplitStringHonouringBrackets(objectName, ".", '[', ']');
             for (int i = 0; i < namePathBits.Length; i++)
             {
                 if (node == null)

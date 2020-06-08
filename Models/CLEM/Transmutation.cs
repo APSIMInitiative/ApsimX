@@ -121,7 +121,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(Transmutation))]
     [Description("This Transmutation cost specifies how much of a given resource (e.g. money) is needed to convert to the needed resource. Any number of these can be supplied under a Transmutation such that you may need money and labour to purchase supplements.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/transmutation/transmutationcost.htm")]
+    [HelpUri(@"Content/Features/Transmutation/TransmutationCost.htm")]
     public class TransmutationCost : CLEMModel, IValidatableObject, ITransmutationCost
     {
         [XmlIgnore]
@@ -186,7 +186,6 @@ namespace Models.CLEM
 
         // This was in commencing, but I don't think there is any reason it has to be
         // could be a problem in future, thus this message.
-
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -255,7 +254,7 @@ namespace Models.CLEM
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Transmutation))]
     [Description("This Transmutation cost specifies how much of a given resource (e.g. money) is needed to convert to the needed resource. Any number of these can be supplied under a Transmutation such that you may need money and labour to purchase supplements.")]
-    [HelpUri(@"content/features/transmutation/transmutationcostlabour.htm")]
+    [HelpUri(@"Content/Features/Transmutation/TransmutationCostLabour.htm")]
     public class TransmutationCostLabour : CLEMModel, IValidatableObject, ITransmutationCost
     {
         /// <summary>
@@ -358,7 +357,7 @@ namespace Models.CLEM
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Transmutation))]
     [Description("This Transmutation cost uses the pricing drfined for the given resource.")]
-    [HelpUri(@"content/features/transmutation/transmutationcostusepricing.htm")]
+    [HelpUri(@"Content/Features/Transmutation/TransmutationCostUsePricing.htm")]
     public class TransmutationCostUsePricing : CLEMModel, IValidatableObject, ITransmutationCost
     {
         private ResourcePricing pricing;
@@ -366,6 +365,7 @@ namespace Models.CLEM
         /// <summary>
         /// Type of resource to use
         /// </summary>
+        [XmlIgnore]
         public Type ResourceType { get; set; }
 
         /// <summary>
@@ -402,6 +402,7 @@ namespace Models.CLEM
         /// <summary>
         /// Get the price object for this transmutation cost
         /// </summary>
+        [XmlIgnore]
         public ResourcePricing Pricing { get {return pricing; } }
 
         /// <summary>
@@ -420,6 +421,18 @@ namespace Models.CLEM
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
+
+            // get pricing if available
+            IResourceType parentResource = Apsim.Parent(this, typeof(CLEMResourceTypeBase)) as IResourceType;
+            if (parentResource != null)
+            {
+                pricing = parentResource.Price(PurchaseOrSalePricingStyleType.Purchase);
+            }
+            if(pricing is null)
+            {
+                string[] memberNames = new string[] { "Resource pricing" };
+                results.Add(new ValidationResult($"No resource pricing was found for [r={(parentResource as IModel).Name}] required for a price based transmutation [{this.Name}]", memberNames));
+            }
             return results;
         }
 
@@ -433,9 +446,6 @@ namespace Models.CLEM
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             ResourceType = typeof(Finance);
-
-            // get pricing if available
-            pricing = Apsim.Children(Apsim.Parent(this, typeof(IResourceType)), typeof(ResourcePricing)).FirstOrDefault() as ResourcePricing;
         }
 
         /// <summary>
@@ -448,12 +458,14 @@ namespace Models.CLEM
             string html = "";
 
             // get the pricing 
-            ResourcePricing price = Apsim.Children(Apsim.Parent(this, typeof(IResourceType)), typeof(ResourcePricing)).FirstOrDefault() as ResourcePricing;
-            if (price!=null)
+            var w = Apsim.Parent(this, typeof(CLEMResourceTypeBase)) as IResourceType;
+            bool multiPrice = Apsim.Children(w as IModel, typeof(ResourcePricing)).Count() > 1;
+            ResourcePricing price = w.Price(PurchaseOrSalePricingStyleType.Purchase);
+            if (price != null)
             {
                 html += "<div class=\"activityentry\">Use ";
                 html += (ResourceTypeName != null && ResourceTypeName != "") ? "<span class=\"resourcelink\">" + ResourceTypeName + "</span>" : "<span class=\"errorlink\">Account not set</span>";
-                html += " based upon the <span class=\"resourcelink\">" + price.Name+"</span> packet size and price for this resource</div>";
+                html += " based upon the " + (multiPrice ? "most suitable" : "<span class=\"resourcelink\"> " + price.Name + "</span>") + " packet size and price for this resource</div>";
             }
             else
             {

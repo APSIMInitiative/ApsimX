@@ -219,7 +219,7 @@ namespace Models.CLEM
         /// <param name="model"></param>
         /// <param name="modelPath">Pass blank string. Used for tracking model path</param>
         /// <returns>Boolean indicating whether validation was successful</returns>
-        private bool Validate(Model model, string modelPath)
+        private bool Validate(IModel model, string modelPath)
         {
             string starter = "[";
             if(typeof(IResourceType).IsAssignableFrom(model.GetType()))
@@ -261,6 +261,11 @@ namespace Models.CLEM
             var validationContext = new ValidationContext(model, null, null);
             var validationResults = new List<ValidationResult>();
             Validator.TryValidateObject(model, validationContext, validationResults, true);
+            if(model.Name.EndsWith(" "))
+            {
+                validationResults.Add(new ValidationResult("Component name cannot end with a space character", new string[] {"Name"}));
+            }
+
             if (validationResults.Count > 0)
             {
                 valid = false;

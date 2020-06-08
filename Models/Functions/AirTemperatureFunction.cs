@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
+using Models.PMF;
 
 namespace Models.Functions
 {
@@ -9,10 +12,9 @@ namespace Models.Functions
     /// A value is calculated from the mean of 3-hourly estimates of air temperature based on daily max and min temperatures.  
     /// </summary>
     [Serializable]
-    [Description("A value is calculated from the mean of 3-hourly estimates of air temperature based on daily max and min temperatures\n\n" +
-        "Eight interpolations of the air temperature are calculated using a three-hour correction factor." +
-        "For each air three-hour air temperature, a value is calculated.  The eight three-hour estimates" +
-        "are then averaged to obtain the daily value.")]
+    [Description("Interoplates Daily Min and Max temperatures out to sub daily values using the Interpolation Method, applyes a temperature response function and returns a daily agrigate")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class AirTemperatureFunction : Model, IFunction, ICustomDocumentation
     {
 
@@ -20,90 +22,62 @@ namespace Models.Functions
         [Link]
         protected IWeather MetData = null;
 
-        /// <summary>Gets or sets the xy pairs.</summary>
-        /// <value>The xy pairs.</value>
+        /// <summary> Method for interpolating Max and Min temperature to sub daily values </summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        private XYPairs XYPairs = null;   // Temperature effect on Growth Interpolation Set
+        public IInterpolationMethod InterpolationMethod = null;
 
-        /// <summary>Number of 3 hourly temperatures</summary>
-        private const int num3hr = 24 / 3;           // 
+        /// <summary>The temperature response function applied to each sub daily temperature and averaged to give daily mean</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        private IIndexedFunction TemperatureResponse = null;
 
-        /// <summary>Fraction_of of day's range_of for this 3 hr period</summary>
-        private double[] t_range_fract = null;
+        /// <summary>Method used to agreagate sub daily values</summary>
+        [Description("Method used to agregate sub daily temperature function")]
+        public AgregationMethod agregationMethod { get; set; }
 
-        /// <summary>Initializes a new instance of the <see cref="AirTemperatureFunction"/> class.</summary>
-        public AirTemperatureFunction()
+        /// <summary>Method used to agreagate sub daily values</summary>
+        public enum AgregationMethod
         {
-            t_range_fract = new double[num3hr];
-
-            // pre calculate t_range_fract for speed reasons
-            for (int period = 1; period <= num3hr; period++)
-            {
-                double period_no = period;
-                t_range_fract[period-1] = 0.92105
-                                    + 0.1140 * period_no
-                                    - 0.0703 * Math.Pow(period_no, 2)
-                                    + 0.0053 * Math.Pow(period_no, 3);
-            }
+            /// <summary>Return average of sub daily values</summary>
+            Average,
+            /// <summary>Return sum of sub daily values</summary>
+            Sum
         }
 
+        /// <summary>Temperatures interpolated to sub daily values from Tmin and Tmax</summary>
+        public List<double> SubDailyTemperatures = null;
 
-        /// <summary>Gets the value.</summary>
+        /// <summary>Temperatures interpolated to sub daily values from Tmin and Tmax</summary>
+        public List<double> SubDailyResponse = null;
+
+        /// <summary>Daily average temperature calculated from sub daily temperature interpolations</summary>
         public double Value(int arrayIndex = -1)
         {
-            return Linint3hrlyTemp(MetData.MaxT, MetData.MinT, XYPairs);
-        }
-        /// <summary>Linint3hrlies the temporary.</summary>
-        /// <param name="tmax">The tmax.</param>
-        /// <param name="tmin">The tmin.</param>
-        /// <param name="ttFn">The tt function.</param>
-        public double Linint3hrlyTemp(double tmax, double tmin, XYPairs ttFn)
-        {
-            // --------------------------------------------------------------------------
-            // Eight interpolations of the air temperature are
-            // calculated using a three-hour correction factor.
-            // For each air three-hour air temperature, a value
-            // is calculated.  The eight three-hour estimates
-            // are then averaged to obtain the daily value.
-            // --------------------------------------------------------------------------
-
-            // Local Variables
-            double tot = 0.0;            // sum_of of 3 hr interpolations
-
-            for (int period = 1; period <= num3hr; period++)
+            if (SubDailyResponse != null)
             {
-                // get mean temperature for 3 hr period (oC)
-                double tmean_3hour = temp_3hr(tmax, tmin, period);
-                tot = tot + ttFn.ValueIndexed(tmean_3hour);
+                if (agregationMethod == AgregationMethod.Average)
+                    return SubDailyResponse.Average();
+                if (agregationMethod == AgregationMethod.Sum)
+                    return SubDailyResponse.Sum();
+                else
+                    throw new Exception("invalid agregation method selected in " + this.Name + "temperature interpolation");
             }
-            return tot / (double)num3hr;
+            else
+                return 0.0;
         }
 
-        /// <summary>Temp_3hrs the specified tmax.</summary>
-        /// <param name="tmax">The tmax.</param>
-        /// <param name="tmin">The tmin.</param>
-        /// <param name="period">The period.</param>
-        private double temp_3hr(double tmax, double tmin, int period)
+        /// <summary> Set the sub dialy temperature values for the day then call temperature response function and set value for each sub daily period</summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDailyInitialisation(object sender, EventArgs e)
         {
-            // --------------------------------------------------------------------------
-            //   returns the temperature for a 3 hour period.
-            //   a 3 hourly estimate of air temperature
-            // --------------------------------------------------------------------------
+            SubDailyTemperatures = InterpolationMethod.SubDailyTemperatures();
+            SubDailyResponse = new List<double>();
+            foreach (double sdt in SubDailyTemperatures)
+            {
+                SubDailyResponse.Add(TemperatureResponse.ValueIndexed(sdt));
+            }
 
-            if (period < 1)
-                throw new Exception("3 hr. period number is below 1");
-            else if (period > 8)
-                throw new Exception("3 hr. period number is above 8");
-
-            double period_no = period;
-
-            // diurnal temperature range for the day (oC)
-            double diurnal_range = tmax - tmin;
-
-            // deviation from day's minimum for this 3 hr period
-            double t_deviation = t_range_fract[period-1] * diurnal_range;
-
-            return tmin + t_deviation;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
@@ -120,16 +94,175 @@ namespace Models.Functions
                 // write memos.
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-                // add graph and table.
-                if (XYPairs != null)
-                {
-                    tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + "</i> is calculated from the mean of 3-hourly estimates of air temperature based on daily max and min temperatures.", indent));
-                    tags.Add(new AutoDocumentation.GraphAndTable(XYPairs, string.Empty, "MeanAirTemperature", Name, indent));
-                }
             }
         }
 
+    }
+
+    /// <summary>
+    /// A value is calculated from the mean of 3-hourly estimates of air temperature based on daily max and min temperatures.  
+    /// </summary>
+    [Serializable]
+    [Description("A value is calculated from the mean of 3-hourly estimates of air temperature based on daily max and min temperatures\n\n" +
+        "Eight interpolations of the air temperature are calculated using a three-hour correction factor." +
+        "For each air three-hour air temperature, a value is calculated.  The eight three-hour estimates" +
+        "are then averaged to obtain the daily value.")]
+    [ValidParent(ParentType = typeof(IFunction))]
+    public class ThreeHourSin : Model, IInterpolationMethod
+    {
+        /// <summary>The met data</summary>
+        [Link]
+        protected IWeather MetData = null;
+
+        /// <summary>Factors used to multiply daily range to give diurnal pattern of temperatures between Tmax and Tmin</summary>
+        public List<double> TempRangeFactors = null;
+        
+        /// <summary>
+        /// Calculate temperatures at 3 hourly intervals from min and max using sin curve
+        /// </summary>
+        /// <returns>list of 8 temperature estimates for 3 hourly periods</returns>
+        public List<double> SubDailyTemperatures()
+        {
+            List<double> sdts = new List<Double>();
+            double diurnal_range = MetData.MaxT - MetData.MinT;
+            foreach (double trf in TempRangeFactors)
+            {
+                sdts.Add(MetData.MinT + trf * diurnal_range);
+            }
+            return sdts;
+        }
+
+        /// <summary> Set the sub daily temperature range factor values at sowing</summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [EventSubscribe("Commencing")]
+        private void OnCommencing(object sender, EventArgs e)
+        {
+            TempRangeFactors = t_range_fract();
+        }
+
+        /// <summary>Fraction_of of day's range_of for this 3 hr period</summary>
+        public List<double> t_range_fract()
+        {
+            List<int> periods = Enumerable.Range(1, 8).ToList();
+            List<double> trfs = new List<double>();
+            // pre calculate t_range_fract for speed reasons
+            foreach (int period in periods)
+            {
+                trfs.Add(0.92105
+                        + 0.1140 * period
+                        - 0.0703 * Math.Pow(period, 2)
+                        + 0.0053 * Math.Pow(period, 3));
+            }
+            if (trfs.Count != 8)
+                throw new Exception("Incorrect number of subdaily temperature estimations in " + this.Name + " temperature interpolation");
+            return trfs;
+        }
+    }
+
+    /// <summary>
+    /// calculating the hourly temperature based on Tmax, Tmin and daylength
+    /// At sunrise (th = 12 − d/2), the air temperature equals Tmin. The maximum temperature 
+    /// is reached when th equals 12 + p h solar time.The default value for p is 1.5 h.
+    /// The sinusoidal curve is followed until sunset.Then a transition takes place to an
+    /// exponential decrease, proceeding to the minimum temperature of the next day.To
+    /// plot this curve correctly, we first need the starting point, the temperature at sunset
+    /// (Tsset).
+    /// </summary>
+    [Serializable]
+    [Description("calculating the hourly temperature based on Tmax, Tmin and daylength")]
+    [ValidParent(ParentType = typeof(IFunction))]
+    public class HourlySinPpAdjusted : Model, IInterpolationMethod
+    {
+
+        /// <summary>The met data</summary>
+        [Link]
+        protected IWeather MetData = null;
+
+        private const double P = 1.5;
+
+        private const double TC = 4.0;
+
+        /// <summary>
+        /// Temperature at the most recent sunset
+        /// </summary>
+        public double Tsset { get; set; }
+
+        /// <summary> Set the sub daily temperature range factor values at sowing</summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [EventSubscribe("Commencing")]
+        private void OnCommencing(object sender, EventArgs e)
+        {
+            
+        }
+
+        /// <summary>Creates a list of temperature range factors used to estimate daily temperature from Min and Max temp</summary>
+        /// <returns></returns>
+        public List<double> SubDailyTemperatures()
+        {
+            double d = MetData.CalculateDayLength(-6);
+            double Tmin = MetData.MinT;
+            double Tmax = MetData.MaxT;
+            double TmaxB = MetData.MaxT;
+            double TminA = MetData.MinT;
+            double Hsrise = MetData.CalculateSunRise();
+            double Hsset =  MetData.CalculateSunSet();
+            
+
+            List<double> sdts = new List<double>();
+            
+            for (int Th = 0; Th <= 23; Th++)
+            {
+                double Ta = 1.0;
+                if (Th < Hsrise)
+                {
+                    //  Hour between midnight and sunrise
+                    //  PERIOD A MaxTB is max. temperature, before day considered
+
+                    //this is the sunset temperature of based on the previous day
+                    double n = 24 - d;
+                    Tsset = Tmin + (TmaxB - Tmin) *
+                                    Math.Sin(Math.PI * (d / (d + 2 * P)));
+
+                    Ta = (Tmin - Tsset * Math.Exp(-n / TC) +
+                            (Tsset - Tmin) * Math.Exp(-(Th + 24 - Hsset) / TC)) /
+                            (1 - Math.Exp(-n / TC));
+                }
+                else if (Th >= Hsrise & Th < 12 + P)
+                {
+                    // PERIOD B Hour between sunrise and normal time of MaxT
+                    Ta = Tmin + (Tmax - Tmin) *
+                            Math.Sin(Math.PI * (Th - Hsrise) / (d + 2 * P));
+                }
+                else if (Th >= 12 + P & Th < Hsset)
+                {
+                    // PERIOD C Hour between normal time of MaxT and sunset
+                    //  MinTA is min. temperature, after day considered
+
+                    Ta = TminA + (Tmax - TminA) *
+                        Math.Sin(Math.PI * (Th - Hsrise) / (d + 2 * P));
+                }
+                else
+                {
+                    // PERIOD D Hour between sunset and midnight
+                    Tsset = TminA + (Tmax - TminA) * Math.Sin(Math.PI * (d / (d + 2 * P)));
+                    double n = 24 - d;
+                    Ta = (TminA - Tsset * Math.Exp(-n / TC) +
+                            (Tsset - TminA) * Math.Exp(-(Th - Hsset) / TC)) /
+                            (1 - Math.Exp(-n / TC));
+                }
+                sdts.Add(Ta);
+            }
+            return sdts;
+        }
+    }
+
+    /// <summary>An interface that defines what needs to be implemented by an organthat has a water demand.</summary>
+    public interface IInterpolationMethod
+    {
+        /// <summary>Calculate temperature at specified periods during the day.</summary>
+        List<double> SubDailyTemperatures();
     }
 
 }

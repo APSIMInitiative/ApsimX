@@ -25,9 +25,10 @@
         [Link] Clock clock = null;
         [Link] ISummary summary = null;
         [Link] List<IPlantDamage> forages = null;
-        [Link] ISolute NO3 = null;
+        [Link(ByName = true)] ISolute Urea = null;
         [Link] Soil soil = null;
         [Link] SurfaceOrganicMatter surfaceOrganicMatter = null;
+        [Link] ScriptCompiler compiler = null;
 
         private double residualBiomass;
         private CSharpExpressionFunction expressionFunction;
@@ -137,8 +138,8 @@
         /// <summary></summary>
         [Separator("Urine and Dung.")]
 
-        [Description("Fraction of defoliated N going to soil (0-1): ")]
-        public double FractionDefoliatedNToSoil { get; set; }
+        [Description("Fraction of defoliated N going to soil. Remainder is exported as animal product or to lanes/camps (0-1).")]
+        public double[] FractionDefoliatedNToSoil { get; set; }   
 
         /// <summary></summary>
         [Description("Proportion of excreted N going to dung (0-1). Yearly or 12 monthly values. Blank means use C:N ratio of dung.")]
@@ -316,16 +317,20 @@
                 expressionFunction = new CSharpExpressionFunction();
                 expressionFunction.Parent = this;
                 expressionFunction.Expression = "Convert.ToDouble(" + FlexibleExpressionForTimingOfGrazing + ")";
+                expressionFunction.SetCompiler(compiler);
                 expressionFunction.CompileExpression();
             }
 
-            if (FractionExcretedNToDung.Length != 1 && FractionExcretedNToDung.Length != 12)
+            if (FractionExcretedNToDung != null && FractionExcretedNToDung.Length != 1 && FractionExcretedNToDung.Length != 12)
                 throw new Exception("You must specify either a single value for 'proportion of defoliated nitrogen going to dung' or 12 monthly values.");
 
             if (SimpleGrazingFrequencyString != null && SimpleGrazingFrequencyString.Equals("end of month", StringComparison.InvariantCultureIgnoreCase))
                 simpleGrazingFrequency = 0;
             else
                 simpleGrazingFrequency = Convert.ToInt32(SimpleGrazingFrequencyString);
+
+            if (FractionDefoliatedNToSoil == null || FractionDefoliatedNToSoil.Length == 0)
+                FractionDefoliatedNToSoil = new double[] { 0 };
 
             // Initialise the days since grazing.
             if (GrazingRotationType == GrazingRotationTypeEnum.SimpleRotation)
@@ -396,9 +401,9 @@
 
             if (TramplingOn)
             {
-                var proportionLitterMovedToSoil = Math.Min(MathUtilities.Divide(PastureConsumedAtMaximumRateOfLitterRemoval, amountDMToRemove, 0), 
+                var proportionLitterMovedToSoil = Math.Min(MathUtilities.Divide(PastureConsumedAtMaximumRateOfLitterRemoval, amountDMToRemove, 0),
                                                            MaximumPropLitterMovedToSoil);
-                surfaceOrganicMatter.Incorporate(proportionLitterMovedToSoil, depth:100);
+                surfaceOrganicMatter.Incorporate(proportionLitterMovedToSoil, depth: 100);
             }
         }
 
@@ -460,9 +465,10 @@
             // find the layer that the fertilizer is to be added to.
             int layer = soil.LayerIndexOfDepth(DepthUrineIsAdded);
 
-            var no3Values = NO3.kgha;
-            no3Values[layer] += AmountUrineNReturned;
-            NO3.SetKgHa(SoluteSetterType.Fertiliser, no3Values);
+            var ureaValues = Urea.kgha;
+            ureaValues[layer] += AmountUrineNReturned;
+            Urea.SetKgHa(SoluteSetterType.Fertiliser, ureaValues);
+            
         }
 
         /// <summary>Return a value from an array that can have either 1 yearly value or 12 monthly values.</summary>
@@ -566,7 +572,7 @@
                 foreach (var grazedForage in grazedForages)
                 {
                     returnedToSoilWt += (1 - grazedForage.DMDOfStructural) * grazedForage.Wt;
-                    returnedToSoilN += FractionDefoliatedNToSoil * grazedForage.N;
+                    returnedToSoilN += GetValueFromMonthArray(FractionDefoliatedNToSoil) * grazedForage.N;
                 }
 
                 double dungNReturned;

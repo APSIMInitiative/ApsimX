@@ -462,6 +462,20 @@
                 return this.DayLength;
         }
 
+        /// <summary> calculate the time of sun rise</summary>
+        /// <returns>Sun rise time</returns>
+        public double CalculateSunRise()
+        {
+            return 12 - CalculateDayLength(-6) / 2;
+        }
+
+        /// <summary> calculate the time of sun set</summary>
+        /// <returns>Sun set time</returns>
+        public double CalculateSunSet()
+        {
+            return 12 + CalculateDayLength(-6)/2;
+        }
+
         /// <summary>
         /// Overrides the base class method to allow for initialization.
         /// </summary>

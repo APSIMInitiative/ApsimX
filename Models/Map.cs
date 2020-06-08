@@ -29,6 +29,17 @@ namespace Models
 
             /// <summary>The longitude</summary>
             public double Longitude { get; set; }
+
+            /// <summary>
+            /// Convenience constructor.
+            /// </summary>
+            /// <param name="latitude">Latitude.</param>
+            /// <param name="longitude">Longitude.</param>
+            public Coordinate(double latitude, double longitude)
+            {
+                Latitude = latitude;
+                Longitude = longitude;
+            }
         }
 
         /// <summary>List of coordinates to show on map</summary>
@@ -46,9 +57,7 @@ namespace Models
                 weather.CloseDataFile();
                 if (latitude != 0 && longitude != 0)
                 {
-                    Coordinate coordinate = new Coordinate();
-                    coordinate.Latitude = latitude;
-                    coordinate.Longitude = longitude;
+                    Coordinate coordinate = new Coordinate(latitude, longitude);
                     coordinates.Add(coordinate);
                     if (filenames != null)
                         filenames.Add(System.IO.Path.GetFileName(weather.FileName));
@@ -61,7 +70,7 @@ namespace Models
         /// <summary>
         /// Coordinate of map center
         /// </summary>
-        private Coordinate _Center = new Coordinate() { Latitude = 0.0, Longitude = 0.0 };
+        private Coordinate _Center = new Coordinate(0, 0);
 
         /// <summary>
         /// Coordinate of the center of the map

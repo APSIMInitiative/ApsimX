@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 282,
-  "Version": 85,
+  "ExplorerWidth": 300,
+  "Version": 101,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -67,129 +67,10 @@
               "Name": "Factors",
               "Children": [
                 {
-                  "$type": "Models.Factorial.CompositeFactor, Models",
-                  "Specifications": [
-                    "[ChangeRuminantPRM]"
-                  ],
-                  "Paths": null,
-                  "Values": null,
-                  "Name": "Default",
-                  "Children": [
-                    {
-                      "$type": "Models.Manager, Models",
-                      "Code": "using System;\r\nusing System.IO;\r\nusing Models.Core;\r\nusing Models.Utilities;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Diagnostics;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Stock stock;\r\n        [Link] Simulation simulation;\r\n\r\n        [Description(\"A dummy (not used) string that can be outputted to identify a parameter set or similar:\")]\r\n        public string Dummy { get; set; }\r\n\r\n        [Description(\"Name of the new ruminant parameter file - must enter 'None' for default values:\")]\r\n        public string FileName { get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n        \tif (FileName.ToLower() != \"none\")  //\r\n        \t\tstock.ParamFile = Path.Combine(Path.GetDirectoryName(simulation.FileName), FileName);\r\n        }\r\n    }\r\n}",
-                      "Parameters": [
-                        {
-                          "Key": "Dummy",
-                          "Value": "Default values"
-                        },
-                        {
-                          "Key": "FileName",
-                          "Value": "None"
-                        }
-                      ],
-                      "Name": "ChangeRuminantPRM",
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.CompositeFactor, Models",
-                  "Specifications": [
-                    "[ChangeRuminantPRM]"
-                  ],
-                  "Paths": null,
-                  "Values": null,
-                  "Name": "PotIntake035",
-                  "Children": [
-                    {
-                      "$type": "Models.Manager, Models",
-                      "Code": "using System;\r\nusing System.IO;\r\nusing Models.Core;\r\nusing Models.Utilities;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Diagnostics;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Stock stock;\r\n        [Link] Simulation simulation;\r\n\r\n        [Description(\"A dummy (not used) string that can be outputted to identify a parameter set or similar:\")]\r\n        public string Dummy { get; set; }\r\n\r\n        [Description(\"Name of the new ruminant parameter file - must enter 'None' for default values:\")]\r\n        public string FileName { get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n        \tif (FileName.ToLower() != \"none\")  //\r\n        \t\tstock.ParamFile = Path.Combine(Path.GetDirectoryName(simulation.FileName), FileName);\r\n        }\r\n    }\r\n}",
-                      "Parameters": [
-                        {
-                          "Key": "Dummy",
-                          "Value": "Incr Pot Intake to 0.035"
-                        },
-                        {
-                          "Key": "FileName",
-                          "Value": "RuminantLUDF_035.prm"
-                        }
-                      ],
-                      "Name": "ChangeRuminantPRM",
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.CompositeFactor, Models",
-                  "Specifications": [
-                    "[ChangeRuminantPRM]"
-                  ],
-                  "Paths": null,
-                  "Values": null,
-                  "Name": "PotIntake050",
-                  "Children": [
-                    {
-                      "$type": "Models.Manager, Models",
-                      "Code": "using System;\r\nusing System.IO;\r\nusing Models.Core;\r\nusing Models.Utilities;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Diagnostics;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Stock stock;\r\n        [Link] Simulation simulation;\r\n\r\n        [Description(\"A dummy (not used) string that can be outputted to identify a parameter set or similar:\")]\r\n        public string Dummy { get; set; }\r\n\r\n        [Description(\"Name of the new ruminant parameter file - must enter 'None' for default values:\")]\r\n        public string FileName { get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n        \tif (FileName.ToLower() != \"none\")  //\r\n        \t\tstock.ParamFile = Path.Combine(Path.GetDirectoryName(simulation.FileName), FileName);\r\n        }\r\n    }\r\n}",
-                      "Parameters": [
-                        {
-                          "Key": "Dummy",
-                          "Value": "Incr Pot Intake to 0.05"
-                        },
-                        {
-                          "Key": "FileName",
-                          "Value": "RuminantLUDF_050.prm"
-                        }
-                      ],
-                      "Name": "ChangeRuminantPRM",
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.CompositeFactor, Models",
-                  "Specifications": [
-                    "[ChangeRuminantPRM]"
-                  ],
-                  "Paths": null,
-                  "Values": null,
-                  "Name": "PotIntake060",
-                  "Children": [
-                    {
-                      "$type": "Models.Manager, Models",
-                      "Code": "using System;\r\nusing System.IO;\r\nusing Models.Core;\r\nusing Models.Utilities;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Diagnostics;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Stock stock;\r\n        [Link] Simulation simulation;\r\n\r\n        [Description(\"A dummy (not used) string that can be outputted to identify a parameter set or similar:\")]\r\n        public string Dummy { get; set; }\r\n\r\n        [Description(\"Name of the new ruminant parameter file - must enter 'None' for default values:\")]\r\n        public string FileName { get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n        \tif (FileName.ToLower() != \"none\")  //\r\n        \t\tstock.ParamFile = Path.Combine(Path.GetDirectoryName(simulation.FileName), FileName);\r\n        }\r\n    }\r\n}",
-                      "Parameters": [
-                        {
-                          "Key": "Dummy",
-                          "Value": "Incr Pot Intake to 0.06"
-                        },
-                        {
-                          "Key": "FileName",
-                          "Value": "RuminantLUDF_060.prm"
-                        }
-                      ],
-                      "Name": "ChangeRuminantPRM",
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[Friesian].IntakeC[2] = 0.025,0.035,0.050,0.060",
+                  "Name": "PotIntake",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -201,6 +82,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "Base",
               "Children": [
                 {
@@ -242,7 +124,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using System;\r\nusing System.IO;\r\nusing Models.Core;\r\nusing Models.Utilities;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Diagnostics;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Stock stock;\r\n        [Link] Simulation simulation;\r\n\r\n        [Description(\"A dummy (not used) string that can be outputted to identify a parameter set or similar:\")]\r\n        public string Dummy { get; set; }\r\n\r\n        [Description(\"Name of the new ruminant parameter file - must enter 'None' for default values:\")]\r\n        public string FileName { get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n        \tif (FileName.ToLower() != \"none\")  //\r\n        \t\tstock.ParamFile = Path.Combine(Path.GetDirectoryName(simulation.FileName), FileName);\r\n        }\r\n    }\r\n}",
+                  "Code": "using System.Diagnostics;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.GrazPlan;\r\nusing Models.Utilities;\r\nusing Models.Core;\r\nusing System.IO;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Stock stock;\r\n        [Link] Simulation simulation;\r\n\r\n        [Description(\"A dummy (not used) string that can be outputted to identify a parameter set or similar:\")]\r\n        public string Dummy { get; set; }\r\n\r\n        [Description(\"Name of the new ruminant parameter file - must enter 'None' for default values:\")]\r\n        public string FileName { get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            if (FileName.ToLower() != \"none\")\r\n            {\r\n               var fileName = Path.Combine(Path.GetDirectoryName(simulation.FileName), FileName);\r\n               var xml = File.ReadAllText(fileName);\r\n               stock.AllGenotypes.LoadPRMXml(xml);\r\n         \t}\r\n        }\r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
                       "Key": "Dummy",
@@ -255,12 +137,12 @@
                   ],
                   "Name": "ChangeRuminantPRM",
                   "IncludeInDocumentation": true,
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using System;\r\nusing Models.Core;\r\nusing Models.Utilities;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Diagnostics;\r\n\r\nnamespace Models\r\n{\r\n\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Stock stock;\r\n        [Link] Supplement supplement;\r\n        [Link] ISummary summary;\r\n        [Link] Simulation farm;\r\n\r\n        private int CurrentGroupNum = 1;    // animal group number\r\n        //private int CurrentLocationNum { get; set; }\r\n\r\n        public enum Genotypes\r\n        {\r\n            Friesian,\r\n            Jersey,\r\n            EternalKiwiCross\r\n        }\r\n\r\n        [Separator(\"Stock type info, the same type of stock are brought onto the paddock at each grazing\")]\r\n\r\n        [Description(\"Stock: genotype (e.g. Friesian, Jersey):\")] \r\n        public Genotypes Genotype { get; set; }\r\n\r\n\t\t[Description(\"Stock: sex (Female, Male, Castrate):\")] \r\n        public ReproductiveType Sex { get; set; }\r\n\r\n        [Description(\"Stock: age (months):\")] \r\n        public double Age { get; set; }\r\n\r\n        [Description(\"Stock: weight (kg liveweight /head):\")] \r\n        public double Weight { get; set; }\r\n\r\n        [Description(\"Stock: fertility status (0 if non-pregnant or days since conception):\")] \r\n        public int Pregnant { get; set; }\r\n\r\n        [Description(\"Stock: lactation status (0 if non-lactating or days since parturition):\")]\r\n        public int Lactating { get; set; }\r\n\r\n\r\n        //[EventSubscribe(\"BuyLactating\")]\r\n        //public void OnBuyLactating(object sender, EventArgs e)\r\n\r\n        public void ChangeStockNum(int NumCowsToChange, string NewLocation)\r\n        {\r\n\r\n            if (NumCowsToChange > 0)\r\n\r\n            {\r\n                //CurrentGroupNum = 1;\r\n                //CurrentGroupNum = stock.NoGroups+1; //take this out as it creates a new group for every buy episode\r\n                StockBuy purchase = new StockBuy();\r\n                purchase.Genotype = ReflectionUtilities.EnumToString(Genotype);\r\n                purchase.Number = NumCowsToChange; //from the Operations file; positive is buy, negative is sell\r\n                purchase.Sex = Sex;\r\n                purchase.Age = Age;       // age in months\r\n                purchase.Weight = Weight;  // liveweight in kg\r\n                purchase.UseTag = 1;\r\n                purchase.MatedTo = purchase.Genotype;\r\n                purchase.Pregnant = Pregnant;  // days pregnant, 0 = non pregnant, 1 = pregnant\r\n                purchase.Lactating = Lactating;  // 0 for dry, 1 for lactating\r\n\r\n                stock.Buy(purchase);\r\n\r\n                stock.Move(NewLocation, CurrentGroupNum);\r\n\r\n            }\r\n\r\n\r\n\r\n            if (NumCowsToChange <0)\r\n            stock.SellTag(-(NumCowsToChange), 1);\r\n            //stock.Sell((CurrentGroupNum),-(NumCowsToChange));\r\n            //stock.Sell(CurrentGroupNum, stock.NumberAll);\r\n        }\r\n    \r\n    }\r\n}\r\n            \r\n\r\n\r\n        \r\n\r\n\r\n\r\n\r\n",
+                  "Code": "using System.Diagnostics;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.GrazPlan;\r\nusing Models.Utilities;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Stock stock;\r\n        [Link] Supplement supplement;\r\n        [Link] ISummary summary;\r\n        [Link] Simulation farm;\r\n\r\n        public enum Genotypes\r\n        {\r\n            Friesian,\r\n            Jersey,\r\n            EternalKiwiCross\r\n        }\r\n\r\n        [Separator(\"Stock type info, the same type of stock are brought onto the paddock at each grazing\")]\r\n\r\n        [Description(\"Stock: genotype (e.g. Friesian, Jersey):\")] \r\n        public Genotypes Genotype { get; set; }\r\n\r\n        [Description(\"Stock: sex (Female, Male, Castrate):\")] \r\n        public ReproductiveType Sex { get; set; }\r\n\r\n        [Description(\"Stock: age (months):\")] \r\n        public double Age { get; set; }\r\n\r\n        [Description(\"Stock: weight (kg liveweight /head):\")] \r\n        public double Weight { get; set; }\r\n\r\n        [Description(\"Stock: fertility status (0 if non-pregnant or days since conception):\")] \r\n        public int Pregnant { get; set; }\r\n\r\n        [Description(\"Stock: lactation status (0 if non-lactating or days since parturition):\")]\r\n        public int Lactating { get; set; }\r\n\r\n        public void ChangeStockNum(int NumCowsToChange, string NewLocation)\r\n        {\r\n            if (NumCowsToChange > 0)\r\n            {\r\n                StockBuy purchase = new StockBuy();\r\n                purchase.Genotype = ReflectionUtilities.EnumToString(Genotype);\r\n                purchase.Number = NumCowsToChange; //from the Operations file; positive is buy, negative is sell\r\n                purchase.Sex = Sex;\r\n                purchase.Age = Age;       // age in months\r\n                purchase.Weight = Weight;  // liveweight in kg\r\n                purchase.UseTag = 1;\r\n                purchase.MatedTo = purchase.Genotype;\r\n                purchase.Pregnant = Pregnant;  // days pregnant, 0 = non pregnant, 1 = pregnant\r\n                purchase.Lactating = Lactating;  // 0 for dry, 1 for lactating\r\n\r\n                stock.Buy(purchase);\r\n                stock.Move(NewLocation);\r\n            }\r\n\r\n            if (NumCowsToChange <0)\r\n            \tstock.Sell(-(NumCowsToChange));\r\n        }\r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
                       "Key": "Genotype",
@@ -340,48 +222,389 @@
                 },
                 {
                   "$type": "Models.GrazPlan.Stock, Models",
-                  "ParamFile": "",
+                  "randFactory": {
+                    "$type": "StdUnits.MyRandom, Models"
+                  },
                   "RandSeed": 9999,
-                  "Genotypes": [
+                  "StockModel": null,
+                  "Name": "Stock",
+                  "Children": [
                     {
-                      "$type": "Models.GrazPlan.SingleGenotypeInits, Models",
-                      "DeathRate": [
-                        0.0,
-                        0.0
+                      "$type": "Models.GrazPlan.Genotype, Models",
+                      "sEditor": "Andrew Moore",
+                      "sEditDate": "30 Jan 2013",
+                      "Animal": 1,
+                      "FDairyIntakePeak": 0.0,
+                      "SRWScalars": [
+                        1.2,
+                        1.4
                       ],
-                      "Conceptions": [
+                      "MaxFleeceDiam": 0.0,
+                      "bDairyBreed": true,
+                      "MortRate": [
                         0.0,
+                        5.53E-05,
+                        5.53E-05
+                      ],
+                      "MortAge": [
+                        0.0,
+                        300.0,
+                        365.0
+                      ],
+                      "MortIntensity": 0.3,
+                      "MortCondConst": 0.6,
+                      "MortWtDiff": 0.1,
+                      "GrowthC": [
+                        0.0,
+                        0.0115,
+                        0.27,
+                        0.4,
+                        1.1
+                      ],
+                      "IntakeC": [
+                        0.0,
+                        0.025,
+                        1.7,
+                        0.22,
+                        60.0,
+                        0.02,
+                        25.0,
+                        22.0,
+                        81.0,
+                        1.7,
+                        0.6,
+                        0.05,
+                        0.15,
+                        0.005,
+                        0.002,
+                        0.5,
+                        1.0,
+                        0.01,
+                        20.0,
+                        3.0,
+                        1.5,
+                        0.7
+                      ],
+                      "IntakeLactC": [
+                        0.0,
+                        0.85,
+                        0.577,
+                        0.9
+                      ],
+                      "GrazeC": [
+                        0.0,
+                        0.8,
+                        0.17,
+                        1.7,
+                        0.00078,
+                        0.6,
+                        0.00074,
+                        0.5,
+                        150.0,
+                        0.14,
+                        0.28,
+                        10.5,
+                        0.8,
+                        0.35,
                         1.0,
                         0.0,
+                        0.0,
+                        0.012,
+                        1.0,
+                        1.0,
+                        11.5
+                      ],
+                      "EfficC": [
+                        0.0,
+                        0.5,
+                        0.02,
+                        0.85,
+                        0.7,
+                        0.4,
+                        0.02,
+                        0.6,
+                        0.133,
+                        0.95,
+                        0.84,
+                        0.8,
+                        0.7,
+                        0.035,
+                        0.33,
+                        0.12,
+                        0.043
+                      ],
+                      "MaintC": [
+                        0.0,
+                        0.09,
+                        0.36,
+                        8E-05,
+                        0.84,
+                        0.23,
+                        0.0025,
+                        0.9,
+                        5.2E-05,
+                        0.16,
+                        0.0152,
+                        0.000526,
+                        0.0161,
+                        0.0422,
+                        0.00011,
+                        0.15,
+                        0.0026,
+                        5.0
+                      ],
+                      "DgProtC": [
+                        0.0,
+                        0.3,
+                        0.25,
+                        0.1,
+                        0.007,
+                        0.005,
+                        0.35,
+                        0.1,
+                        0.1
+                      ],
+                      "ProtC": [
+                        0.0,
+                        0.05,
+                        0.85,
+                        5.5,
+                        0.178,
+                        0.92,
+                        1.0,
+                        0.6,
+                        0.25,
+                        0.9
+                      ],
+                      "PregC": [
+                        0.0,
+                        285.0,
+                        2.2,
+                        1.77,
+                        0.33,
+                        1.8,
+                        2.42,
+                        1.16,
+                        4.11,
+                        343.5,
+                        0.0164,
+                        0.134,
+                        6.22,
+                        0.747
+                      ],
+                      "PregScale": [
+                        0.0,
+                        1.0,
+                        1.15,
                         0.0
                       ],
-                      "GenotypeName": "NZFriesianCross",
-                      "DamBreed": "Friesian",
-                      "SireBreed": "Jersey",
-                      "Generation": 1,
-                      "SRW": 550.0,
+                      "BirthWtScale": [
+                        0.0,
+                        0.07,
+                        0.055,
+                        0.0
+                      ],
+                      "PeakLactC": [
+                        0.0,
+                        0.5,
+                        0.62,
+                        0.0
+                      ],
+                      "LactC": [
+                        0.0,
+                        4.0,
+                        30.0,
+                        0.6,
+                        0.105,
+                        0.94,
+                        3.1,
+                        1.17,
+                        0.0,
+                        0.0,
+                        0.04,
+                        90.0,
+                        0.42,
+                        0.58,
+                        0.0357,
+                        0.032,
+                        0.7,
+                        0.01,
+                        0.1,
+                        1.6,
+                        4.0,
+                        0.0027,
+                        0.004,
+                        3.0,
+                        0.6,
+                        1.03
+                      ],
+                      "WoolC": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "ChillC": [
+                        0.0,
+                        0.09,
+                        4.1,
+                        1.6,
+                        0.5,
+                        0.7,
+                        0.15,
+                        0.481,
+                        0.619,
+                        1.1,
+                        0.322,
+                        39.0,
+                        1.5,
+                        5.0,
+                        0.15,
+                        10.0,
+                        0.38
+                      ],
+                      "GainC": [
+                        0.0,
+                        0.6,
+                        0.7,
+                        0.8,
+                        -6.0,
+                        0.4,
+                        0.9,
+                        0.97,
+                        27.0,
+                        20.3,
+                        2.0,
+                        13.8,
+                        0.072,
+                        0.14,
+                        0.008,
+                        0.115,
+                        1.0,
+                        0.5,
+                        1.09
+                      ],
+                      "PhosC": [
+                        0.0,
+                        0.7,
+                        0.95,
+                        2E-05,
+                        0.003,
+                        4.4E-05,
+                        0.0041,
+                        0.001,
+                        0.0,
+                        0.00051,
+                        3.7E-06,
+                        0.00051,
+                        3.7E-06,
+                        0.0012,
+                        0.004635,
+                        0.22
+                      ],
+                      "SulfC": [
+                        0.0,
+                        0.07,
+                        0.07,
+                        0.0,
+                        0.00114
+                      ],
+                      "MethC": [
+                        0.0,
+                        18.4,
+                        0.013,
+                        0.00752,
+                        0.0237,
+                        0.00336,
+                        18.1,
+                        25.29
+                      ],
+                      "AshAlkC": [
+                        0.0,
+                        0.34,
+                        0.28,
+                        1.1
+                      ],
+                      "OvulationPeriod": 21,
+                      "Puberty": [
+                        183,
+                        365
+                      ],
+                      "DayLengthConst": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "F2": [
+                        0.0,
+                        0.7,
+                        5.0,
+                        0.0
+                      ],
+                      "F3": [
+                        0.0,
+                        5.89,
+                        5.89,
+                        0.0
+                      ],
+                      "ToxaemiaSigs": [
+                        0.0,
+                        0.0
+                      ],
+                      "DystokiaSigs": [
+                        0.0,
+                        0.0
+                      ],
+                      "ExposureConsts": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "SelfWeanPropn": 0.05,
+                      "MaxYoung": 0,
+                      "BreedSRW": 550.0,
                       "PotFleeceWt": 0.0,
-                      "MaxFibreDiam": 0.0,
-                      "FleeceYield": 0.0,
-                      "PeakMilk": 35.0
+                      "FleeceRatio": 0.0,
+                      "PeakMilk": 27.5,
+                      "ConceiveSigs": [
+                        [
+                          0.0,
+                          0.0
+                        ],
+                        [
+                          0.7,
+                          5.89
+                        ],
+                        [
+                          5.0,
+                          5.89
+                        ],
+                        [
+                          0.0,
+                          0.0
+                        ]
+                      ],
+                      "FertWtDiff": 0.0,
+                      "Name": "Friesian",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
-                  "Animals": [],
-                  "PaddockList": [
-                    {
-                      "$type": "Models.GrazPlan.PaddockInit, Models",
-                      "Forages": [],
-                      "Name": "",
-                      "Area": 1.0,
-                      "Slope": 0.0,
-                      "Excretion": null,
-                      "Urine": null
-                    }
-                  ],
-                  "EnterpriseList": [],
-                  "GrazingPeriods": [],
-                  "Name": "Stock",
-                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -2463,7 +2686,7 @@
                   "Children": [
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.Utilities;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.PMF.Organs;\r\nusing System.Data;\r\nusing System.IO;\r\nusing System.Diagnostics;\r\n    \r\nnamespace Models\r\n{\r\n\t[Serializable]\r\n\tpublic class Script : Model\r\n\t{\r\n\t\t[Link] Clock clock;\r\n\t\t[Link] Plant slurp;\r\n\t\t[Link] Simulation simulation;\r\n\t\t[Link] Zone paddock;\r\n\t\t[Link] Stock stock;\r\n\t\t[Link] Supplement supplement;\r\n\t\t[Link] Summary summary;\r\n\r\n\t\t[NonSerialized]\r\n\t\tprivate DataView data;\r\n\r\n\t\t[NonSerialized]\r\n\t\tprivate SimpleLeaf slurpLeaf;\r\n\r\n\t\t[Separator(\"Slurp will be automatically 'sown' at the sart of the simulation\")]\r\n\r\n        [Description(\"EXCEL file name with the resetting data (must be .xlsx)\")]\r\n        [Display(Type=DisplayType.FileName)]\r\n\t\tpublic string SSheetFileName { get; set; }\r\n\r\n\t\t[Description (\"Name of worksheet containing the data\")]\r\n\t\tpublic string SSheetWorksheetName { get; set; }\r\n\r\n\t\tpublic double GrazedArea { get; set; }\r\n\r\n\t\tpublic double SupplementOffered { get; set; }\r\n\r\n\t\t[EventSubscribe(\"StartOfSimulation\")]\r\n\t\tprivate void OnStartOfSimulation(object sender, EventArgs e)\r\n\t\t{\r\n\t\t\tvar fullFileName = SSheetFileName;\r\n\t\t\tif (simulation != null && simulation.FileName != null)\r\n                fullFileName = PathUtilities.GetAbsolutePath(SSheetFileName, simulation.FileName);\r\n\r\n\t\t\tif (!File.Exists(fullFileName))\r\n\t\t\t\tthrow new Exception(\"Cannot find file: \" + fullFileName);\r\n\t\t\tdata = new DataView(ExcelUtilities.ReadExcelFileData(fullFileName, SSheetWorksheetName, headerRow:true));\r\n\r\n\t\t\tslurpLeaf = Apsim.Child(slurp, typeof(SimpleLeaf)) as SimpleLeaf;\r\n\r\n\t\t\tdouble wt = 300;\r\n\t\t\tslurpLeaf.Live.StructuralWt = wt;\r\n\t\t\tslurpLeaf.Live.StorageWt = 0;\r\n\t\t\tslurpLeaf.Live.StructuralN = wt * slurpLeaf.MinNconc;\r\n\t\t\tslurpLeaf.Live.StorageN = wt * slurpLeaf.MaxNconc - slurpLeaf.Live.StructuralN;\r\n\r\n\t\t\tsupplement.SpoilageTime = 0.0; //days\r\n\t\t}\r\n\r\n\t\t[EventSubscribe(\"DoManagement\")]\r\n\t\tprivate void OnDoManagement(object sender, EventArgs e)\r\n\t\t{\r\n\t\t\tdouble DM = 0.0;\r\n\t\t\tdouble digestibility = 0.0;\r\n\r\n\r\n\t\t\t// Find last area grazed \r\n\t\t\tdouble oldGrazedArea = GrazedArea;\r\n\t\t\tdata.RowFilter = \"Date <=#\" + clock.Today.ToString(\"yyyy-MM-dd\") + \"# and GrazedArea >0\";\r\n\t\t\tif (data.Count > 0)\r\n\t\t\t{\r\n\t\t\t\tvar mostRecentRow = data[data.Count-1];\r\n\t\t\t\tif (!Convert.IsDBNull(mostRecentRow[\"GrazedArea\"]))\r\n\t\t\t\t\tGrazedArea = Convert.ToDouble(mostRecentRow[\"GrazedArea\"]); \r\n\t\t\t\tif (GrazedArea != oldGrazedArea)\r\n\t\t\t\t{\r\n\t\t\t\t\tpaddock.Area = GrazedArea;\r\n\t\t\t\t}\r\n\t\t\t}\r\n\r\n\t\t\t// Find last DM value - This will be the most recent day.\r\n\t\t\tdata.RowFilter = \"Date <=#\" + clock.Today.ToString(\"yyyy-MM-dd\") + \"# and PreGrazingCover >0\";\r\n\t\t\tif (data.Count > 0)\r\n\t\t\t{\r\n\t\t\t\tvar mostRecentRow = data[data.Count-1];\r\n\r\n\t\t\t\tif (!Convert.IsDBNull(mostRecentRow[\"PreGrazingCover\"]))\r\n\t\t\t\t\tDM = Convert.ToDouble(mostRecentRow[\"PreGrazingCover\"]) / 10; // to g/m2\r\n\t\t\t}\r\n\r\n\t\t\t// Find last ME value - This will be the most recent day.\r\n\t\t\tdata.RowFilter = \"Date <=#\" + clock.Today.ToString(\"yyyy-MM-dd\") + \"# and PastureMEConc >0\";\r\n\t\t\tif (data.Count > 0)\r\n\t\t\t{\r\n\t\t\t\tvar mostRecentRow = data[data.Count-1];\r\n\r\n\t\t\t\tif (!Convert.IsDBNull(mostRecentRow[\"PastureMEConc\"]))\r\n\t\t\t\t\tdigestibility = Convert.ToDouble(mostRecentRow[\"PastureDigestibility\"]);\r\n\t\t\t}\r\n\t\t\tif (digestibility == 0)\r\n\t\t\t\tdigestibility = 0.84;\r\n\r\n\t\t\tif (DM > 0)\r\n\t\t\t{\r\n\t\t\t\tslurpLeaf.Live.StructuralWt = DM;\r\n\t\t\t\tslurpLeaf.Live.StorageWt = 0;\r\n\t\t\t\tslurpLeaf.Live.DMDOfStructural = digestibility;\r\n\t\t\t\tslurpLeaf.Live.StructuralN = DM * slurpLeaf.MinNconc;\r\n\t\t\t\tslurpLeaf.Live.StorageN = DM * slurpLeaf.MaxNconc - slurpLeaf.Live.StructuralN;\r\n\t\t\t}\r\n\r\n\t\t\t// Handle the supplements, find last supplemenet value - This will be the most recent day.\r\n\t\t\tSupplementOffered = 0.0;\r\n\t\t\t//data.RowFilter = \"Date <=#\" + clock.Today.ToString(\"yyyy-MM-dd\") + \"# and SupplementOffered >0\";\r\n\t\t\tdata.RowFilter = \"Date <=#\" + clock.Today.ToString(\"yyyy-MM-dd\") + \"#\";  // I want to retain the 0 values this time as they are meaningful (not just blank)\r\n\t\t\tif (data.Count > 0)\r\n\t\t\t{\r\n\t\t\t\tvar mostRecentRow = data[data.Count-1];\r\n\r\n\t\t\t\tif (!Convert.IsDBNull(mostRecentRow[\"SupplementOffered\"]))\r\n\t\t\t\t\tSupplementOffered = Convert.ToDouble(mostRecentRow[\"SupplementOffered\"]); \r\n\t\t\t}\r\n\r\n\t\t\tif (SupplementOffered > 0.0)\r\n\t\t\t{\r\n\t\t\t\t// don't need to buy - set up the store with sufficient before the simulation started\r\n\t\t\t\t//supplement.Buy(stock.NumberAll * supplementOffered, \"Silage_11ME\"); \r\n\t\t\t\tsupplement.Feed(\"Silage_11ME\", stock.NumberAll * SupplementOffered, \"Paddock\", false);  //should be true but will through an error\r\n\r\n\t\t\t\tsummary.WriteMessage(this, \"Total supp offered = \" + (stock.NumberAll * SupplementOffered).ToString());\r\n\t\t\t\tsummary.WriteMessage(this, supplement.PaddAmounts[1].ToString());\r\n\t\t\t}\r\n\t\t\t// Columns in spreadsheet:\r\n\t\t\t// Date\r\n\t\t\t// Pasture_Growth_Rate\t(kgDM/ha/day)\r\n\t\t\t// Pre_Cover  (kgDM/ha)\r\n\t\t\t// Post_Cover (kgDM/ha)\r\n\t\t\t// PastureOffered_Obs (kgDM/cow/d)\r\n\t\t\t// PastureOffered_ObsMJ (MJME/cow/d)\r\n\t\t\t// PastureOffered_Mlcalc (MJME/kgDM)\r\n\t\t\t// Milkers offered Grass Silage (kgDM/cow/d)\r\n\t\t\t// ME Silage Obs or Assumed (MJME/kgDM)\r\n\t\t\t// EstmSilageIntake_Obs (MJME)\r\n\t\t\t// EstmSilageIntake_Calc (MJME)\r\n\t\t\t// EstmTotalIntake_Obs (MJME)\r\n\t\t\t// EstmTotalIntake_Calc (MJME)\r\n\t\t\t// Pasture_ME (ME/kgDM)\r\n\t\t\t// Pasture_Protein (%)\r\n\t\t\t// Pasture_DM (%)\r\n\t\t\t// Pasture_WSC (%)\r\n\t\t\t// Pasture_NDF (%)\r\n\t\t\t// Digestability\r\n\t\t}\r\n    }\r\n}\r\n",
+                      "Code": "using System.Diagnostics;\r\nusing System.IO;\r\nusing System.Data;\r\nusing Models.PMF.Organs;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.GrazPlan;\r\nusing Models.Utilities;\r\nusing Models.Core;\r\nusing System;\r\n    \r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Plant slurp;\r\n        [Link] Simulation simulation;\r\n        [Link] Zone paddock;\r\n        [Link] Stock stock;\r\n        [Link] Supplement supplement;\r\n        [Link] Summary summary;\r\n\r\n        [NonSerialized]\r\n        private DataView data;\r\n\r\n        [NonSerialized]\r\n        private SimpleLeaf slurpLeaf;\r\n\r\n        [Separator(\"Slurp will be automatically 'sown' at the sart of the simulation\")]\r\n\r\n        [Description(\"EXCEL file name with the resetting data (must be .xlsx)\")]\r\n        [Display(Type=DisplayType.FileName)]\r\n        public string SSheetFileName { get; set; }\r\n\r\n        [Description (\"Name of worksheet containing the data\")]\r\n        public string SSheetWorksheetName { get; set; }\r\n\r\n        public double GrazedArea { get; set; }\r\n\r\n        public double SupplementOffered { get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            var fullFileName = SSheetFileName;\r\n            if (simulation != null && simulation.FileName != null)\r\n                fullFileName = PathUtilities.GetAbsolutePath(SSheetFileName, simulation.FileName);\r\n\r\n            if (!File.Exists(fullFileName))\r\n                throw new Exception(\"Cannot find file: \" + fullFileName);\r\n            data = new DataView(ExcelUtilities.ReadExcelFileData(fullFileName, SSheetWorksheetName, headerRow:true));\r\n\r\n            slurpLeaf = Apsim.Child(slurp, typeof(SimpleLeaf)) as SimpleLeaf;\r\n\r\n            double wt = 300;\r\n            slurpLeaf.Live.StructuralWt = wt;\r\n            slurpLeaf.Live.StorageWt = 0;\r\n            slurpLeaf.Live.StructuralN = wt * slurpLeaf.MinNconc;\r\n            slurpLeaf.Live.StorageN = wt * slurpLeaf.MaxNconc - slurpLeaf.Live.StructuralN;\r\n\r\n            supplement.SpoilageTime = 0.0; //days\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double DM = 0.0;\r\n            double digestibility = 0.0;\r\n\r\n\r\n            // Find last area grazed \r\n            double oldGrazedArea = GrazedArea;\r\n            data.RowFilter = \"Date <=#\" + clock.Today.ToString(\"yyyy-MM-dd\") + \"# and GrazedArea >0\";\r\n            if (data.Count > 0)\r\n            {\r\n                var mostRecentRow = data[data.Count-1];\r\n                if (!Convert.IsDBNull(mostRecentRow[\"GrazedArea\"]))\r\n                    GrazedArea = Convert.ToDouble(mostRecentRow[\"GrazedArea\"]); \r\n                if (GrazedArea != oldGrazedArea)\r\n                {\r\n                    paddock.Area = GrazedArea;\r\n                }\r\n            }\r\n\r\n            // Find last DM value - This will be the most recent day.\r\n            data.RowFilter = \"Date <=#\" + clock.Today.ToString(\"yyyy-MM-dd\") + \"# and PreGrazingCover >0\";\r\n            if (data.Count > 0)\r\n            {\r\n                var mostRecentRow = data[data.Count-1];\r\n\r\n                if (!Convert.IsDBNull(mostRecentRow[\"PreGrazingCover\"]))\r\n                    DM = Convert.ToDouble(mostRecentRow[\"PreGrazingCover\"]) / 10; // to g/m2\r\n            }\r\n\r\n            // Find last ME value - This will be the most recent day.\r\n            data.RowFilter = \"Date <=#\" + clock.Today.ToString(\"yyyy-MM-dd\") + \"# and PastureMEConc >0\";\r\n            if (data.Count > 0)\r\n            {\r\n                var mostRecentRow = data[data.Count-1];\r\n\r\n                if (!Convert.IsDBNull(mostRecentRow[\"PastureMEConc\"]))\r\n                    digestibility = Convert.ToDouble(mostRecentRow[\"PastureDigestibility\"]);\r\n            }\r\n            if (digestibility == 0)\r\n                digestibility = 0.84;\r\n\r\n            if (DM > 0)\r\n            {\r\n                slurpLeaf.Live.StructuralWt = DM;\r\n                slurpLeaf.Live.StorageWt = 0;\r\n                slurpLeaf.Live.DMDOfStructural = digestibility;\r\n                slurpLeaf.Live.StructuralN = DM * slurpLeaf.MinNconc;\r\n                slurpLeaf.Live.StorageN = DM * slurpLeaf.MaxNconc - slurpLeaf.Live.StructuralN;\r\n            }\r\n\r\n            // Handle the supplements, find last supplemenet value - This will be the most recent day.\r\n            SupplementOffered = 0.0;\r\n            //data.RowFilter = \"Date <=#\" + clock.Today.ToString(\"yyyy-MM-dd\") + \"# and SupplementOffered >0\";\r\n            data.RowFilter = \"Date <=#\" + clock.Today.ToString(\"yyyy-MM-dd\") + \"#\";  // I want to retain the 0 values this time as they are meaningful (not just blank)\r\n            if (data.Count > 0)\r\n            {\r\n                var mostRecentRow = data[data.Count-1];\r\n\r\n                if (!Convert.IsDBNull(mostRecentRow[\"SupplementOffered\"]))\r\n                    SupplementOffered = Convert.ToDouble(mostRecentRow[\"SupplementOffered\"]); \r\n            }\r\n\r\n            if (SupplementOffered > 0.0)\r\n            {\r\n                // don't need to buy - set up the store with sufficient before the simulation started\r\n                //supplement.Buy(stock.NumberAll * supplementOffered, \"Silage_11ME\"); \r\n                supplement.Feed(\"Silage_11ME\", stock.NumberAll * SupplementOffered, \"Paddock\", false);  //should be true but will through an error\r\n\r\n                summary.WriteMessage(this, \"Total supp offered = \" + (stock.NumberAll * SupplementOffered).ToString());\r\n                summary.WriteMessage(this, supplement.PaddAmounts[1].ToString());\r\n            }\r\n            // Columns in spreadsheet:\r\n            // Date\r\n            // Pasture_Growth_Rate    (kgDM/ha/day)\r\n            // Pre_Cover  (kgDM/ha)\r\n            // Post_Cover (kgDM/ha)\r\n            // PastureOffered_Obs (kgDM/cow/d)\r\n            // PastureOffered_ObsMJ (MJME/cow/d)\r\n            // PastureOffered_Mlcalc (MJME/kgDM)\r\n            // Milkers offered Grass Silage (kgDM/cow/d)\r\n            // ME Silage Obs or Assumed (MJME/kgDM)\r\n            // EstmSilageIntake_Obs (MJME)\r\n            // EstmSilageIntake_Calc (MJME)\r\n            // EstmTotalIntake_Obs (MJME)\r\n            // EstmTotalIntake_Calc (MJME)\r\n            // Pasture_ME (ME/kgDM)\r\n            // Pasture_Protein (%)\r\n            // Pasture_DM (%)\r\n            // Pasture_WSC (%)\r\n            // Pasture_NDF (%)\r\n            // Digestability\r\n        }\r\n    }\r\n}\r\n",
                       "Parameters": [
                         {
                           "Key": "SSheetFileName",
@@ -2489,10 +2712,6 @@
                     },
                     {
                       "$type": "Models.PMF.Plant, Models",
-                      "CropType": "Slurp",
-                      "IsAlive": false,
-                      "IsEnding": false,
-                      "DaysAfterEnding": 0,
                       "ResourceName": "Slurp",
                       "Name": "Slurp",
                       "IncludeInDocumentation": false,
@@ -2501,14 +2720,12 @@
                     },
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                      "Canopies": [],
                       "InitialResidueName": "wheat_stubble",
                       "InitialResidueType": "wheat",
                       "InitialResidueMass": 0.0,
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 100.0,
-                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": true,
@@ -2665,7 +2882,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.SoilWater, Models",
+                          "$type": "Models.WaterModel.WaterBalance, Models",
                           "SummerDate": "1-Nov",
                           "SummerU": 5.0,
                           "SummerCona": 5.0,
@@ -2678,10 +2895,9 @@
                           "CN2Bare": 73.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
-                          "slope": "NaN",
-                          "discharge_width": "NaN",
-                          "catchment_area": "NaN",
-                          "max_pond": 0.0,
+                          "Slope": "NaN",
+                          "DischargeWidth": "NaN",
+                          "CatchmentArea": "NaN",
                           "Thickness": [
                             150.0,
                             150.0,
@@ -2690,15 +2906,6 @@
                             300.0,
                             300.0,
                             300.0
-                          ],
-                          "Depth": [
-                            "0-15",
-                            "15-30",
-                            "30-60",
-                            "60-90",
-                            "90-120",
-                            "120-150",
-                            "150-180"
                           ],
                           "SWCON": [
                             0.3,
@@ -2710,9 +2917,8 @@
                             0.3
                           ],
                           "KLAT": null,
-                          "PrecipitationInterception": 0.0,
+                          "ResourceName": "WaterBalance",
                           "Name": "SoilWater",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -3037,7 +3243,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Report.Report, Models",
+                      "$type": "Models.Report, Models",
                       "VariableNames": [
                         "[Clock].Today",
                         "[Slurp].Leaf.Live.Wt",
@@ -3053,6 +3259,7 @@
                       "EventNames": [
                         "[Clock].EndOfDay"
                       ],
+                      "GroupByVariableName": null,
                       "Name": "Report",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3065,10 +3272,10 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Report.Report, Models",
+                  "$type": "Models.Report, Models",
                   "VariableNames": [
-                    "[ChangeRuminantPRM].Script.Dummy as Description",
-                    "[ChangeRuminantPRM].Script.FileName as ParameterSet",
+                    "//[ChangeRuminantPRM].Script.Dummy as Description",
+                    "//[ChangeRuminantPRM].Script.FileName as ParameterSet",
                     "[Clock].Today as Date",
                     "[Stock].NumberAll as CowNumberInMilk",
                     "[Stock].WeightAll as CowWeight // kg",
@@ -3084,6 +3291,7 @@
                   "EventNames": [
                     "[Clock].EndOfDay"
                   ],
+                  "GroupByVariableName": null,
                   "Name": "ValidationReport",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -3106,11 +3314,11 @@
           "Name": "Validation Plots",
           "Children": [
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -3121,7 +3329,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -3139,7 +3347,7 @@
               "Name": "Numbers",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -3168,7 +3376,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -3202,11 +3410,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -3217,7 +3425,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -3235,7 +3443,7 @@
               "Name": "GrazedArea",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -3264,7 +3472,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -3298,11 +3506,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -3313,7 +3521,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -3331,7 +3539,7 @@
               "Name": "MilkProduction",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -3360,7 +3568,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -3394,11 +3602,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -3409,7 +3617,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -3427,7 +3635,7 @@
               "Name": "CowBodyMass",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -3456,7 +3664,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -3490,11 +3698,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -3505,7 +3713,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -3523,7 +3731,7 @@
               "Name": "ConditionScore",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -3557,11 +3765,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -3572,7 +3780,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -3590,7 +3798,7 @@
               "Name": "IntakeTotal",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -3619,7 +3827,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -3653,11 +3861,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -3668,7 +3876,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -3686,7 +3894,7 @@
               "Name": "IntakePasture",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -3715,7 +3923,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -3749,11 +3957,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -3764,7 +3972,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -3782,7 +3990,7 @@
               "Name": "IntakeSupplement",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -3811,7 +4019,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
