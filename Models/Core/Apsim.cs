@@ -303,14 +303,7 @@
         /// <returns>The found siblings or an empty array if not found.</returns>
         public static List<IModel> Siblings(IModel model)
         {
-            if (model != null && model.Parent != null)
-            {
-                return model.Parent.Children.FindAll(m => m != model).ToList<IModel>();
-            }
-            else
-            {
-                return new List<IModel>();
-            }
+            return model.FindAllSiblings().ToList();
         }
 
         /// <summary>
@@ -319,11 +312,7 @@
         /// <param name="model">The model to parent</param>
         public static void ParentAllChildren(IModel model)
         {
-            foreach (IModel child in model.Children)
-            {
-                child.Parent = model;
-                ParentAllChildren(child);
-            }
+            model.ParentAllDescendants();
         }
 
         /// <summary>
