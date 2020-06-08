@@ -260,14 +260,8 @@
         /// <param name="model">The parent model</param>
         /// <returns>A list of all children</returns>
         public static List<IModel> ChildrenRecursively(IModel model)
-        {            
-            List<IModel> models = new List<IModel>();
-            foreach (Model child in model.Children)
-            {                
-                models.Add(child);                
-                models.AddRange(ChildrenRecursively(child));
-            }
-            return models;
+        {
+            return model.FindAllDescendants().ToList();
         }
 
         /// <summary>
@@ -280,7 +274,15 @@
         /// <returns>A list of all children</returns>
         public static List<IModel> ChildrenRecursively(IModel model, Type typeFilter)
         {
-            return ChildrenRecursively(model).FindAll(m => typeFilter.IsAssignableFrom(m.GetType()));
+            if (model == null)
+                return new List<IModel>();
+
+            MethodInfo[] methods = model.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance);
+            MethodInfo find = methods.FirstOrDefault(m => m.Name == "FindAllDescendants" && m.IsGenericMethod && m.GetParameters().Length == 0);
+            if (find == null)
+                throw new Exception($"Unable to find find method");
+
+            return (find.MakeGenericMethod(typeFilter).Invoke(model, null) as IEnumerable<IModel>).ToList();
         }
         
         /// <summary>
@@ -291,10 +293,8 @@
         /// <returns>A list of all children</returns>
         public static List<IModel> ChildrenRecursivelyVisible(IModel model)
         {
-            return ChildrenRecursively(model).FindAll(m => !m.IsHidden);
+            return model.FindAllDescendants().Where(m => !m.IsHidden).ToList();
         }
-
-
 
         /// <summary>
         /// Return all siblings of the specified model.
