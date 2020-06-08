@@ -481,14 +481,13 @@
                 double Wt = (vine.Zone as Zones.RectangularZone).Width;    // Width of tree zone
                 double Wa = (alley.Zone as Zones.RectangularZone).Width;   // Width of alley zone
                 double CWt = vine.Canopies[0].Canopy.Width / 1000;         // Width of the tree canopy
-             
-                double WaOl = CWt;                                  //adjusted Width of tree canopy, because the tree canopy is smaller than the strip width, so there would be a gap between alley and tree 
-                double WaOp = Wa +Wt - WaOl;                               // Width of the open alley zone between tree canopies
-                double Ft = WaOl / (Wt + Wa);                              // Fraction of space in tree canopy
+                             
+                double WaOp = Wa +Wt - CWt;                               // Width of the open alley zone between tree canopies
+                double Ft = CWt / (Wt + Wa);                              // Fraction of space in tree canopy
                 double Fs = WaOp / (Wt + Wa);                              // Fraction of open space in the alley row
 
                
-                double LAIt = MathUtilities.Sum(vine.LAItotsum) * Wt/ WaOl;      // adjusting the LAI of tallest strip based on new width
+                double LAIt = MathUtilities.Sum(vine.LAItotsum) * Wt/ CWt;      // adjusting the LAI of tallest strip based on new width
                 double LAIs = MathUtilities.Sum(alley.LAItotsum)* Wa / WaOp;     // adjusting the LAI of shortest strip based on new width
 
                 double Kt = 0;                                                // Extinction Coefficient of the tallest strip
@@ -501,19 +500,24 @@
                 double Httop = Ht-Ha;                                       // distance from top of shortest to top of tallest
                 double LAIthomo = Ft * LAIt;                                // LAI of top layer of tallest strip if spread homogeneously across all of the space
                 
-                double Ftblack = (Math.Sqrt(Math.Pow(CDt, 2) + Math.Pow(WaOl, 2)) - CDt) / WaOl;  // View factor for top layer of tallest strip
+                double Ftblack = (Math.Sqrt(Math.Pow(CDt, 2) + Math.Pow(CWt, 2)) - CDt) / CWt;  // View factor for top layer of tallest strip
+                
                 double Fsblack = (Math.Sqrt(Math.Pow(Httop, 2) + Math.Pow(WaOp, 2)) - Httop) / WaOp;  // View factor for top layer of shortest strip
+                
                 double Tt = Ft * (Ftblack * Math.Exp(-Kt * LAIt)
                           + Ft * (1 - Ftblack) * Math.Exp(-Kt * LAIthomo))
                           + Fs * Ft * (1 - Fsblack) * Math.Exp(-Kt * LAIthomo);  //  Transmission of light to bottom of top layer in tallest strip
+                
                 double Ts = Fs * (Fsblack + Fs * (1 - Fsblack) * Math.Exp(-Kt * LAIthomo))
                           + Ft * Fs * ((1 - Ftblack) * Math.Exp(-Kt * LAIthomo));           //  Transmission of light to bottom of top layer in shortest strip
+                //this method may overestimed the light interception by the tree top layer, however the fraction of light interception at the interrow compared to the observation is improved
                 double Intttop = 1 - Tt - Ts;                                // Interception by the top layer of the tallest strip (ie light intercepted in tallest strip above height of shortest strip)
                 double Inttbot = (Tt * (1 - Math.Exp(-Kt * 0)));             // Interception by the bottom layer of the tallest strip
                 double Soilt = (Tt * (Math.Exp(-Kt * 0)));                   // Transmission to the soil below tallest strip
                 double Ints = Ts * (1 - Math.Exp(-Ka * LAIs));               // Interception by the shortest strip
                 double Soils = Ts * (Math.Exp(-Ka * LAIs));                  // Transmission to the soil below shortest strip
                 double EnergyBalanceCheck = Intttop + Inttbot + Soilt + Ints + Soils;  // Sum of all light fractions (should equal 1)
+               
                 if (Math.Abs(1 - EnergyBalanceCheck) > 0.001)
                     throw (new Exception("Energy Balance not maintained in strip crop light interception model"));
 
