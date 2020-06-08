@@ -19,7 +19,8 @@ namespace UnitTests.Core
     [TestFixture]
     public class ModelTests
     {
-        private class MockModel1 : Model { }
+        private interface IInterface { }
+        private class MockModel1 : Model, IInterface { }
         private class MockModel2 : Model { }
 
         private IModel simpleModel;
@@ -320,6 +321,7 @@ namespace UnitTests.Core
 
             // 1 match.
             Assert.AreEqual(container, simpleModel.FindDescendant<MockModel1>());
+            Assert.AreEqual(container, simpleModel.FindDescendant<IInterface>());
 
             // Many matches - expect first in depth-first search is returned.
             Assert.AreEqual(folder1, simpleModel.FindDescendant<Folder>());
