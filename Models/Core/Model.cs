@@ -138,7 +138,7 @@
         /// Find a sibling of a given type.
         /// </summary>
         /// <typeparam name="T">Type of the sibling.</typeparam>
-        public T FindSibling<T>() where T : IModel
+        public T FindSibling<T>()
         {
             return FindAllSiblings<T>().FirstOrDefault();
         }
@@ -147,7 +147,7 @@
         /// Performs a depth-first search for a descendant of a given type.
         /// </summary>
         /// <typeparam name="T">Type of the descendant.</typeparam>
-        public T FindDescendant<T>() where T : IModel
+        public T FindDescendant<T>()
         {
             return FindAllDescendants<T>().FirstOrDefault();
         }
@@ -156,7 +156,7 @@
         /// Find an ancestor of a given type.
         /// </summary>
         /// <typeparam name="T">Type of the ancestor.</typeparam>
-        public T FindAncestor<T>() where T : IModel
+        public T FindAncestor<T>()
         {
             return FindAllAncestors<T>().FirstOrDefault();
         }
@@ -165,7 +165,7 @@
         /// Find a model of a given type in scope.
         /// </summary>
         /// <typeparam name="T">Type of model to find.</typeparam>
-        public T FindInScope<T>() where T : IModel
+        public T FindInScope<T>()
         {
             return FindAllInScope<T>().FirstOrDefault();
         }
@@ -175,7 +175,7 @@
         /// </summary>
         /// <param name="name">Name of the sibling.</param>
         /// <typeparam name="T">Type of the sibling.</typeparam>
-        public T FindSibling<T>(string name) where T : IModel
+        public T FindSibling<T>(string name)
         {
             return FindAllSiblings<T>(name).FirstOrDefault();
         }
@@ -185,7 +185,7 @@
         /// </summary>
         /// <param name="name">Name of the descendant.</param>
         /// <typeparam name="T">Type of the descendant.</typeparam>
-        public T FindDescendant<T>(string name) where T : IModel
+        public T FindDescendant<T>(string name)
         {
             return FindAllDescendants<T>(name).FirstOrDefault();
         }
@@ -195,7 +195,7 @@
         /// </summary>
         /// <param name="name">Name of the ancestor.</param>
         /// <typeparam name="T">Type of the ancestor.</typeparam>
-        public T FindAncestor<T>(string name) where T : IModel
+        public T FindAncestor<T>(string name)
         {
             return FindAllAncestors<T>(name).FirstOrDefault();
         }
@@ -205,7 +205,7 @@
         /// </summary>
         /// <param name="name">Name of the model.</param>
         /// <typeparam name="T">Type of model to find.</typeparam>
-        public T FindInScope<T>(string name) where T : IModel
+        public T FindInScope<T>(string name)
         {
             return FindAllInScope<T>(name).FirstOrDefault();
         }
@@ -214,7 +214,7 @@
         /// Find all ancestors of the given type.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        public IEnumerable<T> FindAllAncestors<T>() where T : IModel
+        public IEnumerable<T> FindAllAncestors<T>()
         {
             return FindAllAncestors().OfType<T>();
         }
@@ -223,7 +223,7 @@
         /// Find all descendants of the given type and name.
         /// </summary>
         /// <typeparam name="T">Type of descendants to return.</typeparam>
-        public IEnumerable<T> FindAllDescendants<T>() where T : IModel
+        public IEnumerable<T> FindAllDescendants<T>()
         {
             return FindAllDescendants().OfType<T>();
         }
@@ -232,7 +232,7 @@
         /// Find all siblings of the given type.
         /// </summary>
         /// <typeparam name="T">Type of siblings to return.</typeparam>
-        public IEnumerable<T> FindAllSiblings<T>() where T : IModel
+        public IEnumerable<T> FindAllSiblings<T>()
         {
             return FindAllSiblings().OfType<T>();
         }
@@ -241,7 +241,7 @@
         /// Find all models of a given type in scope.
         /// </summary>
         /// <typeparam name="T">Type of models to find.</typeparam>
-        public IEnumerable<T> FindAllInScope<T>() where T : IModel
+        public IEnumerable<T> FindAllInScope<T>()
         {
             return FindAllInScope().OfType<T>();
         }
@@ -251,7 +251,7 @@
         /// </summary>
         /// <typeparam name="T">Type of siblings to return.</typeparam>
         /// <param name="name">Name of the siblings.</param>
-        public IEnumerable<T> FindAllSiblings<T>(string name) where T : IModel
+        public IEnumerable<T> FindAllSiblings<T>(string name)
         {
             return FindAllSiblings(name).OfType<T>();
         }
@@ -261,7 +261,7 @@
         /// </summary>
         /// <typeparam name="T">Type of descendants to return.</typeparam>
         /// <param name="name">Name of the descendants.</param>
-        public IEnumerable<T> FindAllDescendants<T>(string name) where T : IModel
+        public IEnumerable<T> FindAllDescendants<T>(string name)
         {
             return FindAllDescendants(name).OfType<T>();
         }
@@ -271,7 +271,7 @@
         /// </summary>
         /// <typeparam name="T">Type of ancestors to return.</typeparam>
         /// <param name="name">Name of the ancestors.</param>
-        public IEnumerable<T> FindAllAncestors<T>(string name) where T : IModel
+        public IEnumerable<T> FindAllAncestors<T>(string name)
         {
             return FindAllAncestors(name).OfType<T>();
         }
@@ -281,7 +281,7 @@
         /// </summary>
         /// <typeparam name="T">Type of models to find.</typeparam>
         /// <param name="name">Name of the models.</param>
-        public IEnumerable<T> FindAllInScope<T>(string name) where T : IModel
+        public IEnumerable<T> FindAllInScope<T>(string name)
         {
             return FindAllInScope(name).OfType<T>();
         }
