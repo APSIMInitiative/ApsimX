@@ -207,52 +207,8 @@
 
                 newModel.ParentAllDescendants();
 
-        /// <summary>
-        /// Perform a deep serialise of the model.
-        /// </summary>
-        /// <param name="model">The model to clone</param>
-        /// <returns>The model serialised to a stream.</returns>
-        public static Stream SerialiseToStream(IModel model)
-        {
-            // Get rid of our parent temporarily as we don't want to serialise that.
-            IModel parent = model.Parent;
-            model.Parent = null;
-            Stream stream = new MemoryStream();
-            try
-            {
-                IFormatter formatter = new BinaryFormatter();
-                formatter.Serialize(stream, model);
+                return newModel;
             }
-            finally
-            {
-                model.Parent = parent;
-            }
-            return stream;
-        }
-
-        /// <summary>
-        /// Deserialise a model from a stream.
-        /// </summary>
-        /// <param name="stream">The stream to deserialise from.</param>
-        /// <returns>The newly created model</returns>
-        public static IModel DeserialiseFromStream(Stream stream)
-        {
-            stream.Seek(0, SeekOrigin.Begin);
-
-            IFormatter formatter = new BinaryFormatter();
-            IModel model = (IModel)formatter.Deserialize(stream);
-            return model;
-        }
-
-
-
-        /// <summary>Deletes the specified model.</summary>
-        /// <param name="model">The model.</param>
-        public static bool Delete(IModel model)
-        {
-            Locator(model.Parent).Clear();
-            Apsim.ClearCaches(model);
-            return model.Parent.Children.Remove(model as Model);
         }
 
         /// <summary>Clears the cache</summary>

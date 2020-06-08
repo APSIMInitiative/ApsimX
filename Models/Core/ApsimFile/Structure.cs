@@ -157,5 +157,14 @@
 
             modelToCheck.Name = newName;
         }
+
+        /// <summary>Deletes the specified model.</summary>
+        /// <param name="model">The model.</param>
+        public static bool Delete(IModel model)
+        {
+            Apsim.ClearCache(model);
+            Apsim.ClearCaches(model);
+            return model.Parent.Children.Remove(model as Model);
+        }
     }
 }

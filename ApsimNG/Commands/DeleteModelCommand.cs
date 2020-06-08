@@ -2,6 +2,7 @@
 {
     using Models.Core;
     using Interfaces;
+    using Models.Core.ApsimFile;
 
     /// <summary>This command deletes a model</summary>
     public class DeleteModelCommand : ICommand
@@ -43,7 +44,7 @@
         {
             this.explorerView.Tree.Delete(Apsim.FullPath(this.modelToDelete));
             pos = this.parent.Children.IndexOf(this.modelToDelete as Model);
-            modelWasRemoved = Apsim.Delete(this.modelToDelete as Model);
+            modelWasRemoved = Structure.Delete(this.modelToDelete as Model);
         }
 
         /// <summary>Undo the command</summary>
