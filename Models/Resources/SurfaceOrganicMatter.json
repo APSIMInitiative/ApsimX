@@ -2,7 +2,6 @@
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
   "Version": 102,
-  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -13,6 +12,7 @@
       "InitialStandingFraction": 0.0,
       "InitialCPR": 0.0,
       "InitialCNR": 0.0,
+      "FractionFaecesAdded": "1.0",
       "ResourceName": null,
       "Name": "SurfaceOrganicMatter",
       "Children": [
