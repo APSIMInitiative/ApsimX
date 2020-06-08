@@ -2,13 +2,11 @@
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
   "Version": 102,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
       "$type": "Models.PMF.Plant, Models",
-      "CropType": "Wheat",
-      "IsEnding": false,
-      "DaysAfterEnding": 0,
       "ResourceName": null,
       "Name": "Oats",
       "Children": [
@@ -31,39 +29,71 @@
               "Children": [
                 {
                   "$type": "Models.Core.Folder, Models",
+                  "ShowPageOfGraphs": true,
                   "Name": "PotentialPartitioningMethods",
                   "Children": [
                     {
                       "$type": "Models.PMF.Arbitrator.ReallocationMethod, Models",
-                      "Name": "ReallocationMethod"
+                      "Name": "ReallocationMethod",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     },
                     {
                       "$type": "Models.PMF.Arbitrator.AllocateFixationMethod, Models",
-                      "Name": "AllocateFixationMethod"
+                      "Name": "AllocateFixationMethod",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     },
                     {
                       "$type": "Models.PMF.Arbitrator.RetranslocationMethod, Models",
-                      "Name": "RetranslocationMethod"
+                      "Name": "RetranslocationMethod",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     },
                     {
                       "$type": "Models.PMF.Arbitrator.SendPotentialDMAllocationsMethod, Models",
-                      "Name": "SendPotentialDMAllocationsMethod"
+                      "Name": "SendPotentialDMAllocationsMethod",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
-                  ]
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
+                  "ShowPageOfGraphs": true,
                   "Name": "AllocationMethods",
                   "Children": [
                     {
                       "$type": "Models.PMF.Arbitrator.NutrientConstrainedAllocationMethod, Models",
-                      "Name": "NutrientConstrainedAllocationMethod"
+                      "Name": "NutrientConstrainedAllocationMethod",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     },
                     {
                       "$type": "Models.PMF.Arbitrator.DryMatterAllocationsMethod, Models",
-                      "Name": "DryMatterAllocationsMethod"
+                      "Name": "DryMatterAllocationsMethod",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
-                  ]
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.RelativeAllocation, Models",
@@ -73,7 +103,10 @@
                   "Enabled": true,
                   "ReadOnly": false
                 }
-              ]
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             },
             {
               "$type": "Models.PMF.BiomassTypeArbitrator, Models",
@@ -81,37 +114,65 @@
               "Children": [
                 {
                   "$type": "Models.Core.Folder, Models",
+                  "ShowPageOfGraphs": true,
                   "Name": "PotentialPartitioningMethods",
                   "Children": [
                     {
                       "$type": "Models.PMF.Arbitrator.ReallocationMethod, Models",
-                      "Name": "ReallocationMethod"
+                      "Name": "ReallocationMethod",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
-                  ]
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
+                  "ShowPageOfGraphs": true,
                   "Name": "ActualPartitioningMethods",
                   "Children": [
                     {
                       "$type": "Models.PMF.Arbitrator.AllocateFixationMethod, Models",
-                      "Name": "AllocateFixationMethod"
+                      "Name": "AllocateFixationMethod",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     },
                     {
                       "$type": "Models.PMF.Arbitrator.RetranslocationMethod, Models",
-                      "Name": "RetranslocationMethod"
+                      "Name": "RetranslocationMethod",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
-                  ]
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
+                  "ShowPageOfGraphs": true,
                   "Name": "AllocationMethods",
                   "Children": [
                     {
                       "$type": "Models.PMF.Arbitrator.NitrogenAllocationsMethod, Models",
-                      "Name": "NitrogenAllocationsMethod"
+                      "Name": "NitrogenAllocationsMethod",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
-                  ]
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.RelativeAllocation, Models",
@@ -123,17 +184,32 @@
                 },
                 {
                   "$type": "Models.PMF.Arbitrator.AllocateUptakesMethod, Models",
-                  "Name": "AllocateUptakesMethod"
+                  "Name": "AllocateUptakesMethod",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
-              ]
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             },
             {
               "$type": "Models.PMF.Arbitrator.WaterUptakeMethod, Models",
-              "Name": "WaterUptakeMethod"
+              "Name": "WaterUptakeMethod",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             },
             {
               "$type": "Models.PMF.Arbitrator.NitrogenUptakeMethod, Models",
-              "Name": "NitrogenUptakeMethod"
+              "Name": "NitrogenUptakeMethod",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": false,
@@ -201,6 +277,9 @@
             },
             {
               "$type": "Models.Functions.AirTemperatureFunction, Models",
+              "SubDailyTemperatures": null,
+              "SubDailyResponse": null,
+              "agregationMethod": 0,
               "Name": "ThermalTime",
               "Children": [
                 {
@@ -232,6 +311,7 @@
                 },
                 {
                   "$type": "Models.Functions.ThreeHourSin, Models",
+                  "TempRangeFactors": null,
                   "Name": "InterpolationMethod",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -241,8 +321,7 @@
               ],
               "IncludeInDocumentation": false,
               "Enabled": true,
-              "ReadOnly": false,
-              "agregationMethod": "0"
+              "ReadOnly": false
             },
             {
               "$type": "Models.Functions.MultiplyFunction, Models",
@@ -268,6 +347,9 @@
                 },
                 {
                   "$type": "Models.Functions.AirTemperatureFunction, Models",
+                  "SubDailyTemperatures": null,
+                  "SubDailyResponse": null,
+                  "agregationMethod": 0,
                   "Name": "TempResponseProfile",
                   "Children": [
                     {
@@ -330,6 +412,7 @@
                     },
                     {
                       "$type": "Models.Functions.ThreeHourSin, Models",
+                      "TempRangeFactors": null,
                       "Name": "InterpolationMethod",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -339,8 +422,7 @@
                   ],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
-                  "ReadOnly": false,
-                  "agregationMethod": "0"
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": false,
@@ -876,7 +958,9 @@
                                         }
                                       ],
                                       "LegendPosition": 3,
+                                      "LegendOrientation": 0,
                                       "DisabledSeries": null,
+                                      "LegendOutsideGraph": false,
                                       "Name": "Graph",
                                       "Children": [
                                         {
@@ -892,7 +976,6 @@
                                           "MarkerSize": 0,
                                           "Line": 0,
                                           "LineThickness": 0,
-                                          "Checkpoint": "Current",
                                           "TableName": null,
                                           "XFieldName": ".Simulations.Replacements.Oats.Phenology.EarlyReproductive.Target.Phyllochrons.IncreaseDueToShortPhotoPeriod.PhotoPeriodResponse.XYPairs.X",
                                           "YFieldName": ".Simulations.Replacements.Oats.Phenology.EarlyReproductive.Target.Phyllochrons.IncreaseDueToShortPhotoPeriod.PhotoPeriodResponse.XYPairs.Y",
@@ -942,7 +1025,9 @@
                                         }
                                       ],
                                       "LegendPosition": 3,
+                                      "LegendOrientation": 0,
                                       "DisabledSeries": null,
+                                      "LegendOutsideGraph": false,
                                       "Name": "Graph",
                                       "Children": [
                                         {
@@ -958,7 +1043,6 @@
                                           "MarkerSize": 0,
                                           "Line": 0,
                                           "LineThickness": 0,
-                                          "Checkpoint": "Current",
                                           "TableName": null,
                                           "XFieldName": ".Simulations.Replacements.Oats.Phenology.EarlyReproductive.Target.Phyllochrons.IncreaseDueToShortPhotoPeriod.PhotoPeriodResponse.XYPairs.X",
                                           "YFieldName": ".Simulations.Replacements.Oats.Phenology.EarlyReproductive.Target.Phyllochrons.IncreaseDueToShortPhotoPeriod.PhotoPeriodResponse.XYPairs.Y",
@@ -1008,7 +1092,9 @@
                                         }
                                       ],
                                       "LegendPosition": 3,
+                                      "LegendOrientation": 0,
                                       "DisabledSeries": null,
+                                      "LegendOutsideGraph": false,
                                       "Name": "Graph",
                                       "Children": [
                                         {
@@ -1024,7 +1110,6 @@
                                           "MarkerSize": 0,
                                           "Line": 0,
                                           "LineThickness": 0,
-                                          "Checkpoint": "Current",
                                           "TableName": null,
                                           "XFieldName": ".Simulations.Replacements.Oats.Phenology.EarlyReproductive.Target.Phyllochrons.IncreaseDueToShortPhotoPeriod.PhotoPeriodResponse.XYPairs.X",
                                           "YFieldName": ".Simulations.Replacements.Oats.Phenology.EarlyReproductive.Target.Phyllochrons.IncreaseDueToShortPhotoPeriod.PhotoPeriodResponse.XYPairs.Y",
@@ -1074,7 +1159,9 @@
                                         }
                                       ],
                                       "LegendPosition": 3,
+                                      "LegendOrientation": 0,
                                       "DisabledSeries": null,
+                                      "LegendOutsideGraph": false,
                                       "Name": "Graph",
                                       "Children": [
                                         {
@@ -1090,7 +1177,6 @@
                                           "MarkerSize": 0,
                                           "Line": 0,
                                           "LineThickness": 0,
-                                          "Checkpoint": "Current",
                                           "TableName": null,
                                           "XFieldName": ".Simulations.Replacements.Oats.Phenology.EarlyReproductive.Target.Phyllochrons.IncreaseDueToShortPhotoPeriod.PhotoPeriodResponse.XYPairs.X",
                                           "YFieldName": ".Simulations.Replacements.Oats.Phenology.EarlyReproductive.Target.Phyllochrons.IncreaseDueToShortPhotoPeriod.PhotoPeriodResponse.XYPairs.Y",
@@ -1140,7 +1226,9 @@
                                         }
                                       ],
                                       "LegendPosition": 3,
+                                      "LegendOrientation": 0,
                                       "DisabledSeries": null,
+                                      "LegendOutsideGraph": false,
                                       "Name": "Graph",
                                       "Children": [
                                         {
@@ -1156,7 +1244,6 @@
                                           "MarkerSize": 0,
                                           "Line": 0,
                                           "LineThickness": 0,
-                                          "Checkpoint": "Current",
                                           "TableName": null,
                                           "XFieldName": ".Simulations.Replacements.Oats.Phenology.EarlyReproductive.Target.Phyllochrons.IncreaseDueToShortPhotoPeriod.PhotoPeriodResponse.XYPairs.X",
                                           "YFieldName": ".Simulations.Replacements.Oats.Phenology.EarlyReproductive.Target.Phyllochrons.IncreaseDueToShortPhotoPeriod.PhotoPeriodResponse.XYPairs.Y",
@@ -1206,7 +1293,9 @@
                                         }
                                       ],
                                       "LegendPosition": 3,
+                                      "LegendOrientation": 0,
                                       "DisabledSeries": null,
+                                      "LegendOutsideGraph": false,
                                       "Name": "Graph",
                                       "Children": [
                                         {
@@ -1222,7 +1311,6 @@
                                           "MarkerSize": 0,
                                           "Line": 0,
                                           "LineThickness": 0,
-                                          "Checkpoint": "Current",
                                           "TableName": null,
                                           "XFieldName": ".Simulations.Replacements.Oats.Phenology.EarlyReproductive.Target.Phyllochrons.IncreaseDueToShortPhotoPeriod.PhotoPeriodResponse.XYPairs.X",
                                           "YFieldName": ".Simulations.Replacements.Oats.Phenology.EarlyReproductive.Target.Phyllochrons.IncreaseDueToShortPhotoPeriod.PhotoPeriodResponse.XYPairs.Y",
@@ -1272,7 +1360,9 @@
                                         }
                                       ],
                                       "LegendPosition": 3,
+                                      "LegendOrientation": 0,
                                       "DisabledSeries": null,
+                                      "LegendOutsideGraph": false,
                                       "Name": "Graph",
                                       "Children": [
                                         {
@@ -1288,7 +1378,6 @@
                                           "MarkerSize": 0,
                                           "Line": 0,
                                           "LineThickness": 0,
-                                          "Checkpoint": "Current",
                                           "TableName": null,
                                           "XFieldName": ".Simulations.Replacements.Oats.Phenology.EarlyReproductive.Target.Phyllochrons.IncreaseDueToShortPhotoPeriod.PhotoPeriodResponse.XYPairs.X",
                                           "YFieldName": ".Simulations.Replacements.Oats.Phenology.EarlyReproductive.Target.Phyllochrons.IncreaseDueToShortPhotoPeriod.PhotoPeriodResponse.XYPairs.Y",
@@ -1338,7 +1427,9 @@
                                         }
                                       ],
                                       "LegendPosition": 3,
+                                      "LegendOrientation": 0,
                                       "DisabledSeries": null,
+                                      "LegendOutsideGraph": false,
                                       "Name": "Graph",
                                       "Children": [
                                         {
@@ -1354,7 +1445,6 @@
                                           "MarkerSize": 0,
                                           "Line": 0,
                                           "LineThickness": 0,
-                                          "Checkpoint": "Current",
                                           "TableName": null,
                                           "XFieldName": ".Simulations.Replacements.Oats.Phenology.EarlyReproductive.Target.Phyllochrons.IncreaseDueToShortPhotoPeriod.PhotoPeriodResponse.XYPairs.X",
                                           "YFieldName": ".Simulations.Replacements.Oats.Phenology.EarlyReproductive.Target.Phyllochrons.IncreaseDueToShortPhotoPeriod.PhotoPeriodResponse.XYPairs.Y",
@@ -1785,7 +1875,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -1801,7 +1893,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Oats.Structure.Phyllochron.LeafStageFactor.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Oats.Structure.Phyllochron.LeafStageFactor.XYPairs.Y",
@@ -1851,7 +1942,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -1867,7 +1960,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Oats.Structure.Phyllochron.LeafStageFactor.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Oats.Structure.Phyllochron.LeafStageFactor.XYPairs.Y",
@@ -2038,7 +2130,9 @@
                                     }
                                   ],
                                   "LegendPosition": 3,
+                                  "LegendOrientation": 0,
                                   "DisabledSeries": null,
+                                  "LegendOutsideGraph": false,
                                   "Name": "Graph",
                                   "Children": [
                                     {
@@ -2054,7 +2148,6 @@
                                       "MarkerSize": 0,
                                       "Line": 0,
                                       "LineThickness": 0,
-                                      "Checkpoint": "Current",
                                       "TableName": null,
                                       "XFieldName": ".Simulations.Replacements.Oats.Structure.BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.X",
                                       "YFieldName": ".Simulations.Replacements.Oats.Structure.BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y",
@@ -2104,7 +2197,9 @@
                                     }
                                   ],
                                   "LegendPosition": 3,
+                                  "LegendOrientation": 0,
                                   "DisabledSeries": null,
+                                  "LegendOutsideGraph": false,
                                   "Name": "Graph",
                                   "Children": [
                                     {
@@ -2120,7 +2215,6 @@
                                       "MarkerSize": 0,
                                       "Line": 0,
                                       "LineThickness": 0,
-                                      "Checkpoint": "Current",
                                       "TableName": null,
                                       "XFieldName": ".Simulations.Replacements.Oats.Structure.BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.X",
                                       "YFieldName": ".Simulations.Replacements.Oats.Structure.BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y",
@@ -2170,7 +2264,9 @@
                                     }
                                   ],
                                   "LegendPosition": 3,
+                                  "LegendOrientation": 0,
                                   "DisabledSeries": null,
+                                  "LegendOutsideGraph": false,
                                   "Name": "Graph",
                                   "Children": [
                                     {
@@ -2186,7 +2282,6 @@
                                       "MarkerSize": 0,
                                       "Line": 0,
                                       "LineThickness": 0,
-                                      "Checkpoint": "Current",
                                       "TableName": null,
                                       "XFieldName": ".Simulations.Replacements.Oats.Structure.BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.X",
                                       "YFieldName": ".Simulations.Replacements.Oats.Structure.BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y",
@@ -2315,7 +2410,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -2331,7 +2428,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Oats.Structure.BranchingRate.StressFactors.NitrogenEffect.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Oats.Structure.BranchingRate.StressFactors.NitrogenEffect.XYPairs.Y",
@@ -2381,7 +2477,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -2397,7 +2495,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Oats.Structure.BranchingRate.StressFactors.NitrogenEffect.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Oats.Structure.BranchingRate.StressFactors.NitrogenEffect.XYPairs.Y",
@@ -2447,7 +2544,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -2463,7 +2562,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Oats.Structure.BranchingRate.StressFactors.NitrogenEffect.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Oats.Structure.BranchingRate.StressFactors.NitrogenEffect.XYPairs.Y",
@@ -2559,7 +2657,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -2575,7 +2675,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Oats.Structure.BranchingRate.StressFactors.CoverEffect.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Oats.Structure.BranchingRate.StressFactors.CoverEffect.XYPairs.Y",
@@ -2625,7 +2724,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -2641,7 +2742,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Oats.Structure.BranchingRate.StressFactors.CoverEffect.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Oats.Structure.BranchingRate.StressFactors.CoverEffect.XYPairs.Y",
@@ -2691,7 +2791,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -2707,7 +2809,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Oats.Structure.BranchingRate.StressFactors.CoverEffect.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Oats.Structure.BranchingRate.StressFactors.CoverEffect.XYPairs.Y",
@@ -2757,7 +2858,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -2773,7 +2876,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Oats.Structure.BranchingRate.StressFactors.CoverEffect.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Oats.Structure.BranchingRate.StressFactors.CoverEffect.XYPairs.Y",
@@ -2982,7 +3084,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -2998,7 +3102,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Oats.Structure.HeightModel.PotentialHeight.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Oats.Structure.HeightModel.PotentialHeight.XYPairs.Y",
@@ -3048,7 +3151,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -3064,7 +3169,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Oats.Structure.HeightModel.PotentialHeight.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Oats.Structure.HeightModel.PotentialHeight.XYPairs.Y",
@@ -3114,7 +3218,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -3130,7 +3236,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Oats.Structure.HeightModel.PotentialHeight.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Oats.Structure.HeightModel.PotentialHeight.XYPairs.Y",
@@ -3180,7 +3285,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -3196,7 +3303,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Oats.Structure.HeightModel.PotentialHeight.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Oats.Structure.HeightModel.PotentialHeight.XYPairs.Y",
@@ -3281,7 +3387,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -3297,7 +3405,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Oats.Structure.HeightModel.WaterStress.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Oats.Structure.HeightModel.WaterStress.XYPairs.Y",
@@ -3611,6 +3718,7 @@
           "GrowthRespiration": 0.0,
           "MaintenanceRespiration": 0.0,
           "DMDemand": null,
+          "DMDemandPriorityFactor": null,
           "NDemand": null,
           "DMSupply": null,
           "NSupply": null,
@@ -4190,16 +4298,19 @@
           "DMSupply": null,
           "NSupply": null,
           "DMDemand": null,
+          "DMDemandPriorityFactor": null,
           "NDemand": null,
           "potentialDMAllocation": null,
           "Albedo": 0.25,
           "Gsmax350": 0.011,
           "R50": 150.0,
+          "LAI": 0.0,
+          "Depth": 0.0,
+          "Width": 0.0,
           "FRGR": 0.0,
           "PotentialEP": 0.0,
           "WaterDemand": 0.0,
           "LightProfile": null,
-          "MicroClimatePresent": true,
           "KDead": 0.1,
           "MaximumMainStemLeafNumber": 30,
           "TipsAtEmergence": 0,
@@ -4632,7 +4743,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -4648,7 +4761,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.MaxArea.AgeFactor.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.MaxArea.AgeFactor.XYPairs.Y",
@@ -4698,7 +4810,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -4714,7 +4828,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.MaxArea.AgeFactor.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.MaxArea.AgeFactor.XYPairs.Y",
@@ -4829,7 +4942,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -4845,7 +4960,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.MaxArea.AgeFactor.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.MaxArea.AgeFactor.XYPairs.Y",
@@ -4895,7 +5009,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -4911,7 +5027,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.MaxArea.AgeFactor.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.MaxArea.AgeFactor.XYPairs.Y",
@@ -4961,7 +5076,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -4977,7 +5094,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.MaxArea.AgeFactor.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.MaxArea.AgeFactor.XYPairs.Y",
@@ -5027,7 +5143,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -5043,7 +5161,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.MaxArea.AgeFactor.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.MaxArea.AgeFactor.XYPairs.Y",
@@ -5093,7 +5210,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -5109,7 +5228,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.MaxArea.AgeFactor.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.MaxArea.AgeFactor.XYPairs.Y",
@@ -5159,7 +5277,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -5175,7 +5295,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.MaxArea.AgeFactor.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.MaxArea.AgeFactor.XYPairs.Y",
@@ -5225,7 +5344,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -5241,7 +5362,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.MaxArea.AgeFactor.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.MaxArea.AgeFactor.XYPairs.Y",
@@ -5291,7 +5411,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -5307,7 +5429,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.MaxArea.AgeFactor.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.MaxArea.AgeFactor.XYPairs.Y",
@@ -5403,7 +5524,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -5419,7 +5542,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.LagDuration.AgeFactor.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.LagDuration.AgeFactor.XYPairs.Y",
@@ -5469,7 +5591,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -5485,7 +5609,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.LagDuration.AgeFactor.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.LagDuration.AgeFactor.XYPairs.Y",
@@ -5535,7 +5658,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -5551,7 +5676,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.LagDuration.AgeFactor.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.LagDuration.AgeFactor.XYPairs.Y",
@@ -5601,7 +5725,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -5617,7 +5743,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.LagDuration.AgeFactor.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.LagDuration.AgeFactor.XYPairs.Y",
@@ -5667,7 +5792,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -5683,7 +5810,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.LagDuration.AgeFactor.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.LagDuration.AgeFactor.XYPairs.Y",
@@ -5733,7 +5859,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -5749,7 +5877,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.LagDuration.AgeFactor.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.LagDuration.AgeFactor.XYPairs.Y",
@@ -5799,7 +5926,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -5815,7 +5944,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.LagDuration.AgeFactor.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.LagDuration.AgeFactor.XYPairs.Y",
@@ -6037,7 +6165,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -6053,7 +6183,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.MaximumNConc.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.MaximumNConc.XYPairs.Y",
@@ -6219,7 +6348,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -6235,7 +6366,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.MinimumNConc.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.MinimumNConc.XYPairs.Y",
@@ -6285,7 +6415,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -6301,7 +6433,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.MinimumNConc.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.MinimumNConc.XYPairs.Y",
@@ -6532,7 +6663,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -6548,7 +6681,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.Y",
@@ -6598,7 +6730,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -6614,7 +6748,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.Y",
@@ -6664,7 +6797,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -6680,7 +6815,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.Y",
@@ -6730,7 +6864,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -6746,7 +6882,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.Y",
@@ -6796,7 +6931,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -6812,7 +6949,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.Y",
@@ -6862,7 +6998,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -6878,7 +7016,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.Y",
@@ -6928,7 +7065,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -6944,7 +7083,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.Y",
@@ -6994,7 +7132,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -7010,7 +7150,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.Y",
@@ -7060,7 +7199,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -7076,7 +7217,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.Y",
@@ -7126,7 +7266,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -7142,7 +7284,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.Y",
@@ -7192,7 +7333,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -7208,7 +7351,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.Y",
@@ -7258,7 +7400,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -7274,7 +7418,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.Y",
@@ -7368,7 +7511,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -7384,7 +7529,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMin.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMin.XYPairs.Y",
@@ -7434,7 +7578,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -7450,7 +7596,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMin.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMin.XYPairs.Y",
@@ -7500,7 +7645,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -7516,7 +7663,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMin.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMin.XYPairs.Y",
@@ -7566,7 +7712,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -7582,7 +7730,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMin.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMin.XYPairs.Y",
@@ -7632,7 +7779,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -7648,7 +7797,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMin.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMin.XYPairs.Y",
@@ -7698,7 +7846,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -7714,7 +7864,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMin.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMin.XYPairs.Y",
@@ -7764,7 +7913,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -7780,7 +7931,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMin.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMin.XYPairs.Y",
@@ -7830,7 +7980,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -7846,7 +7998,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMin.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.SpecificLeafAreaMin.XYPairs.Y",
@@ -7989,7 +8140,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -8005,7 +8158,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.ShadeInducedSenescenceRate.CoverEffect.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.ShadeInducedSenescenceRate.CoverEffect.XYPairs.Y",
@@ -8055,7 +8207,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -8071,7 +8225,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.ShadeInducedSenescenceRate.CoverEffect.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.ShadeInducedSenescenceRate.CoverEffect.XYPairs.Y",
@@ -8121,7 +8274,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -8137,7 +8292,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.ShadeInducedSenescenceRate.CoverEffect.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Oats.Leaf.CohortParameters.ShadeInducedSenescenceRate.CoverEffect.XYPairs.Y",
@@ -8636,8 +8790,13 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
               "Name": "WidthFunction",
-              "FixedValue": "0"
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
@@ -8659,8 +8818,10 @@
           "DMSupply": null,
           "NSupply": null,
           "DMDemand": null,
+          "DMDemandPriorityFactor": null,
           "NDemand": null,
           "potentialDMAllocation": null,
+          "IsAboveGround": true,
           "Name": "Stem",
           "Children": [
             {
@@ -8758,7 +8919,9 @@
                         }
                       ],
                       "LegendPosition": 3,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "Graph",
                       "Children": [
                         {
@@ -8774,7 +8937,6 @@
                           "MarkerSize": 0,
                           "Line": 0,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": null,
                           "XFieldName": ".Simulations.Replacements.Oats.Stem.MaximumNConc.XYPairs.X",
                           "YFieldName": ".Simulations.Replacements.Oats.Stem.MaximumNConc.XYPairs.Y",
@@ -8824,7 +8986,9 @@
                         }
                       ],
                       "LegendPosition": 3,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "Graph",
                       "Children": [
                         {
@@ -8840,7 +9004,6 @@
                           "MarkerSize": 0,
                           "Line": 0,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": null,
                           "XFieldName": ".Simulations.Replacements.Oats.Stem.MaximumNConc.XYPairs.X",
                           "YFieldName": ".Simulations.Replacements.Oats.Stem.MaximumNConc.XYPairs.Y",
@@ -8890,7 +9053,9 @@
                         }
                       ],
                       "LegendPosition": 3,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "Graph",
                       "Children": [
                         {
@@ -8906,7 +9071,6 @@
                           "MarkerSize": 0,
                           "Line": 0,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": null,
                           "XFieldName": ".Simulations.Replacements.Oats.Stem.MaximumNConc.XYPairs.X",
                           "YFieldName": ".Simulations.Replacements.Oats.Stem.MaximumNConc.XYPairs.Y",
@@ -8956,7 +9120,9 @@
                         }
                       ],
                       "LegendPosition": 3,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "Graph",
                       "Children": [
                         {
@@ -8972,7 +9138,6 @@
                           "MarkerSize": 0,
                           "Line": 0,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": null,
                           "XFieldName": ".Simulations.Replacements.Oats.Stem.MaximumNConc.XYPairs.X",
                           "YFieldName": ".Simulations.Replacements.Oats.Stem.MaximumNConc.XYPairs.Y",
@@ -9022,7 +9187,9 @@
                         }
                       ],
                       "LegendPosition": 3,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "Graph",
                       "Children": [
                         {
@@ -9038,7 +9205,6 @@
                           "MarkerSize": 0,
                           "Line": 0,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": null,
                           "XFieldName": ".Simulations.Replacements.Oats.Stem.MaximumNConc.XYPairs.X",
                           "YFieldName": ".Simulations.Replacements.Oats.Stem.MaximumNConc.XYPairs.Y",
@@ -9088,7 +9254,9 @@
                         }
                       ],
                       "LegendPosition": 3,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "Graph",
                       "Children": [
                         {
@@ -9104,7 +9272,6 @@
                           "MarkerSize": 0,
                           "Line": 0,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": null,
                           "XFieldName": ".Simulations.Replacements.Oats.Stem.MaximumNConc.XYPairs.X",
                           "YFieldName": ".Simulations.Replacements.Oats.Stem.MaximumNConc.XYPairs.Y",
@@ -9154,7 +9321,9 @@
                         }
                       ],
                       "LegendPosition": 3,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "Graph",
                       "Children": [
                         {
@@ -9170,7 +9339,6 @@
                           "MarkerSize": 0,
                           "Line": 0,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": null,
                           "XFieldName": ".Simulations.Replacements.Oats.Stem.MaximumNConc.XYPairs.X",
                           "YFieldName": ".Simulations.Replacements.Oats.Stem.MaximumNConc.XYPairs.Y",
@@ -9220,7 +9388,9 @@
                         }
                       ],
                       "LegendPosition": 3,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "Graph",
                       "Children": [
                         {
@@ -9236,7 +9406,6 @@
                           "MarkerSize": 0,
                           "Line": 0,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": null,
                           "XFieldName": ".Simulations.Replacements.Oats.Stem.MaximumNConc.XYPairs.X",
                           "YFieldName": ".Simulations.Replacements.Oats.Stem.MaximumNConc.XYPairs.Y",
@@ -9286,7 +9455,9 @@
                         }
                       ],
                       "LegendPosition": 3,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "Graph",
                       "Children": [
                         {
@@ -9302,7 +9473,6 @@
                           "MarkerSize": 0,
                           "Line": 0,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": null,
                           "XFieldName": ".Simulations.Replacements.Oats.Stem.MaximumNConc.XYPairs.X",
                           "YFieldName": ".Simulations.Replacements.Oats.Stem.MaximumNConc.XYPairs.Y",
@@ -9352,7 +9522,9 @@
                         }
                       ],
                       "LegendPosition": 3,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "Graph",
                       "Children": [
                         {
@@ -9368,7 +9540,6 @@
                           "MarkerSize": 0,
                           "Line": 0,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": null,
                           "XFieldName": ".Simulations.Replacements.Oats.Stem.MaximumNConc.XYPairs.X",
                           "YFieldName": ".Simulations.Replacements.Oats.Stem.MaximumNConc.XYPairs.Y",
@@ -10053,15 +10224,28 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
                   "Name": "Metabolic",
-                  "FixedValue": "0.0"
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
                   "Name": "Storage",
-                  "FixedValue": "0.0"
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
-              ]
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": false,
@@ -10073,18 +10257,20 @@
           "DMSupply": null,
           "NSupply": null,
           "DMDemand": null,
+          "DMDemandPriorityFactor": null,
           "NDemand": null,
           "potentialDMAllocation": null,
           "GrowthRespiration": 0.0,
           "MaintenanceRespiration": 0.0,
-          "RootAngle": 45.0,
-          "SWAvailabilityRatio": 0.0,
           "Name": "Root",
           "Children": [
             {
               "$type": "Models.Functions.RootShape.RootShapeCylindre, Models",
               "Name": "RootShape",
-              "Children": []
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             },
             {
               "$type": "Models.Functions.Constant, Models",
@@ -10812,15 +10998,28 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
                   "Name": "Metabolic",
-                  "FixedValue": "0.0"
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
                   "Name": "Storage",
-                  "FixedValue": "0.0"
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
-              ]
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": false,
@@ -10833,8 +11032,10 @@
           "DMSupply": null,
           "NSupply": null,
           "DMDemand": null,
+          "DMDemandPriorityFactor": null,
           "NDemand": null,
           "potentialDMAllocation": null,
+          "IsAboveGround": true,
           "Name": "Panicle",
           "Children": [
             {
@@ -11521,15 +11722,28 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
                   "Name": "Metabolic",
-                  "FixedValue": "0.0"
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
                   "Name": "Storage",
-                  "FixedValue": "0.0"
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
-              ]
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": false,

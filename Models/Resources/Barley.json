@@ -2,13 +2,11 @@
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
   "Version": 102,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
       "$type": "Models.PMF.Plant, Models",
-      "CropType": "Barley",
-      "IsEnding": false,
-      "DaysAfterEnding": 0,
       "ResourceName": null,
       "Name": "Barley",
       "Children": [
@@ -22,39 +20,71 @@
               "Children": [
                 {
                   "$type": "Models.Core.Folder, Models",
+                  "ShowPageOfGraphs": true,
                   "Name": "PotentialPartitioningMethods",
                   "Children": [
                     {
                       "$type": "Models.PMF.Arbitrator.ReallocationMethod, Models",
-                      "Name": "ReallocationMethod"
+                      "Name": "ReallocationMethod",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     },
                     {
                       "$type": "Models.PMF.Arbitrator.AllocateFixationMethod, Models",
-                      "Name": "AllocateFixationMethod"
+                      "Name": "AllocateFixationMethod",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     },
                     {
                       "$type": "Models.PMF.Arbitrator.RetranslocationMethod, Models",
-                      "Name": "RetranslocationMethod"
+                      "Name": "RetranslocationMethod",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     },
                     {
                       "$type": "Models.PMF.Arbitrator.SendPotentialDMAllocationsMethod, Models",
-                      "Name": "SendPotentialDMAllocationsMethod"
+                      "Name": "SendPotentialDMAllocationsMethod",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
-                  ]
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
+                  "ShowPageOfGraphs": true,
                   "Name": "AllocationMethods",
                   "Children": [
                     {
                       "$type": "Models.PMF.Arbitrator.NutrientConstrainedAllocationMethod, Models",
-                      "Name": "NutrientConstrainedAllocationMethod"
+                      "Name": "NutrientConstrainedAllocationMethod",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     },
                     {
                       "$type": "Models.PMF.Arbitrator.DryMatterAllocationsMethod, Models",
-                      "Name": "DryMatterAllocationsMethod"
+                      "Name": "DryMatterAllocationsMethod",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
-                  ]
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.RelativeAllocation, Models",
@@ -64,7 +94,10 @@
                   "Enabled": true,
                   "ReadOnly": false
                 }
-              ]
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             },
             {
               "$type": "Models.PMF.BiomassTypeArbitrator, Models",
@@ -72,37 +105,65 @@
               "Children": [
                 {
                   "$type": "Models.Core.Folder, Models",
+                  "ShowPageOfGraphs": true,
                   "Name": "PotentialPartitioningMethods",
                   "Children": [
                     {
                       "$type": "Models.PMF.Arbitrator.ReallocationMethod, Models",
-                      "Name": "ReallocationMethod"
+                      "Name": "ReallocationMethod",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
-                  ]
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
+                  "ShowPageOfGraphs": true,
                   "Name": "ActualPartitioningMethods",
                   "Children": [
                     {
                       "$type": "Models.PMF.Arbitrator.AllocateFixationMethod, Models",
-                      "Name": "AllocateFixationMethod"
+                      "Name": "AllocateFixationMethod",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     },
                     {
                       "$type": "Models.PMF.Arbitrator.RetranslocationMethod, Models",
-                      "Name": "RetranslocationMethod"
+                      "Name": "RetranslocationMethod",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
-                  ]
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
+                  "ShowPageOfGraphs": true,
                   "Name": "AllocationMethods",
                   "Children": [
                     {
                       "$type": "Models.PMF.Arbitrator.NitrogenAllocationsMethod, Models",
-                      "Name": "NitrogenAllocationsMethod"
+                      "Name": "NitrogenAllocationsMethod",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
-                  ]
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.RelativeAllocation, Models",
@@ -114,17 +175,32 @@
                 },
                 {
                   "$type": "Models.PMF.Arbitrator.AllocateUptakesMethod, Models",
-                  "Name": "AllocateUptakesMethod"
+                  "Name": "AllocateUptakesMethod",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
-              ]
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             },
             {
               "$type": "Models.PMF.Arbitrator.WaterUptakeMethod, Models",
-              "Name": "WaterUptakeMethod"
+              "Name": "WaterUptakeMethod",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             },
             {
               "$type": "Models.PMF.Arbitrator.NitrogenUptakeMethod, Models",
-              "Name": "NitrogenUptakeMethod"
+              "Name": "NitrogenUptakeMethod",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": false,
@@ -146,6 +222,9 @@
             },
             {
               "$type": "Models.Functions.AirTemperatureFunction, Models",
+              "SubDailyTemperatures": null,
+              "SubDailyResponse": null,
+              "agregationMethod": 0,
               "Name": "ThermalTime",
               "Children": [
                 {
@@ -190,7 +269,9 @@
                         }
                       ],
                       "LegendPosition": 3,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "Graph",
                       "Children": [
                         {
@@ -206,7 +287,6 @@
                           "MarkerSize": 0,
                           "Line": 0,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": null,
                           "XFieldName": ".Simulations.Replacements.Barley.Phenology.ThermalTime.XYPairs.X",
                           "YFieldName": ".Simulations.Replacements.Barley.Phenology.ThermalTime.XYPairs.Y",
@@ -256,7 +336,9 @@
                         }
                       ],
                       "LegendPosition": 3,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "Graph1",
                       "Children": [
                         {
@@ -272,7 +354,6 @@
                           "MarkerSize": 0,
                           "Line": 0,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": null,
                           "XFieldName": ".Simulations.Replacements.Barley.Phenology.ThermalTime.XYPairs.X",
                           "YFieldName": ".Simulations.Replacements.Barley.Phenology.ThermalTime.XYPairs.Y",
@@ -322,7 +403,9 @@
                         }
                       ],
                       "LegendPosition": 3,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "Graph2",
                       "Children": [
                         {
@@ -338,7 +421,6 @@
                           "MarkerSize": 0,
                           "Line": 0,
                           "LineThickness": 0,
-                          "Checkpoint": "Current",
                           "TableName": null,
                           "XFieldName": ".Simulations.Replacements.Barley.Phenology.ThermalTime.XYPairs.X",
                           "YFieldName": ".Simulations.Replacements.Barley.Phenology.ThermalTime.XYPairs.Y",
@@ -376,6 +458,7 @@
                 },
                 {
                   "$type": "Models.Functions.ThreeHourSin, Models",
+                  "TempRangeFactors": null,
                   "Name": "InterpolationMethod",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -385,8 +468,7 @@
               ],
               "IncludeInDocumentation": false,
               "Enabled": true,
-              "ReadOnly": false,
-              "agregationMethod": "0"
+              "ReadOnly": false
             },
             {
               "$type": "Models.Functions.MultiplyFunction, Models",
@@ -412,6 +494,9 @@
                 },
                 {
                   "$type": "Models.Functions.AirTemperatureFunction, Models",
+                  "SubDailyTemperatures": null,
+                  "SubDailyResponse": null,
+                  "agregationMethod": 0,
                   "Name": "TempResponseProfile",
                   "Children": [
                     {
@@ -474,6 +559,7 @@
                     },
                     {
                       "$type": "Models.Functions.ThreeHourSin, Models",
+                      "TempRangeFactors": null,
                       "Name": "InterpolationMethod",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -483,8 +569,7 @@
                   ],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
-                  "ReadOnly": false,
-                  "agregationMethod": "0"
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": false,
@@ -1400,7 +1485,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -1416,7 +1503,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Barley.Structure.Phyllochron.LeafStageFactor.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Barley.Structure.Phyllochron.LeafStageFactor.XYPairs.Y",
@@ -1466,7 +1552,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph1",
                           "Children": [
                             {
@@ -1482,7 +1570,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Barley.Structure.Phyllochron.LeafStageFactor.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Barley.Structure.Phyllochron.LeafStageFactor.XYPairs.Y",
@@ -1579,7 +1666,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -1595,7 +1684,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Barley.Structure.Phyllochron.PhotoPeriodEffect.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Barley.Structure.Phyllochron.PhotoPeriodEffect.XYPairs.Y",
@@ -1645,7 +1733,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph1",
                           "Children": [
                             {
@@ -1661,7 +1751,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Barley.Structure.Phyllochron.PhotoPeriodEffect.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Barley.Structure.Phyllochron.PhotoPeriodEffect.XYPairs.Y",
@@ -1711,7 +1800,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph2",
                           "Children": [
                             {
@@ -1727,7 +1818,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Barley.Structure.Phyllochron.PhotoPeriodEffect.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Barley.Structure.Phyllochron.PhotoPeriodEffect.XYPairs.Y",
@@ -1777,7 +1867,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph3",
                           "Children": [
                             {
@@ -1793,7 +1885,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Barley.Structure.Phyllochron.PhotoPeriodEffect.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Barley.Structure.Phyllochron.PhotoPeriodEffect.XYPairs.Y",
@@ -1843,7 +1934,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph4",
                           "Children": [
                             {
@@ -1859,7 +1952,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Barley.Structure.Phyllochron.PhotoPeriodEffect.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Barley.Structure.Phyllochron.PhotoPeriodEffect.XYPairs.Y",
@@ -1909,7 +2001,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph5",
                           "Children": [
                             {
@@ -1925,7 +2019,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Barley.Structure.Phyllochron.PhotoPeriodEffect.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Barley.Structure.Phyllochron.PhotoPeriodEffect.XYPairs.Y",
@@ -1975,7 +2068,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph6",
                           "Children": [
                             {
@@ -1991,7 +2086,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Barley.Structure.Phyllochron.PhotoPeriodEffect.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Barley.Structure.Phyllochron.PhotoPeriodEffect.XYPairs.Y",
@@ -2041,7 +2135,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph7",
                           "Children": [
                             {
@@ -2057,7 +2153,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Barley.Structure.Phyllochron.PhotoPeriodEffect.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Barley.Structure.Phyllochron.PhotoPeriodEffect.XYPairs.Y",
@@ -2537,7 +2632,9 @@
                                     }
                                   ],
                                   "LegendPosition": 3,
+                                  "LegendOrientation": 0,
                                   "DisabledSeries": null,
+                                  "LegendOutsideGraph": false,
                                   "Name": "Graph",
                                   "Children": [
                                     {
@@ -2553,7 +2650,6 @@
                                       "MarkerSize": 0,
                                       "Line": 0,
                                       "LineThickness": 0,
-                                      "Checkpoint": "Current",
                                       "TableName": null,
                                       "XFieldName": ".Simulations.Replacements.Barley.Structure.BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.X",
                                       "YFieldName": ".Simulations.Replacements.Barley.Structure.BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y",
@@ -2603,7 +2699,9 @@
                                     }
                                   ],
                                   "LegendPosition": 3,
+                                  "LegendOrientation": 0,
                                   "DisabledSeries": null,
+                                  "LegendOutsideGraph": false,
                                   "Name": "Graph1",
                                   "Children": [
                                     {
@@ -2619,7 +2717,6 @@
                                       "MarkerSize": 0,
                                       "Line": 0,
                                       "LineThickness": 0,
-                                      "Checkpoint": "Current",
                                       "TableName": null,
                                       "XFieldName": ".Simulations.Replacements.Barley.Structure.BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.X",
                                       "YFieldName": ".Simulations.Replacements.Barley.Structure.BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y",
@@ -2669,7 +2766,9 @@
                                     }
                                   ],
                                   "LegendPosition": 3,
+                                  "LegendOrientation": 0,
                                   "DisabledSeries": null,
+                                  "LegendOutsideGraph": false,
                                   "Name": "Graph2",
                                   "Children": [
                                     {
@@ -2685,7 +2784,6 @@
                                       "MarkerSize": 0,
                                       "Line": 0,
                                       "LineThickness": 0,
-                                      "Checkpoint": "Current",
                                       "TableName": null,
                                       "XFieldName": ".Simulations.Replacements.Barley.Structure.BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.X",
                                       "YFieldName": ".Simulations.Replacements.Barley.Structure.BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y",
@@ -3030,7 +3128,9 @@
                                     }
                                   ],
                                   "LegendPosition": 3,
+                                  "LegendOrientation": 0,
                                   "DisabledSeries": null,
+                                  "LegendOutsideGraph": false,
                                   "Name": "Graph",
                                   "Children": [
                                     {
@@ -3046,7 +3146,6 @@
                                       "MarkerSize": 0,
                                       "Line": 0,
                                       "LineThickness": 0,
-                                      "Checkpoint": "Current",
                                       "TableName": null,
                                       "XFieldName": ".Simulations.Replacements.Barley.Structure.FinalLeafNumber.FinalNodeNumber.PhotoPLeaves.PhotoPeriodReductionFactor.XYPairs.X",
                                       "YFieldName": ".Simulations.Replacements.Barley.Structure.FinalLeafNumber.FinalNodeNumber.PhotoPLeaves.PhotoPeriodReductionFactor.XYPairs.Y",
@@ -3177,6 +3276,7 @@
           "GrowthRespiration": 0.0,
           "MaintenanceRespiration": 0.0,
           "DMDemand": null,
+          "DMDemandPriorityFactor": null,
           "NDemand": null,
           "DMSupply": null,
           "NSupply": null,
@@ -3720,18 +3820,20 @@
           "DMSupply": null,
           "NSupply": null,
           "DMDemand": null,
+          "DMDemandPriorityFactor": null,
           "NDemand": null,
           "potentialDMAllocation": null,
           "GrowthRespiration": 0.0,
           "MaintenanceRespiration": 0.0,
-          "RootAngle": 45.0,
-          "SWAvailabilityRatio": 0.0,
           "Name": "Root",
           "Children": [
             {
               "$type": "Models.Functions.RootShape.RootShapeCylindre, Models",
               "Name": "RootShape",
-              "Children": []
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             },
             {
               "$type": "Models.Functions.Constant, Models",
@@ -4016,7 +4118,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -4032,7 +4136,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Barley.Root.RootFrontVelocity.TemperatureFactor.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Barley.Root.RootFrontVelocity.TemperatureFactor.XYPairs.Y",
@@ -4118,7 +4221,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -4134,7 +4239,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Barley.Root.RootFrontVelocity.WaterFactor.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Barley.Root.RootFrontVelocity.WaterFactor.XYPairs.Y",
@@ -4358,7 +4462,9 @@
                                             }
                                           ],
                                           "LegendPosition": 3,
+                                          "LegendOrientation": 0,
                                           "DisabledSeries": null,
+                                          "LegendOutsideGraph": false,
                                           "Name": "Graph",
                                           "Children": [
                                             {
@@ -4374,7 +4480,6 @@
                                               "MarkerSize": 0,
                                               "Line": 0,
                                               "LineThickness": 0,
-                                              "Checkpoint": "Current",
                                               "TableName": null,
                                               "XFieldName": ".Simulations.Replacements.Barley.Root.DMDemands.Structural.DMDemandFunction.PartitionFraction.PreFlowering.AgeFactor.XYPairs.X",
                                               "YFieldName": ".Simulations.Replacements.Barley.Root.DMDemands.Structural.DMDemandFunction.PartitionFraction.PreFlowering.AgeFactor.XYPairs.Y",
@@ -4651,15 +4756,28 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
                   "Name": "Metabolic",
-                  "FixedValue": "0.0"
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
                   "Name": "Storage",
-                  "FixedValue": "0.0"
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
-              ]
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": false,
@@ -4678,16 +4796,19 @@
           "DMSupply": null,
           "NSupply": null,
           "DMDemand": null,
+          "DMDemandPriorityFactor": null,
           "NDemand": null,
           "potentialDMAllocation": null,
           "Albedo": 0.25,
           "Gsmax350": 0.011,
           "R50": 150.0,
+          "LAI": 0.0,
+          "Depth": 0.0,
+          "Width": 0.0,
           "FRGR": 0.0,
           "PotentialEP": 0.0,
           "WaterDemand": 0.0,
           "LightProfile": null,
-          "MicroClimatePresent": true,
           "KDead": 0.1,
           "MaximumMainStemLeafNumber": 30,
           "TipsAtEmergence": 0,
@@ -4947,7 +5068,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -4963,7 +5086,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.ExpansionStress.WaterStressEffect.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.ExpansionStress.WaterStressEffect.XYPairs.Y",
@@ -5107,7 +5229,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -5123,7 +5247,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.MaxArea.AgeFactor.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.MaxArea.AgeFactor.XYPairs.Y",
@@ -5173,7 +5296,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph1",
                               "Children": [
                                 {
@@ -5189,7 +5314,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.MaxArea.AgeFactor.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.MaxArea.AgeFactor.XYPairs.Y",
@@ -5239,7 +5363,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph2",
                               "Children": [
                                 {
@@ -5255,7 +5381,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.MaxArea.AgeFactor.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.MaxArea.AgeFactor.XYPairs.Y",
@@ -5305,7 +5430,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph3",
                               "Children": [
                                 {
@@ -5321,7 +5448,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.MaxArea.AgeFactor.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.MaxArea.AgeFactor.XYPairs.Y",
@@ -5526,7 +5652,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -5542,7 +5670,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.LagDuration.AgeFactor.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.LagDuration.AgeFactor.XYPairs.Y",
@@ -5592,7 +5719,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph1",
                               "Children": [
                                 {
@@ -5608,7 +5737,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.LagDuration.AgeFactor.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.LagDuration.AgeFactor.XYPairs.Y",
@@ -5658,7 +5786,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph2",
                               "Children": [
                                 {
@@ -5674,7 +5804,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.LagDuration.AgeFactor.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.LagDuration.AgeFactor.XYPairs.Y",
@@ -5724,7 +5853,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph3",
                               "Children": [
                                 {
@@ -5740,7 +5871,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.LagDuration.AgeFactor.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.LagDuration.AgeFactor.XYPairs.Y",
@@ -5790,7 +5920,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph4",
                               "Children": [
                                 {
@@ -5806,7 +5938,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.LagDuration.AgeFactor.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.LagDuration.AgeFactor.XYPairs.Y",
@@ -5856,7 +5987,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph5",
                               "Children": [
                                 {
@@ -5872,7 +6005,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.LagDuration.AgeFactor.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.LagDuration.AgeFactor.XYPairs.Y",
@@ -5922,7 +6054,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph6",
                               "Children": [
                                 {
@@ -5938,7 +6072,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.LagDuration.AgeFactor.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.LagDuration.AgeFactor.XYPairs.Y",
@@ -5988,7 +6121,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph7",
                               "Children": [
                                 {
@@ -6004,7 +6139,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.LagDuration.AgeFactor.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.LagDuration.AgeFactor.XYPairs.Y",
@@ -6054,7 +6188,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph8",
                               "Children": [
                                 {
@@ -6070,7 +6206,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.LagDuration.AgeFactor.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.LagDuration.AgeFactor.XYPairs.Y",
@@ -6406,7 +6541,9 @@
                                     }
                                   ],
                                   "LegendPosition": 3,
+                                  "LegendOrientation": 0,
                                   "DisabledSeries": null,
+                                  "LegendOutsideGraph": false,
                                   "Name": "Graph",
                                   "Children": [
                                     {
@@ -6422,7 +6559,6 @@
                                       "MarkerSize": 0,
                                       "Line": 0,
                                       "LineThickness": 0,
-                                      "Checkpoint": "Current",
                                       "TableName": null,
                                       "XFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.X",
                                       "YFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.Y",
@@ -6472,7 +6608,9 @@
                                     }
                                   ],
                                   "LegendPosition": 3,
+                                  "LegendOrientation": 0,
                                   "DisabledSeries": null,
+                                  "LegendOutsideGraph": false,
                                   "Name": "Graph1",
                                   "Children": [
                                     {
@@ -6488,7 +6626,6 @@
                                       "MarkerSize": 0,
                                       "Line": 0,
                                       "LineThickness": 0,
-                                      "Checkpoint": "Current",
                                       "TableName": null,
                                       "XFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.X",
                                       "YFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.Y",
@@ -6538,7 +6675,9 @@
                                     }
                                   ],
                                   "LegendPosition": 3,
+                                  "LegendOrientation": 0,
                                   "DisabledSeries": null,
+                                  "LegendOutsideGraph": false,
                                   "Name": "Graph2",
                                   "Children": [
                                     {
@@ -6554,7 +6693,6 @@
                                       "MarkerSize": 0,
                                       "Line": 0,
                                       "LineThickness": 0,
-                                      "Checkpoint": "Current",
                                       "TableName": null,
                                       "XFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.X",
                                       "YFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.Y",
@@ -6604,7 +6742,9 @@
                                     }
                                   ],
                                   "LegendPosition": 3,
+                                  "LegendOrientation": 0,
                                   "DisabledSeries": null,
+                                  "LegendOutsideGraph": false,
                                   "Name": "Graph3",
                                   "Children": [
                                     {
@@ -6620,7 +6760,6 @@
                                       "MarkerSize": 0,
                                       "Line": 0,
                                       "LineThickness": 0,
-                                      "Checkpoint": "Current",
                                       "TableName": null,
                                       "XFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.X",
                                       "YFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.Y",
@@ -6670,7 +6809,9 @@
                                     }
                                   ],
                                   "LegendPosition": 3,
+                                  "LegendOrientation": 0,
                                   "DisabledSeries": null,
+                                  "LegendOutsideGraph": false,
                                   "Name": "Graph4",
                                   "Children": [
                                     {
@@ -6686,7 +6827,6 @@
                                       "MarkerSize": 0,
                                       "Line": 0,
                                       "LineThickness": 0,
-                                      "Checkpoint": "Current",
                                       "TableName": null,
                                       "XFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.X",
                                       "YFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.Y",
@@ -6736,7 +6876,9 @@
                                     }
                                   ],
                                   "LegendPosition": 3,
+                                  "LegendOrientation": 0,
                                   "DisabledSeries": null,
+                                  "LegendOutsideGraph": false,
                                   "Name": "Graph5",
                                   "Children": [
                                     {
@@ -6752,7 +6894,6 @@
                                       "MarkerSize": 0,
                                       "Line": 0,
                                       "LineThickness": 0,
-                                      "Checkpoint": "Current",
                                       "TableName": null,
                                       "XFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.X",
                                       "YFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.Y",
@@ -6802,7 +6943,9 @@
                                     }
                                   ],
                                   "LegendPosition": 3,
+                                  "LegendOrientation": 0,
                                   "DisabledSeries": null,
+                                  "LegendOutsideGraph": false,
                                   "Name": "Graph6",
                                   "Children": [
                                     {
@@ -6818,7 +6961,6 @@
                                       "MarkerSize": 0,
                                       "Line": 0,
                                       "LineThickness": 0,
-                                      "Checkpoint": "Current",
                                       "TableName": null,
                                       "XFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.X",
                                       "YFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.Y",
@@ -6868,7 +7010,9 @@
                                     }
                                   ],
                                   "LegendPosition": 3,
+                                  "LegendOrientation": 0,
                                   "DisabledSeries": null,
+                                  "LegendOutsideGraph": false,
                                   "Name": "Graph7",
                                   "Children": [
                                     {
@@ -6884,7 +7028,6 @@
                                       "MarkerSize": 0,
                                       "Line": 0,
                                       "LineThickness": 0,
-                                      "Checkpoint": "Current",
                                       "TableName": null,
                                       "XFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.X",
                                       "YFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.Y",
@@ -6934,7 +7077,9 @@
                                     }
                                   ],
                                   "LegendPosition": 3,
+                                  "LegendOrientation": 0,
                                   "DisabledSeries": null,
+                                  "LegendOutsideGraph": false,
                                   "Name": "Graph8",
                                   "Children": [
                                     {
@@ -6950,7 +7095,6 @@
                                       "MarkerSize": 0,
                                       "Line": 0,
                                       "LineThickness": 0,
-                                      "Checkpoint": "Current",
                                       "TableName": null,
                                       "XFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.X",
                                       "YFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedLagAcceleration.Stress.StressFactor.XYPairs.Y",
@@ -7073,7 +7217,9 @@
                                     }
                                   ],
                                   "LegendPosition": 3,
+                                  "LegendOrientation": 0,
                                   "DisabledSeries": null,
+                                  "LegendOutsideGraph": false,
                                   "Name": "Graph",
                                   "Children": [
                                     {
@@ -7089,7 +7235,6 @@
                                       "MarkerSize": 0,
                                       "Line": 0,
                                       "LineThickness": 0,
-                                      "Checkpoint": "Current",
                                       "TableName": null,
                                       "XFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedSenAcceleration.Stress.StressFactor.XYPairs.X",
                                       "YFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedSenAcceleration.Stress.StressFactor.XYPairs.Y",
@@ -7139,7 +7284,9 @@
                                     }
                                   ],
                                   "LegendPosition": 3,
+                                  "LegendOrientation": 0,
                                   "DisabledSeries": null,
+                                  "LegendOutsideGraph": false,
                                   "Name": "Graph1",
                                   "Children": [
                                     {
@@ -7155,7 +7302,6 @@
                                       "MarkerSize": 0,
                                       "Line": 0,
                                       "LineThickness": 0,
-                                      "Checkpoint": "Current",
                                       "TableName": null,
                                       "XFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedSenAcceleration.Stress.StressFactor.XYPairs.X",
                                       "YFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedSenAcceleration.Stress.StressFactor.XYPairs.Y",
@@ -7205,7 +7351,9 @@
                                     }
                                   ],
                                   "LegendPosition": 3,
+                                  "LegendOrientation": 0,
                                   "DisabledSeries": null,
+                                  "LegendOutsideGraph": false,
                                   "Name": "Graph2",
                                   "Children": [
                                     {
@@ -7221,7 +7369,6 @@
                                       "MarkerSize": 0,
                                       "Line": 0,
                                       "LineThickness": 0,
-                                      "Checkpoint": "Current",
                                       "TableName": null,
                                       "XFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedSenAcceleration.Stress.StressFactor.XYPairs.X",
                                       "YFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedSenAcceleration.Stress.StressFactor.XYPairs.Y",
@@ -7271,7 +7418,9 @@
                                     }
                                   ],
                                   "LegendPosition": 3,
+                                  "LegendOrientation": 0,
                                   "DisabledSeries": null,
+                                  "LegendOutsideGraph": false,
                                   "Name": "Graph3",
                                   "Children": [
                                     {
@@ -7287,7 +7436,6 @@
                                       "MarkerSize": 0,
                                       "Line": 0,
                                       "LineThickness": 0,
-                                      "Checkpoint": "Current",
                                       "TableName": null,
                                       "XFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedSenAcceleration.Stress.StressFactor.XYPairs.X",
                                       "YFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedSenAcceleration.Stress.StressFactor.XYPairs.Y",
@@ -7337,7 +7485,9 @@
                                     }
                                   ],
                                   "LegendPosition": 3,
+                                  "LegendOrientation": 0,
                                   "DisabledSeries": null,
+                                  "LegendOutsideGraph": false,
                                   "Name": "Graph4",
                                   "Children": [
                                     {
@@ -7353,7 +7503,6 @@
                                       "MarkerSize": 0,
                                       "Line": 0,
                                       "LineThickness": 0,
-                                      "Checkpoint": "Current",
                                       "TableName": null,
                                       "XFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedSenAcceleration.Stress.StressFactor.XYPairs.X",
                                       "YFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedSenAcceleration.Stress.StressFactor.XYPairs.Y",
@@ -7403,7 +7552,9 @@
                                     }
                                   ],
                                   "LegendPosition": 3,
+                                  "LegendOrientation": 0,
                                   "DisabledSeries": null,
+                                  "LegendOutsideGraph": false,
                                   "Name": "Graph5",
                                   "Children": [
                                     {
@@ -7419,7 +7570,6 @@
                                       "MarkerSize": 0,
                                       "Line": 0,
                                       "LineThickness": 0,
-                                      "Checkpoint": "Current",
                                       "TableName": null,
                                       "XFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedSenAcceleration.Stress.StressFactor.XYPairs.X",
                                       "YFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.DroughtInducedSenAcceleration.Stress.StressFactor.XYPairs.Y",
@@ -7640,7 +7790,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -7656,7 +7808,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.ShadeInducedSenescenceRate.CoverEffect.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.ShadeInducedSenescenceRate.CoverEffect.XYPairs.Y",
@@ -7706,7 +7857,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph1",
                               "Children": [
                                 {
@@ -7722,7 +7875,6 @@
                                   "MarkerSize": 0,
                                   "Line": 0,
                                   "LineThickness": 0,
-                                  "Checkpoint": "Current",
                                   "TableName": null,
                                   "XFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.ShadeInducedSenescenceRate.CoverEffect.XYPairs.X",
                                   "YFieldName": ".Simulations.Replacements.Barley.Leaf.CohortParameters.ShadeInducedSenescenceRate.CoverEffect.XYPairs.Y",
@@ -7958,7 +8110,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -7974,7 +8128,6 @@
                               "MarkerSize": 0,
                               "Line": 0,
                               "LineThickness": 0,
-                              "Checkpoint": "Current",
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.Barley.Leaf.Photosynthesis.FW.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.Barley.Leaf.Photosynthesis.FW.XYPairs.Y",
@@ -8305,8 +8458,13 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
               "Name": "WidthFunction",
-              "FixedValue": "0"
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
@@ -8328,8 +8486,10 @@
           "DMSupply": null,
           "NSupply": null,
           "DMDemand": null,
+          "DMDemandPriorityFactor": null,
           "NDemand": null,
           "potentialDMAllocation": null,
+          "IsAboveGround": true,
           "Name": "Spike",
           "Children": [
             {
@@ -8881,15 +9041,28 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
                   "Name": "Metabolic",
-                  "FixedValue": "0.0"
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
                   "Name": "Storage",
-                  "FixedValue": "0.0"
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
-              ]
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": false,
@@ -8902,8 +9075,10 @@
           "DMSupply": null,
           "NSupply": null,
           "DMDemand": null,
+          "DMDemandPriorityFactor": null,
           "NDemand": null,
           "potentialDMAllocation": null,
+          "IsAboveGround": true,
           "Name": "Stem",
           "Children": [
             {
@@ -9589,15 +9764,28 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
                   "Name": "Metabolic",
-                  "FixedValue": "0.0"
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
                   "Name": "Storage",
-                  "FixedValue": "0.0"
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
-              ]
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": false,
