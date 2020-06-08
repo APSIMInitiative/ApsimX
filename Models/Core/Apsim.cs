@@ -120,7 +120,11 @@
             if (model == null)
                 return null;
 
-            return model.GetType().GetMethod("FindInScope").MakeGenericMethod(type).Invoke(model, null) as IModel;
+            MethodInfo[] methods = model.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance);
+            MethodInfo find = methods.FirstOrDefault(m => m.Name == "FindInScope" && m.IsGenericMethod);
+            if (find == null)
+                throw new Exception($"Unable to find find method");
+            return find.MakeGenericMethod(type).Invoke(model, null) as IModel;
         }
 
         /// <summary>
