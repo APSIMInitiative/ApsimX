@@ -63,8 +63,10 @@ namespace Models.PostSimulationTools
             if (PredictedTableName == null || ObservedTableName == null)
                 return;
 
-            // If the predicted table has not been modified during the current simulations run, don't do anything.
-            if (dataStore?.Writer != null && !dataStore.Writer.TablesModified.Contains(PredictedTableName))
+            // If neither the predicted nor obseved tables have been modified during
+            // the most recent simulations run, don't do anything.
+            if (dataStore?.Writer != null &&
+              !(dataStore.Writer.TablesModified.Contains(PredictedTableName) || dataStore.Writer.TablesModified.Contains(ObservedTableName)))
                 return;
 
             IEnumerable<string> predictedDataNames = dataStore.Reader.ColumnNames(PredictedTableName);
