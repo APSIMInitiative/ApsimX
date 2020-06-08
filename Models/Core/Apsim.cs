@@ -194,7 +194,7 @@
         /// </summary>
         /// <param name="model">The model to clone</param>
         /// <returns>The clone of the model</returns>
-        public static IModel Clone(IModel model)
+        public static T Clone<T>(this T model) where T : IModel
         {
             IFormatter formatter = new BinaryFormatter();
             Stream stream = new MemoryStream();
@@ -203,12 +203,9 @@
                 formatter.Serialize(stream, model);
 
                 stream.Seek(0, SeekOrigin.Begin);
-                IModel newModel =  (IModel)formatter.Deserialize(stream);
+                T newModel =  (T)formatter.Deserialize(stream);
 
-                ParentAllChildren(newModel);
-                return newModel;
-            }
-        }
+                newModel.ParentAllDescendants();
 
         /// <summary>
         /// Perform a deep serialise of the model.
