@@ -48,20 +48,7 @@ namespace UserInterface.Presenters
             StringBuilder html = new StringBuilder();
             html.AppendLine("<html><body>");
 
-            string typeName = model.GetType().Name;
-            html.AppendLine($"<h1>{typeName} Configuration</h1>");
-            html.AppendLine($"<h2>Specify fixed parameters</h2>");
-            html.AppendLine("<p>todo - requires GridView</p>");
-
-            html.AppendLine("<h2>Specify variable parameters by adding/changing IFunction child objects</h2>");
-            DataTable functionTable = GetDependencies(model, m => typeof(IFunction).IsAssignableFrom(GetMemberType(m)));
-            html.AppendLine(DataTableUtilities.ToHTML(functionTable, true));
-
-            html.AppendLine("<h3>Other dependencies");
-            DataTable depsTable = GetDependencies(model, m => !typeof(IFunction).IsAssignableFrom(GetMemberType(m)));
-            html.AppendLine(DataTableUtilities.ToHTML(depsTable, true));
-
-            html.AppendLine($"<h1>{typeName} Description</h1>");
+            html.AppendLine($"<h1>{model.Name} Description</h1>");
             html.AppendLine("<h2>General Description</h2>");
             string summary = markdown.Transform(AutoDocumentation.GetSummary(model.GetType()));
             html.Append($"<p>{summary}</p>");
@@ -73,6 +60,20 @@ namespace UserInterface.Presenters
                 html.AppendLine($"<p>{remarks}</p>");
             }
 
+            string typeName = model.GetType().Name;
+            html.AppendLine($"<h1>{model.Name} Configuration</h1>");
+            html.AppendLine($"<h2>Inputs</h2>");
+            //html.AppendLine($"<h3>Fixed Parameters</h3>");
+            //html.AppendLine("<p>todo - requires GridView</p>");
+
+            html.AppendLine("<h3>Variable Parameters</h2>");
+            DataTable functionTable = GetDependencies(model, m => typeof(IFunction).IsAssignableFrom(GetMemberType(m)));
+            html.AppendLine(DataTableUtilities.ToHTML(functionTable, true));
+
+            html.AppendLine("<h3>Other dependencies");
+            DataTable depsTable = GetDependencies(model, m => !typeof(IFunction).IsAssignableFrom(GetMemberType(m)));
+            html.AppendLine(DataTableUtilities.ToHTML(depsTable, true));
+
             DataTable publicMethods = GetPublicMethods(model);
             if (publicMethods.Rows.Count > 0)
             {
@@ -80,16 +81,50 @@ namespace UserInterface.Presenters
                 html.AppendLine(DataTableUtilities.ToHTML(publicMethods, true));
             }
 
+            DataTable events = GetEvents(model);
+            if (events.Rows.Count > 0)
+            {
+                html.AppendLine("<h2>Events</h2>");
+                html.AppendLine(DataTableUtilities.ToHTML(events, true));
+            }
+
             DataTable outputs = GetOutputs(model);
             if (outputs.Rows.Count > 0)
             {
-                html.AppendLine("<h3>Model Outputs</h3>");
+                html.AppendLine("<h2>Model Outputs</h2>");
                 html.AppendLine(DataTableUtilities.ToHTML(outputs, true));
             }
 
             html.Append("</body></html>");
 
             return html.ToString();
+        }
+
+        private DataTable GetEvents(IModel model)
+        {
+            DataTable table = new DataTable("Public Events");
+            table.Columns.Add(new DataColumn("Name", typeof(string)));
+            table.Columns.Add(new DataColumn("Delegate Type", typeof(string)));
+            table.Columns.Add(new DataColumn("Description", typeof(string)));
+            table.Columns.Add(new DataColumn("Remarks", typeof(string)));
+
+            BindingFlags flags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy;
+            foreach (EventInfo evnt in model.GetType().GetEvents(flags))
+            {
+                if (!evnt.IsSpecialName && !evnt.DeclaringType.IsAssignableFrom(typeof(ModelCollectionFromResource)))
+                {
+                    DataRow row = table.NewRow();
+
+                    row[0] = evnt.Name;
+                    row[1] = evnt.EventHandlerType.Name;
+                    row[2] = markdown.Transform(AutoDocumentation.GetSummary(evnt));
+                    row[3] = markdown.Transform(AutoDocumentation.GetRemarks(evnt));
+
+                    table.Rows.Add(row);
+                }
+            }
+
+            return table;
         }
 
         private DataTable GetOutputs(IModel model)
