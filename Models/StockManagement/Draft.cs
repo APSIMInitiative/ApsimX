@@ -108,7 +108,7 @@
                     {
                         // Find the animal groups that have the tag number and move them to the
                         // specified padock.
-                        foreach (var group in stock.AnimalList.Animals.Skip(1).Where(g => g.Tag == TagNumbers[t]))
+                        foreach (var group in stock.StockModel.Animals.Skip(1).Where(g => g.Tag == TagNumbers[t]))
                             group.MoveToPaddock(PaddockNames[t]);
                     }
                 }
@@ -165,7 +165,7 @@
             public FieldWithForage(Zone zone, Stock stockModel)
             {
                 field = zone;
-                animalGroups = stockModel.AnimalList.Animals;
+                animalGroups = stockModel.StockModel.Animals;
                 foreach (IPlantDamage forage in Apsim.ChildrenRecursively(zone, typeof(IPlantDamage)))
                     foreach (var organ in forage.Organs)
                         if (organ.IsAboveGround)

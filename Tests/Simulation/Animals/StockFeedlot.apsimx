@@ -1,12 +1,13 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 80,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-06",
+  "Version": 101,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
       "Name": "Feedlot",
       "Children": [
         {
@@ -49,13 +50,14 @@
           "Name": "Feedlot",
           "Children": [
             {
-              "$type": "Models.Report.Report, Models",
+              "$type": "Models.Report, Models",
               "VariableNames": [
                 "[Clock].Today"
               ],
               "EventNames": [
                 ""
               ],
+              "GroupByVariableName": null,
               "Name": "Report",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -212,7 +214,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.SoilWater, Models",
+                  "$type": "Models.WaterModel.WaterBalance, Models",
                   "SummerDate": "1-Nov",
                   "SummerU": 5.0,
                   "SummerCona": 5.0,
@@ -225,10 +227,9 @@
                   "CN2Bare": 73.0,
                   "CNRed": 20.0,
                   "CNCov": 0.8,
-                  "slope": "NaN",
-                  "discharge_width": "NaN",
-                  "catchment_area": "NaN",
-                  "max_pond": 0.0,
+                  "Slope": "NaN",
+                  "DischargeWidth": "NaN",
+                  "CatchmentArea": "NaN",
                   "Thickness": [
                     150.0,
                     150.0,
@@ -237,15 +238,6 @@
                     300.0,
                     300.0,
                     300.0
-                  ],
-                  "Depth": [
-                    "0-15",
-                    "15-30",
-                    "30-60",
-                    "60-90",
-                    "90-120",
-                    "120-150",
-                    "150-180"
                   ],
                   "SWCON": [
                     0.3,
@@ -257,9 +249,8 @@
                     0.3
                   ],
                   "KLAT": null,
-                  "PrecipitationInterception": 0.0,
+                  "ResourceName": "WaterBalance",
                   "Name": "SoilWater",
-                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -585,14 +576,12 @@
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-              "Canopies": [],
               "InitialResidueName": "wheat_stubble",
               "InitialResidueType": "wheat",
               "InitialResidueMass": 0.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 100.0,
-              "FractionFaecesAdded": 1.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
               "IncludeInDocumentation": true,
@@ -669,23 +658,11 @@
         },
         {
           "$type": "Models.GrazPlan.Stock, Models",
-          "ParamFile": "",
+          "randFactory": {
+            "$type": "StdUnits.MyRandom, Models"
+          },
           "RandSeed": 9999,
-          "Genotypes": [],
-          "Animals": [],
-          "PaddockList": [
-            {
-              "$type": "Models.GrazPlan.PaddockInit, Models",
-              "Forages": [],
-              "Name": "",
-              "Area": 1.0,
-              "Slope": 0.0,
-              "Excretion": null,
-              "Urine": null
-            }
-          ],
-          "EnterpriseList": [],
-          "GrazingPeriods": [],
+          "StockModel": null,
           "Name": "Stock",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -694,7 +671,7 @@
         },
         {
           "$type": "Models.Manager, Models",
-          "Code": "using System;\nusing Models.Core;\nusing Models.Utilities;\nusing Models.GrazPlan;\nusing APSIM.Shared.Utilities;\n\nnamespace Models\n{\n    [Serializable]\n    public class Script : Model\n    {\n        [Link] Clock Calendar;\n        [Link] Stock Animals;\n        [Link] Supplement Feed;\n\n        private double sale_age = 3.0;\n        private int no_to_buy;\n        private int group_count;\n        private int g;\n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            // purchase animals annually\n            if (DateUtilities.DatesEqual(\"01 JAN\", Calendar.Today))\n            {\n                g = Animals.NoGroups + 1;\n                no_to_buy = 500 - Animals.NumberAll;\n                \n                StockBuy purchase = new StockBuy();\n                purchase.Genotype = \"small merino\";\n                purchase.Number = no_to_buy;\n                purchase.Sex = ReproductiveType.Castrate;\n                purchase.Age = 12;\n                purchase.Weight = 45.0;\n                purchase.UseTag = g + 1;\n                \n                Animals.Buy(purchase);\n                Animals.Move(\"Feedlot\", g);\n            }\n\n            // Shearing all animals\n            if (DateUtilities.DatesEqual(\"15 Dec\", Calendar.Today))\n            {\n                Animals.Shear(\"\");\n            }\n            \n            // Sell cast for age animals\n            if (DateUtilities.DatesEqual(\"20 Dec\", Calendar.Today))\n            {\n                group_count = Animals.NoGroups;\n                for (g = 1; g <= group_count; g++)\n                {\n                    StockSplit split = new StockSplit();\n                    split.Group = g;\n                    split.Type = \"age\";\n                    split.Value = 365 * sale_age;\n                    Animals.Split(split);                   // older animals into a new group\n                }\n\n                for (g = 1; g <= Animals.NoGroups; g++)\n                {\n                    if (Animals.Age[g - 1] >= 365 * sale_age)\n                        Animals.Sell(Animals.Number[g - 1], g);\n                }\n            }\n            \n            if (Animals.NumberAll > 0)\n                Feed.Feed(\"wheat, crushed\", 0.5 * Animals.NumberAll, \"Feedlot\");\n        }\n    }\n}\n",
+          "Code": "using APSIM.Shared.Utilities;\r\nusing Models.GrazPlan;\r\nusing Models.Utilities;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Calendar;\r\n        [Link] Stock Animals;\r\n        [Link] Supplement Feed;\r\n\r\n        private double sale_age = 3.0;\r\n        private int no_to_buy;\r\n        private int group_count;\r\n        private int g;\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            // purchase animals annually\r\n            if (DateUtilities.DatesEqual(\"01 JAN\", Calendar.Today))\r\n            {\r\n                g = Animals.NoGroups + 1;\r\n                no_to_buy = 500 - Animals.NumberAll;\r\n                \r\n                StockBuy purchase = new StockBuy();\r\n                purchase.Genotype = \"small merino\";\r\n                purchase.Number = no_to_buy;\r\n                purchase.Sex = ReproductiveType.Castrate;\r\n                purchase.Age = 12;\r\n                purchase.Weight = 45.0;\r\n                purchase.UseTag = g + 1;\r\n                \r\n                Animals.Buy(purchase);\r\n                Animals.Move(\"Feedlot\");\r\n            }\r\n\r\n            // Shearing all animals\r\n            if (DateUtilities.DatesEqual(\"15 Dec\", Calendar.Today))\r\n            {\r\n                Animals.Shear(shearAdults:true, shearYoung:true);\r\n            }\r\n            \r\n            // Sell cast for age animals\r\n            if (DateUtilities.DatesEqual(\"20 Dec\", Calendar.Today))\r\n            {\r\n                group_count = Animals.NoGroups;\r\n                for (g = 1; g <= group_count; g++)\r\n                {\r\n                    Animals.SplitByAge(Convert.ToInt32(365 * sale_age));                   // older animals into a new group\r\n                }\r\n\r\n                foreach (var animalGroup in Animals.AnimalGroups)\r\n                {\r\n                    if (animalGroup.AgeDays >= 365 * sale_age)\r\n                        Animals.Sell(animalGroup.NoAnimals, animalGroup);\r\n                }\r\n            }\r\n            \r\n            if (Animals.NumberAll > 0)\r\n                Feed.Feed(\"wheat, crushed\", 0.5 * Animals.NumberAll, \"Feedlot\");\r\n        }\r\n    }\r\n}\r\n",
           "Parameters": [],
           "Name": "ManageStock",
           "IncludeInDocumentation": true,
@@ -702,7 +679,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Report.Report, Models",
+          "$type": "Models.Report, Models",
           "VariableNames": [
             "[Clock].Today",
             "[Stock].Number[1]",
@@ -726,6 +703,7 @@
           "EventNames": [
             "[Clock].EndOfDay"
           ],
+          "GroupByVariableName": null,
           "Name": "Report1",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -733,11 +711,11 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 3,
               "Title": null,
               "Inverted": false,
@@ -748,7 +726,7 @@
               "CrossesAtZero": false
             },
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 0,
               "Title": null,
               "Inverted": false,
@@ -766,7 +744,7 @@
           "Name": "NumbersAll",
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -778,7 +756,6 @@
               "MarkerSize": 0,
               "Line": 0,
               "LineThickness": 0,
-              "Checkpoint": "Current",
               "TableName": "Report1",
               "XFieldName": "Clock.Today",
               "YFieldName": "Stock.NumberAll",
@@ -801,11 +778,11 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 3,
               "Title": null,
               "Inverted": false,
@@ -816,7 +793,7 @@
               "CrossesAtZero": false
             },
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 0,
               "Title": null,
               "Inverted": false,
@@ -834,7 +811,7 @@
           "Name": "WeightAll",
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -846,7 +823,6 @@
               "MarkerSize": 0,
               "Line": 0,
               "LineThickness": 0,
-              "Checkpoint": "Current",
               "TableName": "Report1",
               "XFieldName": "Clock.Today",
               "YFieldName": "Stock.WeightAll",
@@ -869,11 +845,11 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 3,
               "Title": null,
               "Inverted": false,
@@ -884,7 +860,7 @@
               "CrossesAtZero": false
             },
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 0,
               "Title": null,
               "Inverted": false,
@@ -902,7 +878,7 @@
           "Name": "CondScoreAll",
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -914,7 +890,6 @@
               "MarkerSize": 0,
               "Line": 0,
               "LineThickness": 0,
-              "Checkpoint": "Current",
               "TableName": "Report1",
               "XFieldName": "Clock.Today",
               "YFieldName": "Stock.CondScoreAll",
@@ -937,11 +912,11 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 3,
               "Title": null,
               "Inverted": false,
@@ -952,7 +927,7 @@
               "CrossesAtZero": false
             },
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 0,
               "Title": null,
               "Inverted": false,
@@ -963,7 +938,7 @@
               "CrossesAtZero": false
             },
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 2,
               "Title": null,
               "Inverted": false,
@@ -981,7 +956,7 @@
           "Name": "FleeceWt1",
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -993,7 +968,6 @@
               "MarkerSize": 0,
               "Line": 0,
               "LineThickness": 0,
-              "Checkpoint": "Current",
               "TableName": "Report1",
               "XFieldName": "Clock.Today",
               "YFieldName": "Stock.FleeceWt1",
@@ -1011,7 +985,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 2,
@@ -1023,7 +997,6 @@
               "MarkerSize": 0,
               "Line": 0,
               "LineThickness": 0,
-              "Checkpoint": "Current",
               "TableName": "Report1",
               "XFieldName": "Clock.Today",
               "YFieldName": "Stock.FibreDiam1",
