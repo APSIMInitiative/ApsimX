@@ -1238,11 +1238,12 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            if (!parentPlant.IsEmerged)
-                return;
             Structure.UpdateHeight();
             Width = WidthFunction.Value();
             Depth = DepthFunction.Value();
+
+            if (!parentPlant.IsEmerged)
+                return;
 
             if (FrostFraction.Value() > 0)
                 foreach (LeafCohort l in Leaves)
