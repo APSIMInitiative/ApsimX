@@ -186,7 +186,7 @@
             MethodInfo find = methods.FirstOrDefault(m => m.Name == "FindAllInScope" && m.IsGenericMethod);
             if (find == null)
                 throw new Exception($"Unable to find find method");
-            return (find.MakeGenericMethod(typeFilter).Invoke(model, null) as IEnumerable<IModel>).ToList();
+            return (find.MakeGenericMethod(typeFilter).Invoke(model, null) as IEnumerable<object>).OfType<IModel>().ToList();
         }
 
         /// <summary>
@@ -282,7 +282,7 @@
             if (find == null)
                 throw new Exception($"Unable to find find method");
 
-            return (find.MakeGenericMethod(typeFilter).Invoke(model, null) as IEnumerable<IModel>).ToList();
+            return (find.MakeGenericMethod(typeFilter).Invoke(model, null) as IEnumerable<object>).OfType<IModel>().ToList();
         }
         
         /// <summary>
