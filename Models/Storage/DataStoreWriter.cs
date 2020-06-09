@@ -94,6 +94,11 @@
         }
 
         /// <summary>
+        /// A list of table names which have been modified in the most recent simulations run.
+        /// </summary>
+        public List<string> TablesModified { get; private set; } = new List<string>();
+
+        /// <summary>
         /// 
         /// </summary>
         public int NumJobs { get { return 0; } }
@@ -121,6 +126,8 @@
             lock (lockObject)
             {
                 commands.Add(new WriteTableCommand(Connection, table));
+                if (!TablesModified.Contains(table.TableName))
+                    TablesModified.Add(table.TableName);
             }
         }
 
@@ -153,6 +160,8 @@
             lock (lockObject)
             {
                 commands.Add(new WriteTableCommand(Connection, table));
+                if (!TablesModified.Contains(table.TableName))
+                    TablesModified.Add(table.TableName);
             }
         }
 
@@ -163,6 +172,9 @@
         public void DeleteTable(string tableName)
         {
             Connection.ExecuteNonQuery($"DROP TABLE {tableName}");
+            lock (lockObject)
+                if (!TablesModified.Contains(tableName))
+                    TablesModified.Add(tableName);
         }
 
         /// <summary>Wait for all records to be written.</summary>
