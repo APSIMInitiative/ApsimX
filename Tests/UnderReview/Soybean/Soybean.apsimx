@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 100,
+  "Version": 101,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -6734,6 +6734,12 @@
             "[Soybean].Arbitrator.DM.TotalFixationSupply",
             "sum([Soybean].Arbitrator.N.Fixation) as NFixed",
             "[Soybean].Arbitrator.DM.TotalPlantDemand",
+            "[Soybean].Arbitrator.DM.TotalAllocation",
+            "[Soybean].Arbitrator.DM.TotalPlantAllocation",
+            "[Soybean].Arbitrator.DM.TotalReallocation",
+            "[Soybean].Arbitrator.DM.TotalReallocationSupply",
+            "[Soybean].Arbitrator.DM.TotalRetranslocation",
+            "[Soybean].Arbitrator.DM.TotalRetranslocationSupply",
             "[Soybean].Arbitrator.WDemand",
             "[Soybean].Arbitrator.WSupply",
             "[Soybean].Phenology.CurrentStageName",
@@ -7210,6 +7216,7 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
+                      "IsRunning": false,
                       "Name": "Ames2015Base",
                       "Children": [
                         {
@@ -12277,6 +12284,7 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
+                      "IsRunning": false,
                       "Name": "Ames2017Base",
                       "Children": [
                         {
@@ -17522,6 +17530,7 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
+                      "IsRunning": false,
                       "Name": "Sutherland2015Base",
                       "Children": [
                         {
@@ -21409,6 +21418,7 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
+                      "IsRunning": false,
                       "Name": "Sutherland2017Base",
                       "Children": [
                         {
@@ -26719,6 +26729,7 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
+                      "IsRunning": false,
                       "Name": "Arkansas2001Base",
                       "Children": [
                         {
@@ -27393,6 +27404,7 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
+                      "IsRunning": false,
                       "Name": "Arkansas2002Base",
                       "Children": [
                         {
@@ -28067,6 +28079,7 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
+                      "IsRunning": false,
                       "Name": "Arkansas2003Base",
                       "Children": [
                         {
@@ -29196,6 +29209,7 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
+                      "IsRunning": false,
                       "Name": "Indiana2006Base",
                       "Children": [
                         {
@@ -30050,6 +30064,7 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
+                      "IsRunning": false,
                       "Name": "Indiana2007Base",
                       "Children": [
                         {
@@ -31740,6 +31755,7 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
+                      "IsRunning": false,
                       "Name": "Mississippi2002Base",
                       "Children": [
                         {
@@ -32486,6 +32502,7 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
+                      "IsRunning": false,
                       "Name": "Mississippi2003Base",
                       "Children": [
                         {
@@ -33614,6 +33631,7 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
+                      "IsRunning": false,
                       "Name": "Sal2006Base",
                       "Children": [
                         {
@@ -36992,6 +37010,7 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
+                      "IsRunning": false,
                       "Name": "Sal2007Base",
                       "Children": [
                         {
@@ -40210,6 +40229,7 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
+                      "IsRunning": false,
                       "Name": "ColeaballyBase",
                       "Children": [
                         {
@@ -41539,6 +41559,7 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
+                      "IsRunning": false,
                       "Name": "GattonBase",
                       "Children": [
                         {
@@ -44969,6 +44990,199 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Folder, Models",
+                      "ShowPageOfGraphs": true,
+                      "Name": "Partitioning",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 3,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": true,
+                              "CrossesAtZero": false
+                            },
+                            {
+                              "$type": "Models.Axis, Models",
+                              "Type": 0,
+                              "Title": null,
+                              "Inverted": false,
+                              "Minimum": "NaN",
+                              "Maximum": "NaN",
+                              "Interval": "NaN",
+                              "DateTimeAxis": false,
+                              "CrossesAtZero": false
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "DMAllocation",
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": null,
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 0,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Soybean.Arbitrator.DM.TotalPlantDemand",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": false,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "TotalPlantDemand",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16736653,
+                              "FactorToVaryColours": null,
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 0,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Soybean.Arbitrator.DM.TotalFixationSupply",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": false,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "TotalFixationSupply",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -11094807,
+                              "FactorToVaryColours": null,
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 0,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Soybean.Arbitrator.DM.TotalPlantAllocation",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": false,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "TotalPlantAllocation",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -1663232,
+                              "FactorToVaryColours": null,
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 0,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Soybean.Arbitrator.DM.TotalRetranslocation",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": false,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "TotalPlantRetranslocation",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -990142,
+                              "FactorToVaryColours": null,
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 0,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Soybean.Arbitrator.DM.TotalReallocation",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": false,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "TotalPlantReallocation",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -45083,6 +45297,7 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
+                      "IsRunning": false,
                       "Name": "GriffithBase",
                       "Children": [
                         {
@@ -46789,6 +47004,7 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
+                      "IsRunning": false,
                       "Name": "Katherine1988Base",
                       "Children": [
                         {
@@ -48339,6 +48555,7 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
+                      "IsRunning": false,
                       "Name": "Katherine1989Base",
                       "Children": [
                         {
@@ -49650,6 +49867,7 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
+                      "IsRunning": false,
                       "Name": "Kununurra1980Base",
                       "Children": [
                         {
@@ -51352,6 +51570,7 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
+                      "IsRunning": false,
                       "Name": "Kununurra1979Base",
                       "Children": [
                         {
@@ -53142,6 +53361,7 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
+                      "IsRunning": false,
                       "Name": "LeetonBase",
                       "Children": [
                         {
@@ -54018,6 +54238,7 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
+                      "IsRunning": false,
                       "Name": "Leeton2007Base",
                       "Children": [
                         {
@@ -55676,6 +55897,7 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
+                      "IsRunning": false,
                       "Name": "Yaan2014Base",
                       "Children": [
                         {
@@ -57635,6 +57857,7 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
+                      "IsRunning": false,
                       "Name": "Yaan2015Base",
                       "Children": [
                         {
@@ -59565,6 +59788,7 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
+                      "IsRunning": false,
                       "Name": "Yaan2016Base",
                       "Children": [
                         {
@@ -62195,6 +62419,7 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
+                      "IsRunning": false,
                       "Name": "Hedou19Base",
                       "Children": [
                         {
@@ -64740,6 +64965,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
                   "Name": "FertiliserResponseBase",
                   "Children": [
                     {
@@ -65578,6 +65804,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
                   "Name": "MaturityGroupsIowaBase",
                   "Children": [
                     {
@@ -66886,6 +67113,7 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
+                  "IsRunning": false,
                   "Name": "TimeofSowingGriffithBase",
                   "Children": [
                     {

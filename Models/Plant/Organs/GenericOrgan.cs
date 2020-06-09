@@ -364,6 +364,18 @@
             Live.StructuralWt += Allocated.StructuralWt;
             GrowthRespiration += Allocated.StructuralWt * growthRespFactor;
 
+            //// Reallocation
+            //double senescedFrac = SenescenceRate.Value();
+            //if (StartLive.Wt * (1.0 - senescedFrac) < BiomassToleranceValue)
+            //    senescedFrac = 1.0;  // remaining amount too small, senesce all
+
+            //if (MathUtilities.IsGreaterThan(dryMatter.Reallocation, StartLive.StorageWt + StartLive.MetabolicWt))
+            //    throw new Exception("DM reallocation exceeds storage + metabolic dry matter in organ: " + Name);
+            //double StorageDMReallocation = Math.Min(dryMatter.Reallocation, StartLive.StorageWt * senescedFrac * dmReallocationFactor.Value());
+            //Live.StorageWt -= StorageDMReallocation;
+            //Live.MetabolicWt -= (dryMatter.Reallocation - StorageDMReallocation);
+            //Allocated.StorageWt -= dryMatter.Reallocation;
+
 
             // allocate non structural DM
             if ((dryMatter.Storage * DMConversionEfficiency.Value() - DMDemand.Storage) > BiomassToleranceValue)
@@ -391,9 +403,6 @@
             double senescedFrac = SenescenceRate.Value();
             if (StartLive.Wt * (1.0 - senescedFrac) < BiomassToleranceValue)
                 senescedFrac = 1.0;  // remaining amount too small, senesce all
-
-            if (senescedFrac > 0 && StartLive.Wt>0 && Name=="Shell")
-            { }
 
             if (MathUtilities.IsGreaterThan(nitrogen.Reallocation, StartLive.StorageN + StartLive.MetabolicN))
                 throw new Exception("N reallocation exceeds storage + metabolic nitrogen in organ: " + Name);
