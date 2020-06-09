@@ -165,7 +165,7 @@
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            stock.AnimalList.Add(this);
+            stock.StockModel.Add(this);
         }
     }
 }

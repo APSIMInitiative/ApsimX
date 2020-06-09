@@ -277,6 +277,7 @@
     <EmbeddedResource Include="Sensitivity\MorrisTestsBroken.apsimx" />
     <EmbeddedResource Include="Report\ReportOnEvents.apsimx" />
     <EmbeddedResource Include="Resources\WheatModel.apsimx" />
+    <EmbeddedResource Include="Stock\AddAnimalCohort.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\APSIM.Shared\APSIM.Shared.csproj">

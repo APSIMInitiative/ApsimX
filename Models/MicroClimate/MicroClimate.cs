@@ -293,13 +293,21 @@
             }
 
             bool TallestIsTree = false;
+            bool TallestIsVine = false;
+            double Wt = (tallest.Zone as Zones.RectangularZone).Width*1000;    // Width of tallest crop zone
             foreach (MicroClimateCanopy c in tallest.Canopies)
             {
-                if ((c.Canopy.Height - c.Canopy.Depth) > 0)
+               
+                if ((c.Canopy.Height - c.Canopy.Depth) > 0 && c.Canopy.Width > Wt)
                     TallestIsTree = true;
+
+                if ((c.Canopy.Height - c.Canopy.Depth) > 0 && c.Canopy.Width <= Wt)
+                    TallestIsVine = true;
             }
             if (TallestIsTree)
                 DoTreeRowCropShortWaveRadiation(ref tallest, ref shortest);
+            if (TallestIsVine)
+                DoVineStripShortWaveRadiation(ref tallest, ref shortest);
             else
                 DoStripCropShortWaveRadiation(ref tallest, ref shortest);
         }
@@ -450,6 +458,84 @@
                 shortest.SurfaceRs = weather.Radn;
             }
 
+
+        }
+
+        /// <summary>
+        /// This model is for strip crops where there is no verticle overlap of the shortest and tallest crops canopy but no horizontal overlap
+        /// </summary>
+        /// <param name="vine"></param>
+        /// <param name="alley"></param>
+        private void DoVineStripShortWaveRadiation(ref MicroClimateZone vine, ref MicroClimateZone alley)
+        {
+            if (MathUtilities.Sum(vine.DeltaZ) > 0)  // Don't perform calculations if layers are empty
+            {
+                double Ht = MathUtilities.Sum(vine.DeltaZ);                // Height of tree canopy
+
+                double CDt = vine.Canopies[0].Canopy.Depth / 1000;         // Depth of tree canopy    
+                double CBHt = Ht - CDt;                                    // Base hight of the tree canopy
+                double Ha = MathUtilities.Sum(alley.DeltaZ);               // Height of alley canopy
+                if ((Ha > CBHt) & (vine.DeltaZ.Length > 1))
+                    throw (new Exception("Height of the alley canopy must not exceed the base height of the tree canopy"));
+                
+                double Wt = (vine.Zone as Zones.RectangularZone).Width;    // Width of tree zone
+                double Wa = (alley.Zone as Zones.RectangularZone).Width;   // Width of alley zone
+                double CWt = vine.Canopies[0].Canopy.Width / 1000;         // Width of the tree canopy
+             
+                double WaOl = (CWt+Wt)/2;                                  //adjusted Width of tree canopy, because the tree canopy is smaller than the strip width, so there would be a gap between alley and tree 
+                double WaOp = Wa +Wt - WaOl;                               // Width of the open alley zone between tree canopies
+                double Ft = WaOl / (Wt + Wa);                              // Fraction of space in tree canopy
+                double Fs = WaOp / (Wt + Wa);                              // Fraction of open space in the alley row
+
+               
+                double LAIt = MathUtilities.Sum(vine.LAItotsum);           // LAI of tallest strip
+                double LAIs = MathUtilities.Sum(alley.LAItotsum);          // LAI of shortest strip
+
+                double Kt = 0;                                                // Extinction Coefficient of the tallest strip
+                if (vine.Canopies.Count > 0)                                 // If it exists...
+                    Kt = vine.Canopies[0].Ktot;
+                double Ka = 0;                                                // Extinction Coefficient of the shortest strip
+                if (alley.Canopies.Count > 0)                                // If it exists...
+                    Ka = alley.Canopies[0].Ktot;
+
+                double Httop = Ht-Ha;                                       // distance from top of shortest to top of tallest
+                double LAIthomo = Ft * LAIt;                                // LAI of top layer of tallest strip if spread homogeneously across all of the space
+                
+                double Ftblack = (Math.Sqrt(Math.Pow(CDt, 2) + Math.Pow(WaOl, 2)) - CDt) / WaOl;  // View factor for top layer of tallest strip
+                double Fsblack = (Math.Sqrt(Math.Pow(Httop, 2) + Math.Pow(WaOp, 2)) - Httop) / WaOp;  // View factor for top layer of shortest strip
+                double Tt = Ft * (Ftblack * Math.Exp(-Kt * LAIt)
+                          + Ft * (1 - Ftblack) * Math.Exp(-Kt * LAIthomo))
+                          + Fs * Ft * (1 - Fsblack) * Math.Exp(-Kt * LAIthomo);  //  Transmission of light to bottom of top layer in tallest strip
+                double Ts = Fs * (Fsblack + Fs * (1 - Fsblack) * Math.Exp(-Kt * LAIthomo))
+                          + Ft * Fs * ((1 - Ftblack) * Math.Exp(-Kt * LAIthomo));           //  Transmission of light to bottom of top layer in shortest strip
+                double Intttop = 1 - Tt - Ts;                                // Interception by the top layer of the tallest strip (ie light intercepted in tallest strip above height of shortest strip)
+                double Inttbot = (Tt * (1 - Math.Exp(-Kt * 0)));             // Interception by the bottom layer of the tallest strip
+                double Soilt = (Tt * (Math.Exp(-Kt * 0)));                   // Transmission to the soil below tallest strip
+                double Ints = Ts * (1 - Math.Exp(-Ka * LAIs));               // Interception by the shortest strip
+                double Soils = Ts * (Math.Exp(-Ka * LAIs));                  // Transmission to the soil below shortest strip
+                double EnergyBalanceCheck = Intttop + Inttbot + Soilt + Ints + Soils;  // Sum of all light fractions (should equal 1)
+                if (Math.Abs(1 - EnergyBalanceCheck) > 0.001)
+                    throw (new Exception("Energy Balance not maintained in strip crop light interception model"));
+
+                Ft = (Wt) / (Wt + Wa);  // Remove overlap so scaling back to zone ground area works
+                Fs = (Wa) / (Wt + Wa);  // Remove overlap so scaling back to zone ground area works
+
+                if (vine.Canopies.Count > 0)
+                    vine.Canopies[0].Rs[0] = weather.Radn * (Intttop + Inttbot) / Ft;
+                    vine.SurfaceRs = weather.Radn * Soilt / Ft;
+                
+                if (alley.Canopies.Count > 0 && alley.Canopies[0].Rs != null)
+                    if (alley.Canopies[0].Rs.Length > 0)
+                        alley.Canopies[0].Rs[0] = weather.Radn * Ints / Fs;
+                        alley.SurfaceRs = weather.Radn * Soils / Fs;
+                }
+            else
+            {
+                //tallest.Canopies[0].Rs[0] =0;
+                vine.SurfaceRs = weather.Radn;
+                //shortest.Canopies[0].Rs[0] = 0;
+                alley.SurfaceRs = weather.Radn;
+            }
 
         }
 

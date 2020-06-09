@@ -49,6 +49,7 @@
         {
             if (Area <= 0)
                 throw new Exception("Zone area must be greater than zero.  See Zone: " + Name);
+            Validate();
         }
 
         /// <summary>Gets the value of a variable or model.</summary>
@@ -87,6 +88,27 @@
                 foreach (IModel child in Children)
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
             }
+        }
+
+        /// <summary>
+        /// Ensure that child zones' total area does not exceed this zone's area.
+        /// </summary>
+        private void Validate()
+        {
+            Zone[] subPaddocks = Children.OfType<Zone>().ToArray();
+            double totalSubzoneArea = subPaddocks.Sum(z => z.Area);
+            if (totalSubzoneArea > Area)
+                throw new Exception($"Error in zone {Apsim.FullPath(this)}: total area of child zones ({totalSubzoneArea} ha) exceeds that of parent ({Area} ha)");
+        }
+
+        /// <summary>
+        /// Called when the model has been newly created in memory whether from 
+        /// cloning or deserialisation.
+        /// </summary>
+        public override void OnCreated()
+        {
+            Validate();
+            base.OnCreated();
         }
     }
 }

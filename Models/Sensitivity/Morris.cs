@@ -307,6 +307,11 @@
         /// <summary>Main run method for performing our post simulation calculations</summary>
         public void Run()
         {
+            // If the predicted table has not been modified, don't do anything.
+            // This can happen if other simulations were run but the Morris model was not.
+            if (dataStore?.Writer != null && !dataStore.Writer.TablesModified.Contains(TableName))
+                return;
+
             DataTable predictedData = dataStore.Reader.GetData(TableName, filter: "SimulationName LIKE '" + Name + "%'", orderBy: "SimulationID");
             if (predictedData != null)
             {

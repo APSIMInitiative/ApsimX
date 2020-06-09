@@ -46,6 +46,11 @@ namespace Models.Core
         FileNames,
 
         /// <summary>
+        /// Allows selection of a directory via a file chooser widget.
+        /// </summary>
+        DirectoryName,
+
+        /// <summary>
         /// A field name editor.
         /// </summary>
         FieldName,
@@ -59,6 +64,12 @@ namespace Models.Core
         /// A model drop down.
         /// </summary>
         Model,
+
+        /// <summary>
+        /// This property is an object whose properties
+        /// should also be displayed/editable in the GUI.
+        /// </summary>
+        SubModel,
 
         /// <summary>
         /// A CLEM Resource name editor.
