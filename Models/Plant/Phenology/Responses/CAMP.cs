@@ -49,6 +49,9 @@ namespace Models.PMF.Phen
         IFunction pp = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
+        IFunction deltaHaunStage = null;
+
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction haunStage = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
@@ -219,8 +222,7 @@ namespace Models.PMF.Phen
         [JsonIgnore] public double dVrn3 { get; set; }
         /// <summary>Factor for accumulated exposure to short days</summary>
         [JsonIgnore] public double SDDurationFactor { get; set; }
-        /// <summary>Internal Haun stage value, proxy for tt and should be refactored out</summary>
-        [JsonIgnore] public double HS { get; set; }
+
         /// <summary>daily delta Haun stage, proxy for tt and should be refactored out</summary>
         [JsonIgnore] public double dHS { get; set; }
 
@@ -245,11 +247,14 @@ namespace Models.PMF.Phen
             if ((isImbibed==true) && (isAtFlagLeaf == false))
             {
                 ZeroDeltas();
-                dHS = CalcdHS(tt.Value(), HS, BasePhyllochron);
-                if (isEmerged == true)
-                    HS += dHS; //dhs from phenology is incorrect here because photoperiod will be zero.
                 
-                if ((HS >= CompetenceHS) && (isCompetent == false))
+
+                if (isEmerged == false)
+                    dHS = CalcdHS(tt.Value(), haunStage.Value(), BasePhyllochron);
+                else
+                    dHS = deltaHaunStage.Value(); 
+                
+                if ((haunStage.Value() >= CompetenceHS) && (isCompetent == false))
                     isCompetent = true;
 
                 // Work out base, cold induced Vrn1 expression and methalyation until vernalisation is complete
@@ -359,7 +364,7 @@ namespace Models.PMF.Phen
             ZeroDeltas();
             Vrn1atVS = 100;
             SDDurationFactor = 1.0;
-            HS = 0;
+            //HS = 0;
         }
         private void ZeroDeltas()
         {
