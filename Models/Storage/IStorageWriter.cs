@@ -9,6 +9,14 @@
     public interface IStorageWriter
     {
         /// <summary>
+        /// A list of table names which have been modified in the most recent simulations run.
+        /// </summary>
+        /// <remarks>
+        /// This is currently used to determine which post-simulation tools to run.
+        /// </remarks>
+        List<string> TablesModified { get; }
+
+        /// <summary>
         /// Add rows to a table in the db file. Note that the data isn't written immediately.
         /// </summary>
         /// <param name="data">Name of simulation the values correspond to.</param>
