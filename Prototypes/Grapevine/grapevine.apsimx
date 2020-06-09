@@ -46637,7 +46637,7 @@
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factor, Models",
-                      "Specification": "[Weather].FileName = Site1004_RPC.met",
+                      "Specification": "[Weather].FileName = Longlands.met, WAP.met, TOH.met",
                       "Name": "Climate",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -48602,7 +48602,7 @@
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factor, Models",
-                      "Specification": "[Weather].FileName = TOH.met",
+                      "Specification": "[Weather].FileName = Crownthorpe.met, LawnRoad.met, Hexton.met, Site1002_OYB.met, Matawhero.met",
                       "Name": "Climate",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -50567,7 +50567,7 @@
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factor, Models",
-                      "Specification": "[Weather].FileName =LawnRoad.met",
+                      "Specification": "[Weather].FileName = Longlands.met, Twyford.met",
                       "Name": "Climate",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -52532,7 +52532,7 @@
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factor, Models",
-                      "Specification": "[Weather].FileName = TOH.met",
+                      "Specification": "[Weather].FileName = Site1001_BRA.met, Site1003_SEA.met, WAP.met",
                       "Name": "Climate",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -54497,7 +54497,7 @@
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factor, Models",
-                      "Specification": "[Weather].FileName = WAP.met, TOH.met",
+                      "Specification": "[Weather].FileName = Crownthorpe.met, Site1003_SEA.met, Site1004_RPC.met",
                       "Name": "Climate",
                       "Children": [],
                       "IncludeInDocumentation": true,
