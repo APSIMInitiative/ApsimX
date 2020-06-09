@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// Vernalisation rate parameter set for specific cultivar
+    /// Final Leaf Number observations (or estimates) for genotype from specific environmental conditions
     /// </summary>
     [Serializable]
     [Description("")]
@@ -20,8 +20,8 @@ namespace Models.PMF.Phen
         /// <summary>Final Leaf Number when fully vernalised before HS1.1 and then grown in >16h Pp</summary>
         [Description("Final Leaf Number when fully vernalised before HS1.1 and then grown in >16h Pp</summary")]
         public double LV { get; set; }
-        /// <summary>Final Leaf Number when fully vernalised before HS1.1 and then grown in >16h Pp</summary>
-        [Description("Final Leaf Number when fully vernalised before HS1.1 and then grown in >16h Pp")]
+        /// <summary>Final Leaf Number when fully vernalised before HS1.1 and then grown in >8h Pp</summary>
+        [Description("Final Leaf Number when fully vernalised before HS1.1 and then grown in >8h Pp")]
         public double SV { get; set; }
         /// <summary>Final Leaf Number when grown at >20oC in >16h Pp</summary>
         [Description("Final Leaf Number when grown at >20oC in >16h Pp")]
@@ -49,13 +49,7 @@ namespace Models.PMF.Phen
         IFunction pp = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
-        IFunction hs = null;
-
-        [Link(Type = LinkType.Child, ByName = true)]
-        IFunction dhs = null;
-
-        [Link(Type = LinkType.Child, ByName = true)]
-        IFunction basePhyllochron = null;
+        IFunction haunStage = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
         CalcCAMPVrnRates calcCAMPVrnRates = null;
@@ -63,6 +57,23 @@ namespace Models.PMF.Phen
         // Cultivar specific Phenology parameters
         [Link(Type = LinkType.Child, ByName = true)]
         FinalLeafNumberSet FLNparams = null;
+
+        /// <summary>
+        /// Internal calculation of HS progression, this is a proxy for theremal time and should be reformulated to avoid confusion
+        /// </summary>
+        /// <param name="Tt">Daily thermal time</param>
+        /// <param name="HS">Current Haun stage</param>
+        /// <param name="BasePhyllochron">Base phyllochron</param>
+        /// <returns></returns>
+        private double CalcdHS(double Tt, double HS, double BasePhyllochron)
+        {
+            double phyllochron = BasePhyllochron;
+            if (HS <= 2.0)
+                phyllochron = BasePhyllochron * 0.75;
+            else if (HS > 7.0)
+                phyllochron = BasePhyllochron * 1.3;
+            return Tt / phyllochron;
+        }
 
         /// <summary>
         /// Calculate delta of upregulation for photo period (Pp) sensitive genes
@@ -133,8 +144,14 @@ namespace Models.PMF.Phen
         private double baseDVrn2 { get { return 0; } }
         /// <summary>Maximum delta upregulation of Vrn3 at Long Pp</summary>
         private double maxDVrn3 { get { return 0.33; } }
-        /// <summary>The haun stage at which the crop is able to detect and acto upon photoperiod stimuli, needed for vernalisation to occur</summary>
+        /// <summary>The haun stage at which the crop is able to detect and act upon photoperiod stimuli, needed for vernalisation to occur</summary>
         public double CompetenceHS { get { return 1.1; } }
+        /// <summary>The amount of methalated Vrn1 needed for vernalisation saturation to occur</summary>
+        public double VrnSatThreshold { get { return 1.0; } }
+        /// <summary>The amount of cold induced Vrn1 saturation required for methalation of cold Vrn1 to occur</summary>
+        public double MethalationThreshold { get { return 1.375; } }
+        /// <summary></summary>
+        public double BasePhyllochron { get { return 120; } }
 
         // Development state variables
         /// <summary>IsImbibed True if seed is sown and moisture in soil sufficient to start germination</summary>
@@ -156,8 +173,7 @@ namespace Models.PMF.Phen
 
         /// <summary></summary>
         [JsonIgnore] public bool IsVernalised { get { return isVernalised; }}
-        /// <summary></summary>
-        [JsonIgnore] public double BasePhyllochron { get { return basePhyllochron.Value(); } }
+
 
         /// Vrn gene expression state variables
         /// <summary>The current expression of Vrn1 upregulated at base rate.  
@@ -179,11 +195,6 @@ namespace Models.PMF.Phen
         /// <summary>The current expression of all Vrn1
         /// Sum of MethVrn1 and ColdVrn1</summary>
         [JsonIgnore] public double Vrn1 { get; private set; }
-        /// <summary>This is the Target Vrn1 expression must reach for methalation to occur
-        /// and Methalated Vrn1 expression must reach for vernalisation to occur.
-        /// Equals 1 + Vrn2 expression
-        /// Provides mechanism for long days to extend vernalisation response</summary>
-        [JsonIgnore] public double Vrn1Target { get; private set; }
         /// <summary>The current expression of Vrn2
         /// Incremented daily by dVrn2 when plant is competent 
         /// Assumes zero upregulation under short photoperiod,
@@ -206,10 +217,16 @@ namespace Models.PMF.Phen
         [JsonIgnore] public double dVrn2 { get; set; }
         /// <summary>daily delta upregulation of Vrn3</summary>
         [JsonIgnore] public double dVrn3 { get; set; }
-        /// <summary>daily delta Haun stage</summary>
-        [JsonIgnore] private double dHS { get; set; } 
+        /// <summary>Factor for accumulated exposure to short days</summary>
+        [JsonIgnore] public double SDDurationFactor { get; set; }
+        /// <summary>Internal Haun stage value, proxy for tt and should be refactored out</summary>
+        [JsonIgnore] public double HS { get; set; }
+        /// <summary>daily delta Haun stage, proxy for tt and should be refactored out</summary>
+        [JsonIgnore] public double dHS { get; set; }
 
         /// Leaf number variables
+        /// <summary>Haun stage of Vernalisation saturation</summary>
+        [JsonIgnore] public double VSHS { get; private set; }
         /// <summary>Haun stage of Floral Initiation</summary>
         [JsonIgnore] public double FIHS { get; private set; }
         /// <summary>Haun Stage of Terminal Spikelet</summary>
@@ -228,23 +245,20 @@ namespace Models.PMF.Phen
             if ((isImbibed==true) && (isAtFlagLeaf == false))
             {
                 ZeroDeltas();
-
-                if (isEmerged == false)
-                    dHS = tt.Value() / (basePhyllochron.Value() * 0.75); //dhs from phenology is incorrect here because photoperiod will be zero.
-                else
-                    dHS = dhs.Value();
-
-                if ((hs.Value() >= CompetenceHS) && (isCompetent == false))
+                dHS = CalcdHS(tt.Value(), HS, BasePhyllochron);
+                if (isEmerged == true)
+                    HS += dHS; //dhs from phenology is incorrect here because photoperiod will be zero.
+                
+                if ((HS >= CompetenceHS) && (isCompetent == false))
                     isCompetent = true;
 
                 // Work out base, cold induced Vrn1 expression and methalyation until vernalisation is complete
                 if (isVernalised == false)
-                {    // If methalated Vrn1 expression is less that Vrn1Target do Vrn1 upregulation
-                    if (MethVrn1 < Vrn1Target)
-                    {
-                        dBaseVrn1 = CalcBaseUpRegVrn1(tt.Value(), dHS, Params.BaseDVrn1);
-                        dColdVrn1 = CalcColdUpRegVrn1(tt.Value(), dHS, Params.MaxDVrn1, k);
-                    }
+                {
+                    VSHS = haunStage.Value();
+                    dBaseVrn1 = CalcBaseUpRegVrn1(tt.Value(), dHS, Params.BaseDVrn1);
+                    dColdVrn1 = CalcColdUpRegVrn1(tt.Value(), dHS, Params.MaxDVrn1, k);
+                    
                     // If Vrn1(base + cold) equals Vrn1Target methalate coldVrn1.  BaseVrn1 is all methalated every day
                     if (isMethalating ==true)
                         dMethColdVrn1 = Math.Max(0,Math.Min(dColdVrn1, ColdVrn1));
@@ -257,27 +271,22 @@ namespace Models.PMF.Phen
 
                 // Then work out Vrn2 expression 
                 if ((isVernalised == false) && (isCompetent == true))
-                    dVrn2 = CalcdPPVrn(pp.Value(), baseDVrn2, Params.MaxDVrn2, dHS);
-                Vrn2 += dVrn2;
-                Vrn1Target = 1.0 + Vrn2;
-
+                {
+                    SDDurationFactor = Math.Max(0.5, SDDurationFactor - (1 - CalcdPPVrn(pp.Value(), 0, 1, 1)) / 35);
+                    dVrn2 = CalcdPPVrn(pp.Value(), baseDVrn2, Params.MaxDVrn2, 1) * SDDurationFactor;
+                    Vrn2 = Math.Max(0, dVrn2 - MethVrn1);
+                }
+                 
                 // Workout if methalation of cold response has started
-                if ((Vrn1 >= Vrn1Target) && (isMethalating == false))
+                if ((Vrn1 >= MethalationThreshold) && (isMethalating == false))
                     isMethalating = true;
 
-                // Then work out if vernalisation is complete
-                if ((MethVrn1 >= Vrn1Target) && (isCompetent == true) && (isVernalised == false))
+                // Work out if vernalisation is complete
+                if ((MethVrn1 >= 1.0) && (Vrn2 ==0.0) && (isCompetent == true) && (isVernalised == false))
                 {
                     isVernalised = true;
-                    Vrn1atVS = MethVrn1;
-                }
-
-                // Downregulate Vrn1 expression if Vrn1Target has been reached
-                if((isMethalating==true)&&(isVernalised==false)&&dColdVrn1>0)
-                {
-                    double dDRVrn1 = Vrn1 - Vrn1Target;
-                    double dDRColdVrn1 = Math.Min(dDRVrn1, Math.Min(dColdVrn1 + dBaseVrn1, ColdVrn1));
-                    ColdVrn1 -= dDRColdVrn1;
+                    Vrn1atVS = Vrn1;
+                    MethVrn1 = Vrn1;
                 }
 
                 // Then work out Vrn3 expression
@@ -294,15 +303,15 @@ namespace Models.PMF.Phen
                 if ((Vrn1 >= (Vrn1atVS + 1.0)) && (isReproductive == false))
                     isReproductive = true;
                 if (isInduced == false)
-                    FIHS = hs.Value();
+                    FIHS = haunStage.Value();
                 if (isReproductive == false)
                 {
-                    TSHS = hs.Value();
+                    TSHS = haunStage.Value();
                     FLN = 2.86 + 1.1 * TSHS;
                 }
 
                 //Finally work out if Flag leaf has appeared.
-                if (hs.Value() >= FLN)
+                if (haunStage.Value() >= FLN)
                     isAtFlagLeaf = true;
             }
         }
@@ -347,12 +356,14 @@ namespace Models.PMF.Phen
             FIHS = 0;
             TSHS = 0;
             FLN = 2.86;
-            Vrn1Target = 1.0;
             ZeroDeltas();
             Vrn1atVS = 100;
+            SDDurationFactor = 1.0;
+            HS = 0;
         }
         private void ZeroDeltas()
         {
+            dHS = 0;
             dBaseVrn1 = 0;
             dColdVrn1 = 0;
             dMethColdVrn1 = 0;
