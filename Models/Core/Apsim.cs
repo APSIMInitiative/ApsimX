@@ -48,7 +48,7 @@
         /// <param name="value">The value to set the property to</param>
         public static void Set(IModel model, string namePath, object value)
         {
-            Locator(model).Set(namePath, model as Model, value);
+            model.FindInPath(namePath).Value = value;
         }
 
         /// <summary>
