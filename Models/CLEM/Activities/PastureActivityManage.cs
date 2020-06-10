@@ -22,7 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages a pasture by allocating land, tracking pasture state and ecological indicators and communicating with a pasture production database.")]
-    [Version(1, 0, 2, "Now supports generic pasture production database")]
+    [Version(1, 0, 2, "Now supports generic pasture production data reader")]
     [Version(1, 0, 2, "Added ecological indicator calculations")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Pasture/ManagePasture.htm")]
@@ -38,7 +38,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Land type where pasture is located")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Land type where pasture is located required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(Land) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(Land) })]
         public string LandTypeNameToUse { get; set; }
 
         /// <summary>
@@ -46,15 +46,15 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Pasture to manage")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Pasture required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(GrazeFoodStore) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) })]
         public string FeedTypeName { get; set; }
 
         /// <summary>
         /// Name of the model for the pasture input file
         /// </summary>
-        [Description("Name of pasture growth database reader")]
+        [Description("Name of pasture data reader")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Pasture production database reader required")]
-        [Models.Core.Display(Type = DisplayType.CLEMGraspFileName)]
+        [Models.Core.Display(Type = DisplayType.CLEMPastureFileReader)]
         public string PastureDataReader { get; set; }
 
         /// <summary>
@@ -211,11 +211,12 @@ namespace Models.CLEM.Activities
 
                 //Now we have a stocking rate and we have starting values for Land Condition and Grass Basal Area
                 //get the starting pasture data list from Pasture reader
-                GetPastureDataList_TodayToNextEcolCalculation();
-
-                SetupStartingPasturePools(StartingAmount);
+                if (FilePasture != null)
+                {
+                    GetPastureDataList_TodayToNextEcolCalculation();
+                    SetupStartingPasturePools(StartingAmount);
+                }
             }
-
         }
 
         /// <summary>
