@@ -108,6 +108,15 @@
         }
 
         /// <summary>
+        /// Find a child with a given name.
+        /// </summary>
+        /// <param name="name">Name of the child.</param>
+        public IModel FindChild(string name)
+        {
+            return FindAllChildren(name).FirstOrDefault();
+        }
+
+        /// <summary>
         /// Find a descendant with a given name.
         /// </summary>
         /// <param name="name">Name of the descendant.</param>
@@ -141,6 +150,15 @@
         public T FindSibling<T>()
         {
             return FindAllSiblings<T>().FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Find a child with a given type.
+        /// </summary>
+        /// <typeparam name="T">Type of the child.</typeparam>
+        public T FindChild<T>()
+        {
+            return FindAllChildren<T>().FirstOrDefault();
         }
 
         /// <summary>
@@ -178,6 +196,16 @@
         public T FindSibling<T>(string name)
         {
             return FindAllSiblings<T>(name).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Find a child with a given type and name.
+        /// </summary>
+        /// <param name="name">Name of the child.</param>
+        /// <typeparam name="T">Type of the child.</typeparam>
+        public T FindChild<T>(string name)
+        {
+            return FindAllChildren<T>(name).FirstOrDefault();
         }
 
         /// <summary>
@@ -238,6 +266,15 @@
         }
 
         /// <summary>
+        /// Find all children of the given type.
+        /// </summary>
+        /// <typeparam name="T">Type of children to return.</typeparam>
+        public IEnumerable<T> FindAllChildren<T>()
+        {
+            return FindAllChildren().OfType<T>();
+        }
+
+        /// <summary>
         /// Find all models of a given type in scope.
         /// </summary>
         /// <typeparam name="T">Type of models to find.</typeparam>
@@ -254,6 +291,16 @@
         public IEnumerable<T> FindAllSiblings<T>(string name)
         {
             return FindAllSiblings(name).OfType<T>();
+        }
+
+        /// <summary>
+        /// Find all children with the given type and name.
+        /// </summary>
+        /// <typeparam name="T">Type of children to return.</typeparam>
+        /// <param name="name">Name of the children.</param>
+        public IEnumerable<T> FindAllChildren<T>(string name)
+        {
+            return FindAllChildren(name).OfType<T>();
         }
 
         /// <summary>
@@ -293,6 +340,15 @@
         public IEnumerable<IModel> FindAllSiblings(string name)
         {
             return FindAllSiblings().Where(s => s.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+        }
+
+        /// <summary>
+        /// Find all children with a given name.
+        /// </summary>
+        /// <param name="name">Name of the children.</param>
+        public IEnumerable<IModel> FindAllChildren(string name)
+        {
+            return FindAllChildren().Where(c => c.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
         }
 
         /// <summary>
@@ -362,6 +418,14 @@
             foreach (IModel sibling in Parent.Children)
                 if (sibling != this)
                     yield return sibling;
+        }
+
+        /// <summary>
+        /// Returns all children models.
+        /// </summary>
+        public IEnumerable<IModel> FindAllChildren()
+        {
+            return Children;
         }
 
         /// <summary>
