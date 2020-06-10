@@ -334,7 +334,12 @@
     <Compile Include="Plant\Structure\LeafCulms.cs" />
     <Compile Include="PostSimulationTools\SimulationStats.cs" />
     <Compile Include="Report\VariableGroup.cs" />
-    <Compile Include="Sensitivity\CroptimizR.cs" />
+    <Compile Include="Optimisation\Criteria.cs" />
+    <Compile Include="Optimisation\CroptimizR.cs" />
+    <Compile Include="Optimisation\DreamZs.cs" />
+    <Compile Include="Optimisation\IOptimizationMethod.cs" />
+    <Compile Include="Optimisation\Likelihood.cs" />
+    <Compile Include="Optimisation\Simplex.cs" />
     <Compile Include="Soils\Nutrients\INutrientPool.cs" />
     <Compile Include="Soils\SoilTemp\SoilTemperature.cs" />
     <Compile Include="Soils\Standardiser\Layers.cs" />
