@@ -432,25 +432,6 @@
             return allowableModels;
         }
 
-        /// <summary>
-        /// Gets the locater model for the specified model.
-        /// </summary>
-        /// <param name="model">The model to find the locator for</param>
-        /// <returns>The an instance of a locater class for the specified model. Never returns null.</returns>
-        private static Locater Locator(IModel model)
-        {
-            var simulation = Apsim.Parent(model, typeof(Simulation)) as Simulation;
-            if (simulation == null)
-            {
-                // Simulation can be null if this model is not under a simulation e.g. DataStore.
-                return new Locater();
-            }
-            else
-            {
-                return simulation.Locater;
-            }
-        }
-
         /// <summary>Encapsulates a model that can be added to another model.</summary>
         public class ModelDescription : IComparable<ModelDescription>
         {
