@@ -219,7 +219,14 @@
         /// <returns>A list of all children</returns>
         public static IModel Child(IModel model, Type typeFilter)
         {
-            return model.Children.Find(m => typeFilter.IsAssignableFrom(m.GetType()));
+            if (model == null)
+                return null;
+
+            MethodInfo[] methods = model.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance);
+            MethodInfo find = methods.FirstOrDefault(m => m.Name == "FindChild" && m.IsGenericMethod && m.GetParameters().Count() == 0);
+            if (find == null)
+                throw new Exception($"Unable to find find method");
+            return find.MakeGenericMethod(typeFilter).Invoke(model, null) as IModel;
         }
 
         /// <summary>
@@ -231,7 +238,7 @@
         /// <returns>A list of all children</returns>
         public static IModel Child(IModel model, string name)
         {
-            return model.Children.Find(m => m.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+            return model.FindChild(name);
         }
         
         /// <summary>
@@ -243,7 +250,14 @@
         /// <returns>A list of all children</returns>
         public static List<IModel> Children(IModel model, Type typeFilter)
         {
-            return model.Children.FindAll(m => typeFilter.IsAssignableFrom(m.GetType())).ToList<IModel>();
+            if (model == null)
+                return null;
+
+            MethodInfo[] methods = model.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance);
+            MethodInfo find = methods.FirstOrDefault(m => m.Name == "FindAllChildren" && m.IsGenericMethod && m.GetParameters().Count() == 0);
+            if (find == null)
+                throw new Exception($"Unable to find find method");
+            return (find.MakeGenericMethod(typeFilter).Invoke(model, null) as IEnumerable<object>).OfType<IModel>().ToList();
         }
         
         /// <summary>
