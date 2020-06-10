@@ -611,9 +611,9 @@ namespace UserInterface.Presenters
                     cell.EditorType = EditorTypeEnum.DropDown;
                     List<string> fieldNames = new List<string>();
                     Simulation clemParent = Apsim.Parent(this.model, typeof(Simulation)) as Simulation;
-                    // get GRASP file names
-                    fieldNames.AddRange(Apsim.ChildrenRecursively(clemParent, typeof(FileGRASP)).Select(a => a.Name).ToList());
-                    fieldNames.AddRange(Apsim.ChildrenRecursively(clemParent, typeof(FileSQLiteGRASP)).Select(a => a.Name).ToList());
+                    // get Pasture file names
+                    fieldNames.AddRange(Apsim.ChildrenRecursively(clemParent, typeof(FilePasture)).Select(a => a.Name).ToList());
+                    fieldNames.AddRange(Apsim.ChildrenRecursively(clemParent, typeof(FileSQLitePasture)).Select(a => a.Name).ToList());
                     if (fieldNames.Count != 0)
                     {
                         cell.DropDownStrings = fieldNames.ToArray();
