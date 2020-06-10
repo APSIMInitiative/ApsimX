@@ -13,7 +13,7 @@ using Models.Core;
 
 namespace UserInterface.Presenters
 {
-    public class CloudJobPresenter : IPresenter
+    public sealed class CloudJobPresenter : IPresenter, IDisposable
     {
         /// <summary>
         /// The view displaying the list of cloud jobs.
@@ -277,6 +277,11 @@ namespace UserInterface.Presenters
                     return true;
 
             return false;
+        }
+
+        public void Dispose()
+        {
+            cancelToken.Dispose();
         }
     }
 }
