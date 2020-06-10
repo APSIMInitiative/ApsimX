@@ -287,6 +287,9 @@
         /// <summary>Main run method for performing our calculations and storing data.</summary>
         public void Run()
         {
+            if (dataStore?.Writer != null && !dataStore.Writer.TablesModified.Contains("Report"))
+                return;
+
             DataTable predictedData = dataStore.Reader.GetData("Report", filter: "SimulationName LIKE '" + Name + "%'", orderBy: "SimulationID");
             if (predictedData != null)
             {

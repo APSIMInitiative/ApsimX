@@ -39,6 +39,13 @@ namespace UnitTests
             }
         }
 
+        /// <summary>Call an event in a model and all child models.</summary>
+        public static void CallEventAll(IModel model, string eventName, object[] arguments = null)
+        {
+            CallEvent(model, eventName, arguments);
+            Apsim.ChildrenRecursively(model).ForEach(child => CallEvent(child, eventName, arguments));
+        }
+
         /// <summary>ResolveLinks in a model</summary>
         public static void ResolveLinks(IModel model)
         {

@@ -43,6 +43,7 @@
 
         public IStorageWriter Writer { get { return this; } }
 
+        public List<string> TablesModified { get; set; }
 
         public void Empty()
         {

@@ -132,6 +132,9 @@
         {
             if (!initialised)
                 SpinWait.SpinUntil(() => initialised);
+
+            if (storage?.Writer != null)
+                storage.Writer.TablesModified.Clear();
         }
 
         /// <summary>Called once when all jobs have completed running. Should throw on error.</summary>

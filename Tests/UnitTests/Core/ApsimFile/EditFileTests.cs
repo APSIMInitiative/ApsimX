@@ -28,6 +28,11 @@ namespace UnitTests.Core.ApsimFile
         /// </summary>
         private string fileName;
 
+        /// <summary>
+        /// Path to a second .apsimx file which has a few weather
+        /// nodes in it, which will be imported into the first
+        /// .apsimx file via the /Edit feature.
+        /// </summary>
         private string extFile;
 
         [SetUp]
@@ -73,6 +78,21 @@ namespace UnitTests.Core.ApsimFile
             wheat.ResourceName = "Wheat";
             Structure.Add(wheat, paddock);
 
+            Manager manager = new Manager();
+            manager.Code = @"using Models.PMF;
+using Models.Core;
+using System;
+namespace Models
+{
+    [Serializable]
+    public class Script : Model
+    {
+        [Description(""an amount"")]
+        public double Amount { get; set; }
+    }
+}";
+            Structure.Add(manager, paddock);
+
             basicFile.Write(basicFile.FileName);
             fileName = basicFile.FileName;
 
@@ -117,7 +137,10 @@ namespace UnitTests.Core.ApsimFile
                 $"[Weather4] = {extFile};[w2]",
 
                 // Change a property of a resource model.
-                "[Wheat].Leaf.Photosynthesis.RUE.FixedValue = 0.4"
+                "[Wheat].Leaf.Photosynthesis.RUE.FixedValue = 0.4",
+
+                // Change a property of a manager script.
+                "[Manager].Script.Amount = 1234",
             });
 
             string models = typeof(IModel).Assembly.Location;
@@ -129,7 +152,6 @@ namespace UnitTests.Core.ApsimFile
 
             // Children of simulation are, in order:
             // Clock, summary, zone, Weather, Weather2, w1, w2
-
             Assert.AreEqual(null, proc.StdOut);
             Assert.AreEqual(null, proc.StdErr);
 
@@ -177,6 +199,9 @@ namespace UnitTests.Core.ApsimFile
             var wheat = sim.Children[2].Children[2] as Plant;
             var rue = wheat.Children[6].Children[5].Children[0] as Constant;
             Assert.AreEqual(0.4, rue.FixedValue);
+
+            double amount = (double)Apsim.Get(sim, "[Manager].Script.Amount");
+            Assert.AreEqual(1234, amount);
         }
     }
 }
