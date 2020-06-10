@@ -170,7 +170,6 @@
             }
         }
 
-
         /// <summary>
         /// Locates and returns all models in scope of the specified type.
         /// </summary>
@@ -209,12 +208,6 @@
 
                 return newModel;
             }
-        }
-
-        /// <summary>Clears the cache</summary>
-        public static void ClearCache(IModel model)
-        {
-            Locator(model as Model).Clear();
         }
 
         /// <summary>

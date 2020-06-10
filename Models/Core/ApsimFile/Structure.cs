@@ -108,7 +108,7 @@
         {
             model.Name = newName;
             EnsureNameIsUnique(model);
-            Apsim.ClearCache(model);
+            Apsim.ClearCaches(model);
         }
 
         /// <summary>Move a model from one parent to another.</summary>
@@ -122,11 +122,11 @@
                 // Clear the cache for all models in scope of the model to be moved.
                 // The models in scope will be different after the move so we will
                 // need to do this again after we move the model.
-                Apsim.ClearCache(model);
+                Apsim.ClearCaches(model);
                 newParent.Children.Add(model as Model);
                 model.Parent = newParent;
                 EnsureNameIsUnique(model);
-                Apsim.ClearCache(model);
+                Apsim.ClearCaches(model);
             }
             else
                 throw new Exception("Cannot move model " + model.Name);
@@ -162,7 +162,6 @@
         /// <param name="model">The model.</param>
         public static bool Delete(IModel model)
         {
-            Apsim.ClearCache(model);
             Apsim.ClearCaches(model);
             return model.Parent.Children.Remove(model as Model);
         }

@@ -55,7 +55,7 @@
             {
                 this.parent.Children.Insert(pos, this.modelToDelete as Model);
                 this.explorerView.Tree.AddChild(Apsim.FullPath(this.parent), nodeDescription, pos);
-                Apsim.ClearCache(this.modelToDelete);
+                Apsim.ClearCaches(this.modelToDelete);
             }
         }
     }
