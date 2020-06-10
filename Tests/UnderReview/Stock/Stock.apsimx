@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 101,
+  "Version": 102,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -23,7 +23,7 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
-            "C:\\Users\\holzworthdp\\Repos\\ApsimX\\Tests\\UnderReview\\Stock\\LUDFValidateData.xlsx"
+            "LUDFValidateData.xlsx"
           ],
           "SheetNames": [
             "ValidationData",
@@ -85,7 +85,7 @@
             },
             {
               "$type": "Models.Weather, Models",
-              "FileName": "C:\\Users\\holzworthdp\\Repos\\ApsimX\\Examples\\WeatherFiles\\lincoln.met",
+              "FileName": "%root%\\Examples\\WeatherFiles\\lincoln.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "Children": [],
@@ -66174,7 +66174,7 @@
             },
             {
               "$type": "Models.Weather, Models",
-              "FileName": "C:\\Users\\holzworthdp\\Repos\\ApsimX\\Tests\\WeatherFiles\\Ginninderra.met",
+              "FileName": "%root%\\Tests\\WeatherFiles\\Ginninderra.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "Children": [],
