@@ -33,6 +33,17 @@
         public Simulation SimulationToRun { get; private set; } = null;
 
         /// <summary>
+        /// Returns the job's progress as a real number in range [0, 1].
+        /// </summary>
+        public double Progress
+        {
+            get
+            {
+                return SimulationToRun?.Progress ?? 0;
+            }
+        }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="sim">The simulation to run.</param>

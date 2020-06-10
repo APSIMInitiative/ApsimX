@@ -105,7 +105,7 @@ namespace UserInterface.Presenters
 
             if (this.model != null)
             {
-                FindAllProperties(this.model);
+                properties = FindAllProperties(this.model);
                 if (grid.DataSource == null)
                     PopulateGrid(this.model);
                 else
@@ -145,7 +145,7 @@ namespace UserInterface.Presenters
                     if (value)
                         properties = properties.Where(p => !p.DataType.IsArray).ToList();
                     else
-                        FindAllProperties(model);
+                        properties = FindAllProperties(model);
                     PopulateGrid(model);
                 }
             }
@@ -260,7 +260,7 @@ namespace UserInterface.Presenters
             if (model == null)
                 return;
             properties.Clear();
-            FindAllProperties(model);
+            properties.AddRange(FindAllProperties(model));
             PopulateGrid(model);
         }
 
@@ -268,22 +268,22 @@ namespace UserInterface.Presenters
         /// Find all properties from the model and fill this.properties.
         /// </summary>
         /// <param name="model">The mode object</param>
-        protected virtual void FindAllProperties(IModel model)
+        protected virtual List<IVariable> FindAllProperties(object model)
         {
-            this.model = model;
+            List<IVariable> properties = new List<IVariable>();
+
             bool filterByCategory = !((this.CategoryFilter == "") || (this.CategoryFilter == null));
             bool filterBySubcategory = !((this.SubcategoryFilter == "") || (this.SubcategoryFilter == null));
-            if (this.model != null)
+            if (model != null)
             {
                 var orderedMembers = GetMembers(model);
-                properties.Clear();
                 foreach (MemberInfo member in orderedMembers)
                 {
                     IVariable property = null;
                     if (member is PropertyInfo)
-                        property = new VariableProperty(this.model, member as PropertyInfo);
+                        property = new VariableProperty(model, member as PropertyInfo);
                     else if (member is FieldInfo)
-                        property = new VariableField(this.model, member as FieldInfo);
+                        property = new VariableField(model, member as FieldInfo);
 
                     if (property != null && property.Description != null && property.Writable)
                     {
@@ -305,10 +305,10 @@ namespace UserInterface.Presenters
 
                         if (includeProperty && filterByCategory)
                         {
-                            bool hasCategory = Attribute.IsDefined(member,typeof(CategoryAttribute), false);
+                            bool hasCategory = Attribute.IsDefined(member, typeof(CategoryAttribute), false);
                             if (hasCategory)
                             {
-                                CategoryAttribute catAtt = (CategoryAttribute)Attribute.GetCustomAttribute(member,typeof(CategoryAttribute));
+                                CategoryAttribute catAtt = (CategoryAttribute)Attribute.GetCustomAttribute(member, typeof(CategoryAttribute));
                                 if (catAtt.Category == this.CategoryFilter)
                                 {
                                     if (filterBySubcategory)
@@ -322,12 +322,12 @@ namespace UserInterface.Presenters
                                     {
                                         includeProperty = true;
                                     }
-                                } 
+                                }
                                 else
                                 {
                                     includeProperty = false;
                                 }
-                                
+
                             }
                             else
                             {
@@ -340,6 +340,12 @@ namespace UserInterface.Presenters
                                     includeProperty = false;
                             }
                         }
+
+                        if (property.Display != null && property.Display.Type == DisplayType.SubModel && property.Value != null)
+                        {
+                            includeProperty = false;
+                            properties.AddRange(FindAllProperties(property.Value));
+                        }
 			
                         if (includeProperty)
                             properties.Add(property);
@@ -349,6 +355,8 @@ namespace UserInterface.Presenters
                     }
                 }
             }
+
+            return properties;
         }
 
         /// <summary>

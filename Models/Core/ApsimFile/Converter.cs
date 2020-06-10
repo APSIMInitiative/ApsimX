@@ -19,7 +19,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 100; } }
+        public static int LatestVersion { get { return 102; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -2237,6 +2237,36 @@
                     simpleGrazing["FractionDefoliatedNToSoil"] = arr;
                 }
             }
+        }
+
+        /// <summary>
+        /// Add canopy width Function.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion101(JObject root, string fileName)
+        {
+            foreach (JObject Leaf in JsonUtilities.ChildrenOfType(root, "Leaf"))
+            {
+                JsonUtilities.AddConstantFunctionIfNotExists(Leaf, "WidthFunction", "0");
+
+                VariableReference varRef = new VariableReference();
+                varRef.Name = "DepthFunction";
+                varRef.VariableName = "[Leaf].Height";
+
+                JsonUtilities.AddModel(Leaf, varRef);
+            }
+        }
+
+        /// <summary>
+        /// Rename Models.Sensitivity.CroptimizR to Models.Optimisation.CroptimizR.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion102(JObject root, string fileName)
+        {
+            foreach (JObject croptimizR in JsonUtilities.ChildrenRecursively(root, "CroptimizR"))
+                croptimizR["$type"] = croptimizR["$type"].ToString().Replace("Sensitivity", "Optimisation");
         }
 
         /// <summary>

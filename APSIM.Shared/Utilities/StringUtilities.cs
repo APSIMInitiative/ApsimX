@@ -4,6 +4,7 @@ namespace APSIM.Shared.Utilities
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.Specialized;
+    using System.Globalization;
 
     /// <summary>
     /// Static functions for string manipulation
@@ -775,7 +776,7 @@ namespace APSIM.Shared.Utilities
                 TextToken(ref parseSt, out token);
                 token = "-" + token;
             }
-            bool result = int.TryParse(token, out n); // Parse the integer
+            bool result = int.TryParse(token, NumberStyles.Any, CultureInfo.InvariantCulture, out n); // Parse the integer
             if (result)
                 inSt = parseSt;
             return result;
@@ -818,7 +819,7 @@ namespace APSIM.Shared.Utilities
                     token = "";          // This forces a FALSE return
             }
 
-            bool result = Single.TryParse(token, out x); // Parse the value
+            bool result = Single.TryParse(token, System.Globalization.NumberStyles.Any, CultureInfo.InvariantCulture, out x); // Parse the value
             if (result)
                 inSt = parseSt;
             return result;
@@ -861,7 +862,7 @@ namespace APSIM.Shared.Utilities
                     token = "";          // This forces a FALSE return
             }
 
-            bool result = Double.TryParse(token, out x); // Parse the value
+            bool result = Double.TryParse(token, System.Globalization.NumberStyles.Any, CultureInfo.InvariantCulture, out x); // Parse the value
             if (result)
                 inSt = parseSt;
             return result;

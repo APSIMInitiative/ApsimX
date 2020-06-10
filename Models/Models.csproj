@@ -184,6 +184,7 @@
     <Compile Include="CLEM\WarningLog.cs" />
     <Compile Include="Core\Apsim710File\Importer.cs" />
     <Compile Include="Core\ApsimFile\ConverterReturnType.cs" />
+    <Compile Include="Core\ApsimFile\EditFile.cs" />
     <Compile Include="Core\ApsimFile\JsonUtilities.cs" />
     <Compile Include="Core\ApsimFile\Structure.cs" />
     <Compile Include="Core\ApsimFile\XmlConverters.cs" />
@@ -256,6 +257,7 @@
     <Compile Include="Core\Run\EmptyJob.cs" />
     <Compile Include="Core\Run\GenerateApsimXFiles.cs" />
     <Compile Include="Core\Run\IReplacement.cs" />
+    <Compile Include="Core\Run\IReportsStatus.cs" />
     <Compile Include="Core\Run\ISimulationDescriptionGenerator.cs" />
     <Compile Include="Core\Run\SimulationGroup.cs" />
     <Compile Include="Core\Run\ModelReplacement.cs" />
@@ -318,7 +320,11 @@
     <Compile Include="Plant\Interfaces\IPlantDamage.cs" />
     <Compile Include="Plant\Organs\BasialBuds.cs" />
     <Compile Include="Plant\Phenology\Phases\DAWSPhase.cs" />
+    <Compile Include="Plant\Phenology\Phases\VernalisationPhase.cs" />
     <Compile Include="Plant\Phenology\Phases\SimpleLeafAppearancePhase.cs" />
+    <Compile Include="Plant\Phenology\Responses\CalcCAMPVrnRates.cs" />
+    <Compile Include="Plant\Phenology\Responses\CAMP.cs" />
+    <Compile Include="Plant\Phenology\Responses\IVrn1Expression.cs" />
     <Compile Include="Plant\Phenology\Scales\Age.cs" />
     <EmbeddedResource Include="Resources\Scripts\GraphPanelScriptTemplate.cs" />
     <EmbeddedResource Include="Resources\Scripts\CSharpExpressionTemplate.cs" />
@@ -328,6 +334,12 @@
     <Compile Include="Plant\Structure\LeafCulms.cs" />
     <Compile Include="PostSimulationTools\SimulationStats.cs" />
     <Compile Include="Report\VariableGroup.cs" />
+    <Compile Include="Optimisation\Criteria.cs" />
+    <Compile Include="Optimisation\CroptimizR.cs" />
+    <Compile Include="Optimisation\DreamZs.cs" />
+    <Compile Include="Optimisation\IOptimizationMethod.cs" />
+    <Compile Include="Optimisation\Likelihood.cs" />
+    <Compile Include="Optimisation\Simplex.cs" />
     <Compile Include="Soils\Nutrients\INutrientPool.cs" />
     <Compile Include="Soils\SoilTemp\SoilTemperature.cs" />
     <Compile Include="Soils\Standardiser\Layers.cs" />
@@ -873,6 +885,8 @@
     <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Beef\Ujimqin x Angus %282nd cross%29.json" />
     <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Beef\Ujimqin x Charolais %281st cross%29.json" />
     <EmbeddedResource Include="Resources\GrazPlan\Genotypes\Cattle\Beef\Ujimqin x Charolais %282nd cross%29.json" />
+    <EmbeddedResource Include="Resources\RScripts\OptimizR.r" />
+    <EmbeddedResource Include="Resources\RScripts\InstallPackageGithub.R" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">

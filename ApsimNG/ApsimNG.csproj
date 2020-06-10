@@ -186,6 +186,7 @@
     <Compile Include="Cloud\Azure\Licence.cs" />
     <Compile Include="Cloud\DownloadOptions.cs" />
     <Compile Include="EventArguments\CustomDataEventArgs.cs" />
+    <Compile Include="Presenters\DocumentationPresenter.cs" />
     <Compile Include="Views\CloudDownloadView.cs" />
     <Compile Include="Cloud\ICloudInterface.cs" />
     <Compile Include="Cloud\JobDetails.cs" />
@@ -468,6 +469,7 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\Stics.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SimulationStats.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Draft.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Grapevine.png" />
@@ -475,6 +477,10 @@
     <EmbeddedResource Include="Resources\TreeViewImages\ThreeHourSin.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\GenotypeCross.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RelationshipTracker.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CalcCAMPVrnRates.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\FinalLeafNumberSet.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\VernalisationPhase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CAMP.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\MigrantDestinationPhase.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\ProgenyDestinationPhase.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Infestation.png" />

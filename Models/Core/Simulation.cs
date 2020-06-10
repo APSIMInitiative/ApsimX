@@ -107,6 +107,21 @@ namespace Models.Core
             }
         }
 
+        /// <summary>
+        /// Returns the job's progress as a real number in range [0, 1].
+        /// </summary>
+        public double Progress
+        {
+            get
+            {
+                Clock c = Apsim.Child(this, typeof(Clock)) as Clock;
+                if (c == null)
+                    return 0;
+                else
+                    return c.FractionComplete;
+            }
+        }
+
         /// <summary>Is the simulation running?</summary>
         public bool IsRunning { get; private set; } = false;
 
@@ -283,19 +298,6 @@ namespace Models.Core
         {
             model.Children.RemoveAll(child => !child.Enabled);
             model.Children.ForEach(child => RemoveDisabledModels(child));
-        }
-
-        /// <summary>Gets the simulation fraction complete.</summary>
-        public double FractionComplete
-        {
-            get
-            {
-                Clock c = Apsim.Child(this, typeof(Clock)) as Clock;
-                if (c == null)
-                    return 0;
-                else
-                    return c.FractionComplete;
-            }
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
