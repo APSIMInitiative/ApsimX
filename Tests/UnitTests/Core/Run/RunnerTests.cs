@@ -528,7 +528,7 @@
             sim1.Children.Add(testPostSim);
 
             Simulations sims = Simulations.Create(new[] { sim1, sim2, new DataStore() });
-            Apsim.InitialiseModel(sims);
+            Utilities.InitialiseModel(sims);
 
             Runner runner = new Runner(sims, simulationNamesToRun: new[] { "sim1" });
             List<Exception> errors = runner.Run();

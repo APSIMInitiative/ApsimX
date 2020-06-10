@@ -16,6 +16,18 @@ namespace UnitTests
     public class Utilities
     {
         /// <summary>
+        /// Parent all children of 'model' and call 'OnCreated' in each child.
+        /// </summary>
+        /// <param name="model">The model to parent</param>
+        public static void InitialiseModel(IModel model)
+        {
+            model.ParentAllDescendants();
+            model.OnCreated();
+            foreach (var child in model.FindAllDescendants())
+                child.OnCreated();
+        }
+
+        /// <summary>
         /// Event handler for a job runner's <see cref="IJobRunner.AllJobsCompleted"/> event.
         /// Asserts that the job ran successfully.
         /// </summary>

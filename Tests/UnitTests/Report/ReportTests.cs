@@ -59,7 +59,7 @@
                 }
             };
 
-            Apsim.InitialiseModel(simulations);
+            Utilities.InitialiseModel(simulations);
             simulation = simulations.Children[0] as Simulation;
             runner = new Runner(simulation);
             storage = simulation.Children[0] as MockStorage;
@@ -479,7 +479,7 @@
         {
             var model = new MockModel() { Z = new double[] { 1, 2, 3 } };
             simulation.Children.Add(model);
-            Apsim.InitialiseModel(simulation);
+            Utilities.InitialiseModel(simulation);
 
             report.VariableNames = new string[] { "[MockModel].Z[3]" };
 
@@ -500,7 +500,7 @@
             simulation.Children.Remove(storage);
             var datastore = new DataStore();
             simulation.Children.Add(datastore);
-            Apsim.InitialiseModel(simulation);
+            Utilities.InitialiseModel(simulation);
 
             report.VariableNames = new string[] { "[MockModel].Z[3:]" };
 
@@ -532,7 +532,7 @@
             simulation.Children.Remove(storage);
             var datastore = new DataStore();
             simulation.Children.Add(datastore);
-            Apsim.InitialiseModel(simulation); Apsim.InitialiseModel(simulation);
+            Utilities.InitialiseModel(simulation);
 
             report.VariableNames = new string[] { "[MockModel].Z[:2]" };
 
@@ -563,7 +563,7 @@
             simulation.Children.Remove(storage);
             var datastore = new DataStore();
             simulation.Children.Add(datastore);
-            Apsim.InitialiseModel(simulation); Apsim.InitialiseModel(simulation);
+            Utilities.InitialiseModel(simulation);
 
             report.VariableNames = new string[] { "[MockModel].Z[2:3]" };
 
@@ -659,7 +659,7 @@ namespace Models
             };
 
             simulation.Children.Add(model);
-            Apsim.InitialiseModel(simulation);
+            Utilities.InitialiseModel(simulation);
 
             report.VariableNames = new string[] 
             { 

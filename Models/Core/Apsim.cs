@@ -308,31 +308,6 @@
             model.ParentAllDescendants();
         }
 
-        /// <summary>
-        /// Parent all children of 'model' and call 'OnCreated' in each child.
-        /// </summary>
-        /// <param name="model">The model to parent</param>
-        public static void InitialiseModel(IModel model)
-        {
-            ParentAllChildren(model);
-            model.OnCreated();
-            foreach (var child in Apsim.ChildrenRecursively(model))
-                child.OnCreated();
-        }
-
-        /// <summary>
-        /// Parent all children of 'model'.
-        /// </summary>
-        /// <param name="model">The model to parent</param>
-        public static void UnparentAllChildren(IModel model)
-        {
-            foreach (IModel child in model.Children)
-            {
-                child.Parent = null;
-                UnparentAllChildren(child);
-            }
-        }
-
         /// <summary>Return true if the child can be added to the parent.</summary>
         /// <param name="parent">The parent model.</param>
         /// <param name="childType">The child type.</param>
