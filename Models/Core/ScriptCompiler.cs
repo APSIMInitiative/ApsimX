@@ -1,12 +1,16 @@
 ﻿namespace Models.Core
 {
     using System;
-    using System.CodeDom.Compiler;
+    // using System.CodeDom.Compiler;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Text.RegularExpressions;
+    using APSIM.Shared.Utilities;
+    using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.CSharp;
+    using Microsoft.CodeAnalysis.VisualBasic;
 
     /// <summary>Encapsulates the ability to compile a c# script into an assembly.</summary>
     [Serializable]
@@ -16,7 +20,7 @@
         private static object haveTrappedAssemblyResolveEventLock = new object();
         private const string tempFileNamePrefix = "APSIM";
         [NonSerialized]
-        private CodeDomProvider provider;
+        ///// private CodeDomProvider provider;
         private List<PreviousCompilation> previousCompilations = new List<PreviousCompilation>();
 
         /// <summary>Constructor.</summary>
@@ -51,49 +55,58 @@
         /// <param name="model">The model owning the script.</param>
         /// <param name="referencedAssemblies">Optional referenced assemblies.</param>
         /// <returns>Compile errors or null if no errors.</returns>
-        public Results Compile(string code, IModel model, IEnumerable<string> referencedAssemblies = null)
+        public Results Compile(string code, IModel model, IEnumerable<MetadataReference> referencedAssemblies = null)
         {
             string errors = null;
 
             if (code != null)
             {
                 // See if we have compiled the code already. If so then no need to compile again.
-                var compilation = previousCompilations.Find(c => c.Code == code);
+                PreviousCompilation compilation = previousCompilations.Find(c => c.Code == code);
 
                 bool newlyCompiled;
                 if (compilation == null || compilation.Code != code)
                 {
                     newlyCompiled = true;
 
-                    var assemblies = GetReferenceAssemblies(referencedAssemblies, model.Name);
+                    IEnumerable<MetadataReference> assemblies = GetReferenceAssemblies(referencedAssemblies, model.Name);
 
                     // We haven't compiled the code so do it now.
-                    var result = CompileTextToAssembly(code, assemblies);
-                    if (result.Errors.Count > 0)
-                    {
-                        // Errors were found. Add then to the return error string.
-                        errors = null;
-                        foreach (CompilerError err in result.Errors)
-                            errors += $"Line {err.Line}: {err.ErrorText}{Environment.NewLine}";
+                    Compilation compiled = CompileTextToAssembly(code, assemblies);
 
-                        // Because we have errors, remove the previous compilation if there is one.
-                        if (compilation != null)
-                            previousCompilations.Remove(compilation);
-                        compilation = null;
-                    }
-                    else
+                    MemoryStream ms = new MemoryStream();
+                    MemoryStream pdbStream = new MemoryStream();
                     {
-                        // No errors.
-                        // If we don't have a previous compilation, create one.
-                        if (compilation == null)
+                        var emitResult = compiled.Emit(ms, pdbStream);
+                        if (!emitResult.Success)
                         {
-                            compilation = new PreviousCompilation() { ModelFullPath = Apsim.FullPath(model) };
-                            previousCompilations.Add(compilation);
-                        }
+                            // Errors were found. Add then to the return error string.
+                            errors = null;
+                            foreach (Diagnostic diag in emitResult.Diagnostics)
+                                if (diag.Severity == DiagnosticSeverity.Error)
+                                    errors += $"{diag.ToString()}{Environment.NewLine}";
 
-                        // Set the compilation properties.
-                        compilation.Code = code;
-                        compilation.CompiledAssembly = result.CompiledAssembly;
+                            // Because we have errors, remove the previous compilation if there is one.
+                            if (compilation != null)
+                                previousCompilations.Remove(compilation);
+                            compilation = null;
+                        }
+                        else
+                        {
+                            // No errors.
+                            // If we don't have a previous compilation, create one.
+                            if (compilation == null)
+                            {
+                                compilation = new PreviousCompilation() { ModelFullPath = Apsim.FullPath(model) };
+                                previousCompilations.Add(compilation);
+                            }
+
+                            // Set the compilation properties.
+                            ms.Seek(0, SeekOrigin.Begin);
+                            compilation.Code = code;
+                            compilation.Reference = compiled.ToMetadataReference();
+                            compilation.CompiledAssembly = System.Runtime.Loader.AssemblyLoadContext.Default.LoadFromStream(ms);
+                        }
                     }
                 }
                 else
@@ -133,24 +146,31 @@
         /// <summary>Gets a list of assembly names that are needed for compiling.</summary>
         /// <param name="referencedAssemblies"></param>
         /// <param name="modelName">Name of model.</param>
-        private IEnumerable<string> GetReferenceAssemblies(IEnumerable<string> referencedAssemblies, string modelName)
+        private IEnumerable<MetadataReference> GetReferenceAssemblies(IEnumerable<MetadataReference> referencedAssemblies, string modelName)
         {
-            IEnumerable<string> references = new string[] 
+            string runtimePath = Path.GetDirectoryName(typeof(object).Assembly.Location);
+
+            IEnumerable<MetadataReference> references = new MetadataReference[] 
             {
-                "System.dll", 
-                "System.Xml.dll", 
-                "System.Windows.Forms.dll",
-                "System.Data.dll", 
-                "System.Core.dll", 
-                Assembly.GetExecutingAssembly().Location,
-                Assembly.GetEntryAssembly()?.Location,             // Not sure why this can be null in unit tests.
-                typeof(MathNet.Numerics.Fit).Assembly.Location,
-                typeof(APSIM.Shared.Utilities.MathUtilities).Assembly.Location,
+               MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+               MetadataReference.CreateFromFile(Path.Join(runtimePath, "mscorlib.dll")),
+               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.dll")),
+               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Collections.dll")),
+               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Runtime.dll")),
+               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Core.dll")),
+               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Data.dll")),
+               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Xml.dll")),
+               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Xml.ReaderWriter.dll")),
+               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Private.Xml.dll")),
+               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Data.dll")),
+               MetadataReference.CreateFromFile(typeof(MathUtilities).Assembly.Location),
+               MetadataReference.CreateFromFile(typeof(IModel).Assembly.Location),
+               MetadataReference.CreateFromFile(typeof(MathNet.Numerics.Fit).Assembly.Location)
             };
 
             if (previousCompilations != null)
                 references = references.Concat(previousCompilations.Where(p => !p.ModelFullPath.Contains($".{modelName}"))
-                                                                   .Select(p => p.CompiledAssembly.Location));
+                                                                   .Select(p => p.Reference));
             if (referencedAssemblies != null)
                 references = references.Concat(referencedAssemblies);
             
@@ -164,30 +184,31 @@
         /// <param name="code">The code to compile.</param>
         /// <param name="referencedAssemblies">Any referenced assemblies.</param>
         /// <returns>Any compile errors or null if compile was successful.</returns>
-        private CompilerResults CompileTextToAssembly(string code, IEnumerable<string> referencedAssemblies = null)
+        private Compilation CompileTextToAssembly(string code, IEnumerable<MetadataReference> referencedAssemblies = null)
         {
-            if (provider == null)
-                provider = CodeDomProvider.CreateProvider(CodeDomProvider.GetLanguageFromExtension(".cs"));
-
+            SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(code);
             var assemblyFileNameToCreate = Path.ChangeExtension(Path.Combine(Path.GetTempPath(), tempFileNamePrefix + Guid.NewGuid().ToString()), ".dll");
 
-            CompilerParameters parameters = new CompilerParameters
+            bool VB = code.IndexOf("Imports System") != -1;
+            Compilation compilation;
+            if (VB)
             {
-                GenerateInMemory = false,
-                OutputAssembly = assemblyFileNameToCreate
-            };
-            string sourceFileName = Path.ChangeExtension(assemblyFileNameToCreate, ".cs");
-            File.WriteAllText(sourceFileName, code);
+                compilation = VisualBasicCompilation.Create(
+                Path.GetFileNameWithoutExtension(assemblyFileNameToCreate),
+                new[] { syntaxTree },
+                referencedAssemblies,
+                new VisualBasicCompilationOptions(OutputKind.DynamicallyLinkedLibrary)); ;
+            }
+            else
+            {
+                compilation = CSharpCompilation.Create(
+                    Path.GetFileNameWithoutExtension(assemblyFileNameToCreate),
+                    new[] { syntaxTree },
+                    referencedAssemblies,
+                    new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)); ;
+            }
 
-            parameters.OutputAssembly = Path.ChangeExtension(assemblyFileNameToCreate, ".dll");
-            parameters.TreatWarningsAsErrors = false;
-            parameters.IncludeDebugInformation = true;
-            parameters.WarningLevel = 2;
-            foreach (var referencedAssembly in referencedAssemblies)
-                parameters.ReferencedAssemblies.Add(referencedAssembly);
-            parameters.TempFiles = new TempFileCollection(Path.GetTempPath());  // ensure that any temp files are in a writeable area
-            parameters.TempFiles.KeepFiles = false;
-            return provider.CompileAssemblyFromFile(parameters, new string[] { sourceFileName });
+            return compilation;
         }
 
         /// <summary>Cleanup old files.</summary>
@@ -257,6 +278,11 @@
 
             /// <summary>The compiled assembly.</summary>
             public Assembly CompiledAssembly { get; set; }
+
+            /// <summary>
+            /// A reference to the compiled assembly
+            /// </summary>
+            public MetadataReference Reference { get; set; }
         }
     }
 }
