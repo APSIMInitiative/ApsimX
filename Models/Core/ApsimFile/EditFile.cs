@@ -77,7 +77,7 @@ namespace Models.Core.ApsimFile
 
             foreach (CompositeFactor factor in factors)
             {
-                IVariable variable = Apsim.GetVariableObject(file, factor.Paths[0]);
+                IVariable variable = file.FindByPath(factor.Paths[0]);
                 if (variable == null)
                     throw new Exception($"Invalid path: {factor.Paths[0]}");
 

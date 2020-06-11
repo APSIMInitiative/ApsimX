@@ -38,7 +38,7 @@
             // change the property value in all paddocks.
             foreach (Zone paddock in Apsim.ChildrenRecursively(simulation, typeof(Zone)))
             {
-                IVariable variable = Apsim.GetVariableObject(paddock, path);
+                IVariable variable = paddock.FindByPath(path);
                 if (variable != null)
                     variable.Value = replacement;
             }

@@ -125,7 +125,7 @@
             if (xProperty != null)
             {
                 string propertyName = xProperty.GetValue(xYPairs.Parent, null).ToString();
-                IVariable variable = Apsim.GetVariableObject(xYPairs, propertyName);
+                IVariable variable = xYPairs.FindByPath(propertyName);
                 if (variable != null && variable.UnitsLabel != null)
                 {
                     return propertyName + " " + variable.UnitsLabel;
