@@ -2288,6 +2288,9 @@
                 // Apsim.GetVariableObject(model, path) -> model.FindByPath(path)
                 FixGetVariableObject(manager);
 
+                // Apsim.Ancestor<T>(model) -> model.FindAncestor<T>()
+                FixAncestor(manager);
+
                 manager.Save();
             }
 
@@ -2325,6 +2328,20 @@
                     string replace = @"$1.FindByPath($2)";
                     if (match.Groups[1].Value.Contains(" "))
                         replace = replace.Replace("$1", "($1)");
+
+                    return Regex.Replace(match.Value, pattern, replace);
+                });
+            }
+
+
+            void FixAncestor(ManagerConverter manager)
+            {
+                string pattern = @"Apsim\.Ancestor<([^>]+)>\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
+                manager.ReplaceRegex(pattern, match =>
+                {
+                    string replace = @"$2.FindAncestor<$1>($3)";
+                    if (match.Groups[2].Value.Contains(" "))
+                        replace = replace.Replace("$2", "($2)");
 
                     return Regex.Replace(match.Value, pattern, replace);
                 });
