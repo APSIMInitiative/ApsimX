@@ -6,6 +6,9 @@ using UserInterface.Presenters;
 using UserInterface.Views;
 using System.IO;
 using System.Reflection;
+using Models;
+using Models.Core;
+using Models.Core.Run;
 
 /// <summary>
 /// This script selects all nodes in the wheat example, then closes the
@@ -23,17 +26,19 @@ public class Script
 		string bin = Path.GetDirectoryName(typeof(MainPresenter).Assembly.Location);
         string apsimx = Path.Combine(bin, "..");
 		string wheatExample = Path.Combine(apsimx, "Examples", "Wheat.apsimx");
-		OpenFile(mainPresenter, wheatExample);
+		string tempFile = Path.GetTempFileName();
+		File.Copy(wheatExample, tempFile, true);
+		OpenFile(mainPresenter, tempFile);
 		
 		// Cycle through all nodes in the simulations tree.
         CycleThroughNodes(mainPresenter);
-
+		RunFile(mainPresenter);
 		// Close the tab.
 		mainPresenter.CloseTab(0, onLeft: true);
 		while (GLib.MainContext.Iteration());
 			
 		// Try and delete the .db file.
-		string dbFile = Path.ChangeExtension(wheatExample, ".db");
+		string dbFile = Path.ChangeExtension(tempFile, ".db");
 		File.Delete(dbFile);
 		
         // Close the user interface.
@@ -57,4 +62,18 @@ public class Script
 		
 		presenter = null;
     }
+	
+	private void RunFile(MainPresenter mainPresenter)
+	{
+		ExplorerPresenter presenter = mainPresenter.Presenters1[0] as ExplorerPresenter;
+        if (presenter == null)
+            throw new Exception("Unable to open wheat example.");
+		
+		Clock clock = Apsim.Find(presenter.ApsimXFile, typeof(Clock)) as Clock;
+		clock.EndDate = clock.StartDate.AddDays(10);
+		
+		Runner runner = new Runner(presenter.ApsimXFile, runType: Runner.RunTypeEnum.MultiThreaded);
+		RunCommand command = new RunCommand("Simulations", runner, presenter);
+		command.Do(null);
+	}
 }
