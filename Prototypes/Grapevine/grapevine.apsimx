@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 281,
+  "ExplorerWidth": 300,
   "Version": 101,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -41,7 +41,15 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                ""
+                "[Phenology].EndoDormancy.Target.BaseTarget.FixedValue = 70.35",
+                "[Phenology].EndoDormancy.Progression.TemperatureResponse.X = -4.89,-4.88, 11.03,16.9,16.91",
+                "[Phenology].EndoDormancy.Progression.TemperatureResponse.Y = 0,1,1,1,0",
+                "[Phenology].Budding.Target.FixedValue = 806.78",
+                "[Phenology].Budding.Progression.TemperatureResponse.X = 0,2.03,12.03,22.03",
+                "[Phenology].ThermalTime.TemperatureResponse.MinTemp = 2.11",
+                "[Phenology].ThermalTime.TemperatureResponse.OptTemp = 30.72",
+                "[Phenology].ThermalTime.TemperatureResponse.MaxTemp = 38.71",
+                "[Phenology].Flowering.Target.FixedValue = 14.23"
               ],
               "Name": "Chardonnay",
               "Children": [],
@@ -52,7 +60,15 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                ""
+                "[Phenology].EndoDormancy.Target.BaseTarget.FixedValue = 70",
+                "[Phenology].EndoDormancy.Progression.TemperatureResponse.X = 1.07,1.08, 11.03,12.07,12.08",
+                "[Phenology].EndoDormancy.Progression.TemperatureResponse.Y = 0,1,1,1,0",
+                "[Phenology].Budding.Target.FixedValue = 548.4",
+                "[Phenology].Budding.Progression.TemperatureResponse.X = 0,1.21,11.21,21.21",
+                "[Phenology].ThermalTime.TemperatureResponse.MinTemp = 9.97",
+                "[Phenology].ThermalTime.TemperatureResponse.OptTemp = 22.84",
+                "[Phenology].ThermalTime.TemperatureResponse.MaxTemp = 35.02",
+                "[Phenology].Flowering.Target.FixedValue = 28.6"
               ],
               "Name": "Merlot",
               "Children": [],
@@ -63,7 +79,15 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                ""
+                "[Phenology].EndoDormancy.Target.BaseTarget.FixedValue = 70.35",
+                "[Phenology].EndoDormancy.Progression.TemperatureResponse.X = -4.89,-4.88, 11.03,16.9,16.91",
+                "[Phenology].EndoDormancy.Progression.TemperatureResponse.Y = 0,1,1,1,0",
+                "[Phenology].Budding.Target.FixedValue = 806.78",
+                "[Phenology].Budding.Progression.TemperatureResponse.X = 0,2.03,12.03,22.03",
+                "[Phenology].ThermalTime.TemperatureResponse.MinTemp = 2.11",
+                "[Phenology].ThermalTime.TemperatureResponse.OptTemp = 30.72",
+                "[Phenology].ThermalTime.TemperatureResponse.MaxTemp = 38.71",
+                "[Phenology].Flowering.Target.FixedValue = 14.23"
               ],
               "Name": "PinotNoir",
               "Children": [],
@@ -74,7 +98,15 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                ""
+                "[Phenology].EndoDormancy.Target.BaseTarget.FixedValue = 70.35",
+                "[Phenology].EndoDormancy.Progression.TemperatureResponse.X = -4.89,-4.88, 11.03,16.9,16.91",
+                "[Phenology].EndoDormancy.Progression.TemperatureResponse.Y = 0,1,1,1,0",
+                "[Phenology].Budding.Target.FixedValue = 806.78",
+                "[Phenology].Budding.Progression.TemperatureResponse.X = 0,2.03,12.03,22.03",
+                "[Phenology].ThermalTime.TemperatureResponse.MinTemp = 2.11",
+                "[Phenology].ThermalTime.TemperatureResponse.OptTemp = 30.72",
+                "[Phenology].ThermalTime.TemperatureResponse.MaxTemp = 38.71",
+                "[Phenology].Flowering.Target.FixedValue = 14.23"
               ],
               "Name": "PinotGris",
               "Children": [],
@@ -104,9 +136,9 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.WangEngelTempFunction, Models",
-                      "MinTemp": 4.0,
-                      "OptTemp": 28.0,
-                      "MaxTemp": 40.0,
+                      "MinTemp": 1.85,
+                      "OptTemp": 29.15,
+                      "MaxTemp": 39.86,
                       "RefTemp": 25.0,
                       "MaximumTemperatureWeighting": 0.5,
                       "Name": "TemperatureResponse",
@@ -116,8 +148,8 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.ThreeHourSin, Models",
-                      "TempRangeFactors": null,
+                      "$type": "Models.Functions.HourlySinPpAdjusted, Models",
+                      "Tsset": 0.0,
                       "Name": "InterpolationMethod",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -141,7 +173,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 71.3,
+                          "FixedValue": 69.3,
                           "Units": "hours",
                           "Name": "BaseTarget",
                           "Children": [],
@@ -417,7 +449,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 28.0,
+                      "FixedValue": 25.27,
                       "Units": null,
                       "Name": "Target",
                       "Children": [],
@@ -13581,7 +13613,7 @@
                           "Type": 3,
                           "Title": null,
                           "Inverted": false,
-                          "Minimum": "NaN",
+                          "Minimum": 180.0,
                           "Maximum": "NaN",
                           "Interval": "NaN",
                           "DateTimeAxis": false,
@@ -13592,7 +13624,7 @@
                           "Type": 0,
                           "Title": null,
                           "Inverted": false,
-                          "Minimum": "NaN",
+                          "Minimum": 180.0,
                           "Maximum": "NaN",
                           "Interval": "NaN",
                           "DateTimeAxis": false,
@@ -13632,7 +13664,7 @@
                           "Children": [
                             {
                               "$type": "Models.Regression, Models",
-                              "ForEachSeries": false,
+                              "ForEachSeries": true,
                               "showOneToOne": true,
                               "showEquation": true,
                               "Name": "Regression",
@@ -13865,7 +13897,7 @@
                           "MarkerSize": 0,
                           "Line": 4,
                           "LineThickness": 0,
-                          "TableName": "RowReport",
+                          "TableName": "Report",
                           "XFieldName": "Clock.Today.Year",
                           "YFieldName": "bunch.no.shoot",
                           "X2FieldName": null,
@@ -48621,7 +48653,7 @@
                   "Children": [
                     {
                       "$type": "Models.Weather, Models",
-                      "FileName": "LawnRoad.met",
+                      "FileName": "Site1001_BRA.met",
                       "ExcelWorkSheetName": "",
                       "Name": "Weather",
                       "Children": [],
@@ -50372,6 +50404,35 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Climate",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "BudBurstDOY",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Series1",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": false,
@@ -50527,6 +50588,73 @@
                               "ReadOnly": false
                             }
                           ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "BudBurstPredic1",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Climate",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today.Year",
+                          "YFieldName": "VeraisonDAWS",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Series1",
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
