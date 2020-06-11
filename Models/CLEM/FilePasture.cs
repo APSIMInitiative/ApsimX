@@ -12,23 +12,16 @@ using System.Globalization;
 namespace Models.CLEM
 {
     ///<summary>
-    /// Reads in GRASP file data and makes it available to other models.
+    /// Reads in pasture production datacube and makes it available to other models.
     ///</summary>
-    ///    
-    ///<remarks>
-    ///</remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")] //CLEMFileGRASPView
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")] //CLEMFileGRASPPresenter
-    // No longer supported. Ignore from tree or ability to add until deleted.
-    //[ValidParent(ParentType = typeof(ZoneCLEM))]
-    //[ValidParent(ParentType = typeof(ActivityFolder))]
-    //[ValidParent(ParentType = typeof(PastureActivityManage))]
-    [Description("This model holds a GRASP data file for native pasture used in the CLEM simulation.")]
-    [Version(1, 0, 2, "This component is no longer supported.\nUse the FileSQLiteGRASP reader for best performance.")]
+    [ViewName("UserInterface.Views.GridView")] 
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")] 
+    [Description("This component holds a Pasture database file for native pasture used in the CLEM simulation.")]
+    [Version(1, 0, 2, "This component is no longer supported.\nUse the FileSQLitePasture reader for best performance.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/DataReaders/GRASPDataReader.htm")]
-    public class FileGRASP : CLEMModel, IFileGRASP
+    [HelpUri(@"Content/Features/DataReaders/PastureDataReader.htm")]
+    public class FilePasture : CLEMModel, IFilePasture
     {
         /// <summary>
         /// A link to the clock model.
@@ -43,62 +36,62 @@ namespace Models.CLEM
         private ApsimTextFile reader = null;
 
         /// <summary>
-        /// The index of the climate region number column in the GRASP file
+        /// The index of the climate region number column in the Pasture database
         /// </summary>
         private int regionIndex;
 
         /// <summary>
-        /// The index of the soil number column in the GRASP file
+        /// The index of the soil number column in the Pasture database
         /// </summary>
         private int soilIndex;
 
         /// <summary>
-        /// The index of the forage number column in the GRASP file
+        /// The index of the forage number column in the Pasture database
         /// nb. This column is to be ignored.
-        /// It is a legacy column in the GRASP file and is not used any more.
+        /// It is a legacy column in the Pasture database and is not used any more.
         /// </summary>
         private int forageNoIndex;
 
         /// <summary>
-        /// The index of the grass basal area column in the GRASP file
+        /// The index of the grass basal area column in the Pasture database
         /// </summary>
         private int grassBAIndex;
 
         /// <summary>
-        /// The index of the land condition column in the GRASP file
+        /// The index of the land condition column in the Pasture database
         /// </summary>
         private int landConIndex;
 
         /// <summary>
-        /// The index of the stocking rate column in the GRASP file
+        /// The index of the stocking rate column in the Pasture database
         /// nb. a row does NOT exist for every stocking rate.
         /// instead only certain stocking rate categories have rows.
-        /// We need to find the closest categegory in the GRASP file
+        /// We need to find the closest categegory in the Pasture database
         /// to the actual stocking rate in any given month.
-        /// These stocking rate categories vary from GRASP file to GRASP file
+        /// These stocking rate categories vary between Pasture databases
         /// and are not standarised categories.
         /// </summary>
         private int stkRateIndex;
 
         /// <summary>
-        /// The index of the year number column in the GRASP file
+        /// The index of the year number column in the Pasture database
         /// This is NOT the actually date year, this is the number of
-        /// years since the start of the GRASP run that generated the
-        /// GRASP data. 
+        /// years since the start of the pasture model run that generated the
+        /// pasture data. 
         /// eg. it starts at 1 and goes up sequentially 
-        /// for however many years the GRASP run went for.
+        /// for however many years the pasture model run went for.
         /// </summary>
         private int yearNumIndex;
 
         /// <summary>
-        /// The index of the year column in the GRASP file.
+        /// The index of the year column in the Pasture database
         /// This is the actual date year
         /// eg.1975
         /// </summary>
         private int yearIndex;
 
         /// <summary>
-        /// The index of the cut number column in the GRASP file
+        /// The index of the cut number column in the Pasture database
         /// Some crops such as lucerne are ratooning crops.
         /// So we need to provide a cut number to keep track of
         /// how many harvests from the original planting of the
@@ -114,18 +107,18 @@ namespace Models.CLEM
         private int cutNumIndex;
 
         /// <summary>
-        /// The index of the month number column in the GRASP file
+        /// The index of the month number column in the Pasture database
         /// eg. 1 to 12 (for Jan to Dec)
         /// </summary>
         private int monthIndex;
 
         /// <summary>
-        /// The index of the growth amount column in the GRASP file
+        /// The index of the growth amount column in the Pasture database
         /// </summary>
         private int growthIndex;
 
         /// <summary>
-        /// The index of the by product 1 column in the GRASP file
+        /// The index of the by product 1 column in the Pasture database
         /// Crops can have by products that are produced as a consequence
         /// of growing the crop. 
         /// This is the amount of the first by product of this crop
@@ -135,7 +128,7 @@ namespace Models.CLEM
         private int bp1Index;
 
         /// <summary>
-        /// The index of the by product 2 (second) column in the GRASP file
+        /// The index of the by product 2 (second) column in the Pasture database
         /// Crops can have by products that are produced as a consequence
         /// of growing the crop. 
         /// This is the amount of the second by product of this crop
@@ -145,35 +138,35 @@ namespace Models.CLEM
         private int bp2Index;
 
         /// <summary>
-        /// The index of the utilisation column in the GRASP file
+        /// The index of the utilisation column in the Pasture database
         /// The fractional proportional green growth pasture growth that the animals ate.
         /// </summary>
         private int utilisnIndex;
 
         /// <summary>
-        /// The index of the soil loss column in the GRASP file
+        /// The index of the soil loss column in the Pasture database
         /// erosion caused to soil by your stocking number on this pasture growth.
         /// </summary>
         private int soillossIndex;
 
         /// <summary>
-        /// The index of the cover column in the GRASP file
+        /// The index of the cover column in the Pasture database
         /// fraction of the soil surface that has cover (both dead and green) over it.
         /// </summary>
         private int coverIndex;
 
         /// <summary>
-        /// The index of the tree basal area column in the GRASP file
+        /// The index of the tree basal area column in the Pasture database
         /// </summary>
         private int treeBAIndex;
 
         /// <summary>
-        /// The index of the rainfall column in the GRASP file
+        /// The index of the rainfall column in the Pasture database
         /// </summary>
         private int rainfallIndex;
 
         /// <summary>
-        /// The index of the runoff column in the GRASP file
+        /// The index of the runoff column in the Pasture database
         /// </summary>
         private int runoffIndex;
 
@@ -190,7 +183,7 @@ namespace Models.CLEM
         /// <summary>
         /// Constructor
         /// </summary>
-        public FileGRASP()
+        public FilePasture()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.FileReader;
         }
@@ -375,7 +368,7 @@ namespace Models.CLEM
         }
 
         /// <summary>
-        /// Searches the DataTable created from the GRASP File for all the distinct StkRate values.
+        /// Searches the DataTable created from the Pasture model for all the distinct StkRate values.
         /// </summary>
         /// <returns></returns>
         private double[] GetStkRateCategories()
@@ -396,12 +389,12 @@ namespace Models.CLEM
         }
 
         /// <summary>
-        /// Finds the closest Stocking Rate Category in the GRASP file for a given Stocking Rate.
-        ///The GRASP file does not have every stocking rate. 
-        ///Each GRASP file has its own set of stocking rate value categories
-        ///Need to find the closest the stocking rate category in the GRASP file for this stocking rate.
-        ///It will find the category with the next largest value to the actual stocking rate.
-        ///So if the stocking rate is 0 the category with the next largest value will normally be 1
+        /// Finds the closest Stocking Rate Category in the Pasture database for a given Stocking Rate.
+        /// The Pasture database does not have every stocking rate. 
+        /// Each Pasture database has its own set of stocking rate value categories
+        /// Need to find the closest the stocking rate category in the Pasture database for this stocking rate.
+        /// It will find the category with the next largest value to the actual stocking rate.
+        /// So if the stocking rate is 0 the category with the next largest value will normally be 1
         /// </summary>
         /// <param name="stockingRate"></param>
         /// <returns></returns>
@@ -416,8 +409,7 @@ namespace Models.CLEM
         }
 
         /// <summary>
-        /// Searches the DataTable created from the GRASP File using the specified parameters.
-        /// nb. Ignore ForageNo , it is a legacy column in the GRASP file that is not used anymore.
+        /// Searches the DataTable created from the Pasture database using the specified parameters.
         /// </summary>
         /// <param name="region"></param>
         /// <param name="soil"></param>
@@ -495,7 +487,7 @@ namespace Models.CLEM
         private void CheckAllMonthsWereRetrieved(List<PastureDataType> filtered, DateTime startDate, DateTime endDate,
             int region, string soil, double grassBasalArea, double landCondition, double stockingRate)
         {
-            string errormessageStart = "Problem with GRASP input file." + System.Environment.NewLine
+            string errormessageStart = "Problem with Pasture database file." + System.Environment.NewLine
                         + "For Region: " + region + ", Soil: " + soil 
                         + ", GrassBA: " + grassBasalArea + ", LandCon: " + landCondition + ", StkRate: " + stockingRate + System.Environment.NewLine;
 
@@ -608,7 +600,7 @@ namespace Models.CLEM
         }
 
         /// <summary>
-        /// Open the GRASP data file.
+        /// Open the pasture database file.
         /// </summary>
         /// <returns>True if the file was successfully opened</returns>
         public bool OpenDataFile()
@@ -868,7 +860,6 @@ namespace Models.CLEM
         /// <summary>
         /// Forage Number 
         /// nb. This column is to be ignored.
-        /// It is a legacy column in the GRASP file and is not used any more.
         /// </summary>
         public int ForageNo;
 

@@ -17,23 +17,21 @@ using System.Linq;
 namespace Models.CLEM
 {
     ///<summary>
-    /// SQLite database reader for access to GRASP data for other models.
+    /// SQLite database reader for access to Pasture database for other models.
     ///</summary>
-    ///<remarks>
-    ///</remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")] //CLEMFileSQLiteGRASPView
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")] //CLEMFileSQLiteGRASPPresenter
+    [ViewName("UserInterface.Views.GridView")] 
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")] 
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [ValidParent(ParentType = typeof(PastureActivityManage))]
-    [Description("This component reads a SQLite database with GRASP data for native pasture production used in the CLEM simulation.")]
+    [Description("This component reads a SQLite database with native pasture production used in the CLEM simulation.")]
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Added ability to define table and columns to use")]
     [Version(1, 0, 3, "Includes access to ecological indicators from database")]
     [Version(1, 0, 4, "Allow more categories of land condition and grass basal area in datacube lookup")]
-    [HelpUri(@"Content/Features/DataReaders/GRASPDataReaderSQL.htm")]
-    public class FileSQLiteGRASP : CLEMModel, IFileGRASP, IValidatableObject
+    [HelpUri(@"Content/Features/DataReaders/PastureDataReaderSQL.htm")]
+    public class FileSQLitePasture : CLEMModel, IFilePasture, IValidatableObject
     {
         /// <summary>
         /// A link to the clock model.
@@ -200,7 +198,7 @@ namespace Models.CLEM
         /// <summary>
         /// Constructor
         /// </summary>
-        public FileSQLiteGRASP()
+        public FileSQLitePasture()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.FileReader;
             this.SetDefaults();
@@ -267,7 +265,7 @@ namespace Models.CLEM
         }
 
         /// <summary>
-        /// Searches the DataTable created from the GRASP File for all the distinct values for the specified ColumnName.
+        /// Searches the DataTable created from the Pasture database for all the distinct values for the specified ColumnName.
         /// </summary>
         /// <returns>Sorted array of unique values for the column</returns>
         private double[] GetCategories(string columnName)
@@ -369,7 +367,7 @@ namespace Models.CLEM
                         if (!dBcolumns.Contains(col))
                         {
                             string[] memberNames = new string[] { "Missing SQLite database column" };
-                            results.Add(new ValidationResult("Unable to find column [o=" + col + "] in GRASP database [x=" + FullFileName + "] for [" + this.Name + "]", memberNames));
+                            results.Add(new ValidationResult("Unable to find column [o=" + col + "] in pasture database [x=" + FullFileName + "] for [" + this.Name + "]", memberNames));
                         }
                     }
                 }
@@ -518,7 +516,7 @@ namespace Models.CLEM
         /// <summary>
         /// Finds the closest Value of categorised lookup values form the database
         /// This applies to Stocking rates, Grass Basal Area (or use GBA) and Land Condition
-        /// The GRASP file does not have every stocking rate, grass basal area or land condition. 
+        /// The Pasture database does not have every stocking rate, grass basal area or land condition. 
         /// It will find the category with the next largest value to the actual value supplied.
         /// So if the value is 0 the category with the next largest value will normally be the first entry
         /// </summary>
@@ -541,7 +539,7 @@ namespace Models.CLEM
                     valuesToUse = distinctLandConditions;
                     break;
                 default:
-                    throw new ApsimXException(this, $"Unknown GRASP data cetegory [{category}] used in code behind [x={this.Name}]");
+                    throw new ApsimXException(this, $"Unknown Pasture data cetegory [{category}] used in code behind [x={this.Name}]");
             }
 
             // sorting not needed as now done at array creation
@@ -550,8 +548,7 @@ namespace Models.CLEM
         }
 
         /// <summary>
-        /// Queries the the GRASP SQLite database using the specified parameters.
-        /// nb. Ignore ForageNo , it is a legacy column in the GRASP file that is not used anymore.
+        /// Queries the the Pasture SQLite database using the specified parameters.
         /// </summary>
         /// <param name="region"></param>
         /// <param name="soil"></param>
@@ -695,7 +692,7 @@ namespace Models.CLEM
         private void CheckAllMonthsWereRetrieved(List<PastureDataType> filtered, DateTime startDate, DateTime endDate,
             int region, string soil, double grassBasalArea, double landCondition, double stockingRate)
         {
-            string errormessageStart = "Problem with GRASP input file." + System.Environment.NewLine
+            string errormessageStart = "Problem with pasture input file." + System.Environment.NewLine
                         + "For Region: " + region + ", Soil: " + soil 
                         + ", GrassBA: " + grassBasalArea + ", LandCon: " + landCondition + ", StkRate: " + stockingRate + System.Environment.NewLine;
 
