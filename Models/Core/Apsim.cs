@@ -255,15 +255,6 @@
             return model.FindAllDescendants().Where(m => !m.IsHidden).ToList();
         }
 
-        /// <summary>
-        /// Parent all children of 'model'.
-        /// </summary>
-        /// <param name="model">The model to parent</param>
-        public static void ParentAllChildren(IModel model)
-        {
-            model.ParentAllDescendants();
-        }
-
         /// <summary>Return true if the child can be added to the parent.</summary>
         /// <param name="parent">The parent model.</param>
         /// <param name="childType">The child type.</param>
