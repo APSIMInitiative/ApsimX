@@ -11,6 +11,7 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Text.RegularExpressions;
     using System.Xml;
 
     /// <summary>
@@ -19,7 +20,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 102; } }
+        public static int LatestVersion { get { return 103; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -2267,6 +2268,29 @@
         {
             foreach (JObject croptimizR in JsonUtilities.ChildrenRecursively(root, "CroptimizR"))
                 croptimizR["$type"] = croptimizR["$type"].ToString().Replace("Sensitivity", "Optimisation");
+        }
+
+        /// <summary>
+        /// Modify manager scripts to use the new generic model locator API.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion103(JObject root, string fileName)
+        {
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+            {
+                // Apsim.Get(model, path) -> model.FindByPath(path);
+                string pattern = @"Apsim\.Get\(([^,]+),\s*([^\),]+)[^\)]*\)";
+                manager.ReplaceRegex(pattern, m =>
+                {
+                    string replace = @"$1.FindByPath($2).Value";
+                    if (m.Groups[1].Value.Contains(" "))
+                        return replace = replace.Replace("$1", "($1)");
+                    return Regex.Replace(m.Value, pattern, replace);
+                });
+
+                manager.Save();
+            }
         }
 
         /// <summary>

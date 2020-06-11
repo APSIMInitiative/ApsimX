@@ -375,6 +375,27 @@
         }
 
         /// <summary>
+        /// Perform a search and replace in manager script.
+        /// </summary>
+        /// <param name="searchPattern">The pattern to search for.</param>
+        /// <param name="replacer">Delegate that returns a custom replacment string depending on the match..</param>
+        /// <param name="options">Regular expression options to use. Default value is none.</param>
+        public bool ReplaceRegex(string searchPattern, MatchEvaluator replacer, RegexOptions options = RegexOptions.None)
+        {
+            bool replacementDone = false;
+            string oldCode = ToString();
+            if (oldCode == null || searchPattern == null)
+                return false;
+            var newCode = Regex.Replace(oldCode, searchPattern, replacer, options);
+            if (newCode != oldCode)
+            {
+                Read(newCode);
+                replacementDone = true;
+            }
+            return replacementDone;
+        }
+
+        /// <summary>
         /// Add a declaration if it doesn't exist.
         /// </summary>
         /// <param name="typeName">The type name of the declaration.</param>
