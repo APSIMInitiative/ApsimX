@@ -91,7 +91,7 @@ namespace Models.Core
 
             // Parent all models.
             newSimulations.Parent = null;
-            Apsim.ParentAllChildren(newSimulations);
+            newSimulations.ParentAllDescendants();
 
             // Call OnCreated in all models.
             Apsim.ChildrenRecursively(newSimulations).ForEach(m => m.OnCreated());

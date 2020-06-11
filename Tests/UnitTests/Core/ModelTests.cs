@@ -72,7 +72,7 @@ namespace UnitTests.Core
                     }
                 }
             };
-            Apsim.ParentAllChildren(simpleModel);
+            simpleModel.ParentAllDescendants();
 
 
             container = simpleModel.Children[0];
@@ -129,7 +129,7 @@ namespace UnitTests.Core
                     new Zone() { Name = "zone2" }
                 }
             };
-            Apsim.ParentAllChildren(scopedSimulation);
+            scopedSimulation.ParentAllDescendants();
         }
 
         /// <summary>

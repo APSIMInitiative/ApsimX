@@ -61,7 +61,7 @@ namespace UnitTests
         /// <summary>ResolveLinks in a model</summary>
         public static void ResolveLinks(IModel model)
         {
-            Apsim.ParentAllChildren(model);
+            model.ParentAllDescendants();
             var links = new Links();
             links.Resolve(model, true, true);
         }
@@ -201,7 +201,7 @@ namespace UnitTests
                     }
                 }
             };
-            Apsim.ParentAllChildren(sims);
+            sims.ParentAllDescendants();
             sims.Write(sims.FileName);
             return sims;
         }

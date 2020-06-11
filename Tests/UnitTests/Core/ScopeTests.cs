@@ -55,7 +55,7 @@
                     new Zone() { Name = "zone2" }
                 }
             };
-            Apsim.ParentAllChildren(simulation);
+            simulation.ParentAllDescendants();
 
             // Ensure correct scoping from leaf1 (remember Plant is a scoping unit)
             var leaf1 = simulation.Children[2].Children[1].Children[0];

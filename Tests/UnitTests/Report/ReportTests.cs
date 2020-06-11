@@ -99,7 +99,7 @@
                 "[Clock].DoReport"
             };
             simulation.Children.AddRange(new[] { m1, m2 });
-            Apsim.ParentAllChildren(simulation);
+            simulation.ParentAllDescendants();
             m1.OnCreated();
             m2.OnCreated();
 

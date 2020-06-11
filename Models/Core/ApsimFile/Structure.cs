@@ -27,7 +27,7 @@
                 modelToAdd = s.Children[0];
 
             modelToAdd.Parent = parent;
-            Apsim.ParentAllChildren(modelToAdd);
+            modelToAdd.ParentAllDescendants();
             parent.Children.Add(modelToAdd as Model);
 
             // Ensure the model name is valid.

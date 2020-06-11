@@ -183,7 +183,7 @@
                     if (!hasBeenDeserialised)
                     {
                         // Parent all models.
-                        Apsim.ParentAllChildren(relativeTo);
+                        relativeTo.ParentAllDescendants();
 
                         // Call OnCreated in all models.
                         Apsim.ChildrenRecursively(relativeTo).ForEach(m => m.OnCreated());

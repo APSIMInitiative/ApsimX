@@ -198,7 +198,7 @@ namespace UserInterface.Presenters
             {
                 Graph graph = ReflectionUtilities.Clone(graphs[i]) as Graph;
                 graph.Parent = panel;
-                Apsim.ParentAllChildren(graph);
+                graph.ParentAllDescendants();
 
                 if (panel.LegendOutsideGraph)
                     graph.LegendOutsideGraph = true;

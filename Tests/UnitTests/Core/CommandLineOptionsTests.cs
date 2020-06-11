@@ -35,7 +35,7 @@ namespace UnitTests.Core
             sim4.Name = "Base";
 
             Simulations sims = Simulations.Create(new[] { sim1, sim2, sim3, sim4, new DataStore() });
-            Apsim.ParentAllChildren(sims);
+            sims.ParentAllDescendants();
 
             string apsimxFileName = Path.ChangeExtension(Path.GetTempFileName(), ".apsimx");
             sims.Write(apsimxFileName);

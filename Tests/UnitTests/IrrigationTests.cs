@@ -156,7 +156,7 @@
                 }
             };
 
-            Apsim.ParentAllChildren(zone);
+            zone.ParentAllDescendants();
             Apsim.ChildrenRecursively(zone).ForEach(m => m.OnCreated());
             var links = new Links();
             links.Resolve(zone, true);

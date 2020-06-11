@@ -225,7 +225,7 @@ namespace Models.Core
             if (!hasBeenDeserialised)
             {
                 // Parent all models.
-                Apsim.ParentAllChildren(this);
+                this.ParentAllDescendants();
 
                 // Call OnCreated in all models.
                 Apsim.ChildrenRecursively(this).ForEach(m => m.OnCreated());

@@ -100,7 +100,7 @@
 
                     // Make the model readonly if it's not under replacements.
                     SetNotVisible(modelFromResource, this.FindAncestor<Replacements>() == null);
-                    Apsim.ParentAllChildren(this);
+                    this.ParentAllDescendants();
                 }
             }
         }

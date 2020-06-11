@@ -271,7 +271,7 @@ namespace Models.Optimisation
                 newDataStore.Children.AddRange(storage.Children.Select(c => Apsim.Clone(c)));
 
             sims.Children.Add(newDataStore);
-            Apsim.ParentAllChildren(sims);
+            sims.ParentAllDescendants();
 
             sims.Write(apsimxFileName);
 

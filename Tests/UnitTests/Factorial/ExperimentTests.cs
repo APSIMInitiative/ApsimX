@@ -49,7 +49,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(experiment);
+            experiment.ParentAllDescendants();
 
             var sims = experiment.GenerateSimulationDescriptions();
             Assert.AreEqual(sims.Count, 2);
@@ -100,7 +100,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(experiment);
+            experiment.ParentAllDescendants();
 
             var sims = experiment.GenerateSimulationDescriptions();
             Assert.AreEqual(sims[0].Descriptors.Find(d => d.Name == "Experiment").Value, "Exp1");
@@ -171,7 +171,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(experiment);
+            experiment.ParentAllDescendants();
 
             var sims = experiment.GenerateSimulationDescriptions();
             Assert.AreEqual(sims[0].Descriptors.Find(d => d.Name == "Experiment").Value, "Exp1");
@@ -240,7 +240,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(experiment);
+            experiment.ParentAllDescendants();
 
             var sims = experiment.GenerateSimulationDescriptions();
             Assert.AreEqual(sims[0].Name, "Exp1Factor1");
@@ -340,7 +340,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(experiment);
+            experiment.ParentAllDescendants();
 
             var sims = experiment.GenerateSimulationDescriptions();
             Assert.AreEqual(sims[0].Name, "Exp1SiteGoondiwindi");
@@ -452,7 +452,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(experiment);
+            experiment.ParentAllDescendants();
 
             var sims = experiment.GenerateSimulationDescriptions();
             Assert.AreEqual(sims[0].Name, "Exp1Site1");
@@ -503,7 +503,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(experiment);
+            experiment.ParentAllDescendants();
 
             experiment.DisabledSimNames = new List<string>() { "Exp1MaxT10", "Exp1StartDate2003-11-01" };
 
@@ -571,7 +571,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(experiment);
+            experiment.ParentAllDescendants();
 
             var sims = experiment.GenerateSimulationDescriptions();
             Assert.AreEqual(sims.Count, 4);
@@ -682,7 +682,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(experiment);
+            experiment.ParentAllDescendants();
 
             var sims = experiment.GenerateSimulationDescriptions();
             Assert.AreEqual(sims.Count, 8);
@@ -839,7 +839,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(experiment);
+            experiment.ParentAllDescendants();
 
             var sims = experiment.GenerateSimulationDescriptions();
             Assert.AreEqual(sims.Count, 4);

@@ -83,7 +83,7 @@ namespace APSIMRunner
                         // We don't need to recompile any manager scripts and a simulation
                         // should be ready to run at this point following a binary 
                         // deserialisation.
-                        Apsim.ParentAllChildren(sim);
+                        sim.ParentAllDescendants();
                     }
                     else if (runnable is IModel model)
                     {
@@ -96,7 +96,7 @@ namespace APSIMRunner
                         model.Children.RemoveAll(m => m is DataStore);
                         model.Children.Add(storage);
 
-                        Apsim.ParentAllChildren(model);
+                        model.ParentAllDescendants();
                     }
 
                     // Initiate progress updates.

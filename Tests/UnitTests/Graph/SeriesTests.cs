@@ -30,7 +30,7 @@
                     },
                 }
             };
-            Apsim.ParentAllChildren(sim);
+            sim.ParentAllDescendants();
 
             string data =
                 "CheckpointName  SimulationName  Col1  Col2\r\n" +
@@ -92,7 +92,7 @@
                     },
                 }
             };
-            Apsim.ParentAllChildren(folder);
+            folder.ParentAllDescendants();
 
             string data =
                 "CheckpointName  SimulationName   Exp Col1  Col2\r\n" +
@@ -169,7 +169,7 @@
                     },
                 }
             };
-            Apsim.ParentAllChildren(folder);
+            folder.ParentAllDescendants();
 
             string data =
                 "CheckpointName  SimulationName     Irr  Fert   Col1  Col2\r\n" +
@@ -290,7 +290,7 @@
                     },
                 }
             };
-            Apsim.ParentAllChildren(folder);
+            folder.ParentAllDescendants();
 
             var series = folder.Children[1] as Series;
             var descriptors = series.GetDescriptorNames(reader).ToList();
@@ -428,7 +428,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(folder);
+            folder.ParentAllDescendants();
 
             var series = folder.Children[1] as Series;
             var descriptors = series.GetDescriptorNames(reader).ToList();
@@ -530,7 +530,7 @@
                     },
                 }
             };
-            Apsim.ParentAllChildren(sim);
+            sim.ParentAllDescendants();
 
             string data =
                 "CheckpointName  SimulationName  Col1  Col2\r\n" +
@@ -606,7 +606,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(folder);
+            folder.ParentAllDescendants();
 
             string data =
                 "CheckpointName  SimulationName     Exp Col1  Col2  Col3\r\n" +
@@ -667,7 +667,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(folder);
+            folder.ParentAllDescendants();
 
             string data =
                 "CheckpointName  SimulationName    Exp Col1  Col2\r\n" +
@@ -727,7 +727,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(folder);
+            folder.ParentAllDescendants();
 
             string data =
                 "CheckpointName  SimulationName   Zone Col1  Col2\r\n" +
@@ -805,7 +805,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(folder);
+            folder.ParentAllDescendants();
 
             string data =
                 "CheckpointName SimulationName Col1  Col2\r\n" +
@@ -866,7 +866,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(folder);
+            folder.ParentAllDescendants();
 
             string data =
                 " CheckpointName ABC  DEF Col1  Col2\r\n" +
@@ -941,7 +941,7 @@
                     },
                 }
             };
-            Apsim.ParentAllChildren(folder);
+            folder.ParentAllDescendants();
 
             string data =
                 "CheckpointName  SimulationName     Exp   A  Col1  Col2\r\n" +
@@ -991,7 +991,7 @@
                     },
                 }
             };
-            Apsim.ParentAllChildren(folder);
+            folder.ParentAllDescendants();
 
             string data =
                 "CheckpointName    SimulationID     Exp   A  Col1  Col2\r\n" +
@@ -1068,7 +1068,7 @@
             };
 
 
-            Apsim.ParentAllChildren(simulations);
+            simulations.ParentAllDescendants();
 
             string data =
                 "CheckpointName  SimulationName    Exp Col1  Col2\r\n" +
@@ -1152,7 +1152,7 @@
             };
 
 
-            Apsim.ParentAllChildren(simulations);
+            simulations.ParentAllDescendants();
 
             string data =
                 "CheckpointName  SimulationName Col1  Col2\r\n" +
@@ -1225,7 +1225,7 @@
                 }
             };
 
-            Apsim.ParentAllChildren(simulations);
+            simulations.ParentAllDescendants();
 
             string data =
                 "CheckpointName  SimulationName   A  Col1  Col2\r\n" +
@@ -1280,7 +1280,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(folder);
+            folder.ParentAllDescendants();
 
             string data =
                 "CheckpointName  SimulationName Predicted.Grain.Wt  Observed.Grain.Wt\r\n" +
@@ -1342,7 +1342,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(folder);
+            folder.ParentAllDescendants();
 
             string data =
                 "CheckpointName  SimulationName Predicted.Grain.Wt  Observed.Grain.Wt\r\n" +
@@ -1399,7 +1399,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(folder);
+            folder.ParentAllDescendants();
 
             string data =
                 "CheckpointName  SimulationName Predicted.Grain.Wt  Observed.Grain.Wt  Observed.Grain.WtError\r\n" +

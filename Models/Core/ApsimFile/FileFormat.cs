@@ -94,7 +94,7 @@
 
             // Parent all models.
             newModel.Parent = null;
-            Apsim.ParentAllChildren(newModel);
+            newModel.ParentAllDescendants();
 
             // Call created in all models.
             creationExceptions = new List<Exception>();

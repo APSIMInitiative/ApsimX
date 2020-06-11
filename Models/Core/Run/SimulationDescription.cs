@@ -141,7 +141,7 @@
                     newSimulation.Name = Name;
 
                 newSimulation.Parent = null;
-                Apsim.ParentAllChildren(newSimulation);
+                newSimulation.ParentAllDescendants();
                 replacementsToApply.ForEach(r => r.Replace(newSimulation));
 
                 // Give the simulation the descriptors.
