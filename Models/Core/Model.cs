@@ -486,12 +486,13 @@
         /// Returns null if not found.
         /// </summary>
         /// <param name="path">The path of the variable/model.</param>
+        /// <param name="ignoreCase">Perform a case-insensitive search?</param>
         /// <remarks>
         /// See <see cref="Locater"/> for more info about paths.
         /// </remarks>
-        public IVariable FindByPath(string path)
+        public IVariable FindByPath(string path, bool ignoreCase = false)
         {
-            return Locator().GetInternal(path, this);
+            return Locator().GetInternal(path, this, ignoreCase);
         }
 
         /// <summary>

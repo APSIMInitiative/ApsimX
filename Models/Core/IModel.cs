@@ -282,7 +282,8 @@ namespace Models.Core
         /// Returns null if not found.
         /// </summary>
         /// <param name="path">The path of the variable/model.</param>
-        IVariable FindByPath(string path);
+        /// <param name="ignoreCase">Perform a case-insensitive search?</param>
+        IVariable FindByPath(string path, bool ignoreCase = false);
 
         /// <summary>
         /// Called when the model has been newly created in memory whether from 
