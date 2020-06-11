@@ -2291,6 +2291,9 @@
                 // Apsim.Ancestor<T>(model) -> model.FindAncestor<T>()
                 FixAncestor(manager);
 
+                // Apsim.Siblings(model) -> model.FindAllSiblings()
+                FixSiblings(manager);
+
                 manager.Save();
             }
 
@@ -2342,6 +2345,19 @@
                     string replace = @"$2.FindAncestor<$1>($3)";
                     if (match.Groups[2].Value.Contains(" "))
                         replace = replace.Replace("$2", "($2)");
+
+                    return Regex.Replace(match.Value, pattern, replace);
+                });
+            }
+
+            void FixSiblings(ManagerConverter manager)
+            {
+                string pattern = @"Apsim\.Siblings\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
+                manager.ReplaceRegex(pattern, match =>
+                {
+                    string replace = @"$1.FindAllSiblings().ToList()";
+                    if (match.Groups[1].Value.Contains(" "))
+                        replace = replace.Replace("$1", "($1)");
 
                     return Regex.Replace(match.Value, pattern, replace);
                 });
