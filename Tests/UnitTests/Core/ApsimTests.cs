@@ -104,17 +104,14 @@
         [Test]
         public void AncestorTest()
         {
-            // Passing in null should return null.
-            Assert.Null(Apsim.Ancestor<IModel>(null));
-
             // Passing in the top-level simulations object should return null.
-            Assert.Null(Apsim.Ancestor<IModel>(simulations));
+            Assert.Null(simulations.FindAncestor<IModel>());
 
             // Passing in an object should never return that object
-            Assert.AreNotEqual(simulation, Apsim.Ancestor<Simulation>(simulation));
+            Assert.AreNotEqual(simulation, simulation.FindAncestor<Simulation>());
 
             // Searching for any IModel ancestor should return the node's parent.
-            Assert.AreEqual(simulation.Parent, Apsim.Ancestor<IModel>(simulation));
+            Assert.AreEqual(simulation.Parent, simulation.FindAncestor<IModel>());
         }
 
         /// <summary>

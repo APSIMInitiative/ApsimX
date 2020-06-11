@@ -124,7 +124,7 @@ namespace Models.Core.ApsimFile
                 IModel model = composite.Variables.FirstOrDefault(v => v is VariableObject obj && obj.Value is IModel)?.Value as IModel;
                 if (model != null)
                 {
-                    ModelCollectionFromResource resourceModel = Apsim.Ancestor<ModelCollectionFromResource>(model);
+                    ModelCollectionFromResource resourceModel = model.FindAncestor<ModelCollectionFromResource>();
                     if (resourceModel != null)
                         resourceModel.ResourceName = null;
 

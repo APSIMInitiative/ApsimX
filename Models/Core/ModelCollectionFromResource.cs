@@ -36,7 +36,7 @@
         {
             get
             {
-                if (Apsim.Ancestor<Replacements>(this) != null)
+                if (this.FindAncestor<Replacements>() != null)
                     return true;
 
                 if (string.IsNullOrEmpty(ResourceName))
@@ -99,7 +99,7 @@
                     CopyPropertiesFrom(modelFromResource);
 
                     // Make the model readonly if it's not under replacements.
-                    SetNotVisible(modelFromResource, Apsim.Ancestor<Replacements>(this) == null);
+                    SetNotVisible(modelFromResource, this.FindAncestor<Replacements>() == null);
                     Apsim.ParentAllChildren(this);
                 }
             }

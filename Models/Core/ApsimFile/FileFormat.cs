@@ -163,7 +163,7 @@
 
                         // If the model is under a replacements node, then serialize everything.
                         ModelCollectionFromResource resource = instance as ModelCollectionFromResource;
-                        if (Apsim.Ancestor<Replacements>(resource) != null)
+                        if (resource.FindAncestor<Replacements>() != null)
                             return true;
 
                         // Otherwise, only serialize if the property is inherited from
@@ -186,7 +186,7 @@
 
                 public object GetValue(object target)
                 {
-                    if (target is ModelCollectionFromResource m && Apsim.Ancestor<Replacements>(m) == null)
+                    if (target is ModelCollectionFromResource m && m.FindAncestor<Replacements>() == null)
                         return m.ChildrenToSerialize;
 
                     return new DynamicValueProvider(memberInfo).GetValue(target);
