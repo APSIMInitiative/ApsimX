@@ -56,7 +56,7 @@ namespace Models.Functions
         public double Value(int arrayIndex = -1)
         {
             string PropertyName = XProperty;
-            object v = Apsim.Get(this, PropertyName);
+            object v = this.FindByPath(PropertyName)?.Value;
             if (v == null)
                 throw new Exception("Cannot find value for " + Name + " XProperty: " + XProperty);
             double XValue;

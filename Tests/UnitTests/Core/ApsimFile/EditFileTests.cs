@@ -200,7 +200,7 @@ namespace Models
             var rue = wheat.Children[6].Children[5].Children[0] as Constant;
             Assert.AreEqual(0.4, rue.FixedValue);
 
-            double amount = (double)Apsim.Get(sim, "[Manager].Script.Amount");
+            double amount = (double)sim.FindByPath("[Manager].Script.Amount")?.Value;
             Assert.AreEqual(1234, amount);
         }
     }

@@ -263,7 +263,7 @@ namespace Models.Core
 
                 // If not found then find a model of the specified type.
                 if (modelToDocument == null)
-                    modelToDocument = Apsim.Get(simulation, "[" + modelNameToDocument + "]") as IModel;
+                    modelToDocument = simulation.FindByPath("[" + modelNameToDocument + "]")?.Value as IModel;
 
                 // If the simulation has the same name as the model we want to document, dig a bit deeper
                 if (modelToDocument == simulation)
@@ -284,7 +284,7 @@ namespace Models.Core
                     Simulation clonedSimulation = simDescription.ToSimulation();
 
                     // Now use the path to get the model we want to document.
-                    modelToDocument = Apsim.Get(clonedSimulation, pathOfModelToDocument) as IModel;
+                    modelToDocument = clonedSimulation.FindByPath(pathOfModelToDocument)?.Value as IModel;
 
                     if (modelToDocument == null)
                         throw new Exception("Cannot find model to document: " + modelNameToDocument);

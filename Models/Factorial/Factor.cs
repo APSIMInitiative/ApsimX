@@ -158,7 +158,7 @@
             if (experiment != null)
             {
                 var baseSimulation = Apsim.Child(experiment, typeof(Simulation));
-                IModel modelToReplace = Apsim.Get(baseSimulation, specification) as IModel;
+                IModel modelToReplace = baseSimulation.FindByPath(specification)?.Value as IModel;
                 if (modelToReplace == null)
                     throw new ApsimXException(this, "Cannot find model: " + specification);
                 foreach (IModel newModel in Children.Where(c => c.Enabled))

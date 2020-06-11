@@ -60,7 +60,7 @@
         {
             try
             {
-                parent = Apsim.Get(presenter.ApsimXFile, parentPath) as IModel;
+                parent = presenter.ApsimXFile.FindByPath(parentPath)?.Value as IModel;
                 if (parent == null)
                     throw new Exception("Cannot find model " + parentPath);
 

@@ -178,7 +178,7 @@
                             {
                                 object value;
                                 if (parameter.Value.StartsWith(".") || parameter.Value.StartsWith("["))
-                                    value = Apsim.Get(this, parameter.Value);
+                                    value = this.FindByPath(parameter.Value)?.Value;
                                 else if (property.PropertyType == typeof(IPlant))
                                     value = Apsim.Find(this, parameter.Value);
                                 else

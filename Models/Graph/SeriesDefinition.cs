@@ -450,14 +450,14 @@
                 if (modelWithData != null)
                 {
                     // Use reflection to access a property.
-                    object obj = Apsim.Get(modelWithData, namePath);
+                    object obj = modelWithData.FindByPath(namePath)?.Value;
                     if (obj != null && obj.GetType().IsArray)
                         return obj as Array;
                 }
             }
             else
             {
-                return Apsim.Get(series, fieldName) as IEnumerable;
+                return series.FindByPath(fieldName)?.Value as IEnumerable;
             }
 
             return null;

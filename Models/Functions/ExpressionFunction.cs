@@ -94,7 +94,7 @@ namespace Models.Functions
                 symFilled.m_type = ExpressionType.Variable;
                 symFilled.m_values = null;
                 symFilled.m_value = 0;
-                object sometypeofobject = Apsim.Get(RelativeTo, sym.m_name.Trim());
+                object sometypeofobject = RelativeTo.FindByPath(sym.m_name.Trim())?.Value;
                 if (sometypeofobject == null)
                     throw new Exception("Cannot find variable: " + sym.m_name + " in function: " + RelativeTo.Name);
                 if (sometypeofobject is Array)

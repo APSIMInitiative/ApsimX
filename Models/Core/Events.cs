@@ -65,7 +65,7 @@
             string eventName = StringUtilities.ChildName(eventNameAndPath, '.');
 
             // Get the component.
-            object component = Apsim.Get(relativeTo, componentName);
+            object component = relativeTo.FindByPath(componentName)?.Value;
             if (component == null)
                 throw new Exception(Apsim.FullPath(relativeTo) + " can not find the component: " + componentName);
 
@@ -93,7 +93,7 @@
             string eventName = StringUtilities.ChildName(eventNameAndPath, '.');
 
             // Get the component.
-            object component = Apsim.Get(relativeTo, componentName);
+            object component = relativeTo.FindByPath(componentName)?.Value;
             if (component == null)
                 throw new Exception(Apsim.FullPath(relativeTo) + " can not find the component: " + componentName);
 

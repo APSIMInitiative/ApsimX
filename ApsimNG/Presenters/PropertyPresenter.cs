@@ -1,4 +1,4 @@
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System;
     using System.Collections.Generic;
@@ -1039,7 +1039,7 @@ namespace UserInterface.Presenters
 
             if (property.Display != null && property.Display.Type == DisplayType.Model)
             {
-                object result = Apsim.Get(property.Object as IModel, cell.NewValue);
+                object result = (property.Object as IModel).FindByPath(cell.NewValue)?.Value;
                 if (result == null)
                     result = Apsim.Find(property.Object as IModel, cell.NewValue);
 

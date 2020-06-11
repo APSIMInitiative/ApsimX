@@ -81,7 +81,7 @@ namespace UnitTests
             Clock clock = Apsim.Find(sims, typeof(Clock)) as Clock;
             Simulation sim1 = Apsim.Find(sims, typeof(Simulation)) as Simulation;
             Simulation sim2 = Apsim.Find(sims, "Sim2") as Simulation;
-            Soil soil = Apsim.Get(sims, ".Simulations.Sim1.Field.Soil") as Soil;
+            Soil soil = sims.FindByPath(".Simulations.Sim1.Field.Soil")?.Value as Soil;
 
             // Check property values - they should be unchanged at this point.
             DateTime start = new DateTime(2003, 11, 15);
@@ -102,13 +102,13 @@ namespace UnitTests
 
             // Get references to the changed models.
             clock = Apsim.Find(sims, typeof(Clock)) as Clock;
-            Clock clock2 = Apsim.Get(sims, ".Simulations.SimulationVariant35.Clock") as Clock;
+            Clock clock2 = sims.FindByPath(".Simulations.SimulationVariant35.Clock")?.Value as Clock;
 
             // Sims should have at least 3 children - data store and the 2 sims.
             Assert.That(sims.Children.Count > 2);
             sim1 = sims.Children.OfType<Simulation>().First();
             sim2 = sims.Children.OfType<Simulation>().Last();
-            soil = Apsim.Get(sims, ".Simulations.Sim1.Field.Soil") as Soil;
+            soil = sims.FindByPath(".Simulations.Sim1.Field.Soil")?.Value as Soil;
 
             start = new DateTime(2019, 1, 20);
             DateTime end = new DateTime(2019, 3, 20);

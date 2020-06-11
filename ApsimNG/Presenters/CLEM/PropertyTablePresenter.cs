@@ -1,4 +1,4 @@
-
+﻿
 namespace UserInterface.Presenters
 {
     using System;
@@ -795,7 +795,7 @@ namespace UserInterface.Presenters
                 return Apsim.Find(property.Object as IModel, newValue);
 
             if (property.Display != null && property.Display.Type == DisplayType.Model)
-                return Apsim.Get(property.Object as IModel, newValue);
+                return (property.Object as IModel).FindByPath(newValue)?.Value;
 
             try
             {

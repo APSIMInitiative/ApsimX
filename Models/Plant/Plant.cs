@@ -157,7 +157,7 @@
             SowingData = new SowPlant2Type();
             IsAlive = false;
 
-            string photosyntheticPathway = (string) Apsim.Get(this, "Leaf.Photosynthesis.FCO2.PhotosyntheticPathway");
+            string photosyntheticPathway = (string) this.FindByPath("Leaf.Photosynthesis.FCO2.PhotosyntheticPathway")?.Value;
             IsC4 = photosyntheticPathway != null && photosyntheticPathway == "C4";
             Legumosity = 0;
         }

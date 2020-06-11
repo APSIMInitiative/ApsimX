@@ -265,7 +265,7 @@
 
                     // Find child
                     string childName = line.Replace("[Document ", "").Replace("]", "");
-                    IModel child = Apsim.Get(model, childName) as IModel;
+                    IModel child = model.FindByPath(childName)?.Value as IModel;
                     if (child == null)
                         paragraphSoFar += "<b>Unknown child name: " + childName + " </b>\r\n";
                     else
@@ -321,7 +321,7 @@
                     string macro = line.Substring(posMacro + 1, posEndMacro - posMacro - 1);
                     try
                     {
-                        object value = Apsim.Get(model, macro, true);
+                        object value = model.FindByPath(macro, true)?.Value;
                         if (value != null)
                         {
                             line = line.Remove(posMacro, posEndMacro - posMacro + 1);

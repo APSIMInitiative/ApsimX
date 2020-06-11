@@ -537,7 +537,7 @@
             List<MenuDescriptionArgs> descriptions = new List<MenuDescriptionArgs>();
             
             // Get the selected model.
-            object selectedModel = Apsim.Get(this.ApsimXFile, nodePath);
+            object selectedModel = this.ApsimXFile.FindByPath(nodePath)?.Value;
 
             // Go look for all [UserInterfaceAction]
             foreach (MethodInfo method in typeof(ContextMenu).GetMethods())
@@ -681,7 +681,7 @@
         {
             if (this.view.Tree.SelectedNode != string.Empty)
             {
-                object model = Apsim.Get(this.ApsimXFile, this.view.Tree.SelectedNode);
+                object model = this.ApsimXFile.FindByPath(this.view.Tree.SelectedNode)?.Value;
 
                 if (model != null)
                 {
@@ -790,7 +790,7 @@
         {
             e.Allow = false;
 
-            Model parentModel = Apsim.Get(this.ApsimXFile, e.NodePath) as Model;
+            Model parentModel = this.ApsimXFile.FindByPath(e.NodePath)?.Value as Model;
             if (parentModel != null)
             {
                 DragObject dragObject = e.DragObject as DragObject;
@@ -803,7 +803,7 @@
         /// </summary>
         public void DownloadSoil()
         {
-            Model model = Apsim.Get(this.ApsimXFile, this.CurrentNodePath) as Model;
+            Model model = this.ApsimXFile.FindByPath(this.CurrentNodePath)?.Value as Model;
             if (model != null)
             { 
                 Utility.SoilDownloadDialog dlg = new Utility.SoilDownloadDialog();
@@ -816,7 +816,7 @@
         /// </summary>
         public void DownloadWeather()
         {
-            Model model = Apsim.Get(this.ApsimXFile, this.CurrentNodePath) as Model;
+            Model model = this.ApsimXFile.FindByPath(this.CurrentNodePath)?.Value as Model;
             if (model != null)
             {
                 Utility.WeatherDownloadDialog dlg = new Utility.WeatherDownloadDialog();
@@ -880,7 +880,7 @@
         /// <param name="e">Drag arguments</param>
         private void OnDragStart(object sender, DragStartArgs e)
         {
-            Model obj = Apsim.Get(this.ApsimXFile, e.NodePath) as Model;
+            Model obj = this.ApsimXFile.FindByPath(e.NodePath)?.Value as Model;
             if (obj != null)
             {
                 string st = FileFormat.WriteToString(obj);
@@ -902,7 +902,7 @@
             try
             {
                 string toParentPath = e.NodePath;
-                Model toParent = Apsim.Get(this.ApsimXFile, toParentPath) as Model;
+                Model toParent = this.ApsimXFile.FindByPath(toParentPath)?.Value as Model;
 
                 DragObject dragObject = e.DragObject as DragObject;
                 if (dragObject != null && toParent != null)
@@ -922,7 +922,7 @@
                     {
                         if (fromParentPath != toParentPath)
                         {
-                            Model fromModel = Apsim.Get(this.ApsimXFile, dragObject.NodePath) as Model;
+                            Model fromModel = this.ApsimXFile.FindByPath(dragObject.NodePath)?.Value as Model;
                             if (fromModel != null)
                             {
                                 cmd = new MoveModelCommand(fromModel, toParent, this.GetNodeDescription(fromModel), this);
@@ -950,7 +950,7 @@
                 {
                     if (this.IsValidName(e.NewName))
                     {
-                        Model model = Apsim.Get(this.ApsimXFile, e.NodePath) as Model;
+                        Model model = this.ApsimXFile.FindByPath(e.NodePath)?.Value as Model;
                         if (model != null && model.GetType().Name != "Simulations" && e.NewName != string.Empty)
                         {
                             this.HideRightHandPanel();
@@ -980,7 +980,7 @@
         {
             try
             {
-                Model model = Apsim.Get(ApsimXFile, view.Tree.SelectedNode) as Model;
+                Model model = ApsimXFile.FindByPath(view.Tree.SelectedNode)?.Value as Model;
 
                 if (model != null && model.Parent != null)
                 {
@@ -1004,7 +1004,7 @@
         {
             try
             {
-                Model model = Apsim.Get(this.ApsimXFile, this.view.Tree.SelectedNode) as Model;
+                Model model = this.ApsimXFile.FindByPath(this.view.Tree.SelectedNode)?.Value as Model;
 
                 if (model != null && model.Parent != null)
                 {

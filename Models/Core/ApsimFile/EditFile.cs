@@ -143,7 +143,7 @@ namespace Models.Core.ApsimFile
         /// <param name="replacementPath">Path to the model in replacementFile which will be used to replace a model in topLevel.</param>
         private static void ReplaceModelFromFile(Simulations topLevel, string modelToReplace, string replacementFile, string replacementPath)
         {
-            IModel toBeReplaced = Apsim.Get(topLevel, modelToReplace) as IModel;
+            IModel toBeReplaced = topLevel.FindByPath(modelToReplace)?.Value as IModel;
             if (toBeReplaced == null)
                 throw new Exception($"Unable to find model which is to be replaced ({modelToReplace}) in file {topLevel.FileName}");
 
@@ -160,7 +160,7 @@ namespace Models.Core.ApsimFile
             }
             else
             {
-                replacement = Apsim.Get(extFile, replacementPath) as IModel;
+                replacement = extFile.FindByPath(replacementPath)?.Value as IModel;
                 if (replacement == null)
                     throw new Exception($"Unable to find model at path {replacementPath} in file {replacementFile}");
             }

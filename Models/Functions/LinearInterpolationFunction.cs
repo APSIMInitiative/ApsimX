@@ -108,7 +108,7 @@ namespace Models.Functions
                 // add graph and table.
                 if (XYPairs != null)
                 {
-                    IModel xValue = (IModel)Apsim.Get(this, "XValue");
+                    IModel xValue = (IModel)this.FindByPath("XValue")?.Value;
                     string xName = xValue.Name;
                     
                     tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + "</i> is calculated using linear interpolation", indent));

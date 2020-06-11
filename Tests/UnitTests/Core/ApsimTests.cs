@@ -169,10 +169,10 @@
             this.simulation.Set("[Weather].Rain", 111.0);
             Assert.AreEqual(this.simulation.Get("[Weather].Rain"), 111.0);
 
-            double[] thicknessBefore = (double[])Apsim.Get(simulation, "[Physical].Thickness");
+            double[] thicknessBefore = (double[])simulation.FindByPath("[Physical].Thickness")?.Value;
             Assert.AreEqual(6, thicknessBefore.Length); // If APITest.xml is modified, this test will fail and must be updated.
             Apsim.Set(simulation, "[Physical].Thickness[1]", "20");
-            double[] thicknessAfter = (double[])Apsim.Get(simulation, "[Physical].Thickness");
+            double[] thicknessAfter = (double[])simulation.FindByPath("[Physical].Thickness")?.Value;
 
             Assert.AreEqual(thicknessBefore.Length, thicknessAfter.Length);
             Assert.AreEqual(20, thicknessAfter[0]);
@@ -218,12 +218,12 @@
         public void MoveUpDown()
         {
             CommandHistory commandHistory = new CommandHistory();
-            Model modelToMove = Apsim.Get(simulations, "APS14.Factors.Permutation.NRate") as Model;
+            Model modelToMove = simulations.FindByPath("APS14.Factors.Permutation.NRate")?.Value as Model;
 
             MoveModelUpDownCommand moveCommand = new MoveModelUpDownCommand(modelToMove, true, null);
             moveCommand.Do(commandHistory);
 
-            Model modelToMove2 = Apsim.Get(simulations, "APS14.Factors.NRate") as Model;
+            Model modelToMove2 = simulations.FindByPath("APS14.Factors.NRate")?.Value as Model;
 
             Assert.AreEqual(simulations.Children[2].Children[0].Children[0].Children[0].Name, "NRate");
             Assert.AreEqual(simulations.Children[2].Children[0].Children[0].Children[0].Children.Count, 4);

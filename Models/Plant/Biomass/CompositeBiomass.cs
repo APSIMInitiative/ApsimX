@@ -26,7 +26,7 @@ namespace Models.PMF
 
             foreach (string PropertyName in Propertys)
             {
-                object v = Apsim.Get(this, PropertyName);
+                object v = this.FindByPath(PropertyName)?.Value;
                 if (v == null)
                     throw new Exception("Cannot find: " + PropertyName + " in composite biomass: " + this.Name);
 

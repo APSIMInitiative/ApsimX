@@ -142,7 +142,7 @@
                 // Find the model that we are to replace.
                 var experiment = Apsim.Parent(this, typeof(Experiment)) as Experiment;
                 var baseSimulation = Apsim.Child(experiment, typeof(Simulation));
-                var modelToReplace = Apsim.Get(baseSimulation, path) as IModel;
+                var modelToReplace = baseSimulation.FindByPath(path)?.Value as IModel;
 
                 if (modelToReplace == null)
                     throw new Exception($"Error in CompositeFactor {Name}: Unable to find a model to replace from path '{path}'");

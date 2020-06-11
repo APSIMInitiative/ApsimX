@@ -148,7 +148,7 @@ namespace Models.PMF
         [EventSubscribe("DoPhenology")]
         private void OnEndOfDay(object sender, EventArgs e)
         {
-            DltTT = (double)Apsim.Get(this, "[Phenology].DltTT.Value()");
+            DltTT = (double)this.FindByPath("[Phenology].DltTT.Value()")?.Value;
             accumTT += DltTT;
         }
 
@@ -158,10 +158,10 @@ namespace Models.PMF
             if (DMPlantMax > 9990)
             {
                 double ttNow = accumTT;
-                double ttToFlowering = (double)Apsim.Get(this, "[Phenology].TTToFlowering.Value()");
-                double dmPlantMaxTT = (double)Apsim.Get(this, "[Grain].PgrT1.Value()");
+                double ttToFlowering = (double)this.FindByPath("[Phenology].TTToFlowering.Value()")?.Value;
+                double dmPlantMaxTT = (double)this.FindByPath("[Grain].PgrT1.Value()")?.Value;
                 if (ttNow > dmPlantMaxTT + ttToFlowering)
-                    DMPlantMax = (double)Apsim.Get(this, "[Stem].Live.Wt");
+                    DMPlantMax = (double)this.FindByPath("[Stem].Live.Wt")?.Value;
             }
         }
 
@@ -525,7 +525,7 @@ namespace Models.PMF
         //        if (phenology.CurrentPhase.Start == "Flowering" && phenology.CurrentPhase is GenericPhase)
         //            dltTT = (phenology.CurrentPhase as GenericPhase).ProgressionForTimeStep;
         //        else
-        //            dltTT = ((double?)Apsim.Get(this, "[Phenology].DltTTFM.Value()") ?? (double)Apsim.Get(this, "[Phenology].ThermalTime.Value()"));
+        //            dltTT = ((double?)this.FindByPath("[Phenology].DltTTFM.Value()")?.Value ?? (double)this.FindByPath("[Phenology].ThermalTime.Value()")?.Value);
         //        TTFMFromFlowering += dltTT;
         //    }
         //}

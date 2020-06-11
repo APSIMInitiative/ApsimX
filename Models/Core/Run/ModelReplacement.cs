@@ -49,7 +49,7 @@
             }
             else
             {
-                IModel match = Apsim.Get(simulation, path) as IModel;
+                IModel match = simulation.FindByPath(path)?.Value as IModel;
                 if (match == null)
                     throw new Exception("Cannot find a model on path: " + path);
                 ReplaceModel(match);
@@ -58,7 +58,7 @@
                 // replace the model in all paddocks.
                 foreach (IModel paddock in Apsim.ChildrenRecursively(simulation, typeof(Zone)))
                 {
-                    match = Apsim.Get(paddock, path) as IModel;
+                    match = paddock.FindByPath(path)?.Value as IModel;
                     if (match != null)
                         ReplaceModel(match);
                 }

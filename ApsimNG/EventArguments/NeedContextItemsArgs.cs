@@ -229,12 +229,12 @@
                 objectName = ".";
 
             object o = null;
-            IModel replacementModel = Apsim.Get(relativeTo, ".Simulations.Replacements") as IModel;
+            IModel replacementModel = relativeTo.FindByPath(".Simulations.Replacements")?.Value as IModel;
             if (replacementModel != null)
             {
                 try
                 {
-                    o = Apsim.Get(replacementModel, objectName) as IModel;
+                    o = replacementModel.FindByPath(objectName)?.Value as IModel;
                 }
                 catch (Exception) {  }
             }
@@ -243,7 +243,7 @@
             {
                 try
                 {
-                    o = Apsim.Get(relativeTo, objectName);
+                    o = relativeTo.FindByPath(objectName)?.Value;
                 }
                 catch (Exception) { }
             }
@@ -254,7 +254,7 @@
                 IModel simulation = Apsim.Find(relativeTo.Parent.Parent, typeof(Simulation));
                 try
                 {
-                    o = Apsim.Get(simulation, objectName) as IModel;
+                    o = simulation.FindByPath(objectName)?.Value as IModel;
                 }
                 catch (Exception) { }
             }
