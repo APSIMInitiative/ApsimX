@@ -1,7 +1,7 @@
 [weather.met.weather]                
 Site  =  Dashwood
-Latitude= -41.6451
-Longitude=  174.0734                
+Latitude= -41.64371
+Longitude=  174.079630                
 tav= 12.94 !annual  average  ambient  temperature        
 amp= 13.98 !annual  amplitud  in  mean  monthly  temperature     
 year  day  rain  maxt  mint  radn  wind	rh	vpd
