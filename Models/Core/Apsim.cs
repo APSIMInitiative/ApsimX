@@ -18,17 +18,6 @@
     public static class Apsim
     {
         /// <summary>
-        /// Get the underlying variable object for the given path.
-        /// </summary>
-        /// <param name="model">The reference model</param>
-        /// <param name="namePath">The name of the variable to return</param>
-        /// <returns>The found object or null if not found</returns>
-        public static IVariable GetVariableObject(IModel model, string namePath)
-        {
-            return model.FindByPath(namePath);
-        }
-
-        /// <summary>
         /// Sets the value of a variable. Will throw if variable doesn't exist.
         /// </summary>
         /// <param name="model">The reference model</param>
