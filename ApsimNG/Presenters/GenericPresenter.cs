@@ -86,16 +86,18 @@
             {
                 var fileName = match.Groups[2].ToString();
                 var tempFileName = Path.Combine(Path.GetTempPath(), fileName);
+                bool createImage = true;
                 if (File.Exists(tempFileName))
                 {
                     var timeSinceLastAccess = DateTime.Now - File.GetLastAccessTime(tempFileName);
-                    if (timeSinceLastAccess.Hours > 1)
+                    createImage = timeSinceLastAccess.Hours > 1;
+                }
+                if (createImage)
+                {
+                    using (FileStream file = new FileStream(tempFileName, FileMode.Create, FileAccess.Write))
                     {
-                        using (FileStream file = new FileStream(tempFileName, FileMode.Create, FileAccess.Write))
-                        {
-                            var imageStream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"ApsimNG.Resources.{fileName}");
-                            imageStream?.CopyTo(file);
-                        }
+                        var imageStream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"ApsimNG.Resources.{fileName}");
+                        imageStream?.CopyTo(file);
                     }
                 }
             }
