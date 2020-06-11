@@ -247,7 +247,8 @@ namespace Models.Optimisation
             contents.AppendLine($"param_info <- {GetParamInfo()}");
             contents.AppendLine();
             contents.AppendLine(OptimizationMethod.GenerateOptimizationOptions("optim_options"));
-            contents.AppendLine($"optim_options$path_results <- '{OutputPath.Replace(@"\", @"\\")}'");
+            if (!string.IsNullOrEmpty(OutputPath))
+                contents.AppendLine($"optim_options$path_results <- '{OutputPath.Replace(@"\", @"\\")}'");
             if (RandomSeed != null)
                 contents.AppendLine($"optim_options$ranseed <- {RandomSeed}");
             contents.AppendLine();
