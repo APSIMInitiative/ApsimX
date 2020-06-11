@@ -489,7 +489,7 @@
         /// <remarks>
         /// See <see cref="Locater"/> for more info about paths.
         /// </remarks>
-        public IVariable FindInPath(string path)
+        public IVariable FindByPath(string path)
         {
             return Locator().GetInternal(path, this);
         }

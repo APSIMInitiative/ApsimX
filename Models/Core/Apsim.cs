@@ -26,7 +26,7 @@
         /// <returns>The found object or null if not found</returns>
         public static object Get(IModel model, string namePath, bool ignoreCase = false)
         {
-            return model.FindInPath(namePath)?.Value;
+            return model.FindByPath(namePath)?.Value;
         }
 
         /// <summary>
@@ -37,7 +37,7 @@
         /// <returns>The found object or null if not found</returns>
         public static IVariable GetVariableObject(IModel model, string namePath)
         {
-            return model.FindInPath(namePath);
+            return model.FindByPath(namePath);
         }
 
         /// <summary>
@@ -48,7 +48,7 @@
         /// <param name="value">The value to set the property to</param>
         public static void Set(IModel model, string namePath, object value)
         {
-            model.FindInPath(namePath).Value = value;
+            model.FindByPath(namePath).Value = value;
         }
 
         /// <summary>

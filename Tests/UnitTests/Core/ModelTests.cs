@@ -1411,52 +1411,52 @@ namespace UnitTests.Core
         }
 
         /// <summary>
-        /// Tests for the <see cref="IModel.FindInPath(string)"/> method.
+        /// Tests for the <see cref="IModel.FindByPath(string)"/> method.
         /// </summary>
         [Test]
         public void TestFindInPath()
         {
             // 1. Absolute paths.
-            Assert.AreEqual(container, simpleModel.FindInPath(".Test.Container").Value);
-            Assert.AreEqual(simpleModel, simpleModel.FindInPath(".Test").Value);
-            Assert.AreEqual(noSiblings, simpleModel.FindInPath(".Test.folder3.nosiblings").Value);
-            Assert.AreEqual(noSiblings, simpleModel.FindInPath(".Test.folder3.Children[1]").Value);
-            Assert.Null(simpleModel.FindInPath(".Test.folder3.asdf"));
-            Assert.Null(simpleModel.FindInPath(".asdf"));
-            Assert.Null(simpleModel.FindInPath(""));
-            Assert.Null(simpleModel.FindInPath(null));
+            Assert.AreEqual(container, simpleModel.FindByPath(".Test.Container").Value);
+            Assert.AreEqual(simpleModel, simpleModel.FindByPath(".Test").Value);
+            Assert.AreEqual(noSiblings, simpleModel.FindByPath(".Test.folder3.nosiblings").Value);
+            Assert.AreEqual(noSiblings, simpleModel.FindByPath(".Test.folder3.Children[1]").Value);
+            Assert.Null(simpleModel.FindByPath(".Test.folder3.asdf"));
+            Assert.Null(simpleModel.FindByPath(".asdf"));
+            Assert.Null(simpleModel.FindByPath(""));
+            Assert.Null(simpleModel.FindByPath(null));
 
             // Do not allow type names in absolute path.
-            Assert.Null(simpleModel.FindInPath(".Model.Folder.Model"));
+            Assert.Null(simpleModel.FindByPath(".Model.Folder.Model"));
 
             // Absolute path with variable.
-            Assert.AreEqual("folder2", simpleModel.FindInPath(".Test.Container.folder2.Name").Value);
-            Assert.AreEqual(typeof(VariableComposite), simpleModel.FindInPath(".Test.Name").GetType());
+            Assert.AreEqual("folder2", simpleModel.FindByPath(".Test.Container.folder2.Name").Value);
+            Assert.AreEqual(typeof(VariableComposite), simpleModel.FindByPath(".Test.Name").GetType());
 
             // 2. Relative paths.
-            Assert.AreEqual(simpleModel, simpleModel.FindInPath("[Test]").Value);
-            Assert.AreEqual(folder1, simpleModel.FindInPath("[folder1]").Value);
-            Assert.AreEqual(noSiblings, simpleModel.FindInPath("[folder3].nosiblings").Value);
-            Assert.AreEqual(folder2, simpleModel.FindInPath("[Test].Container.folder2").Value);
-            Assert.AreEqual(folder3, simpleModel.FindInPath("[Test].Children[2]").Value);
-            Assert.Null(simpleModel.FindInPath("[asdf]"));
-            Assert.Null(simpleModel.FindInPath("[folder3].foo"));
+            Assert.AreEqual(simpleModel, simpleModel.FindByPath("[Test]").Value);
+            Assert.AreEqual(folder1, simpleModel.FindByPath("[folder1]").Value);
+            Assert.AreEqual(noSiblings, simpleModel.FindByPath("[folder3].nosiblings").Value);
+            Assert.AreEqual(folder2, simpleModel.FindByPath("[Test].Container.folder2").Value);
+            Assert.AreEqual(folder3, simpleModel.FindByPath("[Test].Children[2]").Value);
+            Assert.Null(simpleModel.FindByPath("[asdf]"));
+            Assert.Null(simpleModel.FindByPath("[folder3].foo"));
 
             // Do not allow type names in relative path.
-            Assert.Null(simpleModel.FindInPath(".Model.Folder"));
+            Assert.Null(simpleModel.FindByPath(".Model.Folder"));
 
             // Relative path with variable.
-            Assert.AreEqual("Container", simpleModel.FindInPath("[Container].Name").Value);
-            Assert.AreEqual(typeof(VariableComposite), simpleModel.FindInPath("[Container].Name").GetType());
+            Assert.AreEqual("Container", simpleModel.FindByPath("[Container].Name").Value);
+            Assert.AreEqual(typeof(VariableComposite), simpleModel.FindByPath("[Container].Name").GetType());
 
             // 3. Child paths.
-            Assert.AreEqual(container, simpleModel.FindInPath("Container").Value);
-            Assert.AreEqual(noSiblings, simpleModel.FindInPath("folder3.nosiblings").Value);
-            Assert.AreEqual(folder2, container.FindInPath("folder2").Value);
-            Assert.Null(simpleModel.FindInPath("folder2"));
-            Assert.Null(simpleModel.FindInPath("x"));
-            Assert.Null(simpleModel.FindInPath(""));
-            Assert.Null(simpleModel.FindInPath(null));
+            Assert.AreEqual(container, simpleModel.FindByPath("Container").Value);
+            Assert.AreEqual(noSiblings, simpleModel.FindByPath("folder3.nosiblings").Value);
+            Assert.AreEqual(folder2, container.FindByPath("folder2").Value);
+            Assert.Null(simpleModel.FindByPath("folder2"));
+            Assert.Null(simpleModel.FindByPath("x"));
+            Assert.Null(simpleModel.FindByPath(""));
+            Assert.Null(simpleModel.FindByPath(null));
         }
     }
 }

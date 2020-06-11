@@ -282,7 +282,7 @@ namespace Models.Core
         /// Returns null if not found.
         /// </summary>
         /// <param name="path">The path of the variable/model.</param>
-        IVariable FindInPath(string path);
+        IVariable FindByPath(string path);
 
         /// <summary>
         /// Called when the model has been newly created in memory whether from 
