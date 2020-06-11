@@ -18,18 +18,6 @@
     public static class Apsim
     {
         /// <summary>
-        /// Gets the value of a variable or model.
-        /// </summary>
-        /// <param name="model">The reference model</param>
-        /// <param name="namePath">The name of the object to return</param>
-        /// <param name="ignoreCase">If true, ignore case when searching for the object or property</param>
-        /// <returns>The found object or null if not found</returns>
-        public static object Get(IModel model, string namePath, bool ignoreCase = false)
-        {
-            return model.FindByPath(namePath)?.Value;
-        }
-
-        /// <summary>
         /// Get the underlying variable object for the given path.
         /// </summary>
         /// <param name="model">The reference model</param>
