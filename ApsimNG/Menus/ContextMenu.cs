@@ -949,8 +949,8 @@
                 IModel model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as IModel;
                 if (model != null)
                 {
-                    string modelPath = Apsim.FullPath(model);
-                    StringBuilder message = new StringBuilder($"Searching for references to model {Apsim.FullPath(model)}...");
+                    string modelPath = model.FullPath;
+                    StringBuilder message = new StringBuilder($"Searching for references to model {model.FullPath}...");
                     List<Reference> references = new List<Reference>();
                     message.AppendLine();
                     message.AppendLine();

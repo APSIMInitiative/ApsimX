@@ -18,7 +18,7 @@
         /// <param name="relativeTo">The model to base scoping rules on</param>
         public IModel[] FindAll(IModel relativeTo)
         {
-            string relativeToFullPath = Apsim.FullPath(relativeTo);
+            string relativeToFullPath = relativeTo.FullPath;
             // Try the cache first.
             List<IModel> modelsInScope;
             if (cache.TryGetValue(relativeToFullPath, out modelsInScope))
@@ -32,7 +32,7 @@
 
             IModel scopedParent = FindScopedParentModel(relativeTo);
             if (scopedParent == null)
-                throw new Exception("No scoping model found relative to: " + Apsim.FullPath(relativeTo));
+                throw new Exception("No scoping model found relative to: " + relativeTo.FullPath);
 
             // Return all models in zone and all direct children of zones parent.
             modelsInScope = new List<IModel>();
@@ -87,7 +87,7 @@
 
             IModel scopedParent = relativeTo.Ancestors().FirstOrDefault(a => IsScopedModel(a));
             if (scopedParent == null)
-                throw new Exception("No scoping model found relative to: " + Apsim.FullPath(relativeTo));
+                throw new Exception("No scoping model found relative to: " + relativeTo.FullPath);
 
             // Return all models in zone and all direct children of zones parent.
             modelsInScope = new List<IModel>();

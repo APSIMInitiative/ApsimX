@@ -124,8 +124,8 @@
 
                 if (storage == null)
                     throw new ApsimXException(model, "No datastore is available!");
-                string modelPath = Apsim.FullPath(model);
-                string relativeModelPath = modelPath.Replace(Apsim.FullPath(simulation) + ".", string.Empty);
+                string modelPath = model.FullPath;
+                string relativeModelPath = modelPath.Replace(simulation.FullPath + ".", string.Empty);
 
                 var newRow = messages.NewRow();
                 newRow[0] = simulation.Name;
@@ -148,8 +148,8 @@
 
                 if (storage == null)
                     throw new ApsimXException(model, "No datastore is available!");
-                string modelPath = Apsim.FullPath(model);
-                string relativeModelPath = modelPath.Replace(Apsim.FullPath(simulation) + ".", string.Empty);
+                string modelPath = model.FullPath;
+                string relativeModelPath = modelPath.Replace(simulation.FullPath + ".", string.Empty);
 
                 var newRow = messages.NewRow();
                 newRow[0] = simulation.Name;
@@ -172,8 +172,8 @@
 
                 if (storage == null)
                     throw new ApsimXException(model, "No datastore is available!");
-                string modelPath = Apsim.FullPath(model);
-                string relativeModelPath = modelPath.Replace(Apsim.FullPath(simulation) + ".", string.Empty);
+                string modelPath = model.FullPath;
+                string relativeModelPath = modelPath.Replace(simulation.FullPath + ".", string.Empty);
 
                 var newRow = messages.NewRow();
                 newRow[0] = simulation.Name;
@@ -201,7 +201,7 @@
             initConditions.Columns.Add("Total", typeof(int));
             initConditions.Columns.Add("Value", typeof(string));
 
-            string simulationPath = Apsim.FullPath(simulation);
+            string simulationPath = simulation.FullPath;
 
             var row = initConditions.NewRow();
             row.ItemArray = new object[] { simulation.Name, simulationPath, "Simulation name", "Simulation name", "String", string.Empty, string.Empty, 0, simulation.Name };
@@ -218,7 +218,7 @@
             // Get all model properties and store in 'initialConditionsTable'
             foreach (Model model in Apsim.FindAll(simulation))
             {
-                string thisRelativeModelPath = Apsim.FullPath(model).Replace(simulationPath + ".", string.Empty);
+                string thisRelativeModelPath = model.FullPath.Replace(simulationPath + ".", string.Empty);
 
                 var properties = new List<Tuple<string, VariableProperty>>();
                 FindAllProperties(model, properties);

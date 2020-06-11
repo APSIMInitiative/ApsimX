@@ -42,7 +42,7 @@
         /// <param name="commandHistory">The command history instance</param>
         public void Do(CommandHistory commandHistory)
         {
-            this.explorerView.Tree.Delete(Apsim.FullPath(this.modelToDelete));
+            this.explorerView.Tree.Delete(this.modelToDelete.FullPath);
             pos = this.parent.Children.IndexOf(this.modelToDelete as Model);
             modelWasRemoved = Structure.Delete(this.modelToDelete as Model);
         }
@@ -54,7 +54,7 @@
             if (this.modelWasRemoved)
             {
                 this.parent.Children.Insert(pos, this.modelToDelete as Model);
-                this.explorerView.Tree.AddChild(Apsim.FullPath(this.parent), nodeDescription, pos);
+                this.explorerView.Tree.AddChild(this.parent.FullPath, nodeDescription, pos);
                 Apsim.ClearCaches(this.modelToDelete);
             }
         }

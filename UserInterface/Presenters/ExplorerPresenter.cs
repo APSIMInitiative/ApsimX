@@ -282,7 +282,7 @@ namespace UserInterface.Presenters
                select the first item in the 'allModels' list. */
             if (this.view.SelectedNode == "")
             {
-                this.view.SelectedNode = Apsim.FullPath(allModels[0]);
+                this.view.SelectedNode = allModels[0].FullPath;
                 return true;
             }
 
@@ -290,7 +290,7 @@ namespace UserInterface.Presenters
             int index = -1;
             for (int i = 0; i < allModels.Count; i++)
             {
-                if (Apsim.FullPath(allModels[i]) == this.view.SelectedNode)
+                if (allModels[i].FullPath == this.view.SelectedNode)
                 {
                     index = i;
                     break;
@@ -309,7 +309,7 @@ namespace UserInterface.Presenters
             }
 
             // Select the next node.
-            this.view.SelectedNode = Apsim.FullPath(allModels[index + 1]);
+            this.view.SelectedNode = (allModels[index + 1]).FullPath;
             return true;
         }
 

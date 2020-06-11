@@ -467,7 +467,7 @@
                 table.Rows.Add(new object[] { property.Value, null, null });
             else if (property.Value is IModel m)
             {
-                string cellValue = IsSiblingOfModel(m) ? m.Name : Apsim.FullPath(m);
+                string cellValue = IsSiblingOfModel(m) ? m.Name : m.FullPath;
                 table.Rows.Add(new object[] { property.Description, cellValue, property.Name });
             }
             else if (property is VariableProperty p)
@@ -949,7 +949,7 @@
                 if (IsSiblingOfModel(model))
                     modelNames.Add(model.Name);
                 else
-                    modelNames.Add(Apsim.FullPath(model));
+                    modelNames.Add(model.FullPath);
             }
             return modelNames.ToArray();
         }
@@ -1010,7 +1010,7 @@
                 if (IsSiblingOfModel(m))
                     return m.Name;
 
-                return Apsim.FullPath(m);
+                return m.FullPath;
             }
 
             return result;

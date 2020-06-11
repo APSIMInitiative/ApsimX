@@ -230,7 +230,7 @@
         private string GetFullName(object obj)
         {
             if (obj is IModel)
-                return Apsim.FullPath(obj as IModel);
+                return (obj as IModel).FullPath;
             else
                 return obj.GetType().FullName;
         }

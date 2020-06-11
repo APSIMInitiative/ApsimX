@@ -302,8 +302,8 @@ namespace Models.Optimisation
             if (storage == null)
                 throw new ApsimXException(this, "No datastore is available!");
 
-            string modelPath = Apsim.FullPath(this);
-            string relativeModelPath = modelPath.Replace(Apsim.FullPath(this) + ".", string.Empty);
+            string modelPath = this.FullPath;
+            string relativeModelPath = modelPath.Replace(this.FullPath + ".", string.Empty);
 
             DataTable messages = new DataTable("_Messages");
             messages.Columns.Add("SimulationName", typeof(string));

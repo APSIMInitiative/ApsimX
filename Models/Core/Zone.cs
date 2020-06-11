@@ -98,7 +98,7 @@
             Zone[] subPaddocks = Children.OfType<Zone>().ToArray();
             double totalSubzoneArea = subPaddocks.Sum(z => z.Area);
             if (totalSubzoneArea > Area)
-                throw new Exception($"Error in zone {Apsim.FullPath(this)}: total area of child zones ({totalSubzoneArea} ha) exceeds that of parent ({Area} ha)");
+                throw new Exception($"Error in zone {this.FullPath}: total area of child zones ({totalSubzoneArea} ha) exceeds that of parent ({Area} ha)");
         }
 
         /// <summary>

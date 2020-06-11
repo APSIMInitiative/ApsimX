@@ -66,8 +66,8 @@
             this.graph = Utility.Graph.CreateGraphFromResource(model.GetType().Name + "Graph");
             this.xYPairs.Children.Add(this.graph);
             this.graph.Parent = this.xYPairs;
-            (this.graph.Series[0] as Series).XFieldName = Apsim.FullPath(graph.Parent) + ".X";
-            (this.graph.Series[0] as Series).YFieldName = Apsim.FullPath(graph.Parent) + ".Y";
+            (this.graph.Series[0] as Series).XFieldName = graph.Parent.FullPath + ".X";
+            (this.graph.Series[0] as Series).YFieldName = graph.Parent.FullPath + ".Y";
             this.graphPresenter = new GraphPresenter();
             this.presenter.ApsimXFile.Links.Resolve(graphPresenter);
             this.graphPresenter.Attach(this.graph, this.xYPairsView.Graph, this.presenter);

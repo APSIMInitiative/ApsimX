@@ -319,7 +319,7 @@
         /// <param name="nodePath">Node to be selected.</param>
         public void SelectNode(IModel node)
         {
-            SelectNode(Apsim.FullPath(node));
+            SelectNode(node.FullPath);
             this.HideRightHandPanel();
             this.ShowRightHandPanel();
         }
@@ -363,7 +363,7 @@
                select the first item in the 'allModels' list. */
             if (string.IsNullOrEmpty(view.Tree.SelectedNode))
             {
-                view.Tree.SelectedNode = Apsim.FullPath(allModels[0]);
+                view.Tree.SelectedNode = allModels[0].FullPath;
                 return true;
             }
 
@@ -371,7 +371,7 @@
             int index = -1;
             for (int i = 0; i < allModels.Count; i++)
             {
-                if (Apsim.FullPath(allModels[i]) == this.view.Tree.SelectedNode)
+                if (allModels[i].FullPath == this.view.Tree.SelectedNode)
                 {
                     index = i;
                     break;
@@ -390,7 +390,7 @@
             }
 
             // Select the next node.
-            this.view.Tree.SelectedNode = Apsim.FullPath(allModels[index + 1]);
+            this.view.Tree.SelectedNode = (allModels[index + 1]).FullPath;
             return true;
         }
 
@@ -503,7 +503,7 @@
         public void Move(string originalPath, IModel toParent, TreeViewNode nodeDescription)
         {
             view.Tree.Delete(originalPath);
-            view.Tree.AddChild(Apsim.FullPath(toParent), nodeDescription);
+            view.Tree.AddChild((toParent).FullPath, nodeDescription);
         }
 
         /// <summary>

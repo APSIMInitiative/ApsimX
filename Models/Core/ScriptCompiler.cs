@@ -87,7 +87,7 @@
                         // If we don't have a previous compilation, create one.
                         if (compilation == null)
                         {
-                            compilation = new PreviousCompilation() { ModelFullPath = Apsim.FullPath(model) };
+                            compilation = new PreviousCompilation() { ModelFullPath = model.FullPath };
                             previousCompilations.Add(compilation);
                         }
 

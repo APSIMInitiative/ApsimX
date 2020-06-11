@@ -275,8 +275,8 @@ namespace Models.Core
                     // Get the path of the model (relative to parentSimulation) to document so that 
                     // when replacements happen below we will point to the replacement model not the 
                     // one passed into this method.
-                    string pathOfSimulation = Apsim.FullPath(simulation) + ".";
-                    string pathOfModelToDocument = Apsim.FullPath(modelToDocument).Replace(pathOfSimulation, "");
+                    string pathOfSimulation = simulation.FullPath + ".";
+                    string pathOfModelToDocument = modelToDocument.FullPath.Replace(pathOfSimulation, "");
 
                     // Clone the simulation
                     SimulationDescription simDescription = new SimulationDescription(simulation);

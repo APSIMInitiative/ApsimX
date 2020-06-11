@@ -92,7 +92,7 @@
         {
             InfestingOrganisum = Apsim.Find(this.Parent, InfestingOrganisumName) as LifeCycle;
             if (InfestingOrganisum == null)
-                throw new Exception(Apsim.FullPath(this) + " Could not find an infesting organisum called " + InfestingOrganisumName);
+                throw new Exception(this.FullPath + " Could not find an infesting organisum called " + InfestingOrganisumName);
             InfestingPhase = Apsim.Child(InfestingOrganisum, InfestingPhaseName) as LifeCyclePhase;
         }
 

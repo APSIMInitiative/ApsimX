@@ -180,7 +180,7 @@
 
             graphView.Export(ref img, r, true);
 
-            string path = Apsim.FullPath(graph).Replace(".Simulations.", string.Empty);
+            string path = graph.FullPath.Replace(".Simulations.", string.Empty);
             string fileName = Path.Combine(folder, path + ".png");
             img.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
 

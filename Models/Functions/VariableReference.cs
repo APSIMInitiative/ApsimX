@@ -39,13 +39,13 @@ namespace Models.Functions
             }
             catch (Exception err)
             {
-                throw new Exception($"Error while locating variable '{VariableName}' in variable reference '{Apsim.FullPath(this)}'", err);
+                throw new Exception($"Error while locating variable '{VariableName}' in variable reference '{this.FullPath}'", err);
             }
 
             // This should never happen: the locator is supposed to throw
             // if the variable cannot be found.
             if (o == null)
-                throw new Exception("Unable to locate " + VariableName.Trim() + " called from the variable reference function " + Apsim.FullPath(this));
+                throw new Exception("Unable to locate " + VariableName.Trim() + " called from the variable reference function " + this.FullPath);
 
             if (o is IFunction)
                 return (o as IFunction).Value(arrayIndex);

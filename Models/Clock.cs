@@ -61,7 +61,7 @@
                 if (weather != null)
                     return weather.StartDate;
 
-                throw new Exception($"No start date provided in clock {Apsim.FullPath(this)} and no weather file could be found.");
+                throw new Exception($"No start date provided in clock {this.FullPath} and no weather file could be found.");
             }
             set
             {
@@ -91,7 +91,7 @@
                 if (weather != null)
                     return weather.EndDate;
 
-                throw new Exception($"No end date provided in {Apsim.FullPath(this)}: and no weather file could be found.");
+                throw new Exception($"No end date provided in {this.FullPath}: and no weather file could be found.");
             }
             set
             {

@@ -118,7 +118,7 @@
         {
             LifeCyclePhase InfestingPhase = Immigrants.BelongsToPhase;
             InfestingPhase.NewCohort(Immigrants.Population, Immigrants.ChronologicalAge, Immigrants.PhysiologicalAge);
-            mySummary.WriteMessage(this, "An infestation of  " + Immigrants.Population + " " + Apsim.FullPath(this) + " " + Immigrants.BelongsToPhase.Name + "'s occured today, just now :-)");
+            mySummary.WriteMessage(this, "An infestation of  " + Immigrants.Population + " " + this.FullPath + " " + Immigrants.BelongsToPhase.Name + "'s occured today, just now :-)");
         }
     }
 }

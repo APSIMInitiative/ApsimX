@@ -97,7 +97,7 @@
         /// <returns>The filename string</returns>
         public string ExportToPNG(string folder)
         {
-            string path = Apsim.FullPath(this.map).Replace(".Simulations.", string.Empty);
+            string path = this.map.FullPath.Replace(".Simulations.", string.Empty);
             string fileName = Path.Combine(folder, path + ".png");
 
             Image rawImage = this.view.Export();

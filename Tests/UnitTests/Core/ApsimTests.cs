@@ -56,9 +56,9 @@
             Graph graph = zone2.Children[0] as Graph;
             Soil soil = zone2.Children[1] as Soil;
             
-            Assert.AreEqual(Apsim.FullPath(this.simulation), ".Simulations.Test");
-            Assert.AreEqual(Apsim.FullPath(zone2), ".Simulations.Test.Field2");
-            Assert.AreEqual(Apsim.FullPath(soil), ".Simulations.Test.Field2.Soil");
+            Assert.AreEqual(this.simulation.FullPath, ".Simulations.Test");
+            Assert.AreEqual(zone2.FullPath, ".Simulations.Test.Field2");
+            Assert.AreEqual(soil.FullPath, ".Simulations.Test.Field2.Soil");
         }
 
         /// <summary>

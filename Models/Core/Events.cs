@@ -67,7 +67,7 @@
             // Get the component.
             object component = relativeTo.FindByPath(componentName)?.Value;
             if (component == null)
-                throw new Exception(Apsim.FullPath(relativeTo) + " can not find the component: " + componentName);
+                throw new Exception(relativeTo.FullPath + " can not find the component: " + componentName);
 
             // Get the EventInfo for the published event.
             EventInfo componentEvent = component.GetType().GetEvent(eventName);
@@ -95,7 +95,7 @@
             // Get the component.
             object component = relativeTo.FindByPath(componentName)?.Value;
             if (component == null)
-                throw new Exception(Apsim.FullPath(relativeTo) + " can not find the component: " + componentName);
+                throw new Exception(relativeTo.FullPath + " can not find the component: " + componentName);
 
             // Get the EventInfo for the published event.
             EventInfo componentEvent = component.GetType().GetEvent(eventName);

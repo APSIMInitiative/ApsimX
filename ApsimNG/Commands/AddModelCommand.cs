@@ -86,7 +86,7 @@
             if (modelAdded && modelToAdd != null)
             {
                 parent.Children.Remove(modelToAdd as Model);
-                presenter.DeleteFromTree(Apsim.FullPath(modelToAdd));
+                presenter.DeleteFromTree(modelToAdd.FullPath);
             }
         }
     }
