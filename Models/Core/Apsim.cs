@@ -40,16 +40,6 @@
         }
 
         /// <summary>
-        /// Returns the full path of the specified model.
-        /// </summary>
-        /// <param name="model">The model to return the full path for</param>
-        /// <returns>The path</returns>
-        public static string FullPath(IModel model)
-        {
-            return model.FullPath;
-        }
-
-        /// <summary>
         /// Return a parent node of the specified type 'typeFilter'. Will throw if not found.
         /// </summary>
         /// <param name="model">The model to get the parent for</param>
