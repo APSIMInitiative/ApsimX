@@ -228,9 +228,6 @@
     <Compile Include="Interfaces\ITernaryGraphView.cs" />
     <Compile Include="Presenters\BiomassRemovalPresenter.cs" />
     <Compile Include="Presenters\CLEM\ActivityLedgerGridPresenter.cs" />
-    <Compile Include="Presenters\CLEM\CLEMFileCropPresenter.cs" />
-    <Compile Include="Presenters\CLEM\CLEMFileGRASPPresenter.cs" />
-    <Compile Include="Presenters\CLEM\CLEMFileSQLiteGRASPPresenter.cs" />
     <Compile Include="Presenters\CLEM\CLEMPresenter.cs" />
     <Compile Include="Presenters\CLEM\CLEMSummaryPresenter.cs" />
     <Compile Include="Presenters\CLEM\CustomQueryPresenter.cs" />
@@ -259,9 +256,6 @@
     <Compile Include="Utility\FindAllReferencesDialog.cs" />
     <Compile Include="Utility\WeatherDownloadDialog.cs" />
     <Compile Include="Views\CLEM\ActivityLedgerGridView.cs" />
-    <Compile Include="Views\CLEM\CLEMFileCropView.cs" />
-    <Compile Include="Views\CLEM\CLEMFileGRASPView.cs" />
-    <Compile Include="Views\CLEM\CLEMFileSQLiteGRASPView.cs" />
     <Compile Include="Views\CLEM\CLEMView.cs" />
     <Compile Include="Views\CLEM\CustomQueryView.cs" />
     <Compile Include="Views\CLEM\ModelDetailsWrapperView.cs" />
@@ -576,7 +570,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityGrazeAll.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityGrazePasture.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityGrazePastureHerd.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FileSQLiteGRASP.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FileSQLitePasture.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\Equipment.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\EquipmentType.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\WaterStore.png" />
@@ -601,7 +595,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\CropActivityManageCrop.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\CropActivityManageProduct.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\CropActivityTask.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FileGRASP.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FilePasture.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\Finance.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FinanceActivityCalculateInterest.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FinanceActivityPayExpense.png" />

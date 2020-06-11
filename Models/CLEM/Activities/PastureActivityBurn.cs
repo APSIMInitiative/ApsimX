@@ -36,7 +36,7 @@ namespace Models.CLEM.Activities
         /// Name of graze food store/paddock to burn
         /// </summary>
         [Description("Name of graze food store/paddock to burn")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(GrazeFoodStore) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) })]
         [Required(AllowEmptyStrings = false)]
         public string PaddockName { get; set; }
 
