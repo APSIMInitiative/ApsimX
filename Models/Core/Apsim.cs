@@ -51,21 +51,6 @@
         }
 
         /// <summary>
-        /// Returns the closest ancestor to a node of the specified type.
-        /// Returns null if not found.
-        /// </summary>
-        /// <typeparam name="T">Type of model to search for.</typeparam>
-        /// <param name="model">The reference model.</param>
-        /// <returns></returns>
-        public static T Ancestor<T>(IModel model) where T : IModel
-        {
-            if (model == null)
-                return default(T);
-
-            return model.FindAncestor<T>();
-        }
-
-        /// <summary>
         /// Locates and returns a model with the specified name that is in scope.
         /// </summary>
         /// <param name="model">The reference model</param>
