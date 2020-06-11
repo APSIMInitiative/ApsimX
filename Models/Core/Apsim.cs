@@ -256,16 +256,6 @@
         }
 
         /// <summary>
-        /// Return all siblings of the specified model.
-        /// </summary>
-        /// <param name="model">The parent model</param>
-        /// <returns>The found siblings or an empty array if not found.</returns>
-        public static List<IModel> Siblings(IModel model)
-        {
-            return model.FindAllSiblings().ToList();
-        }
-
-        /// <summary>
         /// Parent all children of 'model'.
         /// </summary>
         /// <param name="model">The model to parent</param>
