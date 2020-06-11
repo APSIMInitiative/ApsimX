@@ -62,23 +62,6 @@ namespace Models.PMF.Phen
         FinalLeafNumberSet FLNparams = null;
 
         /// <summary>
-        /// Internal calculation of HS progression, this is a proxy for theremal time and should be reformulated to avoid confusion
-        /// </summary>
-        /// <param name="Tt">Daily thermal time</param>
-        /// <param name="HS">Current Haun stage</param>
-        /// <param name="BasePhyllochron">Base phyllochron</param>
-        /// <returns></returns>
-        private double CalcdHS(double Tt, double HS, double BasePhyllochron)
-        {
-            double phyllochron = BasePhyllochron;
-            if (HS <= 2.0)
-                phyllochron = BasePhyllochron * 0.75;
-            else if (HS > 7.0)
-                phyllochron = BasePhyllochron * 1.3;
-            return Tt / phyllochron;
-        }
-
-        /// <summary>
         /// Calculate delta of upregulation for photo period (Pp) sensitive genes
         /// </summary>
         /// <param name="Pp">Photoperiod</param>
@@ -250,7 +233,7 @@ namespace Models.PMF.Phen
                 
 
                 if (isEmerged == false)
-                    dHS = CalcdHS(tt.Value(), haunStage.Value(), BasePhyllochron);
+                    dHS = tt.Value()/ (BasePhyllochron * 0.75);
                 else
                     dHS = deltaHaunStage.Value(); 
                 
