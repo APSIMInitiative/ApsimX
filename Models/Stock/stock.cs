@@ -108,9 +108,6 @@
     /// * If young exist, their reproductive status must be the same
     /// * Implants (hormone implants)
     /// * Mean age (if the animals are less than one year old )
-    /// 
-    /// 
-    /// ---
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.HTMLView")]
