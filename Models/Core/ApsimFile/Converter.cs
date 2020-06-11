@@ -2279,7 +2279,17 @@
         {
             foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
             {
-                // model.FindByPath(path)?.Value.Value -> model.FindByPath(path);
+                // Apsim.Get(model, path) -> model.FindByPath(path)
+                FixApsimGet(manager);
+
+                // Apsim.FullPath(model) -> model.FullPath
+                FixFullPath(manager);
+
+                manager.Save();
+            }
+
+            void FixApsimGet(ManagerConverter manager)
+            {
                 string pattern = @"Apsim\.Get\(([^,]+),\s*((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
                 manager.ReplaceRegex(pattern, match =>
                 {
@@ -2289,8 +2299,19 @@
 
                     return Regex.Replace(match.Value, pattern, replace);
                 });
+            }
 
-                manager.Save();
+            void FixFullPath(ManagerConverter manager)
+            {
+                string pattern = @"Apsim\.FullPath\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
+                string replacement = "$1.FullPath";
+                manager.ReplaceRegex(pattern, match =>
+                {
+                    if (match.Groups[1].Value.Contains(" "))
+                        replacement = replacement.Replace("$1", "($1)");
+
+                    return Regex.Replace(match.Value, pattern, replacement);
+                });
             }
         }
 
