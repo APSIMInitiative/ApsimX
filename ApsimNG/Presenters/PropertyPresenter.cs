@@ -559,6 +559,8 @@ namespace UserInterface.Presenters
                 {
                     cell.EditorType = EditorTypeEnum.MultiFiles;
                 }
+                else if (properties[i].Display != null && properties[i].Display.Type == DisplayType.DirectoryName)
+                    cell.EditorType = EditorTypeEnum.DirectoryChooser;
                 else if (properties[i].Display != null && 
                          properties[i].Display.Type == DisplayType.FieldName)
                 {
@@ -1158,6 +1160,11 @@ namespace UserInterface.Presenters
                 Prompt = "Select file path",
                 InitialDirectory = e.OldValue
             };
+            if (properties[e.RowIndex].Display.Type == DisplayType.DirectoryName)
+            {
+                fileChooser.Action = FileDialog.FileActionType.SelectFolder;
+                fileChooser.Prompt = "Select a folder";
+            }
 
             IGridCell cell = grid.GetCell(e.ColIndex, e.RowIndex);
             string fileName = properties[e.RowIndex].Display.Type == DisplayType.FileNames ? string.Join(", ", fileChooser.GetFiles()) : fileChooser.GetFile();
