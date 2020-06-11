@@ -95,7 +95,6 @@
                         {
                             var imageStream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"ApsimNG.Resources.{fileName}");
                             imageStream?.CopyTo(file);
-                            file.Close();
                         }
                     }
                 }

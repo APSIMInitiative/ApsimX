@@ -82,14 +82,14 @@ namespace Models.Core.ApsimFile
                     throw new Exception($"Invalid path: {factor.Paths[0]}");
 
                 string value = factor.Values[0].ToString();
-                string absolutePath;
+                string absolutePath =  null;
                 try
                 {
-                    absolutePath = PathUtilities.GetAbsolutePath(value, Directory.GetCurrentDirectory());
+                    if (!value.Contains(":"))
+                        absolutePath = PathUtilities.GetAbsolutePath(value, Directory.GetCurrentDirectory());
                 }
                 catch
                 {
-                    absolutePath = null;
                 }
 
                 string[] parts = value.Split(';');
@@ -126,9 +126,10 @@ namespace Models.Core.ApsimFile
                 {
                     ModelCollectionFromResource resourceModel = Apsim.Ancestor<ModelCollectionFromResource>(model);
                     if (resourceModel != null)
-                    {
                         resourceModel.ResourceName = null;
-                    }
+
+                    if (model.Parent is Manager manager)
+                        manager.RebuildScriptModel();
                 }
             }
         }

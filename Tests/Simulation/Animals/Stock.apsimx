@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 80,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-06",
+  "Version": 101,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -26,6 +26,7 @@
           "Children": [
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "Farm",
               "Children": [
                 {
@@ -68,13 +69,14 @@
                   "Name": "Feedlot",
                   "Children": [
                     {
-                      "$type": "Models.Report.Report, Models",
+                      "$type": "Models.Report, Models",
                       "VariableNames": [
                         "[Clock].Today"
                       ],
                       "EventNames": [
                         ""
                       ],
+                      "GroupByVariableName": null,
                       "Name": "Report",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -231,7 +233,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.SoilWater, Models",
+                          "$type": "Models.WaterModel.WaterBalance, Models",
                           "SummerDate": "1-Nov",
                           "SummerU": 5.0,
                           "SummerCona": 5.0,
@@ -244,10 +246,9 @@
                           "CN2Bare": 73.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
-                          "slope": "NaN",
-                          "discharge_width": "NaN",
-                          "catchment_area": "NaN",
-                          "max_pond": 0.0,
+                          "Slope": "NaN",
+                          "DischargeWidth": "NaN",
+                          "CatchmentArea": "NaN",
                           "Thickness": [
                             150.0,
                             150.0,
@@ -256,15 +257,6 @@
                             300.0,
                             300.0,
                             300.0
-                          ],
-                          "Depth": [
-                            "0-15",
-                            "15-30",
-                            "30-60",
-                            "60-90",
-                            "90-120",
-                            "120-150",
-                            "150-180"
                           ],
                           "SWCON": [
                             0.3,
@@ -276,9 +268,8 @@
                             0.3
                           ],
                           "KLAT": null,
-                          "PrecipitationInterception": 0.0,
+                          "ResourceName": "WaterBalance",
                           "Name": "SoilWater",
-                          "Children": [],
                           "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
@@ -604,14 +595,12 @@
                     },
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                      "Canopies": [],
                       "InitialResidueName": "wheat_stubble",
                       "InitialResidueType": "wheat",
                       "InitialResidueMass": 0.0,
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 100.0,
-                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": false,
@@ -688,23 +677,11 @@
                 },
                 {
                   "$type": "Models.GrazPlan.Stock, Models",
-                  "ParamFile": "",
+                  "randFactory": {
+                    "$type": "StdUnits.MyRandom, Models"
+                  },
                   "RandSeed": 9999,
-                  "Genotypes": [],
-                  "Animals": [],
-                  "PaddockList": [
-                    {
-                      "$type": "Models.GrazPlan.PaddockInit, Models",
-                      "Forages": [],
-                      "Name": "",
-                      "Area": 1.0,
-                      "Slope": 0.0,
-                      "Excretion": null,
-                      "Urine": null
-                    }
-                  ],
-                  "EnterpriseList": [],
-                  "GrazingPeriods": [],
+                  "StockModel": null,
                   "Name": "Stock",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -713,7 +690,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using System;\nusing Models.Core;\nusing Models.Utilities;\nusing Models.GrazPlan;\nusing APSIM.Shared.Utilities;\nusing Models.Interfaces;\n\nnamespace Models\n{\n    [Serializable]\n    public class Script : Model\n    {\n        [Link] Clock Calendar;\n        [Link] Stock Animals;\n        [Link] Supplement Feed;\n        [Link] Simulation Farm;\n\n        [Separator(\"Category1\")]\n\n        [Description(\"Number of young stock to purchase\")]\n        public string dateToBuySell { get; set;}\n\n        [Description(\"Stocking rate (wethers/property ha)\")]\n        public double stockRate { get; set;}\n\n        [Separator(\"Category2\")]\n\n        [Description(\"Proportion of mature animals to sell\")]\n        public double sale_propn { get; set;}\n\n        [Description(\"Number of young stock to purchase\")]\n        public double no_to_buy { get; set;}\n\n        [Description(\"Model name\")]\n        [Display(Type=DisplayType.Model/*,\n                 ModelType=typeof(Weather)*/)]\n        public IModel w {get; set; }\n\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            // purchase animals annually\n            if (DateUtilities.DatesEqual(dateToBuySell, Calendar.Today))\n            {\n                for (int i = 1; i <= Animals.NoGroups; i++)\n                 {\n                     // Are the i’th group older than 3 years?\n                     if (Animals.AgeMonths[i] > 36) \n                     {\n                         // Then sell some\n                         int numToSell = Convert.ToInt32(sale_propn*Animals.Number[i]);\n                         Animals.Sell(group: i, \n                                      number: numToSell); \n                     }\n                }\n\n                 // Acquire young replacement stock immediately\n                 Animals.Buy(genotype: \"Small Merino\", \n                             number: stockRate * Farm.Area - Animals.NumberAll, \n                             sex: ReproductiveType.Castrate, \n                             age: 15.0, \n                             weight: 48.0, \n                             fleeceWeight: 0.40);\n            }\n        }\n    }\n}\n",
+                  "Code": "using Models.Interfaces;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.GrazPlan;\r\nusing Models.Utilities;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Calendar;\r\n        [Link] Stock Animals;\r\n        [Link] Supplement Feed;\r\n        [Link] Simulation Farm;\r\n\r\n        [Separator(\"Category1\")]\r\n\r\n        [Description(\"Number of young stock to purchase\")]\r\n        public string dateToBuySell { get; set;}\r\n\r\n        [Description(\"Stocking rate (wethers/property ha)\")]\r\n        public double stockRate { get; set;}\r\n\r\n        [Separator(\"Category2\")]\r\n\r\n        [Description(\"Proportion of mature animals to sell\")]\r\n        public double sale_propn { get; set;}\r\n\r\n        [Description(\"Number of young stock to purchase\")]\r\n        public double no_to_buy { get; set;}\r\n\r\n        [Description(\"Model name\")]\r\n        [Display(Type=DisplayType.Model/*,\r\n                 ModelType=typeof(Weather)*/)]\r\n        public IModel w {get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            // purchase animals annually\r\n            if (DateUtilities.DatesEqual(dateToBuySell, Calendar.Today))\r\n            {\r\n                for (int i = 1; i <= Animals.NoGroups; i++)\r\n                 {\r\n                     // Are the i’th group older than 3 years?\r\n                     if (Animals.AgeMonths[i] > 36) \r\n                     {\r\n                         // Then sell some\r\n                         int numToSell = Convert.ToInt32(sale_propn*Animals.Number[i]);\r\n                         Animals.Sell(numToSell); \r\n                     }\r\n                }\r\n\r\n                 // Acquire young replacement stock immediately\r\n                 Animals.Buy(genotype: \"Small Merino\", \r\n                             number: stockRate * Farm.Area - Animals.NumberAll, \r\n                             sex: ReproductiveType.Castrate, \r\n                             age: 15.0, \r\n                             weight: 48.0, \r\n                             fleeceWeight: 0.40);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
                       "Key": "dateToBuySell",
@@ -742,7 +719,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Report.Report, Models",
+                  "$type": "Models.Report, Models",
                   "VariableNames": [
                     "[Clock].Today",
                     "[Stock].NumberAll",
@@ -755,6 +732,7 @@
                   "EventNames": [
                     "[Clock].EndOfDay"
                   ],
+                  "GroupByVariableName": null,
                   "Name": "Report",
                   "Children": [],
                   "IncludeInDocumentation": false,

@@ -191,11 +191,8 @@
             innerText = innerText.Replace("\n", string.Empty);
             innerText = innerText.Replace("\t", string.Empty);
 
-            if (!string.IsNullOrWhiteSpace(innerText))
-            {
-                tableColumnNames.Add(innerText);
-                table.AddColumn(Unit.FromCentimeter(innerText.Length / 3));
-            }
+            tableColumnNames.Add(innerText);
+            table.AddColumn();
 
             return table;
         }
