@@ -141,13 +141,12 @@
             string originalName = modelToCheck.Name;
             string newName = originalName;
             int counter = 0;
-            List<IModel> siblings = Apsim.Siblings(modelToCheck);
-            IModel child = siblings.Find(m => m.Name == newName);
-            while (child != null && child != modelToCheck && counter < 10000)
+            IModel siblingWithSameName = modelToCheck.FindSibling(newName);
+            while (siblingWithSameName != null && counter < 10000)
             {
                 counter++;
                 newName = originalName + counter.ToString();
-                child = siblings.Find(m => m.Name == newName);
+                siblingWithSameName = modelToCheck.FindSibling(newName);
             }
 
             if (counter == 1000)

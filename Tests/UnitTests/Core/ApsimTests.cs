@@ -204,7 +204,7 @@
         public void SiblingsTest()
         {
             IModel clock = Apsim.Child(simulation, typeof(Clock));
-            List<IModel> allSiblings = Apsim.Siblings(clock);
+            List<IModel> allSiblings = clock.FindAllSiblings().ToList();
             Assert.AreEqual(allSiblings.Count, 5);
         }
 
