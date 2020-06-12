@@ -47,7 +47,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("GrazeFoodStore/pasture to graze")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Graze Food Store/pasture required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(GrazeFoodStore) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) })]
         public string GrazeFoodStoreTypeName { get; set; }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Ruminant type to graze")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Ruminant Type required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(RuminantHerd) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(RuminantHerd) })]
         public string RuminantTypeName { get; set; }
 
         /// <summary>

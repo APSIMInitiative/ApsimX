@@ -11,6 +11,7 @@ using Models.Core.ApsimFile;
 using APSIM.Shared.Utilities;
 using Models.PMF;
 using Models.Functions;
+using Models.Soils;
 
 namespace UnitTests.Core.ApsimFile
 {
@@ -93,6 +94,12 @@ namespace Models
 }";
             Structure.Add(manager, paddock);
 
+            Physical physical = new Physical();
+            physical.BD = new double[5];
+            physical.AirDry = new double[5];
+            physical.LL15 = new double[5];
+            Structure.Add(physical, paddock);
+
             basicFile.Write(basicFile.FileName);
             fileName = basicFile.FileName;
 
@@ -141,6 +148,15 @@ namespace Models
 
                 // Change a property of a manager script.
                 "[Manager].Script.Amount = 1234",
+
+                // Set an entire array.
+                "[Physical].BD = 1, 2, 3, 4, 5",
+                
+                // Modify a single element of an array.
+                "[Physical].AirDry[2] = 6",
+
+                // Modify multiple elements of an array.
+                "[Physical].LL15[3:4] = 7",
             });
 
             string models = typeof(IModel).Assembly.Location;
@@ -202,6 +218,11 @@ namespace Models
 
             double amount = (double)Apsim.Get(sim, "[Manager].Script.Amount");
             Assert.AreEqual(1234, amount);
+
+            Physical physical = sim.Children[2].Children[4] as Physical;
+            Assert.AreEqual(new double[5] { 1, 2, 3, 4, 5 }, physical.BD);
+            Assert.AreEqual(new double[5] { 0, 6, 0, 0, 0 }, physical.AirDry);
+            Assert.AreEqual(new double[5] { 0, 0, 7, 7, 0 }, physical.LL15);
         }
     }
 }
