@@ -360,5 +360,13 @@
                 PrePostExceptionsThrown.Add(err);
             }
         }
+
+        /// <summary>
+        /// Tells us to Dispose (close) our datastore
+        /// </summary>
+        public void DisposeStorage()
+        {
+            storage?.Dispose();
+        }
     }
 }
