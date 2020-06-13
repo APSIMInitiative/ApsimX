@@ -128,8 +128,6 @@ namespace Models.PMF.Phen
         public double k { get { return -0.19; } }
         /// <summary>Base delta upregulation of Vrn2 at short Pp</summary>
         private double baseDVrn2 { get { return 0; } }
-        /// <summary>Maximum delta upregulation of Vrn3 at Long Pp</summary>
-        private double maxDVrn3 { get { return 0.33; } }
         /// <summary>The haun stage at which the crop is able to detect and act upon photoperiod stimuli, needed for vernalisation to occur</summary>
         public double CompetenceHS { get { return 1.1; } }
         /// <summary>The amount of methalated Vrn1 needed for vernalisation saturation to occur</summary>
@@ -237,7 +235,7 @@ namespace Models.PMF.Phen
                 else
                     dHS = deltaHaunStage.Value(); 
                 
-                if ((haunStage.Value() >= CompetenceHS) && (isCompetent == false))
+                if ((haunStage.Value() >= Params.VernCompetence) && (isCompetent == false))
                     isCompetent = true;
 
                 // Work out base, cold induced Vrn1 expression and methalyation until vernalisation is complete
@@ -279,7 +277,7 @@ namespace Models.PMF.Phen
 
                 // Then work out Vrn3 expression
                 if ((isVernalised == true) && (isCompetent == true) && (isReproductive == false))
-                    dVrn3 = CalcdPPVrn(pp.Value(), Params.BaseDVrn3, maxDVrn3, dHS);
+                    dVrn3 = CalcdPPVrn(pp.Value(), Params.BaseDVrn3, Params.MaxDVrn3, dHS);
                 Vrn3 = Math.Min(1.0, Vrn3 + dVrn3);
 
                 // Then add Vrn3 expression effects to Vrn1 upregulation
