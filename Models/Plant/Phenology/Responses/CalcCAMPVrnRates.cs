@@ -16,7 +16,7 @@ namespace Models.PMF.Phen
     public class CultivarRateParams : Model
     {
         /// <summary>Earliest HS at which Vern saturation may occur</summary>
-        public double VernCompetence { get; set; }
+        public double VernCompetenceHS { get; set; }
         /// <summary>Base delta for Upregulation of Vrn1 >20oC</summary>
         public double BaseDVrn1 { get; set; }
         /// <summary>Maximum delta for Upregulation of Vrn1 at 0oC</summary>
@@ -27,6 +27,8 @@ namespace Models.PMF.Phen
         public double BaseDVrn3 { get; set; }
         /// <summary>Maximum delta for Upregulation of Vrn3 at Pp above 16h </summary>
         public double MaxDVrn3 { get; set; }
+        /// <summary>Maximum delta for upregulation of Vrn1 due to long Pp</summary>
+        public double MaxDVrnX { get; set; }
     }
 
     /// <summary>
@@ -73,7 +75,8 @@ namespace Models.PMF.Phen
             // Haun stage duration from vernalisation saturation to terminal spikelet under long day conditions
             // Assume VS occurs at Competence HS under long Pp full vernalisation for varieties with FLN < 7.3 in these conditions
             // Assume maximum of 3, Data from Lincoln CE showed varieties that harve a high TSHS hit VS ~3HS prior to TS under these conditions
-            double MinHSVsTs = Math.Min(3.0, TSHS_LV - camp.CompetenceHS);
+            // Assume HS = 1.0 is the earliest VSHS can occur
+            double MinHSVsTs = Math.Min(3.0, TSHS_LV - 1.0);
 
             // Photoperiod sensitivity (PPS)
             // the difference between TSHS at 8 and 16 h pp under 
@@ -81,13 +84,13 @@ namespace Models.PMF.Phen
             double PPS = Math.Max(0, TSHS_SV - TSHS_LV);
 
             //Calculate VSHS for each environment from TSHS and photoperiod response
-            double VSHS_LV = Math.Max(camp.CompetenceHS, TSHS_LV - MinHSVsTs);
-            double VSHS_LN = Math.Max(camp.CompetenceHS, TSHS_LN - MinHSVsTs);
-            double VSHS_SV = Math.Max(camp.CompetenceHS, TSHS_SV - (MinHSVsTs + PPS));
-            double VSHS_SN = Math.Max(camp.CompetenceHS, TSHS_SN - (MinHSVsTs + PPS));
+            double VSHS_LV = Math.Max(1.0, TSHS_LV - MinHSVsTs);
+            double VSHS_LN = Math.Max(1.0, TSHS_LN - MinHSVsTs);
+            double VSHS_SV = Math.Max(1.0, TSHS_SV - (MinHSVsTs + PPS));
+            double VSHS_SN = Math.Max(1.0, TSHS_SN - (MinHSVsTs + PPS));
 
             // The earliest possible vernalistion occurs following full vernalisation under short Pp where Vrn2 is absent
-            Params.VernCompetence = VSHS_SV;
+            Params.VernCompetenceHS = VSHS_SV;
 
             // Maximum delta for Upregulation of Vrn3 (MaxDVrn3)
             // Occurs under long Pp conditions
@@ -114,7 +117,8 @@ namespace Models.PMF.Phen
             // Assume 1 unit of Vrn1 supresses 1 unit of Vrn2.
             // So under long days without vernalisation this can be calculated as the 
             // amount of baseVrn1 expressed at VS
-            Params.MaxDVrn2 = (VSHS_LN + EmergHS) * Params.BaseDVrn1;
+            // Any numbers below VernSatThreshold are irrelevent so make that lower bound
+            Params.MaxDVrn2 = Math.Max(camp.VrnSatThreshold,(VSHS_LN + EmergHS) * Params.BaseDVrn1);
 
             // The amount of methalated Vrn1 at the time of transition from vern treatment (MethVern1@Trans)
             // Under 8h when MethVrn1 will be 1.0 at VSHS
@@ -148,6 +152,12 @@ namespace Models.PMF.Phen
             // The rate of dVrn1/HS at 0oC.  Calculate by rearanging UdVrn1 equation
             // UdVrn1 = MUdVrn1 * np.exp(k*Tt) as UdVrn1@Tt is known 
             Params.MaxDVrn1 = MathUtilities.Divide(DVrn1AtTt,Math.Exp(camp.k * Tt),0);
+
+            double BaseVrn1AtVSHS_LN = Math.Min(camp.VrnSatThreshold, (VSHS_LN + EmergHS) * Params.BaseDVrn1);
+
+
+            Params.MaxDVrnX = (1 - BaseVrn1AtVSHS_LN) / (VSHS_LN - camp.PpCompetenceHS);
+
 
             return Params;
         }
