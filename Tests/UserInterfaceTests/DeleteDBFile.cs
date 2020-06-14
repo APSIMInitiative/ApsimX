@@ -39,6 +39,8 @@ public class Script
 			
 		// Try and delete the .db file.
 		string dbFile = Path.ChangeExtension(tempFile, ".db");
+		GC.Collect();
+		GC.WaitForPendingFinalizers();
 		File.Delete(dbFile);
 		
         // Close the user interface.
