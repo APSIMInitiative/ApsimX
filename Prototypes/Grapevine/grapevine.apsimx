@@ -52581,7 +52581,7 @@
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factor, Models",
-                      "Specification": "[Weather].FileName = Site1001_BRA.met, Site1003_SEA.met, WAP.met, McArthur.met, Bannockburn.met, Gibbston.met",
+                      "Specification": "[Weather].FileName = Site1001_BRA.met, Site1003_SEA.met, WAP.met, McArthur.met, Bannockburn.met, Gibbston.met, Pisa.met",
                       "Name": "Climate",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -52600,7 +52600,7 @@
                   "Children": [
                     {
                       "$type": "Models.Weather, Models",
-                      "FileName": "LongLands.met",
+                      "FileName": "Pisa.met",
                       "ExcelWorkSheetName": "",
                       "Name": "Weather",
                       "Children": [],
