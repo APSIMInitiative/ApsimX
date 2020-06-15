@@ -46,6 +46,11 @@ namespace Models.Core
         FileNames,
 
         /// <summary>
+        /// Allows selection of a directory via a file chooser widget.
+        /// </summary>
+        DirectoryName,
+
+        /// <summary>
         /// A field name editor.
         /// </summary>
         FieldName,
@@ -61,19 +66,25 @@ namespace Models.Core
         Model,
 
         /// <summary>
-        /// A CLEM Resource name editor.
+        /// This property is an object whose properties
+        /// should also be displayed/editable in the GUI.
         /// </summary>
-        CLEMResourceName,
+        SubModel,
 
         /// <summary>
-        /// A CLEM Crop file reader editor.
+        /// A CLEM Resource.
         /// </summary>
-        CLEMCropFileName,
+        CLEMResource,
 
         /// <summary>
-        /// A CLEM Grasp file reader editor.
+        /// A CLEM Crop data reader.
         /// </summary>
-        CLEMGraspFileName
+        CLEMCropFileReader,
+
+        /// <summary>
+        /// A CLEM pasture data reader.
+        /// </summary>
+        CLEMPastureFileReader
     }
 
     /// <summary>
@@ -101,15 +112,15 @@ namespace Models.Core
 
         /// <summary>
         /// Gets or sets the types for the ResourceGroups whose Resource items are valid choices in the Resource name editor.
-        /// eg. [Display(CLEMResourceNameResourceGroups = new Type[] {typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(ProductStore) } )]"
+        /// eg. [Display(CLEMResourceGroups = new Type[] {typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(ProductStore) } )]"
         /// Will create a dropdown list with all the Resource items from only the AnimalFoodStore, HumanFoodStore and ProductStore.
         /// </summary>
-        public Type[] CLEMResourceNameResourceGroups { get; set; }
+        public Type[] CLEMResourceGroups { get; set; }
 
         /// <summary>
         /// Gets or sets strings that are manually added to the Resource name editor.
         /// eg. [Display(CLEMExtraEntries = new string[] {"None", "All"}  )]"
-        /// Will add these strings to the dropdown list created by CLEMResourceNameResourceGroups. 
+        /// Will add these strings to the dropdown list created by CLEMResourceGroups. 
         /// </summary>
         public string[] CLEMExtraEntries { get; set; }
 

@@ -28,7 +28,7 @@ namespace Models.CLEM.Activities
         /// Managed pasture to muster to
         /// </summary>
         [Description("Managed pasture to muster to")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(GrazeFoodStore) }, CLEMExtraEntries = new string[] { "Not specified - general yards" })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) }, CLEMExtraEntries = new string[] { "Not specified - general yards" })]
         public string ManagedPastureName { get; set; }
 
         private string pastureName = "";

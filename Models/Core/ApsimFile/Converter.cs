@@ -19,7 +19,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 101; } }
+        public static int LatestVersion { get { return 102; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -2257,6 +2257,18 @@
                 JsonUtilities.AddModel(Leaf, varRef);
             }
         }
+
+        /// <summary>
+        /// Rename Models.Sensitivity.CroptimizR to Models.Optimisation.CroptimizR.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion102(JObject root, string fileName)
+        {
+            foreach (JObject croptimizR in JsonUtilities.ChildrenRecursively(root, "CroptimizR"))
+                croptimizR["$type"] = croptimizR["$type"].ToString().Replace("Sensitivity", "Optimisation");
+        }
+
         /// <summary>
         /// Add progeny destination phase and mortality function.
         /// </summary>

@@ -12,7 +12,7 @@
     using Views;
 
     /// <summary>A presenter for displaying weather data</summary>
-    public class MetDataPresenter : IPresenter
+    public sealed class MetDataPresenter : IPresenter, IDisposable
     {
         /// <summary>The met data</summary>
         private Weather weatherData;
@@ -834,6 +834,12 @@
             this.weatherDataView.GraphRadiation.FormatAxis(Axis.AxisType.Right, "Radiation (mJ/m2)", false, double.NaN, double.NaN, double.NaN, false);
             this.weatherDataView.GraphRadiation.FormatTitle(title);
             this.weatherDataView.GraphRadiation.Refresh();
+        }
+
+        public void Dispose()
+        {
+            if (graphMetData != null)
+                graphMetData.Dispose();
         }
     }
 }
