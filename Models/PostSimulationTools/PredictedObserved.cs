@@ -274,6 +274,10 @@ ON SimulationID = s.ID";
             HashSet<DataRow> duplicateRows = new HashSet<DataRow>();
 
             StringBuilder errorMessage = new StringBuilder();
+            errorMessage.AppendLine($"Error in {GetType().Name} '{Name}': Duplicate/contradictory observations detected.");
+            if (string.IsNullOrEmpty(RepColumnName))
+                errorMessage.AppendLine("No replicate/block column is specified. If your observed data contains multiple replicates, specifying a replicate column name in the user interface may resolve this error.");
+            errorMessage.AppendLine();
             errorMessage.AppendLine("Summary:");
 
             // If duplicate rows have different reps, we merge them by taking the mean
