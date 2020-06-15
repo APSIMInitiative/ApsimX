@@ -497,12 +497,12 @@ namespace UserInterface.Presenters
                         cell.DropDownStrings = fieldNames;
                     }
                 }
-                else if (this.properties[propListIndex][i].Display != null && this.properties[propListIndex][i].Display.Type == DisplayType.CLEMResourceName)
+                else if (this.properties[propListIndex][i].Display != null && this.properties[propListIndex][i].Display.Type == DisplayType.CLEMResource)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
 
                     List<string> fieldNames = new List<string>();
-                    fieldNames.AddRange(this.GetCLEMResourceNames(this.properties[propListIndex][i].Display.CLEMResourceNameResourceGroups) );
+                    fieldNames.AddRange(this.GetCLEMResourceNames(this.properties[propListIndex][i].Display.CLEMResourceGroups) );
 
                     // add any extras elements provided to the list.
                     if(this.properties[propListIndex][i].Display.CLEMExtraEntries != null)

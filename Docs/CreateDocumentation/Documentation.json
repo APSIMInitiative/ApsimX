@@ -351,6 +351,24 @@
                     ]
                 },
                 {
+                    "Name": "Stock (under review)",
+                    "Documents": [
+                        {
+                            "Name": "Validation",
+                            "FileName": "Tests/UnderReview/Stock/Stock.apsimx"
+                        },
+                        {
+                            "Name": "PDF",
+                            "FileName": "Tests/UnderReview/Stock/Stock.apsimx",
+                            "ModelNameToDocument": "Stock"
+                        },
+                        {
+                            "Name": "GRAZPLAN animal biology model",
+                            "URL": "https://grazplan.csiro.au/wp-content/uploads/2007/08/TechPaperMay12.pdf"
+                        }						
+                    ]
+                },
+                {
                     "Name": "Wheat",
                     "Documents": [
                         {

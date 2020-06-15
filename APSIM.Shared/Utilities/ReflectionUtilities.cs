@@ -40,7 +40,7 @@
         /// </summary>
         public static List<FieldInfo> GetAllFields(Type type, BindingFlags flags)
         {
-            if (type == typeof(Object)) return new List<FieldInfo>();
+            if (type == null || type == typeof(Object)) return new List<FieldInfo>();
 
             var list = GetAllFields(type.BaseType, flags);
             // in order to avoid duplicates, force BindingFlags.DeclaredOnly
@@ -54,7 +54,7 @@
         /// </summary>
         public static List<PropertyInfo> GetAllProperties(Type type, BindingFlags flags)
         {
-            if (type == typeof(Object)) return new List<PropertyInfo>();
+            if (type == typeof(Object) || type == null) return new List<PropertyInfo>();
 
             var list = GetAllProperties(type.BaseType, flags);
             // in order to avoid duplicates, force BindingFlags.DeclaredOnly

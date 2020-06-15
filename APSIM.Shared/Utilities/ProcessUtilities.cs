@@ -165,7 +165,8 @@ namespace APSIM.Shared.Utilities
             /// If true, the child process' standard error/output will be written to this process' standard error/output.
             /// This has no effect if redirectOutput is false!
             /// </param>
-            public void Start(string executable, string arguments, string workingDirectory, bool redirectOutput, bool writeToConsole = false, Dictionary<string, string> environment = null)
+            /// <param name="cancelToken">Proces will be killed if cancellation is requested on this token.</param>
+            public void Start(string executable, string arguments, string workingDirectory, bool redirectOutput, CancellationToken cancelToken = new CancellationToken(), bool writeToConsole = false, Dictionary<string, string> environment = null)
             {
                 Executable = executable;
                 Arguments = arguments;
@@ -197,7 +198,11 @@ namespace APSIM.Shared.Utilities
                 }
                 process.Exited += OnExited;
                 process.EnableRaisingEvents = true;
+
+                cancelToken.Register(Kill);
+
                 process.Start();
+
                 if (redirectOutput)
                 {
                     process.BeginOutputReadLine();
@@ -226,7 +231,8 @@ namespace APSIM.Shared.Utilities
             /// <summary>Kill the process.</summary>
             public void Kill()
             {
-                process.Kill();
+                if (!process.HasExited)
+                    process.Kill();
             }
 
             /// <summary>Handler for all strings written to StdOut</summary>

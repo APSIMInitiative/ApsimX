@@ -201,7 +201,15 @@ namespace Models.CLEM
         /// <returns></returns>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            double maxvalue = Convert.ToDouble(value);
+            double maxvalue = 0;
+            if (value.GetType().IsArray)
+            {
+                maxvalue = (value as double[]).Min();
+            }
+            else
+            {
+                maxvalue = Convert.ToDouble(value);
+            }
             string[] memberNames = new string[] { validationContext.MemberName };
 
             if (maxvalue > compareValue)
@@ -243,7 +251,16 @@ namespace Models.CLEM
         /// <returns></returns>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            double maxvalue = Convert.ToDouble(value);
+            double maxvalue = 0;
+            if (value.GetType().IsArray)
+            {
+                maxvalue = (value as double[]).Min();
+            }
+            else
+            {
+                maxvalue = Convert.ToDouble(value);
+            }
+
             string[] memberNames = new string[] { validationContext.MemberName };
 
             if (maxvalue >= compareValue)

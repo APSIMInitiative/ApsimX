@@ -87,7 +87,7 @@
                 List<ISimulationDescriptionGenerator> simulations = Apsim.FindAll(summaryModel, typeof(ISimulationDescriptionGenerator)).Cast<ISimulationDescriptionGenerator>().ToList();
                 simulations.RemoveAll(s => s is Simulation && (s as IModel).Parent is Experiment);
                 List<string> simulationNames = simulations.SelectMany(m => m.GenerateSimulationDescriptions()).Select(m => m.Name).ToList();
-                simulationNames.AddRange(Apsim.FindAll(summaryModel, typeof(Models.Sensitivity.CroptimizR)).Select(x => x.Name));
+                simulationNames.AddRange(Apsim.FindAll(summaryModel, typeof(Models.Optimisation.CroptimizR)).Select(x => x.Name));
                 summaryView.SimulationDropDown.Values = simulationNames.ToArray();
                 if (simulationNames != null && simulationNames.Count > 0)
                     summaryView.SimulationDropDown.SelectedValue = simulationNames[0];
