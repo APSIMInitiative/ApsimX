@@ -57,6 +57,10 @@ namespace Models.PostSimulationTools
         [Display(Type = DisplayType.FieldName)]
         public string FieldName3UsedForMatch { get; set; }
 
+        /// <summary>Column name for replicate info.</summary>
+        [Description("Column name for replicate info")]
+        public string RepColumnName { get; set; }
+
         /// <summary>Main run method for performing our calculations and storing data.</summary>
         public void Run()
         {
@@ -71,6 +75,10 @@ namespace Models.PostSimulationTools
 
             IEnumerable<string> predictedDataNames = dataStore.Reader.ColumnNames(PredictedTableName);
             IEnumerable<string> observedDataNames = dataStore.Reader.ColumnNames(ObservedTableName);
+
+            CheckForDuplicateData();
+
+            DataTable observedDataTable = GetObservedTable();
 
             if (predictedDataNames == null)
                 throw new ApsimXException(this, "Could not find model data table: " + PredictedTableName);
@@ -243,6 +251,159 @@ namespace Models.PostSimulationTools
                     throw new Exception(Name + ": Cannot find any observed data in node: " + ObservedTableName + ". Check for missing observed file or move " + ObservedTableName + " to top of child list under DataStore (order is important!)");
                 else
                     throw new Exception(Name + ": Observed data was found but didn't match the predicted values. Make sure the values in the SimulationName column match the simulation names in the user interface. Also ensure column names in the observed file match the APSIM report column names.");
+            }
+        }
+
+        private DataTable GetObservedTable()
+        {
+            string sql = $@"SELECT s.Name as SimulationName, o.*
+FROM [{ObservedTableName}] o
+INNER JOIN _Simulations s
+ON SimulationID = s.ID";
+            DataTable fromDataStore = dataStore.Reader.GetDataUsingSql(sql);
+
+            // Get all rows which have overlap to some extent and may be duplicates.
+            // E.g. If we're matching on Date, then each grouping will contain all rows
+            // with the same simulation name + date.
+            IEnumerable<IGrouping<object, DataRow>> overlappingRows = GroupDataByFieldsToMatchOn(fromDataStore);
+
+            // Create a hash set to keep track of duplicate rows. These are rows which
+            // have the same simulation name + date *and* have at least one variable
+            // recorded multiple times with different values. E.g. if we have multiple
+            // different values for LAI on the same date in the same trial, something ain't right.
+            HashSet<DataRow> duplicateRows = new HashSet<DataRow>();
+
+            StringBuilder errorMessage = new StringBuilder();
+            errorMessage.AppendLine("Summary:");
+
+            // If duplicate rows have different reps, we merge them by taking the mean
+            // of any numeric variables. If the reps are the same or there is no rep
+            // column, then they will be added to the duplciateRows set.
+            DataTable observed = overlappingRows.Select(d => Average(d, ref duplicateRows, ref errorMessage)).CopyToDataTable();
+
+            // If any duplicate rows were discovered, throw a fatal.
+            if (duplicateRows.Count > 1)
+            {
+                errorMessage.AppendLine();
+                errorMessage.AppendLine("Duplicate Rows:");
+                DataTable duplicatesTable = duplicateRows.CopyToDataTable();
+                errorMessage.AppendLine(DataTableUtilities.DataTableToText(duplicatesTable, true));
+                throw new Exception(errorMessage.ToString());
+            }
+
+            return observed;
+        }
+
+        private IEnumerable<IGrouping<object, DataRow>> GroupDataByFieldsToMatchOn(DataTable fromDataStore)
+        {
+            if (!string.IsNullOrEmpty(RepColumnName))
+            {
+                if (!string.IsNullOrEmpty(FieldName3UsedForMatch))
+                    return fromDataStore.AsEnumerable().GroupBy(r => new { SimulationName = r["SimulationName"], Key1 = r[FieldNameUsedForMatch], Key2 = r[FieldName2UsedForMatch], Key3 = r[FieldName3UsedForMatch], Rep = r[RepColumnName] });
+
+                if (!string.IsNullOrEmpty(FieldName2UsedForMatch))
+                    return fromDataStore.AsEnumerable().GroupBy(r => new { SimulationName = r["SimulationName"], Key1 = r[FieldNameUsedForMatch], Key2 = r[FieldName2UsedForMatch], Rep = r[RepColumnName] });
+
+                return fromDataStore.AsEnumerable().GroupBy(r => new { SimulationName = r["SimulationName"], Key1 = r[FieldNameUsedForMatch], Rep = r[RepColumnName] });
+            }
+
+            if (!string.IsNullOrEmpty(FieldName3UsedForMatch))
+                return fromDataStore.AsEnumerable().GroupBy(r => new { SimulationName = r["SimulationName"], Key1 = r[FieldNameUsedForMatch], Key2 = r[FieldName2UsedForMatch], Key3 = r[FieldName3UsedForMatch] });
+
+            if (!string.IsNullOrEmpty(FieldName2UsedForMatch))
+                return fromDataStore.AsEnumerable().GroupBy(r => new { SimulationName = r["SimulationName"], Key1 = r[FieldNameUsedForMatch], Key2 = r[FieldName2UsedForMatch] });
+
+            return fromDataStore.AsEnumerable().GroupBy(r => new { SimulationName = r["SimulationName"], Key1 = r[FieldNameUsedForMatch] });
+        }
+
+        private DataRow Average(IEnumerable<DataRow> rows, ref HashSet<DataRow> duplicateRows, ref StringBuilder errorMessage)
+        {
+            if (rows == null || rows.Count() < 1)
+                throw new Exception($"Unable to fetch average of null data rows.");
+
+            if (rows.Count() == 1)
+                return rows.ElementAt(0);
+
+            DataRow result = rows.ElementAt(0);
+
+            foreach (DataColumn col in result.Table.Columns)
+            {
+                if (ReflectionUtilities.IsNumeric(col.DataType))
+                {
+                    IEnumerable<DataRow> dupes = rows.Where(r => !Convert.IsDBNull(r[col.ColumnName]));
+                    if (dupes.Count() > 0 && dupes.Select(r => r[col.ColumnName]).Distinct().Count() > 1)
+                    {
+                        foreach (DataRow row in dupes)
+                        {
+                            errorMessage.Append($"Simulation name = {row["SimulationName"]}");
+                            foreach (string field in GetFieldsToMatchOn())
+                                errorMessage.Append($", {field} = {row[field]}");
+                            if (!string.IsNullOrEmpty(RepColumnName))
+                                errorMessage.Append($", {RepColumnName} = {row[RepColumnName]}");
+                            errorMessage.AppendLine($", {col.ColumnName} = {row[col.ColumnName]}");
+
+                            duplicateRows.Add(row);
+                        }
+                    }
+
+                    object[] values = dupes.Select(r => r[col.ColumnName]).ToArray();
+                    result[col.ColumnName] = MathUtilities.Average(values);
+                }
+            }
+
+            return result;
+        }
+
+        private string[] GetFieldsToMatchOn()
+        {
+            List<string> fieldsToMatchOn = new List<string>();
+            if (!string.IsNullOrEmpty(FieldNameUsedForMatch))
+                fieldsToMatchOn.Add(FieldNameUsedForMatch);
+            if (!string.IsNullOrEmpty(FieldName2UsedForMatch))
+                fieldsToMatchOn.Add(FieldName2UsedForMatch);
+            if (!string.IsNullOrEmpty(FieldName3UsedForMatch))
+                fieldsToMatchOn.Add(FieldName3UsedForMatch);
+
+            return fieldsToMatchOn.ToArray();
+        }
+
+        /// <summary>
+        /// We should have only 1 observation and 1 prediction for each match.
+        /// Throw an error if this is not true.
+        /// 
+        /// E.g. if we have two observations for the same simulation name on the
+        /// same date, that is going to cause problems.
+        /// </summary>
+        /// <remarks>
+        /// Need to think through the implications of having more than 1 zone.
+        /// Does this make it valid to have >1 observation on a given date?
+        /// </remarks>
+        private void CheckForDuplicateData()
+        {
+            string[] fieldsToMatchOn = GetFieldsToMatchOn();
+            string[] escapedFields = fieldsToMatchOn.Select(f => $"[{f}]").ToArray();
+            string reps = !string.IsNullOrEmpty(RepColumnName) && dataStore.Reader.ColumnNames(ObservedTableName).Contains(RepColumnName)
+                ? $", [{RepColumnName}]"
+                : "";
+            string sql = $@"SELECT s.Name as SimulationName, * --s.Name as SimulationName, {string.Join(", ", escapedFields)}, COUNT(*) as N
+FROM [{ObservedTableName}]
+INNER JOIN _Simulations s
+ON SimulationID = s.ID
+GROUP BY SimulationID, {string.Join(", ", escapedFields)}{reps}
+HAVING COUNT(*) > 1";
+
+            foreach (string field in escapedFields)
+                sql += Environment.NewLine + $"AND {field} NOT NULL";
+
+            DataTable duplicates = dataStore.Reader.GetDataUsingSql(sql);
+            if (duplicates.Rows.Count > 0)
+            {
+                StringBuilder msg = new StringBuilder();
+                msg.AppendLine($"Error in file {System.IO.Path.ChangeExtension(dataStore.FileName, ".apsimx")}:");
+                msg.AppendLine($"Error in PredictedObserved {Name}: duplicate records detected for {duplicates.Rows.Count} simulations in observed table {ObservedTableName}:");
+                msg.AppendLine($"You are seeing this error because there are multiple (N) rows in this table which have the same simulation name, {string.Join(", ", fieldsToMatchOn)}.");
+                DataTableUtilities.DataTableToText(duplicates, 0, ", ", true, new System.IO.StringWriter(msg));
+                //throw new Exception(msg.ToString());
             }
         }
     }

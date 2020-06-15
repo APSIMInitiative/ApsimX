@@ -35,6 +35,30 @@
         }
 
         /// <summary>
+        /// Return true iff the given type is a numeric type (double, float, ...).
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public static bool IsNumeric(Type t)
+        {
+            HashSet<Type> numericTypes = new HashSet<Type>
+            {
+                typeof(double),
+                typeof(float),
+                typeof(int),
+                typeof(long),
+                typeof(uint),
+                typeof(decimal),
+                typeof(byte),
+                typeof(sbyte),
+                typeof(short),
+                typeof(ushort),
+            };
+
+            return numericTypes.Contains(t);
+        }
+
+        /// <summary>
         /// Return all fields. The normal .NET reflection doesn't return private fields in base classes.
         /// This function does.
         /// </summary>

@@ -626,6 +626,22 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
+        /// Writes a datatable to a fixed-column-width string.
+        /// </summary>
+        /// <param name="data">Datatable to be written.</param>
+        /// <param name="showHeadings">Show column names in top row?</param>
+        /// <remarks>
+        /// This is just a thin wrapper around <see cref="DataTableToText(DataTable, int, string, bool, TextWriter, bool, string)"/>.
+        /// </remarks>
+        public static string DataTableToText(DataTable data, bool showHeadings)
+        {
+            StringBuilder text = new StringBuilder();
+            using (StringWriter writer = new StringWriter(text))
+                DataTableToText(data, 0, ",", showHeadings, writer);
+            return text.ToString();
+        }
+
+        /// <summary>
         /// Write the specified DataTable to a CSV string, excluding the specified column names.
         /// </summary>
         static public void DataTableToText(DataTable data, int startColumnIndex, string delimiter, bool showHeadings, TextWriter writer, bool excelFriendly = false, string decimalFormatString="F3")
