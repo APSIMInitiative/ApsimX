@@ -28,7 +28,7 @@ namespace Models.CLEM.Groupings
         /// Daily value to supply for each month
         /// </summary>
         [Description("Daily value to supply for each month")]
-        [ArrayItemCount(12), GreaterThanValue(0)]
+        [Required, ArrayItemCount(12)]
         public double[] MonthlyValues { get; set; }
 
         /// <summary>
@@ -68,6 +68,13 @@ namespace Models.CLEM.Groupings
                     break;
                 default:
                     break;
+            }
+            if(MonthlyValues.Count() > 0)
+            {
+                if(MonthlyValues.Max() == 0)
+                {
+                    Summary.WriteWarning(this, $"No feed values were defined for any month in [{this.Name}]. No feeding will be performed for [a={this.Parent.Name}]");
+                }
             }
             return results;
         }

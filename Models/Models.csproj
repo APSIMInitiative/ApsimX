@@ -220,7 +220,7 @@
     <Compile Include="Core\Attributes\TooltipAttribute.cs" />
     <Compile Include="Core\Attributes\VersionAttribute.cs" />
     <Compile Include="CLEM\Activities\BlankActivity.cs" />
-    <Compile Include="CLEM\FileSQLiteGRASP.cs" />
+    <Compile Include="CLEM\FileSQLitePasture.cs" />
     <Compile Include="CLEM\Groupings\RuminantDestockGroup.cs" />
     <Compile Include="CLEM\IActivityPerformedNotifier.cs" />
     <Compile Include="CLEM\IFileGRASP.cs" />
@@ -334,7 +334,12 @@
     <Compile Include="Plant\Structure\LeafCulms.cs" />
     <Compile Include="PostSimulationTools\SimulationStats.cs" />
     <Compile Include="Report\VariableGroup.cs" />
-    <Compile Include="Sensitivity\CroptimizR.cs" />
+    <Compile Include="Optimisation\Criteria.cs" />
+    <Compile Include="Optimisation\CroptimizR.cs" />
+    <Compile Include="Optimisation\DreamZs.cs" />
+    <Compile Include="Optimisation\IOptimizationMethod.cs" />
+    <Compile Include="Optimisation\Likelihood.cs" />
+    <Compile Include="Optimisation\Simplex.cs" />
     <Compile Include="Soils\Nutrients\INutrientPool.cs" />
     <Compile Include="Soils\SoilTemp\SoilTemperature.cs" />
     <Compile Include="Soils\Standardiser\Layers.cs" />
@@ -727,7 +732,7 @@
     <Compile Include="CLEM\FileCrop.cs" />
     <Compile Include="CLEM\Groupings\RuminantFilterGroup.cs" />
     <Compile Include="CLEM\Groupings\LabourFilterGroup.cs" />
-    <Compile Include="CLEM\FileGRASP.cs" />
+    <Compile Include="CLEM\FilePasture.cs" />
     <Compile Include="CLEM\IActivityTimer.cs" />
     <Compile Include="CLEM\Reporting\EcolIndicatorsEventArgs.cs" />
     <Compile Include="CLEM\Reporting\ReportRuminantHerd.cs" />

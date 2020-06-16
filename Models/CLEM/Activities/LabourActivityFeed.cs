@@ -32,7 +32,7 @@ namespace Models.CLEM.Activities
         /// Name of Human Food to use (with Resource Group name appended to the front [separated with a '.'])
         /// </summary>
         [Description("Food to use")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] {typeof(HumanFoodStore)} )]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] {typeof(HumanFoodStore)} )]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Food type required")]
         public string FeedTypeName { get; set; }
 

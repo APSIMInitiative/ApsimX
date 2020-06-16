@@ -707,6 +707,12 @@
 
                     else if (viewName != null && presenterName != null)
                         ShowInRightHandPanel(model, viewName.ToString(), presenterName.ToString());
+                    else
+                    {
+                        var view = new HTMLView(this.view as ViewBase);
+                        var presenter = new DocumentationPresenter();
+                        ShowInRightHandPanel(model, view, presenter);
+                    }
                 }
             }
         }

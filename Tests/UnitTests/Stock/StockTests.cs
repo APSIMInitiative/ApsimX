@@ -578,7 +578,7 @@
             Assert.AreEqual(100, groups.Last().NoAnimals);
 
             // Make sure summary file was written to.
-            Assert.AreEqual("Selling 50 animals", MockSummary.messages[0]);
+            Assert.AreEqual("Sold 50 animals", MockSummary.messages[0]);
         }
 
         /// <summary>Ensure a user can sell animals by weight.</summary>
@@ -634,7 +634,7 @@
             Assert.AreEqual(100, groups.Last().NoAnimals);
 
             // Make sure summary file was written to.
-            Assert.AreEqual("Selling 50 animals", MockSummary.messages[0]);
+            Assert.AreEqual("Sold 50 animals", MockSummary.messages[0]);
         }
 
         /// <summary>Ensure a user can shear animals.</summary>

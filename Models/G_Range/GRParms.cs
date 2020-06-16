@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Globalization;
 
 namespace Models
 {
@@ -1381,7 +1382,7 @@ namespace Models
         private double ReadDoubleVal(string s)
         {
             double result;
-            if (Double.TryParse(s, out result))
+            if (Double.TryParse(s, NumberStyles.Any, CultureInfo.InvariantCulture, out result))
                 return result;
             return Double.NaN;
         }
@@ -1389,7 +1390,7 @@ namespace Models
         private int ReadIntVal(string s)
         {
             int result;
-            if (Int32.TryParse(s, out result))
+            if (Int32.TryParse(s, NumberStyles.Any, CultureInfo.InvariantCulture, out result))
                 return result;
             return Int32.MinValue;
         }
@@ -1400,7 +1401,7 @@ namespace Models
             dest = new double[parts.Length];
             for (int i = 0; i < parts.Length; i++)
             {
-                if (!Double.TryParse(parts[i], out dest[i]))
+                if (!Double.TryParse(parts[i], NumberStyles.Any, CultureInfo.InvariantCulture, out dest[i]))
                     dest[i] = Double.NaN;
             }
         }
