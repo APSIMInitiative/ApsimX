@@ -289,9 +289,12 @@ ON SimulationID = s.ID";
             if (duplicateRows.Count > 1)
             {
                 errorMessage.AppendLine();
-                errorMessage.AppendLine("Duplicate Rows:");
-                DataTable duplicatesTable = duplicateRows.CopyToDataTable();
-                errorMessage.AppendLine(DataTableUtilities.DataTableToText(duplicatesTable, true));
+                
+                // For more info (way too much usually), uncomment the next 3 lines.
+                //errorMessage.AppendLine("Duplicate Rows:");
+                //DataTable duplicatesTable = duplicateRows.CopyToDataTable();
+                //errorMessage.AppendLine(DataTableUtilities.DataTableToText(duplicatesTable, true));
+                
                 throw new Exception(errorMessage.ToString());
             }
 
