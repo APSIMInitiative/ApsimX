@@ -33142,36 +33142,6 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Factorial.CompositeFactor, Models",
-                      "Specifications": [
-                        "[LucerneSowingRule].Script.SowingDate = 2018-10-04",
-                        "[Clock].StartDate = 2018-10-04",
-                        "[Clock].EndDate = 2020-04-08"
-                      ],
-                      "Paths": null,
-                      "Values": null,
-                      "Name": "SD29",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Factorial.CompositeFactor, Models",
-                      "Specifications": [
-                        "[LucerneSowingRule].Script.SowingDate = 2019-10-04",
-                        "[Clock].StartDate = 2019-10-04",
-                        "[Clock].EndDate = 2020-04-08"
-                      ],
-                      "Paths": null,
-                      "Values": null,
-                      "Name": "SD30",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
