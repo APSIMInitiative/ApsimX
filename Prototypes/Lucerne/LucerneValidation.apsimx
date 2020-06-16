@@ -1956,7 +1956,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.025,
+                      "FixedValue": 100000.0,
                       "Units": "g/m^2/d",
                       "Name": "FixationCoefficiency",
                       "Children": [],
@@ -2630,7 +2630,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "StartFlowering",
+                          "Start": "FloralInitiation",
                           "End": "Maturity",
                           "Name": "PhaseLookupValue",
                           "Children": [
@@ -2649,7 +2649,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.3,
+                                  "FixedValue": 0.2,
                                   "Units": null,
                                   "Name": "BasalBudFactor",
                                   "Children": [],
@@ -6465,7 +6465,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.075,
+                                  "FixedValue": 0.05,
                                   "Units": null,
                                   "Name": "Increasing",
                                   "Children": [],
@@ -6834,7 +6834,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.0005,
+                              "FixedValue": 0.01,
                               "Units": null,
                               "Name": "Constant",
                               "Children": [],
@@ -6855,7 +6855,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.0005,
+                              "FixedValue": 0.01,
                               "Units": null,
                               "Name": "Constant",
                               "Children": [],
@@ -7786,6 +7786,7 @@
                     "[TapRoot].DMRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.Y =1.5, 1.5, 0",
                     "[TapRoot].DMDemands.Storage.MultiplyFunction.RegrowthEffect.XYPairs.X = 0, 300, 350",
                     "[TapRoot].DMDemands.Storage.MultiplyFunction.RegrowthEffect.XYPairs.Y = 0, 0, 1.5",
+                    "[TapRoot].DMRetranslocationFactor.Vegetative.MultiplyFunction.AnnualEffect.Increasing.FixedValue=0.05",
                     "[TapRoot].NRetranslocationFactor.Vegetative.MultiplyFunction.AnnualEffect.Increasing.FixedValue=0.03"
                   ],
                   "Name": "FD5",
@@ -16553,7 +16554,7 @@
                           "LineThickness": 0,
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Lucerne.Leaf.DeltaPotentialLAI",
+                          "YFieldName": "Lucerne.Leaf.Area.LeafArea.BasialBudLAI",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": false,
@@ -18515,6 +18516,35 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16747854,
+                          "FactorToVaryColours": "Defoliation",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 4,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "ObsAllData",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "LAI",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Observed",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": false,
@@ -20079,7 +20109,7 @@
                         },
                         {
                           "Key": "CultivarName",
-                          "Value": "Kaituna"
+                          "Value": "FD5"
                         },
                         {
                           "Key": "SowingDate",
@@ -27373,6 +27403,124 @@
                       "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": "Date",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": "",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [
+                        "SS",
+                        "LL",
+                        "Iversen_121DefoliationSSFDFD2",
+                        "Iversen_121DefoliationLLFDFD2",
+                        "Iversen_121DefoliationHHFDFD2",
+                        "Iversen_121DefoliationSSFDFD5",
+                        "Iversen_121DefoliationLLFDFD5",
+                        "Iversen_121DefoliationSSFDFD10",
+                        "Iversen_121DefoliationLLFDFD10",
+                        "Iversen_121DefoliationHHFDFD10"
+                      ],
+                      "LegendOutsideGraph": false,
+                      "Name": "BasalBudsArea",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16747854,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "Defoliation",
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Lucerne.Leaf.BasalBuds.LAI",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
+                          "Children": [
+                            {
+                              "$type": "Models.EventNamesOnGraph, Models",
+                              "ColumnName": "Lucerne.Phenology.CurrentStageName",
+                              "SimulationName": null,
+                              "Name": "EventNamesOnGraph",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16747854,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "LAI",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted1",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -27740,8 +27888,10 @@
                         "Iversen_121DefoliationLLFDFD2",
                         "Iversen_121DefoliationHHFDFD2",
                         "Iversen_121DefoliationSSFDFD5",
-                        "Iversen_121DefoliationLLFDFD5",
-                        "Iversen_121DefoliationHHFDFD5"
+                        "Iversen_121DefoliationHHFDFD5",
+                        "Iversen_121DefoliationSSFDFD10",
+                        "Iversen_121DefoliationLLFDFD10",
+                        "Iversen_121DefoliationHHFDFD10"
                       ],
                       "LegendOutsideGraph": false,
                       "Name": "RootWt",
@@ -29007,15 +29157,7 @@
                       ],
                       "LegendPosition": 1,
                       "LegendOrientation": 0,
-                      "DisabledSeries": [
-                        "Iversen_121DefoliationSSFDFD2",
-                        "Iversen_121DefoliationLLFDFD2",
-                        "Iversen_121DefoliationHHFDFD2",
-                        "Iversen_121DefoliationHHFDFD5",
-                        "Iversen_121DefoliationSSFDFD10",
-                        "Iversen_121DefoliationLLFDFD10",
-                        "Iversen_121DefoliationHHFDFD10"
-                      ],
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "ThermalTimeAfterCutting",
                       "Children": [
@@ -29942,7 +30084,7 @@
                       "Specifications": [
                         "[LucerneSowingRule].Script.SowingDate = 2017-10-04",
                         "[Clock].StartDate = 2017-10-04",
-                        "[Clock].EndDate = 2019-03-10"
+                        "[Clock].EndDate = 2019-06-10"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -29957,11 +30099,26 @@
                       "Specifications": [
                         "[LucerneSowingRule].Script.SowingDate = 2018-10-04",
                         "[Clock].StartDate = 2018-10-04",
-                        "[Clock].EndDate = 2019-03-10"
+                        "[Clock].EndDate = 2020-04-08"
                       ],
                       "Paths": null,
                       "Values": null,
                       "Name": "SD29",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[LucerneSowingRule].Script.SowingDate = 2019-10-04",
+                        "[Clock].StartDate = 2019-10-04",
+                        "[Clock].EndDate = 2020-04-08"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "SD30",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -29984,7 +30141,7 @@
                 {
                   "$type": "Models.Clock, Models",
                   "Start": "2010-09-27T00:00:00",
-                  "End": "2019-04-10T00:00:00",
+                  "End": "2020-04-08T00:00:00",
                   "Name": "clock",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -31351,7 +31508,9 @@
                       ],
                       "LegendPosition": 1,
                       "LegendOrientation": 0,
-                      "DisabledSeries": [],
+                      "DisabledSeries": [
+                        "SD21"
+                      ],
                       "LegendOutsideGraph": false,
                       "Name": "Height",
                       "Children": [
@@ -31373,7 +31532,7 @@
                           "YFieldName": "Height",
                           "X2FieldName": "",
                           "Y2FieldName": "",
-                          "ShowInLegend": false,
+                          "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
                           "CumulativeX": false,
@@ -31756,26 +31915,7 @@
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
                       "DisabledSeries": [
-                        "SD3",
-                        "SD4",
-                        "SD5",
-                        "SD6",
-                        "SD7",
-                        "SD8",
-                        "SD9",
-                        "SD10",
-                        "SD11",
-                        "SD12",
-                        "SD13",
-                        "SD14",
-                        "SD15",
-                        "SD16",
-                        "SD17",
-                        "SD18",
-                        "SD19",
-                        "SD20",
-                        "SD21",
-                        "SD22"
+                        "SD1"
                       ],
                       "LegendOutsideGraph": false,
                       "Name": "AboveGroundWt",
@@ -31977,7 +32117,9 @@
                       ],
                       "LegendPosition": 1,
                       "LegendOrientation": 0,
-                      "DisabledSeries": [],
+                      "DisabledSeries": [
+                        "SD21"
+                      ],
                       "LegendOutsideGraph": false,
                       "Name": "RootWt",
                       "Children": [
@@ -31999,7 +32141,7 @@
                           "YFieldName": "RootWt",
                           "X2FieldName": "",
                           "Y2FieldName": "",
-                          "ShowInLegend": false,
+                          "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
                           "CumulativeX": false,
@@ -33006,7 +33148,7 @@
                       "Specifications": [
                         "[LucerneSowingRule].Script.SowingDate = 2018-10-04",
                         "[Clock].StartDate = 2018-10-04",
-                        "[Clock].EndDate = 2019-12-31"
+                        "[Clock].EndDate = 2020-04-08"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -33021,7 +33163,7 @@
                       "Specifications": [
                         "[LucerneSowingRule].Script.SowingDate = 2019-10-04",
                         "[Clock].StartDate = 2019-10-04",
-                        "[Clock].EndDate = 2019-12-31"
+                        "[Clock].EndDate = 2020-04-08"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -33048,7 +33190,7 @@
                 {
                   "$type": "Models.Clock, Models",
                   "Start": "2010-09-27T00:00:00",
-                  "End": "2012-07-12T00:00:00",
+                  "End": "2020-04-08T00:00:00",
                   "Name": "clock",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -36030,7 +36172,7 @@
                       "Specifications": [
                         "[LucerneSowingRule].Script.SowingDate = 2018-10-04",
                         "[Clock].StartDate = 2018-10-04",
-                        "[Clock].EndDate = 2019-12-31"
+                        "[Clock].EndDate = 2020-04-08"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -36045,7 +36187,7 @@
                       "Specifications": [
                         "[LucerneSowingRule].Script.SowingDate = 2019-10-04",
                         "[Clock].StartDate = 2019-10-04",
-                        "[Clock].EndDate = 2019-12-31"
+                        "[Clock].EndDate = 2020-04-08"
                       ],
                       "Paths": null,
                       "Values": null,
