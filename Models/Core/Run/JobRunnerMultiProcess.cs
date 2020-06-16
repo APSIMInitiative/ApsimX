@@ -111,6 +111,7 @@
                                     arguments: pipeHandles,
                                     workingDirectory: Directory.GetCurrentDirectory(),
                                     redirectOutput: true,
+                                    cancelToken: cancelToken.Token,
                                     writeToConsole: false);
 
                 // Release the local handles that were created with the above GetClientHandleAsString calls
@@ -126,16 +127,40 @@
                     {
                         var startTime = DateTime.Now;
 
+                        DummyJob dummy = new DummyJob(job.RunnableJob);
+                        if (!(job.RunnableJob is JobRunnerSleepJob))
+                            lock (runningLock)
+                                SimsRunning.Add(dummy);
+
                         // Send the job to APSIMRunner.exe - this will run the simulation.
                         PipeUtilities.SendObjectToPipe(pipeWrite, job.JobSentToClient);
 
                         pipeWrite.WaitForPipeDrain();
 
                         // Get the output data back from APSIMRunner.exe
-                        var endJob = PipeUtilities.GetObjectFromPipe(pipeRead) as JobOutput;
+                        object response = PipeUtilities.GetObjectFromPipe(pipeRead);
+                        while (!(response is JobOutput))
+                        {
+                            if (response == null)
+                                throw new Exception("Invalid response from APSIMRunner pipe: response was null");
+
+                            if (response is ProgressReport progressResponse)
+                                dummy.Progress = progressResponse.Progress;
+
+                            response = PipeUtilities.GetObjectFromPipe(pipeRead);
+                        }
+
+                        var endJob = response as JobOutput;
 
                         // Send the output data to storage.
                         endJob?.WriteOutput(job.DataStore);
+                        
+                        if (!(job.RunnableJob is JobRunnerSleepJob))
+                            lock (runningLock)
+                            {
+                                NumJobsCompleted++;
+                                SimsRunning.Remove(dummy);
+                            }
 
                         // Signal end of job.
                         InvokeJobCompleted(job.RunnableJob,
@@ -234,6 +259,28 @@
             }
         }
 
+        /// <summary>
+        /// Used by APSIMRunner.exe to send progress updates over
+        /// pipe to main job runner thread.
+        /// </summary>
+        [Serializable]
+        public class ProgressReport
+        {
+            /// <summary>
+            /// Job progress.
+            /// </summary>
+            public double Progress { get; private set; }
+
+            /// <summary>
+            /// Constructor.
+            /// </summary>
+            /// <param name="progress">Job progress.</param>
+            public ProgressReport(double progress)
+            {
+                Progress = progress;
+            }
+        }
+
         /// <summary>An class for encapsulating arguments to an EndJob command</summary>
         [Serializable]
         public class JobOutput
@@ -255,7 +302,36 @@
                 ReportData.ForEach(table => storage.Writer.WriteTable(table));
             }
         }
-        
+
+        /// <summary>
+        /// A bit of a hack class to allow us to provide progress
+        /// updates for individual jobs.
+        /// </summary>
+        /// <remarks>
+        /// When the APSIMRunner sends progress updates, we need to
+        /// update the IRunnables in the SimsRunning list. However,
+        /// most IRunnable implementations don't allow us to set the
+        /// progress (and nor should they). This is a bit of a hack to
+        /// overcome this limitation. This may need to be reworked in
+        /// future if we need to access other properties of the objects
+        /// in SimsRunning.
+        /// </remarks>
+        private class DummyJob : IRunnable
+        {
+            public IRunnable ActualJob { get; set; }
+            public double Progress { get; set; }
+
+            public void Run(CancellationTokenSource cancelToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public DummyJob(IRunnable actualJob)
+            {
+                ActualJob = actualJob;
+            }
+        }
+
         private class MultiProcessJob
         {
             /// <summary>The owining job manager.</summary>

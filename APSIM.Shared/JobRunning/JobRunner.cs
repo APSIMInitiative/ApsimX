@@ -36,8 +36,7 @@
         /// <summary>
         /// Lock object controlling access to SimsRunning list
         /// </summary>
-        
-        public readonly object runningLock = new object();
+        protected readonly object runningLock = new object();
 
         /// <summary>The number of jobs that are currently running.</summary>
         protected int numberJobsRunning;
@@ -45,19 +44,8 @@
         /// <summary>A token for cancelling running of jobs</summary>
         protected CancellationTokenSource cancelToken;
 
-        /// <summary>
-        /// Gets the aggregate progress of all jobs as a real number in range [0, 1].
-        /// </summary>
-        public double Progress
-        {
-            get
-            {
-                if (SimsRunning == null || SimsRunning.Count == 0)
-                    return 0;
-
-                return SimsRunning.Sum(j => j.Progress) / SimsRunning.Count;
-            }
-        }
+        /// <summary>The number of jobs which have finished running.</summary>
+        public int NumJobsCompleted { get; protected set; }
 
         /// <summary>Constructor.</summary>
         /// <param name="numProcessors">Number of processors to use.</param>
@@ -195,6 +183,7 @@
                 if (!(job is JobRunnerSleepJob))
                     lock (runningLock)
                     {
+                        NumJobsCompleted++;
                         SimsRunning.Remove(job);
                     }
             }

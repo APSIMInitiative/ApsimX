@@ -47,6 +47,11 @@ namespace Models.Utilities
         private string startupFile;
 
         /// <summary>
+        /// Allows the caller to cancel the R process(es) started by this component.
+        /// </summary>
+        private CancellationToken cancelToken;
+
+        /// <summary>
         /// Directory to which packages will be installed.
         /// On Windows, this is %appdata%\ApsimInitiative\ApsimX\rpackages.
         /// On Linux, this is ~/.config/ApsimInitiative/ApsimX/rpackages.
@@ -62,7 +67,8 @@ namespace Models.Utilities
         /// On Windows, prompts user to install if necessasry.
         /// Will throw on 'Nix systems if R is not installed.
         /// </summary>
-        public R()
+        /// <param name="cancelToken">Allows the caller to cancel the R process(es) started by this component.</param>
+        public R(CancellationToken cancelToken = new CancellationToken())
         {
             rScript = GetRExePath();
             // Create a temporary working directory.
@@ -75,6 +81,8 @@ namespace Models.Utilities
             startupFile = Path.Combine(workingDirectory, ".Rprofile");
             if (!File.Exists(startupFile))
                 File.WriteAllText(startupFile, startupCommand);
+
+            this.cancelToken = cancelToken;
         }
 
         /// <summary>
@@ -149,7 +157,7 @@ namespace Models.Utilities
             if (ErrorReceived != null)
                 proc.ErrorReceived += ErrorReceived;
 
-            proc.Start(rScript, "\"" + scriptName + "\" " + args, workingDirectory, true, environment: environment);
+            proc.Start(rScript, "\"" + scriptName + "\" " + args, workingDirectory, true, cancelToken, environment: environment);
         }
 
         /// <summary>
@@ -177,7 +185,9 @@ namespace Models.Utilities
                 error.AppendLine(File.ReadAllText(fileName));
 
                 message = error.ToString();
-                if (throwOnError)
+                // RSCript will exit with non-0 exit code if cancelled.
+                // No need to throw an exception in this case.
+                if (throwOnError && !cancelToken.IsCancellationRequested)
                     throw new Exception(message);
             }
             else
@@ -506,7 +516,7 @@ namespace Models.Utilities
 
             // Run the installer.
             var installer = new ProcessUtilities.ProcessWithRedirectedOutput();
-            installer.Start(installerPath, "", workingDirectory, false);
+            installer.Start(installerPath, "", workingDirectory, false, cancelToken);
             installer.WaitForExit();
         }
 
@@ -518,7 +528,7 @@ namespace Models.Utilities
         private string GetPathToPackage(string package)
         {
             ProcessUtilities.ProcessWithRedirectedOutput findR = new ProcessUtilities.ProcessWithRedirectedOutput();
-            findR.Start("/usr/bin/which", package, Path.GetTempPath(), true);
+            findR.Start("/usr/bin/which", package, Path.GetTempPath(), true, cancelToken);
             findR.WaitForExit();
             if (string.IsNullOrEmpty(findR.StdOut) && !string.IsNullOrEmpty(findR.StdErr))
             {
