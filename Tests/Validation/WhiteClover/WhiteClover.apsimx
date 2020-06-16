@@ -534,6 +534,7 @@
           "FieldNameUsedForMatch": "Date",
           "FieldName2UsedForMatch": null,
           "FieldName3UsedForMatch": null,
+          "RepColumnName": "Rep",
           "Name": "PredictedObserved",
           "Children": [
             {
@@ -690,6 +691,7 @@
           "FieldNameUsedForMatch": "Date",
           "FieldName2UsedForMatch": null,
           "FieldName3UsedForMatch": null,
+          "RepColumnName": null,
           "Name": "PredictedObservedMeans",
           "Children": [
             {
